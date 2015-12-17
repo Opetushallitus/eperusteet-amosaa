@@ -1,0 +1,5 @@
+/eperusteet-amosaa-service/target/
+/eperusteet-amosaa-app/build
+/eperusteet-amosaa-app/typings
+/eperusteet-amosaa-app/src/app/templates.jade
+/eperusteet-amosaa-app/node_modules

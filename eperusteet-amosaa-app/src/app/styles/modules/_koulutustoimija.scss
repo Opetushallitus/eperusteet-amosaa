@@ -1,0 +1,70 @@
+.koulutustoimija {
+    $box-color: #D1D2D4;
+
+    .otsikkotaso {
+        margin-top: 25px;
+    }
+
+    .otsikko {
+        button {
+            margin-left: 10px;
+        }
+    }
+    .yhteinen-osa {
+        .laatikko {
+            cursor: pointer;
+            margin-top: 5px;
+            padding: 0;
+            width: 100%;
+            border: 1px solid $box-color;
+            height: 31px;
+
+            .tila {
+                float: left;
+                padding: 0 22px 0 0;
+                margin: 0;
+                background: #FCAE27;
+                position: relative;
+                display: block;
+                width: 30px;
+                height: 30px;
+            }
+
+            .nimi {
+                position: relative;
+                top: 4px;
+                left: 5px;
+                color: black;
+            }
+
+            .muokattu {
+                float: right;
+            }
+
+            .right-arrow {
+                float: right;
+                padding: 0 22px 0 0;
+                margin: 0;
+                background: $box-color;
+                // position: relative;
+                display: block;
+                width: 30px;
+                height: 30px;
+
+                .glyphicon {
+                    color: #fff;
+                    top: 5px;
+                    left: 5px;
+                }
+            }
+        }
+    }
+
+    .kaikki-opetussuunnitelmat {
+        .listaus {
+            .laatikko {
+                border: 1px solid $box-color;
+            }
+        }
+    }
+}

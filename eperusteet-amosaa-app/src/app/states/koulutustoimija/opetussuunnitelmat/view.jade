@@ -1,0 +1,12 @@
+div
+  h2 Opetussuunnitelmat
+  table.table.table-striped
+    thead
+      tr
+        th nimi
+        th kuvaus
+    tbody
+      tr(ng-repeat="ops in opetussuunnitelmat")
+        td
+          a(ng-href="{{ ops.$$url }}", ng-bind="ops.nimi.fi")
+        td(ng-bind="ops.kuvaus.fi")

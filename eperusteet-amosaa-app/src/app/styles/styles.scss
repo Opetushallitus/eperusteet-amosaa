@@ -1,0 +1,13 @@
+$icon-font-path: "bootstrap/fonts/";
+@function font-path($path) { @return $path; }
+
+@import "../../../node_modules/bootstrap-sass/assets/stylesheets/_bootstrap-sprockets.scss";
+@import "../../../node_modules/bootstrap-sass/assets/stylesheets/_bootstrap.scss";
+
+@import "vendor/_virkailija.scss";
+
+@import "generic/_lists.scss";
+
+@import "modules/_main.scss";
+@import "modules/_ylanavi.scss";
+@import "modules/_koulutustoimija.scss";

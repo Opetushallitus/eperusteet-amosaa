@@ -1,0 +1,50 @@
+div.koulutustoimija
+
+  pre(ng-bind="kayttajaprofiili | json")
+
+  h2.otsikko
+    span(ng-bind="koulutustoimija.nimi")
+    button.btn.btn-default
+      span.glyphicon.glyphicon-chevron-down
+
+  div.otsikkotaso.yhteinen-osa
+    h3 Koulutustoimijakohtainen yhteiset osat
+      div.laatikko
+        div.tila(ng-bind="yhteinen.valmis")
+        a.nimi(ng-bind="yhteinen.nimi.fi")
+        p.muokattu(ng-bind="yhteinen.muokattu")
+        span.right-arrow
+          span.glyphicon.glyphicon-chevron-right
+
+  div.otsikkotaso.kaikki-opetussuunnitelmat
+    h3 Kaikki opetussuunnitelmat
+
+    div.row
+      div.col-xs-5
+        div.input-group
+          span.input-group-addon
+            span.glyphicon.glyphicon-search
+          input.form-control(type="text")
+      div.checkbox-text.col-xs-5
+        div.checkbox
+          label
+            input(type="checkbox")
+            span Tarkennettu haku
+      div.col-xs-2
+        div.pull-right
+          button.btn.btn-default Lisää uusi
+
+    div.listaus
+
+    // div
+    //   input(type="checkbox")
+    //   label Ammatillinen peruskoulutus
+    //   input(type="checkbox")
+    //   label Ammattitutkinto
+    //   input(type="checkbox")
+    //   label Erikoisammattitutkinto
+
+
+pre(ng-bind="koulutustoimija | json")
+pre(ng-bind="yhteinen | json")
+pre(ng-bind="opetussuunnitelmat | json")
