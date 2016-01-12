@@ -20,7 +20,7 @@ angular.module("app", [
         return path;
     };
 
-    $stateProvider.decorator('views', (state, parent) => {
+    $stateProvider.decorator("views", (state, parent) => {
         _.each(state.views, (view, name) => {
             const idx = _.indexOf(name, "@");
             if (idx !== -1

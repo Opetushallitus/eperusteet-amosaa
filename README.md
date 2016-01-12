@@ -19,6 +19,7 @@ Kehitysympäristön vaatimukset
 npm -g install typescript
 npm -g install gulp
 npm -g install tslint
+npm -g install tsd
 ```
 
 Riippuvuuksien takia käännösaikana tarvitaan pääsy sisäiseen pakettien hallintaan, koska osa paketeista (lähinnä build-parent) ei ole julkisissa repoissa.
@@ -34,6 +35,7 @@ eperusteet-amosaa-app:
 ```sh
 cd eperusteet-amosaa-app
 npm install
+tsd install
 gulp
 ```
 

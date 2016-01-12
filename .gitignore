@@ -3,3 +3,6 @@
 /eperusteet-amosaa-app/typings
 /eperusteet-amosaa-app/src/app/templates.jade
 /eperusteet-amosaa-app/node_modules
+
+*.iml
+.idea/
