@@ -1,6 +1,7 @@
 {
   "app": "src/app/",
   "build": "build/",
+  "dist": "target/dist",
   "dependencies": [
     "node_modules/jquery/dist/jquery.js",
     "node_modules/bootstrap-sass/assets/javascripts/bootstrap.js",
