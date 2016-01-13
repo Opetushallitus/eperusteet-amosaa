@@ -124,6 +124,9 @@ gulp
     });
 })
 .task('build', ['dependencies', 'templates', 'sass', 'compile', 'static'])
+.task('dist', ['build'], function() {
+    return gulp.src([config.build + '**/*']).pipe(gulp.dest(config.dist));
+})
 .task('watch', ['connect', 'build'], function() {
     gulp.watch(config.app + '**/*.ts', ['compile']);
     gulp.watch(config.app + '**/*.jade', ['templates']);
