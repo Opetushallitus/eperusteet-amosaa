@@ -20,7 +20,24 @@ angular.module("app", [
         return path;
     };
 
-    $stateProvider.decorator('views', (state, parent) => {
+    // TODO:
+    // - Lisää tyhjä oletuskontrolleri jos ei ole ja tila/näkymä ei ole abstrakti
+    $stateProvider.decorator("views", (state, parent) => {
+        _.merge(state.views, _(state.views)
+            .map((view, name) => [name, view])
+            .map((pair) => {
+                // Add @<state> automatically to named views
+                if (!_.isEmpty(pair[0])
+                    && pair[0] !== "@default"
+                    && _.indexOf(pair[0], "@") === -1) {
+                    pair[0] += "@" + state.name;
+                }
+                return pair;
+            })
+            .fromPairs()
+            .value());
+
+        // Set template or templateUrl automatically if not specified
         _.each(state.views, (view, name) => {
             const idx = _.indexOf(name, "@");
             if (idx !== -1
@@ -49,6 +66,7 @@ angular.module("app", [
 })
 .run(($rootScope, $log, $urlMatcherFactory) => {
     $rootScope.$on("$stateChangeError", (event, toState, toParams, fromState, fromParams, error) => {
+        console.log("fail");
         $log.error(error);
     });
 });

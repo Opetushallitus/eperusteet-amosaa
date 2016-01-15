@@ -1,5 +1,5 @@
 module Opetussuunnitelmat {
-    export const parsiPerustiedot = (opetussuunnitelmat, urlGenerator: (id: Number) => string) => _(opetussuunnitelmat)
+    export const parsiPerustiedot = (opetussuunnitelmat, urlGenerator: (id: number) => string) => _(opetussuunnitelmat)
         .map(p => ({
             id: p.id,
             nimi: p.nimi,

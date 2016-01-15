@@ -1,0 +1,8 @@
+div.edit-controls(ng-cloak ng-hide="hideControls || !editStarted")
+  div.edit-control-content
+    div.edit-control-header
+      span.glyphicon.glyphicon-pencil
+      span(ng-bind="'muokattavana' | kaanna")
+    div.edit-control-buttons
+      button.btn.btn-default(ng-click="cancel()" ng-bind="'peruuta' | kaanna")
+      button.btn.btn-primary(ng-click="save()" ng-bind="'tallenna' | kaanna")

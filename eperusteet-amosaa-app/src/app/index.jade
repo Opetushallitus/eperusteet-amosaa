@@ -10,4 +10,7 @@ html(lang="fi" ng-app="app")
     script(src="app.js")
     title="ePerusteet-amosaa"
   body
+    a(href="", ui-sref="root.sandbox") sandbox
+    br
+    a(href="", ui-sref="root.koulutustoimija({ ktId: 1 })") koulutustoimija
     div.container.ui-view
