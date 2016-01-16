@@ -39,6 +39,10 @@ gulp
     return gulp.src([config.app + 'views/**/*.jade', config.app + 'states/**/*.jade'])
         .pipe(mkStream(function(file, cb) {
             var fpath = file.path.slice((file.cwd + config.app).length + 1);
+
+            if (/^win/.test(process.platform))
+                fpath = fpath.replace(/\\/g,'/');
+
             if (fpath !== 'index.jade') {
                 var prefix = 'script(type="text/ng-template" id="' + fpath + '")\n';
                 file.contents = new Buffer(prefix + '  ' + String(file.contents).replace(/\n/g, '\n  ') + '\n');
@@ -57,9 +61,9 @@ gulp
 })
 .task('static', function() {
     return gulp.src([
-        './node_modules/bootstrap-sass/assets/fonts/*'
+        'node_modules/bootstrap-sass/assets/fonts/bootstrap/*'
     ])
-    .pipe(gulp.dest(config.build));
+    .pipe(gulp.dest(config.build + 'bootstrap/fonts/'));
 })
 .task('sass', function() {
     return gulp.src([config.app + 'styles/styles.scss'])
