@@ -7,8 +7,8 @@
   "files": [
     "typings/tsd.d.ts",
     "src/app/globals.ts",
-    "src/app/components/editointikontrollit/editointikontrollit.ts",
     "src/app/app.ts",
+    "src/app/components/editointikontrollit/editointikontrollit.ts",
     "src/app/states/state.ts",
     "src/app/states/sandbox/state.ts",
     "src/app/states/koulutustoimija/state.ts",

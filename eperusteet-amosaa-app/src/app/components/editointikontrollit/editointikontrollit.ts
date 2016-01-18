@@ -4,7 +4,7 @@ interface IEditointikontrollitCallbacks {
     cancel: () => Promise<any>,
 }
 
-module EditointikontrollitService {
+namespace EditointikontrollitService {
     let _$rootScope, _$q, _$log;
 
     export const init = ($rootScope, $q, $log) => {
@@ -13,63 +13,93 @@ module EditointikontrollitService {
         _$q = $q;
     };
 
-    let _editing: boolean = false;
+    let
+        _editing: boolean = false,
+        _activeCallbacks: any;
     const stop = () => _$q((resolve) => {
         _editing = false;
     });
 
+    const start = (callbacks, isGlobal) => _$q((resolve, reject) => {
+        if (_editing) {
+            return reject();
+        }
+        else if (!callbacks) {
+            return reject();
+        }
+        else {
+            _editing = true;
+            _activeCallbacks = callbacks;
+            _$rootScope.$broadcast("editointikontrollit:disable");
+            if (isGlobal) {
+                _$rootScope.$broadcast("editointikontrollit:start");
+            }
+            return callbacks.start().then(resolve).catch(reject);
+        }
+    });
 
-    export const create = (callbacks: IEditointikontrollitCallbacks) => {
-        const cleanup = () => _$q((resolve) => {
-            stop();
-            callbacks = undefined;
-        });
+    export const save = (kommentti?) => _$q((resolve, reject) => {
+        return _activeCallbacks.save(kommentti).then(() => {
+            _editing = false;
+            _$rootScope.$broadcast("editointikontrollit:enable");
+            _$rootScope.$broadcast("editointikontrollit:cancel");
+            resolve();
+        })
+        .catch(reject);
+    });
 
+    export const cancel = () => _$q((resolve, reject) => {
+        return _activeCallbacks.cancel().then(() => {
+            _editing = false;
+            _$rootScope.$broadcast("editointikontrollit:enable");
+            _$rootScope.$broadcast("editointikontrollit:cancel");
+            resolve();
+        })
+        .catch(reject);
+    });
 
-        return {
-            start: () => _$q((resolve, reject) => {
-                if (_editing) {
-                    _$log.warn("Already editing");
-                    return reject();
-                }
-                else if (!callbacks) {
-                    _$log.error("Callbacks not provided");
-                    return reject();
-                }
-                else {
-                    console.log("Enabling directive");
-                    _editing = true;
-                    _$rootScope.$broadcast("editointikontrollit:start");
-                    return callbacks.start().then(resolve).catch(reject);
-                }
-            }),
-            save: (kommentti?) => _$q((resolve, reject) => {
-                return callbacks.save(kommentti).then(() => {
-                    _editing = false;
-                    _$rootScope.$broadcast("editointikontrollit:save");
-                    resolve();
-                })
-                .catch(reject);
-            }),
-            cancel: () => _$q((resolve, reject) => {
-                return callbacks.cancel().then(() => {
-                    _editing = false;
-                    _$rootScope.$broadcast("editointikontrollit:cancel");
-                    resolve();
-                })
-                .catch(reject);
-            }),
-            isEnabled: () => !!callbacks,
-            isEditing: () => _editing
-        };
-    };
+    export const isEnabled = () => !!_activeCallbacks;
+    export const isEditing = () => _editing;
+    export const create = (callbacks: IEditointikontrollitCallbacks) => _.partial(start, callbacks, true);
+    export const createLocal = (callbacks: IEditointikontrollitCallbacks) => _.partial(start, callbacks, false);
 }
 
 module EditointikontrollitImpl {
+    export const controller = ($scope, $rootScope, $timeout) => {
+        $scope.kommentti = "";
+
+        // TODO: Enable
+        // $scope.$on("$stateChangeStart", () => {
+        //     Editointikontrollit.unregisterCallback();
+        //     setEditControls();
+        // });
+
+        $scope.$on("editointikontrollitRefresh", $scope.updatePosition);
+
+        $scope.$on("editointikontrollit:start", () => {
+            $scope.editStarted = true;
+            $scope.setMargins();
+            $scope.kommentti = "";
+            $timeout($scope.updatePosition);
+        });
+
+        $scope.$on("editointikontrollit:cancel", () => {
+            $scope.editStarted = false;
+            $scope.setMargins();
+        });
+
+        $scope.save = () => {
+            EditointikontrollitService.save($scope.kommentti);
+        };
+
+        $scope.cancel = EditointikontrollitService.cancel;
+    };
+
     export const directive = ($window) => {
         return {
             templateUrl: "components/editointikontrollit/editointikontrollit.jade",
             restrict: "E",
+            controller: controller,
             link: (scope: any) => {
                 let window = angular.element($window),
                 container = angular.element(".edit-controls"),
@@ -109,69 +139,17 @@ module EditointikontrollitImpl {
             }
         };
     };
-
-    export const controller = ($scope, $rootScope, Editointikontrollit, $timeout) => {
-        $scope.kommentti = "";
-        $scope.hideControls = true;
-
-        function setEditControls() {
-            if (Editointikontrollit.editingEnabled()) {
-                $scope.hideControls = false;
-            }
-            else {
-                $scope.hideControls = true;
-                $scope.editStarted = false;
-            }
-        }
-
-        setEditControls();
-
-        $scope.$on("$stateChangeStart", () => {
-            Editointikontrollit.unregisterCallback();
-            setEditControls();
-        });
-
-        Editointikontrollit.registerCallbackListener(setEditControls);
-
-        $scope.$on("editointikontrollitRefresh", () => {
-            $scope.updatePosition();
-        });
-
-        $scope.$on("enableEditing", () => {
-            $scope.editStarted = true;
-            $scope.setMargins();
-            $scope.kommentti = "";
-            $timeout(() => {
-                $scope.updatePosition();
-            });
-        });
-        $scope.$on("disableEditing", () => {
-            $scope.editStarted = false;
-            $scope.setMargins();
-        });
-
-        $scope.start = () => {
-            Editointikontrollit.startEditing();
-        };
-        $scope.save = () => {
-            Editointikontrollit.saveEditing($scope.kommentti);
-        };
-        $scope.cancel = () => {
-            Editointikontrollit.cancelEditing();
-        };
-    };
 }
 
 angular.module("app")
 .run(($injector) => $injector.invoke(EditointikontrollitService.init))
 // .factory("Editointikontrollit", EditointikontrollitImpl.service)
 .directive("editointikontrollit", EditointikontrollitImpl.directive)
-.controller("EditointiController", EditointikontrollitImpl.controller)
+// .controller("editointicontroller", EditointikontrollitImpl.controller)
 .directive("ekbutton", () => ({
     restrict: "A",
     link: (scope, el, attr) => {
-        scope.$on("editointikontrollit:start", () => el.attr('disabled', ''));
-        scope.$on("editointikontrollit:cancel", () => el.removeAttr('disabled'));
-        scope.$on("editointikontrollit:stop", () => el.removeAttr('disabled'));
+        scope.$on("editointikontrollit:disable", () => el.attr('disabled', ''));
+        scope.$on("editointikontrollit:enable", () => el.removeAttr('disabled'));
     }
 }));

@@ -11,52 +11,45 @@ angular.module("app")
         },
         "editointikontrollit_local": {
             controller: ($scope, $q, $timeout) => {
-                let ek = EditointikontrollitService.create({
+                $scope.edit = EditointikontrollitService.createLocal({
                     start: () => $q((resolve, reject) => $timeout(() => {
-                        console.log("starting editing");
                         $scope.isEditing = true;
                         resolve();
                     }, 1000)),
                     save: () => $q((resolve, reject) => $timeout(() => {
-                        console.log("saving");
+                        console.log("save local");
                         $scope.isEditing = false;
                         resolve();
                     }, 1000)),
                     cancel: () => $q((resolve, reject) => $timeout(() => {
-                        console.log("cancelling editing");
+                        console.log("cancel local");
                         $scope.isEditing = false;
                         resolve();
                     }, 1000)),
                 });
 
-                $scope.edit = ek.start;
-                $scope.save = ek.save;
-                $scope.cancel = ek.cancel;
+                $scope.cancel = EditointikontrollitService.cancel;
+                $scope.save = EditointikontrollitService.save;
             }
         },
         "editointikontrollit_global": {
             controller: ($scope, $q, $timeout) => {
-                let ek = EditointikontrollitService.create({
+                $scope.edit = EditointikontrollitService.create({
                     start: () => $q((resolve, reject) => $timeout(() => {
-                        console.log("starting editing");
                         $scope.isEditing = true;
                         resolve();
                     }, 1000)),
                     save: () => $q((resolve, reject) => $timeout(() => {
-                        console.log("saving");
+                        console.log("save global");
                         $scope.isEditing = false;
                         resolve();
                     }, 1000)),
                     cancel: () => $q((resolve, reject) => $timeout(() => {
-                        console.log("cancelling editing");
+                        console.log("cancel global");
                         $scope.isEditing = false;
                         resolve();
                     }, 1000)),
                 });
-
-                $scope.edit = ek.start;
-                $scope.save = ek.save;
-                $scope.cancel = ek.cancel;
             }
         }
     }
