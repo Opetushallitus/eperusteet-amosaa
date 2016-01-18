@@ -1,5 +1,6 @@
+// Todo: add kaanna service
 span.ohje
-  span.popover-element(popover-title="{{title || 'ohje' |kaanna}}", uib-popover="{{textObject|kaanna}}",
+  span.popover-element(popover-title="{{otsikko || 'ohje'}}", uib-popover="{{teksti}}",
     popover-placement="{{suunta || 'top'}}", popover-trigger="mouseenter", popover-animation="true",
-    ng-class="{open: isOpen, badge: ohje !== 'false'}", ng-click="{isOpen = !isOpen}")
+    ng-class="{open: isOpen, badge: ohje !== 'false'}", ng-click="{isOpen:!isOpen}")
     span ?

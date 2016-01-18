@@ -10,50 +10,44 @@ angular.module("app")
         },
         "editointikontrollit_local": {
             controller: function ($scope, $q, $timeout) {
-                var ek = EditointikontrollitService.create({
+                $scope.edit = EditointikontrollitService.createLocal({
                     start: function () { return $q(function (resolve, reject) { return $timeout(function () {
-                        console.log("starting editing");
                         $scope.isEditing = true;
                         resolve();
                     }, 1000); }); },
                     save: function () { return $q(function (resolve, reject) { return $timeout(function () {
-                        console.log("saving");
+                        console.log("save local");
                         $scope.isEditing = false;
                         resolve();
                     }, 1000); }); },
                     cancel: function () { return $q(function (resolve, reject) { return $timeout(function () {
-                        console.log("cancelling editing");
+                        console.log("cancel local");
                         $scope.isEditing = false;
                         resolve();
                     }, 1000); }); }
                 });
-                $scope.edit = ek.start;
-                $scope.save = ek.save;
-                $scope.cancel = ek.cancel;
+                $scope.cancel = EditointikontrollitService.cancel;
+                $scope.save = EditointikontrollitService.save;
             }
         },
         "editointikontrollit_global": {
             controller: function ($scope, $q, $timeout) {
-                var ek = EditointikontrollitService.create({
+                $scope.edit = EditointikontrollitService.create({
                     start: function () { return $q(function (resolve, reject) { return $timeout(function () {
-                        console.log("starting editing");
                         $scope.isEditing = true;
                         resolve();
                     }, 1000); }); },
                     save: function () { return $q(function (resolve, reject) { return $timeout(function () {
-                        console.log("saving");
+                        console.log("save global");
                         $scope.isEditing = false;
                         resolve();
                     }, 1000); }); },
                     cancel: function () { return $q(function (resolve, reject) { return $timeout(function () {
-                        console.log("cancelling editing");
+                        console.log("cancel global");
                         $scope.isEditing = false;
                         resolve();
                     }, 1000); }); }
                 });
-                $scope.edit = ek.start;
-                $scope.save = ek.save;
-                $scope.cancel = ek.cancel;
             }
         }
     }

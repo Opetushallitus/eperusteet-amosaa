@@ -18,7 +18,7 @@ var Ohje;
 (function (Ohje) {
     Ohje.directive = function () {
         return {
-            templateUrl: "components/ohje/ohje",
+            templateUrl: "components/ohje/ohje.jade",
             restrict: "AE",
             scope: {
                 teksti: '@',

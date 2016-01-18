@@ -20,7 +20,7 @@ module Ohje {
 
     export const directive = () => {
         return {
-            templateUrl: "components/ohje/ohje",
+            templateUrl: "components/ohje/ohje.jade",
             restrict: "AE",
             scope: {
                 teksti: '@',
