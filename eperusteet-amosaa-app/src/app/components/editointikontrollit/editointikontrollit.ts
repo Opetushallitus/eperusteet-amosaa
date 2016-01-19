@@ -38,6 +38,7 @@ namespace EditointikontrollitService {
     });
 
     export const save = (kommentti?) => _$q((resolve, reject) => {
+        _$rootScope.$broadcast("editointikontrollit:saving");
         return _activeCallbacks.save(kommentti).then(() => {
             _editing = false;
             _$rootScope.$broadcast("editointikontrollit:enable");
@@ -47,6 +48,7 @@ namespace EditointikontrollitService {
         .catch(reject);
     });
     export const cancel = () => _$q((resolve, reject) => {
+        _$rootScope.$broadcast("editointikontrollit:canceling");
         return _activeCallbacks.cancel().then(() => {
             _editing = false;
             _$rootScope.$broadcast("editointikontrollit:enable");
@@ -64,9 +66,14 @@ namespace EditointikontrollitService {
 module EditointikontrollitImpl {
     export const controller = ($scope, $rootScope, $timeout) => {
         $scope.kommentti = "";
+        $scope.disableButtons = false;
+
+        const progress = (promise) => {
+            $scope.disableButtons = true;
+            promise.finally(() => $scope.disableButtons = false);
+        };
 
         // $scope.$on("$stateChangeStart", () => {
-        //     console.log("moro");
         //     // Editointikontrollit.unregisterCallback();
         //     // setEditControls();
         // });
@@ -82,14 +89,12 @@ module EditointikontrollitImpl {
 
         $scope.$on("editointikontrollit:cancel", () => {
             $scope.editStarted = false;
+            $scope.disableButtons = false;
             $scope.setMargins();
         });
 
-        $scope.save = () => {
-            EditointikontrollitService.save($scope.kommentti);
-        };
-
-        $scope.cancel = EditointikontrollitService.cancel;
+        $scope.save = () => progress(EditointikontrollitService.save($scope.kommentti));
+        $scope.cancel = () => progress(EditointikontrollitService.cancel());
     };
 
     export const directive = ($window) => {
@@ -140,9 +145,7 @@ module EditointikontrollitImpl {
 
 angular.module("app")
 .run(($injector) => $injector.invoke(EditointikontrollitService.init))
-// .factory("Editointikontrollit", EditointikontrollitImpl.service)
 .directive("editointikontrollit", EditointikontrollitImpl.directive)
-// .controller("editointicontroller", EditointikontrollitImpl.controller)
 .directive("ekbutton", () => ({
     restrict: "A",
     link: (scope, el, attr) => {
@@ -150,3 +153,5 @@ angular.module("app")
         scope.$on("editointikontrollit:enable", () => el.removeAttr("disabled"));
     }
 }));
+// .factory("Editointikontrollit", EditointikontrollitImpl.service)
+// .controller("editointicontroller", EditointikontrollitImpl.controller)

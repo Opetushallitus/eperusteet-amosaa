@@ -13,7 +13,6 @@ angular.module("app")
             controller: ($scope) => {
                 $scope.data = "Main controller data";
             },
-
         },
         "ylanavi": {
             controller: ($scope) => {

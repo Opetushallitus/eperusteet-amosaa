@@ -5,5 +5,5 @@ div.edit-controls(ng-cloak ng-hide="hideControls || !editStarted")
       span.glyphicon.glyphicon-pencil
       span(ng-bind="'muokattavana'")
     div.edit-control-buttons
-      button.btn.btn-default(ng-click="cancel()" ng-bind="'peruuta'")
-      button.btn.btn-primary(ng-click="save()" ng-bind="'tallenna'")
+      button.btn.btn-default(ng-disabled="disableButtons", ng-click="cancel()", ng-bind="'peruuta'")
+      button.btn.btn-primary(ng-disabled="disableButtons", ng-click="save()", ng-bind="'tallenna'")

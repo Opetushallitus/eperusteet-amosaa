@@ -9,6 +9,15 @@ angular.module("app")
             controller: ($scope) => {
             }
         },
+        "kaanna": {
+            controller: ($scope) => {
+                $scope.obj = {
+                    fi: "Hei",
+                    en: "Hello"
+                };
+                $scope.objFi = KaannaService.kaanna($scope.obj);
+            }
+        },
         "editointikontrollit_local": {
             controller: ($scope, $q, $timeout) => {
                 $scope.edit = EditointikontrollitService.createLocal({
@@ -35,20 +44,9 @@ angular.module("app")
         "editointikontrollit_global": {
             controller: ($scope, $q, $timeout) => {
                 $scope.edit = EditointikontrollitService.create({
-                    start: () => $q((resolve, reject) => $timeout(() => {
-                        $scope.isEditing = true;
-                        resolve();
-                    }, 1000)),
-                    save: () => $q((resolve, reject) => $timeout(() => {
-                        console.log("save global");
-                        $scope.isEditing = false;
-                        resolve();
-                    }, 1000)),
-                    cancel: () => $q((resolve, reject) => $timeout(() => {
-                        console.log("cancel global");
-                        $scope.isEditing = false;
-                        resolve();
-                    }, 1000)),
+                    start: () => $q((resolve, reject) => $timeout(resolve, 1000)),
+                    save: () => $q((resolve, reject) => $timeout(resolve, 1000)),
+                    cancel: () => $q((resolve, reject) => $timeout(resolve, 1000)),
                 });
             }
         }
