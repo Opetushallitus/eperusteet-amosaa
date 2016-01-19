@@ -13,6 +13,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * European Union Public Licence for more details.
  */
+<<<<<<< 6600c7bd757c6d2715b5d2302ce5c6e82ca2180e:eperusteet-amosaa-service/src/main/java/fi/vm/sade/eperusteet/amosaa/dto/ops/TermiDto.java
 package fi.vm.sade.eperusteet.amosaa.dto.ops;
 
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
@@ -27,3 +28,29 @@ public class TermiDto {
     private LokalisoituTekstiDto termi;
     private LokalisoituTekstiDto selitys;
 }
+=======
+'use strict';
+var Ohje;
+(function (Ohje) {
+    Ohje.directive = function () {
+        return {
+            templateUrl: "components/ohje/ohje.jade",
+            restrict: "AE",
+            scope: {
+                teksti: "@",
+                otsikko: "@?",
+                suunta: "@?",
+                ohje: "@?"
+            },
+            controller: "OhjeController"
+        };
+    };
+    Ohje.controller = function ($scope) {
+        $scope.isOpen = false;
+    };
+})(Ohje || (Ohje = {}));
+angular.module("app")
+    .directive("ohje", Ohje.directive)
+    .controller("OhjeController", Ohje.controller);
+//# sourceMappingURL=ohje.js.map
+>>>>>>> added angular-spinner:eperusteet-amosaa-app/src/app/components/ohje/ohje.js

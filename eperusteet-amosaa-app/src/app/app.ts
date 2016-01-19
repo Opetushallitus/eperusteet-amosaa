@@ -1,7 +1,13 @@
 angular.module("app", [
     "ui.router",
     "restangular",
+<<<<<<< 932cd549116b2f29fc10b76972162ff3724b07ac
     "pascalprecht.translate"
+=======
+    "ngAnimate",
+    "ui.bootstrap",
+    "angularSpinner"
+>>>>>>> merge master deletions
 ])
 
 // Route configuration

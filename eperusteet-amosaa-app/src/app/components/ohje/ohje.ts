@@ -23,12 +23,12 @@ module Ohje {
             templateUrl: "components/ohje/ohje.jade",
             restrict: "AE",
             scope: {
-                teksti: '@',
-                otsikko: '@?',
-                suunta: '@?',
-                ohje: '@?'
+                teksti: "@",
+                otsikko: "@?",
+                suunta: "@?",
+                ohje: "@?"
             },
-            controller: 'OhjeController'
+            controller: "OhjeController"
         }
     };
 
