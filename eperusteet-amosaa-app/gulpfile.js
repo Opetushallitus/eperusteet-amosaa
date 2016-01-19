@@ -7,6 +7,7 @@ var
     preprocess    = require('gulp-preprocess'),
     gulp          = require('gulp'),
     jade          = require('gulp-jade'),
+    merge         = require('merge-stream'),
     proxy         = require('proxy-middleware'),
     sass          = require('gulp-sass'),
     shell         = require('gulp-shell'),
@@ -62,8 +63,10 @@ gulp
     .pipe(gulp.dest(config.build));
 })
 .task('sass', function() {
-    return gulp.src([config.app + 'styles/styles.scss'])
-        .pipe(sass().on('error', sass.logError))
+    return merge(
+        gulp.src(config.styles),
+            gulp.src([config.app + 'styles/styles.scss'])
+            .pipe(sass().on('error', sass.logError)))
         .pipe(concat('styles.css'))
         .pipe(autoprefixer({
             browser: ['last 1 version'],

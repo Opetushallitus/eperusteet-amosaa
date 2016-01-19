@@ -2,12 +2,19 @@ angular.module("app", [
     "ui.router",
     "restangular"
 ])
+
+// Route configuration
 .config(($stateProvider, $urlRouterProvider, $urlMatcherFactoryProvider, $sceProvider) => {
     $sceProvider.enabled(true);
     $urlRouterProvider.when("", "/fi");
     $urlRouterProvider.when("/", "/fi");
     $urlMatcherFactoryProvider.strictMode(false); // Trailing slash ignored
 })
+
+// Translation configuration
+// .config(($translateProvider) => {
+//
+// })
 
 // Generate template or templateUrl automatically for states when not defined
 // Defaults to <state path>/view.jade or <ui-view></ui-view> depending on abstract
@@ -64,6 +71,7 @@ angular.module("app", [
             .value();
     });
 })
+
 .run(($rootScope, $log, $urlMatcherFactory) => {
     $rootScope.$on("$stateChangeError", (event, toState, toParams, fromState, fromParams, error) => {
         console.log("fail");
