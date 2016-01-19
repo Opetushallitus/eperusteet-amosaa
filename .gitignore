@@ -6,3 +6,5 @@
 /eperusteet-amosaa-app/node_modules
 target/**
 **/target/**
+**/*.js
+**/*.map
