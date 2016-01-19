@@ -16,9 +16,8 @@ namespace EditointikontrollitService {
     let
         _editing: boolean = false,
         _activeCallbacks: any;
-    const stop = () => _$q((resolve) => {
-        _editing = false;
-    });
+
+    const stop = () => _$q((resolve) => { _editing = false; });
 
     const start = (callbacks, isGlobal) => _$q((resolve, reject) => {
         if (_editing) {
@@ -47,7 +46,6 @@ namespace EditointikontrollitService {
         })
         .catch(reject);
     });
-
     export const cancel = () => _$q((resolve, reject) => {
         return _activeCallbacks.cancel().then(() => {
             _editing = false;
@@ -57,7 +55,6 @@ namespace EditointikontrollitService {
         })
         .catch(reject);
     });
-
     export const isEnabled = () => !!_activeCallbacks;
     export const isEditing = () => _editing;
     export const create = (callbacks: IEditointikontrollitCallbacks) => _.partial(start, callbacks, true);
@@ -68,10 +65,10 @@ module EditointikontrollitImpl {
     export const controller = ($scope, $rootScope, $timeout) => {
         $scope.kommentti = "";
 
-        // TODO: Enable
         // $scope.$on("$stateChangeStart", () => {
-        //     Editointikontrollit.unregisterCallback();
-        //     setEditControls();
+        //     console.log("moro");
+        //     // Editointikontrollit.unregisterCallback();
+        //     // setEditControls();
         // });
 
         $scope.$on("editointikontrollitRefresh", $scope.updatePosition);
@@ -149,7 +146,7 @@ angular.module("app")
 .directive("ekbutton", () => ({
     restrict: "A",
     link: (scope, el, attr) => {
-        scope.$on("editointikontrollit:disable", () => el.attr('disabled', ''));
-        scope.$on("editointikontrollit:enable", () => el.removeAttr('disabled'));
+        scope.$on("editointikontrollit:disable", () => el.attr("disabled", ""));
+        scope.$on("editointikontrollit:enable", () => el.removeAttr("disabled"));
     }
 }));
