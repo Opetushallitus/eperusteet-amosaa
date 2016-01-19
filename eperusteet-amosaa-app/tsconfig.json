@@ -8,8 +8,6 @@
     "typings/tsd.d.ts",
     "src/app/globals.ts",
     "src/app/components/editointikontrollit/editointikontrollit.ts",
-    "src/app/components/ohje/ohje.ts",
-    "src/app/components/spinner/spinner.ts",
     "src/app/app.ts",
     "src/app/states/state.ts",
     "src/app/states/sandbox/state.ts",

@@ -40,7 +40,3 @@ module Ohje {
 angular.module("app")
     .directive("ohje", Ohje.directive)
     .controller("OhjeController", Ohje.controller);
-
-
-
-

@@ -1,8 +1,6 @@
 angular.module("app", [
     "ui.router",
-    "restangular",
-    "ngAnimate",
-    "ui.bootstrap"
+    "restangular"
 ])
 .config(($stateProvider, $urlRouterProvider, $urlMatcherFactoryProvider, $sceProvider) => {
     $sceProvider.enabled(true);
