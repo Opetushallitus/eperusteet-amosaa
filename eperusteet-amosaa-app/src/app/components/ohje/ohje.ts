@@ -14,8 +14,6 @@
  * European Union Public Licence for more details.
  */
 
-'use strict';
-
 module Ohje {
 
     export const directive = () => {
@@ -35,6 +33,7 @@ module Ohje {
     export const controller = ($scope:any) => {
         $scope.isOpen = false;
     }
+
 }
 
 angular.module("app")

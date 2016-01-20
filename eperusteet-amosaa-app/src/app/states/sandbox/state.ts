@@ -6,12 +6,12 @@ angular.module("app")
     },
     views: {
         "": {
-            controller: ($scope) => {
+            controller: () => {
             }
         },
         "loading_bar": {
             controller: function ($scope, cfpLoadingBar, TestApi) {
-                TestApi.all('users').getList()
+                TestApi.all("users").getList()
                   .then(function(res) {
                       $scope.users = res;
                   });
