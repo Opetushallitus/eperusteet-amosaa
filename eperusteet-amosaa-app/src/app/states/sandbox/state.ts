@@ -10,7 +10,11 @@ angular.module("app")
             }
         },
         "loading_bar": {
-            controller: function ($scope, cfpLoadingBar) {
+            controller: function ($scope, cfpLoadingBar, TestApi) {
+                TestApi.all('users').getList()
+                  .then(function(res) {
+                      $scope.users = res;
+                  });
                 $scope.startLoading = function () {
                     cfpLoadingBar.start();
                 };

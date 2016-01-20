@@ -76,6 +76,7 @@ angular.module("app", [
 
 .config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
     cfpLoadingBarProvider.includeSpinner = false;
+    cfpLoadingBarProvider.latencyThreshold = 0;
 }])
 
 .run(($rootScope, $log, $urlMatcherFactory) => {
