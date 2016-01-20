@@ -8,7 +8,9 @@ $icon-font-path: "bootstrap/fonts/";
 
 @import "generic/_lists.scss";
 
+@import "modules/_loading_bar.scss";
 @import "modules/_main.scss";
 @import "modules/_ylanavi.scss";
 @import "modules/_koulutustoimija.scss";
 @import "modules/_editointikontrollit.scss";
+@import "modules/_koulutustoimija.scss";

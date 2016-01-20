@@ -14,8 +14,6 @@
  * European Union Public Licence for more details.
  */
 
-'use strict';
-
 module Ohje {
 
     export const directive = () => {
@@ -23,18 +21,19 @@ module Ohje {
             templateUrl: "components/ohje/ohje.jade",
             restrict: "AE",
             scope: {
-                teksti: '@',
-                otsikko: '@?',
-                suunta: '@?',
-                ohje: '@?'
+                teksti: "@",
+                otsikko: "@?",
+                suunta: "@?",
+                ohje: "@?"
             },
-            controller: 'OhjeController'
+            controller: "OhjeController"
         }
     };
 
     export const controller = ($scope:any) => {
         $scope.isOpen = false;
     }
+
 }
 
 angular.module("app")
