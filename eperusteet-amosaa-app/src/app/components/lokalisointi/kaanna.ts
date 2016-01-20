@@ -61,20 +61,17 @@ angular.module("app")
         return postfix;
     }
 
-    const getAttr = (attr: any, scope: any) => {
-        if (!_.isString(attr) || _.size(attr) === 0) {
-            return;
-        }
-        return scope.$eval(attr) || attr;
-    }
+    const getAttr = (attr, scope) => _.isString(attr)
+        && !_.isEmpty(attr)
+        && (scope.$eval(attr) || attr);
 
     return {
         restrict: "A",
-        link: (scope: any, el: any, attrs: any) => {
+        link: (scope, el, attrs) => {
             const kaannaValue = (value) => _.isObject(value)
                 ? KaannaService.kaannaSisalto(value)
                 : KaannaService.kaanna(value);
-            const original = getAttr(attrs.kaanna, scope) || el.text();
+            const original = getAttr(attrs["kaanna"], scope) || el.text();
             const postfix = resolvePostfix(attrs);
 
             if (_.isObject(original)) {
@@ -83,22 +80,22 @@ angular.module("app")
                 //     IconMapping.addIcon(attrs.iconRole, el);
                 // }
                 scope.$watch(() => {
-                    return getAttr(attrs.kaanna, scope);
+                    return getAttr(attrs["kaanna"], scope);
                 }, (value) => {
                     el.text(kaannaValue(value));
                 });
                 scope.$on("changed:sisaltokieli", () => {
-                    el.text(kaannaValue(getAttr(attrs.kaanna, scope)));
+                    el.text(kaannaValue(getAttr(attrs["kaanna"], scope)));
                 });
             }
             else {
                 const textEl = angular.element("<span>").attr("translate", original);
-                if (attrs.kaannaValues) {
-                    textEl.attr("translate-values", attrs.kaannaValues);
+                if (attrs["kaannaValues"]) {
+                    textEl.attr("translate-values", attrs["kaannaValues"]);
                 }
                 el.html("").append(textEl).append(postfix);
-                if (attrs.iconRole) {
-                    const iconEl = angular.element("<span>").attr("icon-role", attrs.iconRole);
+                if (attrs["iconRole"]) {
+                    const iconEl = angular.element("<span>").attr("icon-role", attrs["iconRole"]);
                     el.removeAttr("icon-role");
                     el.prepend(iconEl);
                 }

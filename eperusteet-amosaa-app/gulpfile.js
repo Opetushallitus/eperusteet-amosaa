@@ -56,7 +56,19 @@ gulp
         .pipe(gulp.dest(config.build))
         .pipe(connect.reload());
 })
-.task('static', function() {
+.task('locales', function() {
+    return gulp.src([
+        './src/localisation/**'
+    ])
+    .pipe(gulp.dest(config.build + '/localisation'));
+})
+.task('images', function() {
+    return gulp.src([
+        './src/images/**',
+    ])
+    .pipe(gulp.dest(config.build + '/images'));
+})
+.task('static', ['locales', 'images'], function() {
     return gulp.src([
         './node_modules/bootstrap-sass/assets/fonts/*'
     ])
