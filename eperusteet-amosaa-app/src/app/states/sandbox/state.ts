@@ -9,6 +9,19 @@ angular.module("app")
             controller: ($scope) => {
             }
         },
+        "loading_bar": {
+            controller: function ($scope, cfpLoadingBar) {
+                $scope.startLoading = function () {
+                    cfpLoadingBar.start();
+                };
+                $scope.jumpAhead = function () {
+                    cfpLoadingBar.inc(30);
+                };
+                $scope.stopLoading = function () {
+                    cfpLoadingBar.complete();
+                };
+            }
+        },
         "kaanna": {
             controller: ($scope) => {
                 $scope.obj = {

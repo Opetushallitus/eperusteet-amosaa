@@ -12,6 +12,7 @@
     "src/app/components/lokalisointi/kaanna.ts",
     "src/app/components/lokalisointi/kieli.ts",
     "src/app/components/ckeditor/ckeditor.ts",
+    "src/app/components/ohje/ohje.ts",
     "src/app/app.ts",
     "src/app/states/state.ts",
     "src/app/states/sandbox/state.ts",
