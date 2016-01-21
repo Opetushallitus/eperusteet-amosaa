@@ -145,6 +145,6 @@ gulp
 .task('watch', ['connect', 'build'], function() {
     gulp.watch(config.app + '**/*.ts', ['compile']);
     gulp.watch(config.app + '**/*.jade', ['templates']);
-    gulp.watch(config.app + 'styles/**/*.scss', ['sass']);
+    gulp.watch(config.app + '**/*.scss', ['sass']);
 })
 .task('default', ['watch']);

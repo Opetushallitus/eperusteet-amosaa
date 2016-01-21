@@ -10,6 +10,7 @@
     "angular-cache": "4.4.2",
     "angular-elastic": "2.5.0",
     "angular-i18n": "1.4.8",
+    "angular-loading-bar": "^0.8.0",
     "angular-resource": "1.4.7",
     "angular-route": "1.4.8",
     "angular-sanitize": "1.4.8",
