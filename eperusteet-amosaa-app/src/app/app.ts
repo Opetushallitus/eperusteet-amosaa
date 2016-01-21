@@ -4,6 +4,7 @@ angular.module("app", [
     "pascalprecht.translate"
 ])
 
+
 // Route configuration
 .config(($stateProvider, $urlRouterProvider, $translateProvider, $urlMatcherFactoryProvider, $sceProvider) => {
     $sceProvider.enabled(true);
