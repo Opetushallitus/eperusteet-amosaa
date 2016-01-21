@@ -6,7 +6,24 @@ angular.module("app")
     },
     views: {
         "": {
-            controller: ($scope) => {
+            controller: () => {
+            }
+        },
+        "loading_bar": {
+            controller: function ($scope, cfpLoadingBar, TestApi) {
+                TestApi.all("users").getList()
+                  .then((res) => {
+                      $scope.users = res;
+                  });
+                $scope.startLoading = () => {
+                    cfpLoadingBar.start();
+                };
+                $scope.jumpAhead = () => {
+                    cfpLoadingBar.inc(30);
+                };
+                $scope.stopLoading = () => {
+                    cfpLoadingBar.complete();
+                };
             }
         },
         "kaanna": {

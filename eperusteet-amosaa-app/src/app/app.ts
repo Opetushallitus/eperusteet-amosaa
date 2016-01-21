@@ -1,7 +1,11 @@
 angular.module("app", [
     "ui.router",
     "restangular",
-    "pascalprecht.translate"
+    "pascalprecht.translate",
+    "ngAnimate",
+    "ui.bootstrap",
+    "angularSpinner",
+    "angular-loading-bar"
 ])
 
 
@@ -70,6 +74,11 @@ angular.module("app", [
             .value();
     });
 })
+
+.config(["cfpLoadingBarProvider", function(cfpLoadingBarProvider) {
+    cfpLoadingBarProvider.includeSpinner = false;
+    cfpLoadingBarProvider.latencyThreshold = 0;
+}])
 
 .run(($rootScope, $log, $urlMatcherFactory) => {
     $rootScope.$on("$stateChangeError", (event, toState, toParams, fromState, fromParams, error) => {
