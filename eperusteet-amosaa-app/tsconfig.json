@@ -21,6 +21,7 @@
     "src/app/data/amosaa.ts",
     "src/app/data/eperusteet.ts",
     "src/app/data/misc.ts",
+    "src/app/data/testApi.ts",
     "src/app/logic/kayttajatiedot.ts",
     "src/app/logic/opetussuunnitelmat.ts",
     "src/app/logic/lmixins.ts",

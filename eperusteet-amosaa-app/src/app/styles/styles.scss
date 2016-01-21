@@ -4,6 +4,7 @@ $icon-font-path: "bootstrap/fonts/";
 @import "../../../node_modules/bootstrap-sass/assets/stylesheets/_bootstrap-sprockets.scss";
 @import "../../../node_modules/bootstrap-sass/assets/stylesheets/_bootstrap.scss";
 
+
 @import "vendor/_virkailija.scss";
 
 @import "generic/_lists.scss";
@@ -12,3 +13,7 @@ $icon-font-path: "bootstrap/fonts/";
 @import "modules/_ylanavi.scss";
 @import "modules/_koulutustoimija.scss";
 @import "modules/_editointikontrollit.scss";
+@import "modules/_koulutustoimija.scss";
+
+@import "../components/ohje/_ohje.scss";
+@import "../components/loadingbar/_loading_bar.scss";

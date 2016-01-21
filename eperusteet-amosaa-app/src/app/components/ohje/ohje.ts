@@ -14,8 +14,6 @@
  * European Union Public Licence for more details.
  */
 
-'use strict';
-
 module Ohje {
 
     export const directive = () => {
@@ -28,15 +26,15 @@ module Ohje {
                 suunta: "@?",
                 ohje: "@?"
             },
-            controller: "OhjeController"
+            controller: Ohje.controller
         }
     };
 
-    export const controller = ($scope:any) => {
+    export const controller = ($scope) => {
         $scope.isOpen = false;
     }
+
 }
 
 angular.module("app")
     .directive("ohje", Ohje.directive)
-    .controller("OhjeController", Ohje.controller);
