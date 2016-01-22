@@ -38,6 +38,14 @@ function createProxy(from, to) {
     return proxy(pOpt);
 }
 
+var testReporter = function (output, file) {
+    console.log("Found " + output.length + " errors in " + file.path);
+
+    _.forEach(output, function(error) {
+        console.log("    " + error.failure + " [" + error.endPosition.line + ", " + error.endPosition.character + "]");
+    });
+};
+
 gulp
 .task('templatepacker', function() {
     return gulp.src([config.app + 'components/**/*.jade', config.app + 'views/**/*.jade', config.app + 'states/**/*.jade'])
@@ -117,7 +125,7 @@ gulp
 .task('compile', function() {
     return gulp.src(sources)
         .pipe(tslint({ configuration: tslint_config }))
-        .pipe(tslint.report('prose', {
+        .pipe(tslint.report(testReporter, {
             emitError: false,
             summarizeFailureOutput: true
         }))

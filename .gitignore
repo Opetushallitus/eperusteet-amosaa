@@ -1,3 +1,4 @@
+.idea
 /eperusteet-amosaa-service/target/
 /eperusteet-amosaa-app/build
 /eperusteet-amosaa-app/typings
@@ -10,3 +11,4 @@ target/**
 
 *.iml
 .idea/
+
