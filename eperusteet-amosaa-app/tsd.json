@@ -6,10 +6,10 @@
   "bundle": "typings/tsd.d.ts",
   "installed": {
     "angularjs/angular.d.ts": {
-      "commit": "78ba6e41543e5ababbd1dda19797601be3c1f304"
+      "commit": "3a666d1bff92e944488c25599ec56a4937c17c4e"
     },
     "jquery/jquery.d.ts": {
-      "commit": "78ba6e41543e5ababbd1dda19797601be3c1f304"
+      "commit": "3a666d1bff92e944488c25599ec56a4937c17c4e"
     },
     "angular-ui-router/angular-ui-router.d.ts": {
       "commit": "fc341765ebbb04b7109981a25dced01f488f4d94"
@@ -19,6 +19,18 @@
     },
     "lodash/lodash.d.ts": {
       "commit": "78ba6e41543e5ababbd1dda19797601be3c1f304"
+    },
+    "moment/moment.d.ts": {
+      "commit": "93bae1bb4c887c1375a4c1f0c3bb849ff06b8ac6"
+    },
+    "moment/moment-node.d.ts": {
+      "commit": "93bae1bb4c887c1375a4c1f0c3bb849ff06b8ac6"
+    },
+    "angular-loading-bar/angular-loading-bar.d.ts": {
+      "commit": "3a666d1bff92e944488c25599ec56a4937c17c4e"
+    },
+    "angular-spinner/angular-spinner.d.ts": {
+      "commit": "3a666d1bff92e944488c25599ec56a4937c17c4e"
     }
   }
 }

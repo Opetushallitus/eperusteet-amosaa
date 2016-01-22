@@ -1,0 +1,10 @@
+h1 Sandbox
+div(ui-view="editointikontrollit_local")
+div(ui-view="editointikontrollit_global")
+div(ui-view="kaanna")
+h2 Ohje
+ohje(teksti="this is a test", otsikko="test title", suunta="top")
+h2 Spinner
+button.btn.btn-default(ng-click="showSpinner = !showSpinner") Toggle spinner
+div(ng-show="showSpinner", us-spinner)
+div(ui-view="loading_bar")

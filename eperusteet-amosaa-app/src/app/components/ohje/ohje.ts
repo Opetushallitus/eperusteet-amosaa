@@ -14,17 +14,27 @@
  * European Union Public Licence for more details.
  */
 
-package fi.vm.sade.eperusteet.amosaa.dto.ops;
+module Ohje {
 
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
-import lombok.Getter;
-import lombok.Setter;
+    export const directive = () => {
+        return {
+            templateUrl: "components/ohje/ohje.jade",
+            restrict: "AE",
+            scope: {
+                teksti: "@",
+                otsikko: "@?",
+                suunta: "@?",
+                ohje: "@?"
+            },
+            controller: Ohje.controller
+        }
+    };
 
-@Getter
-@Setter
-public class TermiDto {
-    private Long id;
-    private String avain;
-    private LokalisoituTekstiDto termi;
-    private LokalisoituTekstiDto selitys;
+    export const controller = ($scope) => {
+        $scope.isOpen = false;
+    }
+
 }
+
+angular.module("app")
+    .directive("ohje", Ohje.directive)
