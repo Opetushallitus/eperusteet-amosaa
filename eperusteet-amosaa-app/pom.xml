@@ -15,6 +15,38 @@
     </properties>
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>exec-npm-install</id>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <executable>npm</executable>
+                            <arguments>
+                                <argument>install</argument>
+                            </arguments>
+                        </configuration>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>exec-gulp-dist</id>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <executable>gulp</executable>
+                            <arguments>
+                                <argument>dist --no-color</argument>
+                            </arguments>
+                        </configuration>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <!-- <plugin> -->
             <!--     <groupId>com.github.eirslett</groupId> -->
             <!--     <artifactId>frontend&#45;maven&#45;plugin</artifactId> -->
