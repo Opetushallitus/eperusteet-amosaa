@@ -1,5 +1,6 @@
 {
   "app": "src/app/",
+  "test": "test",
   "build": "build/",
   "dist": "target/dist",
   "styles": [],

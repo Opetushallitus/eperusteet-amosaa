@@ -8,5 +8,5 @@ div
           input.form-control(type="text", ng-model="params[param]")
   div(ng-repeat="state in states")
     h4(ng-bind="state.name")
-    a(ng-href="{{ urlify(state) }}", ng-bind="urlify(state)") {{ state.name }}
+    a(ng-href="{{ urlify(state) }}", ng-bind="urlify(state)") {{ state.name }}
     // pre(ng-bind="state | json")

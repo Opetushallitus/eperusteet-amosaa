@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "sourceMap": false
+  },
+  "files": [
+    "typings/tsd.d.ts",
+    "conf.ts",
+    "e2e/routes.ts",
+    "e2e/sandbox.ts"
+  ]
+}

@@ -19,6 +19,9 @@ var
     tslint_config = require('./tslint.json'),
     watch         = require('gulp-watch');
 
+var tests = _.filter(ts_app_config.files, function(file) { return _.startsWith(file, 'test'); });
+var sources = _.reject(ts_app_config.files, function(file) { return _.startsWith(file, 'test'); });
+
 // TODO:
 // Add preprocessing options
 // Dist
@@ -78,7 +81,7 @@ gulp
     return merge(
         gulp.src(config.styles),
             gulp.src([config.app + 'styles/styles.scss'])
-            .pipe(sass().on('error', sass.logError)))
+                .pipe(sass().on('error', sass.logError)))
         .pipe(concat('styles.css'))
         .pipe(autoprefixer({
             browser: ['last 1 version'],
@@ -108,7 +111,7 @@ gulp
 //         .pipe(gulp.dest('tmp/'));
 // })
 .task('compile', function() {
-    return gulp.src(ts_app_config.files)
+    return gulp.src(sources)
         .pipe(tslint({ configuration: tslint_config }))
         .pipe(tslint.report('prose', {
             emitError: false,
