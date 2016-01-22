@@ -1,23 +1,125 @@
-table.boxtable {
-    // background: #ccc;
-    border-collapse: collapse;
-    border-spacing: 10px;
+$boxtable-border-width: 1px;
+$boxtable-border-color: #dcddde;
+$boxtable-first-col-width: 70px;
+$boxtable-row-height: 26px;
+$boxtable-font-size: 14px;
+$boxtable-icon-size: 20px;
+$boxtable-row-gap: 4px;
 
+$boxtable-star-color: #bebfc1;
+
+table.boxtable {
     thead {
+
         tr {
             th {
+                border-width: 0;
+
+                padding-left: 0;
+                padding-right: 0;
+
+                // Remove underlines
+                a {
+                    cursor: pointer;
+                    &:link, &:visited, &:hover, &:active {
+                        text-decoration: none;
+                    }
+                    span {
+                        &:link, &:visited, &:hover, &:active {
+                            text-decoration: none;
+                        }
+                    }
+                }
             }
         }
     }
     tbody {
         tr {
-            border: 0px;
-            div {
-                border: 1px solid black;
-                td {
-                    padding: 15px 0 15px 0;
+            td {
+                border-width: 0;
+
+                padding: 0 0 $boxtable-row-gap 0;
+
+                font-size: $boxtable-font-size;
+                line-height: $boxtable-row-height;
+                vertical-align: middle;
+
+                & > div {
+                    height: $boxtable-row-height + $boxtable-border-width * 2;
+                    border-top: solid $boxtable-border-width $boxtable-border-color;
+                    border-bottom: solid $boxtable-border-width $boxtable-border-color;
+                }
+                // First column
+                &:first-child {
+                    width: $boxtable-first-col-width;
+
+                    & > div {
+                        // State
+                        div:first-child {
+                            background-color: #fcae27;
+                            width: $boxtable-row-height;
+                            height: $boxtable-row-height;
+                            float: left;
+                        }
+                        // Favourite
+                        & > div:nth-child(2) {
+                            text-align: center;
+                            color: #bebfc1;
+                            font-size: $boxtable-icon-size;
+                            vertical-align: middle;
+                            height: $boxtable-row-height;
+                            padding-top: 2px;
+
+                            a {
+                                color: $boxtable-star-color;
+                                &:link, &:visited, &:hover, &:active {
+                                    text-decoration: none;
+                                }
+                                span {
+                                    &:link, &:visited, &:hover, &:active {
+                                        text-decoration: none;
+                                    }
+                                }
+                            }
+                        }
+                        & > div:first-child {
+                            border-left: solid $boxtable-border-width $boxtable-border-color;
+                        }
+                    }
+                }
+                // Last column
+                &:last-child > div {
+                    border-right: solid $boxtable-border-width $boxtable-border-color;
+
+                    & > div:first-child {
+                        float: left;
+                    }
+
+                    & > a {
+                        // Remove underlines
+                        cursor: pointer;
+                        &:link, &:visited, &:hover, &:active,
+                        & > div > span:link, & > div > span:visited,
+                        & > div > span:hover, & > div > span:active {
+                            text-decoration: none;
+                        }
+                        
+                        & > div {
+                            text-align: center;
+                            color: white;
+                            font-size: $boxtable-icon-size;
+                            vertical-align: middle;
+
+                            padding-top: 1px;
+                            background-color: #d1d2d4;
+                            width: $boxtable-row-height;
+                            height: $boxtable-row-height;
+                            float: right;
+                        }
+                    }
                 }
             }
+
         }
     }
 }

@@ -9,6 +9,14 @@ angular.module("app")
             controller: () => {
             }
         },
+        bootstrap: {
+            controller: ($scope) => {
+
+            }
+        },
+        boxtable: {
+            controller: ($scope) => {}
+        },
         loading_bar: {
             controller: function ($scope, cfpLoadingBar, TestApi) {
                 TestApi.all("users").getList()

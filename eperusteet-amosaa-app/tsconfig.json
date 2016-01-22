@@ -16,7 +16,6 @@
     "src/app/app.ts",
     "src/app/states/state.ts",
     "src/app/states/sandbox/state.ts",
-    "src/app/states/sandbox/bootstrap/state.ts",
     "src/app/states/routelist/state.ts",
     "src/app/states/koulutustoimija/state.ts",
     "src/app/data/fakes.ts",
