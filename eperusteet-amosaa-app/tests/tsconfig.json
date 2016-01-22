@@ -1,11 +1,11 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "commonjs",
+    "target": "es6",
     "sourceMap": false
   },
   "files": [
     "typings/tsd.d.ts",
+    "helpers.ts",
     "conf.ts",
     "e2e/routes.ts",
     "e2e/sandbox.ts"
