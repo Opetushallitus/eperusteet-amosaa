@@ -36,7 +36,7 @@
                         <id>exec-gulp-dist</id>
                         <phase>generate-sources</phase>
                         <configuration>
-                            <executable>gulp</executable>
+                            <executable>./node_modules/gulp/bin/gulp.js</executable>
                             <arguments>
                                 <argument>dist</argument>
                                 <argument>--no-color</argument>
