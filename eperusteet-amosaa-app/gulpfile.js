@@ -35,11 +35,23 @@ function createProxy(from, to) {
     return proxy(pOpt);
 }
 
+const testReporter = function (output, file) {
+    console.log("Found " + output.length + " errors in " + file.path);
+
+    _.forEach(output, function(error) {
+        console.log("    " + error.failure + " [" + error.endPosition.line + ", " + error.endPosition.character + "]");
+    });
+};
+
 gulp
 .task('templatepacker', function() {
     return gulp.src([config.app + 'components/**/*.jade', config.app + 'views/**/*.jade', config.app + 'states/**/*.jade'])
         .pipe(mkStream(function(file, cb) {
             var fpath = file.path.slice((file.cwd + config.app).length + 1);
+
+            if (/^win/.test(process.platform))
+                fpath = fpath.replace(/\\/g,'/');
+
             if (fpath !== 'index.jade') {
                 var prefix = 'script(type="text/ng-template" id="' + fpath + '")\n';
                 file.contents = new Buffer(prefix + '  ' + String(file.contents).replace(/\n/g, '\n  ') + '\n');
@@ -110,7 +122,7 @@ gulp
 .task('compile', function() {
     return gulp.src(ts_app_config.files)
         .pipe(tslint({ configuration: tslint_config }))
-        .pipe(tslint.report('prose', {
+        .pipe(tslint.report(testReporter, {
             emitError: false,
             summarizeFailureOutput: true
         }))
