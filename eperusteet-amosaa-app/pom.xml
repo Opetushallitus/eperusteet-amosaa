@@ -38,7 +38,8 @@
                         <configuration>
                             <executable>gulp</executable>
                             <arguments>
-                                <argument>dist --no-color</argument>
+                                <argument>dist</argument>
+                                <argument>--no-color</argument>
                             </arguments>
                         </configuration>
                         <goals>
