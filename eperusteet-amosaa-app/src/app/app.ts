@@ -8,7 +8,6 @@ angular.module("app", [
     "angular-loading-bar"
 ])
 
-
 // Route configuration
 .config(($stateProvider, $urlRouterProvider, $translateProvider, $urlMatcherFactoryProvider, $sceProvider) => {
     $sceProvider.enabled(true);

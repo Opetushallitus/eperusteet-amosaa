@@ -68,11 +68,11 @@ gulp
     ])
     .pipe(gulp.dest(config.build + '/images'));
 })
-.task('static', ['locales', 'images'], function() {
+.task('static-fonts', ['locales', 'images'], function() {
     return gulp.src([
-        './node_modules/bootstrap-sass/assets/fonts/*'
+        './node_modules/bootstrap-sass/assets/fonts/**'
     ])
-    .pipe(gulp.dest(config.build));
+    .pipe(gulp.dest(config.build + '/fonts'));
 })
 .task('sass', function() {
     return merge(
@@ -138,7 +138,7 @@ gulp
         }
     });
 })
-.task('build', ['dependencies', 'templates', 'sass', 'compile', 'static'])
+.task('build', ['dependencies', 'templates', 'sass', 'compile', 'static-fonts'])
 .task('dist', ['build'], function() {
     return gulp.src([config.build + '**/*']).pipe(gulp.dest(config.dist));
 })

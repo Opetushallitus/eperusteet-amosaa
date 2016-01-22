@@ -9,7 +9,7 @@ angular.module("app")
             controller: () => {
             }
         },
-        "loading_bar": {
+        loading_bar: {
             controller: function ($scope, cfpLoadingBar, TestApi) {
                 TestApi.all("users").getList()
                   .then((res) => {
@@ -26,7 +26,7 @@ angular.module("app")
                 };
             }
         },
-        "kaanna": {
+        kaanna: {
             controller: ($scope) => {
                 $scope.obj = {
                     fi: "Hei",
@@ -35,7 +35,7 @@ angular.module("app")
                 $scope.objFi = KaannaService.kaanna($scope.obj);
             }
         },
-        "editointikontrollit_local": {
+        editointikontrollit_local: {
             controller: ($scope, $q, $timeout) => {
                 $scope.edit = EditointikontrollitService.createLocal({
                     start: () => $q((resolve, reject) => $timeout(() => {
@@ -58,7 +58,7 @@ angular.module("app")
                 $scope.save = EditointikontrollitService.save;
             }
         },
-        "editointikontrollit_global": {
+        editointikontrollit_global: {
             controller: ($scope, $q, $timeout) => {
                 $scope.edit = EditointikontrollitService.create({
                     start: () => $q((resolve, reject) => $timeout(resolve, 1000)),
