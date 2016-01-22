@@ -35,7 +35,7 @@ function createProxy(from, to) {
     return proxy(pOpt);
 }
 
-const testReporter = function (output, file) {
+var testReporter = function (output, file) {
     console.log("Found " + output.length + " errors in " + file.path);
 
     _.forEach(output, function(error) {
