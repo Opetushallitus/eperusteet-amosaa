@@ -10,7 +10,7 @@
     "angular-cache": "4.4.2",
     "angular-elastic": "2.5.0",
     "angular-i18n": "1.4.8",
-    "angular-loading-bar": "^0.8.0",
+    "angular-loading-bar": "0.8.0",
     "angular-resource": "1.4.7",
     "angular-route": "1.4.8",
     "angular-sanitize": "1.4.8",
@@ -23,9 +23,9 @@
     "angular-ui-sortable": "0.13.4",
     "angular-ui-utils": "0.1.1",
     "bootstrap-sass": "3.3.6",
-    "event-stream": "^3.3.2",
+    "event-stream": "3.3.2",
     "gulp": "3.9.0",
-    "gulp-autoprefixer": "^3.1.0",
+    "gulp-autoprefixer": "3.1.0",
     "gulp-concat": "2.6.0",
     "gulp-connect": "2.2.0",
     "gulp-connect-proxy": "0.3.1",
@@ -36,15 +36,17 @@
     "gulp-tsc": "1.1.4",
     "gulp-tslint": "^4.2.1",
     "gulp-watch": "4.3.5",
-    "jquery": "^2.1.4",
+    "jquery": "2.1.4",
     "lazy.js": "0.4.2",
     "lodash": "3.0.0",
+    "merge-stream": "1.0.0",
     "proxy-middleware": "0.15.0",
     "restangular": "1.5.1",
     "tslint": "3.2.0"
   },
   "dependencies": {
-    "angular-spinner": "^0.8.0",
-    "angular-ui-bootstrap": "^0.14.3"
+    "angular-moment": "1.0.0-beta.3",
+    "angular-spinner": "0.8.0",
+    "angular-ui-bootstrap": "0.14.3"
   }
 }
