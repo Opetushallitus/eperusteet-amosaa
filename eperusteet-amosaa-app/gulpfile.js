@@ -7,6 +7,7 @@ var
     preprocess    = require('gulp-preprocess'),
     gulp          = require('gulp'),
     jade          = require('gulp-jade'),
+    merge         = require('merge-stream'),
     proxy         = require('proxy-middleware'),
     sass          = require('gulp-sass'),
     shell         = require('gulp-shell'),
@@ -36,7 +37,7 @@ function createProxy(from, to) {
 
 gulp
 .task('templatepacker', function() {
-    return gulp.src([config.app + 'views/**/*.jade', config.app + 'states/**/*.jade'])
+    return gulp.src([config.app + 'components/**/*.jade', config.app + 'views/**/*.jade', config.app + 'states/**/*.jade'])
         .pipe(mkStream(function(file, cb) {
             var fpath = file.path.slice((file.cwd + config.app).length + 1);
 
@@ -59,15 +60,29 @@ gulp
         .pipe(gulp.dest(config.build))
         .pipe(connect.reload());
 })
-.task('static', function() {
+.task('locales', function() {
     return gulp.src([
-        'node_modules/bootstrap-sass/assets/fonts/bootstrap/*'
+        './src/localisation/**'
     ])
-    .pipe(gulp.dest(config.build + 'bootstrap/fonts/'));
+    .pipe(gulp.dest(config.build + '/localisation'));
+})
+.task('images', function() {
+    return gulp.src([
+        './src/images/**',
+    ])
+    .pipe(gulp.dest(config.build + '/images'));
+})
+.task('static-fonts', ['locales', 'images'], function() {
+    return gulp.src([
+        './node_modules/bootstrap-sass/assets/fonts/**'
+    ])
+    .pipe(gulp.dest(config.build + '/fonts'));
 })
 .task('sass', function() {
-    return gulp.src([config.app + 'styles/styles.scss'])
-        .pipe(sass().on('error', sass.logError))
+    return merge(
+        gulp.src(config.styles),
+            gulp.src([config.app + 'styles/styles.scss'])
+            .pipe(sass().on('error', sass.logError)))
         .pipe(concat('styles.css'))
         .pipe(autoprefixer({
             browser: ['last 1 version'],
@@ -127,13 +142,13 @@ gulp
         }
     });
 })
-.task('build', ['dependencies', 'templates', 'sass', 'compile', 'static'])
+.task('build', ['dependencies', 'templates', 'sass', 'compile', 'static-fonts'])
 .task('dist', ['build'], function() {
     return gulp.src([config.build + '**/*']).pipe(gulp.dest(config.dist));
 })
 .task('watch', ['connect', 'build'], function() {
     gulp.watch(config.app + '**/*.ts', ['compile']);
     gulp.watch(config.app + '**/*.jade', ['templates']);
-    gulp.watch(config.app + 'styles/**/*.scss', ['sass']);
+    gulp.watch(config.app + '**/*.scss', ['sass']);
 })
 .task('default', ['watch']);

@@ -2,12 +2,20 @@
   "app": "src/app/",
   "build": "build/",
   "dist": "target/dist",
+  "styles": [],
   "dependencies": [
-    "node_modules/jquery/dist/jquery.js",
-    "node_modules/bootstrap-sass/assets/javascripts/bootstrap.js",
-    "node_modules/angular/angular.js",
-    "node_modules/lodash/index.js",
-    "node_modules/restangular/dist/restangular.js",
-    "node_modules/angular-ui-router/release/angular-ui-router.js"
+    "./node_modules/jquery/dist/jquery.js",
+    "./node_modules/bootstrap-sass/assets/javascripts/bootstrap.js",
+    "./node_modules/angular/angular.js",
+    "./node_modules/lodash/index.js",
+    "./node_modules/restangular/dist/restangular.js",
+    "./node_modules/angular-ui-router/release/angular-ui-router.js",
+    "./node_modules/angular-translate/dist/angular-translate.js",
+    "./node_modules/angular-i18n/angular-locale_fi-fi.js",
+    "./node_modules/angular-animate/angular-animate.js",
+    "./node_modules/angular-ui-bootstrap/ui-bootstrap-tpls.js",
+    "./node_modules/spin.js/spin.js",
+    "./node_modules/angular-spinner/angular-spinner.js",
+    "./node_modules/angular-loading-bar/build/loading-bar.js"
   ]
 }

@@ -1,0 +1,12 @@
+div
+  pre(ng-bind="params | json")
+  div(ng-repeat="(param, value) in params")
+    div.form-group.form-horizontal
+      div.form-group.row
+        label.control-label.col-sm-1 {{ param }}
+        span.input-group.col-sm-10
+          input.form-control(type="text", ng-model="params[param]")
+  div(ng-repeat="state in states")
+    h4(ng-bind="state.name")
+    a(ng-href="{{ urlify(state) }}", ng-bind="urlify(state)") {{ state.name }}
+    // pre(ng-bind="state | json")

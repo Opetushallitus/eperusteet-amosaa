@@ -10,6 +10,7 @@
     "angular-cache": "4.4.2",
     "angular-elastic": "2.5.0",
     "angular-i18n": "1.4.8",
+    "angular-loading-bar": "^0.8.0",
     "angular-resource": "1.4.7",
     "angular-route": "1.4.8",
     "angular-sanitize": "1.4.8",
@@ -37,9 +38,13 @@
     "gulp-watch": "4.3.5",
     "jquery": "^2.1.4",
     "lazy.js": "0.4.2",
-    "lodash": "3.10.1",
+    "lodash": "3.0.0",
     "proxy-middleware": "0.15.0",
     "restangular": "1.5.1",
     "tslint": "3.2.0"
+  },
+  "dependencies": {
+    "angular-spinner": "^0.8.0",
+    "angular-ui-bootstrap": "^0.14.3"
   }
 }

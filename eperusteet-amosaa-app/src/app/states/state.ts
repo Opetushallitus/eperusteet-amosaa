@@ -3,7 +3,7 @@ angular.module("app")
 .state("root", {
     url: "/:lang",
     resolve: {
-        kayttajaprofiili: () => Fake.Kayttajaprofiili(1),
+        kayttajaprofiili: () => Fake.Kayttajaprofiili(1)
     },
     views: {
         "": {
@@ -13,14 +13,13 @@ angular.module("app")
             controller: ($scope) => {
                 $scope.data = "Main controller data";
             },
-
         },
-        "ylanavi@root": {
+        "ylanavi": {
             controller: ($scope) => {
                 $scope.data = "ylanavi";
             }
         },
-        "footer@root": {
+        "footer": {
             controller: ($scope) => {
                 $scope.data = "footer";
             }
