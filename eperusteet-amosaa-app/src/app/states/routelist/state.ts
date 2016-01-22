@@ -5,11 +5,10 @@ angular.module("app")
     resolve: {},
     controller: ($scope, $state) => {
         $scope.params = _($state.get())
-            .map((state) => {
-                return state.url.match(/:.*/g);
-            })
+            .map((state) => state.url.split("/"))
             .compact()
-            .flatten()
+            .flatten(true)
+            .filter((param) => _.size(param) > 1 && param[0] === ":")
             .map((param) => {
                 return [param.slice(1), undefined];
             })

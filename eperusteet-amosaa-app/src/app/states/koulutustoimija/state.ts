@@ -1,7 +1,7 @@
 angular.module("app")
 .config($stateProvider => $stateProvider
 .state("root.koulutustoimija", {
-    url: "/koulutustoimija/:ktId",
+    url: "/koulutustoimija/:ktId/:x",
     resolve: {
         koulutustoimija: ($stateParams) => Fake.Koulutustoimijat()[$stateParams.ktId],
         yhteinen: (koulutustoimija) => Fake.YhteisetOsat()[koulutustoimija.yhteinenOsa],
