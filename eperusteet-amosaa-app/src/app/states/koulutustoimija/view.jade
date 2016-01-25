@@ -1,20 +1,25 @@
 div.koulutustoimija
-
-  pre(ng-bind="kayttajaprofiili | json")
-
   h2.otsikko
-    span(ng-bind="koulutustoimija.nimi")
+    span(kaanna="koulutustoimija.organisaatiot[0].nimi")
     button.btn.btn-default
       span.glyphicon.glyphicon-chevron-down
 
   div.otsikkotaso.yhteinen-osa
     h3 Koulutustoimijakohtainen yhteiset osat
-      div.laatikko
-        div.tila(ng-bind="yhteinen.valmis")
-        a.nimi(ng-bind="yhteinen.nimi.fi")
-        p.muokattu(ng-bind="yhteinen.muokattu")
-        span.right-arrow
-          span.glyphicon.glyphicon-chevron-right
+    table.table.boxtable
+      tbody
+        tr
+          td
+            div
+              div(name="state")
+          td
+            div Kokkolan kokkikoulun yhteiset
+          td
+            div
+              a(href="#")
+                div(name="go")
+                  span.glyphicon.glyphicon-chevron-right
+
 
   div.otsikkotaso.kaikki-opetussuunnitelmat
     h3 Kaikki opetussuunnitelmat
@@ -34,17 +39,33 @@ div.koulutustoimija
         div.pull-right
           button.btn.btn-default Lisää uusi
 
-    div.listaus
-
-    // div
-    //   input(type="checkbox")
-    //   label Ammatillinen peruskoulutus
-    //   input(type="checkbox")
-    //   label Ammattitutkinto
-    //   input(type="checkbox")
-    //   label Erikoisammattitutkinto
-
-
-pre(ng-bind="koulutustoimija | json")
-pre(ng-bind="yhteinen | json")
-pre(ng-bind="opetussuunnitelmat | json")
+    table.table.boxtable
+      thead
+        tr
+          th
+          th: a(href="#") TUTKINNON NIMI&nbsp;
+              span.glyphicon.glyphicon-sort-by-attributes
+          th: a(href="#") Osaamisala&nbsp;
+              span.glyphicon.glyphicon-sort-by-attributes
+          th: a(href="#") TUTKINNON TYYPPI&nbsp;
+              span.glyphicon.glyphicon-sort-by-attributes
+      tbody
+        tr(ng-repeat="ops in opsit.data")
+          td
+            div
+              div(name="state")
+              div(name="favourite")
+                a(href="#")
+                  span.glyphicon.glyphicon-star
+          td
+            div(kaanna="ops.nimi")
+          td
+            div(ng-show="ops.osaamisalat.length > 0", kaanna="ops.osaamisalat[0].nimi")
+            div(ng-hide="ops.osaamisalat.length > 0")
+          td
+            div(kaanna="ops.koulutustyyppi")
+          td
+            div
+              a(href="#")
+                div(name="go")
+                  span.glyphicon.glyphicon-chevron-right
