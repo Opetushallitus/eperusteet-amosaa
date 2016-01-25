@@ -10,7 +10,9 @@ $icon-font-path: "fonts/bootstrap/";
 
 @import "generic/list";
 @import "generic/modal";
+@import "generic/has_feedback";
 
 @import "modules/main";
 @import "modules/ylanavi";
+@import "modules/murupolku";
 @import "modules/koulutustoimija";
