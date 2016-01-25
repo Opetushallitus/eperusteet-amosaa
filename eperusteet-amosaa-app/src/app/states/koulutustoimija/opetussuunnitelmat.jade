@@ -1,0 +1,48 @@
+div.otsikkotaso.kaikki-opetussuunnitelmat
+  h3 Kaikki opetussuunnitelmat
+
+  div.row
+    div.col-xs-5
+      div.input-group
+        span.input-group-addon
+          span.glyphicon.glyphicon-search
+        input.form-control(type="text")
+    div.checkbox-text.col-xs-5
+      div.checkbox
+        label
+          input(type="checkbox")
+          span Tarkennettu haku
+    div.col-xs-2
+      div.pull-right
+        button.btn.btn-default Lisää uusi
+
+  table.table.boxtable
+    thead
+      tr
+        th
+        th: a(href="#") TUTKINNON NIMI&nbsp;
+            span.glyphicon.glyphicon-sort-by-attributes
+        th: a(href="#") Osaamisala&nbsp;
+            span.glyphicon.glyphicon-sort-by-attributes
+        th: a(href="#") TUTKINNON TYYPPI&nbsp;
+            span.glyphicon.glyphicon-sort-by-attributes
+    tbody
+      tr(ng-repeat="ops in opsit.data")
+        td
+          div
+            div(name="state")
+            div(name="favourite")
+              a(href="#")
+                span.glyphicon.glyphicon-star
+        td
+          div(kaanna="ops.nimi")
+        td
+          div(ng-show="ops.osaamisalat.length > 0", kaanna="ops.osaamisalat[0].nimi")
+          div(ng-hide="ops.osaamisalat.length > 0")
+        td
+          div(kaanna="ops.koulutustyyppi")
+        td
+          div
+            a(href="#")
+              div(name="go")
+                span.glyphicon.glyphicon-chevron-right

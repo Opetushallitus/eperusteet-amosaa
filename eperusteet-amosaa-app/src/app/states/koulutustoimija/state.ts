@@ -8,11 +8,18 @@ angular.module("app")
         opetussuunnitelmat: (koulutustoimija) => Fake.Opetussuunnitelmat(koulutustoimija.id),
         perusteet: Eperusteet => Eperusteet.one("perusteet").get()
     },
-    controller: ($scope, yhteinen, kayttajaprofiili, koulutustoimija, opetussuunnitelmat, perusteet) => {
-        $scope.yhteinen = yhteinen;
-        $scope.kayttajaprofiili = kayttajaprofiili;
-        $scope.koulutustoimija = koulutustoimija;
-        $scope.opetussuunnitelmat = opetussuunnitelmat;
-        $scope.opsit = perusteet;
+    views: {
+        "": {
+            controller: ($scope, yhteinen, kayttajaprofiili, koulutustoimija) => {
+                $scope.yhteinen = yhteinen;
+                $scope.kayttajaprofiili = kayttajaprofiili;
+                $scope.koulutustoimija = koulutustoimija;
+            }
+        },
+        opetussuunnitelmat: {
+            controller: ($scope, perusteet) => {
+                $scope.opsit = perusteet;
+            }
+        }
     }
 }))
