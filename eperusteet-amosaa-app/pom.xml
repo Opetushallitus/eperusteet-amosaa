@@ -15,77 +15,77 @@
     </properties>
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>exec-npm-install</id>
-                        <phase>generate-sources</phase>
-                        <configuration>
-                            <executable>npm</executable>
-                            <arguments>
-                                <argument>install</argument>
-                            </arguments>
-                        </configuration>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>exec-gulp-dist</id>
-                        <phase>generate-sources</phase>
-                        <configuration>
-                            <executable>gulp</executable>
-                            <arguments>
-                                <argument>dist</argument>
-                                <argument>--no-color</argument>
-                            </arguments>
-                        </configuration>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
             <!-- <plugin> -->
-            <!--     <groupId>com.github.eirslett</groupId> -->
-            <!--     <artifactId>frontend&#45;maven&#45;plugin</artifactId> -->
-            <!--     <version>0.0.27</version> -->
-            <!--     <!&#45;&#45; <configuration> &#45;&#45;> -->
-            <!--     <!&#45;&#45;     <workingDirectory></workingDirectory> &#45;&#45;> -->
-            <!--     <!&#45;&#45; </configuration> &#45;&#45;> -->
+            <!--     <groupId>org.codehaus.mojo</groupId> -->
+            <!--     <artifactId>exec&#45;maven&#45;plugin</artifactId> -->
             <!--     <executions> -->
             <!--         <execution> -->
-            <!--             <id>install node and npm</id> -->
-            <!--             <goals> -->
-            <!--                 <goal>install&#45;node&#45;and&#45;npm</goal> -->
-            <!--             </goals> -->
+            <!--             <id>exec&#45;npm&#45;install</id> -->
+            <!--             <phase>generate&#45;sources</phase> -->
             <!--             <configuration> -->
-            <!--                 <nodeVersion>v5.2.0</nodeVersion> -->
-            <!--                 <npmVersion>3.5.2</npmVersion> -->
+            <!--                 <executable>npm</executable> -->
+            <!--                 <arguments> -->
+            <!--                     <argument>install</argument> -->
+            <!--                 </arguments> -->
             <!--             </configuration> -->
+            <!--             <goals> -->
+            <!--                 <goal>exec</goal> -->
+            <!--             </goals> -->
             <!--         </execution> -->
             <!--         <execution> -->
-            <!--             <id>npm install</id> -->
-            <!--             <goals> -->
-            <!--                 <goal>npm</goal> -->
-            <!--             </goals> -->
+            <!--             <id>exec&#45;gulp&#45;dist</id> -->
+            <!--             <phase>generate&#45;sources</phase> -->
             <!--             <configuration> -->
-            <!--                 <arguments>install</arguments> -->
+            <!--                 <executable>./node_modules/gulp/bin/gulp.js</executable> -->
+            <!--                 <arguments> -->
+            <!--                     <argument>dist</argument> -->
+            <!--                     <argument>&#45;&#45;no&#45;color</argument> -->
+            <!--                 </arguments> -->
             <!--             </configuration> -->
-            <!--         </execution> -->
-            <!--         <execution> -->
-            <!--             <id>gulp build</id> -->
             <!--             <goals> -->
-            <!--                 <goal>gulp</goal> -->
+            <!--                 <goal>exec</goal> -->
             <!--             </goals> -->
-            <!--             <configuration> -->
-            <!--                 <arguments>dist &#45;&#45;no&#45;color</arguments> -->
-            <!--             </configuration> -->
             <!--         </execution> -->
             <!--     </executions> -->
             <!-- </plugin> -->
+            <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>0.0.25</version>
+                <!-- <configuration> -->
+                <!--     <workingDirectory></workingDirectory> -->
+                <!-- </configuration> -->
+                <executions>
+                    <execution>
+                        <id>install node and npm</id>
+                        <goals>
+                            <goal>install-node-and-npm</goal>
+                        </goals>
+                        <configuration>
+                            <nodeVersion>v5.2.0</nodeVersion>
+                            <npmVersion>3.5.2</npmVersion>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>npm install</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>install</arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>gulp build</id>
+                        <goals>
+                            <goal>gulp</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>dist --no-color</arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.3</version>
