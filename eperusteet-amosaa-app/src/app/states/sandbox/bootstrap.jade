@@ -1,7 +1,8 @@
 .row
     .col-xs-12
-        h1#css.page-header CSS
-        h2#tables Tables
+        h1.page-header Bootstrap
+
+        h2 Tables
         table.table
             thead
                 tr
@@ -25,3 +26,100 @@
                     td Data
                     td Data
                     td Data
+
+        h2 Buttons
+
+        div
+            div.btn.btn-default Default
+            span &nbsp;
+            div.btn.btn-primary Primary
+            span &nbsp;
+            div.btn.btn-success Success
+            span &nbsp;
+            div.btn.btn-info Info
+            span &nbsp;
+            div.btn.btn-warning Warning
+            span &nbsp;
+            div.btn.btn-danger Danger
+
+        h2 Buttons disabled
+
+        div
+            div.btn.btn-default.disabled Default
+            span &nbsp;
+            div.btn.btn-primary.disabled Primary
+            span &nbsp;
+            div.btn.btn-success.disabled Success
+            span &nbsp;
+            div.btn.btn-info.disabled Info
+            span &nbsp;
+            div.btn.btn-warning.disabled Warning
+            span &nbsp;
+            div.btn.btn-danger.disabled Danger
+
+        h2 Modals
+
+        a.btn.btn-primary(data-toggle='modal', data-target='#wizard')
+            | Launch wizard
+        #wizard.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myWizardLabel').wizard
+            .modal-dialog(role='document')
+                .modal-content
+                    .modal-header
+                        h4.modal-title Lisää uusi
+                    .modal-body
+                        p Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                        form
+                            .form-group
+                                label.control-label(for='test-name') Test:
+                                input#test-name.form-control(type='text')
+                            .form-group
+                                label.control-label(for='message-text') Message:
+                                textarea#message-text.form-control
+                            .form-group
+                                label.radio-inline
+                                    input#inlineRadio1(type='radio', name='inlineRadioOptions', value='option1')
+                                    |  1
+                                label.radio-inline
+                                    input#inlineRadio2(type='radio', name='inlineRadioOptions', value='option2')
+                                    |  2
+                                label.radio-inline
+                                    input#inlineRadio3(type='radio', name='inlineRadioOptions', value='option3')
+                                    |  3
+                    .modal-footer
+                        a.btn.btn-default(type='button') Takaisin
+                        a.btn.btn-default(type='button', data-dismiss='modal') Peruuta
+                        a.btn.btn-primary(type='button') OK
+
+        span &nbsp;
+
+        a.btn.btn-primary(data-toggle='modal', data-target='#modal')
+            | Launch modal
+        #modal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel')
+            .modal-dialog(role='document')
+                .modal-content
+                    .modal-header
+                        h4.modal-title Lisää uusi
+                    .modal-body
+                        p Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                        form
+                            .form-group
+                                label.control-label(for='test-name') Test:
+                                input#test-name.form-control(type='text')
+                            .form-group
+                                label.control-label(for='message-text') Message:
+                                textarea#message-text.form-control
+                            .form-group
+                                label.radio-inline
+                                    input#inlineRadio1(type='radio', name='inlineRadioOptions', value='option1')
+                                    |  1
+                                label.radio-inline
+                                    input#inlineRadio2(type='radio', name='inlineRadioOptions', value='option2')
+                                    |  2
+                                label.radio-inline
+                                    input#inlineRadio3(type='radio', name='inlineRadioOptions', value='option3')
+                                    |  3
+                    .modal-footer
+                        a.btn.btn-default Takaisin
+                        button.btn.btn-default(type='button', data-dismiss='modal') Peruuta
+                        a.btn.btn-primary OK
+
