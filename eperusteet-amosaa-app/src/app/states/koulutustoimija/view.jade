@@ -1,9 +1,19 @@
 div.koulutustoimija
-  h2.otsikko
-    span(kaanna="koulutustoimija.organisaatiot[0].nimi")
-    button.btn.btn-default
-      span.glyphicon.glyphicon-chevron-down
 
+  div.row
+    div.col-xs-6
+      h2.otsikko
+        span(kaanna="koulutustoimija.organisaatiot[0].nimi")
+        button.btn.btn-default
+          span.glyphicon.glyphicon-chevron-down
+    div.col-xs-6
+      p.pull-right
+        span Selitteet
+        span.icon
+          i.fa.fa-question
+        span Tiedotteet
+        span.icon
+          i.fa.fa-exclamation
 
   div(ui-view="tiedotteet")
   div(ui-view="yhteiset")

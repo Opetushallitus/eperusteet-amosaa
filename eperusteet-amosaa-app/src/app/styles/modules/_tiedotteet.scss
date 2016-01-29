@@ -1,40 +1,82 @@
 $tiedoite-height: 50px;
 $tiedoite-vertical-padding: 5px;
 $tiedoite-border: 1px;
+$tiedoite-row-gap: 4px;
 
 .tiedotteet {
 
   .tiedote {
-    border: 1px solid lightgray;
-    height: $tiedoite-height;
 
-    // Left icon
-    div > .icon {
-      font-size: $tiedoite-height - 2 * $tiedoite-vertical-padding - 2 * $tiedoite-border;
-      color: #138cc5;
-      padding: $tiedoite-vertical-padding 20px $tiedoite-vertical-padding 10px;
+    &:not(:first-child) {
+      margin-top: $tiedoite-row-gap;
     }
 
-    // Right dismiss button
-    a {
-      vertical-align: middle;
-      border-left: 1px solid lightgray;
-      height: 100%;
-      padding: 0 10px 0 10px;
+    .tiedote-laatikko {
+      border: 1px solid lightgray;
+      //height: $tiedoite-height;
+      background-color: #f3fafd;
+      position: relative;
 
-      & > span {
-        font-size: 18px;
-        text-decoration: none;
-        line-height: $tiedoite-height - 2 * $tiedoite-border;
+
+      .icon {
+        padding: 0 10px;
+        i {
+          font-size: 19px;
+          margin-top: ($tiedoite-height - 20px) / 2;
+          width: 20px;
+          height: 20px;
+        }
       }
+
+      // Right dismiss button
+      a {
+        vertical-align: middle;
+        //border-left: 1px solid lightgray;
+        height: 100%;
+        padding: 0 10px 0 10px;
+
+        & > span {
+          font-size: 18px;
+          text-decoration: none;
+          line-height: $tiedoite-height - 2 * $tiedoite-border;
+          color: gray;
+        }
+      }
+
+      // Content
+      .tiedote-otsikko {
+        padding: $tiedoite-vertical-padding;
+
+        p {
+          margin-bottom: 0;
+          &:last-child {
+            color: gray;
+          }
+        }
+      }
+
+      .tiedote-sisalto {
+        padding: 0 40px;
+        padding-bottom: 10px;
+      }
+
     }
 
-    // Content
-    .tiedote-sisalto {
-      padding: $tiedoite-vertical-padding;
+    // Expand text
+    & > a {
+      text-decoration: none;
+      position: absolute;
+      left: 50%;
+      bottom: -10px;
+      transform: translateX(-50%);
+      width: 80px;
+      text-align: center;
+      font-size: 20px;
 
-      p {
-        margin-bottom: 0;
+
+      i {
+        color: gray;
+        text-decoration: none;
       }
     }
   }

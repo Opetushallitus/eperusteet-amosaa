@@ -1,0 +1,17 @@
+$icon-size: 20px;
+
+.icon {
+  padding: 0 10px;
+  display: inline;
+
+  i {
+    font-size: 19px;
+    text-align: center;
+    width: $icon-size;
+    height: $icon-size;
+    padding-top: 1px;
+    color: #FFFFFF;
+    background-color: #149ccd;
+    border-radius: 4px;
+  }
+}
