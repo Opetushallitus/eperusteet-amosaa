@@ -15,7 +15,6 @@
  */
 package fi.vm.sade.eperusteet.amosaa.service.external;
 
-import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanProjektitiedotDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import java.util.List;
 import java.util.concurrent.Future;
@@ -29,16 +28,10 @@ public interface KayttajanTietoService {
 
     @PreAuthorize("isAuthenticated()")
     KayttajanTietoDto haeKirjautaunutKayttaja();
-    
+
     @PreAuthorize("isAuthenticated()")
     KayttajanTietoDto hae(String oid);
 
     @PreAuthorize("isAuthenticated()")
     Future<KayttajanTietoDto> haeAsync(String oid);
-
-    @PreAuthorize("isAuthenticated()")
-    List<KayttajanProjektitiedotDto> haeOpetussuunnitelmat(String oid);
-
-    @PreAuthorize("isAuthenticated()")
-    KayttajanProjektitiedotDto haeOpetussuunnitelma(String oid, Long opsId);
 }

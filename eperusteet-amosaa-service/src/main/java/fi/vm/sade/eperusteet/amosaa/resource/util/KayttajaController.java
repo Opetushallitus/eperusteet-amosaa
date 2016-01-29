@@ -37,4 +37,9 @@ public class KayttajaController {
     public KayttajanTietoDto get() {
         return kayttajat.haeKirjautaunutKayttaja();
     }
+
+//    @RequestMapping(method = RequestMethod.GET)
+//    public List<KayttajanTietoDto> get() {
+//        return new ArrayList<>();
+//    }
 }

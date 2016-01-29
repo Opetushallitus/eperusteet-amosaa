@@ -3,6 +3,9 @@ angular.module("app")
 .state("root", {
     url: "/:lang",
     resolve: {
+        kayttaja: () => Kayttaja.kayttaja(),
+        casMe: () => Kayttaja.casMe(),
+        casRoles: () => Kayttaja.casRoles(),
         kayttajaprofiili: () => Fake.Kayttajaprofiili(1)
     },
     views: {
@@ -13,6 +16,10 @@ angular.module("app")
             controller: ($scope) => {
                 $scope.data = "Main controller data";
             },
+        },
+        "notifikaatiot": {
+            templateUrl: "components/notifikaatiot/notifikaatiot.jade",
+            controller: "NotifikaatioController"
         },
         "ylanavi": {
             controller: ($scope) => {

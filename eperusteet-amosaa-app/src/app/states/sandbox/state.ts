@@ -34,6 +34,15 @@ angular.module("app")
                 };
             }
         },
+        notifikaatiot: {
+            controller: ($scope) => {
+                $scope.normaali = () => NotifikaatioService.normaali("Infot");
+                $scope.onnistui = () => NotifikaatioService.onnistui("Success!");
+                $scope.varoitus = () => NotifikaatioService.varoitus("Voi ei!");
+                $scope.fataali = () => NotifikaatioService.fataali("Jotain meni todella pahasti mönkään :(")
+                    .finally(() => NotifikaatioService.onnistui("Tilanne palautui normaaliksi :)"));
+            }
+        },
         kaanna: {
             controller: ($scope) => {
                 $scope.obj = {

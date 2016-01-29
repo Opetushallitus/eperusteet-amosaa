@@ -4,6 +4,11 @@ $icon-font-path: "fonts/bootstrap/";
 @import "vendor/bootstrap";
 @import "vendor/virkailija";
 
+@import "../components/editointikontrollit/_styles.scss";
+@import "../components/ohje/_ohje.scss";
+@import "../components/loadingbar/_loading_bar.scss";
+@import "../components/notifikaatiot/_notifikaatiot.scss";
+
 @import "../components/editointikontrollit/styles";
 @import "../components/ohje/ohje";
 @import "../components/loadingbar/loading_bar";

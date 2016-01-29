@@ -17,7 +17,6 @@ package fi.vm.sade.eperusteet.amosaa.service.external.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanProjektitiedotDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import fi.vm.sade.eperusteet.amosaa.service.util.RestClientFactory;
@@ -67,18 +66,6 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
             kayttaja.setOidHenkilo(ap.getName());
         }
         return kayttaja;
-    }
-
-    @Override
-    public List<KayttajanProjektitiedotDto> haeOpetussuunnitelmat(String oid) {
-        // TODO
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public KayttajanProjektitiedotDto haeOpetussuunnitelma(String oid, Long opsId) {
-        // TODO
-        throw new NotImplementedException();
     }
 
     @Component
