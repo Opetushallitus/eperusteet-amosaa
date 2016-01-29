@@ -20,6 +20,12 @@ angular.module("app")
             controller: ($scope, perusteet) => {
                 $scope.opsit = perusteet;
             }
+        },
+        yhteiset: {
+            controller: ($scope) => {}
+        },
+        "tiedotteet": {
+            controller: ($scope) => {}
         }
     }
-}))
+}));

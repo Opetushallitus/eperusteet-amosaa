@@ -1,0 +1,41 @@
+$tiedoite-height: 50px;
+$tiedoite-vertical-padding: 5px;
+$tiedoite-border: 1px;
+
+.tiedotteet {
+
+  .tiedote {
+    border: 1px solid lightgray;
+    height: $tiedoite-height;
+
+    // Left icon
+    div > .icon {
+      font-size: $tiedoite-height - 2 * $tiedoite-vertical-padding - 2 * $tiedoite-border;
+      color: #138cc5;
+      padding: $tiedoite-vertical-padding 20px $tiedoite-vertical-padding 10px;
+    }
+
+    // Right dismiss button
+    a {
+      vertical-align: middle;
+      border-left: 1px solid lightgray;
+      height: 100%;
+      padding: 0 10px 0 10px;
+
+      & > span {
+        font-size: 18px;
+        text-decoration: none;
+        line-height: $tiedoite-height - 2 * $tiedoite-border;
+      }
+    }
+
+    // Content
+    .tiedote-sisalto {
+      padding: $tiedoite-vertical-padding;
+
+      p {
+        margin-bottom: 0;
+      }
+    }
+  }
+}

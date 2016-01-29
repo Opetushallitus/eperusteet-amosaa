@@ -4,6 +4,8 @@ $icon-font-path: "fonts/bootstrap/";
 @import "vendor/bootstrap";
 @import "vendor/virkailija";
 
+@import "../../../node_modules/font-awesome/scss/font-awesome";
+
 @import "../components/editointikontrollit/styles";
 @import "../components/ohje/ohje";
 @import "../components/loadingbar/loading_bar";
@@ -16,3 +18,4 @@ $icon-font-path: "fonts/bootstrap/";
 @import "modules/ylanavi";
 @import "modules/murupolku";
 @import "modules/koulutustoimija";
+@import "modules/tiedotteet";

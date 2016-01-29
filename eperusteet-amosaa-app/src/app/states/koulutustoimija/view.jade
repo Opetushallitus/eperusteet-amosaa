@@ -4,20 +4,7 @@ div.koulutustoimija
     button.btn.btn-default
       span.glyphicon.glyphicon-chevron-down
 
-  div.otsikkotaso.yhteinen-osa
-    h3 Koulutustoimijakohtainen yhteiset osat
-    table.table.boxtable
-      tbody
-        tr
-          td
-            div
-              div(name="state")
-          td
-            div Kokkolan kokkikoulun yhteiset
-          td
-            div
-              a(href="#")
-                div(name="go")
-                  span.glyphicon.glyphicon-chevron-right
 
+  div(ui-view="tiedotteet")
+  div(ui-view="yhteiset")
   div(ui-view="opetussuunnitelmat")
