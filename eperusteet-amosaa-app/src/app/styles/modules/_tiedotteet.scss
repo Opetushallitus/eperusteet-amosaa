@@ -21,7 +21,7 @@ $tiedoite-row-gap: 4px;
       .icon {
         padding: 0 10px;
         i {
-          font-size: 19px;
+          font-size: 18px;
           margin-top: ($tiedoite-height - 20px) / 2;
           width: 20px;
           height: 20px;
@@ -39,7 +39,7 @@ $tiedoite-row-gap: 4px;
           font-size: 18px;
           text-decoration: none;
           line-height: $tiedoite-height - 2 * $tiedoite-border;
-          color: gray;
+          color: #6E9BAA;
         }
       }
 
@@ -65,9 +65,9 @@ $tiedoite-row-gap: 4px;
     // Expand text
     & > a {
       text-decoration: none;
-      position: absolute;
+      position: relative;
+      top: -18px;
       left: 50%;
-      bottom: -10px;
       transform: translateX(-50%);
       width: 80px;
       text-align: center;
@@ -75,6 +75,7 @@ $tiedoite-row-gap: 4px;
 
 
       i {
+        position: absolute;
         color: gray;
         text-decoration: none;
       }
