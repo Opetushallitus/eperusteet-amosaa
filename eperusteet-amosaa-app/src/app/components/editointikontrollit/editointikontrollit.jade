@@ -6,4 +6,5 @@ div.edit-controls(ng-cloak ng-hide="hideControls || !editStarted")
       span(ng-bind="'muokattavana'")
     div.edit-control-buttons
       button.btn.btn-default(ng-disabled="disableButtons", ng-click="cancel()", ng-bind="'peruuta'")
+      span &nbsp;
       button.btn.btn-primary(ng-disabled="disableButtons", ng-click="save()", ng-bind="'tallenna'")

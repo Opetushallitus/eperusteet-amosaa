@@ -1,17 +1,35 @@
-div#ylanavi
-  div.navbar.navbar-default
-    div.pull-right
-      a kielivalinta
-  div#murupolku
-    ol.breadcrumb
-      li
-        a(ui-sref="root")
-          span.glyphicon.glyphicon-home
-      li
-        a(ui-sref="root.koulutustoimija") koulutustoimija
-      li
-        a(href="") 42
-      li
-        a(href="") ops
-      li
-        a(href="") 1
+div.ylanavi
+  div.row
+    div.col-xs-8
+      ol.breadcrumb
+        li
+          a(ui-sref="root")
+            span.glyphicon.glyphicon-home
+        li
+          a(ui-sref="root.koulutustoimija") koulutustoimija
+        li
+          a(href="") 42
+        li
+          a(href="") ops
+        li
+          a(href="") 1
+
+    div.col-xs-4
+      div.pull-right
+        div.dropdown.kielivalitsin
+          span sisalto-kieli
+          span :&nbsp;
+          span
+            a.action-link.dropdown-toggle(data-toggle="dropdown", style="cursor: pointer;") suomi
+              span.caret
+            ul.dropdown-menu.dropdown-menu-right
+              li
+                a suomi
+              li
+                a ruotsi
+              li
+                a saame
+              li
+                a ru
+              li
+                a en
