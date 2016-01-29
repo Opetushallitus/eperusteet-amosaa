@@ -85,7 +85,8 @@ gulp
 })
 .task('static-fonts', ['locales', 'images'], function() {
     return gulp.src([
-        './node_modules/bootstrap-sass/assets/fonts/**'
+        './node_modules/bootstrap-sass/assets/fonts/**',
+        './node_modules/font-awesome/fonts/**'
     ])
     .pipe(gulp.dest(config.build + '/fonts'));
 })
