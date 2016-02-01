@@ -4,20 +4,28 @@ $icon-font-path: "fonts/bootstrap/";
 @import "vendor/bootstrap";
 @import "vendor/virkailija";
 
+<<<<<<< HEAD
 @import "../components/editointikontrollit/_styles.scss";
 @import "../components/ohje/_ohje.scss";
 @import "../components/loadingbar/_loading_bar.scss";
 @import "../components/notifikaatiot/_notifikaatiot.scss";
 
+||||||| merged common ancestors
+=======
+@import "../../../node_modules/font-awesome/scss/font-awesome";
+
+>>>>>>> origin/saulin_kehityshaara
 @import "../components/editointikontrollit/styles";
 @import "../components/ohje/ohje";
 @import "../components/loadingbar/loading_bar";
 
-@import "generic/list";
+@import "generic/boxtable";
 @import "generic/modal";
 @import "generic/has_feedback";
+@import "generic/amosaa_icons";
 
 @import "modules/main";
 @import "modules/ylanavi";
 @import "modules/murupolku";
 @import "modules/koulutustoimija";
+@import "modules/tiedotteet";
