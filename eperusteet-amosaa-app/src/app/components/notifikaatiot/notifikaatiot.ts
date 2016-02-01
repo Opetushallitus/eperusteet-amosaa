@@ -78,13 +78,13 @@ namespace NotifikaatioService {
     };
 
     export const fataali = (viesti) => _$modal.open({
-        templateUrl: "components/notifikaatiot/jarjestelmavirhe.jade",
-        controller: ($uibModalInstance, $scope, $state, viesti) => {
-            $scope.viesti = viesti;
-            $scope.ok = $uibModalInstance.close;
-        },
         resolve: {
-            viesti: _.constant(viesti)
+            _viesti: _.constant(viesti)
+        },
+        templateUrl: "components/notifikaatiot/jarjestelmavirhe.jade",
+        controller: ($uibModalInstance, $scope, $state, _viesti) => {
+            $scope.viesti = _viesti;
+            $scope.ok = $uibModalInstance.close;
         }
     }).result;
 

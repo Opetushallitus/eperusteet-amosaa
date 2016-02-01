@@ -30,8 +30,8 @@
     "gulp-connect": "2.2.0",
     "gulp-connect-proxy": "0.3.1",
     "gulp-jade": "1.1.0",
-    "gulp-preprocess": "^2.0.0",
-    "gulp-sass": "2.0.4",
+    "gulp-preprocess": "2.0.0",
+    "gulp-sass": "2.1.1",
     "gulp-shell": "0.5.1",
     "gulp-tsc": "1.1.4",
     "gulp-tslint": "^4.2.1",
@@ -47,6 +47,7 @@
   "dependencies": {
     "angular-moment": "1.0.0-beta.3",
     "angular-spinner": "0.8.0",
-    "angular-ui-bootstrap": "0.14.3"
+    "angular-ui-bootstrap": "0.14.3",
+    "font-awesome": "4.5.0"
   }
 }
