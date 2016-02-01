@@ -6,6 +6,7 @@
   },
   "files": [
     "typings/tsd.d.ts",
+    "typings/moment/moment.d.ts",
     "src/app/globals.ts",
     "src/app/components/editointikontrollit/editointikontrollit.ts",
     "src/app/components/lokalisointi/lokalisointi.ts",
@@ -14,6 +15,7 @@
     "src/app/components/ckeditor/ckeditor.ts",
     "src/app/components/ohje/ohje.ts",
     "src/app/components/notifikaatiot/notifikaatiot.ts",
+    "src/app/components/datepicker/datepicker.ts",
     "src/app/app.ts",
     "src/app/states/state.ts",
     "src/app/states/sandbox/state.ts",

@@ -43,6 +43,11 @@ angular.module("app")
                     .finally(() => NotifikaatioService.onnistui("Tilanne palautui normaaliksi :)"));
             }
         },
+        datepicker: {
+            controller: ($scope) => {
+                $scope.pvm = "";
+            }
+        },
         kaanna: {
             controller: ($scope) => {
                 $scope.obj = {
