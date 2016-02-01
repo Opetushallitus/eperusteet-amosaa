@@ -1,6 +1,55 @@
+$yhteiset-ylatunniste-height: 60px;
+$yhteiset-ylatunniste-padding: 5px;
+$yhteiser-muokkaa-height: $yhteiset-ylatunniste-height - 2 * $yhteiset-ylatunniste-padding;
+$yhteiset-muokkaa-ikoni-height: 30px;
+
 .yhteiset-nakyma {
     .ylatunniste {
-        background-color: red;
-        height: 60px;
+        background-color: #f3fafd;
+        height: $yhteiset-ylatunniste-height;
+        padding: $yhteiset-ylatunniste-padding;
+
+        .muokkaa {
+            width: $yhteiser-muokkaa-height;
+            height: $yhteiser-muokkaa-height;
+            background-color: #fcae27;
+
+            i {
+                width: $yhteiser-muokkaa-height;
+                height: $yhteiser-muokkaa-height;
+                text-align: center;
+                padding-top: ($yhteiser-muokkaa-height - $yhteiset-muokkaa-ikoni-height) / 2;
+                font-size: $yhteiset-muokkaa-ikoni-height;
+                text-decoration: none;
+                color: white;
+            }
+        }
+
+        h2 {
+            display: inline;
+            margin: 0 0 0 20px;
+            a {
+                margin-right: 10px;
+                i {
+                    color: #10546d;
+                    text-decoration: none;
+                }
+                i:hover {
+                    color: #1982aa;
+                }
+            }
+        }
+
+        .painikkeet {
+            height: $yhteiser-muokkaa-height;
+            a {
+                margin-right: 5px;
+            }
+            .keskitetty {
+                position: relative;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+        }
     }
 }
