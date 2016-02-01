@@ -119,7 +119,7 @@ module DatePicker {
                         return undefined;
                     }
 
-                    if(parsedMoment.isValid()) {
+                    if (parsedMoment.isValid()) {
                         ngModel.$setValidity("dateformatvalidator", true);
                         return viewValue;
                     } else {
