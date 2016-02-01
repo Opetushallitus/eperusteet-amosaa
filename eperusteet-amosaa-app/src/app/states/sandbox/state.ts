@@ -34,6 +34,12 @@ angular.module("app")
                 };
             }
         },
+        datepicker: {
+            controller: ($scope) => {
+                console.log($scope);
+                $scope.pvm = "";
+            }
+        },
         kaanna: {
             controller: ($scope) => {
                 $scope.obj = {
