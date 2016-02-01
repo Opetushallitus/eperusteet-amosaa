@@ -10,6 +10,10 @@ angular.module("app")
                 $scope.yhteinen = yhteinen;
                 $scope.kayttajaprofiili = kayttajaprofiili;
                 $scope.koulutustoimija = koulutustoimija;
+
+                $scope.addOpetussuunnitelma = () => {
+                    ModalAdd.opetussuunnitelma();
+                };
             }
         },
         opetussuunnitelmat: {

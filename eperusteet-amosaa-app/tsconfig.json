@@ -18,7 +18,7 @@
     "src/app/components/notifikaatiot/notifikaatiot.ts",
     "src/app/components/datepicker/datepicker.ts",
     "src/app/app.ts",
-    "src/app/modals/add.ts",
+    "src/app/modals/add/add.ts",
     "src/app/states/state.ts",
     "src/app/states/sandbox/state.ts",
     "src/app/states/routelist/state.ts",

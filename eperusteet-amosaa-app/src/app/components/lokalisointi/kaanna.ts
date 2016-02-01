@@ -1,6 +1,12 @@
 module KaannaService {
     let _$translate;
 
+    // export interface Kieliolio {
+    //     fi: string
+    //     sv: string
+    //     en: string
+    // }
+
     export const init = ($translate) => {
         _$translate = $translate;
     };
@@ -29,6 +35,11 @@ module KaannaService {
             return secondary;
         }
     }
+
+    export const hae = (obj, query: string = "") =>
+        _.any(obj, (v: string) => (v || "")
+                .toLowerCase()
+                .indexOf(query.toLowerCase()) !== -1);
 
     export const kaannaSisalto = (input, useFallback?) => _.isEmpty(input)
         ? ""

@@ -1,0 +1,31 @@
+div.modal-header
+  h2(kaanna="'lisaa-opetussuunnitelma'")
+
+div.modal-body
+  div.tutkintohaku
+    h4(kaanna="'valitse-tutkinto'")
+
+    .form-group.has-feedback.has-feedback-left
+      input.form-control(type="text" placeholder="{{ 'hae' | kaanna }}" ng-model="input" ng-change="update(input)")
+      i.form-control-feedback.glyphicon.glyphicon-search(style="color: gray;")
+
+    div.listaus(ng-show="input.length > 0")
+      div.tutkinto(ng-repeat="peruste in perusteet" ng-click="valitsePeruste(peruste)")
+        div.nimi(kaanna="peruste.nimi")
+        div.diaari(ng-bind="peruste.diaarinumero")
+
+  div(ng-show="peruste")
+    pre(ng-bind="peruste | json")
+    h4(kaanna="'tutkinto'")
+    h5 Autoalan perustutkinto
+    h5 Tekniikan ja liikenteen ala
+    h5 123123
+
+  div(ng-show="peruste")
+    label(kaanna="'opetussuunnitelman-nimi'")
+    input.form-control(type="text", placeholder="{{ 'hae' | kaanna }}")
+
+
+div.modal-footer
+  button.btn.btn-primary(ng-click="ok()", kaanna="'tallenna'")
+  button.btn.btn-default(ng-click="ok()", kaanna="'peruuta'")

@@ -3,6 +3,7 @@ angular.module("app", [
     "restangular",
     "pascalprecht.translate",
     "ngAnimate",
+    "ngSanitize",
     "ui.bootstrap",
     "angularSpinner",
     "angular-loading-bar"
@@ -14,8 +15,9 @@ angular.module("app", [
     $urlRouterProvider.when("", "/fi");
     $urlRouterProvider.when("/", "/fi");
     // $translateProvider.useLoader();
-    $translateProvider.preferredLanguage("fi");
     $urlMatcherFactoryProvider.strictMode(false); // Trailing slash ignored
+    $translateProvider.preferredLanguage("fi");
+    $translateProvider.useSanitizeValueStrategy("sanitize");
 })
 
 // Generate template or templateUrl automatically for states when not defined
