@@ -1,20 +1,13 @@
 namespace NotifikaatioService {
-    let
-        _$modal,
-        _$rootScope,
-        _$state,
-        _$timeout,
-        _NOTIFICATION_DELAY_SUCCESS,
-        _NOTIFICATION_DELAY_WARNING;
-
-    export const init = ($uibModal, $rootScope, $state, $timeout, NOTIFICATION_DELAY_SUCCESS, NOTIFICATION_DELAY_WARNING) => {
-        _$modal = $uibModal;
-        _$rootScope = $rootScope;
-        _$state = $state;
-        _$timeout = $timeout;
-        _NOTIFICATION_DELAY_SUCCESS = NOTIFICATION_DELAY_SUCCESS;
-        _NOTIFICATION_DELAY_WARNING = NOTIFICATION_DELAY_WARNING;
-
+    let i;
+    export const init = () => {
+        i = InjectorService.inject([
+            "$uibModal",
+            "$rootScope",
+            "$state",
+            "$timeout",
+            "NOTIFICATION_DELAY_SUCCESS",
+            "NOTIFICATION_DELAY_WARNING"]);
     }
 
     let _viestit = [];
@@ -24,10 +17,10 @@ namespace NotifikaatioService {
 
         _viestit = _.filter(_viestit, (viesti) => {
             if (viesti.tyyppi === 1) {
-                return comp(viesti.luotu, _NOTIFICATION_DELAY_SUCCESS);
+                return comp(viesti.luotu, i.NOTIFICATION_DELAY_SUCCESS);
             }
             else if (viesti.tyyppi === 2) {
-                return comp(viesti.luotu, _NOTIFICATION_DELAY_WARNING);
+                return comp(viesti.luotu, i.NOTIFICATION_DELAY_WARNING);
             }
             else {
                 return true;
@@ -35,13 +28,13 @@ namespace NotifikaatioService {
         });
     };
 
-    const refresh = () => _$timeout(() => {
+    const refresh = () => i.$timeout(() => {
         paivita();
-        _$rootScope.$broadcast("update:notifikaatiot");
+        i.$rootScope.$broadcast("update:notifikaatiot");
         if (!_.isEmpty(_viestit)) {
             refresh();
         }
-    }, _NOTIFICATION_DELAY_SUCCESS);
+    }, i.NOTIFICATION_DELAY_SUCCESS);
 
     const uusiViesti = (tyyppi, viesti, ilmanKuvaa?) => {
         if (_.isObject(viesti) && viesti.data && viesti.data.syy) {
@@ -62,22 +55,22 @@ namespace NotifikaatioService {
             luotu: new Date()
         });
 
-        _$rootScope.$broadcast("update:notifikaatiot");
+        i.$rootScope.$broadcast("update:notifikaatiot");
         refresh();
     };
 
-    export const poista = (i) => {
-        if (_.isObject(i)) {
-            _.remove(_viestit, i);
+    export const poista = (idx) => {
+        if (_.isObject(idx)) {
+            _.remove(_viestit, idx);
             paivita();
-            _$rootScope.$broadcast("update:notifikaatiot");
+            i.$rootScope.$broadcast("update:notifikaatiot");
         }
         else {
-            _viestit.splice(i, 1);
+            _viestit.splice(idx, 1);
         }
     };
 
-    export const fataali = (viesti) => _$modal.open({
+    export const fataali = (viesti) => i.$uibModal.open({
         resolve: {
             _viesti: _.constant(viesti)
         },
@@ -132,7 +125,7 @@ namespace NotifikaatioService {
 // }
 
 angular.module("app")
-.run(($injector) => $injector.invoke(NotifikaatioService.init))
+.run(NotifikaatioService.init)
 .constant("NOTIFICATION_DELAY_SUCCESS", 2000)
 .constant("NOTIFICATION_DELAY_WARNING", 5000)
 .controller("NotifikaatioController", ($scope) => {
