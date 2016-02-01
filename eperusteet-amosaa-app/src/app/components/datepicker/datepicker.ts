@@ -15,11 +15,6 @@
  */
 
 module DatePicker {
-    let _$datepicker;
-
-    export const init = ($datepicker) => {
-        _$datepicker = $datepicker;
-    };
 
     export const directive = ($parse, $timeout) => {
 
@@ -63,7 +58,7 @@ module DatePicker {
                             element.find("input").attr("required", "");
                         });
                     } else if (value) {
-                        let parsed = $parse(value);
+                        const parsed = $parse(value);
                         scope.$watch(() => {
                             return parsed(scope.$parent);
                         }, (newValue) => {
@@ -73,8 +68,8 @@ module DatePicker {
                 });
 
                 // Two-way binding with deep object hierarchies needs some tricks
-                let getter = $parse(scope.modelVar);
-                let setter = getter.assign;
+                const getter = $parse(scope.modelVar);
+                const setter = getter.assign;
                 scope.input = {};
                 scope.input.model = getter(scope.model);
 
@@ -85,11 +80,11 @@ module DatePicker {
                         setter(scope.model, scope.input.model);
                     }
                 });
-                // outside => inner
 
+                // outside => inner
                 scope.$watch(() => {
                     return getter(scope.model);
-                }, function (value) {
+                }, (value) => {
                     checkInputType(scope);
                     scope.input.model = value;
                 });
@@ -111,34 +106,30 @@ module DatePicker {
                 ngModel.$formatters.unshift((viewValue) => {
                     return validate(viewValue);
                 });
-                let validate = (viewValue) => {
-                    if (viewValue instanceof Date || viewValue === "" || viewValue === null || viewValue === undefined) {
+                const validate = (viewValue) => {
+                    if (_.isDate(viewValue) || viewValue === "" || viewValue === null || viewValue === undefined) {
                         ngModel.$setValidity("dateformatvalidator", true);
                         return viewValue;
-                    }
-                    else if (typeof viewValue === "string") {
+                    } else if (_.isString(viewValue)) {
                         parsedMoment = moment(viewValue, "D.M.YYYY", true);
-                    }
-                    else if (typeof viewValue === "number") {
+                    } else if (_.isNumber(viewValue)) {
                         parsedMoment = moment(viewValue);
-                    }
-                    else {
+                    } else {
                         ngModel.$setValidity("dateformatvalidator", false);
                         return undefined;
                     }
-                    if (parsedMoment.isValid()) {
+
+                    if(parsedMoment.isValid()) {
                         ngModel.$setValidity("dateformatvalidator", true);
                         return viewValue;
-                    }
-                    else {
+                    } else {
                         ngModel.$setValidity("dateformatvalidator", false);
                         return undefined;
                     }
                 }
             }
         };
-
-    }
+    };
 
 }
 

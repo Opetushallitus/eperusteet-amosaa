@@ -45,7 +45,6 @@ angular.module("app")
         },
         datepicker: {
             controller: ($scope) => {
-                console.log($scope);
                 $scope.pvm = "";
             }
         },
