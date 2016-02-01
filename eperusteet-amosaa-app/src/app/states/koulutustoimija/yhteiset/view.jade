@@ -1,23 +1,32 @@
 div.yhteiset-nakyma
-  div.ylatunniste
-    a.pull-left(href="#")
-      div.muokkaa
-        i.fa.fa-pencil
-    div.pull-left
-      h2 Hervannan ammattioppilaitos, yhteiset osat
-      h2
-        a(href="#")
-          i.fa.fa-magic
-        a(href="#")
-          i.fa.fa-hand-peace-o
-        a(href="#")
-          i.fa.fa-gift
+  div.row
+    div.col-xs-12
+      div.ylatunniste
+        a.pull-left(href="#")
+          div.muokkaa
+            i.fa.fa-pencil
+        div.pull-left
+          h2 Hervannan ammattioppilaitos, yhteiset osat
+          h2
+            a(href="#")
+              i.fa.fa-magic
 
 
-    div.painikkeet
-      div.keskitetty.pull-right
-        a.btn.btn-default Esikatselu
-        a.btn.btn-default PDF
+        div.painikkeet
+          div.keskitetty.pull-right
+            a.btn.btn-default Esikatselu
+            a.btn.btn-default PDF
+
+    div.col-xs-12
+      div.tabit
+        ul.nav.nav-tabs
+          li(ui-sref-active="active")
+            a(ui-sref=".sisalto") Sisalto
+          li(ui-sref-active="active")
+            a(ui-sref=".kasitteet") Kasitteet
+          li(ui-sref-active="active")
+            a(ui-sref=".poistetut") poistetut
 
 
-  div.ui-view
+    div.col-xs-12
+      div.ui-view
