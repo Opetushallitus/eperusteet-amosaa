@@ -48,6 +48,7 @@
     "angular-moment": "1.0.0-beta.3",
     "angular-spinner": "0.8.0",
     "angular-ui-bootstrap": "0.14.3",
-    "font-awesome": "4.5.0"
+    "font-awesome": "4.5.0",
+    "jquery-sticky": "^1.0.3"
   }
 }

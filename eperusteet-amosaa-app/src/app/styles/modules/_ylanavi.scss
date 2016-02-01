@@ -3,3 +3,11 @@
         padding: 8px 0;
     }
 }
+
+.ylanavi-sticky {
+    & > .ylanavi {
+        background-color: #FFFFFF;
+        z-index: 1000;
+        box-shadow: 0 4px 2px -3px gray;
+    }
+}

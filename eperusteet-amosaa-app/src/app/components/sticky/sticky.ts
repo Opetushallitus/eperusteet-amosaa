@@ -14,27 +14,17 @@
  * European Union Public Licence for more details.
  */
 
-module Ohje {
-
+module Sticky {
     export const directive = () => {
         return {
-            templateUrl: "components/ohje/ohje.jade",
-            restrict: "AE",
-            scope: {
-                teksti: "@",
-                otsikko: "@?",
-                suunta: "@?",
-                ohje: "@?"
-            },
-            controller: Ohje.controller
+            restrict: "A",
+            link: (scope, element, attrs) => {
+                console.log(attrs);
+                (<any>$(element)).sticky({ topSpacing: 0, className:  attrs.classname});
+            }
         }
     };
-
-    export const controller = ($scope) => {
-        $scope.isOpen = false;
-    }
-
 }
 
 angular.module("app")
-    .directive("ohje", Ohje.directive);
+.directive("sticky", Sticky.directive);
