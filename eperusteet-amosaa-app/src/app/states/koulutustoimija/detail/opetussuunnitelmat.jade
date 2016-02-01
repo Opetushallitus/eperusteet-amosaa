@@ -19,11 +19,14 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
     thead
       tr
         th
-        th: a(href="#") TUTKINNON NIMI&nbsp;
+        th
+          a(href="#") TUTKINNON NIMI&nbsp;
             span.glyphicon.glyphicon-sort-by-attributes
-        th: a(href="#") Osaamisala&nbsp;
+        th
+          a(href="#") Osaamisala&nbsp;
             span.glyphicon.glyphicon-sort-by-attributes
-        th: a(href="#") TUTKINNON TYYPPI&nbsp;
+        th
+          a(href="#") TUTKINNON TYYPPI&nbsp;
             span.glyphicon.glyphicon-sort-by-attributes
     tbody
       tr(ng-repeat="ops in opsit.data")
@@ -34,10 +37,12 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
               a(href="#")
                 span.glyphicon.glyphicon-star
         td
-          div(kaanna="ops.nimi")
+          div
+            a(href="#")
+              span.ellipsis(kaanna="ops.nimi")
         td
-          div(ng-show="ops.osaamisalat.length > 0", kaanna="ops.osaamisalat[0].nimi")
-          div(ng-hide="ops.osaamisalat.length > 0")
+          div
+            span.ellipsis(ng-show="ops.osaamisalat.length > 0", kaanna="ops.osaamisalat[0].nimi")
         td
           div(kaanna="ops.koulutustyyppi")
         td

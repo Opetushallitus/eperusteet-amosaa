@@ -60,6 +60,11 @@ module OhjeImpl {
             controller: controller
         }
     };
+
+    export const controller = ($scope) => {
+        $scope.isOpen = false;
+    }
+
 }
 
 angular.module("app")

@@ -18,6 +18,7 @@
     "src/app/components/notifikaatiot/notifikaatiot.ts",
     "src/app/components/datepicker/datepicker.ts",
     "src/app/components/utils/utils.ts",
+    "src/app/components/sticky/sticky.ts",
     "src/app/app.ts",
     "src/app/misc/filters.ts",
     "src/app/modals/add/add.ts",
