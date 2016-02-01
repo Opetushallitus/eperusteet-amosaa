@@ -52,4 +52,22 @@ $yhteiset-muokkaa-ikoni-height: 30px;
             }
         }
     }
+    .tabit {
+        margin-top: 20px;
+
+        .nav.nav-tabs {
+            li > a {
+                border-top-left-radius: 4px;
+                border-top-right-radius: 4px;
+                background: #f1f9fc;
+            }
+            li > a:hover {
+                cursor: pointer;
+            }
+
+            li.active > a {
+                background: #fff;
+            }
+        }
+    }
 }
