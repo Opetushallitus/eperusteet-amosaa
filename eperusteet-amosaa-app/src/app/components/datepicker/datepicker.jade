@@ -4,7 +4,7 @@ label( class="col-sm-3 control-label ng-binding" ) {{label}}
 div(class="col-sm-9 form-clear")
     ng-form(name="innerForm")
         div(class="input-group")
-            input(type="'text'" name="innerName" class="form-control" datepicker-popup="d.M.yyyy"
+            input(type="'text'" name="innerName" class="form-control" uib-datepicker-popup="d.M.yyyy"
             ng-model="model" placeholder="{{placeholder | kaanna}}" is-open="datePicker.state"
             dateformatvalidator id="{{inputElId}}")
 

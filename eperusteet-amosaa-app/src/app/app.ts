@@ -1,11 +1,11 @@
 angular.module("app", [
     "ui.router",
+    "angularSpinner",
     "restangular",
     "pascalprecht.translate",
     "ngAnimate",
     "ngSanitize",
     "ui.bootstrap",
-    "angularSpinner",
     "angular-loading-bar"
 ])
 
