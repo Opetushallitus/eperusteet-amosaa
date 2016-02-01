@@ -9,13 +9,14 @@ angular.module("app")
             .compact()
             .flatten(true)
             .filter((param) => _.size(param) > 1 && param[0] === ":")
-            .map((param) => {
-                return [param.slice(1), undefined];
-            })
+            .map((param) => [param.slice(1), ""])
             .fromPairs()
             .value();
 
-        $scope.states = $state.get();
+        $scope.states = _($state.get())
+            .each((state) => state.$$depth = _.size((state.name).split(".")))
+            .value();
+
         $scope.urlify = (state) => $state.href(state, $scope.params);
     }
 }));
