@@ -14,12 +14,12 @@ module Kayttaja {
     // TODO: Map by koulutustoimija
     export const tyoryhmat = () => _Api.one("kayttaja").all("tyoryhmat").get();
 
-    export const casRoles = () => _$q((resolve) => 
+    export const casRoles = () => _$q((resolve) =>
         _Cas.one("myroles").get()
             .then(resolve)
             .catch(() => resolve({})));
 
-    export const casMe = () => _$q((resolve) => 
+    export const casMe = () => _$q((resolve) =>
         _Cas.one("me").get()
             .then(resolve)
             .catch(() => resolve({})));
