@@ -189,8 +189,8 @@ public class PermissionManager {
     @Transactional(readOnly = true)
     @PreAuthorize("isAuthenticated()")
     public Map<TargetType, Set<Permission>> getOpsPermissions() {
-
         Map<TargetType, Set<Permission>> permissionMap = new HashMap<>();
+
         Set<Permission> opsPermissions =
             EnumSet.allOf(RolePermission.class).stream()
                    .map(p -> new Pair<>(p, SecurityUtil.getOrganizations(Collections.singleton(p))))

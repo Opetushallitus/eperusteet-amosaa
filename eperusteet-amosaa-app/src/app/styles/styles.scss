@@ -1,16 +1,23 @@
 $icon-font-path: "fonts/bootstrap/";
 @function font-path($path) { @return $path; }
 
-@import "../../../node_modules/bootstrap-sass/assets/stylesheets/_bootstrap-sprockets.scss";
-@import "../../../node_modules/bootstrap-sass/assets/stylesheets/_bootstrap.scss";
+@import "vendor/bootstrap";
+@import "vendor/virkailija";
+
 @import "../components/editointikontrollit/_styles.scss";
 @import "../components/ohje/_ohje.scss";
 @import "../components/loadingbar/_loading_bar.scss";
+@import "../components/notifikaatiot/_notifikaatiot.scss";
 
-@import "vendor/_virkailija.scss";
+@import "../components/editointikontrollit/styles";
+@import "../components/ohje/ohje";
+@import "../components/loadingbar/loading_bar";
 
-@import "generic/_lists.scss";
+@import "generic/list";
+@import "generic/modal";
+@import "generic/has_feedback";
 
-@import "modules/_main.scss";
-@import "modules/_ylanavi.scss";
-@import "modules/_koulutustoimija.scss";
+@import "modules/main";
+@import "modules/ylanavi";
+@import "modules/murupolku";
+@import "modules/koulutustoimija";

@@ -15,11 +15,8 @@
  */
 package fi.vm.sade.eperusteet.amosaa.service.mocks;
 
-import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanProjektitiedotDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
-import java.util.Collections;
-import java.util.List;
 import java.util.concurrent.Future;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
@@ -43,15 +40,5 @@ public class KayttajanTietoServiceMock implements KayttajanTietoService {
     @Override
     public KayttajanTietoDto haeKirjautaunutKayttaja() {
         return hae(null);
-    }
-    
-    @Override
-    public List<KayttajanProjektitiedotDto> haeOpetussuunnitelmat(String oid) {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public KayttajanProjektitiedotDto haeOpetussuunnitelma(String oid, Long opsId) {
-        return null;
     }
 }

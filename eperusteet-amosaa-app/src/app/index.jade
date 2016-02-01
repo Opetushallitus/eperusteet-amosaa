@@ -10,12 +10,15 @@ html(lang="fi" ng-app="app")
     script(src="app.js")
     title="ePerusteet-amosaa"
   body
-    a(href="", ui-sref="root.sandbox") sandbox
-    br
-    a(href="", ui-sref="root.koulutustoimija({ ktId: 1 })") koulutustoimija
-    br
-    a(href="", ui-sref="root.routelist") routelist
-    div.container.ui-view
+    // Debug
+    div.pull-left
+      a(href="", ui-sref="root.sandbox") sandbox
+      br
+      a(href="", ui-sref="root.koulutustoimija({ ktId: 1 })") koulutustoimija
+      br
+      a(href="", ui-sref="root.routelist") routelist
+
+    div(ui-view="notifikaatiot")
+    div.container(style="border-left: 1px dashed lightgray; border-right: 1px dashed lightgray;").ui-view
     div.editointi-wrapper
       editointikontrollit
-      // editointikontrollit(ng-controller="Editointicontroller")
