@@ -1,7 +1,7 @@
 declare module _ {
     interface OwnMixins {
-        print<T>(array: T): T;
-        print<T>(): T;
+        print(array: any): any;
+        print(): any;
         fromPairs(pairs: Array<any>): any;
         fromPairs(): any;
     }

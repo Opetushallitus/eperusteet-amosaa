@@ -38,4 +38,18 @@ describe("Sandbox components", () => {
         Helper.allEnabled(by.buttonText("Muokkaa"));
     });
 
+    it("Päivämäärän valinnan pitäisi toimia", () => {
+        const datepickerButton = $("datepick button");
+        const datepickerInput = $("datepick input");
+        datepickerButton.click();
+
+        const today = element(by.buttonText("Today"));
+        today.click();
+
+        const date = new Date();
+        const todaysDate = date.getDay() + "." + (date.getMonth()+1) + "." + date.getFullYear();
+
+        expect(datepickerInput.getAttribute('value')).toEqual( todaysDate );
+    });
+
 });

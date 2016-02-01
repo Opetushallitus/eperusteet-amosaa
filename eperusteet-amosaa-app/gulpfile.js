@@ -48,7 +48,11 @@ var testReporter = function (output, file) {
 
 gulp
 .task('templatepacker', function() {
-    return gulp.src([config.app + 'components/**/*.jade', config.app + 'views/**/*.jade', config.app + 'states/**/*.jade'])
+    return gulp.src([
+            config.app + 'components/**/*.jade',
+            config.app + 'views/**/*.jade',
+            config.app + 'modals/**/*.jade',
+            config.app + 'states/**/*.jade'])
         .pipe(mkStream(function(file, cb) {
             var fpath = file.path.slice((file.cwd + config.app).length + 1);
 

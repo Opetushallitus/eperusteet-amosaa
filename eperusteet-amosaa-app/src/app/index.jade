@@ -15,14 +15,12 @@ html(lang="fi" ng-app="app")
       div.row
         .col-xs-12
           ul.list-inline
-            li
-              a(href="", ui-sref="root.sandbox") sandbox
-            li
-              a(href="", ui-sref="root.koulutustoimija.detail({ ktId: 1 })") koulutustoimija
-            li
-              a(href="", ui-sref="root.routelist") routelist
+            li: a(href="", ui-sref="root.sandbox") sandbox
+            li: a(href="", ui-sref="root.koulutustoimija.detail({ ktId: 1 })") koulutustoimija
+            li: a(href="", ui-sref="root.routelist") routelist
 
     div(ui-view="notifikaatiot")
-    div.container(style="border-left: 1px dashed lightgray; border-right: 1px dashed lightgray;").ui-view
-    div.editointi-wrapper
-      editointikontrollit
+    div.container(style="border-left: 1px dashed lightgray; border-right: 1px dashed lightgray;")
+      div.ui-view
+      div.editointi-wrapper
+        editointikontrollit

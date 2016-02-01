@@ -8,7 +8,7 @@ Kehitysympäristön vaatimukset
 
 ## Backend
 - JDK 8
-- Maven 3
+- Maven 3 > (3.1)
 - PostgreSQL 9.3 (luo tietokanta paikallista kehitystä varten)
 - Tomcat [7.0.42,8)
 

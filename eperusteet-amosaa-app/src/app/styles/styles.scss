@@ -14,6 +14,8 @@ $icon-font-path: "fonts/bootstrap/";
 @import "../components/ohje/ohje";
 @import "../components/loadingbar/loading_bar";
 
+@import "../modals/add/styles";
+
 @import "generic/boxtable";
 @import "generic/modal";
 @import "generic/has_feedback";
