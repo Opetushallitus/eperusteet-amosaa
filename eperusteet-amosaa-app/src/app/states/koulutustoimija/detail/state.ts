@@ -14,8 +14,6 @@ angular.module("app")
                 $scope.addOpetussuunnitelma = () => {
                     ModalAdd.opetussuunnitelma();
                 };
-
-                $scope.addOpetussuunnitelma();
             }
         },
         opetussuunnitelmat: {

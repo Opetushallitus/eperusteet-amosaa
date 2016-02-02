@@ -31,6 +31,9 @@
     },
     "angular-spinner/angular-spinner.d.ts": {
       "commit": "3a666d1bff92e944488c25599ec56a4937c17c4e"
+    },
+    "d3/d3.d.ts": {
+      "commit": "8960370289f10cf75b72cb3e06a15150c1b323e2"
     }
   }
 }

@@ -16,20 +16,20 @@ div.ylanavi
 
     div.col-xs-4
       div.pull-right
-        div.dropdown.kielivalitsin
+        span.ohje(ng-show="help.template")
+          span.popover-element.badge(
+            uib-popover-template="help.template"
+            popover-trigger="mouseenter"
+            popover-animation="true"
+            popover-placement="bottom"
+            popover-title="{{ help.state }}") ?
+        span.dropdown.kielivalitsin
           span sisalto-kieli
-          span :&nbsp;
+          span=": "
           span
-            a.action-link.dropdown-toggle(data-toggle="dropdown", style="cursor: pointer;") suomi
+            a.action-link.dropdown-toggle(data-toggle="dropdown", style="cursor: pointer;") fi
               span.caret
             ul.dropdown-menu.dropdown-menu-right
-              li
-                a suomi
-              li
-                a ruotsi
-              li
-                a saame
-              li
-                a ru
-              li
-                a en
+              li(ng-repeat="kieli in langs")
+                a(href="" kaanna="kieli")
+
