@@ -51,6 +51,7 @@ gulp
     return gulp.src([
             config.app + 'components/**/*.jade',
             config.app + 'views/**/*.jade',
+            config.app + 'misc/guidance/**/*.jade',
             config.app + 'modals/**/*.jade',
             config.app + 'states/**/*.jade'])
         .pipe(mkStream(function(file, cb) {

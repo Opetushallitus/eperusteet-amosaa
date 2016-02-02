@@ -10,25 +10,36 @@ angular.module("app")
     },
     views: {
         "": {
-            resolve: {
-                // perusteet: eperusteet => eperusteet.one("perusteet").get()
-            },
             controller: ($scope) => {
                 $scope.data = "Main controller data";
             },
         },
-        "notifikaatiot": {
+        notifikaatiot: {
             templateUrl: "components/notifikaatiot/notifikaatiot.jade",
             controller: "NotifikaatioController"
         },
-        "ylanavi": {
-            controller: ($scope) => {
-                $scope.data = "ylanavi";
+        ylanavi: {
+            controller: ($scope, $rootScope, $state, $templateCache) => {
+                $scope.langs = KieliService.getSisaltokielet();
+                $scope.help = {
+                    title: KaannaService.kaanna("ohje"),
+                    template: ""
+                };
+
+                const updateHelp = _.callAndGive((state: string) => {
+                    const templateUrl = ("misc/guidance/" + state + ".jade")
+                                .replace(".detail", "");
+                    $scope.help.template = $templateCache.get(templateUrl)
+                        ? templateUrl
+                        : "";
+                }, $state.current.name);
+
+                $rootScope.$on("$stateChangeSuccess", (_, state) =>
+                        updateHelp(state.name));
             }
         },
-        "footer": {
+        footer: {
             controller: ($scope) => {
-                $scope.data = "footer";
             }
         }
     }
