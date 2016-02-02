@@ -16,6 +16,7 @@ angular.module("app", [
     $urlRouterProvider.when("/", "/fi");
     // $translateProvider.useLoader();
     $urlMatcherFactoryProvider.strictMode(false); // Trailing slash ignored
+    moment.locale("fi");
     $translateProvider.preferredLanguage("fi");
     $translateProvider.useSanitizeValueStrategy("sanitize");
 })
