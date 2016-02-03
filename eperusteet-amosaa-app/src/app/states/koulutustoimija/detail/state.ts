@@ -12,7 +12,9 @@ angular.module("app")
                 $scope.koulutustoimija = koulutustoimija;
 
                 $scope.addOpetussuunnitelma = () => {
-                    ModalAdd.opetussuunnitelma();
+                    ModalAdd.opetussuunnitelma().then((ops) => {
+                        console.log(ops);
+                    });
                 };
             }
         },

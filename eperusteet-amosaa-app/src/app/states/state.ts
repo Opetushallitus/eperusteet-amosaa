@@ -21,26 +21,12 @@ angular.module("app")
         ylanavi: {
             controller: ($scope, $rootScope, $state, $templateCache) => {
                 $scope.langs = KieliService.getSisaltokielet();
-                $scope.help = {
-                    title: KaannaService.kaanna("ohje"),
-                    template: ""
-                };
-
-                const updateHelp = _.callAndGive((state: string) => {
-                    const templateUrl = ("misc/guidance/" + state + ".jade")
-                                .replace(".detail", "");
-                    $scope.help.template = $templateCache.get(templateUrl)
-                        ? templateUrl
-                        : "";
-                }, $state.current.name);
-
-                $rootScope.$on("$stateChangeSuccess", (_, state) =>
-                        updateHelp(state.name));
+                $scope.$on('help:updated', (_, helpUrl) => $scope.helpUrl = helpUrl);
+                OhjeService.updateHelp($state.current.name);
             }
         },
         footer: {
-            controller: ($scope) => {
-            }
+            controller: ($scope) => { }
         }
     }
 }));
