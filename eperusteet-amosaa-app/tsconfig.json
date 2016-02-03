@@ -42,7 +42,6 @@
     "src/app/states/koulutustoimija/state.ts",
     "src/app/logic/kayttajatiedot.ts",
     "src/app/logic/opetussuunnitelmat.ts",
-    "src/app/logic/lmixins.ts",
-    "src/app/logic/filters.ts"
+    "src/app/logic/lmixins.ts"
   ]
 }

@@ -16,13 +16,13 @@ div.ylanavi
 
     div.col-xs-4
       div.pull-right
-        span.ohje(ng-show="help.template")
+        span.ohje(ng-show="helpUrl")
           span.popover-element.badge(
-            uib-popover-template="help.template"
+            uib-popover-template="helpUrl"
             popover-trigger="mouseenter"
             popover-animation="true"
             popover-placement="bottom"
-            popover-title="{{ help.state }}") ?
+            popover-title="{{ 'apuotsikko' | kaanna }}") ?
         span.dropdown.kielivalitsin
           span sisalto-kieli
           span=": "

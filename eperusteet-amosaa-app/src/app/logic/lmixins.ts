@@ -1,9 +1,9 @@
 declare module _ {
     interface OwnMixins {
-        callAndGive<F>(a: F, ...any): F;
-        print(any): any;
+        callAndGive<F>(x: F, ...args: any[]): F;
+        print(x: any): any;
         print(): any;
-        fromPairs(a: Array<any>): any;
+        fromPairs(x: Array<any>): any;
         fromPairs(): any;
     }
 

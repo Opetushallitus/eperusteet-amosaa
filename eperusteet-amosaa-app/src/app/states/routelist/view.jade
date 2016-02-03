@@ -7,11 +7,21 @@ div
           input.form-control(type="text", ng-model="params[param]")
 
   div(style="margin-left: {{ state.$$depth * 40 }}px" ng-repeat="state in states" ng-show="state.name")
-    h3(ng-bind="state.name")
+    h3
+      span(ng-bind="state.name")
+      span(style="color: #cc2222" ng-hide="state.$$helpUrl")=" NO HELP SPECIFIED"
+      span.ohje(ng-show="state.$$helpUrl")
+        span.popover-element.badge(
+          uib-popover-template="state.$$helpUrl"
+          popover-trigger="mouseenter"
+          popover-animation="true"
+          popover-placement="bottom"
+          popover-title="Help") ?
+    div
+      p(ng-bind="state.$$helpUrl")
     div(ng-show="state.abstract")
       label(style="margin-right: 5px") Abstrakti
     div
       label(style="margin-right: 5px") url:
       span(ng-bind="state.url")
     a(ng-href="{{ urlify(state) }}", ng-bind="urlify(state)") {{ state.name }}
-    // pre(ng-bind="state | json")
