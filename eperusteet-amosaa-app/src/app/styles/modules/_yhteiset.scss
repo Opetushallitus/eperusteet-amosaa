@@ -70,4 +70,15 @@ $yhteiset-muokkaa-ikoni-height: 30px;
             }
         }
     }
+
+    .konteksti {
+        .col-fixed-240{
+            width: 240px;
+            background: red;
+        }
+        .col-offset-240 {
+            margin-left: 255px;
+            background-color: blue;
+        }
+    }
 }

@@ -6,6 +6,9 @@ angular.module("app")
     views: {
         "": {
             controller: ($scope) => {}
+        },
+        "sivunavi": {
+
         }
     }
 }));
