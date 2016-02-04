@@ -21,7 +21,6 @@ import fi.vm.sade.eperusteet.amosaa.dto.TiedoteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.PoistettuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.TyoryhmaDto;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.YhteinenBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.YhteinenDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.YhteinenSisaltoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.OpetussuunnitelmaBaseDto;

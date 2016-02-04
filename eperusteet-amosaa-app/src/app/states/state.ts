@@ -3,15 +3,22 @@ angular.module("app")
 .state("root", {
     url: "/:lang",
     resolve: {
-        // kayttaja: () => Kayttaja.kayttaja(),
+        kayttaja: Api => Api.one("kayttaja"),
+        kayttajaKoulutustoimijat: kayttaja => kayttaja.one("koulutustoimijat").get(),
         // casMe: () => Kayttaja.casMe(),
         // casRoles: () => Kayttaja.casRoles(),
         kayttajaprofiili: () => Fake.Kayttajaprofiili(1)
     },
     views: {
         "": {
-            controller: ($scope) => {
-                $scope.data = "Main controller data";
+            controller: ($scope, $state, kayttajaKoulutustoimijat) => {
+                // FIXME Find generic solution
+                const redirect = () => $state.go("root.koulutustoimija.detail", { ktId: kayttajaKoulutustoimijat[0].koulutustoimija });
+                $scope.$on("$stateChangeSuccess", (_, state) => {
+                    if (state.name === "root") {
+                        redirect();
+                    }
+                });
             },
         },
         notifikaatiot: {

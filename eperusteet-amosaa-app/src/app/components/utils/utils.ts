@@ -1,7 +1,7 @@
 namespace UtilService {
     let i;
-    export const init = () => {
-        i = InjectorService.inject(["$window"]);
+    export const init = ($injector) => {
+        i = inject($injector, ["$window"]);
     }
 
     export const scrollTo = (selector, offset) => {

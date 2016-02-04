@@ -14,9 +14,9 @@
  * European Union Public Licence for more details.
  */
 
-package fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija;
+package fi.vm.sade.eperusteet.amosaa.dto.kayttaja;
 
-import java.util.UUID;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,8 +26,6 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class TyoryhmaOikeusDto {
-    Long id;
-    String henkiloOid;
-    HenkiloOikeus oikeus;
+public class KayttajanOikeudetDto {
+     List<KayttajanKoulutustoimijaDto> koulutustoimijat;
 }

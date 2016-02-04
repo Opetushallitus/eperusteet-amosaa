@@ -1,13 +1,19 @@
 namespace NotifikaatioService {
-    let i;
-    export const init = () => {
-        i = InjectorService.inject([
-            "$uibModal",
-            "$rootScope",
-            "$state",
-            "$timeout",
-            "NOTIFICATION_DELAY_SUCCESS",
-            "NOTIFICATION_DELAY_WARNING"]);
+    let
+        _$uibModal,
+        _$rootScope,
+        _$state,
+        _$timeout,
+        _NOTIFICATION_DELAY_SUCCESS,
+        _NOTIFICATION_DELAY_WARNING;
+
+    export const init = ($uibModal, $rootScope, $state, $timeout, NOTIFICATION_DELAY_SUCCESS, NOTIFICATION_DELAY_WARNING) => {
+        _$uibModal = $uibModal;
+        _$rootScope = $rootScope;
+        _$state = $state;
+        _$timeout = $timeout;
+        _NOTIFICATION_DELAY_SUCCESS = NOTIFICATION_DELAY_SUCCESS;
+        _NOTIFICATION_DELAY_WARNING = NOTIFICATION_DELAY_WARNING;
     }
 
     let _viestit = [];
@@ -17,10 +23,10 @@ namespace NotifikaatioService {
 
         _viestit = _.filter(_viestit, (viesti) => {
             if (viesti.tyyppi === 1) {
-                return comp(viesti.luotu, i.NOTIFICATION_DELAY_SUCCESS);
+                return comp(viesti.luotu, _NOTIFICATION_DELAY_SUCCESS);
             }
             else if (viesti.tyyppi === 2) {
-                return comp(viesti.luotu, i.NOTIFICATION_DELAY_WARNING);
+                return comp(viesti.luotu, _NOTIFICATION_DELAY_WARNING);
             }
             else {
                 return true;
@@ -28,13 +34,13 @@ namespace NotifikaatioService {
         });
     };
 
-    const refresh = () => i.$timeout(() => {
+    const refresh = () => _$timeout(() => {
         paivita();
-        i.$rootScope.$broadcast("update:notifikaatiot");
+        _$rootScope.$broadcast("update:notifikaatiot");
         if (!_.isEmpty(_viestit)) {
             refresh();
         }
-    }, i.NOTIFICATION_DELAY_SUCCESS);
+    }, _NOTIFICATION_DELAY_SUCCESS);
 
     const uusiViesti = (tyyppi, viesti, ilmanKuvaa?) => {
         if (_.isObject(viesti) && viesti.data && viesti.data.syy) {
@@ -55,7 +61,7 @@ namespace NotifikaatioService {
             luotu: new Date()
         });
 
-        i.$rootScope.$broadcast("update:notifikaatiot");
+        _$rootScope.$broadcast("update:notifikaatiot");
         refresh();
     };
 
@@ -63,14 +69,14 @@ namespace NotifikaatioService {
         if (_.isObject(idx)) {
             _.remove(_viestit, idx);
             paivita();
-            i.$rootScope.$broadcast("update:notifikaatiot");
+            _$rootScope.$broadcast("update:notifikaatiot");
         }
         else {
             _viestit.splice(idx, 1);
         }
     };
 
-    export const fataali = (viesti) => i.$uibModal.open({
+    export const fataali = (viesti) => _$uibModal.open({
         resolve: {
             _viesti: _.constant(viesti)
         },

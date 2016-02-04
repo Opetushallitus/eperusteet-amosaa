@@ -88,7 +88,6 @@ angular.module("app", [
 
 .run(($rootScope, $log, $urlMatcherFactory) => {
     $rootScope.$on("$stateChangeError", (event, toState, toParams, fromState, fromParams, error) => {
-        console.log("fail");
         $log.error(error);
     });
 });

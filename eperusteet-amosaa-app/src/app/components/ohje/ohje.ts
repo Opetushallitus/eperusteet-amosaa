@@ -16,14 +16,12 @@
 
 module OhjeService {
     let i;
-    export const init = _.once(() => {
-        i = InjectorService.inject([
-            "$templateCache",
-            "$rootScope",
-            "$state"]);
+    export const init = ($injector) => {
+        i = inject($injector, ["$templateCache", "$rootScope", "$state"]);
+        helpUpdater();
+    };
 
-        i.$rootScope.$on("$stateChangeSuccess", (_, state) => updateHelp(state.name));
-    });
+    const helpUpdater = _.once(() => i.$rootScope.$on("$stateChangeSuccess", (_, state) => updateHelp(state.name)));
 
     const stateName2Url = (state) =>
         ("misc/guidance/" + state + ".jade").replace(".detail", "");
