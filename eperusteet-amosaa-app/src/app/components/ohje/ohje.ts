@@ -45,7 +45,7 @@ module OhjeService {
 module OhjeImpl {
     export const controller = ($scope) => {
         $scope.isOpen = false;
-    }
+    };
 
     export const directive = () => {
         return {
@@ -60,10 +60,6 @@ module OhjeImpl {
             controller: controller
         }
     };
-
-    export const controller = ($scope) => {
-        $scope.isOpen = false;
-    }
 
 }
 

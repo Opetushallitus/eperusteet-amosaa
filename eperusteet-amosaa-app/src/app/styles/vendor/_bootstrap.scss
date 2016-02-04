@@ -13,6 +13,7 @@ $bootstrap-sass-asset-helper: true;
 
 // Core variables and mixins
 @import "../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/variables";
+@import "virkailija_variables";
 @import "../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/mixins";
 
 // Reset and dependencies

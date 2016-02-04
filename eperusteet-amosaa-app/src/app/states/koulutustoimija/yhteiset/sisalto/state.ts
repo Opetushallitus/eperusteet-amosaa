@@ -5,10 +5,11 @@ angular.module("app")
     resolve: {},
     views: {
         "": {
-            controller: ($scope) => {}
+            controller: () => {}
         },
         "sivunavi": {
-
+        },
+        "nakyma": {
         }
     }
 }));

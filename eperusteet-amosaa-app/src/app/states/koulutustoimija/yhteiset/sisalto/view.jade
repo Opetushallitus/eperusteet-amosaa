@@ -1,9 +1,6 @@
-div.row
-  div.col-xs-12
-    div.col-fixed-240.pull-left
+div.sisalto
+    div.col-fixed-nav.pull-left
       // haku juttuja
       div(ui-view="sivunavi")
-    div.col-offset-240
-      div.row
-        div.col-xs-12
-          p asd
+    div.col-offset-nav
+      div(ui-view="nakyma")
