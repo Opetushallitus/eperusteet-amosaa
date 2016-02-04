@@ -21,7 +21,7 @@ angular.module("app")
         ylanavi: {
             controller: ($scope, $rootScope, $state, $templateCache) => {
                 $scope.langs = KieliService.getSisaltokielet();
-                $scope.$on('help:updated', (_, helpUrl) => $scope.helpUrl = helpUrl);
+                $scope.$on("help:updated", (_, helpUrl) => $scope.helpUrl = helpUrl);
                 OhjeService.updateHelp($state.current.name);
             }
         },

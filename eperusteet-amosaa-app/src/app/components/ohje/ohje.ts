@@ -31,7 +31,7 @@ module OhjeService {
     export const updateHelp = (state: string) => {
         const templateUrl = stateName2Url(state);
         if (i.$templateCache.get(templateUrl)) {
-            i.$rootScope.$broadcast('help:updated', templateUrl);
+            i.$rootScope.$broadcast("help:updated", templateUrl);
         }
     };
 
@@ -60,11 +60,6 @@ module OhjeImpl {
             controller: controller
         }
     };
-
-    export const controller = ($scope) => {
-        $scope.isOpen = false;
-    }
-
 }
 
 angular.module("app")

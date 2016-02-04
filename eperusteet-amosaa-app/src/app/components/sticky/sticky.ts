@@ -19,8 +19,7 @@ module Sticky {
         return {
             restrict: "A",
             link: (scope, element, attrs) => {
-                console.log(attrs);
-                (<any>$(element)).sticky({ topSpacing: 0, className:  attrs.classname});
+                $(element).sticky({ topSpacing: 0, className:  attrs.classname});
             }
         }
     };
