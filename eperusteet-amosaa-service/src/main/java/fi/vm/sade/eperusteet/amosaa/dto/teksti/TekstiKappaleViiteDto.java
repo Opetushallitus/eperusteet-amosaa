@@ -32,17 +32,13 @@ import lombok.Setter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TekstiKappaleViiteDto {
     private Long id;
+    private TekstiKappaleDto tekstiKappale;
+    private Omistussuhde omistussuhde;
+    private boolean pakollinen;
+    private boolean valmis;
 
     @JsonProperty("_tekstiKappale")
     private Reference tekstiKappaleRef;
-
-    private TekstiKappaleDto tekstiKappale;
-
-    private Omistussuhde omistussuhde;
-
-    private boolean pakollinen;
-
-    private boolean valmis;
 
     public TekstiKappaleViiteDto() { }
 

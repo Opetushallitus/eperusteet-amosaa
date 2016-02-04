@@ -1,8 +1,9 @@
 declare module _ {
     interface OwnMixins {
-        print(array: any): any;
+        callAndGive<F>(x: F, ...args: any[]): F;
+        print(x: any): any;
         print(): any;
-        fromPairs(pairs: Array<any>): any;
+        fromPairs(x: Array<any>): any;
         fromPairs(): any;
     }
 
@@ -12,6 +13,10 @@ declare module _ {
 }
 
 _.mixin({
+    callAndGive: (f: Function, ...args) => {
+        f.apply(undefined, args);
+        return f;
+    },
     fromPairs: (pairs) => {
         let obj: any = {};
         _.each(pairs, (pair) => {

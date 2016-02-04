@@ -13,6 +13,7 @@ $icon-font-path: "fonts/bootstrap/";
 @import "../components/editointikontrollit/styles";
 @import "../components/ohje/ohje";
 @import "../components/loadingbar/loading_bar";
+@import "../components/toggler/styles";
 
 @import "../modals/add/styles";
 
@@ -27,3 +28,19 @@ $icon-font-path: "fonts/bootstrap/";
 @import "modules/koulutustoimija";
 @import "modules/yhteiset";
 @import "modules/tiedotteet";
+
+*::-webkit-scrollbar {
+    width: 11px;
+}
+
+*::-webkit-scrollbar-track {
+    background-color: #fff;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+
+    &:hover {
+        background-color: #ddd;
+    }
+}

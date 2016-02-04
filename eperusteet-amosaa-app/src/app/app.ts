@@ -1,11 +1,11 @@
 angular.module("app", [
     "ui.router",
+    "angularSpinner",
     "restangular",
     "pascalprecht.translate",
     "ngAnimate",
     "ngSanitize",
     "ui.bootstrap",
-    "angularSpinner",
     "angular-loading-bar"
 ])
 
@@ -16,6 +16,7 @@ angular.module("app", [
     $urlRouterProvider.when("/", "/fi");
     // $translateProvider.useLoader();
     $urlMatcherFactoryProvider.strictMode(false); // Trailing slash ignored
+    moment.locale("fi");
     $translateProvider.preferredLanguage("fi");
     $translateProvider.useSanitizeValueStrategy("sanitize");
 })

@@ -14,16 +14,20 @@
  * European Union Public Licence for more details.
  */
 
-module Sticky {
-    export const directive = () => {
-        return {
-            restrict: "A",
-            link: (scope, element, attrs) => {
-                $(element).sticky({ topSpacing: 0, className:  attrs.classname});
-            }
-        }
-    };
-}
+package fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija;
 
-angular.module("app")
-.directive("sticky", Sticky.directive);
+import fi.vm.sade.eperusteet.amosaa.dto.ReferenceableDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ *
+ * @author nkala
+ */
+@Getter
+@Setter
+public class PoistettuDto {
+    LokalisoituTekstiDto nimi;
+    ReferenceableDto osa;
+}

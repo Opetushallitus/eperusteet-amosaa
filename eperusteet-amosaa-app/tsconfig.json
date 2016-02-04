@@ -6,7 +6,6 @@
   },
   "files": [
     "typings/tsd.d.ts",
-    "typings/moment/moment.d.ts",
     "src/app/globals.ts",
     "src/app/components/injector/injector.ts",
     "src/app/components/editointikontrollit/editointikontrollit.ts",
@@ -15,10 +14,14 @@
     "src/app/components/lokalisointi/kieli.ts",
     "src/app/components/ckeditor/ckeditor.ts",
     "src/app/components/ohje/ohje.ts",
+    "src/app/components/toggler/toggler.ts",
     "src/app/components/notifikaatiot/notifikaatiot.ts",
     "src/app/components/sticky/sticky.ts",
     "src/app/components/datepicker/datepicker.ts",
+    "src/app/components/utils/utils.ts",
+    "src/app/components/sticky/sticky.ts",
     "src/app/app.ts",
+    "src/app/misc/filters.ts",
     "src/app/modals/add/add.ts",
     "src/app/states/state.ts",
     "src/app/states/sandbox/state.ts",
@@ -41,7 +44,6 @@
     "src/app/states/koulutustoimija/state.ts",
     "src/app/logic/kayttajatiedot.ts",
     "src/app/logic/opetussuunnitelmat.ts",
-    "src/app/logic/lmixins.ts",
-    "src/app/logic/filters.ts"
+    "src/app/logic/lmixins.ts"
   ]
 }
