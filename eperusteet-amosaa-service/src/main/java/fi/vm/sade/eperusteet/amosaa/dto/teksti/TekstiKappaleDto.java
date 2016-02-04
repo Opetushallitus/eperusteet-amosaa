@@ -16,6 +16,7 @@
 package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,7 +26,7 @@ import java.util.UUID;
 
 /**
  *
- * @author mikkom
+ * @author nkala
  */
 @Getter
 @Setter
@@ -39,16 +40,15 @@ public class TekstiKappaleDto {
 
     private LokalisoituTekstiDto nimi;
     private LokalisoituTekstiDto teksti;
-    private Tila tila;
     private UUID tunniste;
     private Boolean pakollinen;
     private Boolean valmis;
+    private SisaltoTyyppi tyyppi;
 
     public TekstiKappaleDto() {}
 
     public TekstiKappaleDto(LokalisoituTekstiDto nimi, LokalisoituTekstiDto teksti, Tila tila) {
         this.nimi = nimi;
         this.teksti = teksti;
-        this.tila = tila;
     }
 }
