@@ -2,14 +2,20 @@
     .ohje {
         margin: 5px;
         position: relative;
-        top: 7px;
+        top: 6px;
         right: 10px;
+
+        i {
+            background-color: lightgray;
+        }
     }
 
     .kielivalitsin {
         position: relative;
-        top: 7px;
-        right: -2px;
+        top: 4px;
+        span:first-child {
+            margin-right: 5px;
+        }
     }
 }
 
