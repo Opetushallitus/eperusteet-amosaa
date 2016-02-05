@@ -16,6 +16,7 @@
     "src/app/components/ohje/ohje.ts",
     "src/app/components/toggler/toggler.ts",
     "src/app/components/notifikaatiot/notifikaatiot.ts",
+    "src/app/logic/taulukko.ts",
     "src/app/components/sticky/sticky.ts",
     "src/app/components/datepicker/datepicker.ts",
     "src/app/components/utils/utils.ts",

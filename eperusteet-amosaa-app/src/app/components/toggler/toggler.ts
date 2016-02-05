@@ -8,7 +8,7 @@ module TogglerImpl {
             $scope.ngModel = !$scope.ngModel;
             $scope.onToggle($scope.ngModel);
         };
-    }
+    };
 
     export const directive = () => {
         return {

@@ -232,5 +232,24 @@ $yhteiset-top-vertical-margin: 10px;
                 margin-top: -8px;
             }
         }
+
+        table {
+            a, a > span {
+                text-decoration: none;
+
+            }
+            td:nth-child(1) {
+                width: 40%;
+            }
+            td:nth-child(2) {
+                width: 20%;
+            }
+            td:nth-child(3) {
+                width: 25%;
+            }
+            td:nth-child(4) {
+                width: 15%;
+            }
+        }
     }
 }

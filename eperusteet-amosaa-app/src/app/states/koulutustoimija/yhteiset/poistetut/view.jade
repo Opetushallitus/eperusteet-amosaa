@@ -1,3 +1,61 @@
 div.poistetut
-  h2 Poistetut
-    ohje(teksti="this is a test", otsikko="test title", suunta="top")
+  div.row
+    div.col-xs-6
+      h2 Poistetut
+        ohje(teksti="this is a test", otsikko="test title", suunta="top")
+    div.col-xs-6
+      div.input-group.input-group-sm
+        input.form-control(type="text", placeholder="{{'haku-nimi' | kaanna}}", ng-model="nimi" ng-change="paivita()")
+        span.input-group-btn
+          button.btn.btn-default(ng-click="nimi = ''")
+            i.fa.fa-times
+
+  div.row
+    div.col-xs-12
+      table.table.table-striped
+        thead
+          tr
+            th
+              a(href="", ng-click="vaihdaJarjestys('nimi')")
+                span(kaanna="'tekstikappale-otsikko'")
+                span(ng-show="jarjestys==='nimi'")=" "
+                  span.glyphicon.glyphicon-sort-by-alphabet-alt(ng-show="jarjestysKaanteinen")
+                  span.glyphicon.glyphicon-sort-by-alphabet(ng-show="!jarjestysKaanteinen")
+            th
+              a(href="", ng-click="vaihdaJarjestys('poistaja')")
+                span(kaanna="'poistaja'")
+                span(ng-show="jarjestys==='poistaja'")=" "
+                  span.glyphicon.glyphicon-sort-by-alphabet-alt(ng-show="jarjestysKaanteinen")
+                  span.glyphicon.glyphicon-sort-by-alphabet(ng-show="!jarjestysKaanteinen")
+            th
+              a(href="", ng-click="vaihdaJarjestys('poistoAika')")
+                span(kaanna="'poistopaivamaara'")
+                span(ng-show="jarjestys==='poistoAika'")=" "
+                  span.glyphicon.glyphicon-sort-by-attributes-alt(ng-show="jarjestysKaanteinen")
+                  span.glyphicon.glyphicon-sort-by-attributes(ng-show="!jarjestysKaanteinen")
+            th
+              a(href="")
+                span(kaanna="'toiminnot'")
+        tbody
+          tr(ng-repeat="poistettu in suodatetut = (poistetut " +
+          "| filter:nimi) " +
+          "| limitTo:alkioitaSivulla:(sivu - 1) * alkioitaSivulla " +
+          "| orderBy:jarjestys:jarjestysKaanteinen")
+
+            td {{poistettu.nimi}}
+            td {{poistettu.poistaja}}
+            td {{poistettu.poistoAika | date}}
+            td
+              a.label.label-info(kaanna="'nayta'")
+              span=" "
+              a.label.label-warning(kaanna="'palauta'")
+
+
+  nav.text-center
+    uib-pagination(
+    ng-model="sivu",
+    total-items="suodatetut.length",
+    items-per-page="alkioitaSivulla",
+    force-ellipses="true",
+    direction-links="false"
+    )
