@@ -20,3 +20,11 @@
         box-shadow: 0 4px 2px -3px gray;
     }
 }
+
+.ylanavi-sticky {
+    & > .ylanavi {
+        background-color: #FFFFFF;
+        z-index: $zindex-navbar;
+        box-shadow: 0 4px 2px -3px gray;
+    }
+}
