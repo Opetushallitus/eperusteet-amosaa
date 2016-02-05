@@ -1,4 +1,5 @@
 $icon-font-path: "fonts/bootstrap/";
+$fa-font-path: "fonts";
 @function font-path($path) { @return $path; }
 
 @import "vendor/bootstrap";
