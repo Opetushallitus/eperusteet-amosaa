@@ -33,6 +33,8 @@
     "src/app/states/koulutustoimija/yhteiset/kasitteet/state.ts",
     "src/app/states/koulutustoimija/yhteiset/poistetut/state.ts",
     "src/app/states/koulutustoimija/yhteiset/sisalto/state.ts",
+    "src/app/states/koulutustoimija/yhteiset/sisalto/tiedot/state.ts",
+    "src/app/states/koulutustoimija/yhteiset/sisalto/tekstikappale/state.ts",
     "src/app/data/fakes.ts",
     "src/app/data/amosaa.ts",
     "src/app/data/eperusteet.ts",

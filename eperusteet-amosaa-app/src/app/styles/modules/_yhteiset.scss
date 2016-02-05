@@ -5,7 +5,7 @@ $yhteiset-muokkaa-ikoni-height: 30px;
 $yhteiset-sivunavi-width: 280px;
 $yhteiset-haku-padding: 5px;
 $yhteiset-valikko-min-height: 600px;
-$yhteiset-sisalto-vertical-margin: 10px;
+$yhteiset-top-vertical-margin: 10px;
 
 .yhteiset-nakyma {
     .ylatunniste {
@@ -57,7 +57,7 @@ $yhteiset-sisalto-vertical-margin: 10px;
         }
     }
     .tabit {
-        margin-top: 20px;
+        margin-top: 10px;
 
         .nav.nav-tabs {
             li {
@@ -89,7 +89,7 @@ $yhteiset-sisalto-vertical-margin: 10px;
 
         .sivunavi {
             .haku {
-                margin-bottom: $yhteiset-sisalto-vertical-margin;
+                margin-bottom: $yhteiset-top-vertical-margin;
 
                 .form-inline {
                     .form-group {
@@ -145,13 +145,14 @@ $yhteiset-sisalto-vertical-margin: 10px;
         }
 
         .nakyma {
+            margin-top: $yhteiset-top-vertical-margin;
+
             .ylapalkki {
-                margin-top: $yhteiset-sisalto-vertical-margin;
-                height: $input-height-base + $yhteiset-sisalto-vertical-margin;
+                height: $input-height-base + $yhteiset-top-vertical-margin;
                 border-bottom: 1px solid #DEDEDF;
-                line-height: $input-height-base;
 
                 p {
+                    line-height: $input-height-base;
                     display: inline;
                     margin-right: 25px;
                     span {
@@ -181,11 +182,54 @@ $yhteiset-sisalto-vertical-margin: 10px;
                     }
                 }
             }
-            .tekstit {
-                margin: 0 -1 * ($grid-gutter-width / 2);
-                span {
-                    color: gray;
+
+            .tiedot {
+                .tekstit {
+                    margin: 0 -1 * ($grid-gutter-width / 2);
+                    span {
+                        color: gray;
+                    }
                 }
+            }
+
+            .tekstikappale {
+                h1, h2, h3, h4, h5, h6 {
+                    padding-left: 30px;
+                    margin-top: 10px;
+                    position: relative;
+                    a {
+                        position: absolute;
+                        text-decoration: none;
+                        left: 0;
+                        i {
+                            text-decoration: none;
+                            color: #a1cbdc;
+                        }
+                    }
+                }
+                p {
+                    padding-left: 30px;
+                }
+            }
+        }
+    }
+
+    .kasitteet {
+        margin-top: $yhteiset-top-vertical-margin;
+        h2 {
+            margin-top: 0;
+            span {
+                margin-top: -8px;
+            }
+        }
+    }
+
+    .poistetut {
+        margin-top: $yhteiset-top-vertical-margin;
+        h2 {
+            margin-top: 0;
+            span {
+                margin-top: -8px;
             }
         }
     }

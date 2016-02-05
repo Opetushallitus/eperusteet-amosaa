@@ -17,15 +17,15 @@ div.ylanavi(sticky, className="ylanavi-sticky")
     div.col-xs-4
       div.pull-right
         span.ohje(ng-show="helpUrl")
-          span.popover-element.badge(
+          span.popover-element.icon(
             uib-popover-template="helpUrl"
             popover-trigger="mouseenter"
             popover-animation="true"
             popover-placement="bottom"
-            popover-title="{{ 'apuotsikko' | kaanna }}") ?
+            popover-title="{{ 'apuotsikko' | kaanna }}")
+            i.fa.fa-exclamation
         span.dropdown.kielivalitsin
-          span sisalto-kieli
-          span=": "
+          span sisalto-kieli:
           span
             a.action-link.dropdown-toggle(data-toggle="dropdown", style="cursor: pointer;") fi
               span.caret

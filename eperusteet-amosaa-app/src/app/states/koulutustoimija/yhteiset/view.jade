@@ -17,16 +17,17 @@ div.yhteiset-nakyma
             a.btn.btn-default Esikatselu
             a.btn.btn-default PDF
 
+  div.row
     div.col-xs-12
       div.tabit
         ul.nav.nav-tabs
           li(ui-sref-active="active")
-            a(ui-sref=".sisalto") Sisaltö
+            a(ui-sref=".sisalto.tiedot") Sisaltö
           li(ui-sref-active="active")
             a(ui-sref=".kasitteet") Käsitteet
           li(ui-sref-active="active")
             a(ui-sref=".poistetut") Poistetut
 
-
+  div.row
     div.col-xs-12
       div.ui-view

@@ -84,7 +84,7 @@ gulp
 })
 .task('images', function() {
     return gulp.src([
-        './src/images/**',
+        './src/images/**'
     ])
     .pipe(gulp.dest(config.build + '/images'));
 })
