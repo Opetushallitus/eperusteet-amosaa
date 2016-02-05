@@ -4,7 +4,7 @@ angular.module("app")
     abstract: true,
     url: "/koulutustoimija/:ktId",
     resolve: {
-        jotain: (Api, $stateParams) => Api.one("koulutustoimijat/" + $stateParams.ktId).get(),
+        // jotain: (Api, $stateParams) => Api.one("koulutustoimijat/" + $stateParams.ktId).get(),
         koulutustoimija: ($stateParams) => Fake.Koulutustoimijat()[1],
         // wat: jotain => jotain.one("yhteinen").get(),
         // yhteinen: (Api, $stateParams) => Api.one("koulutustoimijat/" + $stateParams.ktId + "/yhteinen").get(),
