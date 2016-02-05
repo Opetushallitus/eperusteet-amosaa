@@ -5,7 +5,7 @@ $yhteiset-muokkaa-ikoni-height: 30px;
 $yhteiset-sivunavi-width: 280px;
 $yhteiset-haku-padding: 5px;
 $yhteiset-valikko-min-height: 600px;
-$yhteiset-sisalto-vertical-margin: 10px;
+$yhteiset-top-vertical-margin: 10px;
 
 .yhteiset-nakyma {
     .ylatunniste {
@@ -89,7 +89,7 @@ $yhteiset-sisalto-vertical-margin: 10px;
 
         .sivunavi {
             .haku {
-                margin-bottom: $yhteiset-sisalto-vertical-margin;
+                margin-bottom: $yhteiset-top-vertical-margin;
 
                 .form-inline {
                     .form-group {
@@ -146,12 +146,12 @@ $yhteiset-sisalto-vertical-margin: 10px;
 
         .nakyma {
             .ylapalkki {
-                margin-top: $yhteiset-sisalto-vertical-margin;
-                height: $input-height-base + $yhteiset-sisalto-vertical-margin;
+                margin-top: $yhteiset-top-vertical-margin;
+                height: $input-height-base + $yhteiset-top-vertical-margin;
                 border-bottom: 1px solid #DEDEDF;
-                line-height: $input-height-base;
 
                 p {
+                    line-height: $input-height-base;
                     display: inline;
                     margin-right: 25px;
                     span {
@@ -191,6 +191,22 @@ $yhteiset-sisalto-vertical-margin: 10px;
     }
 
     .kasitteet {
+        margin-top: $yhteiset-top-vertical-margin;
+        h2 {
+            margin-top: 0;
+            span {
+                margin-top: -8px;
+            }
+        }
+    }
 
+    .poistetut {
+        margin-top: $yhteiset-top-vertical-margin;
+        h2 {
+            margin-top: 0;
+            span {
+                margin-top: -8px;
+            }
+        }
     }
 }
