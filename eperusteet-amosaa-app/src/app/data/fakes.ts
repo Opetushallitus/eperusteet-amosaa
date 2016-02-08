@@ -75,7 +75,7 @@ module Fake {
             fi: "Ideat loppuu"
         },
         yhteinenOsa: 6
-    }]
+    }];
 
     export const Opetussuunnitelmat = (koulutustoimijaId) => ({
         3: {
@@ -119,6 +119,45 @@ module Fake {
             peruste: 617
         }
     });
+
+    export const Poistetut = (yhteisetId) => ([
+        {
+            id: 1,
+            nimi: "Jotain ihan älytöntä",
+            poistaja: "Testi Testi",
+            poistoAika: 1450162628037
+        },
+        {
+            id: 2,
+            nimi: "Tekstikappaleen otsikko 3",
+            poistaja: "Testi Testi",
+            poistoAika: 1450122638037
+        },
+        {
+            id: 3,
+            nimi: "Tekstikappaleen otsikko 4",
+            poistaja: "Testi Testi2",
+            poistoAika: 1450462638037
+        },
+        {
+            id: 3,
+            nimi: "Tekstikappaleen otsikko 4",
+            poistaja: "Testi Testi2",
+            poistoAika: 1450162738037
+        },
+        {
+            id: 3,
+            nimi: "Tekstikappaleen otsikko 4",
+            poistaja: "Testi Testi2",
+            poistoAika: 1450162138037
+        },
+        {
+            id: 3,
+            nimi: "Tekstikappaleen otsikko 4",
+            poistaja: "Testi Testi2",
+            poistoAika: 1451162638037
+        }
+    ]);
 
     // export const Suoritustapa = (id, suoritustapaTunniste) => Opetussuunnitelma(id).suoritustapa[suoritustapaTunniste];
 }
