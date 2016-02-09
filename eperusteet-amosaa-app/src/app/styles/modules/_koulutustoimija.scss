@@ -7,10 +7,19 @@
 
     .otsikko {
         margin: 10px 0;
-        button {
+        span > a {
             margin-left: 10px;
+            text-decoration: none;
+            i {
+                text-decoration: none;
+            }
         }
     }
+
+    .tiedotteet-selite {
+        margin: 10px 0;
+    }
+
     .yhteinen-osa {
         .laatikko {
             cursor: pointer;

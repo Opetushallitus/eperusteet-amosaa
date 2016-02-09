@@ -25,9 +25,10 @@ div.ylanavi(sticky, className="ylanavi-sticky")
             popover-title="{{ 'apuotsikko' | kaanna }}")
             i.fa.fa-exclamation
         span.dropdown.kielivalitsin
-          span sisalto-kieli:
+          span(kaanna="'sisalto-kieli'")
+          span=": "
           span
-            a.action-link.dropdown-toggle(data-toggle="dropdown", style="cursor: pointer;") fi
+            a.action-link.dropdown-toggle(data-toggle="dropdown") fi
               span.caret
             ul.dropdown-menu.dropdown-menu-right
               li(ng-repeat="kieli in langs")

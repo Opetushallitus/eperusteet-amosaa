@@ -1,10 +1,10 @@
 // Sprockets for fonts
 @function twbs-font-path($path) {
-  @return font-path($path);
+    @return font-path($path);
 }
 
 @function twbs-image-path($path) {
-  @return image-path($path);
+    @return image-path($path);
 }
 
 $bootstrap-sass-asset-helper: true;
@@ -14,7 +14,8 @@ $bootstrap-sass-asset-helper: true;
 // Core variables and mixins
 @import "../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/variables";
 @import "virkailija_variables";
-@import "../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/mixins";
+//@import "../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/mixins";
+@import "bootstrap/mixins";
 
 // Reset and dependencies
 @import "../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/normalize";
@@ -28,7 +29,8 @@ $bootstrap-sass-asset-helper: true;
 @import "../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/grid";
 @import "../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/tables";
 @import "../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/forms";
-@import "../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/buttons";
+//@import "../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/buttons";
+@import "bootstrap/buttons";
 
 // Components
 @import "../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/component-animations";

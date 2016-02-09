@@ -14,6 +14,7 @@ angular.module("app", [
     $sceProvider.enabled(true);
     $urlRouterProvider.when("", "/fi");
     $urlRouterProvider.when("/", "/fi");
+    $urlRouterProvider.otherwise("/fi/virhe");
     // $translateProvider.useLoader();
     $urlMatcherFactoryProvider.strictMode(false); // Trailing slash ignored
     moment.locale("fi");
@@ -86,9 +87,18 @@ angular.module("app", [
     usSpinnerConfigProvider.setDefaults({color: "#29d", radius: 30, width: 8, length: 16});
 }])
 
-.run(($rootScope, $log, $urlMatcherFactory) => {
+.run(($rootScope, $log, $urlMatcherFactory, $state) => {
     $rootScope.$on("$stateChangeError", (event, toState, toParams, fromState, fromParams, error) => {
-        console.log("fail");
+
         $log.error(error);
+
+        $state.go("root.virhe", {
+            "event": event,
+            "toState": toState,
+            "toParams": toParams,
+            "fromState": fromState,
+            "fromParams": fromParams,
+            "error": error
+        });
     });
 });
