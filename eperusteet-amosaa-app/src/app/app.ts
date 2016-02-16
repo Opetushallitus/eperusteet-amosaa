@@ -14,7 +14,6 @@ angular.module("app", [
     $sceProvider.enabled(true);
     $urlRouterProvider.when("", "/fi");
     $urlRouterProvider.when("/", "/fi");
-    $urlRouterProvider.otherwise("/fi/virhe");
     // $translateProvider.useLoader();
     $urlMatcherFactoryProvider.strictMode(false); // Trailing slash ignored
     moment.locale("fi");
@@ -89,7 +88,6 @@ angular.module("app", [
 
 .run(($rootScope, $log, $urlMatcherFactory, $state) => {
     $rootScope.$on("$stateChangeError", (event, toState, toParams, fromState, fromParams, error) => {
-
         $log.error(error);
 
         $state.go("root.virhe", {

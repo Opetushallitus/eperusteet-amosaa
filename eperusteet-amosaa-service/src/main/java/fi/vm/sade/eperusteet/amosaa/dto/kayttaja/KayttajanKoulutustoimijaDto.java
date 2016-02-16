@@ -25,5 +25,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class KayttajanKoulutustoimijaDto {
+    String koulutustoimija;
 
+//    Long koulutustoimija;
+//    ReferenceableDto koulutustoimija;
 }

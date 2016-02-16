@@ -15,6 +15,7 @@
  */
 package fi.vm.sade.eperusteet.amosaa.service.external;
 
+import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanKoulutustoimijaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import java.util.List;
 import java.util.concurrent.Future;
@@ -26,6 +27,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
  */
 public interface KayttajanTietoService {
 
+    // FIXME korjaa autentikaatiotasot
+
     @PreAuthorize("isAuthenticated()")
     KayttajanTietoDto haeKirjautaunutKayttaja();
 
@@ -34,4 +37,7 @@ public interface KayttajanTietoService {
 
     @PreAuthorize("isAuthenticated()")
     Future<KayttajanTietoDto> haeAsync(String oid);
+
+    @PreAuthorize("isAuthenticated()")
+    List<KayttajanKoulutustoimijaDto> koulutustoimijat();
 }

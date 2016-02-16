@@ -14,20 +14,12 @@
  * European Union Public Licence for more details.
  */
 
-package fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija;
-
-import java.util.UUID;
-import lombok.Getter;
-import lombok.Setter;
-
-/**
- *
- * @author nkala
- */
-@Getter
-@Setter
-public class TyoryhmaOikeusDto {
-    Long id;
-    String henkiloOid;
-    HenkiloOikeus oikeus;
+function inject(injector, injectables: Array<any>) {
+    let strs = _.clone(injectables);
+    let obj: any = {};
+    injectables.push(function() {
+        _.each(arguments, (arg, idx) => obj[strs[idx]] = arg);
+    });
+    injector.invoke(injectables);
+    return obj;
 }

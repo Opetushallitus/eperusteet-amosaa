@@ -17,15 +17,14 @@ package fi.vm.sade.eperusteet.amosaa.service.external.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanKoulutustoimijaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import fi.vm.sade.eperusteet.amosaa.service.util.RestClientFactory;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 import fi.vm.sade.generic.rest.CachingRestClient;
-import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.Future;
-import org.apache.commons.lang.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
@@ -36,13 +35,13 @@ import org.springframework.stereotype.Service;
 
 import static fi.vm.sade.eperusteet.amosaa.service.external.impl.KayttajanTietoParser.parsiKayttaja;
 import java.security.Principal;
+import java.util.ArrayList;
 
 /**
  * @author mikkom
  */
 @Service
 public class KayttajanTietoServiceImpl implements KayttajanTietoService {
-
     @Autowired
     private KayttajaClient client;
 
@@ -91,4 +90,14 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
             }
         }
     }
+
+    @Override
+    public List<KayttajanKoulutustoimijaDto> koulutustoimijat() {
+        ArrayList<KayttajanKoulutustoimijaDto> result = new ArrayList<>();
+        KayttajanKoulutustoimijaDto kkt = new KayttajanKoulutustoimijaDto();
+        kkt.setKoulutustoimija("1.2.246.562.10.20516711478");
+        result.add(kkt);
+        return result;
+    }
+
 }

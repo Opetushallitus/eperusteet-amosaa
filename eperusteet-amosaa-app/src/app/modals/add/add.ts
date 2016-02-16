@@ -1,12 +1,8 @@
 namespace ModalAdd {
     let i;
-    export const init = () => {
-        i = InjectorService.inject([
-                "$rootScope",
-                "$uibModal",
-                "$q"]);
+    export const init = ($injector) => {
+        i = inject($injector, ["$rootScope", "$uibModal", "$q"]);
     };
-
 
     const filterPerusteet = (perusteet = [], query = "") => _(perusteet)
         .filter((peruste) => KaannaService.hae(peruste.nimi, query))
