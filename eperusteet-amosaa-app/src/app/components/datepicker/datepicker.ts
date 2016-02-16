@@ -107,7 +107,7 @@ module DatePicker {
                     return validate(viewValue);
                 });
                 const validate = (viewValue) => {
-                    if (_.isDate(viewValue) || viewValue === "" || viewValue === null || viewValue === undefined) {
+                    if (_.isDate(viewValue) || !viewValue) {
                         ngModel.$setValidity("dateformatvalidator", true);
                         return viewValue;
                     } else if (_.isString(viewValue)) {
