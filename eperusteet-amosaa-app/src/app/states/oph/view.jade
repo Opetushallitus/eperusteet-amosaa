@@ -2,7 +2,7 @@ div.koulutustoimija
   div.row
     div.col-xs-6
       h2.otsikko
-        span(kaanna="koulutustoimija.organisaatiot[0].nimi")
+        span(kaanna="'opetushallitus'")
         span.dropdown
           a.dropdown-toggle(href="", data-toggle="dropdown")
             i.fa.fa-chevron-down.fa-fw
@@ -11,7 +11,6 @@ div.koulutustoimija
               a(href="", kaanna="oph-nakyma", ui-sref="root.oph")
             li(ui-sref-active="active")
               a(href="", kaanna="koulutustoimija-nakyma", ui-sref="root.koulutustoimija.detail({ ktId: 1 })")
-
 
     div.col-xs-6.tiedotteet-selite
       p.pull-right
@@ -22,6 +21,6 @@ div.koulutustoimija
         span.icon
           i.fa.fa-exclamation
 
-  div(ui-view="tiedotteet")
-  div(ui-view="yhteiset")
-  div(ui-view="opetussuunnitelmat")
+div(ui-view="tiedotteet")
+div(ui-view="pohjat")
+div(ui-view="tilastot")

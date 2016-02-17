@@ -13,8 +13,8 @@
     .kielivalitsin {
         position: relative;
         top: 4px;
-        span:first-child {
-            margin-right: 5px;
+        a {
+            cursor: pointer;
         }
     }
 }

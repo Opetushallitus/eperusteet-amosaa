@@ -5,7 +5,7 @@
 
 /* NAPPULAT */
 
-@mixin virkailija-button-variant($color, $background, $border) {
+/*@mixin virkailija-button-variant($color, $background, $border) {
   padding: 6.5px;
   color: $color;
   border-radius: 3px;
@@ -85,7 +85,7 @@
 
 .btn-danger {
   @include virkailija-button-variant($btn-danger-color, $btn-danger-bg, $btn-danger-border);
-}
+}*/
 
 body {
   font-size: 13px;
