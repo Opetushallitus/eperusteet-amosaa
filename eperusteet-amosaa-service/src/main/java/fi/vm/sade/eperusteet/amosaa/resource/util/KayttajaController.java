@@ -16,10 +16,11 @@
 package fi.vm.sade.eperusteet.amosaa.resource.util;
 
 import com.wordnik.swagger.annotations.Api;
-import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanKoulutustoimijaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import java.util.List;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -43,7 +44,12 @@ public class KayttajaController {
     }
 
     @RequestMapping(value = "/koulutustoimijat", method = RequestMethod.GET)
-    public List<KayttajanKoulutustoimijaDto> getKoulutustoimijat() {
+    public List<KoulutustoimijaBaseDto> getKoulutustoimijat() {
         return kayttajat.koulutustoimijat();
+    }
+
+    @RequestMapping(value = "/organisaatiot", method = RequestMethod.GET)
+    public Set<String> getOrganisaatiot() {
+        return kayttajat.getUserOrganizations();
     }
 }

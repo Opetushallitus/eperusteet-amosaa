@@ -14,21 +14,17 @@
  * European Union Public Licence for more details.
  */
 
-package fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija;
+package fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija;
 
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
-import java.util.List;
-import lombok.Getter;
-import lombok.Setter;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
+import fi.vm.sade.eperusteet.amosaa.repository.version.JpaWithVersioningRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author nkala
  */
-@Getter
-@Setter
-public class TyoryhmaDto {
-    Long id;
-    LokalisoituTekstiDto nimi;
-    List<TyoryhmaOikeusDto> oikeudet;
+@Repository
+public interface KoulutustoimijaRepository extends JpaWithVersioningRepository<Koulutustoimija, Long> {
+    Koulutustoimija findOneByOrganisaatio(final String organisaatio);
 }

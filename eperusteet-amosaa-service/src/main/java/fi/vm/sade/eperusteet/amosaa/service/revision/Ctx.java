@@ -13,7 +13,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * European Union Public Licence for more details.
  */
-package fi.vm.sade.eperusteet.amosaa.dto.kayttaja;
+
+package fi.vm.sade.eperusteet.amosaa.service.revision;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -24,9 +25,13 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class KayttajanKoulutustoimijaDto {
-    String koulutustoimija;
+public class Ctx {
+    private Long ktId;
 
-//    Long koulutustoimija;
-//    ReferenceableDto koulutustoimija;
+    public Ctx() {
+    }
+
+    public Ctx(Long ktId) {
+        this.ktId = ktId;
+    }
 }

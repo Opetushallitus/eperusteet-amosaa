@@ -1,19 +1,45 @@
+div.nakyma
+  div.ylapalkki
+    div.pull-left
+      p
+        span
+          b Muokattu:
+        span(ng-bind="uusin.date | aikaleima")
+      p
+        span
+          b Muokkaaja:
+        span(ng-bind="uusin.muokkaaja")
+
+    div.pull-right
+      button.btn.btn-primary.muokkaa(ng-hide="$$ekEditing" ng-click="edit()")
+        i.fa.fa-pencil
+
+    div.pull-right
+      p
+        span
+          b Versio:
+        input(type="number" min="1" max="{{ uusin.id }}" ng-model="uusin.id")
+      a(href="" ng-click="listRevisions()")
+        b Historia
+
+
 div.tiedot
   div.tekstit
     div.container-fluid
-      h3 Tiedot
+      h3(kaanna="'tiedot'")
       div.row
         div.col-xs-4
           span Nimi:
         div.col-xs-8
-          span Hervannan ammattioppilaitos, yhteiset osat
+          div(ng-show="$$ekEditing")
+            input.form-control(slocalized ng-model="yhteiset.nimi" type="text" required="true")
+          div(ng-hide="$$ekEditing")
+            p(ng-bind="yhteiset.nimi | kaanna")
 
         div.col-xs-4
-          span Projektin työryhmä:
+          span Tiivistelmä:
         div.col-xs-8
-          span ePerusteet_siirto_pt
-
-        div.col-xs-4
-          span Diaarinumero:
-        div.col-xs-8
-          span 30/011/2009
+          div(ng-show="$$ekEditing")
+            input.form-control(slocalized ng-model="yhteiset.kuvaus" type="text" required="true")
+          div(ng-hide="$$ekEditing")
+            p(ng-bind="yhteiset.kuvaus | kaanna")

@@ -49,10 +49,6 @@ import javax.annotation.PostConstruct;
 public class OrganisaatioServiceImpl implements OrganisaatioService {
 
     private static final String ORGANISAATIOT = "/rest/organisaatio/";
-    private static final String HIERARKIA_HAKU = "v2/hierarkia/hae?";
-    private static final String KUNTA_KRITEERI = "kunta=";
-    private static final String STATUS_KRITEERI = "&aktiiviset=true&suunnitellut=true&lakkautetut=false";
-    private static final String ORGANISAATIO_KRITEERI = "oidRestrictionList=";
 
     @Autowired
     private Client client;

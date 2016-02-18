@@ -1,5 +1,5 @@
-div.otsikkotaso.yhteinen-osa
-  h3 Koulutustoimijakohtainen yhteiset osat
+div.otsikkotaso.yhteiset-osa
+  h3(kaanna="'koulutustoimija-yhteiset-osat'")
   table.table.boxtable
     tbody
       tr
@@ -8,10 +8,10 @@ div.otsikkotaso.yhteinen-osa
             div(name="state")
         td
           div
-            a(href="#" ui-sref="^.yhteiset.sisalto")
-              span Kokkolan kokkikoulun yhteiset
+            a(href="" ui-sref="^.yhteiset.sisalto.tiedot({ yhteisetId: yhteiset.id })")
+              span(kaanna="yhteiset.nimi")
         td
           div
-            a(href="#" ui-sref="^.yhteiset.sisalto")
+            a(href="" ui-sref="^.yhteiset.sisalto.tiedot({ yhteisetId: yhteiset.id })")
               div(name="go")
                 span.glyphicon.glyphicon-chevron-right

@@ -1,10 +1,10 @@
-moro
 div.edit-controls(ng-cloak ng-hide="hideControls || !editStarted")
   div.edit-control-content
     div.edit-control-header
       span.glyphicon.glyphicon-pencil
-      span(ng-bind="'muokattavana'")
     div.edit-control-buttons
       button.btn.btn-default(ng-disabled="disableButtons", ng-click="cancel()", ng-bind="'peruuta'")
       span &nbsp;
       button.btn.btn-primary(ng-disabled="disableButtons", ng-click="save()", ng-bind="'tallenna'")
+    div.edit-control-comment
+      input.form-control(type="text" placeholder="{{ 'kirjoita-kommentti' | kaanna }}")

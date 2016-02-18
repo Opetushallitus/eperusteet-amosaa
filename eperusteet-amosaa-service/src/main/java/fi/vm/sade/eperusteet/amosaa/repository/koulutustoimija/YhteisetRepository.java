@@ -14,18 +14,16 @@
  * European Union Public Licence for more details.
  */
 
-package fi.vm.sade.eperusteet.amosaa.dto.kayttaja;
+package fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija;
 
-import java.util.List;
-import lombok.Getter;
-import lombok.Setter;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Yhteiset;
+import fi.vm.sade.eperusteet.amosaa.repository.version.JpaWithVersioningRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author nkala
  */
-@Getter
-@Setter
-public class KayttajanOikeudetDto {
-     List<KayttajanKoulutustoimijaDto> koulutustoimijat;
+@Repository
+public interface YhteisetRepository extends JpaWithVersioningRepository<Yhteiset, Long> {
 }

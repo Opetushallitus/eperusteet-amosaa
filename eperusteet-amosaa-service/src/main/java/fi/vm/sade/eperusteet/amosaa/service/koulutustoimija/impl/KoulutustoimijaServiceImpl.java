@@ -16,44 +16,79 @@
 
 package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.impl;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import fi.vm.sade.eperusteet.amosaa.domain.Tila;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Yhteiset;
+//import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Yhteinen;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.dto.TiedoteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.PoistettuDto;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.TyoryhmaDto;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.YhteinenDto;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.YhteinenSisaltoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.OpetussuunnitelmaDto;
+import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
+import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
+import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.YhteisetRepository;
 
 /**
  *
  * @author nkala
  */
 @Service
+@Transactional
 public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
-    private KoulutustoimijaDto getOrInitialize(String kOid) {
-        KoulutustoimijaDto koulutustoimijaDto = new KoulutustoimijaDto();
-        koulutustoimijaDto.setId(1L);
-        koulutustoimijaDto.setOid(kOid);
-//        koulutustoimijaDto.setOid("1.2.246.562.10.20516711478"););
-        koulutustoimijaDto.setVersion(1L);
-        return koulutustoimijaDto;
+
+    @Autowired
+    private OrganisaatioService organisaatioService;
+
+    @Autowired
+    private KoulutustoimijaRepository koulutustoimijaRepository;
+
+    @Autowired
+    private YhteisetRepository yhteinenRepository;
+
+    @Autowired
+    private DtoMapper mapper;
+
+    private Koulutustoimija getOrInitialize(String kOid) {
+        Koulutustoimija koulutustoimija = koulutustoimijaRepository.findOneByOrganisaatio(kOid);
+        if (koulutustoimija != null) {
+            return koulutustoimija;
+        }
+
+        JsonNode organisaatio = organisaatioService.getOrganisaatio(kOid);
+        LokalisoituTeksti nimi = LokalisoituTeksti.of(Kieli.FI, organisaatio.get("nimi").get("fi").asText());
+        koulutustoimija = new Koulutustoimija();
+        koulutustoimija.setNimi(nimi);
+        koulutustoimija.setOrganisaatio(kOid);
+
+        Yhteiset yhteinen = new Yhteiset();
+        yhteinen.setNimi(nimi);
+        yhteinen.setJulkaisukielet(Collections.EMPTY_SET);
+        yhteinen.setTila(Tila.LUONNOS);
+        koulutustoimija.setYhteiset(yhteinenRepository.save(yhteinen));
+
+        return koulutustoimijaRepository.save(koulutustoimija);
     }
 
     @Override
-    public KoulutustoimijaDto getKoulutustoimija(String kOid) {
-        return getOrInitialize(kOid);
+    public KoulutustoimijaBaseDto getKoulutustoimija(String kOid) {
+        return mapper.map(getOrInitialize(kOid), KoulutustoimijaBaseDto.class);
     }
 
     @Override
     public KoulutustoimijaDto getKoulutustoimija(Long kId) {
-        KoulutustoimijaDto result = new KoulutustoimijaDto();
-        return result;
+        return mapper.map(koulutustoimijaRepository.findOne(kId), KoulutustoimijaDto.class);
     }
 
     @Override
@@ -63,55 +98,31 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     }
 
     @Override
-    public YhteinenDto getYhteinen(String kOid) {
-        YhteinenDto result = new YhteinenDto();
-        return result;
-    }
-
-    @Override
-    public List<PoistettuDto> getYhteinenPoistetut(String kOid) {
-        ArrayList<PoistettuDto> result = new ArrayList<>();
-        return result;
-    }
-
-    @Override
-    public List<TyoryhmaDto> getTyoryhmat(String kOid) {
-        ArrayList<TyoryhmaDto> result = new ArrayList<>();
-        return result;
-    }
-
-    @Override
-    public YhteinenSisaltoDto getYhteinenSisalto(String kOid) {
-        YhteinenSisaltoDto result = new YhteinenSisaltoDto();
-        return result;
-    }
-
-    @Override
-    public List<OpetussuunnitelmaBaseDto> getOpetussuunnitelmat(String kOid) {
+    public List<OpetussuunnitelmaBaseDto> getOpetussuunnitelmat(Long kOid) {
         ArrayList<OpetussuunnitelmaBaseDto> result = new ArrayList<>();
         return result;
     }
 
     @Override
-    public OpetussuunnitelmaDto getOpetussuunnitelma(String kOid, Long opsId) {
+    public OpetussuunnitelmaDto getOpetussuunnitelma(Long kOid, Long opsId) {
         OpetussuunnitelmaDto result = new OpetussuunnitelmaDto();
         return result;
     }
 
     @Override
-    public List<TiedoteDto> getTiedotteet(String kOid) {
+    public List<TiedoteDto> getTiedotteet(Long kOid) {
         ArrayList<TiedoteDto> result = new ArrayList<>();
         return result;
     }
 
     @Override
-    public TiedoteDto getTiedote(String kOid) {
+    public TiedoteDto getTiedote(Long kOid) {
         TiedoteDto result = new TiedoteDto();
         return result;
     }
 
     @Override
-    public List<TiedoteDto> getOmatTiedotteet(String kOid) {
+    public List<TiedoteDto> getOmatTiedotteet(Long kOid) {
         ArrayList<TiedoteDto> result = new ArrayList<>();
         return result;
     }

@@ -4,10 +4,8 @@ angular.module("app")
     url: "",
     views: {
         "": {
-            controller: ($scope, yhteinen, koulutustoimija) => {
-                $scope.yhteinen = yhteinen;
+            controller: ($scope, koulutustoimija) => {
                 $scope.koulutustoimija = koulutustoimija;
-
                 $scope.addOpetussuunnitelma = () => {
                     ModalAdd.opetussuunnitelma().then((ops) => {
                         console.log(ops);
@@ -21,10 +19,13 @@ angular.module("app")
             }
         },
         yhteiset: {
-            controller: ($scope) => {}
+            controller: ($scope, yhteiset) => {
+                $scope.yhteiset = yhteiset;
+            }
         },
         tiedotteet: {
-            controller: ($scope) => {}
+            controller: ($scope) => {
+            }
         }
     }
 }));

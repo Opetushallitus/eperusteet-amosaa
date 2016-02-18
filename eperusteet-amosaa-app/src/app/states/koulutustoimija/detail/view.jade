@@ -2,7 +2,7 @@ div.koulutustoimija
   div.row
     div.col-xs-6
       h2.otsikko
-        span(kaanna="koulutustoimija.organisaatiot[0].nimi")
+        span(kaanna="koulutustoimija.nimi")
         span.dropdown
           a.dropdown-toggle(href="", data-toggle="dropdown")
             i.fa.fa-chevron-down.fa-fw
@@ -10,15 +10,12 @@ div.koulutustoimija
             li(ui-sref-active="active")
               a(href="", kaanna="oph-nakyma", ui-sref="root.oph")
             li(ui-sref-active="active")
-              a(href="", kaanna="koulutustoimija-nakyma", ui-sref="root.koulutustoimija.detail({ ktId: 1 })")
+              a(href="", kaanna="koulutustoimija-nakyma", ui-sref="root.koulutustoimija.detail")
 
 
     div.col-xs-6.tiedotteet-selite
-      p.pull-right
-        span Selitteet
-        span.icon
-          i.fa.fa-question
-        span Tiedotteet
+      div.pull-right
+        a(href="" kaanna="'tiedotteet'")
         span.icon
           i.fa.fa-exclamation
 

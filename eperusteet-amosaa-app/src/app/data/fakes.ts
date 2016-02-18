@@ -60,7 +60,7 @@ module Fake {
         kuvaus: {
             fi: "Vuonna 2127 haluttiin huikeampia sirkustaiteilijoita toimimaan pienemmässä painovoimassa."
         },
-        yhteinenOsa: 5
+        yhteisetOsa: 5
     }, {
         id: 2,
         organisaatiot: [ {
@@ -74,7 +74,7 @@ module Fake {
         kuvaus: {
             fi: "Ideat loppuu"
         },
-        yhteinenOsa: 6
+        yhteisetOsa: 6
     }];
 
     export const Opetussuunnitelmat = (koulutustoimijaId) => ({

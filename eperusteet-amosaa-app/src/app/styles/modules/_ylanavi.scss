@@ -1,13 +1,9 @@
 .ylanavi {
     .ohje {
-        margin: 5px;
+        margin: 5px 5px 5px 5px;
         position: relative;
-        top: 6px;
-        right: 10px;
-
-        i {
-            background-color: lightgray;
-        }
+        top: 3px;
+        right: -5px;
     }
 
     .kielivalitsin {
@@ -15,6 +11,7 @@
         top: 4px;
         a {
             cursor: pointer;
+            margin: 5px;
         }
     }
 }

@@ -2,13 +2,13 @@ div.yhteiset-nakyma
   div.row
     div.col-xs-12
       div.ylatunniste
-        a.pull-left(href="#")
+        a.pull-left(href="")
           div.muokkaa
             i.fa.fa-pencil
         div.pull-left
-          h2 Hervannan ammattioppilaitos, yhteiset osat
+          h2(ng-bind="yhteiset.nimi | kaanna")
           h2
-            a(href="#")
+            span
               i.fa.fa-magic
 
 

@@ -23,6 +23,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
  */
 public interface OrganisaatioService {
 
-    @PreAuthorize("permitAll()")
+    @PreAuthorize("isAuthenticated()")
     JsonNode getOrganisaatio(String organisaatioOid);
 }

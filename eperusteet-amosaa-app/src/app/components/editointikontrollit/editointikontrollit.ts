@@ -1,7 +1,9 @@
 interface IEditointikontrollitCallbacks {
-    start: () => Promise<any>,
-    save: (kommentti?) => Promise<any>,
-    cancel: () => Promise<any>,
+    start?: (val) => Promise<any>,
+    save?: (kommentti?) => Promise<any>,
+    cancel?: () => Promise<any>,
+    after?: (res) => void
+    done?: () => void
 }
 
 namespace EditointikontrollitService {
@@ -13,54 +15,95 @@ namespace EditointikontrollitService {
         _$q = $q;
     };
 
-    let
-        _editing: boolean = false,
-        _activeCallbacks: any;
+    let _activeCallbacks: any;
 
-    const stop = () => _$q((resolve) => { _editing = false; });
+    const defaultCallbacks = () => ({
+        start:  (val) => _$q((resolve, reject) => resolve(val)),
+        save:   (val) => _$q((resolve, reject) => resolve(val)),
+        after:  (res) => _$q((resolve, reject) => resolve(res)),
+        cancel: (res) => _$q((resolve, reject) => resolve(res)),
+    });
 
-    const start = (callbacks, isGlobal) => _$q((resolve, reject) => {
-        if (_editing) {
-            return reject();
-        }
-        else if (!callbacks) {
+    const stop = () => _$q((resolve) => {
+        _$rootScope.$$ekEditing = false;
+    });
+
+    const handleError = (reject) => ((err) => {
+        NotifikaatioService.varoitus(err.status + "! Voi rähmä :(");
+        console.error(err);
+        return reject(err);
+    });
+
+    const start = (callbacks, isGlobal: boolean) => _$q((resolve, reject) => {
+        callbacks = _.merge(defaultCallbacks(), callbacks);
+        if (_$rootScope.$$ekEditing) {
             return reject();
         }
         else {
-            _editing = true;
+            _$rootScope.$$ekEditing = true;
             _activeCallbacks = callbacks;
             _$rootScope.$broadcast("editointikontrollit:disable");
             if (isGlobal) {
                 _$rootScope.$broadcast("editointikontrollit:start");
             }
-            return callbacks.start().then(resolve).catch(reject);
+            return callbacks.start()
+                .then(resolve)
+                .catch(handleError(reject));
         }
     });
 
-    export const save = (kommentti?) => _$q((resolve, reject) => {
-        _$rootScope.$broadcast("editointikontrollit:saving");
-        return _activeCallbacks.save(kommentti).then(() => {
-            _editing = false;
+    export const save = (kommentti?) => _$q((resolve, reject) => _activeCallbacks
+        .save(kommentti)
+        .then((res) => {
+            _$rootScope.$broadcast("editointikontrollit:saving");
+            _$rootScope.$$ekEditing = false;
             _$rootScope.$broadcast("editointikontrollit:enable");
             _$rootScope.$broadcast("editointikontrollit:cancel");
-            resolve();
+            _activeCallbacks.after(res);
+            _activeCallbacks.done();
         })
-        .catch(reject);
-    });
+        .catch(handleError(reject)));
+
     export const cancel = () => _$q((resolve, reject) => {
         _$rootScope.$broadcast("editointikontrollit:canceling");
-        return _activeCallbacks.cancel().then(() => {
-            _editing = false;
-            _$rootScope.$broadcast("editointikontrollit:enable");
-            _$rootScope.$broadcast("editointikontrollit:cancel");
-            resolve();
-        })
-        .catch(reject);
+        return _activeCallbacks.cancel()
+            .then(() => {
+                _$rootScope.$$ekEditing = false;
+                _$rootScope.$broadcast("editointikontrollit:enable");
+                _$rootScope.$broadcast("editointikontrollit:cancel");
+                resolve();
+            })
+            .catch(reject);
     });
+
+    export const createRestangular = (
+        scope,
+        field: string,
+        resolvedObj: restangular.IElement,
+        callbacks: IEditointikontrollitCallbacks = {}) => {
+        scope[field] = resolvedObj.clone();
+        return EditointikontrollitService.create(_.merge({
+            start: (res) => _$q((resolve, reject) => scope[field].get()
+                    .then(resolve)
+                    .catch(reject)),
+            save: (kommentti) => _$q((resolve, reject) => scope[field].put()
+                    .then((res) => {
+                        NotifikaatioService.onnistui("tallennus-onnistui");
+                        resolve(res);
+                    })
+                    .catch(reject)),
+            cancel: (res) => _$q((resolve, reject) => {
+                scope[field] = resolvedObj.clone();
+                resolve();
+            }),
+            after: (res) => _.merge(resolvedObj, res),
+        }, callbacks));
+    };
+
     export const isEnabled = () => !!_activeCallbacks;
-    export const isEditing = () => _editing;
-    export const create = (callbacks: IEditointikontrollitCallbacks) => _.partial(start, callbacks, true);
-    export const createLocal = (callbacks: IEditointikontrollitCallbacks) => _.partial(start, callbacks, false);
+    export const isEditing = () => _$rootScope.$$ekEditing;
+    export const create = (callbacks = {}) => _.partial(start, callbacks, true);
+    export const createLocal = (callbacks = {}) => _.partial(start, callbacks, false);
 }
 
 module EditointikontrollitImpl {

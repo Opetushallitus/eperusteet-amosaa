@@ -17,23 +17,6 @@ angular.module("app")
         boxtable: {
             controller: ($scope) => {}
         },
-        loading_bar: {
-            controller: function ($scope, cfpLoadingBar, TestApi) {
-                TestApi.all("users").getList()
-                  .then((res) => {
-                      $scope.users = res;
-                  });
-                $scope.startLoading = () => {
-                    cfpLoadingBar.start();
-                };
-                $scope.jumpAhead = () => {
-                    cfpLoadingBar.inc(30);
-                };
-                $scope.stopLoading = () => {
-                    cfpLoadingBar.complete();
-                };
-            }
-        },
         notifikaatiot: {
             controller: ($scope) => {
                 $scope.normaali = () => NotifikaatioService.normaali("Infot");

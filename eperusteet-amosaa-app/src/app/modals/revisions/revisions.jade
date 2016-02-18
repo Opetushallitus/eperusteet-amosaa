@@ -1,0 +1,19 @@
+div.modal-header
+  h2(kaanna="'versio-historia'")
+
+div.modal-body
+  table.table.table-striped
+    thead
+      tr
+        th(kaanna="'revisio-id'")
+        th(kaanna="'paivamaara'")
+        th(kaanna="'muokkaaja'")
+    tbody
+      tr(ng-repeat="revision in revisions")
+        td(ng-bind="revision.id")
+        td(ng-bind="revision.date | aikaleima")
+        td(ng-bind="revision.muokkaaja")
+
+div.modal-footer
+  button.btn.btn-primary(ng-click="ok()", kaanna="'tallenna'")
+  button.btn.btn-default(ng-click="ok()", kaanna="'peruuta'")

@@ -16,14 +16,6 @@ div.ylanavi(sticky, className="ylanavi-sticky")
 
     div.col-xs-4
       div.pull-right
-        span.ohje(ng-show="helpUrl")
-          span.popover-element.icon(
-            uib-popover-template="helpUrl"
-            popover-trigger="mouseenter"
-            popover-animation="true"
-            popover-placement="bottom"
-            popover-title="{{ 'apuotsikko' | kaanna }}")
-            i.fa.fa-exclamation
         span.dropdown.kielivalitsin
           span(kaanna="'sisalto-kieli'")
           span=": "
@@ -34,3 +26,13 @@ div.ylanavi(sticky, className="ylanavi-sticky")
               li(ng-repeat="kieli in langs")
                 a(href="" kaanna="kieli")
 
+        span.ohje.popover-element.fa-stack.fa-lg(
+          style="color: #199dd0;"
+          ng-show="helpUrl"
+          uib-popover-template="helpUrl"
+          popover-trigger="mouseenter"
+          popover-animation="true"
+          popover-placement="bottom"
+          popover-title="{{ 'apuotsikko' | kaanna }}")
+          i.fa.fa-circle.fa-stack-2x
+          i.fa.fa-info.fa-stack-1x.fa-inverse

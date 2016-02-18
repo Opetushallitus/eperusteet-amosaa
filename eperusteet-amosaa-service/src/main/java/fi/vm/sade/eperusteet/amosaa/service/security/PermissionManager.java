@@ -17,7 +17,9 @@ package fi.vm.sade.eperusteet.amosaa.service.security;
 
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.Tyyppi;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.ops.Opetussuunnitelma;
+import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.ops.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.service.exception.NotExistsException;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.Organization;
@@ -49,7 +51,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class PermissionManager {
 
     public enum TargetType {
-
         POHJA("pohja"),
         TARKASTELU("tarkastelu"),
         OPETUSSUUNNITELMA("opetussuunnitelma");
@@ -92,6 +93,9 @@ public class PermissionManager {
 
     @Autowired
     private OpetussuunnitelmaRepository opetussuunnitelmaRepository;
+
+    @Autowired
+    private KoulutustoimijaRepository koulutustoimijaRepository;
 
     @Transactional(readOnly = true)
     public boolean hasPermission(Authentication authentication, Serializable targetId, TargetType target,
@@ -208,6 +212,26 @@ public class PermissionManager {
         permissionMap.put(TargetType.POHJA, pohjaPermissions);
 
         return permissionMap;
+    }
+
+    @Transactional(readOnly = true)
+    @PreAuthorize("isAuthenticated()")
+    public Set<Permission> getKoulutustoimijaPermissions(Long id) {
+
+        Koulutustoimija koulutustoimija = koulutustoimijaRepository.findOne(id);
+        if (koulutustoimija == null) {
+            throw new NotExistsException(MSG_OPS_EI_OLEMASSA);
+        }
+
+        String organisaatio = koulutustoimija.getOrganisaatio();
+        Set<Permission> permissions
+            = EnumSet.allOf(RolePermission.class).stream()
+            .map(p -> new Pair<>(p, SecurityUtil.getOrganizations(Collections.singleton(p))))
+            .filter(pair -> pair.getSecond().contains(organisaatio))
+            .flatMap(pair -> fromRolePermission(pair.getFirst()).stream())
+            .collect(Collectors.toSet());
+
+        return new HashSet<>(permissions);
     }
 
     @Transactional(readOnly = true)

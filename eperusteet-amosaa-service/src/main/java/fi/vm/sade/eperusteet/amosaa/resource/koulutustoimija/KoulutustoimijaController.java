@@ -19,15 +19,16 @@ package fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija;
 import com.wordnik.swagger.annotations.Api;
 import fi.vm.sade.eperusteet.amosaa.dto.TiedoteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.PoistettuDto;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.TyoryhmaDto;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.YhteinenDto;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.YhteinenSisaltoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
+import fi.vm.sade.eperusteet.amosaa.service.security.PermissionManager;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -45,75 +46,56 @@ public class KoulutustoimijaController {
     @Autowired
     private KoulutustoimijaService koulutustoimijaService;
 
-    @RequestMapping(value = "/{koulutustoimija}", method = RequestMethod.GET)
+    @Autowired
+    private PermissionManager permissionManager;
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
     public KoulutustoimijaDto get(
-            @PathVariable("koulutustoimija") final String kOid) {
-        return koulutustoimijaService.getKoulutustoimija(kOid);
+            @PathVariable("id") final Long id) {
+        return koulutustoimijaService.getKoulutustoimija(id);
     }
 
-    @RequestMapping(value = "/{koulutustoimija}/yhteinen", method = RequestMethod.GET)
-    @ResponseBody
-    public YhteinenDto getYhteinen(
-            @PathVariable("koulutustoimija") final String kOid) {
-        return koulutustoimijaService.getYhteinen(kOid);
-    }
-
-    @RequestMapping(value = "/{koulutustoimija}/yhteinen/poistetut", method = RequestMethod.GET)
-    @ResponseBody
-    public List<PoistettuDto> getYhteinenPoistetut(
-            @PathVariable("koulutustoimija") final String kOid) {
-        return koulutustoimijaService.getYhteinenPoistetut(kOid);
-    }
-
-    @RequestMapping(value = "/{koulutustoimija}/yhteinen/tyoryhmat", method = RequestMethod.GET)
-    @ResponseBody
-    public List<TyoryhmaDto> getYhteinenTyoryhmat(
-            @PathVariable("koulutustoimija") final String kOid) {
-        return koulutustoimijaService.getTyoryhmat(kOid);
-    }
-
-    @RequestMapping(value = "/{koulutustoimija}/yhteinen/sisalto", method = RequestMethod.GET)
-    @ResponseBody
-    public YhteinenSisaltoDto getYhteinenSisalto(
-            @PathVariable("koulutustoimija") final String kOid) {
-        return koulutustoimijaService.getYhteinenSisalto(kOid);
-    }
-
-    @RequestMapping(value = "/{koulutustoimija}/opetussuunnitelmat", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}/opetussuunnitelmat", method = RequestMethod.GET)
     @ResponseBody
     public List<OpetussuunnitelmaBaseDto> getOpetussuunnitelmat(
-            @PathVariable("koulutustoimija") final String kOid) {
-        return koulutustoimijaService.getOpetussuunnitelmat(kOid);
+            @PathVariable("id") final Long id) {
+        return koulutustoimijaService.getOpetussuunnitelmat(id);
     }
 
-    @RequestMapping(value = "/{koulutustoimija}/opetussuunnitelmat/{opsId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}/opetussuunnitelmat/{opsId}", method = RequestMethod.GET)
     @ResponseBody
     public OpetussuunnitelmaDto getOpetussuunnitelma(
-            @PathVariable("koulutustoimija") final String kOid,
+            @PathVariable("id") final Long id,
             @PathVariable("opsId") final Long opsId) {
-        return koulutustoimijaService.getOpetussuunnitelma(kOid, opsId);
+        return koulutustoimijaService.getOpetussuunnitelma(id, opsId);
     }
 
-    @RequestMapping(value = "/{koulutustoimija}/tiedotteet", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}/tiedotteet", method = RequestMethod.GET)
     @ResponseBody
     public List<TiedoteDto> getTiedotteet(
-            @PathVariable("koulutustoimija") final String kOid) {
-        return koulutustoimijaService.getTiedotteet(kOid);
+            @PathVariable("id") final Long id) {
+        return koulutustoimijaService.getTiedotteet(id);
     }
 
-    @RequestMapping(value = "/{koulutustoimija}/tiedote/{tiedoteId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}/tiedote/{tiedoteId}", method = RequestMethod.GET)
     @ResponseBody
     public TiedoteDto getTiedote(
-            @PathVariable("koulutustoimija") final String kOid,
+            @PathVariable("id") final Long id,
             @PathVariable("tiedoteId") final Long tiedoteId) {
-        return koulutustoimijaService.getTiedote(kOid);
+        return koulutustoimijaService.getTiedote(id);
     }
 
-    @RequestMapping(value = "/{koulutustoimija}/omattiedotteet", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}/omattiedotteet", method = RequestMethod.GET)
     @ResponseBody
     public List<TiedoteDto> getOmatTiedotteet(
-            @PathVariable("koulutustoimija") final String kOid) {
-        return koulutustoimijaService.getOmatTiedotteet(kOid);
+            @PathVariable("id") final Long id) {
+        return koulutustoimijaService.getOmatTiedotteet(id);
     }
+
+    @RequestMapping(value = "/oikeudet", method = RequestMethod.GET)
+    public ResponseEntity<Map<PermissionManager.TargetType, Set<PermissionManager.Permission>>> getOikeudet() {
+        return new ResponseEntity<>(permissionManager.getOpsPermissions(), HttpStatus.OK);
+    }
+
 }

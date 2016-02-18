@@ -8,7 +8,7 @@ angular.module("app")
     views: {
         "": {
             controller: ($scope, poistetut) => {
-                $scope.vaihdaJarjestys = TaulukkoService.bindSivutus($scope, "poistoAika", poistetut);
+                $scope.vaihdaJarjestys = Taulukot.bindSivutus($scope, "poistoAika", poistetut);
             }
         }
     }

@@ -14,9 +14,10 @@
  * European Union Public Licence for more details.
  */
 
-package fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija;
+package fi.vm.sade.eperusteet.amosaa.dto.kayttaja;
 
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.KayttajaoikeusTyyppi;
+import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,8 +27,10 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class YhteinenBaseDto {
-    Long id;
-    LokalisoituTekstiDto nimi;
-    String diaarinumero;
+public class KayttajaoikeusDto {
+    private Long id;
+    private Reference kayttaja;
+    private Reference ops;
+    private Reference koulutustoimija;
+    private KayttajaoikeusTyyppi oikeus;
 }

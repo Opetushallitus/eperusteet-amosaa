@@ -87,16 +87,25 @@ angular.module("app", [
 }])
 
 .run(($rootScope, $log, $urlMatcherFactory, $state) => {
+    $rootScope.error = null;
     $rootScope.$on("$stateChangeError", (event, toState, toParams, fromState, fromParams, error) => {
-        $log.error(error);
-
-        $state.go("root.virhe", {
-            "event": event,
-            "toState": toState,
-            "toParams": toParams,
-            "fromState": fromState,
-            "fromParams": fromParams,
-            "error": error
-        });
+        if (!$rootScope.error) {
+            $rootScope.error = { event, toState, toParams, fromState, fromParams, error };
+            $log.error(error);
+            $state.go("root.virhe");
+        }
+    });
+})
+.run(($rootScope, $log, $urlMatcherFactory, $state) => {
+    $rootScope.$on("$stateChangeStart", (event, state, params) => {
+        if (EditointikontrollitService.isEditing()) {
+            event.preventDefault();
+            NotifikaatioService.normaali("ohje-editointi-on-paalla");
+        }
+    });
+    $rootScope.$on("$stateChangeSuccess", (event, state, params) => {
+        if (state.name === "root") {
+            // $state.go("root");
+        }
     });
 });

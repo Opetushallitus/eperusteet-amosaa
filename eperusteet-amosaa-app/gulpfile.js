@@ -76,19 +76,17 @@ gulp
         .pipe(gulp.dest(config.build))
         .pipe(connect.reload());
 })
+.task('ckeditor', function() {
+    gulp.src(['./src/ckeditor-plugins/**']).pipe(gulp.dest(config.build + '/ckeditor-plugins'));
+    return gulp.src(['./node_modules/ckeditor/**']).pipe(gulp.dest(config.build + '/ckeditor'));
+})
 .task('locales', function() {
-    return gulp.src([
-        './src/localisation/**'
-    ])
-    .pipe(gulp.dest(config.build + '/localisation'));
+    return gulp.src(['./src/localisation/**']).pipe(gulp.dest(config.build + '/localisation'));
 })
 .task('images', function() {
-    return gulp.src([
-        './src/images/**'
-    ])
-    .pipe(gulp.dest(config.build + '/images'));
+    return gulp.src(['./src/images/**']).pipe(gulp.dest(config.build + '/images'));
 })
-.task('static-fonts', ['locales', 'images'], function() {
+.task('static-fonts', ['ckeditor', 'locales', 'images'], function() {
     return gulp.src([
         './node_modules/bootstrap-sass/assets/fonts/**',
         './node_modules/font-awesome/fonts/**'

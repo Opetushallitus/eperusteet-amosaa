@@ -49,8 +49,8 @@ public enum SisaltoTyyppi {
         throw new IllegalArgumentException(tila + " ei ole kelvollinen tila");
     }
 
-    public boolean isOneOf(KoulutusTyyppi[] tyypit) {
-        for (KoulutusTyyppi toinen : tyypit) {
+    public boolean isOneOf(SisaltoTyyppi[] tyypit) {
+        for (SisaltoTyyppi toinen : tyypit) {
             if (toinen.toString().equals(this.tyyppi)) {
                 return true;
             }

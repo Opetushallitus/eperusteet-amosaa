@@ -2,6 +2,10 @@ div.container {
     min-width: 960px;
 }
 
+.label {
+    user-select: none;
+}
+
 .paaotsikko {
     margin-top: 0;
     margin-bottom: 10px;

@@ -11,22 +11,20 @@ $fluid-container-width: 960px;;
 }
 
 .edit-controls {
-  background: transparentize($valinta-vari, 0.3);
+  background: transparentize($valinta-vari, 0.12);
   height: $edit-control-height;
   position: relative;
   float: left;
-  border: 2px solid black;
   z-index: 1040;
 
   &.floating {
     position: fixed;
-    border-bottom-color: transparentize($valinta-vari, 0.3);
     bottom: 0px;
     &.ng-hide-add {
-      transition: bottom 0.1s;
+      transition: bottom 0.2s;
     }
     &.ng-hide-remove {
-      transition: bottom 0.4s;
+      transition: bottom 0.2s;
     }
     &.ng-hide-add.ng-hide-add-active, &.ng-hide-remove {
       bottom: -$edit-control-height;
@@ -40,7 +38,7 @@ $fluid-container-width: 960px;;
       transition: none;
     }
     &.ng-hide-remove {
-      transition: opacity 0.4s;
+      transition: opacity 0.2s;
     }
     &.ng-hide-add.ng-hide-add-active, &.ng-hide-remove {
       opacity: 0;
@@ -51,34 +49,34 @@ $fluid-container-width: 960px;;
   }
 
   .edit-control-content {
-    max-width: $fluid-container-width;
     height: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    padding-top: 10px;
-    padding-bottom: 10px;
-  }
-  .edit-control-header {
-    float: left;
-    padding-left: 10px;
-    width: $edit-control-header-width;
-    font-size: 20px;
-    .glyphicon {
-      margin-right: 10px;
-      border: 2px solid #333;
-      // @include borderradius(10px);
-      padding: 5px;
+    margin-top: 4px;
+    margin-left: 6px;
+    margin-right: -11px;
+    padding: 10px 0 10px 0;
+    .edit-control-header {
+      left: -30px;
+      float: left;
+      padding-left: 10px;
+      font-size: 20px;
+
+      .glyphicon {
+        top: 3px;
+        margin: 3px 7px 3px 3px;
+      }
     }
-  }
-  .edit-control-buttons {
-    float: right;
-    padding-right: 10px;
-    text-align: right;
-    width: $edit-control-buttons-width;
-  }
-  .edit-control-comment {
-    float: right;
-    width: 400px;
+    .edit-control-buttons {
+      float: right;
+      padding-right: 10px;
+      // text-align: right;
+      width: $edit-control-buttons-width;
+    }
+    .edit-control-comment {
+      float: right;
+      width: 300px;
+      margin-right: 5px;
+      border-radius: none !important;
+    }
   }
   @media (max-width: 850px) {
     .edit-control-comment {

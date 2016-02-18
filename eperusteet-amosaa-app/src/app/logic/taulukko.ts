@@ -1,5 +1,4 @@
-
-namespace TaulukkoService {
+namespace Taulukot {
     export const bindSivutus = ($scope, jarjestys: string, poistetut: Array<any>) => {
         $scope.poistetut = poistetut;
         $scope.nimi = "";
