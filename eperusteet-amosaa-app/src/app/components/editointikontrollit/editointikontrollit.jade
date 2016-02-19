@@ -4,7 +4,7 @@ div.edit-controls(ng-cloak ng-hide="hideControls || !editStarted")
       span.glyphicon.glyphicon-pencil
     div.edit-control-buttons
       button.btn.btn-default(ng-disabled="disableButtons", ng-click="cancel()", ng-bind="'peruuta'")
-      span &nbsp;
+      span=" "
       button.btn.btn-primary(ng-disabled="disableButtons", ng-click="save()", ng-bind="'tallenna'")
     div.edit-control-comment
-      input.form-control(type="text" placeholder="{{ 'kirjoita-kommentti' | kaanna }}")
+      input.form-control(type="text" ng-model="kommentti" placeholder="{{ 'kirjoita-kommentti' | kaanna }}")

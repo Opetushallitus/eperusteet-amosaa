@@ -29,6 +29,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class YhteisetDto extends YhteisetBaseDto {
+    private String kommentti;
     private LokalisoituTekstiDto kuvaus;
     private Set<Kieli> julkaisukielet;
 }

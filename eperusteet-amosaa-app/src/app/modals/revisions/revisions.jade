@@ -1,19 +1,42 @@
+mixin searchbox(model, label, placeholder, onChange)
+  .form-group.has-feedback.has-feedback-left
+    label.control-label(kaanna=label)
+    input.form-control(type='text', ng-change=onChange placeholder="{{ " + placeholder + " | kaanna }}", ng-model=model)
+    i.form-control-feedback.glyphicon.glyphicon-search(style="color: gray;")
+
+
 div.modal-header
   h2(kaanna="'versio-historia'")
 
 div.modal-body
-  table.table.table-striped
-    thead
-      tr
-        th(kaanna="'revisio-id'")
-        th(kaanna="'paivamaara'")
-        th(kaanna="'muokkaaja'")
-    tbody
-      tr(ng-repeat="revision in revisions")
-        td(ng-bind="revision.id")
-        td(ng-bind="revision.date | aikaleima")
-        td(ng-bind="revision.muokkaaja")
+  .history-search
+    +searchbox("search", "'suodata-versioita'", "'kirjoita-kommentteja'", "update(search)")
+
+  .history-list
+    .history-item(ng-repeat="revision in revisions")
+      .hi-topic(ng-click="toggle(revision)")
+        span.hi-id
+          a(href="" ng-click="ok(revision.id)" ng-bind="revision.id")
+        span.hi-muokkaaja(ng-bind="revision.muokkaaja")
+        span.hi-aikaleima(ng-bind="revision.date | aikaleima")
+      .hi-kommentti(ng-show="revision.kommentti && (revision.$$show || search)")
+        p(ng-bind="revision.kommentti")
+
+  nav
+    ul.pagination
+      li
+        a(href="") «
+      li(ng-class="{ 'active': page === pagination.current }" ng-repeat=("page in pagination.pages"))
+        a(href="" ng-click="selectPage(page)") {{ page + 1 }}
+      li
+        a(href="") »
+
 
 div.modal-footer
-  button.btn.btn-primary(ng-click="ok()", kaanna="'tallenna'")
+  .pull-left.history-total
+    span
+      span(kaanna="'hakutuloksia'")
+      span=": "
+      span(ng-bind="revisions.length")
+
   button.btn.btn-default(ng-click="ok()", kaanna="'peruuta'")

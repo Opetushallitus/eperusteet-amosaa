@@ -58,6 +58,7 @@ public class YhteisetServiceImpl implements YhteisetService {
     public YhteisetDto updateYhteiset(Long kid, Long id, YhteisetDto body) {
         Yhteiset yhteinen = repository.findOne(id);
         body.setId(id);
+        repository.setRevisioKommentti(body.getKommentti());
         Yhteiset updated = mapper.map(body, yhteinen);
         return mapper.map(updated, YhteisetDto.class);
     }
@@ -72,4 +73,10 @@ public class YhteisetServiceImpl implements YhteisetService {
     public YhteisetRepository getRepository() {
         return repository;
     }
+
+    @Override
+    public Object convertToDto(Object obj) {
+        return mapper.map(obj, YhteisetDto.class);
+    }
+
 }

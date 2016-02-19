@@ -7,10 +7,11 @@ interface IEditointikontrollitCallbacks {
 }
 
 namespace EditointikontrollitService {
-    let _$rootScope, _$q, _$log;
+    let _$rootScope, _$q, _$log, _$timeout;
 
-    export const init = ($rootScope, $q, $log) => {
+    export const init = ($rootScope, $q, $log, $timeout) => {
         _$rootScope = $rootScope;
+        _$timeout = $timeout;
         _$log = $log;
         _$q = $q;
     };
@@ -40,14 +41,16 @@ namespace EditointikontrollitService {
             return reject();
         }
         else {
-            _$rootScope.$$ekEditing = true;
-            _activeCallbacks = callbacks;
-            _$rootScope.$broadcast("editointikontrollit:disable");
-            if (isGlobal) {
-                _$rootScope.$broadcast("editointikontrollit:start");
-            }
             return callbacks.start()
-                .then(resolve)
+                .then(res => {
+                    _$rootScope.$$ekEditing = true;
+                    _activeCallbacks = callbacks;
+                    _$rootScope.$broadcast("editointikontrollit:disable");
+                    if (isGlobal) {
+                        _$rootScope.$broadcast("editointikontrollit:start");
+                    }
+                    resolve(res);
+                })
                 .catch(handleError(reject));
         }
     });
@@ -83,15 +86,22 @@ namespace EditointikontrollitService {
         callbacks: IEditointikontrollitCallbacks = {}) => {
         scope[field] = resolvedObj.clone();
         return EditointikontrollitService.create(_.merge({
-            start: (res) => _$q((resolve, reject) => scope[field].get()
-                    .then(resolve)
-                    .catch(reject)),
-            save: (kommentti) => _$q((resolve, reject) => scope[field].put()
+            start: () => _$q((resolve, reject) => scope[field].get()
+                .then(res => {
+                    _.merge(resolvedObj, res);
+                    scope[field] = resolvedObj.clone();
+                    resolve();
+                })
+                .catch(reject)),
+            save: (kommentti) => _$q((resolve, reject) => {
+                scope[field].kommentti = kommentti;
+                return scope[field].put()
                     .then((res) => {
                         NotifikaatioService.onnistui("tallennus-onnistui");
                         resolve(res);
                     })
-                    .catch(reject)),
+                    .catch(reject);
+            }),
             cancel: (res) => _$q((resolve, reject) => {
                 scope[field] = resolvedObj.clone();
                 resolve();

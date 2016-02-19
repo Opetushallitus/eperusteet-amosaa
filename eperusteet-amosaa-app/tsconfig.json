@@ -28,6 +28,7 @@
     "src/app/logic/lmixins.ts",
     "src/app/logic/taulukko.ts",
     "src/app/logic/revisions.ts",
+    "src/app/logic/pagination.ts",
     "src/app/misc/filters.ts",
     "src/app/modals/add/add.ts",
     "src/app/modals/revisions/revisions.ts",

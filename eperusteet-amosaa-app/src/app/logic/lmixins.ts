@@ -3,6 +3,7 @@ declare module _ {
         callAndGive<F>(x: F, ...args: any[]): F;
         print(x: any): any;
         print(): any;
+        matchStrings(search: string, target: string): boolean;
         fromPairs(x: Array<any>): any;
         fromPairs(): any;
     }
@@ -13,6 +14,8 @@ declare module _ {
 }
 
 _.mixin({
+    matchStrings: (search: string = "", target: string = "") =>
+        !search || (target && target.toLocaleLowerCase().indexOf(search.toLowerCase()) !== -1),
     callAndGive: (f: Function, ...args) => {
         f.apply(undefined, args);
         return f;
