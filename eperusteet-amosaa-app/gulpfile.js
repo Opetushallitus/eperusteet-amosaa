@@ -77,8 +77,8 @@ gulp
         .pipe(connect.reload());
 })
 .task('ckeditor', function() {
-    gulp.src(['./src/ckeditor-plugins/**']).pipe(gulp.dest(config.build + '/ckeditor-plugins'));
-    return gulp.src(['./node_modules/ckeditor/**']).pipe(gulp.dest(config.build + '/ckeditor'));
+    gulp.src(['./node_modules/ckeditor/**']).pipe(gulp.dest(config.build + '/ckeditor'));
+    return gulp.src(['./src/ckeditor-plugins/**']).pipe(gulp.dest(config.build + '/ckeditor/plugins'));
 })
 .task('locales', function() {
     return gulp.src(['./src/localisation/**']).pipe(gulp.dest(config.build + '/localisation'));
