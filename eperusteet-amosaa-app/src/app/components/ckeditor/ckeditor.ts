@@ -181,28 +181,26 @@ angular.module("app")
                 }
             }
 
-            console.log(element[0]);
             let ready = false;
             let deferredcall = null;
 
             editor = CKEDITOR.inline(element[0], {
-                // toolbar: toolbarLayout,
-                // removePlugins: "resize,elementspath,scayt,wsc,image",
-                // extraPlugins: "divarea,sharedspace,epimage,termi",
-                // extraPlugins: "divarea,sharedspace",
-                // disallowedContent: "br; tr td{width,height}",
-                // extraAllowedContent: "img[!data-uid,src]; abbr[data-viite]",
-                // disableObjectResizing: true, // doesn"t seem to work with inline editor
-                // language: "fi",
-                // "entities_latin": false,
-                // sharedSpaces: {
-                //     top: "ck-toolbar-top"
-                // },
-                // readOnly: !editingEnabled,
-                // title: false,
-                // customData: {
-                //     // kaanna: KaannaService.kaanna
-                // }
+                toolbar: toolbarLayout,
+                removePlugins: "resize,elementspath,scayt,wsc,image",
+                extraPlugins: "divarea,sharedspace,epimage,termi",
+                disallowedContent: "br; tr td{width,height}",
+                extraAllowedContent: "img[!data-uid,src]; abbr[data-viite]",
+                disableObjectResizing: true, // doesn"t seem to work with inline editor
+                language: "fi",
+                "entities_latin": false,
+                sharedSpaces: {
+                    top: "ck-toolbar-top"
+                },
+                readOnly: !editingEnabled,
+                title: false,
+                customData: {
+                    kaanna: KaannaService.kaanna
+                }
             });
 
         //     // poistetaan enterin käyttö, jos kyseessä on yhden rivin syöttö

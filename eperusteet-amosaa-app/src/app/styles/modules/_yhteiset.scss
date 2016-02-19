@@ -190,8 +190,8 @@ $yhteiset-top-vertical-margin: 10px;
                 }
             }
 
-            .tekstikappale {
-                h1, h2, h3, h4, h5, h6 {
+            .tekstikappaleet {
+                h2, h3, h4, h5, h6 {
                     padding-left: 30px;
                     margin-top: 10px;
                     position: relative;
@@ -205,8 +205,8 @@ $yhteiset-top-vertical-margin: 10px;
                         }
                     }
                 }
-                p {
-                    padding-left: 30px;
+                .tekstikappale {
+                    margin-left: 30px;
                 }
             }
         }

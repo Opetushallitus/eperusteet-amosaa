@@ -11,7 +11,6 @@ angular.module("app")
 
             $scope.edit = EditointikontrollitService.createRestangular($scope, "yhteiset", yhteiset, {
                 done: () => historia.get("uusin").then(res => {
-                    console.log(res);
                     $scope.uusin = Revisions.parseOne(res);
                     $scope.historia.push($scope.uusin);
                 })
