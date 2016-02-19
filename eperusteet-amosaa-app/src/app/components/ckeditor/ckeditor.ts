@@ -192,7 +192,7 @@ angular.module("app")
                 extraAllowedContent: "img[!data-uid,src]; abbr[data-viite]",
                 disableObjectResizing: true, // doesn"t seem to work with inline editor
                 language: "fi",
-                "entities_latin": false,
+                entities_latin: false,
                 sharedSpaces: {
                     top: "ck-toolbar-top"
                 },
@@ -203,144 +203,143 @@ angular.module("app")
                 }
             });
 
-        //     // poistetaan enterin käyttö, jos kyseessä on yhden rivin syöttö
-        //     if (!element.is("div")) {
-        //         editor.on("key", (event) => {
-        //             if (event.data.keyCode === 13) {
-        //                 event.cancel();
-        //             }
-        //         });
-        //     }
-        //
-        //     scope.$on("$translateChangeSuccess", () => {
-        //         placeholderText = getPlaceholder();
-        //         ctrl.$render();
-        //     });
-        //
-        //     function setReadOnly(state) {
-        //         editor.setReadOnly(state);
-        //     }
-        //
-        //     scope.$on("enableEditing", () => {
-        //         editingEnabled = true;
-        //         if (ready) {
-        //             setReadOnly(!editingEnabled);
-        //         } else {
-        //             deferredcall = _.partial(setReadOnly, !editingEnabled);
-        //         }
-        //         element.addClass("edit-mode");
-        //     });
-        //
-        //     scope.$on("disableEditing", () => {
-        //         editingEnabled = false;
-        //         editor.setReadOnly(!editingEnabled);
-        //         element.removeClass("edit-mode");
-        //     });
-        //
-        //     scope.$on("$destroy", () => {
-        //         $timeout(() => {
-        //             if (editor && editor.status !== "destroyed") {
-        //                 editor.destroy(false);
-        //             }
-        //         });
-        //
-        //     });
-        //
-        //     editor.on("focus", () => {
-        //         if (editingEnabled) {
-        //             element.removeClass("has-placeholder");
-        //             $("#toolbar").show();
-        //             if (_.isEmpty(ctrl.$viewValue)) {
-        //                 editor.setData("");
-        //             }
-        //         }
-        //     });
-        //
-        //     let UUID = "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}";
-        //     let imgSrcPattern = new RegExp("src=\"[^\"]+/" + UUID + "\"", "g");
-        //     function trim(obj) {
-        //         // Replace all nbsps with normal spaces, remove extra spaces and trim ends.
-        //         if (_.isString(obj)) {
-        //             obj = obj.replace(/&nbsp;/gi, " ").replace(/ +/g, " ").replace(imgSrcPattern, " ").trim();
-        //         }
-        //         return obj;
-        //     }
-        //
-        //     let dataSavedOnNotification = false;
-        //     scope.$on("notifyCKEditor", () => {
-        //         if (editor.checkDirty()) {
-        //             dataSavedOnNotification = true;
-        //             editor.getSelection().unlock();
-        //             let data = element.hasClass("has-placeholder") ? "" : editor.getData();
-        //             ctrl.$setViewValue(trim(data));
-        //         }
-        //         $("#toolbar").hide();
-        //     });
-        //
-        //     function updateModel() {
-        //         if (editor.checkDirty()) {
-        //             editor.getSelection().unlock();
-        //             let data = editor.getData();
-        //             scope.$apply(() => {
-        //                 ctrl.$setViewValue(trim(data));
-        //                 // scope.$broadcast("edited");
-        //             });
-        //             if (_.isEmpty(data)) {
-        //                 element.addClass("has-placeholder");
-        //                 editor.setData(placeholderText);
-        //             }
-        //         }
-        //
-        //     }
-        //
-        //     editor.on("blur", () => {
-        //         if (dataSavedOnNotification) {
-        //             dataSavedOnNotification = false;
-        //             return;
-        //         }
-        //         updateModel();
-        //         $("#toolbar").hide();
-        //     });
-        //
-        //     editor.on("loaded", () => {
-        //         editor.filter.disallow("br");
-        //         editor.filter.addTransformations([[
-        //             {
-        //                 element: "img",
-        //                 right: (el) => {
-        //                     el.attributes.src = EpImageService.getUrl({id: el.attributes["data-uid"]});
-        //                     delete el.attributes.height;
-        //                     delete el.attributes.width;
-        //                 }
-        //             }
-        //         ]]);
-        //     });
-        //
-        //     editor.on("instanceReady", () => {
-        //         ready = true;
-        //         if (deferredcall) {
-        //             deferredcall();
-        //             deferredcall = null;
-        //         }
-        //         $rootScope.$broadcast("ckEditorInstanceReady");
-        //     });
-        //
-        //     // model -> view
-        //
-        //     ctrl.$render = () => {
-        //         if (editor) {
-        //             if (angular.isUndefined(ctrl.$viewValue) || (angular.isString(ctrl.$viewValue) && _.isEmpty(ctrl.$viewValue) && placeholderText)) {
-        //                 element.addClass("has-placeholder");
-        //                 editor.setData(placeholderText);
-        //                 editor.resetDirty();
-        //             } else {
-        //                 element.removeClass("has-placeholder");
-        //                 editor.setData(ctrl.$viewValue);
-        //             }
-        //         }
-        //     };
-        //     placeholderText = getPlaceholder();
-        // }
+            // poistetaan enterin käyttö, jos kyseessä on yhden rivin syöttö
+            if (!element.is("div")) {
+                editor.on("key", (event) => {
+                    if (event.data.keyCode === 13) {
+                        event.cancel();
+                    }
+                });
+            }
+
+            scope.$on("$translateChangeSuccess", () => {
+                placeholderText = getPlaceholder();
+                ctrl.$render();
+            });
+
+            function setReadOnly(state) {
+                editor.setReadOnly(state);
+            }
+
+            scope.$on("enableEditing", () => {
+                editingEnabled = true;
+                if (ready) {
+                    setReadOnly(!editingEnabled);
+                } else {
+                    deferredcall = _.partial(setReadOnly, !editingEnabled);
+                }
+                element.addClass("edit-mode");
+            });
+
+            scope.$on("disableEditing", () => {
+                editingEnabled = false;
+                editor.setReadOnly(!editingEnabled);
+                element.removeClass("edit-mode");
+            });
+
+            scope.$on("$destroy", () => {
+                $timeout(() => {
+                    if (editor && editor.status !== "destroyed") {
+                        editor.destroy(false);
+                    }
+                });
+
+            });
+
+            editor.on("focus", () => {
+                if (editingEnabled) {
+                    element.removeClass("has-placeholder");
+                    $("#toolbar").show();
+                    if (_.isEmpty(ctrl.$viewValue)) {
+                        editor.setData("");
+                    }
+                }
+            });
+
+            let UUID = "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}";
+            let imgSrcPattern = new RegExp("src=\"[^\"]+/" + UUID + "\"", "g");
+            function trim(obj) {
+                // Replace all nbsps with normal spaces, remove extra spaces and trim ends.
+                if (_.isString(obj)) {
+                    obj = obj.replace(/&nbsp;/gi, " ").replace(/ +/g, " ").replace(imgSrcPattern, " ").trim();
+                }
+                return obj;
+            }
+
+            let dataSavedOnNotification = false;
+            scope.$on("notifyCKEditor", () => {
+                if (editor.checkDirty()) {
+                    dataSavedOnNotification = true;
+                    editor.getSelection().unlock();
+                    let data = element.hasClass("has-placeholder") ? "" : editor.getData();
+                    ctrl.$setViewValue(trim(data));
+                }
+                $("#toolbar").hide();
+            });
+
+            function updateModel() {
+                if (editor.checkDirty()) {
+                    editor.getSelection().unlock();
+                    let data = editor.getData();
+                    scope.$apply(() => {
+                        ctrl.$setViewValue(trim(data));
+                        // scope.$broadcast("edited");
+                    });
+                    if (_.isEmpty(data)) {
+                        element.addClass("has-placeholder");
+                        editor.setData(placeholderText);
+                    }
+                }
+
+            }
+
+            editor.on("blur", () => {
+                if (dataSavedOnNotification) {
+                    dataSavedOnNotification = false;
+                    return;
+                }
+                updateModel();
+                $("#toolbar").hide();
+            });
+
+            editor.on("loaded", () => {
+                editor.filter.disallow("br");
+                editor.filter.addTransformations([[
+                    {
+                        element: "img",
+                        right: (el) => {
+                            // el.attributes.src = EpImageService.getUrl({id: el.attributes["data-uid"]});
+                            delete el.attributes.height;
+                            delete el.attributes.width;
+                        }
+                    }
+                ]]);
+            });
+
+            editor.on("instanceReady", () => {
+                ready = true;
+                if (deferredcall) {
+                    deferredcall();
+                    deferredcall = null;
+                }
+                $rootScope.$broadcast("ckEditorInstanceReady");
+            });
+
+            // model -> view
+
+            ctrl.$render = () => {
+                if (editor) {
+                    if (angular.isUndefined(ctrl.$viewValue) || (angular.isString(ctrl.$viewValue) && _.isEmpty(ctrl.$viewValue) && placeholderText)) {
+                        element.addClass("has-placeholder");
+                        editor.setData(placeholderText);
+                        editor.resetDirty();
+                    } else {
+                        element.removeClass("has-placeholder");
+                        editor.setData(ctrl.$viewValue);
+                    }
+                }
+            };
+            placeholderText = getPlaceholder();
         }
     };
 });

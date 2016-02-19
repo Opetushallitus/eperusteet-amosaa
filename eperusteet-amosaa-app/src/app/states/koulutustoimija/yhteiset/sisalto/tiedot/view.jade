@@ -44,16 +44,27 @@ mixin ekinput(model)
   div(ng-show="$$ekEditing")
     input.form-control(slocalized ng-model=model type="text" required="true")
   div(ng-hide="$$ekEditing")
-    p(ng-bind=model + "| kaanna")
+    p(ng-bind-html=model + "| kaanna")
 
+
+mixin ekeditor(model, layout)
+  div(ng-if="$$ekEditing")
+    textarea.form-control(ckeditor slocalized ng-model=model layout=layout)
+  div(ng-if="!$$ekEditing")
+    p(ng-bind-html=model + "| kaanna")
+
+mixin formfield(label)
+  div(style="margin-bottom: 50px")
+    .col-xs-2: span(kaanna=label)
+    .col-xs-10
+      block
 
 +historia("versio", "uusin", "edit()", "listRevisions()", "restoreRevision()", "restoreNew()")
 .tiedot
   .tekstit
     .container-fluid
       h3(kaanna="'tiedot'")
-      .row
-        .col-xs-4: span(kaanna="'nimi'")
-        .col-xs-8: +ekinput("yhteiset.nimi")
-        .col-xs-4: span(kaanna="'tiivistelma'")
-        .col-xs-8: +ekinput("yhteiset.kuvaus")
+      +formfield("'nimi'")
+        +ekinput("yhteiset.nimi")
+      +formfield("'tiivistelma'")
+        +ekeditor("yhteiset.kuvaus", "simplified")

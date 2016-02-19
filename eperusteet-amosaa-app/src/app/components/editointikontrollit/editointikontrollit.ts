@@ -94,6 +94,7 @@ namespace EditointikontrollitService {
                 })
                 .catch(reject)),
             save: (kommentti) => _$q((resolve, reject) => {
+                _$rootScope.$broadcast("notifyCKEditor");
                 scope[field].kommentti = kommentti;
                 return scope[field].put()
                     .then((res) => {
