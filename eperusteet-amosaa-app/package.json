@@ -16,15 +16,13 @@
     "gulp-sass": "2.1.1",
     "gulp-shell": "0.5.1",
     "gulp-tsc": "1.1.4",
-    "gulp-tslint": "4.2.1",
     "gulp-watch": "4.3.5",
     "jquery": "2.1.4",
     "lazy.js": "0.4.2",
     "lodash": "3.0.0",
     "merge-stream": "1.0.0",
     "proxy-middleware": "0.15.0",
-    "restangular": "1.5.1",
-    "tslint": "3.2.0"
+    "restangular": "1.5.1"
   },
   "dependencies": {
     "angular": "1.4.7",
