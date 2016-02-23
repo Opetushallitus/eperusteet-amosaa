@@ -19,10 +19,13 @@ package fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.AbstractAuditedEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
+import fi.vm.sade.eperusteet.amosaa.domain.liite.Liite;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappaleViite;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.CascadeType;
@@ -30,11 +33,18 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -82,4 +92,26 @@ public class Yhteiset extends AbstractAuditedEntity implements Serializable, Ref
     @NotNull
     @Enumerated(EnumType.STRING)
     private Set<Kieli> julkaisukielet = new HashSet<>();
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @Getter
+    @Setter
+    @JoinColumn
+    private TekstiKappaleViite tekstit = new TekstiKappaleViite();
+
+    @Getter
+    @Setter
+    private boolean esikatseltavissa = false;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Getter
+    @Setter
+    private Date paatospaivamaara;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    @JoinTable(name = "yhteiset_liite", inverseJoinColumns = {@JoinColumn(name="liite_id")}, joinColumns = {@JoinColumn(name="yhteiset_id")})
+    @Getter
+    @Setter
+    private Set<Liite> liitteet = new HashSet<>();
 }

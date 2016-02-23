@@ -15,11 +15,11 @@
  */
 package fi.vm.sade.eperusteet.amosaa.service.ops.impl;
 
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Yhteiset;
 import fi.vm.sade.eperusteet.amosaa.domain.liite.Liite;
-import fi.vm.sade.eperusteet.amosaa.domain.ops.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.dto.liite.LiiteDto;
+import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.YhteisetRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.liite.LiiteRepository;
-import fi.vm.sade.eperusteet.amosaa.repository.ops.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.service.exception.NotExistsException;
 import fi.vm.sade.eperusteet.amosaa.service.exception.ServiceException;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
@@ -46,7 +46,7 @@ public class LiiteServiceImpl implements LiiteService {
     private LiiteRepository liitteet;
 
     @Autowired
-    private OpetussuunnitelmaRepository opetussuunnitelmat;
+    private YhteisetRepository yhteiset;
 
     @Autowired
     DtoMapper mapper;
@@ -77,25 +77,25 @@ public class LiiteServiceImpl implements LiiteService {
     @Transactional
     public UUID add(Long opsId, String tyyppi, String nimi, long length, InputStream is) {
         Liite liite = liitteet.add(tyyppi, nimi, length, is);
-        Opetussuunnitelma ops = opetussuunnitelmat.findOne(opsId);
-        ops.attachLiite(liite);
+        Yhteiset ops = yhteiset.findOne(opsId);
+//        ops.attachLiite(liite);
         return liite.getId();
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<LiiteDto> getAll(Long opsId) {
-        return mapper.mapAsList(liitteet.findByOpsId(opsId), LiiteDto.class);
-    }
-
-    @Override
-    @Transactional
-    public void delete(Long opsId, UUID id) {
-        Liite liite = liitteet.findOne(opsId, id);
-        if ( liite == null ) {
-            throw new NotExistsException("Liitettä ei ole");
-        }
-        opetussuunnitelmat.findOne(opsId).removeLiite(liite);
-    }
+//    @Override
+//    @Transactional(readOnly = true)
+//    public List<LiiteDto> getAll(Long opsId) {
+//        return mapper.mapAsList(liitteet.findByOpsId(opsId), LiiteDto.class);
+//    }
+//
+//    @Override
+//    @Transactional
+//    public void delete(Long opsId, UUID id) {
+//        Liite liite = liitteet.findOne(opsId, id);
+//        if ( liite == null ) {
+//            throw new NotExistsException("Liitettä ei ole");
+//        }
+////        yhteiset.findOne(opsId).removeLiite(liite);
+//    }
 
 }

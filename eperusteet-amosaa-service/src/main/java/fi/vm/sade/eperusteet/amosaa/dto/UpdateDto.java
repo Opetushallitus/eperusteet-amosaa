@@ -13,15 +13,18 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * European Union Public Licence for more details.
  */
-package fi.vm.sade.eperusteet.amosaa.repository.teksti;
 
-import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappaleViite;
+package fi.vm.sade.eperusteet.amosaa.dto;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  *
- * @author jhyoty
+ * @author nkala
  */
-public interface TekstikappaleviiteRepositoryCustom {
+@Getter
+@Setter
+public class UpdateDto {
 
-    TekstiKappaleViite findInOps(Long opsId, Long viiteId);
 }

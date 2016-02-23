@@ -28,22 +28,18 @@ import org.springframework.stereotype.Service;
  * @author mikkom
  */
 @Service
+@PreAuthorize("isAuthenticated()")
 public interface KayttajanTietoService {
 
     // FIXME korjaa autentikaatiotasot
 
-    @PreAuthorize("isAuthenticated()")
     KayttajanTietoDto haeKirjautaunutKayttaja();
 
-    @PreAuthorize("isAuthenticated()")
     KayttajanTietoDto hae(String oid);
 
-    @PreAuthorize("isAuthenticated()")
     Future<KayttajanTietoDto> haeAsync(String oid);
 
-    @PreAuthorize("isAuthenticated()")
     List<KoulutustoimijaBaseDto> koulutustoimijat();
 
-    @PreAuthorize("isAuthenticated()")
     Set<String> getUserOrganizations();
 }

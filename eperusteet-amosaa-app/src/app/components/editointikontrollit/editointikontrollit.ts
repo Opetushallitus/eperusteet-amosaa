@@ -21,8 +21,9 @@ namespace EditointikontrollitService {
     const defaultCallbacks = () => ({
         start:  (val) => _$q((resolve, reject) => resolve(val)),
         save:   (val) => _$q((resolve, reject) => resolve(val)),
-        after:  (res) => _$q((resolve, reject) => resolve(res)),
         cancel: (res) => _$q((resolve, reject) => resolve(res)),
+        after:  _.noop,
+        done: _.noop
     });
 
     const stop = () => _$q((resolve) => {
@@ -49,7 +50,7 @@ namespace EditointikontrollitService {
                     if (isGlobal) {
                         _$rootScope.$broadcast("editointikontrollit:start");
                     }
-                    resolve(res);
+                    return resolve(res);
                 })
                 .catch(handleError(reject));
         }
@@ -99,7 +100,7 @@ namespace EditointikontrollitService {
                 return scope[field].put()
                     .then((res) => {
                         NotifikaatioService.onnistui("tallennus-onnistui");
-                        resolve(res);
+                        return resolve(res);
                     })
                     .catch(reject);
             }),

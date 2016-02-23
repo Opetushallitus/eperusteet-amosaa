@@ -16,7 +16,7 @@
 
 package fi.vm.sade.eperusteet.amosaa.domain;
 
-import fi.vm.sade.eperusteet.amosaa.domain.ops.Opetussuunnitelma;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 import java.io.Serializable;
@@ -26,7 +26,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Getter;
@@ -49,8 +48,7 @@ public class Termi implements Serializable {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "ops_id")
-    private Opetussuunnitelma ops;
+    private Koulutustoimija koulutustoimija;
 
     @Column(name = "avain")
     private String avain;

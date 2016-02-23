@@ -27,17 +27,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
  *
  * @author nkala
  */
+@PreAuthorize("isAuthenticated()")
 public interface YhteisetService extends RevisionService {
 
-    @PreAuthorize("isAuthenticated()")
-    YhteisetDto getYhteiset(Long kid, Long id);
+    YhteisetDto getYhteiset(Long baseId, Long id);
 
-    @PreAuthorize("isAuthenticated()")
-    List<PoistettuDto> getYhteisetPoistetut(Long kid, Long id);
+    List<PoistettuDto> getYhteisetPoistetut(Long baseId, Long id);
 
-    @PreAuthorize("isAuthenticated()")
-    YhteisetSisaltoDto getYhteisetSisalto(Long kid, Long id);
+    YhteisetSisaltoDto getYhteisetSisalto(Long baseId, Long id);
 
-    @PreAuthorize("isAuthenticated()")
-    YhteisetDto updateYhteiset(Long kid, Long id, YhteisetDto body);
+    YhteisetDto updateYhteiset(Long baseId, Long id, YhteisetDto body);
 }

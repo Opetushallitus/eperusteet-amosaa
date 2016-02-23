@@ -16,8 +16,7 @@
 package fi.vm.sade.eperusteet.amosaa.domain.teksti;
 
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
-import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
-import fi.vm.sade.eperusteet.amosaa.service.exception.ValidointiException;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Yhteiset;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -34,8 +33,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedNativeQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -51,17 +50,6 @@ import org.hibernate.envers.Audited;
 @Entity
 @Audited
 @Table(name = "tekstikappaleviite")
-@NamedNativeQuery(
-    name = "TekstiKappaleViite.findRootByTekstikappaleId",
-    query
-    = "with recursive vanhemmat(id,vanhempi_id,tekstikappale_id) as "
-    + "(select tv.id, tv.vanhempi_id, tv.tekstikappale_id from tekstikappaleviite tv "
-    + "where tv.tekstikappale_id = ?1 and tv.omistussuhde in (?2,?3) "
-    + "union all "
-    + "select tv.id, tv.vanhempi_id, v.tekstikappale_id "
-    + "from tekstikappaleviite tv, vanhemmat v where tv.id = v.vanhempi_id) "
-    + "select id from vanhemmat where vanhempi_id is null"
-)
 public class TekstiKappaleViite implements ReferenceableEntity, Serializable {
 
     @Id
@@ -88,16 +76,10 @@ public class TekstiKappaleViite implements ReferenceableEntity, Serializable {
     @Setter
     private TekstiKappale tekstiKappale;
 
-    /**
-     * Kertoo viitattavan tekstikappaleen omistussuhteen.
-     * Vain omaa tekstikappaletta voidaan muokata, lainatusta tekstikappaleesta
-     * täytyy ensin tehdä oma kopio ennen kuin muokkaus on mahdollista.
-     */
-    @Enumerated(value = EnumType.STRING)
     @NotNull
     @Getter
     @Setter
-    private Omistussuhde omistussuhde = Omistussuhde.OMA;
+    private Long owner;
 
     @OneToMany(mappedBy = "vanhempi", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @OrderColumn
@@ -109,8 +91,8 @@ public class TekstiKappaleViite implements ReferenceableEntity, Serializable {
     public TekstiKappaleViite() {
     }
 
-    public TekstiKappaleViite(Omistussuhde omistussuhde) {
-        this.omistussuhde = omistussuhde;
+    public TekstiKappaleViite(Long owner) {
+        this.owner = owner;
     }
 
     // Kopioi viitehierarkian ja siirtää irroitetut paikoilleen
@@ -118,7 +100,7 @@ public class TekstiKappaleViite implements ReferenceableEntity, Serializable {
     public TekstiKappaleViite kopioiHierarkia(Map<UUID, TekstiKappaleViite> irroitetut) {
         TekstiKappaleViite result = new TekstiKappaleViite();
         result.setTekstiKappale(this.getTekstiKappale());
-        result.setOmistussuhde(this.getOmistussuhde());
+        result.setOwner(this.getOwner());
 
         if (lapset != null) {
             List<TekstiKappaleViite> ilapset = new ArrayList<>();

@@ -34,6 +34,26 @@ namespace ModalAdd {
         }
     }).result;
 
+    export const sisaltoAdder = (sallitut = ["tekstikappale"]) => i.$uibModal.open({
+            resolve: { },
+            templateUrl: "modals/add/sisalto.jade",
+            controller: ($uibModalInstance, $scope, $state) => {
+                $scope.sallitut = sallitut;
+                $scope.valittu = undefined;
+
+                $scope.valitse = (tyyppi) => {
+                    $scope.obj = {
+                        tyyppi: tyyppi,
+                        data: {
+                            tekstiKappale: {
+                                nimi: {}
+                            },
+                        }
+                    };
+                };
+                $scope.ok = $uibModalInstance.close;
+            }
+        }).result;
 };
 
 angular.module("app")

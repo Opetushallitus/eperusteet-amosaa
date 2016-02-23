@@ -20,7 +20,6 @@ import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.Kayttaja;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.Kayttajaoikeus;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.KayttajaoikeusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
-import fi.vm.sade.eperusteet.amosaa.domain.ops.Opetussuunnitelma;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -32,18 +31,20 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface KayttajaoikeusRepository extends JpaRepository<Kayttajaoikeus, Long> {
-    @Query("SELECT o.oikeus FROM Kayttajaoikeus o WHERE o.kayttaja.id = ?1 AND o.koulutustoimija.id = ?2 AND o.ops = NULL")
+//    @Query("SELECT o.oikeus FROM Kayttajaoikeus o WHERE o.kayttaja.id = ?1 AND o.koulutustoimija.id = ?2 AND o.ops = NULL")
+    @Query("SELECT o.oikeus FROM Kayttajaoikeus o WHERE o.kayttaja.id = ?1 AND o.koulutustoimija.id = ?2")
     KayttajaoikeusTyyppi findKayttajaoikeusYhteiset(Long kayttaja, Long koulutustoimija);
 
-    @Query("SELECT o.oikeus FROM Kayttajaoikeus o WHERE o.koulutustoimija.id = ?1 AND o.ops.id = ?2")
-    KayttajaoikeusTyyppi findKayttajaoikeusOpetussuunnitelma(Long kayttaja, Long ops);
+//    @Query("SELECT o.oikeus FROM Kayttajaoikeus o WHERE o.koulutustoimija.id = ?1 AND o.ops.id = ?2")
+//    KayttajaoikeusTyyppi findKayttajaoikeusOpetussuunnitelma(Long kayttaja, Long ops);
 
-    @Query("SELECT o FROM Kayttajaoikeus o WHERE o.koulutustoimija.id = ?1 AND o.ops = NULL")
+//    @Query("SELECT o FROM Kayttajaoikeus o WHERE o.koulutustoimija.id = ?1 AND o.ops = NULL")
+    @Query("SELECT o FROM Kayttajaoikeus o WHERE o.koulutustoimija.id = ?1")
     List<Kayttajaoikeus> findAllYhteiset(Long koulutustoimija);
 
     @Query("SELECT o FROM Kayttajaoikeus o WHERE o.kayttaja.id = ?1 AND o.koulutustoimija.id = ?2")
     List<Kayttajaoikeus> findAllKayttajaoikeus(Long kayttaja, Long koulutustoimija);
 
     List<Kayttajaoikeus> findAllByKayttajaAndKoulutustoimija(Kayttaja kayttaja, Koulutustoimija koulutustoimija);
-    List<Kayttajaoikeus> findAllByOps(Opetussuunnitelma ops);
+//    List<Kayttajaoikeus> findAllByOps(Opetussuunnitelma ops);
 }

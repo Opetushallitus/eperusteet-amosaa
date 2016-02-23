@@ -1,9 +1,11 @@
 mixin icon(type)
   i(class="fa fa-" + type)
 
+
 mixin editButton(actionEdit)
   button.btn.btn-primary.muokkaa(ng-hide="$$ekEditing || versio" ng-click=actionEdit)&attributes(attributes)
     +icon("pencil")
+
 
 mixin historia(versio, uusin, actionEdit, actionRevisions, actionPalauta, restoreNew)
   .ylapalkki
@@ -40,6 +42,7 @@ mixin historia(versio, uusin, actionEdit, actionRevisions, actionPalauta, restor
         a(href="" ng-click=restoreNew)
           b(kaanna="'palaa-uusimpaan'")
 
+
 mixin ekinput(model)
   div(ng-show="$$ekEditing")
     input.form-control(slocalized ng-model=model type="text" required="true")
@@ -53,11 +56,13 @@ mixin ekeditor(model, layout)
   div(ng-if="!$$ekEditing")
     p(ng-bind-html=model + "| kaanna")
 
+
 mixin formfield(label)
   div(style="margin-bottom: 50px")
     .col-xs-2: span(kaanna=label)
     .col-xs-10
       block
+
 
 +historia("versio", "uusin", "edit()", "listRevisions()", "restoreRevision()", "restoreNew()")
 .tiedot

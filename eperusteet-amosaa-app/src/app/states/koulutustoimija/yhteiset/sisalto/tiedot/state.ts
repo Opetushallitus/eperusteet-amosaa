@@ -34,6 +34,7 @@ namespace TiedotImpl {
                     _.merge(yhteiset, versio.plain());
                     $scope.yhteiset = yhteiset;
                     NotifikaatioService.onnistui("versio-palautettu-onnistuneesti");
+                    $scope.restoreNew();
                 });
             };
         }

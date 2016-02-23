@@ -16,32 +16,29 @@
 package fi.vm.sade.eperusteet.amosaa.service.ops;
 
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.TekstiKappaleViiteDto;
+import java.util.List;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
  * @author mikkom
  */
+@PreAuthorize("isAuthenticated()")
 public interface TekstiKappaleViiteService {
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
-    TekstiKappaleViiteDto.Matala getTekstiKappaleViite(@P("opsId") Long opsId, Long viiteId);
+    TekstiKappaleViiteDto.Matala getTekstiKappaleViite(@P("baseId") Long baseId, @P("id") Long id, Long viiteId);
 
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
-    <T> T getTekstiKappaleViite(@P("opsId") Long opsId, Long viiteId, Class<T> t);
+    <T> T getTekstiKappaleViite(@P("baseId") Long baseId, @P("id") Long id, Long viiteId, Class<T> t);
 
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'MUOKKAUS')")
-    TekstiKappaleViiteDto.Matala addTekstiKappaleViite(@P("opsId") Long opsId, Long viiteId,
+    <T> List<T> getTekstiKappaleViitteet(@P("baseId") Long baseId, @P("id") Long id, Class<T> t);
+
+    TekstiKappaleViiteDto.Matala addTekstiKappaleViite(@P("baseId") Long baseId, @P("id") Long id, Long viiteId,
                                                        TekstiKappaleViiteDto.Matala viiteDto);
 
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'MUOKKAUS')")
-    TekstiKappaleViiteDto updateTekstiKappaleViite(@P("opsId") Long opsId, Long rootViiteId, TekstiKappaleViiteDto uusi);
+    TekstiKappaleViiteDto updateTekstiKappaleViite(@P("baseId") Long baseId, @P("id") Long id, Long rootViiteId, TekstiKappaleViiteDto uusi);
 
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'MUOKKAUS')")
-    void reorderSubTree(@P("opsId") Long opsId, Long rootViiteId, TekstiKappaleViiteDto.Puu uusi);
+    void removeTekstiKappaleViite(@P("baseId") Long baseId, @P("id") Long id, Long viiteId);
 
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'MUOKKAUS')")
-    void removeTekstiKappaleViite(@P("opsId") Long opsId, Long viiteId);
+    TekstiKappaleViiteDto.Puu kloonaaTekstiKappale(@P("baseId") Long baseId, @P("id") Long id, Long viiteId);
 
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'MUOKKAUS')")
-    TekstiKappaleViiteDto.Puu kloonaaTekstiKappale(@P("opsId") Long opsId, Long viiteId);
+    void reorderSubTree(@P("baseId") Long baseId, @P("id") Long id, Long rootViiteId, TekstiKappaleViiteDto.Puu uusi);
 }

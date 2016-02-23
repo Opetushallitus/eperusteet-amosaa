@@ -163,18 +163,18 @@ public class LiitetiedostoController {
         }
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(
-        @PathVariable("opsId") Long opsId,
-        @PathVariable("id") UUID id) {
-        liitteet.delete(opsId, id);
-    }
-
-    @RequestMapping(method = RequestMethod.GET)
-    public List<LiiteDto> getAll(@PathVariable("opsId") Long opsId) {
-        return liitteet.getAll(opsId);
-    }
+//    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+//    @ResponseStatus(HttpStatus.NO_CONTENT)
+//    public void delete(
+//        @PathVariable("opsId") Long opsId,
+//        @PathVariable("id") UUID id) {
+//        liitteet.delete(opsId, id);
+//    }
+//
+//    @RequestMapping(method = RequestMethod.GET)
+//    public List<LiiteDto> getAll(@PathVariable("opsId") Long opsId) {
+//        return liitteet.getAll(opsId);
+//    }
 
     private static final Logger LOG = LoggerFactory.getLogger(LiitetiedostoController.class);
 
