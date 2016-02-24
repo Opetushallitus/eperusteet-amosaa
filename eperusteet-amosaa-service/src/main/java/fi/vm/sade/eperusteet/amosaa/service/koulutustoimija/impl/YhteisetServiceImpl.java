@@ -58,6 +58,7 @@ public class YhteisetServiceImpl implements YhteisetService {
     public YhteisetDto updateYhteiset(Long kid, Long id, YhteisetDto body) {
         Yhteiset yhteinen = repository.findOne(id);
         body.setId(id);
+        body.setTila(yhteinen.getTila());
         repository.setRevisioKommentti(body.getKommentti());
         Yhteiset updated = mapper.map(body, yhteinen);
         return mapper.map(updated, YhteisetDto.class);

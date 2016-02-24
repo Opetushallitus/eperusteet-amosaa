@@ -167,15 +167,9 @@ module EditointikontrollitImpl {
                 * tarpeeksi alas. Ylempänä editointipalkki kelluu.
                 */
                 scope.updatePosition = () => {
-                    if (window.scrollTop() + window.innerHeight() < wrapper.offset().top + container.height()) {
-                        container.addClass("floating");
-                        container.removeClass("static");
-                        container.css("width", wrapper.width());
-                    } else {
-                        container.removeClass("floating");
-                        container.addClass("static");
-                        container.css("width", "100%");
-                    }
+                    container.addClass("floating");
+                    container.removeClass("static");
+                    container.css("width", wrapper.width());
                 };
 
                 let updatepos = scope.updatePosition;

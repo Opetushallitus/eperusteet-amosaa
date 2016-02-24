@@ -43,22 +43,48 @@ mixin historia(versio, uusin, actionEdit, actionRevisions, actionPalauta, restor
           b(kaanna="'palaa-uusimpaan'")
 
 
-mixin ekinput(model)
+mixin ekdate(model, label)
+  div(ng-if="$$ekEditing")
+    datepick(type="date" label="{{ " + label + " | kaanna }}" model=model)
+  div(ng-if="!$$ekEditing")
+    p(ng-bind=model + " | aikaleima")
+
+
+mixin ekstring(model, required)
+  - required = required || "false"
   div(ng-show="$$ekEditing")
-    input.form-control(slocalized ng-model=model type="text" required="true")
+    input.form-control(ng-model=model type="text" required=required)
   div(ng-hide="$$ekEditing")
     p(ng-bind-html=model + "| kaanna")
 
 
+mixin ekinput(model, required)
+  - required = required || "false"
+  div(ng-show="$$ekEditing")
+    input.form-control(slocalized ng-model=model type="text" required=required)
+  div(ng-hide="$$ekEditing")
+    p(ng-bind-html=model + "| kaanna")
+
+
+mixin eklangs(model)
+  div(ng-if="$$ekEditing")
+    | editoin
+    // textarea.form-control(ckeditor slocalized ng-model=model layout=layout)
+  div(ng-if="!$$ekEditing")
+    | moro
+    // div(ng-repeat="kieli in ")
+    // p(ng-bind-html=model + "| kaanna")
+
+
 mixin ekeditor(model, layout)
   div(ng-if="$$ekEditing")
-    textarea.form-control(ckeditor slocalized ng-model=model layout=layout)
+    textarea.form-control.ckeditor(ckeditor slocalized ng-model=model layout=layout)
   div(ng-if="!$$ekEditing")
     p(ng-bind-html=model + "| kaanna")
 
 
 mixin formfield(label)
-  div(style="margin-bottom: 50px")
+  div.row(style="margin-bottom: 20px")
     .col-xs-2: span(kaanna=label)
     .col-xs-10
       block

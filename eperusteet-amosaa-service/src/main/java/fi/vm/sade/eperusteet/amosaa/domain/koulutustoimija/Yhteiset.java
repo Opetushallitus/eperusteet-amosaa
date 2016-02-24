@@ -106,6 +106,19 @@ public class Yhteiset extends AbstractAuditedEntity implements Serializable, Ref
     @Temporal(TemporalType.TIMESTAMP)
     @Getter
     @Setter
+    private Date voimaantulo;
+
+    @Getter
+    @Setter
+    private String hyvaksyja;
+
+    @Getter
+    @Setter
+    private String paatosnumero;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Getter
+    @Setter
     private Date paatospaivamaara;
 
     @ManyToMany(fetch = FetchType.LAZY)
