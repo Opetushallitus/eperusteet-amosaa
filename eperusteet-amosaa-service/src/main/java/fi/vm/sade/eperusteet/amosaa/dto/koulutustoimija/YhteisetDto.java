@@ -38,4 +38,7 @@ public class YhteisetDto extends YhteisetBaseDto {
     private Set<LiiteDto> liitteet;
     private Date paatospaivamaara;
     private Reference tekstit;
+    private Date voimaantulo;
+    private String hyvaksyja;
+    private String paatosnumero;
 }

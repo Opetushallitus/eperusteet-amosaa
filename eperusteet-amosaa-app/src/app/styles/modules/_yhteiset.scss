@@ -78,13 +78,6 @@ $yhteiset-top-vertical-margin: 10px;
     }
 
     .sisalto {
-        .col-fixed-nav {
-            width: $yhteiset-sivunavi-width;
-        }
-        .col-offset-nav {
-            margin-left: $yhteiset-sivunavi-width + $grid-gutter-width / 2;
-        }
-
         .sivunavi {
             .haku {
                 margin-bottom: $yhteiset-top-vertical-margin;
@@ -143,7 +136,25 @@ $yhteiset-top-vertical-margin: 10px;
         }
 
         .nakyma {
+            .vasen {
+                padding: 8px 0 4px 14px;
+                width: 290px;
+                position: absolute;
+                bottom: 0;
+                top: 0;
+                height: 100%;
+                z-index: 1;
+            }
+
+            .oikea {
+                padding-left:  300px;
+            }
+
             margin-top: $yhteiset-top-vertical-margin;
+
+            .content {
+                // float: left;
+            }
 
             .ylapalkki {
                 height: $input-height-base + $yhteiset-top-vertical-margin;
