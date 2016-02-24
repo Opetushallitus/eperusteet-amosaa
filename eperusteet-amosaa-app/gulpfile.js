@@ -49,6 +49,7 @@ var testReporter = function (output, file) {
 gulp
 .task('templatepacker', function() {
     return gulp.src([
+            config.app + 'misc/mixins.jade',
             config.app + 'components/**/*.jade',
             config.app + 'views/**/*.jade',
             config.app + 'misc/guidance/**/*.jade',
@@ -57,8 +58,9 @@ gulp
         .pipe(mkStream(function(file, cb) {
             var fpath = file.path.slice((file.cwd + config.app).length + 1);
 
-            if (/^win/.test(process.platform))
+            if (/^win/.test(process.platform)) {
                 fpath = fpath.replace(/\\/g,'/');
+            }
 
             if (fpath !== 'index.jade') {
                 var prefix = 'script(type="text/ng-template" id="' + fpath + '")\n';
