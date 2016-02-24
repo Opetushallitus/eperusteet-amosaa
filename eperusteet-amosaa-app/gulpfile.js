@@ -15,8 +15,8 @@ var
     typescript    = require('gulp-tsc'),
     url           = require('url'),
     ts_app_config = require('./tsconfig.json'),
-    tslint        = require('gulp-tslint'),
-    tslint_config = require('./tslint.json'),
+    // tslint        = require('gulp-tslint'),
+    // tslint_config = require('./tslint.json'),
     watch         = require('gulp-watch');
 
 var tests = _.filter(ts_app_config.files, function(file) { return _.startsWith(file, 'test'); });
@@ -128,11 +128,11 @@ gulp
 // })
 .task('compile', function() {
     return gulp.src(sources)
-        .pipe(tslint({ configuration: tslint_config }))
-        .pipe(tslint.report(testReporter, {
-            emitError: false,
-            summarizeFailureOutput: true
-        }))
+        // .pipe(tslint({ configuration: tslint_config }))
+        // .pipe(tslint.report(testReporter, {
+        //     emitError: false,
+        //     summarizeFailureOutput: true
+        // }))
         .pipe(typescript())
         .on('error', function(error) {
             console.log(error.toString());
