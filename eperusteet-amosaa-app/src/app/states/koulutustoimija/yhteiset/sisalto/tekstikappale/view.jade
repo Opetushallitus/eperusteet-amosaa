@@ -5,7 +5,7 @@ div.tekstikappaleet
       i.fa.fa-chevron-down
     | Tekstikappaleen aliotsikko
   div.tekstikappale
-    div(ckeditor slocalized ng-model="model").bigger
+    div(ckeditor slocalized ng-model="model")
 
   h2
     a(href="#")
@@ -23,4 +23,16 @@ div.tekstikappaleet
     p
       span Ut purus massa, facilisis nec mi non, varius sollicitudin orci. Curabitur malesuada luctus libero, quis posuere urna aliquet et. Duis ut posuere eros. In hac habitasse platea dictumst. Integer pharetra maximus venenatis. Fusce varius tellus nec vestibulum placerat. Integer et turpis sit amet elit pretium consectetur id eu odio. Interdum et malesuada fames ac ante ipsum primis in faucibus. Mauris ac orci erat. Ut ante ante, rutrum vitae eros eget, pulvinar commodo mauris. Ut condimentum tristique turpis eget molestie. Mauris suscipit ac nibh eget facilisis. Proin ornare lectus eu urna finibus, nec placerat tellus volutpat.
 
-      span Ut purus massa, facilisis nec mi non, varius sollicitudin orci. Curabitur malesuada luctus libero, quis posuere urna aliquet et. Duis ut posuere eros. In hac habitasse platea dictumst. Integer pharetra maximus venenatis. Fusce varius tellus nec vestibulum placerat. Integer et turpis sit amet elit pretium consectetur id eu odio. Interdum et malesuada fames ac ante ipsum primis in faucibus. Mauris ac orci erat. Ut ante ante, rutrum vitae eros eget, pulvinar commodo mauris. Ut condimentum tristique turpis eget molestie. Mauris suscipit ac nibh eget facilisis. Proin ornare lectus eu urna finibus, nec placerat tellus volutpat.
+    .pull-right
+      button.btn.btn-primary.muokkaa(ng-hide="$$ekEditing" ng-click="edit()")
+        | Muokkaa
+
+  div
+    div(ng-if="$$ekEditing")
+      h1(kaanna="'nimi'")
+      input.form-control(slocalized ng-model="tkv.tekstiKappale.nimi" type="text" required="true")
+      h1(kaanna="'sisalto'")
+      div.form-control(ckeditor slocalized ng-model="tkv.tekstiKappale.teksti" layout="normal")
+    div(ng-if="!$$ekEditing")
+      h1(kaanna="tkv.tekstiKappale.nimi")
+      p(ng-bind-html="tkv.tekstiKappale.teksti | kaanna")

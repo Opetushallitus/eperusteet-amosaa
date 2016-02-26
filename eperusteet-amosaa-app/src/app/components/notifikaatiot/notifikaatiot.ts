@@ -5,15 +5,17 @@ namespace NotifikaatioService {
         _$state,
         _$timeout,
         _NOTIFICATION_DELAY_SUCCESS,
-        _NOTIFICATION_DELAY_WARNING;
+        _NOTIFICATION_DELAY_WARNING,
+        _NOTIFICATION_DELAY_INFO;
 
-    export const init = ($uibModal, $rootScope, $state, $timeout, NOTIFICATION_DELAY_SUCCESS, NOTIFICATION_DELAY_WARNING) => {
+    export const init = ($uibModal, $rootScope, $state, $timeout, NOTIFICATION_DELAY_SUCCESS, NOTIFICATION_DELAY_WARNING,  NOTIFICATION_DELAY_INFO) => {
         _$uibModal = $uibModal;
         _$rootScope = $rootScope;
         _$state = $state;
         _$timeout = $timeout;
         _NOTIFICATION_DELAY_SUCCESS = NOTIFICATION_DELAY_SUCCESS;
         _NOTIFICATION_DELAY_WARNING = NOTIFICATION_DELAY_WARNING;
+        _NOTIFICATION_DELAY_INFO = NOTIFICATION_DELAY_INFO;
     }
 
     let _viestit = [];
@@ -29,7 +31,7 @@ namespace NotifikaatioService {
                 return comp(viesti.luotu, _NOTIFICATION_DELAY_WARNING);
             }
             else {
-                return true;
+                return comp(viesti.luotu, _NOTIFICATION_DELAY_INFO);
             }
         });
     };
@@ -134,6 +136,7 @@ angular.module("app")
 .run(NotifikaatioService.init)
 .constant("NOTIFICATION_DELAY_SUCCESS", 2000)
 .constant("NOTIFICATION_DELAY_WARNING", 5000)
+.constant("NOTIFICATION_DELAY_INFO", 8000)
 .controller("NotifikaatioController", ($scope) => {
     $scope.viestit = [];
     $scope.poistaNotifikaatio = NotifikaatioService.poista;

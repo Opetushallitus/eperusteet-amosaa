@@ -7,10 +7,11 @@ interface IEditointikontrollitCallbacks {
 }
 
 namespace EditointikontrollitService {
-    let _$rootScope, _$q, _$log;
+    let _$rootScope, _$q, _$log, _$timeout;
 
-    export const init = ($rootScope, $q, $log) => {
+    export const init = ($rootScope, $q, $log, $timeout) => {
         _$rootScope = $rootScope;
+        _$timeout = $timeout;
         _$log = $log;
         _$q = $q;
     };
@@ -20,8 +21,9 @@ namespace EditointikontrollitService {
     const defaultCallbacks = () => ({
         start:  (val) => _$q((resolve, reject) => resolve(val)),
         save:   (val) => _$q((resolve, reject) => resolve(val)),
-        after:  (res) => _$q((resolve, reject) => resolve(res)),
         cancel: (res) => _$q((resolve, reject) => resolve(res)),
+        after:  _.noop,
+        done: _.noop
     });
 
     const stop = () => _$q((resolve) => {
@@ -40,14 +42,16 @@ namespace EditointikontrollitService {
             return reject();
         }
         else {
-            _$rootScope.$$ekEditing = true;
-            _activeCallbacks = callbacks;
-            _$rootScope.$broadcast("editointikontrollit:disable");
-            if (isGlobal) {
-                _$rootScope.$broadcast("editointikontrollit:start");
-            }
             return callbacks.start()
-                .then(resolve)
+                .then(res => {
+                    _$rootScope.$$ekEditing = true;
+                    _activeCallbacks = callbacks;
+                    _$rootScope.$broadcast("editointikontrollit:disable");
+                    if (isGlobal) {
+                        _$rootScope.$broadcast("editointikontrollit:start");
+                    }
+                    return resolve(res);
+                })
                 .catch(handleError(reject));
         }
     });
@@ -83,15 +87,23 @@ namespace EditointikontrollitService {
         callbacks: IEditointikontrollitCallbacks = {}) => {
         scope[field] = resolvedObj.clone();
         return EditointikontrollitService.create(_.merge({
-            start: (res) => _$q((resolve, reject) => scope[field].get()
-                    .then(resolve)
-                    .catch(reject)),
-            save: (kommentti) => _$q((resolve, reject) => scope[field].put()
+            start: () => _$q((resolve, reject) => scope[field].get()
+                .then(res => {
+                    _.merge(resolvedObj, res);
+                    scope[field] = resolvedObj.clone();
+                    resolve();
+                })
+                .catch(reject)),
+            save: (kommentti) => _$q((resolve, reject) => {
+                _$rootScope.$broadcast("notifyCKEditor");
+                scope[field].kommentti = kommentti;
+                return scope[field].put()
                     .then((res) => {
                         NotifikaatioService.onnistui("tallennus-onnistui");
-                        resolve(res);
+                        return resolve(res);
                     })
-                    .catch(reject)),
+                    .catch(reject);
+            }),
             cancel: (res) => _$q((resolve, reject) => {
                 scope[field] = resolvedObj.clone();
                 resolve();
@@ -155,15 +167,9 @@ module EditointikontrollitImpl {
                 * tarpeeksi alas. Ylempänä editointipalkki kelluu.
                 */
                 scope.updatePosition = () => {
-                    if (window.scrollTop() + window.innerHeight() < wrapper.offset().top + container.height()) {
-                        container.addClass("floating");
-                        container.removeClass("static");
-                        container.css("width", wrapper.width());
-                    } else {
-                        container.removeClass("floating");
-                        container.addClass("static");
-                        container.css("width", "100%");
-                    }
+                    container.addClass("floating");
+                    container.removeClass("static");
+                    container.css("width", wrapper.width());
                 };
 
                 let updatepos = scope.updatePosition;

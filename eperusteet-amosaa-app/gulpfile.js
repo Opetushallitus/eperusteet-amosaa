@@ -15,8 +15,8 @@ var
     typescript    = require('gulp-tsc'),
     url           = require('url'),
     ts_app_config = require('./tsconfig.json'),
-    tslint        = require('gulp-tslint'),
-    tslint_config = require('./tslint.json'),
+    // tslint        = require('gulp-tslint'),
+    // tslint_config = require('./tslint.json'),
     watch         = require('gulp-watch');
 
 var tests = _.filter(ts_app_config.files, function(file) { return _.startsWith(file, 'test'); });
@@ -49,6 +49,7 @@ var testReporter = function (output, file) {
 gulp
 .task('templatepacker', function() {
     return gulp.src([
+            config.app + 'misc/mixins.jade',
             config.app + 'components/**/*.jade',
             config.app + 'views/**/*.jade',
             config.app + 'misc/guidance/**/*.jade',
@@ -57,8 +58,9 @@ gulp
         .pipe(mkStream(function(file, cb) {
             var fpath = file.path.slice((file.cwd + config.app).length + 1);
 
-            if (/^win/.test(process.platform))
+            if (/^win/.test(process.platform)) {
                 fpath = fpath.replace(/\\/g,'/');
+            }
 
             if (fpath !== 'index.jade') {
                 var prefix = 'script(type="text/ng-template" id="' + fpath + '")\n';
@@ -128,11 +130,11 @@ gulp
 // })
 .task('compile', function() {
     return gulp.src(sources)
-        .pipe(tslint({ configuration: tslint_config }))
-        .pipe(tslint.report(testReporter, {
-            emitError: false,
-            summarizeFailureOutput: true
-        }))
+        // .pipe(tslint({ configuration: tslint_config }))
+        // .pipe(tslint.report(testReporter, {
+        //     emitError: false,
+        //     summarizeFailureOutput: true
+        // }))
         .pipe(typescript())
         .on('error', function(error) {
             console.log(error.toString());

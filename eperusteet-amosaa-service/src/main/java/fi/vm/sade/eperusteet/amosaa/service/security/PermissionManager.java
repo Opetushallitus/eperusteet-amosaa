@@ -18,9 +18,7 @@ package fi.vm.sade.eperusteet.amosaa.service.security;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.Tyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
-import fi.vm.sade.eperusteet.amosaa.domain.ops.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
-import fi.vm.sade.eperusteet.amosaa.repository.ops.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.service.exception.NotExistsException;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.Organization;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.RolePermission;
@@ -91,8 +89,8 @@ public class PermissionManager {
 
     private static final String MSG_OPS_EI_OLEMASSA = "Pyydettyä opetussuunnitelmaa ei ole olemassa";
 
-    @Autowired
-    private OpetussuunnitelmaRepository opetussuunnitelmaRepository;
+//    @Autowired
+//    private OpetussuunnitelmaRepository opetussuunnitelmaRepository;
 
     @Autowired
     private KoulutustoimijaRepository koulutustoimijaRepository;
@@ -104,29 +102,6 @@ public class PermissionManager {
         if (perm == Permission.HALLINTA && targetId == null && target == TargetType.TARKASTELU &&
                 hasRole(authentication, RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA, RolePermission.CRUD, Organization.OPH)) {
             return true;
-        }
-
-        Pair<Tyyppi, Tila> tyyppiJaTila =
-            targetId != null ? opetussuunnitelmaRepository.findTyyppiAndTila((long) targetId) : null;
-
-        if (perm == Permission.LUKU && tyyppiJaTila != null) {
-            if (tyyppiJaTila.getSecond() == Tila.JULKAISTU) {
-                return true;
-            } else if (opetussuunnitelmaRepository.isEsikatseltavissa((long) targetId)) {
-                return true;
-            }
-        }
-
-        // Salli valmiiden pohjien lukeminen kaikilta joilla on CRUD-oikeus tai ADMIN-oikeus
-        if (perm == Permission.LUKU && targetId != null &&
-                (hasRole(authentication, RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA, RolePermission.CRUD, Organization.ANY) ||
-                        hasRole(authentication, RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA, RolePermission.ADMIN, Organization.ANY))) {
-            if (tyyppiJaTila == null) {
-                throw new NotExistsException();
-            }
-            if (tyyppiJaTila.getFirst() == Tyyppi.POHJA && tyyppiJaTila.getSecond() == Tila.VALMIS) {
-                return true;
-            }
         }
 
         Set<RolePermission> permissions;
@@ -154,17 +129,8 @@ public class PermissionManager {
         switch (target) {
             case POHJA:
             case OPETUSSUUNNITELMA:
-                if (targetId != null) {
-                    List<String> opsOrganisaatiot = opetussuunnitelmaRepository.findOrganisaatiot((Long) targetId);
-                    if (opsOrganisaatiot.isEmpty()) {
-                        throw new NotExistsException(MSG_OPS_EI_OLEMASSA);
-                    }
-                    Set<String> kayttajaOrganisaatiot = SecurityUtil.getOrganizations(authentication, permissions);
-                    return !CollectionUtil.intersect(opsOrganisaatiot, kayttajaOrganisaatiot).isEmpty();
-                } else {
-                    return hasAnyRole(authentication, RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA,
-                                      permissions, Organization.ANY);
-                }
+                return hasAnyRole(authentication, RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA,
+                                  permissions, Organization.ANY);
             default:
                 return hasAnyRole(authentication, RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA,
                                   permissions, Organization.ANY);
@@ -237,26 +203,7 @@ public class PermissionManager {
     @Transactional(readOnly = true)
     @PreAuthorize("isAuthenticated()")
     public Map<TargetType, Set<Permission>> getOpsPermissions(Long id) {
-
         Map<TargetType, Set<Permission>> permissionMap = new HashMap<>();
-        Opetussuunnitelma ops = opetussuunnitelmaRepository.findOne(id);
-        if (ops == null) {
-            throw new NotExistsException(MSG_OPS_EI_OLEMASSA);
-        }
-        boolean isPohja = ops.getTyyppi() == Tyyppi.POHJA;
-        Set<String> organisaatiot = ops.getOrganisaatiot();
-        Set<Permission> permissions
-            = EnumSet.allOf(RolePermission.class).stream()
-            .map(p -> new Pair<>(p, SecurityUtil.getOrganizations(Collections.singleton(p))))
-            .filter(pair -> !CollectionUtil.intersect(pair.getSecond(), organisaatiot).isEmpty())
-            .flatMap(pair -> fromRolePermission(pair.getFirst()).stream())
-            .collect(Collectors.toSet());
-
-        permissionMap.put(TargetType.OPETUSSUUNNITELMA, permissions);
-        if (ops.getTyyppi() == Tyyppi.POHJA) {
-            permissionMap.put(TargetType.POHJA, permissions);
-        }
-
         return permissionMap;
     }
 

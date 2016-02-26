@@ -55,12 +55,12 @@ public class KommenttiServiceImpl implements KommenttiService {
     @Autowired
     private PermissionManager permissionManager;
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<KommenttiDto> getAllByOpetussuunnitelma(Long opsId) {
-        List<Kommentti> kommentit = repository.findByOpetussuunnitelmaId(opsId);
-        return mapper.mapAsList(kommentit, KommenttiDto.class);
-    }
+//    @Override
+//    @Transactional(readOnly = true)
+//    public List<KommenttiDto> getAllByOpetussuunnitelma(Long opsId) {
+//        List<Kommentti> kommentit = repository.findByOpetussuunnitelmaId(opsId);
+//        return mapper.mapAsList(kommentit, KommenttiDto.class);
+//    }
 
     @Override
     @Transactional(readOnly = true)
@@ -103,12 +103,12 @@ public class KommenttiServiceImpl implements KommenttiService {
     private void assertRights(Kommentti kommentti, Permission p) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         KayttajanTietoDto kirjautunut = kayttajat.haeKirjautaunutKayttaja();
-        if (kirjautunut.getOidHenkilo().equals(kommentti.getLuoja())) {
-            return;
-        }
-        if (!permissionManager.hasPermission(authentication, kommentti.getOpetussuunnitelmaId(), TargetType.OPETUSSUUNNITELMA, p)) {
-            throw new BusinessRuleViolationException("Ei oikeutta");
-        }
+//        if (kirjautunut.getOidHenkilo().equals(kommentti.getLuoja())) {
+//            return;
+//        }
+//        if (!permissionManager.hasPermission(authentication, kommentti.getOpetussuunnitelmaId(), TargetType.OPETUSSUUNNITELMA, p)) {
+//            throw new BusinessRuleViolationException("Ei oikeutta");
+//        }
     }
 
     @Override

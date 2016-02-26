@@ -108,7 +108,7 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
 
     @Override
     public List<KoulutustoimijaBaseDto> koulutustoimijat() {
-        return getUserOrganizations().stream()
+        return getUserOrganizations().stream ()
                 .map((orgOid) -> koulutustoimijat.getKoulutustoimija(orgOid))
                 .collect(Collectors.toList());
     }

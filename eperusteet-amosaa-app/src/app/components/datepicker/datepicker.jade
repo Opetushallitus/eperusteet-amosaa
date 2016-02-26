@@ -1,17 +1,10 @@
-label( class="col-sm-3 control-label ng-binding" ) {{label}}
-    span(ng-transclude)
+div
+    div(class="input-group")
+        input(type="'text'" name="innerName" class="form-control" uib-datepicker-popup="d.M.yyyy"
+        ng-model="model" placeholder="{{placeholder | kaanna}}" is-open="datePicker.state"
+        dateformatvalidator id="{{inputElId}}")
 
-div(class="col-sm-9 form-clear")
-    ng-form(name="innerForm")
-        div(class="input-group")
-            input(type="'text'" name="innerName" class="form-control" uib-datepicker-popup="d.M.yyyy"
-            ng-model="model" placeholder="{{placeholder | kaanna}}" is-open="datePicker.state"
-            dateformatvalidator id="{{inputElId}}")
-
-            span(class="input-group-btn")
-                button(type="button" class="btn btn-default" ng-click="datePicker.open($event)")
-                    span(class="glyphicon glyphicon-calendar")
-
-        p(class="alert alert-error" ng-show="innerForm.innerName.$invalid" ng-bind="'kelvoton-pvm'")
-
-
+        span(class="input-group-btn")
+            button(type="button" class="btn btn-default" ng-click="datePicker.open($event)")
+                span(class="glyphicon glyphicon-calendar")
+    p(class="alert alert-error" ng-show="innerForm.innerName.$invalid" ng-bind="'kelvoton-pvm'")

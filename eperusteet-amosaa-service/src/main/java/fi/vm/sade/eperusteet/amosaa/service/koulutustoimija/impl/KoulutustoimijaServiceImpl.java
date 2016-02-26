@@ -23,6 +23,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Yhteiset;
 //import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Yhteinen;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappaleViite;
 import fi.vm.sade.eperusteet.amosaa.dto.TiedoteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
@@ -39,6 +40,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.YhteisetRepository;
+import javax.persistence.EntityManager;
 
 /**
  *
@@ -47,6 +49,9 @@ import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.YhteisetRepositor
 @Service
 @Transactional
 public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
+
+    @Autowired
+    private EntityManager em;
 
     @Autowired
     private OrganisaatioService organisaatioService;
@@ -76,9 +81,10 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
         yhteinen.setNimi(nimi);
         yhteinen.setJulkaisukielet(Collections.EMPTY_SET);
         yhteinen.setTila(Tila.LUONNOS);
-        koulutustoimija.setYhteiset(yhteinenRepository.save(yhteinen));
-
-        return koulutustoimijaRepository.save(koulutustoimija);
+        koulutustoimija.setYhteiset(yhteinen);
+        koulutustoimija = koulutustoimijaRepository.save(koulutustoimija);
+        koulutustoimija.getYhteiset().getTekstit().setOwner(koulutustoimija.getYhteiset().getId());
+        return koulutustoimija;
     }
 
     @Override

@@ -17,7 +17,10 @@
 package fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija;
 
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
+import fi.vm.sade.eperusteet.amosaa.dto.Reference;
+import fi.vm.sade.eperusteet.amosaa.dto.liite.LiiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
+import java.util.Date;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,6 +32,13 @@ import lombok.Setter;
 @Getter
 @Setter
 public class YhteisetDto extends YhteisetBaseDto {
+    private String kommentti;
     private LokalisoituTekstiDto kuvaus;
     private Set<Kieli> julkaisukielet;
+    private Set<LiiteDto> liitteet;
+    private Date paatospaivamaara;
+    private Reference tekstit;
+    private Date voimaantulo;
+    private String hyvaksyja;
+    private String paatosnumero;
 }

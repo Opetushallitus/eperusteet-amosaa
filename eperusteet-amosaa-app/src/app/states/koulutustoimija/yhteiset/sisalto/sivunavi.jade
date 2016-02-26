@@ -2,24 +2,17 @@ div.sivunavi
   div.haku
     div.form-inline
       div.form-group.has-feedback.has-feedback-left
-        input.form-control(type="text", placeholder="Hae")
+        input.form-control(type="text" placeholder="{{ 'hae' | kaanna }}")
         i.form-control-feedback.glyphicon.glyphicon-search(style="color: gray;")
-        a(href="").btn.btn-default.square
+        a.btn.btn-default.square(href="" ng-click="add()")
           i.fa.fa-plus
-        a(href="").btn.btn-default.square
+        a.btn.btn-default.square(href="")
           i.fa.fa-arrows-v
 
   div.valikko
     ul
       li
-        a(href="", ui-sref-active="active", ui-sref=".tiedot") Tiedot
-      li
-        a(href="", ui-sref-active="active") Opetuksen järjestäminen
-      li
-        a(href="", ui-sref-active="active") Elinikäisen oppimisen avaintaitojen kuvaus
-      li
-        a(href="", ui-sref-active="active") LIITE 1
-      li
-        a(href="", ui-sref-active="active") LIITE 2
-      li
-        a(href="", ui-sref-active="active", ui-sref=".tekstikappale") Tekstikappale
+        a(href="" ui-sref-active="active" ui-sref=".tiedot" kaanna="'tiedot'")
+      li(ng-repeat="item in sivunavi")
+        a(href="" ui-sref-active="active" ui-sref=".tekstikappale({ tkvId: item.id })"
+          ng-bind="(item.tekstiKappale.nimi || 'nimeton-tekstikappale') | kaanna")

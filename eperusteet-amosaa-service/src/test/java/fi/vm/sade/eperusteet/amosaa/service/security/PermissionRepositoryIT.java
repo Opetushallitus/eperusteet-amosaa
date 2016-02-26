@@ -15,7 +15,6 @@
  */
 package fi.vm.sade.eperusteet.amosaa.service.security;
 
-import fi.vm.sade.eperusteet.amosaa.service.ops.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -33,8 +32,8 @@ public class PermissionRepositoryIT extends AbstractIntegrationTest {
     @Autowired
     private PermissionReporitory permissions;
 
-    @Autowired
-    private OpetussuunnitelmaService ops;
+//    @Autowired
+//    private OpetussuunnitelmaService ops;
 
     @Test
     @Ignore

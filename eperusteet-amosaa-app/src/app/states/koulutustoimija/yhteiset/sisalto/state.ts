@@ -2,14 +2,28 @@ angular.module("app")
 .config($stateProvider => $stateProvider
 .state("root.koulutustoimija.yhteiset.sisalto", {
     url: "/sisalto",
-    resolve: {},
+    resolve: {
+        sivunavi: (otsikot, yhteiset) => Tekstikappaleet.rakenna(otsikot, yhteiset._tekstit)
+    },
     views: {
         "": {
-            controller: () => {}
+            controller: () => { }
         },
-        "sivunavi": {
-        },
-        "nakyma": {
+        sivunavi: {
+            controller: ($scope, sivunavi, tekstit) => {
+                $scope.sivunavi = sivunavi;
+                $scope.add = () => {
+                    ModalAdd.sisaltoAdder()
+                        .then(uusi => {
+                            switch(uusi.tyyppi) {
+                                case "tekstikappale": {
+                                    tekstit.post("", uusi.data).then(res => sivunavi.unshift(res));
+                                }
+                                default: {}
+                            }
+                        });
+                };
+            }
         }
     }
 }));

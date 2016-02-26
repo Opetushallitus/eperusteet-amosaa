@@ -1,6 +1,5 @@
 div.sisalto
-    div.col-fixed-nav.pull-left
-      // haku juttuja
-      div(ui-view="sivunavi")
-    div.col-offset-nav
-      div(ui-view="nakyma")
+  div.nakyma
+    div.row
+      div.vasen(ui-view="sivunavi")
+      div.col-xs-12.oikea.ui-view

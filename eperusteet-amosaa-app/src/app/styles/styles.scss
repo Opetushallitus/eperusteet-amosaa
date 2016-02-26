@@ -15,8 +15,10 @@ $fa-font-path: "fonts";
 @import "../components/ohje/ohje";
 @import "../components/loadingbar/loading_bar";
 @import "../components/toggler/styles";
+@import "../components/ckeditor/styles";
 
 @import "../modals/add/styles";
+@import "../modals/revisions/styles";
 
 @import "generic/boxtable";
 @import "generic/modal";

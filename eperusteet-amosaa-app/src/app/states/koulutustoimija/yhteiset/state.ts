@@ -4,6 +4,8 @@ angular.module("app")
     url: "/yhteiset/:yhteisetId",
     resolve: {
         yhteiset: (koulutustoimija, yhteiset) => koulutustoimija.one("yhteiset", yhteiset.id).get(),
+        tekstit: yhteiset => yhteiset.one("tekstit", yhteiset._tekstit),
+        otsikot: yhteiset => yhteiset.one("tekstit", "otsikot").get(),
     },
     views: {
         "": {

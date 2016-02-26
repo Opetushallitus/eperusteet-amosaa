@@ -30,23 +30,31 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @author nkala
  */
 public interface AbstractRevisionController {
-
     @RequestMapping(value = "/versiot/uusin", method = RequestMethod.GET)
     @ResponseBody
     @InternalApi
     default public Revision getLatestRevision(
-            @PathVariable("kid") final Long kid,
+            @PathVariable("baseId") final Long baseId,
             @PathVariable("id") final Long id) {
-        return getService().getLatestRevision(kid, id);
+        return getService().getLatestRevision(baseId, id);
     }
 
     @RequestMapping(value = "/versiot", method = RequestMethod.GET)
     @ResponseBody
     @InternalApi
     default public List<Revision> getRevisions(
-            @PathVariable("kid") final Long kid,
+            @PathVariable("baseId") final Long baseId,
             @PathVariable("id") final Long id) {
-        return getService().getRevisions(kid, id);
+        return getService().getRevisions(baseId, id);
+    }
+
+    @RequestMapping(value = "/versiot/{revId}", method = RequestMethod.GET)
+    @ResponseBody
+    default public Object getRevisions(
+            @PathVariable("baseId") final Long baseId,
+            @PathVariable("id") final Long id,
+            @PathVariable("revId") final Integer revId) {
+        return getService().getData(baseId, id, revId);
     }
 
     RevisionService getService();

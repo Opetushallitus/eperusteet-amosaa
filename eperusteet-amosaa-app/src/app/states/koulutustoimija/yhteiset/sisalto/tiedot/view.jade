@@ -1,45 +1,22 @@
-div.nakyma
-  div.ylapalkki
-    div.pull-left
-      p
-        span
-          b Muokattu:
-        span(ng-bind="uusin.date | aikaleima")
-      p
-        span
-          b Muokkaaja:
-        span(ng-bind="uusin.muokkaaja")
-
-    div.pull-right
-      button.btn.btn-primary.muokkaa(ng-hide="$$ekEditing" ng-click="edit()")
-        i.fa.fa-pencil
-
-    div.pull-right
-      p
-        span
-          b Versio:
-        input(type="number" min="1" max="{{ uusin.id }}" ng-model="uusin.id")
-      a(href="" ng-click="listRevisions()")
-        b Historia
-
-
-div.tiedot
-  div.tekstit
-    div.container-fluid
+.tiedot
+  +historia("versio", "uusin", "edit()", "listRevisions()", "restoreRevision()", "restoreNew()")
+  .tekstit
+    .container-fluid
       h3(kaanna="'tiedot'")
-      div.row
-        div.col-xs-4
-          span Nimi:
-        div.col-xs-8
-          div(ng-show="$$ekEditing")
-            input.form-control(slocalized ng-model="yhteiset.nimi" type="text" required="true")
-          div(ng-hide="$$ekEditing")
-            p(ng-bind="yhteiset.nimi | kaanna")
+      +formfield("'nimi'")
+        +ekinput("yhteiset.nimi")
 
-        div.col-xs-4
-          span Tiivistelmä:
-        div.col-xs-8
-          div(ng-show="$$ekEditing")
-            input.form-control(slocalized ng-model="yhteiset.kuvaus" type="text" required="true")
-          div(ng-hide="$$ekEditing")
-            p(ng-bind="yhteiset.kuvaus | kaanna")
+      +formfield("'tiivistelma'")
+        +ekeditor("yhteiset.kuvaus", "simplified")
+
+      +formfield("'paatosnumero'")
+        +ekstring("yhteiset.paatosnumero")
+
+      +formfield("'hyvaksyja'")
+        +ekstring("yhteiset.hyvaksyja")
+
+      +formfield("'paatospvm'")
+        +ekdate("yhteiset.paatospaivamaara", "'paatospvm'")
+
+      +formfield("'voimaantulopvm'")
+        +ekdate("yhteiset.voimaantulo", "'voimaantulopvm'")

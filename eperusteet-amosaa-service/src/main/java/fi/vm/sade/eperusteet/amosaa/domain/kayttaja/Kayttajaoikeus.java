@@ -17,7 +17,7 @@
 package fi.vm.sade.eperusteet.amosaa.domain.kayttaja;
 
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
-import fi.vm.sade.eperusteet.amosaa.domain.ops.Opetussuunnitelma;
+//import fi.vm.sade.eperusteet.amosaa.domain.ops.Opetussuunnitelma;
 import java.io.Serializable;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -51,11 +51,11 @@ public class Kayttajaoikeus implements Serializable {
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     private Kayttaja kayttaja;
 
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Getter
-    @Setter
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
-    private Opetussuunnitelma ops;
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+//    @Getter
+//    @Setter
+//    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+//    private Opetussuunnitelma ops;
 
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Getter

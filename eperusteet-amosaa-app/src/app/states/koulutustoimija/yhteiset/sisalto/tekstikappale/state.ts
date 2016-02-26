@@ -1,11 +1,15 @@
 angular.module("app")
     .config($stateProvider => $stateProvider
         .state("root.koulutustoimija.yhteiset.sisalto.tekstikappale", {
-            url: "/tekstikappale",
-            resolve: {},
+            url: "/tekstikappale/:tkvId",
+            resolve: {
+                tekstikappale: (yhteiset, $stateParams) => yhteiset.one("tekstit", $stateParams.tkvId).get()
+            },
             views: {
                 "": {
-                    controller: ($scope) => {}
+                    controller: ($scope, tekstikappale) => {
+                        $scope.edit = EditointikontrollitService.createRestangular($scope, "tkv", tekstikappale);
+                    }
                 }
             }
         }));

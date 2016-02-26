@@ -2,15 +2,14 @@ $error-vari: #fcc;
 
 .notification-wrapper {
   margin: 0px;
-  margin-top: 24px;
+  margin-top: 28px;
+  margin-right: 28px;
   padding: 0px;
   padding-top: 6px;
-  margin-left: auto;
-  margin-right: auto;
   position: fixed;
   width: 100%;
   top: 0px;
-  left: 0px;
+  right: 0px;
   z-index: 9999;
 }
 
@@ -20,16 +19,16 @@ $error-vari: #fcc;
   margin-right: auto;
   position: relative;
   top: 0px;
+  right: 0px;
+  float: right;
 }
 
 @mixin notification() {
   cursor: pointer;
   padding: 0px 5px 0px 2px;
   min-height: 42px;
-  width: 70%;
+  width: 300px;
   margin: 0px;
-  margin-left: auto;
-  margin-right: auto;
   margin-top: 5px;
   font-weight: bold;
   border: none;

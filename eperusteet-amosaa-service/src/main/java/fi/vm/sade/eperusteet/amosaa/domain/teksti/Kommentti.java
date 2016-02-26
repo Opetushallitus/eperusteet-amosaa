@@ -51,8 +51,4 @@ public class Kommentti extends AbstractAuditedReferenceableEntity {
     @Getter
     @Setter
     private Long parentId;
-
-    @Getter
-    @Setter
-    private Long opetussuunnitelmaId;
 }

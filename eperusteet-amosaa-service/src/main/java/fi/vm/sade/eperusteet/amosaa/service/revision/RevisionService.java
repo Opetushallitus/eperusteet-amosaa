@@ -20,11 +20,13 @@ import fi.vm.sade.eperusteet.amosaa.domain.revision.Revision;
 import fi.vm.sade.eperusteet.amosaa.repository.version.JpaWithVersioningRepository;
 import java.util.List;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author nkala
  */
+@Transactional
 public interface RevisionService {
 
     @PreAuthorize("isAuthenticated()")
@@ -42,6 +44,12 @@ public interface RevisionService {
         return getRepository().getLatestRevisionId(id);
     }
 
+    @PreAuthorize("isAuthenticated()")
+    default Object getData(Long ktId, Long id, Integer rev) {
+        return convertToDto(getRepository().findRevision(id, rev));
+    }
+
+    Object convertToDto(Object obj);
 
     JpaWithVersioningRepository getRepository();
 }
