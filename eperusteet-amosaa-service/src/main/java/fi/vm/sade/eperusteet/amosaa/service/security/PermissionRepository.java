@@ -25,7 +25,7 @@ import org.springframework.stereotype.Repository;
  * @author jhyoty
  */
 @Repository
-public class PermissionReporitory {
+public class PermissionRepository {
 
     @Autowired
     private EntityManager em;
