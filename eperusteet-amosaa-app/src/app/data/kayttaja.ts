@@ -9,7 +9,9 @@ module Kayttaja {
 
     export const kayttaja = () => _Api.one("kayttaja").get();
 
-    export const oikeudet = () => _Api.one("kayttaja").all("oikeudet").get();
+    //export const oikeudet = () => _Api.one("kayttaja").all("oikeudet").get();
+
+    export const oikeudet = () => _Api.one("koulutustoimijat").one("oikeudet").get();
 
     // TODO: Map by koulutustoimija
     export const tyoryhmat = () => _Api.one("kayttaja").all("tyoryhmat").get();
@@ -23,7 +25,7 @@ module Kayttaja {
         _Cas.one("me").get()
             .then(resolve)
             .catch(() => resolve({})));
-};
+}
 
 
 angular.module("app")

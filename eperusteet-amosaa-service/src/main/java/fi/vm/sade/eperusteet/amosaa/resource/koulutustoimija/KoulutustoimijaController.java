@@ -16,6 +16,7 @@
 
 package fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija;
 
+import com.codahale.metrics.annotation.Timed;
 import com.wordnik.swagger.annotations.Api;
 import fi.vm.sade.eperusteet.amosaa.dto.TiedoteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
@@ -51,49 +52,60 @@ public class KoulutustoimijaController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public KoulutustoimijaDto get(
-            @PathVariable("id") final Long id) {
-        return koulutustoimijaService.getKoulutustoimija(id);
+    @Timed
+    public ResponseEntity<KoulutustoimijaDto> get(@PathVariable("id") final Long id) {
+        KoulutustoimijaDto koulutustoimijaDto = koulutustoimijaService.getKoulutustoimija(id);
+        if (koulutustoimijaDto != null) {
+            return new ResponseEntity<>(koulutustoimijaService.getKoulutustoimija(id), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @RequestMapping(value = "/{id}/opetussuunnitelmat", method = RequestMethod.GET)
     @ResponseBody
-    public List<OpetussuunnitelmaBaseDto> getOpetussuunnitelmat(
+    @Timed
+    public ResponseEntity<List<OpetussuunnitelmaBaseDto>> getOpetussuunnitelmat(
             @PathVariable("id") final Long id) {
-        return koulutustoimijaService.getOpetussuunnitelmat(id);
+        return new ResponseEntity<>(koulutustoimijaService.getOpetussuunnitelmat(id), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}/opetussuunnitelmat/{opsId}", method = RequestMethod.GET)
     @ResponseBody
-    public OpetussuunnitelmaDto getOpetussuunnitelma(
+    @Timed
+    public ResponseEntity<OpetussuunnitelmaDto> getOpetussuunnitelma(
             @PathVariable("id") final Long id,
             @PathVariable("opsId") final Long opsId) {
-        return koulutustoimijaService.getOpetussuunnitelma(id, opsId);
+        return new ResponseEntity<>(koulutustoimijaService.getOpetussuunnitelma(id, opsId), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}/tiedotteet", method = RequestMethod.GET)
     @ResponseBody
-    public List<TiedoteDto> getTiedotteet(
+    @Timed
+    public ResponseEntity<List<TiedoteDto>> getTiedotteet(
             @PathVariable("id") final Long id) {
-        return koulutustoimijaService.getTiedotteet(id);
+        return new ResponseEntity<>(koulutustoimijaService.getTiedotteet(id), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}/tiedote/{tiedoteId}", method = RequestMethod.GET)
     @ResponseBody
-    public TiedoteDto getTiedote(
+    @Timed
+    public ResponseEntity<TiedoteDto> getTiedote(
             @PathVariable("id") final Long id,
             @PathVariable("tiedoteId") final Long tiedoteId) {
-        return koulutustoimijaService.getTiedote(id);
+        return new ResponseEntity<>(koulutustoimijaService.getTiedote(id), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}/omattiedotteet", method = RequestMethod.GET)
     @ResponseBody
-    public List<TiedoteDto> getOmatTiedotteet(
+    @Timed
+    public ResponseEntity<List<TiedoteDto>> getOmatTiedotteet(
             @PathVariable("id") final Long id) {
-        return koulutustoimijaService.getOmatTiedotteet(id);
+        return new ResponseEntity<>(koulutustoimijaService.getOmatTiedotteet(id), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/oikeudet", method = RequestMethod.GET)
+    @ResponseBody
+    @Timed
     public ResponseEntity<Map<PermissionManager.TargetType, Set<PermissionManager.Permission>>> getOikeudet() {
         return new ResponseEntity<>(permissionManager.getOpsPermissions(), HttpStatus.OK);
     }

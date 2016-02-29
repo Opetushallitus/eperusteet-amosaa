@@ -11,9 +11,9 @@ angular.module("app")
     },
     views: {
         "": {
-            controller: ($scope, $state, $stateParams, kayttajanKoulutustoimijat) => {
+            controller: ($rootScope, $scope, $state, $stateParams, kayttajanKoulutustoimijat) => {
                 if (_.isEmpty(kayttajanKoulutustoimijat)) {
-                    console.log("Ei koulutustoimijoita");
+                    $state.go("root.virhe.koulutustoimija");
                 }
                 else if ($state.current.name === "root") {
                     // TODO: Valitse preferattu koulutustoimija

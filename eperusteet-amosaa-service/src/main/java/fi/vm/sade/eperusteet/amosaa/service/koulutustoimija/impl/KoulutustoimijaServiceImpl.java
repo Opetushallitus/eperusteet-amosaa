@@ -20,10 +20,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Yhteiset;
-//import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Yhteinen;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
-import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappaleViite;
 import fi.vm.sade.eperusteet.amosaa.dto.TiedoteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
@@ -36,6 +34,7 @@ import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -93,6 +92,7 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public KoulutustoimijaDto getKoulutustoimija(Long kId) {
         return mapper.map(koulutustoimijaRepository.findOne(kId), KoulutustoimijaDto.class);
     }

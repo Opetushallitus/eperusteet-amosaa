@@ -33,7 +33,7 @@ public interface AbstractRevisionController {
     @RequestMapping(value = "/versiot/uusin", method = RequestMethod.GET)
     @ResponseBody
     @InternalApi
-    default public Revision getLatestRevision(
+    default Revision getLatestRevision(
             @PathVariable("baseId") final Long baseId,
             @PathVariable("id") final Long id) {
         return getService().getLatestRevision(baseId, id);
@@ -42,7 +42,7 @@ public interface AbstractRevisionController {
     @RequestMapping(value = "/versiot", method = RequestMethod.GET)
     @ResponseBody
     @InternalApi
-    default public List<Revision> getRevisions(
+    default List<Revision> getRevisions(
             @PathVariable("baseId") final Long baseId,
             @PathVariable("id") final Long id) {
         return getService().getRevisions(baseId, id);
@@ -50,7 +50,7 @@ public interface AbstractRevisionController {
 
     @RequestMapping(value = "/versiot/{revId}", method = RequestMethod.GET)
     @ResponseBody
-    default public Object getRevisions(
+    default Object getRevisions(
             @PathVariable("baseId") final Long baseId,
             @PathVariable("id") final Long id,
             @PathVariable("revId") final Integer revId) {

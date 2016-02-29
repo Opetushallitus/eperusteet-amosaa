@@ -63,8 +63,8 @@
 
     <context:component-scan base-package="fi.vm.sade.eperusteet.amosaa.service"/>
     <tx:annotation-driven/>
-    <cache:annotation-driven />
-    <aop:aspectj-autoproxy  />
+    <cache:annotation-driven/>
+    <aop:aspectj-autoproxy/>
 
     <jee:jndi-lookup id="dataSource" jndi-name="jdbc/eperusteet-amosaa" expected-type="javax.sql.DataSource"/>
 

@@ -1,7 +1,6 @@
 angular.module("app")
     .config($stateProvider => $stateProvider
-        .state("root.virhe", {
-            abstract: true,
-            url: "/virhe",
+        .state("root.virhe.koulutustoimija", {
+            url: "/koulutustoimija",
             controller: () => {}
         }));

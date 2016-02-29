@@ -86,13 +86,12 @@ angular.module("app", [
     usSpinnerConfigProvider.setDefaults({color: "#29d", radius: 30, width: 8, length: 16});
 }])
 
-.run(($rootScope, $log, $urlMatcherFactory, $state) => {
+.run(($rootScope, $urlMatcherFactory, $state) => {
     $rootScope.error = null;
     $rootScope.$on("$stateChangeError", (event, toState, toParams, fromState, fromParams, error) => {
         if (!$rootScope.error) {
             $rootScope.error = { event, toState, toParams, fromState, fromParams, error };
-            $log.error(error);
-            $state.go("root.virhe");
+            $state.go("root.virhe.detail");
         }
     });
 })

@@ -15,25 +15,16 @@
  */
 package fi.vm.sade.eperusteet.amosaa.service.security;
 
-import fi.vm.sade.eperusteet.amosaa.domain.Tila;
-import fi.vm.sade.eperusteet.amosaa.domain.Tyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.service.exception.NotExistsException;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.Organization;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.RolePermission;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.RolePrefix;
-import fi.vm.sade.eperusteet.amosaa.service.util.CollectionUtil;
 import fi.vm.sade.eperusteet.amosaa.service.util.Pair;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -51,11 +42,12 @@ public class PermissionManager {
     public enum TargetType {
         POHJA("pohja"),
         TARKASTELU("tarkastelu"),
-        OPETUSSUUNNITELMA("opetussuunnitelma");
+        OPETUSSUUNNITELMA("opetussuunnitelma"),
+        KOULUTUSTOIMIJA("koulutustoimija");
 
         private final String target;
 
-        private TargetType(String target) {
+        TargetType(String target) {
             this.target = target;
         }
 
@@ -77,7 +69,7 @@ public class PermissionManager {
 
         private final String permission;
 
-        private Permission(String permission) {
+        Permission(String permission) {
             this.permission = permission;
         }
 
@@ -130,7 +122,18 @@ public class PermissionManager {
             case POHJA:
             case OPETUSSUUNNITELMA:
                 return hasAnyRole(authentication, RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA,
-                                  permissions, Organization.ANY);
+                        permissions, Organization.ANY);
+            case KOULUTUSTOIMIJA:
+                if (targetId != null) {
+                    Koulutustoimija koulutustoimija = koulutustoimijaRepository.findOne((Long) targetId);
+                    if (koulutustoimija != null) {
+                        String orgOid = koulutustoimija.getOrganisaatio();
+                        Organization organization = new Organization(orgOid);
+
+                        return hasAnyRole(authentication, RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA,
+                                permissions, organization);
+                    }
+                }
             default:
                 return hasAnyRole(authentication, RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA,
                                   permissions, Organization.ANY);
