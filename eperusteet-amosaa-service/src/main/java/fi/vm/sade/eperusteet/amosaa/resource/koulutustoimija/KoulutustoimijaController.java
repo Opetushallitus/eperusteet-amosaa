@@ -18,6 +18,7 @@ package fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija;
 
 import com.wordnik.swagger.annotations.Api;
 import fi.vm.sade.eperusteet.amosaa.dto.TiedoteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.OpetussuunnitelmaDto;
@@ -48,6 +49,7 @@ public class KoulutustoimijaController {
 
     @Autowired
     private PermissionManager permissionManager;
+    
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
@@ -78,6 +80,13 @@ public class KoulutustoimijaController {
         return koulutustoimijaService.getTiedotteet(id);
     }
 
+    @RequestMapping(value = "/{id}/tiedotteet", method = RequestMethod.GET)
+    @ResponseBody
+    public List<KayttajanTietoDto> getKayttajat(
+            @PathVariable("id") final Long id) {
+        return koulutustoimijaService.getKayttajat(id);
+    }
+
     @RequestMapping(value = "/{id}/tiedote/{tiedoteId}", method = RequestMethod.GET)
     @ResponseBody
     public TiedoteDto getTiedote(
@@ -97,5 +106,4 @@ public class KoulutustoimijaController {
     public ResponseEntity<Map<PermissionManager.TargetType, Set<PermissionManager.Permission>>> getOikeudet() {
         return new ResponseEntity<>(permissionManager.getOpsPermissions(), HttpStatus.OK);
     }
-
 }

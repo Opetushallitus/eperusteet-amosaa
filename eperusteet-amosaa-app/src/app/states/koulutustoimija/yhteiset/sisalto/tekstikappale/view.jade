@@ -1,18 +1,7 @@
 div.tekstikappaleet
   .ylapalkki
-    .pull-left
-      p
-        span
-          b(kaanna="'muokattu'")
-        span(ng-bind="tkv.tekstiKappale.muokattu | aikaleima")
-      p
-        span
-          b(kaanna="'muokkaaja'")
-        span(ng-bind="tkv.tekstiKappale.muokkaaja")
-
-    .pull-right
-      button.btn.btn-primary.muokkaa(ng-hide="$$ekEditing" ng-click="edit()")
-        | Muokkaa
+    +historia("versio", "tkv.tekstiKappale", "edit()", "listRevisions()", "restoreRevision()", "restoreNew()")
+      button.btn.btn-primary.muokkaa(ng-show="$$ekEditing" ng-click="remove()" kaanna="'poista'")
 
   div
     div(ng-if="$$ekEditing")
