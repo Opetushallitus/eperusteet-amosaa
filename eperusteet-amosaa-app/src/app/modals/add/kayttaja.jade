@@ -1,0 +1,58 @@
+div.modal-header
+  h2(kaanna="'lisaa-kayttaja'")
+
+div.modal-body
+  div.tutkintohaku
+    .form-group.has-feedback.has-feedback-left
+      input.form-control(type="text"
+        placeholder="{{ 'hae-peruste' | kaanna }}"
+        ng-model="input"
+        ng-change="update(input)")
+      i.form-control-feedback.glyphicon.glyphicon-search(style="color: gray;")
+
+    div.listaus(ng-show="input.length > 0")
+      div.tutkinto(ng-show="perusteet.length > 0" ng-repeat="peruste in perusteet" ng-click="valitsePeruste(peruste)")
+        div.nimi(kaanna="peruste.nimi")
+        div.diaari(ng-bind="peruste.diaarinumero")
+      div(ng-show="perusteet.length === 0")
+        span.ei-tuloksia(kaanna="'ei-hakutuloksia'")
+
+    div.peruste(ng-show="peruste")
+      div
+        h4(kaanna="'tutkinto'")
+        span.content.tutkinto-nimi(ng-bind="peruste.nimi | kaanna")
+        span=" ("
+        span.tutkinto-diaari(ng-bind="peruste.diaarinumero")
+        span=")"
+      div
+        span.content(kaanna="'voimassa-olo-alkoi'")
+        span=": "
+        span(ng-bind="peruste.voimassaoloAlkaa | aikaleima:'date'")
+      div(ng-if="peruste.voimassaoloLoppuu")
+        span(kaanna="'voimassa-olo-paattyy'")
+        span=": "
+        span(ng-bind="peruste.voimassaoloLoppuu | aikaleima:'date'")
+
+      div
+        h4(kaanna="'koulutukset'")
+        div.content(ng-repeat="koulutus in peruste.koulutukset")
+          span(ng-bind="koulutus.nimi | kaanna")
+          span=" ("
+          span(ng-bind="koulutus.koulutuskoodiArvo")
+          span=")"
+
+        toggler.pull-next-to(yes="enemman" no="vahemman" ng-model="$$perusteNaytaLisaa")
+
+        div(ng-show="$$perusteNaytaLisaa")
+          div(ng-if="peruste.osaamisalat.length > 0")
+            h4(kaanna="'osaamisalat'")
+            p.content(ng-repeat="osaamisala in peruste.osaamisalat"
+              ng-bind="osaamisala.nimi | kaanna")
+
+          h4(kaanna="'kuvaus'")
+          p.content(ng-bind="peruste.kuvaus | kaanna")
+
+
+div.modal-footer
+  button.btn.btn-primary(ng-click="ok()", kaanna="'tallenna'")
+  button.btn.btn-default(ng-click="ok()", kaanna="'peruuta'")

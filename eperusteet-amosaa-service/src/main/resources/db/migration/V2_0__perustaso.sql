@@ -1,4 +1,4 @@
- CREATE SEQUENCE hibernate_sequence;
+CREATE SEQUENCE hibernate_sequence;
 
 CREATE TABLE revinfo (
     rev integer NOT NULL PRIMARY KEY,
@@ -280,4 +280,18 @@ CREATE TABLE termi_aud (
     rev INTEGER NOT NULL,
     revtype SMALLINT,
     revend INTEGER
+);
+
+
+CREATE TABLE poistetut (
+    id bigint NOT NULL PRIMARY KEY,
+    nimi_id bigint NOT NULL REFERENCES lokalisoituteksti(id),
+    yhteiset_id bigint REFERENCES yhteiset(id),
+    koulutustoimija_id bigint REFERENCES koulutustoimija(id),
+--     opetussuunnitelma_id bigint REFERENCES opetussuunnitelma,
+    poistettu_id bigint NOT NULL,
+    pvm timestamp without time zone,
+    tyyppi VARCHAR(64),
+    muokkaajaoid character varying(255),
+    UNIQUE(id)
 );

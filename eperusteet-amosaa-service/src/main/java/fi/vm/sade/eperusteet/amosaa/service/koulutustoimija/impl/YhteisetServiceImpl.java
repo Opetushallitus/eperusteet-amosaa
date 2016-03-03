@@ -17,9 +17,10 @@
 package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.impl;
 
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Yhteiset;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.PoistettuDto;
+import fi.vm.sade.eperusteet.amosaa.dto.PoistettuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.YhteisetDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.YhteisetSisaltoDto;
+import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.YhteisetRepository;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.YhteisetService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import java.util.ArrayList;
@@ -27,7 +28,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.YhteisetRepository;
 
 /**
  *
