@@ -28,7 +28,7 @@ import java.util.List;
  */
 @Repository
 public interface KommenttiRepository extends JpaRepository<Kommentti, Long> {
-    List<Kommentti> findByOpetussuunnitelmaId(Long opetussuunnitelmaId);
+//    List<Kommentti> findByOpetussuunnitelmaId(Long opetussuunnitelmaId);
 
     List<Kommentti> findByParentId(Long parentId);
 

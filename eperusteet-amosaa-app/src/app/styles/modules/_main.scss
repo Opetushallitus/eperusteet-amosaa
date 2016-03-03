@@ -2,8 +2,18 @@ div.container {
     min-width: 960px;
 }
 
+.label {
+    user-select: none;
+}
+
 .paaotsikko {
     margin-top: 0;
     margin-bottom: 10px;
     border-bottom: 1px solid lightgray;
+}
+
+.pull-next-to {
+    float: right;
+    top: -16px;
+    position: relative;
 }

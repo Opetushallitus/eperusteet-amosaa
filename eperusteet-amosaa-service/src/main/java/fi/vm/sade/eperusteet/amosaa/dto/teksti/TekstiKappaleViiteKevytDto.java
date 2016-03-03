@@ -16,7 +16,6 @@
 package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import fi.vm.sade.eperusteet.amosaa.domain.teksti.Omistussuhde;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import java.util.List;
 import lombok.Getter;
@@ -33,8 +32,8 @@ public class TekstiKappaleViiteKevytDto {
     @JsonProperty("_tekstiKappale")
     private Reference tekstiKappaleRef;
     private TekstiKappaleKevytDto tekstiKappale;
-    private Omistussuhde omistussuhde;
+    private Long owner;
     private boolean pakollinen;
     private boolean valmis;
-    private List<TekstiKappaleViiteKevytDto> lapset;
+    private List<Reference> lapset;
 }

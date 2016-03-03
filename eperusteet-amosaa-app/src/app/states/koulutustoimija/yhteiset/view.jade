@@ -1,2 +1,35 @@
-p yhteiset
-div.ui-view
+div.yhteiset-nakyma
+  div.row
+    div.col-xs-12
+      div.ylatunniste
+        a.pull-left(href="")
+          div.muokkaa
+            i.fa.fa-pencil
+        div.pull-left
+          h2(ng-bind="yhteiset.nimi | kaanna")
+          h2
+            span
+              i.fa.fa-magic
+
+
+        div.painikkeet
+          div.keskitetty.pull-right
+            button.btn.btn-default Esikatselu
+            button.btn.btn-default
+              span PDF
+              span.fa.fa-file-pdf-o.fa-fw
+
+  div.row
+    div.col-xs-12
+      div.tabit
+        ul.nav.nav-tabs
+          li(ui-sref-active="active")
+            a(ui-sref=".sisalto") Sisaltö
+          li(ui-sref-active="active")
+            a(ui-sref=".kasitteet") Käsitteet
+          li(ui-sref-active="active")
+            a(ui-sref=".poistetut") Poistetut
+
+  div.row
+    div.col-xs-12
+      div.ui-view

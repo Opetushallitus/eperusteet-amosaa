@@ -1,7 +1,7 @@
 angular.module("app")
 .config($stateProvider => $stateProvider
 .state("root.koulutustoimija.yhteiset.kasitteet", {
-    url: "/poistetut",
+    url: "/kasitteet",
     resolve: {},
     views: {
         "": {

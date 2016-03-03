@@ -30,7 +30,7 @@ import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 
 class JpaWithVersioningRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRepository<T, ID> implements
-    JpaWithVersioningRepository<T, ID> {
+        JpaWithVersioningRepository<T, ID> {
 
     private final EntityManager entityManager;
     private final JpaEntityInformation<T, ID> entityInformation;
@@ -43,23 +43,44 @@ class JpaWithVersioningRepositoryImpl<T, ID extends Serializable> extends Simple
     }
 
     @Override
+    public Revision getLatestRevision(ID id) {
+        AuditReader auditReader = AuditReaderFactory.get(entityManager);
+        Object[] rev = (Object[])auditReader.createQuery()
+                .forRevisionsOfEntity(entityInformation.getJavaType(), false, true)
+                .add(AuditEntity.id().eq(id))
+                .addOrder(AuditEntity.revisionNumber().desc())
+                .addProjection(AuditEntity.revisionNumber())
+                .addProjection(AuditEntity.revisionProperty(RevisionInfo_.timestamp.getName()))
+                .addProjection(AuditEntity.revisionProperty(RevisionInfo_.muokkaajaOid.getName()))
+                .addProjection(AuditEntity.revisionProperty(RevisionInfo_.kommentti.getName()))
+                .addOrder(AuditEntity.revisionProperty(RevisionInfo_.timestamp.getName()).desc())
+                .getResultList()
+                .iterator()
+                .next();
+
+        return rev != null
+                ? new Revision((Integer) rev[0], (Long) rev[1], (String) rev[2], (String) rev[3])
+                : null;
+    }
+
+    @Override
     public List<Revision> getRevisions(ID id) {
         AuditReader auditReader = AuditReaderFactory.get(entityManager);
 
         @SuppressWarnings("unchecked")
         List<Object[]> results = (List<Object[]>) auditReader.createQuery()
-            .forRevisionsOfEntity(entityInformation.getJavaType(), false, true)
-            .addProjection(AuditEntity.revisionNumber())
-            .addProjection(AuditEntity.revisionProperty(RevisionInfo_.timestamp.getName()))
-            .addProjection(AuditEntity.revisionProperty(RevisionInfo_.muokkaajaOid.getName()))
-            .addProjection(AuditEntity.revisionProperty(RevisionInfo_.kommentti.getName()))
-            .addOrder(AuditEntity.revisionProperty(RevisionInfo_.timestamp.getName()).desc())
-            .add(AuditEntity.id().eq(id))
-            .getResultList();
+                .forRevisionsOfEntity(entityInformation.getJavaType(), false, true)
+                .addProjection(AuditEntity.revisionNumber())
+                .addProjection(AuditEntity.revisionProperty(RevisionInfo_.timestamp.getName()))
+                .addProjection(AuditEntity.revisionProperty(RevisionInfo_.muokkaajaOid.getName()))
+                .addProjection(AuditEntity.revisionProperty(RevisionInfo_.kommentti.getName()))
+                .addOrder(AuditEntity.revisionProperty(RevisionInfo_.timestamp.getName()).desc())
+                .add(AuditEntity.id().eq(id))
+                .getResultList();
 
         List<Revision> revisions = new ArrayList<>();
         for (Object[] result : results) {
-            revisions.add(new Revision((Integer) result[0], (Long) result[1], (String)result[2], (String)result[3]));
+            revisions.add(new Revision((Integer) result[0], (Long) result[1], (String) result[2], (String) result[3]));
         }
 
         return revisions;

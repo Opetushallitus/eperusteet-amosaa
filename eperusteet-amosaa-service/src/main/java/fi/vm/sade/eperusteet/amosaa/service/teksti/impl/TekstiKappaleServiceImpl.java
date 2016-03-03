@@ -81,7 +81,6 @@ public class TekstiKappaleServiceImpl implements TekstiKappaleService {
         clone = repository.save(clone);
 
         viite.setTekstiKappale(clone);
-        viite.setOmistussuhde(Omistussuhde.OMA);
 
         mapper.map(clone, tekstiKappaleDto);
         return tekstiKappaleDto;

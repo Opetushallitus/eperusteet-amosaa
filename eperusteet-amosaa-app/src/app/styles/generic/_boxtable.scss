@@ -35,6 +35,9 @@ table.boxtable {
     }
     tbody {
         tr {
+            &:hover {
+                
+            }
             td {
                 border-width: 0;
 
@@ -48,6 +51,18 @@ table.boxtable {
                     height: $boxtable-row-height + $boxtable-border-width * 2;
                     border-top: solid $boxtable-border-width $boxtable-border-color;
                     border-bottom: solid $boxtable-border-width $boxtable-border-color;
+                    & > a, & > a > span {
+
+                        text-decoration: none;
+                    }
+
+                    .ellipsis {
+                        display: block;
+                        width: 350px;
+                        white-space: nowrap;
+                        overflow:hidden !important;
+                        text-overflow: ellipsis;
+                    }
                 }
                 // First column
                 &:first-child {

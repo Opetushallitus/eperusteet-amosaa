@@ -8,7 +8,7 @@ module KieliService {
        _$translate = $translate;
     }
 
-    let SISALTOKIELET = [
+    export let SISALTOKIELET = [
         "fi",
         "sv",
         "se",

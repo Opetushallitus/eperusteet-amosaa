@@ -29,6 +29,8 @@ public interface JpaWithVersioningRepository<T, ID extends Serializable> extends
 
     List<Revision> getRevisions(final ID id);
 
+    Revision getLatestRevision(final ID id);
+
     T findRevision(final ID id, final Integer revisionId);
 
     Integer getLatestRevisionId(final ID id);

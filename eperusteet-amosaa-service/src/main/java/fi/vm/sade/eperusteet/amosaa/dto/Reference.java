@@ -41,13 +41,16 @@ public class Reference {
         return id;
     }
 
+    public Long getIdLong() {
+        return Long.parseLong(id);
+    }
+
     public static Reference of(ReferenceableEntity e) {
         return (e == null || e.getId() == null) ? null : new Reference(e.getId().toString());
     }
 
     public static Reference of(ReferenceableDto d) {
         return (d == null || d.getId() == null) ? null : new Reference(d.getId().toString());
-
     }
 
     public static Reference of(Long id) {

@@ -16,7 +16,6 @@
 package fi.vm.sade.eperusteet.amosaa.dto.kayttaja;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -34,5 +33,4 @@ public class KayttajanTietoDto {
     String oidHenkilo;
     String kieliKoodi;
     JsonNode yhteystiedot;
-    List<KayttajanKoulutustoimijaDto> koulutustoimijat;
 }

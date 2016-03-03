@@ -1,20 +1,21 @@
 namespace NotifikaatioService {
     let
-        _$modal,
+        _$uibModal,
         _$rootScope,
         _$state,
         _$timeout,
         _NOTIFICATION_DELAY_SUCCESS,
-        _NOTIFICATION_DELAY_WARNING;
+        _NOTIFICATION_DELAY_WARNING,
+        _NOTIFICATION_DELAY_INFO;
 
-    export const init = ($uibModal, $rootScope, $state, $timeout, NOTIFICATION_DELAY_SUCCESS, NOTIFICATION_DELAY_WARNING) => {
-        _$modal = $uibModal;
+    export const init = ($uibModal, $rootScope, $state, $timeout, NOTIFICATION_DELAY_SUCCESS, NOTIFICATION_DELAY_WARNING,  NOTIFICATION_DELAY_INFO) => {
+        _$uibModal = $uibModal;
         _$rootScope = $rootScope;
         _$state = $state;
         _$timeout = $timeout;
         _NOTIFICATION_DELAY_SUCCESS = NOTIFICATION_DELAY_SUCCESS;
         _NOTIFICATION_DELAY_WARNING = NOTIFICATION_DELAY_WARNING;
-
+        _NOTIFICATION_DELAY_INFO = NOTIFICATION_DELAY_INFO;
     }
 
     let _viestit = [];
@@ -30,7 +31,7 @@ namespace NotifikaatioService {
                 return comp(viesti.luotu, _NOTIFICATION_DELAY_WARNING);
             }
             else {
-                return true;
+                return comp(viesti.luotu, _NOTIFICATION_DELAY_INFO);
             }
         });
     };
@@ -66,18 +67,18 @@ namespace NotifikaatioService {
         refresh();
     };
 
-    export const poista = (i) => {
-        if (_.isObject(i)) {
-            _.remove(_viestit, i);
+    export const poista = (idx) => {
+        if (_.isObject(idx)) {
+            _.remove(_viestit, idx);
             paivita();
             _$rootScope.$broadcast("update:notifikaatiot");
         }
         else {
-            _viestit.splice(i, 1);
+            _viestit.splice(idx, 1);
         }
     };
 
-    export const fataali = (viesti) => _$modal.open({
+    export const fataali = (viesti) => _$uibModal.open({
         resolve: {
             _viesti: _.constant(viesti)
         },
@@ -132,9 +133,10 @@ namespace NotifikaatioService {
 // }
 
 angular.module("app")
-.run(($injector) => $injector.invoke(NotifikaatioService.init))
+.run(NotifikaatioService.init)
 .constant("NOTIFICATION_DELAY_SUCCESS", 2000)
 .constant("NOTIFICATION_DELAY_WARNING", 5000)
+.constant("NOTIFICATION_DELAY_INFO", 8000)
 .controller("NotifikaatioController", ($scope) => {
     $scope.viestit = [];
     $scope.poistaNotifikaatio = NotifikaatioService.poista;

@@ -17,7 +17,6 @@ package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import fi.vm.sade.eperusteet.amosaa.domain.teksti.Omistussuhde;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import java.util.List;
 import lombok.Getter;
@@ -32,17 +31,13 @@ import lombok.Setter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TekstiKappaleViiteDto {
     private Long id;
+    private TekstiKappaleDto tekstiKappale;
+    private Long owner;
+    private boolean pakollinen;
+    private boolean valmis;
 
     @JsonProperty("_tekstiKappale")
     private Reference tekstiKappaleRef;
-
-    private TekstiKappaleDto tekstiKappale;
-
-    private Omistussuhde omistussuhde;
-
-    private boolean pakollinen;
-
-    private boolean valmis;
 
     public TekstiKappaleViiteDto() { }
 

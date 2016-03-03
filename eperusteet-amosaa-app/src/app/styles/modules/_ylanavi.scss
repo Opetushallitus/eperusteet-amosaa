@@ -1,5 +1,33 @@
 .ylanavi {
+    .ohje {
+        margin: 5px 5px 5px 5px;
+        position: relative;
+        top: 3px;
+        right: -5px;
+    }
+
     .kielivalitsin {
-        padding: 8px 0;
+        position: relative;
+        top: 4px;
+        a {
+            cursor: pointer;
+            margin: 5px;
+        }
+    }
+}
+
+.ylanavi-sticky {
+    & > .ylanavi {
+        background-color: #FFFFFF;
+        z-index: $zindex-navbar;
+        box-shadow: 0 4px 2px -3px gray;
+    }
+}
+
+.ylanavi-sticky {
+    & > .ylanavi {
+        background-color: #FFFFFF;
+        z-index: $zindex-navbar;
+        box-shadow: 0 4px 2px -3px gray;
     }
 }

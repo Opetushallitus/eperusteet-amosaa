@@ -1,4 +1,4 @@
-div.ylanavi
+div.ylanavi(sticky, className="ylanavi-sticky")
   div.row
     div.col-xs-8
       ol.breadcrumb
@@ -16,20 +16,23 @@ div.ylanavi
 
     div.col-xs-4
       div.pull-right
-        div.dropdown.kielivalitsin
-          span sisalto-kieli
-          span :&nbsp;
+        span.dropdown.kielivalitsin
+          span(kaanna="'sisalto-kieli'")
+          span=": "
           span
-            a.action-link.dropdown-toggle(data-toggle="dropdown", style="cursor: pointer;") suomi
+            a.action-link.dropdown-toggle(data-toggle="dropdown") fi
               span.caret
             ul.dropdown-menu.dropdown-menu-right
-              li
-                a suomi
-              li
-                a ruotsi
-              li
-                a saame
-              li
-                a ru
-              li
-                a en
+              li(ng-repeat="kieli in langs")
+                a(href="" kaanna="kieli")
+
+        span.ohje.popover-element.fa-stack.fa-lg(
+          style="color: #199dd0;"
+          ng-show="helpUrl"
+          uib-popover-template="helpUrl"
+          popover-trigger="mouseenter"
+          popover-animation="true"
+          popover-placement="bottom"
+          popover-title="{{ 'apuotsikko' | kaanna }}")
+          i.fa.fa-circle.fa-stack-2x
+          i.fa.fa-info.fa-stack-1x.fa-inverse

@@ -7,6 +7,8 @@ html(lang="fi" ng-app="app")
     include ./templates.jade
     link(rel="stylesheet" href="styles.css")
     script(src="dependencies.js")
+    script(type='text/javascript').
+      CKEDITOR.basePath = '/ckeditor/';
     script(src="app.js")
     title="ePerusteet-amosaa"
   body
@@ -15,14 +17,12 @@ html(lang="fi" ng-app="app")
       div.row
         .col-xs-12
           ul.list-inline
-            li
-              a(href="", ui-sref="root.sandbox") sandbox
-            li
-              a(href="", ui-sref="root.koulutustoimija.detail({ ktId: 1 })") koulutustoimija
-            li
-              a(href="", ui-sref="root.routelist") routelist
+            li: a(href="", ui-sref="root.sandbox", ui-sref-opts="{ reload: true }") sandbox
+            li: a(ui-sref="root", ui-sref-opts="{ reload: true }") koulutustoimija
+            li: a(href="", ui-sref="root.routelist", ui-sref-opts="{ reload: true }") routelist
 
-    div(ui-view="notifikaatiot")
-    div.container(style="border-left: 1px dashed lightgray; border-right: 1px dashed lightgray;").ui-view
-    div.editointi-wrapper
-      editointikontrollit
+    div.container(style="border-left: 1px dashed lightgray; border-right: 1px dashed lightgray;")
+      div(ui-view="notifikaatiot")
+      div.ui-view
+      div.editointi-wrapper
+        editointikontrollit

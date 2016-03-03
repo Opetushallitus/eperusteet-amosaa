@@ -26,8 +26,8 @@ import java.util.List;
  * @author mikkom
  */
 public interface KommenttiService {
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
-    public List<KommenttiDto> getAllByOpetussuunnitelma(Long opsId);
+//    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
+//    public List<KommenttiDto> getAllByOpetussuunnitelma(Long opsId);
 
     @PreAuthorize("isAuthenticated()")
     public List<KommenttiDto> getAllByParent(Long id);

@@ -7,6 +7,7 @@ $nappi-vari: lightgrey;
   font-size: 13px;
   font-weight: normal;
   color: rgb(51, 51, 51);
+
   .badge {
     background-color: #ccc;
     color: white;
@@ -17,6 +18,8 @@ $nappi-vari: lightgrey;
     border-radius: $ohje-badge-size / 2;
     padding: 3px 6px;
     cursor: pointer;
+    user-select: none;
+
     &:hover {
       background-color: #bbb;
     }
@@ -41,6 +44,7 @@ $nappi-vari: lightgrey;
 
 .popover-element .tag {
   cursor: pointer;
+  user-select: none;
 }
 
 .popover {

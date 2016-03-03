@@ -15,8 +15,8 @@ var
     typescript    = require('gulp-tsc'),
     url           = require('url'),
     ts_app_config = require('./tsconfig.json'),
-    tslint        = require('gulp-tslint'),
-    tslint_config = require('./tslint.json'),
+    // tslint        = require('gulp-tslint'),
+    // tslint_config = require('./tslint.json'),
     watch         = require('gulp-watch');
 
 var tests = _.filter(ts_app_config.files, function(file) { return _.startsWith(file, 'test'); });
@@ -48,12 +48,19 @@ var testReporter = function (output, file) {
 
 gulp
 .task('templatepacker', function() {
-    return gulp.src([config.app + 'components/**/*.jade', config.app + 'views/**/*.jade', config.app + 'states/**/*.jade'])
+    return gulp.src([
+            config.app + 'misc/mixins.jade',
+            config.app + 'components/**/*.jade',
+            config.app + 'views/**/*.jade',
+            config.app + 'misc/guidance/**/*.jade',
+            config.app + 'modals/**/*.jade',
+            config.app + 'states/**/*.jade'])
         .pipe(mkStream(function(file, cb) {
             var fpath = file.path.slice((file.cwd + config.app).length + 1);
 
-            if (/^win/.test(process.platform))
+            if (/^win/.test(process.platform)) {
                 fpath = fpath.replace(/\\/g,'/');
+            }
 
             if (fpath !== 'index.jade') {
                 var prefix = 'script(type="text/ng-template" id="' + fpath + '")\n';
@@ -71,19 +78,17 @@ gulp
         .pipe(gulp.dest(config.build))
         .pipe(connect.reload());
 })
+.task('ckeditor', function() {
+    gulp.src(['./node_modules/ckeditor/**']).pipe(gulp.dest(config.build + '/ckeditor'));
+    return gulp.src(['./src/ckeditor-plugins/**']).pipe(gulp.dest(config.build + '/ckeditor/plugins'));
+})
 .task('locales', function() {
-    return gulp.src([
-        './src/localisation/**'
-    ])
-    .pipe(gulp.dest(config.build + '/localisation'));
+    return gulp.src(['./src/localisation/**']).pipe(gulp.dest(config.build + '/localisation'));
 })
 .task('images', function() {
-    return gulp.src([
-        './src/images/**',
-    ])
-    .pipe(gulp.dest(config.build + '/images'));
+    return gulp.src(['./src/images/**']).pipe(gulp.dest(config.build + '/images'));
 })
-.task('static-fonts', ['locales', 'images'], function() {
+.task('static-fonts', ['ckeditor', 'locales', 'images'], function() {
     return gulp.src([
         './node_modules/bootstrap-sass/assets/fonts/**',
         './node_modules/font-awesome/fonts/**'
@@ -125,11 +130,11 @@ gulp
 // })
 .task('compile', function() {
     return gulp.src(sources)
-        .pipe(tslint({ configuration: tslint_config }))
-        .pipe(tslint.report(testReporter, {
-            emitError: false,
-            summarizeFailureOutput: true
-        }))
+        // .pipe(tslint({ configuration: tslint_config }))
+        // .pipe(tslint.report(testReporter, {
+        //     emitError: false,
+        //     summarizeFailureOutput: true
+        // }))
         .pipe(typescript())
         .on('error', function(error) {
             console.log(error.toString());

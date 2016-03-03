@@ -1,0 +1,25 @@
+div.tekstikappaleet
+  .ylapalkki
+    .pull-left
+      p
+        span
+          b(kaanna="'muokattu'")
+        span(ng-bind="tkv.tekstiKappale.muokattu | aikaleima")
+      p
+        span
+          b(kaanna="'muokkaaja'")
+        span(ng-bind="tkv.tekstiKappale.muokkaaja")
+
+    .pull-right
+      button.btn.btn-primary.muokkaa(ng-hide="$$ekEditing" ng-click="edit()")
+        | Muokkaa
+
+  div
+    div(ng-if="$$ekEditing")
+      h1(kaanna="'nimi'")
+      input.form-control(slocalized ng-model="tkv.tekstiKappale.nimi" type="text" required="true")
+      h1(kaanna="'sisalto'")
+      div.form-control(ckeditor slocalized ng-model="tkv.tekstiKappale.teksti" layout="normal")
+    div(ng-if="!$$ekEditing")
+      h1(kaanna="tkv.tekstiKappale.nimi")
+      p(ng-bind-html="tkv.tekstiKappale.teksti | kaanna")

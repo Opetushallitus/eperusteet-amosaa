@@ -1,10 +1,11 @@
 angular.module("app", [
     "ui.router",
+    "angularSpinner",
     "restangular",
     "pascalprecht.translate",
     "ngAnimate",
+    "ngSanitize",
     "ui.bootstrap",
-    "angularSpinner",
     "angular-loading-bar"
 ])
 
@@ -14,8 +15,10 @@ angular.module("app", [
     $urlRouterProvider.when("", "/fi");
     $urlRouterProvider.when("/", "/fi");
     // $translateProvider.useLoader();
-    $translateProvider.preferredLanguage("fi");
     $urlMatcherFactoryProvider.strictMode(false); // Trailing slash ignored
+    moment.locale("fi");
+    $translateProvider.preferredLanguage("fi");
+    $translateProvider.useSanitizeValueStrategy("sanitize");
 })
 
 // Generate template or templateUrl automatically for states when not defined
@@ -83,9 +86,26 @@ angular.module("app", [
     usSpinnerConfigProvider.setDefaults({color: "#29d", radius: 30, width: 8, length: 16});
 }])
 
-.run(($rootScope, $log, $urlMatcherFactory) => {
+.run(($rootScope, $log, $urlMatcherFactory, $state) => {
+    $rootScope.error = null;
     $rootScope.$on("$stateChangeError", (event, toState, toParams, fromState, fromParams, error) => {
-        console.log("fail");
-        $log.error(error);
+        if (!$rootScope.error) {
+            $rootScope.error = { event, toState, toParams, fromState, fromParams, error };
+            $log.error(error);
+            $state.go("root.virhe");
+        }
+    });
+})
+.run(($rootScope, $log, $urlMatcherFactory, $state) => {
+    $rootScope.$on("$stateChangeStart", (event, state, params) => {
+        if (EditointikontrollitService.isEditing()) {
+            event.preventDefault();
+            NotifikaatioService.normaali("ohje-editointi-on-paalla");
+        }
+    });
+    $rootScope.$on("$stateChangeSuccess", (event, state, params) => {
+        if (state.name === "root") {
+            // $state.go("root");
+        }
     });
 });

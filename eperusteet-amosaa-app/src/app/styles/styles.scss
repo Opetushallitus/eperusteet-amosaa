@@ -1,9 +1,10 @@
 $icon-font-path: "fonts/bootstrap/";
+$fa-font-path: "fonts";
 @function font-path($path) { @return $path; }
 
 @import "vendor/bootstrap";
+@import "vendor/font_awesome";
 @import "vendor/virkailija";
-@import "../../../node_modules/font-awesome/scss/font-awesome";
 
 @import "../components/editointikontrollit/_styles.scss";
 @import "../components/ohje/_ohje.scss";
@@ -13,6 +14,11 @@ $icon-font-path: "fonts/bootstrap/";
 @import "../components/editointikontrollit/styles";
 @import "../components/ohje/ohje";
 @import "../components/loadingbar/loading_bar";
+@import "../components/toggler/styles";
+@import "../components/ckeditor/styles";
+
+@import "../modals/add/styles";
+@import "../modals/revisions/styles";
 
 @import "generic/boxtable";
 @import "generic/modal";
@@ -23,4 +29,21 @@ $icon-font-path: "fonts/bootstrap/";
 @import "modules/ylanavi";
 @import "modules/murupolku";
 @import "modules/koulutustoimija";
+@import "modules/yhteiset";
 @import "modules/tiedotteet";
+
+*::-webkit-scrollbar {
+    width: 11px;
+}
+
+*::-webkit-scrollbar-track {
+    background-color: #fff;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+
+    &:hover {
+        background-color: #ddd;
+    }
+}

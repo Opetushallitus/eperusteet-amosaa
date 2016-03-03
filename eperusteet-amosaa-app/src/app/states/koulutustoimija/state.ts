@@ -4,10 +4,12 @@ angular.module("app")
     abstract: true,
     url: "/koulutustoimija/:ktId",
     resolve: {
-        koulutustoimija: ($stateParams) => Fake.Koulutustoimijat()[$stateParams.ktId],
-        yhteinen: (koulutustoimija) => Fake.YhteisetOsat()[koulutustoimija.yhteinenOsa],
+        koulutustoimijat: (Api) => Api.all("koulutustoimijat"),
+        koulutustoimija: ($stateParams, koulutustoimijat) => koulutustoimijat.get($stateParams.ktId),
+        yhteiset: (koulutustoimija) => koulutustoimija.yhteiset,
         opetussuunnitelmat: (koulutustoimija) => Fake.Opetussuunnitelmat(koulutustoimija.id),
         perusteet: Eperusteet => Eperusteet.one("perusteet").get()
     },
-    controller: () => {}
+    controller: (koulutustoimija) => {
+    }
 }));

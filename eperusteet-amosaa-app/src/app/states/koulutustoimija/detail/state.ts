@@ -1,27 +1,31 @@
 angular.module("app")
-  .config($stateProvider => $stateProvider
-    .state("root.koulutustoimija.detail", {
-      url: "",
-      resolve: {
-      },
-      views: {
+.config($stateProvider => $stateProvider
+.state("root.koulutustoimija.detail", {
+    url: "",
+    views: {
         "": {
-          controller: ($scope, yhteinen, kayttajaprofiili, koulutustoimija) => {
-            $scope.yhteinen = yhteinen;
-            $scope.kayttajaprofiili = kayttajaprofiili;
-            $scope.koulutustoimija = koulutustoimija;
-          }
+            controller: ($scope, koulutustoimija) => {
+                $scope.koulutustoimija = koulutustoimija;
+                $scope.addOpetussuunnitelma = () => {
+                    ModalAdd.opetussuunnitelma().then((ops) => {
+                        console.log(ops);
+                    });
+                };
+            }
         },
         opetussuunnitelmat: {
-          controller: ($scope, perusteet) => {
-            $scope.opsit = perusteet;
-          }
+            controller: ($scope, perusteet) => {
+                $scope.opsit = perusteet;
+            }
         },
         yhteiset: {
-          controller: ($scope) => {}
+            controller: ($scope, yhteiset) => {
+                $scope.yhteiset = yhteiset;
+            }
         },
-        "tiedotteet": {
-          controller: ($scope) => {}
+        tiedotteet: {
+            controller: ($scope) => {
+            }
         }
-      }
-    }));
+    }
+}));

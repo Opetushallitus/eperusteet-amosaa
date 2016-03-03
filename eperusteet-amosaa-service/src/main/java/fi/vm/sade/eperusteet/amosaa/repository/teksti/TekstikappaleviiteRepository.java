@@ -26,6 +26,8 @@ import org.springframework.stereotype.Repository;
  * @author mikkom
  */
 @Repository
-public interface TekstikappaleviiteRepository extends JpaWithVersioningRepository<TekstiKappaleViite, Long>, TekstikappaleviiteRepositoryCustom {
+public interface TekstikappaleviiteRepository extends JpaWithVersioningRepository<TekstiKappaleViite, Long> {
     List<TekstiKappaleViite> findAllByTekstiKappale(TekstiKappale tekstiKappale);
+    List<TekstiKappaleViite> findAllByOwner(Long owner);
+    TekstiKappaleViite findOneByOwnerAndId(Long owner, Long id);
 }

@@ -16,7 +16,10 @@
 package fi.vm.sade.eperusteet.amosaa.service.mocks;
 
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Future;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
@@ -27,6 +30,12 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class KayttajanTietoServiceMock implements KayttajanTietoService {
+
+    @Override
+    public List<KoulutustoimijaBaseDto> koulutustoimijat() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     @Override
     public KayttajanTietoDto hae(String oid) {
         return null;
@@ -35,6 +44,11 @@ public class KayttajanTietoServiceMock implements KayttajanTietoService {
     @Override
     public Future<KayttajanTietoDto> haeAsync(String oid) {
         return new AsyncResult<>(hae(oid));
+    }
+
+    @Override
+    public Set<String> getUserOrganizations() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override

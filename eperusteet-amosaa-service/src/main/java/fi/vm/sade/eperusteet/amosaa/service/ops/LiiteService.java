@@ -35,11 +35,11 @@ public interface LiiteService {
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
     public LiiteDto get(Long opsId, UUID id);
 
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
-    public List<LiiteDto> getAll(Long opsId);
+//    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
+//    public List<LiiteDto> getAll(Long opsId);
 
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'MUOKKAUS')")
-    public void delete(Long opsId, UUID id);
+//    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'MUOKKAUS')")
+//    public void delete(Long opsId, UUID id);
 
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
     public void export(@P("opsId") final Long opsId, UUID id, OutputStream os);
