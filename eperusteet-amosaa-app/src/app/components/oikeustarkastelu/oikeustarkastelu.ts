@@ -1,25 +1,20 @@
-namespace OikeudetService {
-    let _$state;
-
-    export const init = ($state) => {
-        _$state = $state;
+module OikeustarkasteluImpl {
+    export const controller = ($rootScope, $scope) => {
+        $scope.oikeudet = $rootScope.oikeudet;
     };
 
-}
-
-module OikeustarkasteluImpl {
     export const directive = () => {
         return {
             restrict: "A",
+            controller: controller,
             link: (scope, element, attrs) => {
-                Kayttaja.oikeudet().then(res => {
-                    console.log(res);
-                });
+                if (!_.some(attrs.oikeustarkastelu.split("|"), (oikeus) => oikeus === scope.oikeudet)) {
+                    element.hide();
+                }
             }
         }
     };
 }
 
 angular.module("app")
-    .run(($injector) => $injector.invoke(OikeudetService.init))
     .directive("oikeustarkastelu", OikeustarkasteluImpl.directive);

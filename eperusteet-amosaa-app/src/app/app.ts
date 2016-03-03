@@ -86,7 +86,7 @@ angular.module("app", [
     usSpinnerConfigProvider.setDefaults({color: "#29d", radius: 30, width: 8, length: 16});
 }])
 
-.run(($rootScope, $urlMatcherFactory, $state) => {
+.run(($rootScope, $log, $urlMatcherFactory, $state) => {
     $rootScope.error = null;
     $rootScope.$on("$stateChangeError", (event, toState, toParams, fromState, fromParams, error) => {
         if (!$rootScope.error) {
@@ -94,12 +94,15 @@ angular.module("app", [
             $state.go("root.virhe.detail");
         }
     });
-})
-.run(($rootScope, $log, $urlMatcherFactory, $state) => {
     $rootScope.$on("$stateChangeStart", (event, state, params) => {
         if (EditointikontrollitService.isEditing()) {
             event.preventDefault();
             NotifikaatioService.normaali("ohje-editointi-on-paalla");
+        }
+
+        // TODO: Käy läpi oikeudet ja valitse oikea oikeus rootScopeen.
+        if (state.name.search("koulutustoimija") > -1) {
+            $rootScope.oikeudet = "LUKU";
         }
     });
     $rootScope.$on("$stateChangeSuccess", (event, state, params) => {
