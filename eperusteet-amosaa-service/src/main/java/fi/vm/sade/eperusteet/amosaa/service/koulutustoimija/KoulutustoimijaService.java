@@ -29,7 +29,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
  *
  * @author nkala
  */
-    @PreAuthorize("isAuthenticated()")
+@PreAuthorize("isAuthenticated()")
 public interface KoulutustoimijaService {
 
     KoulutustoimijaBaseDto getKoulutustoimija(String kOid);
