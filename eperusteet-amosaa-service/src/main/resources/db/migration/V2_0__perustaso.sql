@@ -1,4 +1,4 @@
- CREATE SEQUENCE hibernate_sequence;
+CREATE SEQUENCE hibernate_sequence;
 
 CREATE TABLE revinfo (
     rev integer NOT NULL PRIMARY KEY,

@@ -14,62 +14,63 @@
  * European Union Public Licence for more details.
  */
 
-package fi.vm.sade.eperusteet.amosaa.resource;
+package fi.vm.sade.eperusteet.amosaa.resource.util;
 
+import com.codahale.metrics.annotation.Timed;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.TekstiKappaleViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.TekstiKappaleViiteKevytDto;
 import fi.vm.sade.eperusteet.amosaa.service.ops.TekstiKappaleViiteService;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 /**
  *
  * @author nkala
  */
+
 public interface TekstiKappaleViiteAbstractController {
 
     TekstiKappaleViiteService service();
 
     @RequestMapping(value = "/tekstit/{tkvId}", method = RequestMethod.GET)
-    @ResponseBody
-    default public TekstiKappaleViiteDto.Matala getTekstit(
+    @Timed
+    default ResponseEntity<TekstiKappaleViiteDto.Matala> getTekstit(
             @PathVariable("baseId") final Long baseId,
             @PathVariable("id") final Long id,
             @PathVariable("tkvId") final Long tkvId) {
-        return service().getTekstiKappaleViite(baseId, id, tkvId);
+        return ResponseEntity.ok(service().getTekstiKappaleViite(baseId, id, tkvId));
     }
 
     @RequestMapping(value = "/tekstit/otsikot", method = RequestMethod.GET)
-    @ResponseBody
-    default public List<TekstiKappaleViiteKevytDto> getOtsikot(
+    @Timed
+    default ResponseEntity<List<TekstiKappaleViiteKevytDto>> getOtsikot(
             @PathVariable("baseId") final Long baseId,
             @PathVariable("id") final Long id) {
-        return service().getTekstiKappaleViitteet(baseId, id, TekstiKappaleViiteKevytDto.class);
+        return ResponseEntity.ok(service().getTekstiKappaleViitteet(baseId, id, TekstiKappaleViiteKevytDto.class));
     }
 
     @RequestMapping(value = "/tekstit/{viiteId}", method = RequestMethod.POST)
-    @ResponseBody
-    default public TekstiKappaleViiteDto.Matala addTekstiKappaleLapsi(
+    @Timed
+    default ResponseEntity<TekstiKappaleViiteDto.Matala> addTekstiKappaleLapsi(
             @PathVariable("baseId") final Long baseId,
             @PathVariable("id") final Long id,
             @PathVariable("viiteId") final Long viiteId,
             @RequestBody(required = false) TekstiKappaleViiteDto.Matala tekstiKappaleViiteDto) {
         tekstiKappaleViiteDto.setLapset(new ArrayList<>());
-        return service().addTekstiKappaleViite(baseId, id, viiteId, tekstiKappaleViiteDto);
+        return ResponseEntity.ok(service().addTekstiKappaleViite(baseId, id, viiteId, tekstiKappaleViiteDto));
     }
 
     @RequestMapping(value = "/tekstit/{viiteId}", method = RequestMethod.PUT)
-    default public TekstiKappaleViiteDto updateTekstiKappaleViite(
+    @Timed
+    default ResponseEntity<TekstiKappaleViiteDto> updateTekstiKappaleViite(
             @PathVariable("baseId") final Long baseId,
             @PathVariable("id") final Long id,
             @PathVariable("viiteId") final Long viiteId,
             @RequestBody final TekstiKappaleViiteDto.Puu tekstiKappaleViiteDto) {
-        return service().updateTekstiKappaleViite(baseId, id, viiteId, tekstiKappaleViiteDto);
+        return ResponseEntity.ok(service().updateTekstiKappaleViite(baseId, id, viiteId, tekstiKappaleViiteDto));
     }
 
 //    @RequestMapping(value = "/tekstit/{viiteId}/versiot", method = GET)

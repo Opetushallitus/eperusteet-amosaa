@@ -109,5 +109,4 @@ public class KoulutustoimijaController {
     public ResponseEntity<Map<PermissionManager.TargetType, Set<PermissionManager.Permission>>> getOikeudet() {
         return new ResponseEntity<>(permissionManager.getOpsPermissions(), HttpStatus.OK);
     }
-
 }

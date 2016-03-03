@@ -80,6 +80,7 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
         yhteinen.setNimi(nimi);
         yhteinen.setJulkaisukielet(Collections.EMPTY_SET);
         yhteinen.setTila(Tila.LUONNOS);
+
         koulutustoimija.setYhteiset(yhteinen);
         koulutustoimija = koulutustoimijaRepository.save(koulutustoimija);
         koulutustoimija.getYhteiset().getTekstit().setOwner(koulutustoimija.getYhteiset().getId());

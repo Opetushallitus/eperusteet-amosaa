@@ -16,45 +16,48 @@
 
 package fi.vm.sade.eperusteet.amosaa.resource.util;
 
+import com.codahale.metrics.annotation.Timed;
 import fi.vm.sade.eperusteet.amosaa.domain.revision.Revision;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.service.revision.RevisionService;
 import java.util.List;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 /**
  *
  * @author nkala
  */
+
 public interface AbstractRevisionController {
+
     @RequestMapping(value = "/versiot/uusin", method = RequestMethod.GET)
-    @ResponseBody
     @InternalApi
-    default Revision getLatestRevision(
+    @Timed
+    default ResponseEntity<Revision> getLatestRevision(
             @PathVariable("baseId") final Long baseId,
             @PathVariable("id") final Long id) {
-        return getService().getLatestRevision(baseId, id);
+        return ResponseEntity.ok(getService().getLatestRevision(baseId, id));
     }
 
     @RequestMapping(value = "/versiot", method = RequestMethod.GET)
-    @ResponseBody
     @InternalApi
-    default List<Revision> getRevisions(
+    @Timed
+    default ResponseEntity<List<Revision>> getRevisions(
             @PathVariable("baseId") final Long baseId,
             @PathVariable("id") final Long id) {
-        return getService().getRevisions(baseId, id);
+        return ResponseEntity.ok(getService().getRevisions(baseId, id));
     }
 
     @RequestMapping(value = "/versiot/{revId}", method = RequestMethod.GET)
-    @ResponseBody
-    default Object getRevisions(
+    @InternalApi
+    @Timed
+    default ResponseEntity<Object> getRevisions(
             @PathVariable("baseId") final Long baseId,
             @PathVariable("id") final Long id,
             @PathVariable("revId") final Integer revId) {
-        return getService().getData(baseId, id, revId);
+        return ResponseEntity.ok(getService().getData(baseId, id, revId));
     }
 
     RevisionService getService();

@@ -28,7 +28,7 @@ public class AuditRevisionListener implements org.hibernate.envers.RevisionListe
     @Override
     public void newRevision(Object revisionEntity) {
         if ( revisionEntity instanceof RevisionInfo ) {
-            RevisionInfo ri = (RevisionInfo)revisionEntity;
+            RevisionInfo ri = (RevisionInfo) revisionEntity;
             ri.setMuokkaajaOid(SecurityUtil.getAuthenticatedPrincipal().getName());
         }
     }

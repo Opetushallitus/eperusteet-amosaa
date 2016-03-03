@@ -22,6 +22,7 @@ import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,7 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(value = "kayttaja")
 public class KayttajaController {
 
-    @Autowired
+@Autowired
     private KayttajanTietoService kayttajat;
 
     @RequestMapping(method = RequestMethod.GET)
@@ -51,5 +52,10 @@ public class KayttajaController {
     @RequestMapping(value = "/organisaatiot", method = RequestMethod.GET)
     public Set<String> getOrganisaatiot() {
         return kayttajat.getUserOrganizations();
+    }
+
+    @RequestMapping(value = "/oikeudet", method = RequestMethod.GET)
+    public ResponseEntity<String> getOikeudet() {
+        return ResponseEntity.ok("LUKU");
     }
 }

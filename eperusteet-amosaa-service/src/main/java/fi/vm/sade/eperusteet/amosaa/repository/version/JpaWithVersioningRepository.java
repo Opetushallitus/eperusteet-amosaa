@@ -35,7 +35,7 @@ public interface JpaWithVersioningRepository<T, ID extends Serializable> extends
 
     Integer getLatestRevisionId(final ID id);
 
-    public class DomainClassNotAuditedException extends BeanCreationException {
+    class DomainClassNotAuditedException extends BeanCreationException {
 
         public DomainClassNotAuditedException(Class<?> clazz) {
             super("Defined domain class '" + clazz.getSimpleName() + "' does not contain @audited-annotation");
