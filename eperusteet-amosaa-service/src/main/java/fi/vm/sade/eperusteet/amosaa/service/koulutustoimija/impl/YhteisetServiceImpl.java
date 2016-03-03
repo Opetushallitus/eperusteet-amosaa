@@ -16,18 +16,25 @@
 
 package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.impl;
 
+import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.Kayttajaoikeus;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Yhteiset;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.PoistettuDto;
+import fi.vm.sade.eperusteet.amosaa.dto.PoistettuDto;
+import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.YhteisetDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.YhteisetSisaltoDto;
+import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaoikeusRepository;
+import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
+import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.YhteisetRepository;
+import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.YhteisetService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.YhteisetRepository;
 
 /**
  *
@@ -41,7 +48,13 @@ public class YhteisetServiceImpl implements YhteisetService {
     private DtoMapper mapper;
 
     @Autowired
+    private KoulutustoimijaRepository koulutustoimijaRepository;
+
+    @Autowired
     private YhteisetRepository repository;
+
+    @Autowired
+    private KayttajaoikeusRepository kayttajaoikeusRepository;
 
     @Override
     public YhteisetDto getYhteiset(Long kid, Long id) {
@@ -62,6 +75,30 @@ public class YhteisetServiceImpl implements YhteisetService {
         repository.setRevisioKommentti(body.getKommentti());
         Yhteiset updated = mapper.map(body, yhteinen);
         return mapper.map(updated, YhteisetDto.class);
+    }
+
+    @Override
+    public KayttajaoikeusDto updateOikeus(Long baseId, Long id, Long oikeusId, KayttajaoikeusDto oikeusDto) {
+        Kayttajaoikeus oikeus = kayttajaoikeusRepository.findOne(oikeusId);
+
+        if (!Objects.equals(oikeus.getKoulutustoimija().getId(), baseId)
+                || !Objects.equals(oikeus.getYhteiset().getId(), id)
+                || !oikeusDto.getKayttaja().getId().equals(oikeusDto.getKayttaja().getId())) {
+            throw new BusinessRuleViolationException("Päivitys virheellinen");
+        }
+        oikeus.setOikeus(oikeusDto.getOikeus());
+        return mapper.map(oikeus, KayttajaoikeusDto.class);
+    }
+
+    @Override
+    public List<KayttajaoikeusDto> getOikeudet(Long baseId, Long id) {
+        Koulutustoimija kt = koulutustoimijaRepository.findOne(baseId);
+        Yhteiset yhteiset = kt.getYhteiset();
+        if (!Objects.equals(yhteiset.getId(), id)) {
+            throw new BusinessRuleViolationException("Yhteiset eivät ole sama kuin koulutustoimijalla");
+        }
+        List<Kayttajaoikeus> oikeudet = kayttajaoikeusRepository.findAllByKoulutustoimijaAndYhteiset(kt, yhteiset);
+        return mapper.mapAsList(oikeudet, KayttajaoikeusDto.class);
     }
 
     @Override

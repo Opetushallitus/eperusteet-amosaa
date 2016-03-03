@@ -21,11 +21,13 @@ import fi.vm.sade.eperusteet.amosaa.dto.teksti.TekstiKappaleViiteKevytDto;
 import fi.vm.sade.eperusteet.amosaa.service.ops.TekstiKappaleViiteService;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
  *
@@ -72,6 +74,15 @@ public interface TekstiKappaleViiteAbstractController {
         return service().updateTekstiKappaleViite(baseId, id, viiteId, tekstiKappaleViiteDto);
     }
 
+    @RequestMapping(value = "/tekstit/{viiteId}", method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    default public void removeTekstiKappaleViite(
+            @PathVariable("baseId") final Long baseId,
+            @PathVariable("id") final Long id,
+            @PathVariable("viiteId") final Long viiteId) {
+        service().removeTekstiKappaleViite(baseId, id, viiteId);
+    }
+
 //    @RequestMapping(value = "/tekstit/{viiteId}/versiot", method = GET)
 //    public ResponseEntity<List<RevisionDto>> getVersionsForTekstiKappaleViite(
 //            @PathVariable("viiteId") final long viiteId) {
@@ -90,7 +101,7 @@ public interface TekstiKappaleViiteAbstractController {
 //    @RequestMapping(value = "/tekstit/{viiteId}/revert/{versio}", method = RequestMethod.POST)
 //    public void revertTekstikappaleToVersion(
 //        @PathVariable("opsId") final Long opsId,
-//        @PathVariable("viiteId") final Long viiteId,
+//        @PathVariable("viiteId") final Long viiteId,*
 //        @PathVariable("versio") final Integer versio){
 //        tekstiKappaleViiteService.revertToVersion(opsId, viiteId, versio);
 //    }
@@ -146,15 +157,6 @@ public interface TekstiKappaleViiteAbstractController {
 //            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 //        }
 //        return new ResponseEntity<>(dto, HttpStatus.OK);
-//    }
-//
-//
-//    @RequestMapping(value = "/tekstit/{viiteId}", method = RequestMethod.DELETE)
-//    @ResponseStatus(HttpStatus.NO_CONTENT)
-//    public void removeTekstiKappaleViite(
-//            @PathVariable("opsId") final Long opsId,
-//            @PathVariable("viiteId") final Long viiteId) {
-//        tekstiKappaleViiteService.removeTekstiKappaleViite(opsId, viiteId);
 //    }
 
 //    @RequestMapping(value = "/tekstit/{viiteId}/muokattavakopio", method = RequestMeth*od.POST)

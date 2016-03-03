@@ -5,7 +5,8 @@ div.modal-body.modal-sisalto
   div.sisalto-valinta(ng-hide="obj.tyyppi")
     div(ng-repeat="tyyppi in sallitut")
       div.sisalto-item
-        a(href=""
+        a(class="tekstikappale"
+          href=""
           ng-bind="'sisaltotyyppi-' + tyyppi | kaanna"
           ng-click="valitse(tyyppi)")
 

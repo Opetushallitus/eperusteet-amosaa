@@ -30,7 +30,8 @@ import lombok.Setter;
 public class KayttajaoikeusDto {
     private Long id;
     private Reference kayttaja;
-    private Reference ops;
+//    private Reference ops;
+    private Reference yhteiset;
     private Reference koulutustoimija;
     private KayttajaoikeusTyyppi oikeus;
 }

@@ -17,14 +17,30 @@ package fi.vm.sade.eperusteet.amosaa.service.external.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.Kayttaja;
+import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.Kayttajaoikeus;
+import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.KayttajaoikeusTyyppi;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Yhteiset;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
+import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaRepository;
+import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaoikeusRepository;
+import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
+import static fi.vm.sade.eperusteet.amosaa.service.external.impl.KayttajanTietoParser.parsiKayttaja;
+import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
+import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
+import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.RolePermission;
 import fi.vm.sade.eperusteet.amosaa.service.util.RestClientFactory;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 import fi.vm.sade.generic.rest.CachingRestClient;
+import java.util.Calendar;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
@@ -32,14 +48,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-
-import static fi.vm.sade.eperusteet.amosaa.service.external.impl.KayttajanTietoParser.parsiKayttaja;
-import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
-import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
-import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.RolePermission;
-import java.util.EnumSet;
-import java.util.Set;
-import java.util.stream.Collectors;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -52,7 +60,16 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
     private KayttajaClient client;
 
     @Autowired
+    private KoulutustoimijaRepository koulutustoimijaRepository;
+
+    @Autowired
     private KoulutustoimijaService koulutustoimijat;
+
+    @Autowired
+    private KayttajaRepository kayttajaRepository;
+
+    @Autowired
+    private KayttajaoikeusRepository kayttajaoikeusRepository;
 
     @Autowired
     private DtoMapper mapper;
@@ -87,7 +104,9 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
                 JsonNode json = mapper.readTree(crc.getAsString(url));
                 return parsiKayttaja(json);
             } catch (Exception e) {
-                return null;
+                KayttajanTietoDto result = new KayttajanTietoDto();
+                result.setOidHenkilo(oid);
+                return result;
             }
         }
     }
@@ -97,13 +116,51 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
     }
 
     @Override
-    public KayttajanTietoDto haeKirjautaunutKayttaja() {
-        KayttajanTietoDto kayttaja = hae(getUserOid());
-        if (kayttaja == null) { //"fallback" jos integraatio on rikki eikä löydä käyttäjän tietoja
-            kayttaja = new KayttajanTietoDto();
-            kayttaja.setOidHenkilo(getUserOid());
+    @Cacheable(value = "kayttajatiedot", unless = "#result == null")
+    public KayttajanTietoDto haeNimi(Long id) {
+        Kayttaja kayttaja = kayttajaRepository.findOne(id);
+        return hae(kayttaja.getOid());
+    }
+
+    @Override
+    public Kayttaja getKayttaja() {
+        String oid = SecurityUtil.getAuthenticatedPrincipal().getName();
+        Kayttaja kayttaja = kayttajaRepository.findOneByOid(oid);
+        if (kayttaja == null) {
+            Kayttaja uusi = new Kayttaja();
+            uusi.setOid(oid);
+            uusi.setTiedotekuittaus(Calendar.getInstance().getTime());
+            kayttaja = kayttajaRepository.save(uusi);
         }
         return kayttaja;
+    }
+
+    @Override
+    public KayttajanTietoDto haeKirjautaunutKayttaja() {
+        Kayttaja kayttaja = getKayttaja();
+        KayttajanTietoDto kayttajatieto = hae(getUserOid());
+        if (kayttajatieto == null) { //"fallback" jos integraatio on rikki eikä löydä käyttäjän tietoja
+            kayttajatieto = new KayttajanTietoDto();
+            kayttajatieto.setOidHenkilo(getUserOid());
+        }
+
+        List<KoulutustoimijaBaseDto> kts = koulutustoimijat();
+        for (KoulutustoimijaBaseDto kt : kts) {
+            Koulutustoimija kte = koulutustoimijaRepository.findOne(kt.getId());
+            Yhteiset yhteiset = kte.getYhteiset();
+            Kayttajaoikeus oikeus = kayttajaoikeusRepository.findOneByKayttajaAndKoulutustoimijaAndYhteiset(kayttaja, kte, yhteiset);
+            if (oikeus != null) {
+                continue;
+            }
+            Kayttajaoikeus kayttajaoikeus = new Kayttajaoikeus();
+            kayttajaoikeus.setKayttaja(kayttaja);
+            kayttajaoikeus.setKoulutustoimija(kte);
+            kayttajaoikeus.setYhteiset(kte.getYhteiset());
+            kayttajaoikeus.setOikeus(KayttajaoikeusTyyppi.LUKU);
+            // TODO: Hae tähän parempi oikeus
+            kayttajaoikeusRepository.save(kayttajaoikeus);
+        }
+        return kayttajatieto;
     }
 
     @Override

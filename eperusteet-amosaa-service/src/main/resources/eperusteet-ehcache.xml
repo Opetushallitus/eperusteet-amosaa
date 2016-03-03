@@ -303,6 +303,12 @@
            timeToLiveSeconds="3600"
            overflowToDisk="false" />
 
+    <cache name="kayttajatiedot"
+           maxElementsInMemory="10000"
+           eternal="false"
+           timeToLiveSeconds="360000"
+           overflowToDisk="false" />
+
     <cache name="perusteet"
            maxElementsInMemory="10"
            eternal="false"

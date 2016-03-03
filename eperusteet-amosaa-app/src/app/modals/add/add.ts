@@ -2,12 +2,9 @@ namespace ModalAdd {
     let i;
     export const init = ($injector) => {
         i = inject($injector, ["$rootScope", "$uibModal", "$q"]);
-    };
-
-    const filterPerusteet = (perusteet = [], query = "") => _(perusteet)
+    }; const filterPerusteet = (perusteet = [], query = "") => _(perusteet)
         .filter((peruste) => KaannaService.hae(peruste.nimi, query))
         .value();
-
 
     export const opetussuunnitelma = () => i.$uibModal.open({
         resolve: {

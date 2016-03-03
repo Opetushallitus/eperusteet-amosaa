@@ -89,6 +89,9 @@ namespace NotifikaatioService {
         }
     }).result;
 
+    export const serverCb = (response) => {
+    };
+
     export const normaali = _.partial(uusiViesti, 0);
     export const onnistui = _.partial(uusiViesti, 1);
     export const varoitus = _.partial(uusiViesti, 2);
@@ -97,24 +100,6 @@ namespace NotifikaatioService {
 
 
 
-//     const serverCb = (response) => {
-//         if (response) {
-//             if (response.status >= 500) {
-//                 fataali(Kaanna.kaanna("jarjestelmavirhe-teksti", {virhekoodi: response.status}), () => {
-//                     // TODO Ota käyttöön myöhemmin
-//                     // $state.go("root.etusivu");
-//                 });
-//             }
-//             else if (response.data && response.data.syy) {
-//                 let syy = response.data.syy;
-//                 uusiViesti(2, _.isArray(syy) ? syy[0] : syy);
-//             }
-//             else {
-//                 uusiViesti(2, Kaanna.kaanna("odottamaton-virhe"));
-//             }
-//         }
-//     };
-//
 //     const serverLukitus = (response) => {
 //       if (response && response.status === 409 && response.data && response.data.lukko) {
 //         uusiViesti(2, Kaanna.kaanna("lukitus-kayttajalla", {user: response.data.lukko.haltijaNimi || response.data.lukko.haltijaOid}));

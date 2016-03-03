@@ -16,12 +16,13 @@
 package fi.vm.sade.eperusteet.amosaa.service.ops.impl;
 
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Yhteiset;
-import fi.vm.sade.eperusteet.amosaa.domain.teksti.Omistussuhde;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappaleViite;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.TekstiKappaleDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.TekstiKappaleViiteDto;
+import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.YhteisetRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.TekstiKappaleRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.TekstikappaleviiteRepository;
@@ -30,19 +31,18 @@ import fi.vm.sade.eperusteet.amosaa.service.locking.LockManager;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.ops.TekstiKappaleViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.teksti.TekstiKappaleService;
-import java.util.ArrayList;
+import static fi.vm.sade.eperusteet.amosaa.service.util.Nulls.assertExists;
+import fi.vm.sade.eperusteet.amosaa.service.util.PoistettuService;
+import java.util.Collections;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import static fi.vm.sade.eperusteet.amosaa.service.util.Nulls.assertExists;
-import java.util.Collections;
-import java.util.IdentityHashMap;
-import java.util.Objects;
 
 /**
  * @author mikkom
@@ -53,6 +53,12 @@ public class TekstiKappaleViiteServiceImpl implements TekstiKappaleViiteService 
 
     @Autowired
     private DtoMapper mapper;
+
+    @Autowired
+    private PoistettuService poistetutService;
+
+    @Autowired
+    private KoulutustoimijaRepository koulutustoimijaRepository;
 
     @Autowired
     private YhteisetRepository yhteisetRepository;
@@ -89,7 +95,9 @@ public class TekstiKappaleViiteServiceImpl implements TekstiKappaleViiteService 
 
     @Override
     @Transactional(readOnly = false)
-    public TekstiKappaleViiteDto.Matala addTekstiKappaleViite(@P("baseId") Long baseId, @P("id") Long id, Long viiteId,
+    public TekstiKappaleViiteDto.Matala addTekstiKappaleViite(
+            @P("baseId") Long baseId,
+            @P("id") Long id, Long viiteId,
         TekstiKappaleViiteDto.Matala viiteDto) {
         viiteDto.setOwner(id);
 
@@ -138,15 +146,11 @@ public class TekstiKappaleViiteServiceImpl implements TekstiKappaleViiteService 
             throw new BusinessRuleViolationException("Pakollista tekstikappaletta ei voi poistaa");
         }
 
-        repository.lock(viite.getRoot());
-//        if (viite.getTekstiKappale() != null && viite.getTekstiKappale().getTila().equals(Tila.LUONNOS) && findViitteet(viiteId).size() == 1) {
-//            lockMgr.lock(viite.getTekstiKappale().getId());
-//            TekstiKappale tekstiKappale = viite.getTekstiKappale();
-//            tekstiKappaleService.delete(tekstiKappale.getId());
-//        }
-        viite.setTekstiKappale(null);
+//        repository.lock(viite.getRoot());
+        Koulutustoimija koulutustoimija = koulutustoimijaRepository.findOne(baseId);
+        poistetutService.lisaaPoistettu(koulutustoimija, koulutustoimija.getYhteiset(), viite);
+
         viite.getVanhempi().getLapset().remove(viite);
-        viite.setVanhempi(null);
         repository.delete(viite);
     }
 
@@ -226,20 +230,6 @@ public class TekstiKappaleViiteServiceImpl implements TekstiKappaleViiteService 
         if (ops == null) {
             throw new BusinessRuleViolationException("Opetussuunnitelmaa ei olemassa.");
         }
-
-//        Yhteiset pohja = ops.getPohja();
-//        if (pohja != null) {
-//            Set<UUID> pohjaTekstit = pohja.getTekstit().getLapset().stream()
-//                    .map(x -> x.getTekstiKappale().getTunniste())
-//                    .collect(Collectors.toSet());
-//
-//            // Pois päätason tekstit joita ei pohjassa ole määritelty
-//            uusi.setLapset(uusi.getLapset().stream()
-//                    .filter(x -> {
-//                        return pohjaTekstit.contains(x.getTekstiKappale().getTunniste());
-//                    })
-//                    .collect(Collectors.toList()));
-//        }
 
         repository.lock(viite.getRoot());
         Set<TekstiKappaleViite> refs = Collections.newSetFromMap(new IdentityHashMap<>());
