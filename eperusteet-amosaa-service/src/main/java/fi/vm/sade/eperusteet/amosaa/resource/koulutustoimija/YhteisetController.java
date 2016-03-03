@@ -18,9 +18,9 @@ package fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija;
 
 import com.wordnik.swagger.annotations.Api;
 import fi.vm.sade.eperusteet.amosaa.dto.PoistettuDto;
+import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.YhteisetDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.YhteisetSisaltoDto;
-import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.resource.TekstiKappaleViiteAbstractController;
 import fi.vm.sade.eperusteet.amosaa.resource.util.AbstractRevisionController;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.YhteisetService;
@@ -54,8 +54,8 @@ public class YhteisetController implements AbstractRevisionController, TekstiKap
     @Autowired
     private PoistettuService poistetutService;
 
-    @Autowired
-    private KoulutustoimijaRepository koulutustoimijaRepository;
+//    @Autowired
+//    private KoulutustoimijaRepository koulutustoimijaRepository;
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
@@ -93,6 +93,22 @@ public class YhteisetController implements AbstractRevisionController, TekstiKap
             @PathVariable("baseId") final Long baseId,
             @PathVariable("id") final Long id) {
         return service.getYhteisetSisalto(baseId, id);
+    }
+
+    @RequestMapping(value = "/oikeudet", method = RequestMethod.GET)
+    public List<KayttajaoikeusDto> getOikeudet(
+            @PathVariable("baseId") final Long baseId,
+            @PathVariable("id") final Long id) {
+        return service.getOikeudet(baseId, id);
+    }
+
+    @RequestMapping(value = "/oikeudet/{oikeusId}", method = RequestMethod.PUT)
+    public KayttajaoikeusDto updateOikeus(
+            @PathVariable("baseId") final Long baseId,
+            @PathVariable("id") final Long id,
+            @PathVariable("oikeusId") final Long oikeusId,
+            @RequestBody(required = false) KayttajaoikeusDto body) {
+        return service.updateOikeus(baseId, id, oikeusId, body);
     }
 
     @Override

@@ -6,30 +6,6 @@ namespace ModalAdd {
         .filter((peruste) => KaannaService.hae(peruste.nimi, query))
         .value();
 
-    export const kayttaja = (koulutustoimijat) => i.$uibModal.open({
-        resolve: {
-        },
-        templateUrl: "modals/add/kayttaja.jade",
-        controller: ($uibModalInstance, $scope, $state, kayttajat) => {
-            $scope.perusteet = filterPerusteet(perusteet.data);
-            $scope.peruste = undefined;
-            $scope.ops = {};
-            $scope.ok = $uibModalInstance.close;
-
-            $scope.update = (input) => {
-                if (!_.isEmpty(input)) {
-                    $scope.peruste = undefined;
-                }
-                $scope.perusteet = filterPerusteet(perusteet.data, input);
-            };
-
-            $scope.valitsePeruste = (peruste) => {
-                $scope.input = "";
-                $scope.peruste = peruste;
-            }
-        }
-    }).result;
-
     export const opetussuunnitelma = () => i.$uibModal.open({
         resolve: {
             perusteet: Eperusteet => Eperusteet.one("perusteet").get()

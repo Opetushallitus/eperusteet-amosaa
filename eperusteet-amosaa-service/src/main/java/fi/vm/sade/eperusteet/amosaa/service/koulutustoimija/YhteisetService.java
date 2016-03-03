@@ -17,6 +17,7 @@
 package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija;
 
 import fi.vm.sade.eperusteet.amosaa.dto.PoistettuDto;
+import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.YhteisetDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.YhteisetSisaltoDto;
 import fi.vm.sade.eperusteet.amosaa.service.revision.RevisionService;
@@ -35,6 +36,10 @@ public interface YhteisetService extends RevisionService {
     List<PoistettuDto> getYhteisetPoistetut(Long baseId, Long id);
 
     YhteisetSisaltoDto getYhteisetSisalto(Long baseId, Long id);
+
+    List<KayttajaoikeusDto> getOikeudet(Long baseId, Long id);
+
+    KayttajaoikeusDto updateOikeus(Long baseId, Long id, Long oikeusId, KayttajaoikeusDto oikeus);
 
     YhteisetDto updateYhteiset(Long baseId, Long id, YhteisetDto body);
 }

@@ -1,4 +1,6 @@
 div.poistetut
+  // pre(ng-bind="oikeudet | json")
+
   div.row
     div.col-xs-6
       h2(kaanna="'oikeudet'")
@@ -27,12 +29,15 @@ div.poistetut
               a(href="")
                 span(kaanna="'oikeus'")
         tbody
-          tr(ng-repeat="henkilo in henkilot")
-            td(kaanna="henkilo.nimi")
+          tr(ng-repeat="oikeus in oikeudet")
             td
-              span.dropdown
-                a.dropdown-toggle(href="" data-toggle="dropdown")
-                  i.fa.fa-chevron-down.fa-fw
-                ul.dropdown-menu.dropdown-menu-right
-                  li(ui-sref-active="active")
-                    a(href="" kaanna="koulutustoimija-nakyma" ui-sref="root.koulutustoimija.detail")
+              span(ng-show="oikeus.$$kayttajanimi" ng-bind="oikeus.$$kayttajanimi")
+              span(ng-hide="oikeus.$$kayttajanimi" kaanna="'haetaan-kayttajanimea'")
+            td
+              span(ng-bind="'oikeus-' + oikeus.oikeus | kaanna")
+              // span.dropdown
+              //   a.dropdown-toggle(href="" data-toggle="dropdown")
+              //     i.fa.fa-chevron-down.fa-fw
+              //   ul.dropdown-menu.dropdown-menu-right
+              //     li(ui-sref-active="active")
+              //       a(href="" kaanna="koulutustoimija-nakyma" ui-sref="root.koulutustoimija.detail")

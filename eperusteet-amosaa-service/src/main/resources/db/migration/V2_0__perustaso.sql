@@ -125,6 +125,42 @@ CREATE TABLE tekstiosa_aud (
     PRIMARY KEY(id, rev)
 );
 
+CREATE TABLE opetussuunnitelmat (
+    id bigint NOT NULL PRIMARY KEY,
+    nimi_id bigint NOT NULL REFERENCES lokalisoituteksti(id),
+    kuvaus_id bigint REFERENCES lokalisoituteksti(id),
+    esikatseltavissa BOOLEAN,
+    paatospaivamaara TIMESTAMP WITHOUT TIME ZONE,
+    tekstit_id bigint NOT NULL,
+    paatosnumero CHARACTER VARYING(255) UNIQUE,
+    hyvaksyja CHARACTER VARYING(255),
+    voimaantulo TIMESTAMP WITHOUT TIME ZONE,
+    luoja CHARACTER VARYING(255),
+    luotu TIMESTAMP WITHOUT TIME ZONE,
+    muokattu TIMESTAMP WITHOUT TIME ZONE,
+    muokkaaja CHARACTER VARYING(255),
+    tila CHARACTER VARYING(255) NOT NULL
+);
+
+CREATE TABLE opetussuunnitelmat_aud (
+    id bigint NOT NULL PRIMARY KEY,
+    nimi_id bigint NOT NULL REFERENCES lokalisoituteksti(id),
+    kuvaus_id bigint REFERENCES lokalisoituteksti(id),
+    esikatseltavissa BOOLEAN,
+    paatospaivamaara TIMESTAMP WITHOUT TIME ZONE,
+    tekstit_id bigint NOT NULL,
+    paatosnumero CHARACTER VARYING(255) UNIQUE,
+    hyvaksyja CHARACTER VARYING(255),
+    voimaantulo TIMESTAMP WITHOUT TIME ZONE,
+    tila CHARACTER VARYING(255) NOT NULL,
+    luoja CHARACTER VARYING(255),
+    luotu TIMESTAMP WITHOUT TIME ZONE,
+    muokattu TIMESTAMP WITHOUT TIME ZONE,
+    muokkaaja CHARACTER VARYING(255),
+    rev INTEGER NOT NULL,
+    revtype SMALLINT,
+    revend INTEGER
+);
 
 CREATE TABLE yhteiset (
     id bigint NOT NULL PRIMARY KEY,
@@ -242,8 +278,13 @@ CREATE TABLE kayttaja_oikeudet (
     id bigint NOT NULL PRIMARY KEY,
     kayttaja_id bigint REFERENCES kayttaja(id),
     koulutustoimija_id bigint REFERENCES koulutustoimija(id),
+    yhteiset_id bigint REFERENCES yhteiset(id),
+    opetussuunnitelma_id bigint REFERENCES opetussuunnitelmat(id),
     oikeus VARCHAR(64) NOT NULL,
-    UNIQUE(kayttaja_id, koulutustoimija_id)
+    UNIQUE(kayttaja_id, koulutustoimija_id, yhteiset_id),
+    UNIQUE(kayttaja_id, koulutustoimija_id, opetussuunnitelma_id),
+    CHECK((yhteiset_id IS NULL AND opetussuunnitelma_id IS NOT NULL)
+        OR (yhteiset_id IS NOT NULL AND opetussuunnitelma_id IS NULL))
 );
 
 CREATE TABLE yhteiset_liite (
