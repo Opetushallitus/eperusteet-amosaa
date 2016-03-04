@@ -4,6 +4,7 @@
 /eperusteet-amosaa-app/typings
 /eperusteet-amosaa-app/src/app/templates.jade
 /eperusteet-amosaa-app/node_modules
+/eperusteet-amosaa-app/node/
 /eperusteet-amosaa-app/tests/node_modules/
 /eperusteet-amosaa-app/tests/typings/
 target/**

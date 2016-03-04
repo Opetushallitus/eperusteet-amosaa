@@ -1,14 +1,54 @@
 div.kasitteet
-  a(href="").btn.btn-default.pull-right Lisää
-  h2 Käsitteet
-    ohje(teksti="this is a test", otsikko="test title", suunta="top")
+  div.row
+    div.col-xs-6
+      h2 Käsitteet
+        ohje(teksti="this is a test", otsikko="test title", suunta="top")
+    div.col-xs-6
+      div.input-group.input-group-sm
+        input.form-control(type="text", placeholder="{{'haku-nimi' | kaanna}}", ng-model="nimi" ng-change="paivita()")
+        span.input-group-btn
+          button.btn.btn-default(ng-click="nimi = ''")
+            i.fa.fa-times
 
   div.row
-    div.col-xs-4
-      div.form-group.has-feedback.has-feedback-left
-        input.form-control(type="text", placeholder="Rajaa...")
-        i.form-control-feedback.glyphicon.glyphicon-search(style="color: gray;")
+    div.col-xs-12
+      table.table.table-striped
+        thead
+          tr
+            th
+              a(href="", ng-click="vaihdaJarjestys('nimi')")
+                span(kaanna="'kasite-otsikko'")
+                span(ng-show="jarjestys==='nimi'")=" "
+                span.glyphicon.glyphicon-sort-by-alphabet-alt(ng-show="jarjestysKaanteinen")
+                span.glyphicon.glyphicon-sort-by-alphabet(ng-show="!jarjestysKaanteinen")
+            th
+              a(href="", ng-click="vaihdaJarjestys('kirjoittaja')")
+                span(kaanna="'kirjoittaja'")
+                span(ng-show="jarjestys==='kirjoittaja'")=" "
+                span.glyphicon.glyphicon-sort-by-alphabet-alt(ng-show="jarjestysKaanteinen")
+                span.glyphicon.glyphicon-sort-by-alphabet(ng-show="!jarjestysKaanteinen")
+            th
+              a(href="", ng-click="vaihdaJarjestys('Aika')")
+                span(kaanna="'luoto'")
+                span(ng-show="jarjestys==='kirjoitusAika'")=" "
+                span.glyphicon.glyphicon-sort-by-attributes-alt(ng-show="jarjestysKaanteinen")
+                span.glyphicon.glyphicon-sort-by-attributes(ng-show="!jarjestysKaanteinen")
+        tbody
+          tr(ng-repeat="poistettu in suodatetut = (poistetut " +
+          "| filter:nimi) " +
+          "| limitTo:alkioitaSivulla:(sivu - 1) * alkioitaSivulla " +
+          "| orderBy:jarjestys:jarjestysKaanteinen")
 
-  div.row
-    dic.col-xs-12
-      span lorem ipsum
+            td(href="", ng-click="edit(kasite)") {{kasite.otsikko}}
+            td {{kasite.kirjoittaja}}
+            td {{kasite.luotu | date}}
+
+
+  nav.text-center
+    uib-pagination(
+    ng-model="sivu",
+    total-items="suodatetut.length",
+    items-per-page="alkioitaSivulla",
+    force-ellipses="true",
+    direction-links="false"
+    )
