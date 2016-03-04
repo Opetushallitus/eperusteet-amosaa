@@ -14,11 +14,11 @@
  * European Union Public Licence for more details.
  */
 
-package fi.vm.sade.eperusteet.amosaa.repository.ops;
+package fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija;
 
 import java.util.List;
-import fi.vm.sade.eperusteet.ylops.domain.Termi;
-import fi.vm.sade.eperusteet.ylops.domain.ops.Opetussuunnitelma;
+import fi.vm.sade.eperusteet.amosaa.domain.Termi;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -28,6 +28,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface TermistoRepository extends JpaRepository<Termi, Long> {
-    List<Termi> findByBaseId(Long baseId);
+    List<Termi> findById(Long id);
     Termi findOneByKoulutustoimijaAndAvain(Koulutustoimija koulutustoimija, String avain);
 }

@@ -67,7 +67,7 @@ public class TermistoController {
 
     @RequestMapping(value = "/termisto/{id}", method = POST)
     public TermiDto updateTermi(
-            @PathVariable("baseId") final Long opsId,
+            @PathVariable("baseId") final Long baseId,
             @PathVariable("id") final Long id,
             @RequestBody TermiDto dto) {
         dto.setId(id);

@@ -15,7 +15,7 @@
  */
 package fi.vm.sade.eperusteet.amosaa.service.ops;
 
-import fi.vm.sade.eperusteet.ylops.dto.ops.TermiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.ops.TermiDto;
 import java.util.List;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -38,6 +38,6 @@ public interface TermistoService {
     @PreAuthorize("hasPermission(#baseId, 'koulutustoimija', 'MUOKKAUS')")
     TermiDto updateTermi(@P("baseId") Long baseId, TermiDto dto);
 
-    @PreAuthorize("hasPermission(#baseId, 'opetussuunnitelma', 'MUOKKAUS')")
+    @PreAuthorize("hasPermission(#baseId, 'koulutustoimija', 'MUOKKAUS')")
     void deleteTermi(@P("baseId") Long baseId, Long id);
 }

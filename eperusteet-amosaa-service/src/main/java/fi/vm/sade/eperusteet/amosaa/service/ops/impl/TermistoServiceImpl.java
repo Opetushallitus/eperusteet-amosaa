@@ -66,7 +66,7 @@ public class TermistoServiceImpl implements TermistoService {
         Koulutustoimija toimija = koulutustoimija.findOne(baseId);
         assertExists(toimija, "Koulutustoimija ei ole olemassa");
         Termi tmp = mapper.map(dto, Termi.class);
-        tmp.setOps(toimija);
+        tmp.setKoulutustoimija(toimija);
         tmp = termisto.save(tmp);
         return mapper.map(tmp, TermiDto.class);
     }

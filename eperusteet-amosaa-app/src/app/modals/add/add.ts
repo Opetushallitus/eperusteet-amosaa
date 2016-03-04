@@ -54,6 +54,27 @@ namespace ModalAdd {
                 $scope.ok = $uibModalInstance.close;
             }
         }).result;
+
+    export const kasiteAdder = (sallitut = ["kasite"]) => i.$uibModal.open({
+        resolve: { },
+        templateUrl: "modals/add/kasite.jade",
+        controller: ($uibModalInstance, $scope, $state) => {
+            $scope.sallitut = sallitut;
+            $scope.valittu = undefined;
+            //Todo
+            $scope.valitse = (tyyppi) => {
+                $scope.obj = {
+                    tyyppi: tyyppi,
+                    data: {
+                        kasite: {
+                            otsikko: {}
+                        },
+                    }
+                };
+            };
+            $scope.ok = $uibModalInstance.close;
+        }
+    }).result;
 };
 
 angular.module("app")
