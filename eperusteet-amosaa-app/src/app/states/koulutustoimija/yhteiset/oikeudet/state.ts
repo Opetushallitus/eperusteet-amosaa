@@ -8,14 +8,23 @@ angular.module("app")
     views: {
         "": {
             controller: ($scope, oikeudet, kayttaja) => {
-                $scope.oikeudet = oikeudet;
-                _.each($scope.oikeudet, (oikeus) => {
-                    kayttaja.one(oikeus._kayttaja, "nimi").get().then(res => {
-                        oikeus.$$kayttajanimi = res.kutsumanimi
-                            ? res.kutsumanimi + " " + res.sukunimi
-                            : res.oidHenkilo;
+                $scope.vaihtoehdot = Kayttaja.oikeusVaihtoehdot();
+
+                $scope.oikeudet = _.map(oikeudet, (oikeus: any) => {
+                    return _.merge(oikeus, {
+                        $$kayttajanimi: oikeus.kayttajatieto.kutsumanimi
+                            ? oikeus.kayttajatieto.kutsumanimi + " " + oikeus.kayttajatieto.sukunimi
+                            : oikeus.kayttajatieto.oidHenkilo
                     });
                 });
+
+                $scope.valitse = (oikeus: string, vaihtoehto) => {
+                    vaihtoehto.oikeus = oikeus;
+                    vaihtoehto = vaihtoehto.save()
+                        .then(() => NotifikaatioService.onnistui("oikeus-paivitetty"))
+                        .catch(NotifikaatioService.serverCb);
+                };
+
             }
         }
     }
