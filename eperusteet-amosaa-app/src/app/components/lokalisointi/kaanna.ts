@@ -45,6 +45,8 @@ module KaannaService {
         ? ""
         : translate(input, KieliService.getSisaltokieli(), useFallback);
 
+    let watobject = [];
+
     export const kaanna = (input, config?, useFallback?) => {
         if (_.isObject(input)) {
             return kaannaSisalto(input, useFallback);
