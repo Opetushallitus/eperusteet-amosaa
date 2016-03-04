@@ -1,3 +1,5 @@
+package fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija;
+
 /*
  * Copyright (c) 2013 The Finnish Board of Education - Opetushallitus
  *
@@ -14,17 +16,17 @@
  * European Union Public Licence for more details.
  */
 
-package fi.vm.sade.eperusteet.amosaa.repository.kayttaja;
+import com.wordnik.swagger.annotations.Api;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.Kayttaja;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author nkala
  */
-@Repository
-public interface KayttajaRepository extends JpaRepository<Kayttaja, Long> {
-    Kayttaja findOneByOid(String oid);
+@RestController
+@RequestMapping("/koulutustoimijat/{baseId}")
+@Api(value = "tekstit")
+public class TekstiKappaleViiteController {
 }

@@ -40,15 +40,16 @@ div.poistetut
           tr(ng-repeat="poistettu in suodatetut = (poistetut " +
           "| filter:nimi) " +
           "| limitTo:alkioitaSivulla:(sivu - 1) * alkioitaSivulla " +
-          "| orderBy:jarjestys:jarjestysKaanteinen")
+          "| orderBy:jarjestys:jarjestysKaanteinen")
 
-            td {{poistettu.nimi}}
-            td {{poistettu.poistaja}}
-            td {{poistettu.poistoAika | date}}
+            td(kaanna="poistettu.nimi")
+            td(ng-bind="poistettu.muokkaajaOid")
+            td(ng-bind="poistettu.pvm | aikaleima")
             td
-              a.label.label-info(kaanna="'nayta'")
-              span=" "
-              a.label.label-warning(kaanna="'palauta'")
+              a.label.label-warning(kaanna="'palauta'"
+                ng-click="palauta(poistettu)")
+              // a.label.label-info(kaanna="'nayta'")
+              // span=" "
 
 
   nav.text-center
@@ -57,5 +58,4 @@ div.poistetut
     total-items="suodatetut.length",
     items-per-page="alkioitaSivulla",
     force-ellipses="true",
-    direction-links="false"
-    )
+    direction-links="false")

@@ -18,14 +18,13 @@ package fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija;
 
 import com.wordnik.swagger.annotations.Api;
 import fi.vm.sade.eperusteet.amosaa.dto.TiedoteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionManager;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,6 +47,7 @@ public class KoulutustoimijaController {
 
     @Autowired
     private PermissionManager permissionManager;
+    
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
@@ -93,9 +93,9 @@ public class KoulutustoimijaController {
         return koulutustoimijaService.getOmatTiedotteet(id);
     }
 
-    @RequestMapping(value = "/oikeudet", method = RequestMethod.GET)
-    public ResponseEntity<Map<PermissionManager.TargetType, Set<PermissionManager.Permission>>> getOikeudet() {
-        return new ResponseEntity<>(permissionManager.getOpsPermissions(), HttpStatus.OK);
+    @RequestMapping(value = "/kayttajat", method = RequestMethod.GET)
+    public ResponseEntity<List<KayttajanTietoDto>> getKayttajat(
+            @PathVariable("id") final Long id) {
+        return new ResponseEntity<>(koulutustoimijaService.getKayttajat(id), HttpStatus.OK);
     }
-
 }

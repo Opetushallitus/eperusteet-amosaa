@@ -7,8 +7,16 @@ angular.module("app")
             },
             views: {
                 "": {
-                    controller: ($scope, tekstikappale) => {
+                    controller: ($state, $stateParams, $location, $scope, $timeout, tekstikappale) => {
                         $scope.edit = EditointikontrollitService.createRestangular($scope, "tkv", tekstikappale);
+                        $scope.remove = () => {
+                            tekstikappale.remove().then(() => {
+                                NotifikaatioService.onnistui("poisto-tekstikappale-onnistui");
+                                EditointikontrollitService.cancel().then(() => {
+                                    $state.go("root.koulutustoimija.yhteiset.poistetut", $stateParams, { reload: true });
+                                });
+                            });
+                        };
                     }
                 }
             }

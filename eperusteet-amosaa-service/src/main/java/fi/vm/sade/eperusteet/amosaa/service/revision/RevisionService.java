@@ -49,6 +49,11 @@ public interface RevisionService {
         return convertToDto(getRepository().findRevision(id, rev));
     }
 
+    @PreAuthorize("isAuthenticated()")
+    default Revision getRemoved(Long ktId, Long id) {
+        return getRepository().getLatestRevision(id);
+    }
+
     Object convertToDto(Object obj);
 
     JpaWithVersioningRepository getRepository();
