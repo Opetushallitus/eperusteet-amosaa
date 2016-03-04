@@ -37,7 +37,7 @@ module KaannaService {
     }
 
     export const hae = (obj, query: string = "") =>
-        _.any(obj, (v: string) => (v || "")
+        _.any(obj, (v: string = "") => v
                 .toLowerCase()
                 .indexOf(query.toLowerCase()) !== -1);
 

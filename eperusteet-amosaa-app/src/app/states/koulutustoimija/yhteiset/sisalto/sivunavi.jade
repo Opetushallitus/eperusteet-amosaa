@@ -2,17 +2,17 @@ div.sivunavi
   div.haku
     div.form-inline
       div.form-group.has-feedback.has-feedback-left
-        input.form-control(type="text" placeholder="{{ 'hae' | kaanna }}")
+        input.form-control(type="text" ng-model="search" placeholder="{{ 'hae' | kaanna }}")
         i.form-control-feedback.glyphicon.glyphicon-search(style="color: gray;")
         a.btn.btn-default.square(href="" ng-click="add()")
-          i.fa.fa-plus
+          +icon("plus")
         a.btn.btn-default.square(href="")
-          i.fa.fa-arrows-v
+          +icon("arrows-v")
 
   div.valikko
     ul
       li
         a(href="" ui-sref-active="active" ui-sref=".tiedot" kaanna="'tiedot'")
-      li(ng-repeat="item in sivunavi")
+      li(ng-show="suodata(item.tekstiKappale.nimi)" ng-repeat="item in sivunavi")
         a(href="" ui-sref-active="active" ui-sref=".tekstikappale({ tkvId: item.id })"
           ng-bind="(item.tekstiKappale.nimi || 'nimeton-tekstikappale') | kaanna")

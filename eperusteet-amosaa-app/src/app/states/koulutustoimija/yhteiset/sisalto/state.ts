@@ -12,6 +12,7 @@ angular.module("app")
         sivunavi: {
             controller: ($scope, sivunavi, tekstit) => {
                 $scope.sivunavi = sivunavi;
+                $scope.suodata = (item) => KaannaService.hae(item, $scope.search);
                 $scope.add = () => {
                     ModalAdd.sisaltoAdder()
                         .then(uusi => {
