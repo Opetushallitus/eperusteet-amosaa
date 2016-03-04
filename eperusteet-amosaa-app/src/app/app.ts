@@ -20,6 +20,7 @@ angular.module("app", [
 
     $translateProvider.useLoader('LokalisointiLoader');
     $translateProvider.preferredLanguage("fi");
+    $translateProvider.useSanitizeValueStrategy(null);
     moment.locale("fi");
 })
 
