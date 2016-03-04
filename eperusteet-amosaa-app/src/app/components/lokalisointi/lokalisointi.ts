@@ -1,5 +1,6 @@
 // TODO: Refaktoroi
 angular.module("app")
+.constant('LOKALISOINTI_SERVICE_LOC', '/lokalisointi/cxf/rest/v1/localisation?category=eperusteet-amosaa')
 .service("Lokalisointi", ($http, $q) => {
     const
         PREFIX = "localisation/locale-",

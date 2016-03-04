@@ -167,5 +167,6 @@ gulp
     gulp.watch(config.app + '**/*.ts', ['compile']);
     gulp.watch(config.app + '**/*.jade', ['templates']);
     gulp.watch(config.app + '**/*.scss', ['sass']);
+    gulp.watch('./src/localisation/*.json', ['locales']);
 })
 .task('default', ['watch']);
