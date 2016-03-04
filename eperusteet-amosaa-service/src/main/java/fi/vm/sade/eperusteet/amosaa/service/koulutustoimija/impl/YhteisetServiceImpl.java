@@ -27,6 +27,7 @@ import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaoikeusRepository
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.YhteisetRepository;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
+import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.YhteisetService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import java.util.ArrayList;
@@ -55,6 +56,9 @@ public class YhteisetServiceImpl implements YhteisetService {
 
     @Autowired
     private KayttajaoikeusRepository kayttajaoikeusRepository;
+
+    @Autowired
+    private KayttajanTietoService kayttajatietoService;
 
     @Override
     public YhteisetDto getYhteiset(Long kid, Long id) {
@@ -97,8 +101,11 @@ public class YhteisetServiceImpl implements YhteisetService {
         if (!Objects.equals(yhteiset.getId(), id)) {
             throw new BusinessRuleViolationException("Yhteiset eivät ole sama kuin koulutustoimijalla");
         }
-        List<Kayttajaoikeus> oikeudet = kayttajaoikeusRepository.findAllByKoulutustoimijaAndYhteiset(kt, yhteiset);
-        return mapper.mapAsList(oikeudet, KayttajaoikeusDto.class);
+        List<KayttajaoikeusDto> oikeusDtot = mapper.mapAsList(kayttajaoikeusRepository.findAllByKoulutustoimijaAndYhteiset(kt, yhteiset), KayttajaoikeusDto.class);
+        for (KayttajaoikeusDto oikeus : oikeusDtot) {
+            oikeus.setKayttajatieto(kayttajatietoService.haeNimi(oikeus.getKayttaja().getIdLong()));
+        }
+        return oikeusDtot;
     }
 
     @Override

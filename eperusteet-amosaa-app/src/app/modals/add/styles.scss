@@ -55,3 +55,43 @@ div.tutkintohaku {
         }
     }
 }
+
+.modal-sisalto {
+    .sisalto-valinta {
+        .sisalto-item {
+            min-height: 58px;
+            cursor: pointer;
+            border: 1px solid #9be;
+            background: #9be;
+
+            &:hover {
+                border: 1px solid #acf;
+                background: #acf;
+            }
+
+            a {
+                position: relative;
+                top: 8px;
+                left: 5px;
+            }
+
+            .sisalto-text {
+                float: left;
+                padding: 10px;
+                position: absolute;
+                margin-left: 54px;
+                background: #fff;
+                width: 512px;
+                height: 56px;
+            }
+
+            .sisalto-icon {
+                float: left;
+                color: #fff;
+                height: 56px;
+                padding: 8px 14px 8px 14px;
+                font-size: 30px;
+            }
+        }
+    }
+}

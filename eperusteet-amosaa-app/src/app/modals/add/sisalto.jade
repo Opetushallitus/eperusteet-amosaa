@@ -4,11 +4,13 @@ div.modal-header
 div.modal-body.modal-sisalto
   div.sisalto-valinta(ng-hide="obj.tyyppi")
     div(ng-repeat="tyyppi in sallitut")
-      div.sisalto-item
-        a(class="tekstikappale"
-          href=""
-          ng-bind="'sisaltotyyppi-' + tyyppi | kaanna"
-          ng-click="valitse(tyyppi)")
+      div.sisalto-item(ng-click="valitse(tyyppi)")
+        span.sisalto-icon
+          +icon("file-text-o")
+        div.sisalto-text
+          a(class="tekstikappale"
+            href=""
+            ng-bind="'sisaltotyyppi-' + tyyppi | kaanna")
 
   div.sisalto-tekstikappale(ng-show="obj.tyyppi === 'tekstikappale'")
     h3(kaanna="'anna-nimi'")
