@@ -8,7 +8,6 @@
     "typings/tsd.d.ts",
     "src/app/globals.ts",
     "src/app/components/injector.ts",
-    "src/app/components/injector/injector.ts",
     "src/app/components/editointikontrollit/editointikontrollit.ts",
     "src/app/components/lokalisointi/lokalisointi.ts",
     "src/app/components/lokalisointi/kaanna.ts",
