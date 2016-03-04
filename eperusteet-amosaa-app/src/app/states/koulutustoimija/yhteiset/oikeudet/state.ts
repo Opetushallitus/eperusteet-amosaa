@@ -9,6 +9,7 @@ angular.module("app")
         "": {
             controller: ($scope, oikeudet, kayttaja) => {
                 $scope.vaihtoehdot = Kayttaja.oikeusVaihtoehdot();
+                $scope.suodata = (item) => _.matchStrings($scope.search, item.$$kayttajanimi);
 
                 $scope.oikeudet = _.map(oikeudet, (oikeus: any) => {
                     return _.merge(oikeus, {

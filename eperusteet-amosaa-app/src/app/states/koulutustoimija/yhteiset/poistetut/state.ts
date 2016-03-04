@@ -9,6 +9,7 @@ angular.module("app")
         "": {
             controller: ($scope, poistetut, yhteiset) => {
                 $scope.vaihdaJarjestys = Taulukot.bindSivutus($scope, "poistoAika", poistetut);
+                $scope.suodata = (item) => KaannaService.hae(item.nimi, $scope.search);
             }
         }
     }

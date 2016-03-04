@@ -17,9 +17,13 @@
   "oikeus-muokkaus":             "Muokkaus",
   "oikeus-poisto":               "Poisto",
   "pdf":                         "PDF",
+  "poistaja":                    "Poistaja",
+  "poistopaivamaara":            "Pvm",
+  "poistettu-otsikko":           "Poistetun nimi",
   "poistetut":                   "Poistetut",
   "sisalto":                     "Sisältö",
   "sisalto-kieli":               "Sisällön kieli",
+  "toiminnot":                   "Toiminnot",
   "sisaltotyyppi-tekstikappale": "Tekstikappale",
   "vahemman":                    "Vähemmän",
   "versio":                      "Versio"

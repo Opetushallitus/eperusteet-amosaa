@@ -8,10 +8,10 @@ div.poistetut
         input.form-control(
           type="text"
           placeholder="{{'haku-nimi' | kaanna}}"
-          ng-model="nimi"
+          ng-model="search"
           ng-change="paivita()")
         span.input-group-btn
-          button.btn.btn-default(ng-click="nimi = ''")
+          button.btn.btn-default(ng-click="search = ''")
             +icon("times")
 
   div.row
@@ -27,7 +27,7 @@ div.poistetut
               a(href="")
                 span(kaanna="'oikeus'")
         tbody
-          tr(ng-repeat="oikeus in oikeudet | orderBy:'$$kayttajanimi'")
+          tr(ng-show="suodata(oikeus)" ng-repeat="oikeus in oikeudet | orderBy:'$$kayttajanimi'")
             td
               span(ng-show="oikeus.$$kayttajanimi" ng-bind="oikeus.$$kayttajanimi")
               span(ng-hide="oikeus.$$kayttajanimi" kaanna="'haetaan-kayttajanimea'")
