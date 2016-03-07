@@ -29,6 +29,7 @@ import lombok.Setter;
 @Setter
 public class KayttajaoikeusDto {
     private Long id;
+    private KayttajanTietoDto kayttajatieto;
     private Reference kayttaja;
 //    private Reference ops;
     private Reference yhteiset;

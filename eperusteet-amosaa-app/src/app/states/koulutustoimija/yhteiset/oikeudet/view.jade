@@ -1,20 +1,18 @@
 div.poistetut
-  // pre(ng-bind="oikeudet | json")
-
   div.row
     div.col-xs-6
-      h2(kaanna="'oikeudet'")
+      h2(ng-bind="'oikeudet' | kaanna")
         ohje(teksti="this is a test" otsikko="test title" suunta="top")
     div.col-xs-6
       div.input-group.input-group-sm
-        span.input-group-btn
-          button.btn.btn-default(ng-click="nimi = ''")
-            +icon("plus")
         input.form-control(
           type="text"
           placeholder="{{'haku-nimi' | kaanna}}"
-          ng-model="nimi"
+          ng-model="search"
           ng-change="paivita()")
+        span.input-group-btn
+          button.btn.btn-default(ng-click="search = ''")
+            +icon("times")
 
   div.row
     div.col-xs-12
@@ -29,15 +27,15 @@ div.poistetut
               a(href="")
                 span(kaanna="'oikeus'")
         tbody
-          tr(ng-repeat="oikeus in oikeudet")
+          tr(ng-show="suodata(oikeus)" ng-repeat="oikeus in oikeudet | orderBy:'$$kayttajanimi'")
             td
               span(ng-show="oikeus.$$kayttajanimi" ng-bind="oikeus.$$kayttajanimi")
               span(ng-hide="oikeus.$$kayttajanimi" kaanna="'haetaan-kayttajanimea'")
             td
               span(ng-bind="'oikeus-' + oikeus.oikeus | kaanna")
-              // span.dropdown
-              //   a.dropdown-toggle(href="" data-toggle="dropdown")
-              //     i.fa.fa-chevron-down.fa-fw
-              //   ul.dropdown-menu.dropdown-menu-right
-              //     li(ui-sref-active="active")
-              //       a(href="" kaanna="koulutustoimija-nakyma" ui-sref="root.koulutustoimija.detail")
+              span.dropdown
+                a.dropdown-toggle(href="" data-toggle="dropdown")
+                  i.fa.fa-chevron-down.fa-fw
+                ul.dropdown-menu.dropdown-menu-right
+                  li(ng-repeat="ovaihtoehto in vaihtoehdot")
+                    a(href="" ng-bind="'oikeus-' + ovaihtoehto | kaanna" ng-click="valitse(ovaihtoehto, oikeus)")

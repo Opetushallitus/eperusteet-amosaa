@@ -37,13 +37,15 @@ module KaannaService {
     }
 
     export const hae = (obj, query: string = "") =>
-        _.any(obj, (v: string) => (v || "")
+        _.any(obj, (v: string = "") => v
                 .toLowerCase()
                 .indexOf(query.toLowerCase()) !== -1);
 
     export const kaannaSisalto = (input, useFallback?) => _.isEmpty(input)
         ? ""
         : translate(input, KieliService.getSisaltokieli(), useFallback);
+
+    let watobject = [];
 
     export const kaanna = (input, config?, useFallback?) => {
         if (_.isObject(input)) {

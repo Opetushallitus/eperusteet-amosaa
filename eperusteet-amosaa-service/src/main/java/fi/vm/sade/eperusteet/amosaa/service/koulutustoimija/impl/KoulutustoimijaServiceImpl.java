@@ -28,17 +28,14 @@ import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.OpetussuunnitelmaDto;
-import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.YhteisetRepository;
-import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import javax.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,22 +49,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
 
     @Autowired
-    private EntityManager em;
-
-    @Autowired
     private OrganisaatioService organisaatioService;
-
-    @Autowired
-    private KayttajaRepository kayttajaRepository;
 
     @Autowired
     private KoulutustoimijaRepository koulutustoimijaRepository;
 
     @Autowired
     private YhteisetRepository yhteisetRepository;
-
-    @Autowired
-    private KayttajanTietoService kayttajaService;
 
     @Autowired
     private DtoMapper mapper;

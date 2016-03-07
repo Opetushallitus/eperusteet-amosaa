@@ -30,7 +30,6 @@ import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRe
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import static fi.vm.sade.eperusteet.amosaa.service.external.impl.KayttajanTietoParser.parsiKayttaja;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
-import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.RolePermission;
 import fi.vm.sade.eperusteet.amosaa.service.util.RestClientFactory;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
@@ -70,9 +69,6 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
 
     @Autowired
     private KayttajaoikeusRepository kayttajaoikeusRepository;
-
-    @Autowired
-    private DtoMapper mapper;
 
     @Override
     public KayttajanTietoDto hae(String oid) {
