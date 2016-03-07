@@ -312,15 +312,16 @@ CREATE TABLE termi (
 );
 
 CREATE TABLE termi_aud (
-    id bigint NOT NULL PRIMARY KEY,
-    koulutustoimija_id BIGINT NOT NULL REFERENCES koulutustoimija(id),
-    termi_id BIGINT REFERENCES lokalisoituteksti(id),
-    selitys_id BIGINT REFERENCES lokalisoituteksti(id),
+    id BIGINT NOT NULL,
+    koulutustoimija_id BIGINT NOT NULL,
+    termi_id BIGINT,
+    selitys_id BIGINT,
     avain TEXT NOT NULL,
     alaviite BOOLEAN,
     rev INTEGER NOT NULL,
     revtype SMALLINT,
-    revend INTEGER
+    revend INTEGER,
+    PRIMARY KEY (id, rev)
 );
 
 

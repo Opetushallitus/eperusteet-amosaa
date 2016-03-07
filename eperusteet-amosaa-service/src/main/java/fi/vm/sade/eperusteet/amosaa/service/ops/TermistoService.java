@@ -24,20 +24,17 @@ import org.springframework.security.access.prepost.PreAuthorize;
  *
  * @author apvilkko
  */
+
+@PreAuthorize("isAuthenticated()")
 public interface TermistoService {
 
-    @PreAuthorize("hasPermission(#baseId, 'koulutustoimija', 'LUKU')")
     List<TermiDto> getTermit(@P("baseId") Long baseId);
 
-    @PreAuthorize("hasPermission(#baseId, 'koulutustoimija', 'LUKU')")
-    TermiDto getTermi(Long baseId, String avain);
+    TermiDto getTermi(@P("baseId") Long baseId, String avain);
 
-    @PreAuthorize("hasPermission(#baseId, 'koulutustoimija', 'MUOKKAUS')")
     TermiDto addTermi(@P("baseId") Long baseId, TermiDto dto);
 
-    @PreAuthorize("hasPermission(#baseId, 'koulutustoimija', 'MUOKKAUS')")
     TermiDto updateTermi(@P("baseId") Long baseId, TermiDto dto);
 
-    @PreAuthorize("hasPermission(#baseId, 'koulutustoimija', 'MUOKKAUS')")
-    void deleteTermi(@P("baseId") Long baseId, Long id);
+    void deleteTermi(@P("baseId") Long baseId, @P("id") Long id);
 }
