@@ -115,4 +115,9 @@ angular.module("app", [
             // $state.go("root");
         }
     });
+})
+
+// FIXME: Move to own file
+// Global $scope functions
+.run(($rootScope) => {
 });

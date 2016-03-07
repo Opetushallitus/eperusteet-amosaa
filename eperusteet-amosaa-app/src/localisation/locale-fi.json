@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "alaviite-ohje-otsikko":       "Käsite alaviite",
   "apuotsikko":                  "Apuotsikko",
   "enemman":                     "Enemman",
@@ -29,4 +30,39 @@
   "sisaltotyyppi-tekstikappale": "Tekstikappale",
   "vahemman":                    "Vähemmän",
   "versio":                      "Versio"
+=======
+  "anna-nimi":                       "Anna nimi",
+  "apuotsikko":                      "Apuotsikko",
+  "enemman":                         "Enemman",
+  "esikatselu":                      "Esikatselu",
+  "hae":                             "Hae",
+  "hae-peruste":                     "Hae peruste",
+  "haku-nimi":                       "Hae nimistä",
+  "kasitteet":                       "Käsitteet",
+  "kirjoita-kommentti":              "Kirjoita kommentti",
+  "lisaa-sisaltoa":                  "Lisää sisältöä",
+  "muokattu":                        "Muokattu",
+  "muokkaaja":                       "Muokkaaja",
+  "muokkaajaa-ei-loytynyt":          "Muokkaajaa ei löytynyt",
+  "nimi":                            "Nimi",
+  "oikeudet":                        "Oikeudet",
+  "oikeus-hallinta":                 "Hallinta",
+  "oikeus-lisays":                   "Lisäys",
+  "oikeus-luku":                     "Luku",
+  "oikeus-muokkaus":                 "Muokkaus",
+  "oikeus-poisto":                   "Poisto",
+  "pdf":                             "PDF",
+  "poistaja":                        "Poistaja",
+  "poistettu-otsikko":               "Poistetun nimi",
+  "poistetut":                       "Poistetut",
+  "poistopaivamaara":                "Pvm",
+  "sisalto":                         "Sisältö",
+  "sisalto-kieli":                   "Sisällön kieli",
+  "sisaltotyyppi-tekstikappale":     "Tekstikappale",
+  "tallennus-onnistui":              "Tallennus onnistui",
+  "toiminnot":                       "Toiminnot",
+  "vahemman":                        "Vähemmän",
+  "versio":                          "Versio",
+  "versio-palautettu-onnistuneesti": "Versio palautettiin onnistuneesti"
+>>>>>>> 45e3304... Lisätty käyttäjätietojen lataus
 }
