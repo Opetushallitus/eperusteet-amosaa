@@ -7,17 +7,17 @@ mixin editButton(actionEdit)
     +icon("pencil")
 
 
-mixin historia(versio, uusin, actionEdit, actionRevisions, actionPalauta, restoreNew)
+mixin historia(versio, uusinMuokkaaja, uusinMuokkaus, uusinRevisio, actionEdit, actionRevisions, actionPalauta, restoreNew)
   .ylapalkki
     .pull-left
       p
         span
           b(kaanna="'muokattu'")
-        span(ng-bind=uusin + ".date | aikaleima")
+        span(ng-bind=uusinMuokkaus + " | aikaleima")
       p
         span
           b(kaanna="'muokkaaja'")
-        span(ng-bind=uusin + ".muokkaaja")
+        span(ng-bind=uusinMuokkaaja)
 
     .pull-right
       block
@@ -28,7 +28,7 @@ mixin historia(versio, uusin, actionEdit, actionRevisions, actionPalauta, restor
         span
           b(kaanna="'versio'")
         a(href="" ng-click=actionRevisions)
-          span(ng-bind=uusin + ".id")
+          span(ng-bind=uusinRevisio)
 
   div(ng-show="versio")
     br
