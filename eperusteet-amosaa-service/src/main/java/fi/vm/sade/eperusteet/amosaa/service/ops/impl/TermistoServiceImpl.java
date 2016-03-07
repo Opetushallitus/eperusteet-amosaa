@@ -49,7 +49,7 @@ public class TermistoServiceImpl implements TermistoService {
     @Override
     @Transactional(readOnly = true)
     public List<TermiDto> getTermit(Long baseId) {
-        List<Termi> termit = termisto.findByBaseId(baseId);
+        List<Termi> termit = termisto.findAll();
         return mapper.mapAsList(termit, TermiDto.class);
     }
 

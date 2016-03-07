@@ -21,11 +21,13 @@ import fi.vm.sade.eperusteet.amosaa.service.ops.TermistoService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,34 +46,34 @@ public class TermistoController {
     private TermistoService termistoService;
 
     @RequestMapping(value = "/termisto", method = GET)
-    public List<TermiDto> getAll(
+    public ResponseEntity<List<TermiDto>> getAll(
             @PathVariable("baseId") final Long baseId) {
-        return termistoService.getTermit(baseId);
+        return ResponseEntity.ok(termistoService.getTermit(baseId));
     }
 
-    @RequestMapping(value = "/termi/{avain}", method = GET)
-    public TermiDto get(
+    @RequestMapping(value = "/termisto/{avain}", method = GET)
+    public ResponseEntity<TermiDto> get(
             @PathVariable("baseId") final Long baseId,
             @PathVariable("avain") final String avain) {
-        return termistoService.getTermi(baseId, avain);
+        return ResponseEntity.ok(termistoService.getTermi(baseId, avain));
     }
 
     @RequestMapping(value = "/termisto", method = POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public TermiDto addTermi(
+    public ResponseEntity<TermiDto> addTermi(
             @PathVariable("baseId") final Long baseId,
             @RequestBody TermiDto dto) {
         dto.setId(null);
-        return termistoService.addTermi(baseId, dto);
+        return ResponseEntity.ok(termistoService.addTermi(baseId, dto));
     }
 
-    @RequestMapping(value = "/termisto/{id}", method = POST)
-    public TermiDto updateTermi(
+    @RequestMapping(value = "/termisto/{id}", method = PUT)
+    public ResponseEntity<TermiDto> updateTermi(
             @PathVariable("baseId") final Long baseId,
             @PathVariable("id") final Long id,
             @RequestBody TermiDto dto) {
         dto.setId(id);
-        return termistoService.updateTermi(baseId, dto);
+        return ResponseEntity.ok(termistoService.updateTermi(baseId, dto));
     }
 
     @RequestMapping(value = "/termisto/{id}", method = DELETE)
