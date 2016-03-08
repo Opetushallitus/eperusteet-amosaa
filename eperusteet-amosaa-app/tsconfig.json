@@ -29,6 +29,7 @@
     "src/app/logic/revisions.ts",
     "src/app/logic/pagination.ts",
     "src/app/logic/tekstikappaleet.ts",
+    "src/app/logic/termisto.ts",
     "src/app/misc/filters.ts",
     "src/app/modals/add/add.ts",
     "src/app/modals/revisions/revisions.ts",
