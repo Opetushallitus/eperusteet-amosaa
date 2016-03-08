@@ -32,6 +32,7 @@
     "src/app/logic/termisto.ts",
     "src/app/misc/filters.ts",
     "src/app/modals/add/add.ts",
+    "src/app/modals/confirm/confirm.ts",
     "src/app/modals/revisions/revisions.ts",
     "src/app/states/state.ts",
     "src/app/states/sandbox/state.ts",

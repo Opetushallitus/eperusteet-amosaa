@@ -29,18 +29,38 @@ namespace ModalRevisions {
     }).result;
 
     export const kasiteRevision = (kasite) => i.$uibModal.open({
-        resolve: {
-            kasite: () => kasite
-        },
+        size: 'lg',
         templateUrl: "modals/revisions/kasiteRevisionModal.jade",
-        controller: ($uibModalInstance, $scope, $state, kasite) => {
-            $scope.kasite = kasite;
+        controller: ($uibModalInstance, $rootScope, $scope, $state, $q) => {
 
-            $scope.ok = $uibModalInstance.close;
+           $scope.kasite = kasite;
 
-            $scope.update = () => {
-                console.log
-            }
+            $scope.edit = EditointikontrollitService.createLocal({
+                start: () => $q((resolve, reject) => $scope.kasite.get()
+                    .then(res => {
+                        _.merge(kasite, res);
+                        $scope.kasite = kasite.clone();
+                        resolve();
+                    })
+                    .catch(reject)),
+                save: () => $q((resolve, reject) => {
+                    $rootScope.$broadcast("notifyCKEditor");
+                    return $scope.kasite.put()
+                        .then((res) => {
+                            $uibModalInstance.close;
+                            NotifikaatioService.onnistui("tallennus-onnistui");
+                            return resolve(res);
+                        })
+                        .catch(reject);
+                }),
+                cancel: (res) => $q((resolve, reject) => {
+                    $scope.kasite = kasite.clone();
+                    resolve();
+                })
+            });
+
+            $scope.cancel = EditointikontrollitService.cancel;
+            $scope.save = EditointikontrollitService.save;
         }
     }).result;
 

@@ -5,7 +5,7 @@ div.kasitteet
         ohje(teksti="this is a test", otsikko="test title", suunta="top")
     div.col-xs-6
       div.input-group.input-group-sm
-        input.form-control(type="text", placeholder="{{'haku-nimi' | kaanna}}", ng-model="nimi" ng-change="paivita()")
+        input.form-control(type="text", placeholder="{{'haku-termi' | kaanna}}", ng-model="termi" ng-change="paivita()")
         span.input-group-btn
           button.btn.btn-default(ng-click="nimi = ''")
             i.fa.fa-times
@@ -29,13 +29,20 @@ div.kasitteet
                 span.glyphicon.glyphicon-sort-by-alphabet(ng-show="!jarjestysKaanteinen")
         tbody
           tr(ng-repeat="kasite in kasitteet")
-            td(href="", ng-bind="kasite.termi | kaanna")
             td
-              div(ng-bind-html="kasite.selitys | kaanna")
+              div(ng-if="$$ekEditing && ($index === selected.value)")
+                input.form-control(slocalized ng-model="kasite.termi" type="text" required=true)
+              div(ng-show="!$$ekEditing && ($index !== selected.value)")
+                p(ng-bind-html="kasite.termi | kaanna")
             td
+              div(ng-if="$$ekEditing && ($index === selected.value)")
+                div.form-control.ckeditor(ckeditor ng-model="kasite.selitys" slocalized layout="normal")
+              div(ng-show="!$$ekEditing && ($index !== selected.value)")
+                p(ng-bind-html="kasite.selitys | kaanna")
+            td(ng-show="!$$ekEditing")
               a.btn.btn-warning.btn-sm.pull-right.btn-small-margin-left
-                i.fa.fa-trash
-              a.btn.btn-primary.btn-sm.pull-right(ng-click="editKasite(kasite)")
+                i.fa.fa-trash(ng-click="delete(kasite)")
+              a.btn.btn-primary.btn-sm.pull-right(ng-click="kasite.$$edit(); selected.value = $index")
                 i.fa.fa-pencil
 
 

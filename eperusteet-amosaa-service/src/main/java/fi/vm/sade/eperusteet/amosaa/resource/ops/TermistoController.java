@@ -38,7 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author apvilkko
  */
 @RestController
-@RequestMapping("/koulutustoimija/{baseId}")
+@RequestMapping("/koulutustoimijat/{baseId}")
 @InternalApi
 public class TermistoController {
 
@@ -51,11 +51,18 @@ public class TermistoController {
         return ResponseEntity.ok(termistoService.getTermit(baseId));
     }
 
-    @RequestMapping(value = "/termisto/{avain}", method = GET)
+    @RequestMapping(value = "/termisto/{id}", method = GET)
+    public ResponseEntity<TermiDto> get(
+            @PathVariable("baseId") final Long baseId,
+            @PathVariable("id") final Long id) {
+        return ResponseEntity.ok(termistoService.getTermi(baseId, id));
+    }
+
+    @RequestMapping(value = "/termisto/{avain}/avain", method = GET)
     public ResponseEntity<TermiDto> get(
             @PathVariable("baseId") final Long baseId,
             @PathVariable("avain") final String avain) {
-        return ResponseEntity.ok(termistoService.getTermi(baseId, avain));
+        return ResponseEntity.ok(termistoService.getTermiByAvain(baseId, avain));
     }
 
     @RequestMapping(value = "/termisto", method = POST)
