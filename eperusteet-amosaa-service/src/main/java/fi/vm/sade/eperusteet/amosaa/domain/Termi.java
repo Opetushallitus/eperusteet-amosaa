@@ -41,6 +41,7 @@ import org.hibernate.envers.RelationTargetAuditMode;
 @Table(name = "termi")
 @Getter
 @Setter
+@Audited
 public class Termi implements Serializable {
 
     @Id

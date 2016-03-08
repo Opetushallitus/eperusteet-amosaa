@@ -49,7 +49,8 @@ public class TermistoServiceImpl implements TermistoService {
     @Override
     @Transactional(readOnly = true)
     public List<TermiDto> getTermit(Long baseId) {
-        List<Termi> termit = termisto.findAll();
+        Koulutustoimija toimija = koulutustoimija.findOne(baseId);
+        List<Termi> termit = termisto.findAllByKoulutustoimija(toimija);
         return mapper.mapAsList(termit, TermiDto.class);
     }
 
