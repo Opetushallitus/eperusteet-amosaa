@@ -27,11 +27,18 @@ div.kasitteet
                 span(ng-show="jarjestys==='selitys'")=" "
                 span.glyphicon.glyphicon-sort-by-alphabet-alt(ng-show="jarjestysKaanteinen")
                 span.glyphicon.glyphicon-sort-by-alphabet(ng-show="!jarjestysKaanteinen")
-        tbody
-          tr(ng-repeat="kasite in kasitteet")
-            td(href="", ng-bind="kasite.termi | kaanna")
-            td
+        tbody(ng-repeat="kasite in kasitteet")
+          tr
+            td(ng-if="!$$ekEditing")
+              div(href="", ng-bind="kasite.termi | kaanna")
+            td(ng-if="$$ekEditing")
+              div
+                textarea.form-control.ckeditor(ckeditor slocalized ng-model='kasite.termi')
+            td(ng-if="!$$ekEditing")
               div(ng-bind-html="kasite.selitys | kaanna")
+            td(ng-if="$$ekEditing")
+              div
+                input.form-control.ckeditor(ckeditor slocalized ng-model='kasite.selitys')
             td
               a.btn.btn-warning.btn-sm.pull-right.btn-small-margin-left
                 i.fa.fa-trash
