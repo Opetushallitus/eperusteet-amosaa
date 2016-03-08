@@ -28,6 +28,22 @@ namespace ModalRevisions {
         }
     }).result;
 
+    export const kasiteRevision = (kasite) => i.$uibModal.open({
+        resolve: {
+            kasite: () => kasite
+        },
+        templateUrl: "modals/revisions/kasiteRevisionModal.jade",
+        controller: ($uibModalInstance, $scope, $state, kasite) => {
+            $scope.kasite = kasite;
+
+            $scope.ok = $uibModalInstance.close;
+
+            $scope.update = () => {
+                console.log
+            }
+        }
+    }).result;
+
 };
 
 angular.module("app")

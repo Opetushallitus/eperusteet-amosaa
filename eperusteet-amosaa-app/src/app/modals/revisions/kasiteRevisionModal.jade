@@ -1,0 +1,15 @@
+div.modal-header
+    h2.modal-title(kaanna="'kasite'")
+
+.modal-body
+    form
+        .form-group
+            label.control-label(for='termi', ng-bind="'termi' | kaanna")
+            input#termi.form-control(type='text')
+        .form-group
+            label.control-label(for='selitys', ng-bind="'selitys' | kaanna")
+            textarea#selitys.form-control
+
+div.modal-footer
+    button.btn.btn-default(type='button', data-dismiss='modal', ng-click="cancel()") Peruuta
+    button.btn.btn-primary(type='button', ng-click="update()") OK

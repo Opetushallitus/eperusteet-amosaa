@@ -1,7 +1,7 @@
 div.kasitteet
   div.row
     div.col-xs-6
-      h2 Käsitteet
+      h2(ng-bind="'kasitteet' | kaanna")
         ohje(teksti="this is a test", otsikko="test title", suunta="top")
     div.col-xs-6
       div.input-group.input-group-sm
@@ -12,42 +12,37 @@ div.kasitteet
 
   div.row
     div.col-xs-12
-      table.table.table-striped
+      table.table.table-striped.kasitteet-table
         thead
           tr
             th
-              a(href="", ng-click="vaihdaJarjestys('nimi')")
-                span(kaanna="'kasite-otsikko'")
-                span(ng-show="jarjestys==='nimi'")=" "
+              a(href="", ng-click="vaihdaJarjestys('Termi')")
+                span(kaanna="'termi'")
+                span(ng-show="jarjestys==='termi'")=" "
                 span.glyphicon.glyphicon-sort-by-alphabet-alt(ng-show="jarjestysKaanteinen")
                 span.glyphicon.glyphicon-sort-by-alphabet(ng-show="!jarjestysKaanteinen")
             th
-              a(href="", ng-click="vaihdaJarjestys('kirjoittaja')")
-                span(kaanna="'kirjoittaja'")
-                span(ng-show="jarjestys==='kirjoittaja'")=" "
+              a(href="", ng-click="vaihdaJarjestys('Selitys')")
+                span(kaanna="'selitys'")
+                span(ng-show="jarjestys==='selitys'")=" "
                 span.glyphicon.glyphicon-sort-by-alphabet-alt(ng-show="jarjestysKaanteinen")
                 span.glyphicon.glyphicon-sort-by-alphabet(ng-show="!jarjestysKaanteinen")
-            th
-              a(href="", ng-click="vaihdaJarjestys('Aika')")
-                span(kaanna="'luoto'")
-                span(ng-show="jarjestys==='kirjoitusAika'")=" "
-                span.glyphicon.glyphicon-sort-by-attributes-alt(ng-show="jarjestysKaanteinen")
-                span.glyphicon.glyphicon-sort-by-attributes(ng-show="!jarjestysKaanteinen")
         tbody
-          tr(ng-repeat="poistettu in suodatetut = (poistetut " +
-          "| filter:nimi) " +
-          "| limitTo:alkioitaSivulla:(sivu - 1) * alkioitaSivulla " +
-          "| orderBy:jarjestys:jarjestysKaanteinen")
-
-            td(href="", ng-click="edit(kasite)") {{kasite.otsikko}}
-            td {{kasite.kirjoittaja}}
-            td {{kasite.luotu | date}}
+          tr(ng-repeat="kasite in kasitteet")
+            td(href="", ng-bind="kasite.termi | kaanna")
+            td
+              div(ng-bind-html="kasite.selitys | kaanna")
+            td
+              a.btn.btn-warning.btn-sm.pull-right.btn-small-margin-left
+                i.fa.fa-trash
+              a.btn.btn-primary.btn-sm.pull-right(ng-click="editKasite(kasite)")
+                i.fa.fa-pencil
 
 
   nav.text-center
     uib-pagination(
     ng-model="sivu",
-    total-items="suodatetut.length",
+    total-items="kasitteet.length",
     items-per-page="alkioitaSivulla",
     force-ellipses="true",
     direction-links="false"
