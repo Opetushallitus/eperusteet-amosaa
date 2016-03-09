@@ -11,24 +11,26 @@ div.yhteiset-nakyma
             span
               i.fa.fa-magic
 
-
         div.painikkeet
           div.keskitetty.pull-right
-            button.btn.btn-default Esikatselu
+            button.btn.btn-default(kaanna="'esikatselu'")
             button.btn.btn-default
-              span PDF
+              span(kaanna="'pdf'")
               span.fa.fa-file-pdf-o.fa-fw
+
 
   div.row
     div.col-xs-12
       div.tabit
         ul.nav.nav-tabs
           li(ui-sref-active="active")
-            a(ui-sref=".sisalto") Sisaltö
+            a(ui-sref=".sisalto" kaanna="sisalto")
           li(ui-sref-active="active")
-            a(ui-sref=".kasitteet") Käsitteet
+            a(ui-sref=".kasitteet" kaanna="kasitteet")
           li(ui-sref-active="active")
-            a(ui-sref=".poistetut") Poistetut
+            a(ui-sref=".poistetut" kaanna="poistetut")
+          li(ui-sref-active="active")
+            a(ui-sref=".oikeudet" kaanna="oikeudet")
 
   div.row
     div.col-xs-12

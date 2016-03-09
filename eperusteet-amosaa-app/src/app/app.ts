@@ -2,6 +2,7 @@ angular.module("app", [
     "ui.router",
     "angularSpinner",
     "restangular",
+    "ngResource",
     "pascalprecht.translate",
     "ngAnimate",
     "ngSanitize",
@@ -16,9 +17,11 @@ angular.module("app", [
     $urlRouterProvider.when("/", "/fi");
     // $translateProvider.useLoader();
     $urlMatcherFactoryProvider.strictMode(false); // Trailing slash ignored
-    moment.locale("fi");
+
+    $translateProvider.useLoader('LokalisointiLoader');
     $translateProvider.preferredLanguage("fi");
-    $translateProvider.useSanitizeValueStrategy("sanitize");
+    $translateProvider.useSanitizeValueStrategy(null);
+    moment.locale("fi");
 })
 
 // Generate template or templateUrl automatically for states when not defined
@@ -98,14 +101,23 @@ angular.module("app", [
 })
 .run(($rootScope, $log, $urlMatcherFactory, $state) => {
     $rootScope.$on("$stateChangeStart", (event, state, params) => {
+        // if (!params.lang || _.isNumber(_.parseInt(params.lang))) {
+        //     $state.go("root", { lang: "fi" }, { reload: true });
+        // }
         if (EditointikontrollitService.isEditing()) {
             event.preventDefault();
             NotifikaatioService.normaali("ohje-editointi-on-paalla");
         }
     });
     $rootScope.$on("$stateChangeSuccess", (event, state, params) => {
-        if (state.name === "root") {
+        if ($state.is("root.**")) {
+            console.log(params);
             // $state.go("root");
         }
     });
+})
+
+// FIXME: Move to own file
+// Global $scope functions
+.run(($rootScope) => {
 });

@@ -3,8 +3,8 @@ angular.module("app")
 .state("root", {
     url: "/:lang",
     resolve: {
+        kayttajanKoulutustoimijat: Api => Api.all("kayttaja/koulutustoimijat").getList(),
         kayttaja: Api => Api.one("kayttaja").get(),
-        kayttajanKoulutustoimijat: kayttaja => kayttaja.one("koulutustoimijat").get(),
         casMe: () => Kayttaja.casMe(),
         casRoles: () => Kayttaja.casRoles(),
         kayttajaprofiili: () => Fake.Kayttajaprofiili(1)

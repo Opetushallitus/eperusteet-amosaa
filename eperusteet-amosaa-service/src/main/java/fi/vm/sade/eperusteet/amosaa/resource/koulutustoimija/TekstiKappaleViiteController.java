@@ -1,3 +1,5 @@
+package fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija;
+
 /*
  * Copyright (c) 2013 The Finnish Board of Education - Opetushallitus
  *
@@ -14,25 +16,17 @@
  * European Union Public Licence for more details.
  */
 
-package fi.vm.sade.eperusteet.amosaa.dto.kayttaja;
+import com.wordnik.swagger.annotations.Api;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.KayttajaoikeusTyyppi;
-import fi.vm.sade.eperusteet.amosaa.dto.Reference;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  *
  * @author nkala
  */
-@Getter
-@Setter
-public class KayttajaoikeusDto {
-    private Long id;
-    private KayttajanTietoDto kayttajatieto;
-    private Reference kayttaja;
-//    private Reference ops;
-    private Reference yhteiset;
-    private Reference koulutustoimija;
-    private KayttajaoikeusTyyppi oikeus;
+@RestController
+@RequestMapping("/koulutustoimijat/{baseId}")
+@Api(value = "tekstit")
+public class TekstiKappaleViiteController {
 }

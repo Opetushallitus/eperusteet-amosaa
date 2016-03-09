@@ -22,8 +22,11 @@ import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -51,5 +54,11 @@ public class KayttajaController {
     @RequestMapping(value = "/organisaatiot", method = RequestMethod.GET)
     public Set<String> getOrganisaatiot() {
         return kayttajat.getUserOrganizations();
+    }
+
+    @RequestMapping(value = "/{id}/nimi", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<KayttajanTietoDto> getKayttajanNimi(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(kayttajat.haeNimi(id));
     }
 }

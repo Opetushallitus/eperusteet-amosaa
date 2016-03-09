@@ -26,4 +26,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface KayttajaRepository extends JpaRepository<Kayttaja, Long> {
+    Kayttaja findOneByOid(String oid);
 }

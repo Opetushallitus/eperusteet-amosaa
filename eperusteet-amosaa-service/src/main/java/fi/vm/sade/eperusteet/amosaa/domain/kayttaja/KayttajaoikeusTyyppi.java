@@ -23,6 +23,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
  * @author nkala
  */
 public enum KayttajaoikeusTyyppi {
+    LUKU("luku"),
     MUOKKAUS("muokkaus"),
     LISAYS("lisays"),
     POISTO("poisto"),

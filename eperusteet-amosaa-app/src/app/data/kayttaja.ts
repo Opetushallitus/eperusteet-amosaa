@@ -23,6 +23,9 @@ module Kayttaja {
         _Cas.one("me").get()
             .then(resolve)
             .catch(() => resolve({})));
+
+    export const oikeusVaihtoehdot = () =>
+        (["luku", "muokkaus", "lisays", "poisto", "hallinta"]);
 };
 
 

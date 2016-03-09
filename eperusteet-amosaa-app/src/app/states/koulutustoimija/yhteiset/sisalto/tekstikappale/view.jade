@@ -1,25 +1,21 @@
 div.tekstikappaleet
   .ylapalkki
-    .pull-left
-      p
-        span
-          b(kaanna="'muokattu'")
-        span(ng-bind="tkv.tekstiKappale.muokattu | aikaleima")
-      p
-        span
-          b(kaanna="'muokkaaja'")
-        span(ng-bind="tkv.tekstiKappale.muokkaaja")
-
-    .pull-right
-      button.btn.btn-primary.muokkaa(ng-hide="$$ekEditing" ng-click="edit()")
-        | Muokkaa
+    +historia("versio",
+      "tkv.tekstiKappale.$$nimi",
+      "tkv.tekstiKappale.muokattu",
+      "1",
+      "edit()",
+      "listRevisions()",
+      "restoreRevision()",
+      "restoreNew()")
+      button.btn.btn-primary.muokkaa(ng-show="$$ekEditing" ng-click="remove()" kaanna="'poista'")
 
   div
     div(ng-if="$$ekEditing")
       h1(kaanna="'nimi'")
-      input.form-control(slocalized ng-model="tkv.tekstiKappale.nimi" type="text" required="true")
+      input.form-control(style="margin-bottom: 16px; margin-top: 16px" slocalized ng-model="tkv.tekstiKappale.nimi" type="text" required="true")
       h1(kaanna="'sisalto'")
-      div.form-control(ckeditor slocalized ng-model="tkv.tekstiKappale.teksti" layout="normal")
+      div.form-control(style="margin-bottom: 16px" ckeditor slocalized ng-model="tkv.tekstiKappale.teksti" layout="normal")
     div(ng-if="!$$ekEditing")
-      h1(kaanna="tkv.tekstiKappale.nimi")
-      p(ng-bind-html="tkv.tekstiKappale.teksti | kaanna")
+      h1(style="margin-bottom: 16px; margin-top: 16px" kaanna="tkv.tekstiKappale.nimi")
+      p(style="margin-bottom: 16px" ng-bind-html="tkv.tekstiKappale.teksti | kaanna")

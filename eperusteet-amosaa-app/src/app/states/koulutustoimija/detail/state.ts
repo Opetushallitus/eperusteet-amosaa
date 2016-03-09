@@ -4,7 +4,8 @@ angular.module("app")
     url: "",
     views: {
         "": {
-            controller: ($scope, koulutustoimija) => {
+            controller: ($scope, kayttajanKoulutustoimijat, koulutustoimija) => {
+                $scope.koulutustoimijat = kayttajanKoulutustoimijat;
                 $scope.koulutustoimija = koulutustoimija;
                 $scope.addOpetussuunnitelma = () => {
                     ModalAdd.opetussuunnitelma().then((ops) => {

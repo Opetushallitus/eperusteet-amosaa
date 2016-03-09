@@ -5,10 +5,10 @@ div.poistetut
         ohje(teksti="this is a test", otsikko="test title", suunta="top")
     div.col-xs-6
       div.input-group.input-group-sm
-        input.form-control(type="text", placeholder="{{'haku-nimi' | kaanna}}", ng-model="nimi" ng-change="paivita()")
+        input.form-control(type="text", placeholder="{{'haku-nimi' | kaanna}}", ng-model="search" ng-change="paivita()")
         span.input-group-btn
-          button.btn.btn-default(ng-click="nimi = ''")
-            i.fa.fa-times
+          button.btn.btn-default(ng-click="search = ''")
+            +icon("times")
 
   div.row
     div.col-xs-12
@@ -17,7 +17,7 @@ div.poistetut
           tr
             th
               a(href="", ng-click="vaihdaJarjestys('nimi')")
-                span(kaanna="'tekstikappale-otsikko'")
+                span(kaanna="'poistettu-otsikko'")
                 span(ng-show="jarjestys==='nimi'")=" "
                   span.glyphicon.glyphicon-sort-by-alphabet-alt(ng-show="jarjestysKaanteinen")
                   span.glyphicon.glyphicon-sort-by-alphabet(ng-show="!jarjestysKaanteinen")
@@ -37,18 +37,19 @@ div.poistetut
               a(href="")
                 span(kaanna="'toiminnot'")
         tbody
-          tr(ng-repeat="poistettu in suodatetut = (poistetut " +
-          "| filter:nimi) " +
-          "| limitTo:alkioitaSivulla:(sivu - 1) * alkioitaSivulla " +
-          "| orderBy:jarjestys:jarjestysKaanteinen")
+          tr(ng-show="suodata(poistettu)" ng-repeat="poistettu in suodatetut = (poistetut " +
+            "| filter:nimi) " +
+            "| limitTo:alkioitaSivulla:(sivu - 1) * alkioitaSivulla " +
+            "| orderBy:jarjestys:jarjestysKaanteinen")
 
-            td {{poistettu.nimi}}
-            td {{poistettu.poistaja}}
-            td {{poistettu.poistoAika | date}}
+            td(kaanna="poistettu.nimi")
+            td(ng-bind="poistettu.muokkaajaOid")
+            td(ng-bind="poistettu.pvm | aikaleima")
             td
-              a.label.label-info(kaanna="'nayta'")
-              span=" "
-              a.label.label-warning(kaanna="'palauta'")
+              a.label.label-warning(kaanna="'palauta'"
+                ng-click="palauta(poistettu)")
+              // a.label.label-info(kaanna="'nayta'")
+              // span=" "
 
 
   nav.text-center
@@ -57,5 +58,4 @@ div.poistetut
     total-items="suodatetut.length",
     items-per-page="alkioitaSivulla",
     force-ellipses="true",
-    direction-links="false"
-    )
+    direction-links="false")

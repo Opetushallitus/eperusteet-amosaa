@@ -15,6 +15,7 @@
  */
 package fi.vm.sade.eperusteet.amosaa.service.mocks;
 
+import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.Kayttaja;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
@@ -32,7 +33,17 @@ import org.springframework.stereotype.Service;
 public class KayttajanTietoServiceMock implements KayttajanTietoService {
 
     @Override
+    public Kayttaja getKayttaja() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
     public List<KoulutustoimijaBaseDto> koulutustoimijat() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public KayttajanTietoDto haeNimi(Long id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

@@ -12,10 +12,11 @@ angular.module("app")
 
 
 namespace TiedotImpl {
-    export const controller = ($q, $scope, $state, koulutustoimija, yhteiset, historia, versioId, versio) => {
+    export const controller = ($q, $scope, $state, koulutustoimija, yhteiset, historia, versioId, versio, nimiLataaja) => {
         $scope.versio = versio;
         $scope.koulutustoimija = koulutustoimija;
         [$scope.uusin, $scope.historia] = Revisions.parseAll(historia);
+        nimiLataaja($scope.uusin.muokkaaja).then(nimi => $scope.uusin.$$nimi = nimi);
 
         $scope.edit = EditointikontrollitService.createRestangular($scope, "yhteiset", yhteiset, {
             done: () => historia.get("uusin").then(res => {
