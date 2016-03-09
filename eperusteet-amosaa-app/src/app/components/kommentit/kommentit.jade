@@ -1,0 +1,47 @@
+div.kommentit
+  hr
+  div.kommentti-alue
+    div
+      h2
+        span(kaanna="keskustelu")
+        span &nbsp;{{kommentit.length}}&nbsp;
+        span(kaanna="kommenttia ")
+
+    div
+      a.action-link(ng-click="editoi = true" ng-hide="editoi")
+        h3
+          span.glyphicon.glyphicon-plus
+          span(kaanna="lisaa-kommentti")
+
+      div(ng-hide="!editoi")
+        textarea.form-control.msd-elastic(ng-model="editoitava")
+        div.aler.alert-danger(kaanna"kommentti-ei-saa-ylittaa" ng-hide="true")
+        div.kommentti-painikkeet
+          button.btn(kaanna="peruuta" ng-click="editoi = false")
+          button.btn.btn-primary(kaanna="tallenna" ng-click="lisaaKommentti(sisalto, editoitava); editoi = false; editoitava = ''")
+
+    div(style="clear: both;")
+
+    div.kommentti.kommentti-oma(ng-repeat="kommentti in kommentit" ng-class="{ indent: kommentti.parentId }")
+      div
+        div.pull-left.ryhma-jasen-avatar.kommentti-avatar
+          div.nimikirjain-avatar {{komentti.muokkaaja[0]}}
+
+        div.kommentti-sisalto
+          h3 {{kommentti.muokkaaja}}
+            span.pull-right
+              a.action-link
+                span.glyphicon.glyphicon-pencil
+
+          div
+            p.rajattu-viesti {{kommentti.sisalto}}
+          div.kommentti-footer
+            span.aikaleima {{kommentti.muokattu | aikaleima}}
+            a.action-link
+              span(kaanna="vastaa")
+            a.action-link
+              span(kaanna="piilota-vastaukset")
+
+
+    hr
+

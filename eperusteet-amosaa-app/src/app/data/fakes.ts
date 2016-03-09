@@ -159,5 +159,48 @@ module Fake {
         }
     ]);
 
+    export const Kommentit = () => ([
+        {
+            "nimi" : null,
+            "muokkaaja" : "1.2.246.562.24.00000000001",
+            "sisalto" : "Kommentti #1",
+            "luotu" : 1457434340403,
+            "muokattu" : 1457434340403,
+            "id" : 8632520,
+            "ylinId" : null,
+            "parentId" : null,
+            "perusteprojektiId" : 8632360,
+            "poistettu" : null,
+            "perusteenOsaId" : null,
+            "suoritustapa" : "opetuksen_yleiset_tavoitteet"
+        }, {
+            "nimi" : null,
+            "muokkaaja" : "1.2.246.562.24.00000000001",
+            "sisalto" : "Vastaus kommenttiin #1",
+            "luotu" : 1457439332713,
+            "muokattu" : 1457439332713,
+            "id" : 8632521,
+            "ylinId" : 8632520,
+            "parentId" : 8632520,
+            "perusteprojektiId" : 8632360,
+            "poistettu" : null,
+            "perusteenOsaId" : null,
+            "suoritustapa" : "opetuksen_yleiset_tavoitteet"
+        }, {
+            "nimi" : null,
+            "muokkaaja" : "1.2.246.562.24.00000000001",
+            "sisalto" : "Toinen kommentti",
+            "luotu" : 1457439338488,
+            "muokattu" : 1457439338488,
+            "id" : 8632522,
+            "ylinId" : null,
+            "parentId" : null,
+            "perusteprojektiId" : 8632360,
+            "poistettu" : null,
+            "perusteenOsaId" : null,
+            "suoritustapa" : "opetuksen_yleiset_tavoitteet"
+        }
+    ]);
+
     // export const Suoritustapa = (id, suoritustapaTunniste) => Opetussuunnitelma(id).suoritustapa[suoritustapaTunniste];
 }

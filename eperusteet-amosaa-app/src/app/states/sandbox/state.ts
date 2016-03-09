@@ -31,6 +31,14 @@ angular.module("app")
                 $scope.pvm = "";
             }
         },
+        kommentit: {
+            resolve: {
+                kommentit: () => Fake.Kommentit()
+            },
+            controller: ($scope, kommentit) => {
+                $scope.kommentit = kommentit;
+            }
+        },
         kaanna: {
             controller: ($scope) => {
                 $scope.obj = {

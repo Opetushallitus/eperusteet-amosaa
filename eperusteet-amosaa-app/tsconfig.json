@@ -22,6 +22,7 @@
     "src/app/components/datepicker/datepicker.ts",
     "src/app/components/utils/utils.ts",
     "src/app/components/sticky/sticky.ts",
+    "src/app/components/kommentit/kommentit.ts",
     "src/app/app.ts",
     "src/app/logic/kayttajatiedot.ts",
     "src/app/logic/opetussuunnitelmat.ts",

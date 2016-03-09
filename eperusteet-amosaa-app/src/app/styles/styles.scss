@@ -7,6 +7,7 @@ $fa-font-path: "fonts";
 @import "vendor/virkailija";
 
 @import "../components/editointikontrollit/_styles.scss";
+@import "../components/kommentit/_styles.scss";
 @import "../components/ohje/_ohje.scss";
 @import "../components/loadingbar/_loading_bar.scss";
 @import "../components/notifikaatiot/_notifikaatiot.scss";
