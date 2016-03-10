@@ -2,9 +2,32 @@ mixin icon(type)
   i(class="fa fa-" + type)
 
 
+mixin removeButtonSmall(actionEdit)
+  button.btn.btn-warning.btn-sm.btn-small-margin-left(ng-disabled="$$ekEditing || versio" ng-click=actionEdit)&attributes(attributes)
+    +icon("trash")
+
+
+mixin editButtonSmall(actionEdit)
+  button.btn.btn-primary.btn-sm.muokkaa(ng-disabled="$$ekEditing || versio" ng-click=actionEdit)&attributes(attributes)
+    +icon("pencil")
+
+
 mixin editButton(actionEdit)
   button.btn.btn-primary.muokkaa(ng-hide="$$ekEditing || versio" ng-click=actionEdit)&attributes(attributes)
     +icon("pencil")
+
+
+mixin addButtonSmall(actionEdit)
+  button.btn.btn-primary.btn-sm.muokkaa.btn-small-margin-left(ng-click=actionEdit)&attributes(attributes)
+    +icon("plus-circle")
+
+mixin saveButtonSmall(actionEdit)
+  button.btn.btn-primary.btn-sm.muokkaa(ng-click=actionEdit)&attributes(attributes)
+    +icon("save")
+
+mixin cancelButtonSmall(actionEdit)
+  button.btn.btn-warning.btn-sm.muokkaa.btn-small-margin-left(ng-click=actionEdit)&attributes(attributes)
+    +icon("close")
 
 
 mixin historia(versio, uusin, actionEdit, actionRevisions, actionPalauta, restoreNew)

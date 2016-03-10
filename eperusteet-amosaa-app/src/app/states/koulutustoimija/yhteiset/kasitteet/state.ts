@@ -4,47 +4,42 @@ angular.module("app")
     url: "/kasitteet",
     resolve: {
         kasitteet: (koulutustoimija) => koulutustoimija.all('termisto').getList(),
-        //experimenting
-        //lista: (kasitteet) => Termisto.rakenna(kasitteet)
     },
     views: {
         "": {
-            controller: ($scope, $rootScope, kasitteet) => {
-
-                $scope.kasitteet = kasitteet;
-
-                const createKasitteet = () => {
-                    $scope.kasitteet = _(kasitteet).map((kasite, idx) => {
-                            kasite.$$edit = EditointikontrollitService.createRestangular($scope.kasitteet, idx, kasite);
-                            return kasite;
-                        }).sortBy('termi').value();
+            controller: ($scope, $rootScope, kasitteet, $log) => {
+                $scope.newKasite = {
+                    placeholder: {termi: "", selitys: "", alaviite: null},
+                    creating: false
                 };
-
-                createKasitteet();
-
-                $scope.selected = {value: undefined};
-
-                $rootScope.$on('editointikontrollit:cancel', (e) => {
-                    $scope.selected = {value: undefined}
-                });
-
-                const refresh = (kasite) => {
-                    $scope.kasitteet = _.without($scope.kasitteet, kasite);
-                }
-
-                $scope.delete = (kasite) => {
-                    let options = { name: kasite.termi };
-                    ModalConfirm.generalConfirm(options, kasite).then((kasite) => {
-                        if (kasite) {
-                            kasite.remove().then(() => {
-                                NotifikaatioService.onnistui("poistaminen-onnistui");
-                                refresh(kasite);
-                            });
-                        }
-                    });
+                $scope.cancel = () => {
+                    $scope.newKasite.creating = false;
                 };
+                $scope.createKasite = () => {
+                    $log.info("creating");
+                    $scope.newKasite.creating = true;
+                };
+                $scope.postKasite = (newKasite) => {
+                    //validate here
+                    $scope.newKasite.creating = false;
+                    kasitteet.post(newKasite).then((res) => {
+                        $scope.kasittet.unshift(res);
+                    })
+                };
+                $scope.edit = EditointikontrollitService.createListRestangular($scope, "kasitteet", kasitteet);
+                $scope.remove = (kasite) =>
+                    ModalConfirm.generalConfirm({ name: kasite.termi }, kasite)
+                        .then(kasite => kasite.remove())
+                        .then(() => _.remove($scope.kasitteet, kasite));
+
+                $scope.sortOptions = [{value:"-date", text:"Sort by publish date"},
+                    {value:"name", text:"Sort by blog name"},
+                    {value:"author.name", text:"Sort by author"}];
+
+                $scope.sortOrder = $scope.sortOptions[0].value;
 
             }
+
 
         }
 }}));

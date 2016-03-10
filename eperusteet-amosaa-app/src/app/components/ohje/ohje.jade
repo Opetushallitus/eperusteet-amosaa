@@ -1,8 +1,8 @@
 // Todo: add kaanna service
 span.ohje
   span.popover-element.badge(
-    popover-title="{{otsikko || 'ohje'}}"
-    uib-popover="{{teksti}}"
+    popover-title="{{otsikko || 'ohje' | kaanna}}"
+    uib-popover="{{teksti | kaanna}}"
     popover-placement="{{suunta || 'top'}}"
     popover-trigger="mouseenter"
     popover-animation="true"

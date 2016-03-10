@@ -1,4 +1,27 @@
-a.btn-small-margin-left {
+.table-striped.kasitteet-table {
+  .thead > tr > th {
+    color: #b3bdc6;
+  }
+  tbody {
+    tr:first-child > td {
+      background-color: #f8f8f8;
+      border: 2px dashed #DADFE3;
+      color: #b3bdc6;
+    }
+    i.fa.fa-check{
+      margin-left: 25px;
+      color: #199DD0;
+    }
+    input.form-control.alaviite {
+      margin-left: 25px;
+    }
+    tr > td > span.info {
+      margin-left: 16px;
+    }
+  }
+}
+
+button.btn-small-margin-left {
   margin-left: 5px;
 }
 
