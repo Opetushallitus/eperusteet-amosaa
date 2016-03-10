@@ -27,30 +27,30 @@ div.kasitteet
                 span(ng-show="jarjestys==='selitys'")=" "
                 span.glyphicon.glyphicon-sort-by-alphabet-alt(ng-show="jarjestysKaanteinen")
                 span.glyphicon.glyphicon-sort-by-alphabet(ng-show="!jarjestysKaanteinen")
+            th
         tbody
           tr(ng-repeat="kasite in kasitteet")
-            td
-              div(ng-if="$$ekEditing && ($index === selected.value)")
+            td(width="20%")
+              div(ng-show="$$ekEditing && $$ekEditingIndex === $index")
                 input.form-control(slocalized ng-model="kasite.termi" type="text" required=true)
-              div(ng-show="!$$ekEditing && ($index !== selected.value)")
+              div(ng-show="!$$ekEditing || $$ekEditingIndex !== $index")
                 p(ng-bind-html="kasite.termi | kaanna")
             td
-              div(ng-if="$$ekEditing && ($index === selected.value)")
+              div(ng-show="$$ekEditing && $$ekEditingIndex === $index")
                 div.form-control.ckeditor(ckeditor ng-model="kasite.selitys" slocalized layout="normal")
-              div(ng-show="!$$ekEditing && ($index !== selected.value)")
+              div(ng-show="!$$ekEditing || $$ekEditingIndex !== $index")
                 p(ng-bind-html="kasite.selitys | kaanna")
-            td(ng-show="!$$ekEditing")
-              a.btn.btn-warning.btn-sm.pull-right.btn-small-margin-left
-                i.fa.fa-trash(ng-click="delete(kasite)")
-              a.btn.btn-primary.btn-sm.pull-right(ng-click="kasite.$$edit(); selected.value = $index")
-                i.fa.fa-pencil
+            td(width="90px")
+              span.pull-right
+                +removeButtonSmall("remove(kasite)")
+              span.pull-right
+                +editButtonSmall("edit($index)")
 
 
   nav.text-center
     uib-pagination(
-    ng-model="sivu",
-    total-items="kasitteet.length",
-    items-per-page="alkioitaSivulla",
-    force-ellipses="true",
-    direction-links="false"
-    )
+      ng-model="sivu",
+      total-items="kasitteet.length",
+      items-per-page="alkioitaSivulla",
+      force-ellipses="true",
+      direction-links="false")
