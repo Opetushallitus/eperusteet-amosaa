@@ -29,5 +29,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TermistoRepository extends JpaRepository<Termi, Long> {
     List<Termi> findAllByKoulutustoimija(Koulutustoimija koulutustoimija);
+    Termi findOneByKoulutustoimijaAndId(Koulutustoimija koulutustoimija, Long id);
     Termi findOneByKoulutustoimijaAndAvain(Koulutustoimija koulutustoimija, String avain);
 }

@@ -56,7 +56,15 @@ public class TermistoServiceImpl implements TermistoService {
 
     @Override
     @Transactional(readOnly = true)
-    public TermiDto getTermi(Long baseId, String avain) {
+    public TermiDto getTermi(Long baseId, Long id) {
+        Koulutustoimija toimija = koulutustoimija.findOne(id);
+        Termi termi = termisto.findOneByKoulutustoimijaAndId(toimija, id);
+        return mapper.map(termi, TermiDto.class);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public TermiDto getTermiByAvain(Long baseId, String avain) {
         Koulutustoimija toimija = koulutustoimija.findOne(baseId);
         Termi termi = termisto.findOneByKoulutustoimijaAndAvain(toimija, avain);
         return mapper.map(termi, TermiDto.class);
@@ -85,7 +93,9 @@ public class TermistoServiceImpl implements TermistoService {
 
     @Override
     public void deleteTermi(Long baseId, Long id) {
-        Termi termi = termisto.findOne(id);
+        Koulutustoimija toimija = koulutustoimija.findOne(baseId);
+        assertExists(toimija, "Koulutustoimija ei ole olemassa");
+        Termi termi = termisto.findOneByKoulutustoimijaAndId(toimija, id);
         termisto.delete(termi);
     }
 

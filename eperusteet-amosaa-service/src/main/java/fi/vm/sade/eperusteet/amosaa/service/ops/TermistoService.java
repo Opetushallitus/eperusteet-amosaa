@@ -30,7 +30,9 @@ public interface TermistoService {
 
     List<TermiDto> getTermit(@P("baseId") Long baseId);
 
-    TermiDto getTermi(@P("baseId") Long baseId, String avain);
+    TermiDto getTermi(@P("baseId") Long baseId, Long id);
+
+    TermiDto getTermiByAvain(@P("baseId") Long baseId, String avain);
 
     TermiDto addTermi(@P("baseId") Long baseId, TermiDto dto);
 
