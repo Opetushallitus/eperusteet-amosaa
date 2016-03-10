@@ -38,7 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author apvilkko
  */
 @RestController
-@RequestMapping("/koulutustoimija/{baseId}")
+@RequestMapping("/koulutustoimijat/{baseId}")
 @InternalApi
 public class TermistoController {
 

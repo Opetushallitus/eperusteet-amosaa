@@ -10,3 +10,15 @@ a.btn-small-margin-left {
     margin: 0px;
   }
 }
+
+.modal-dialogue > .modal-body > .form > .form-group.ckeditor-input-top-margin {
+  margin-top: 30px;
+}
+
+.kasite-checkbox {
+  label {
+    input[type="radio"], input[type="checkbox"] {
+      top: 3px;
+    }
+  }
+}

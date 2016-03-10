@@ -1,15 +1,22 @@
 div.modal-header
-    h2.modal-title(kaanna="'kasite'")
+    h2.modal-title(kaanna="'termi'")
 
 .modal-body
-    form
+    form-horizontal
         .form-group
             label.control-label(for='termi', ng-bind="'termi' | kaanna")
-            input#termi.form-control(type='text')
-        .form-group
+            input#termi.form-control(slocalized ng-model="kasite.termi" required=true)
+        .form-group.ckeditor-input-top-margin
             label.control-label(for='selitys', ng-bind="'selitys' | kaanna")
-            textarea#selitys.form-control
+            div#selitys.cke_show_borders.form-control(ckeditor slocalized ng-model="kasite.selitys" layout="normal")
+        div
+            strong.kasite-checkbox(for='alaviite', ng-bind="'alaviite' | kaanna")
+            ohje(teksti="Merkitse käsite alaviiteeksi", otsikko="Kasite alaviite", suunta="top")
+        div.checkbox
+            label
+                input.form-control#alaviite(type='checkbox', checked="true", ng-model="kasite.alaviite")
+                p Merkitse käsite alaviiteeksi
 
 div.modal-footer
-    button.btn.btn-default(type='button', data-dismiss='modal', ng-click="cancel()") Peruuta
-    button.btn.btn-primary(type='button', ng-click="update()") OK
+    button.btn.btn-default(type='button', data-dismiss='modal', ng-click="cancel()", ng-bind="'peruuta' | kaanna")
+    button.btn.btn-primary(type='button', ng-click="save()", ng-bind="'OK' | kaanna")
