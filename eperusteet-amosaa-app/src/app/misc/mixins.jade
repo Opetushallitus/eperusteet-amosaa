@@ -17,6 +17,15 @@ mixin editButton(actionEdit)
     +icon("pencil")
 
 
+mixin addButtonSmall(actionEdit)
+  button.btn.btn-primary.btn-sm.muokkaa(ng-click=actionEdit)&attributes(attributes)
+    +icon("plus-circle")
+
+mixin saveButtonSmall(actionEdit)
+  button.btn.btn-primary.btn-sm.muokkaa(ng-click=actionEdit)&attributes(attributes)
+    +icon("save")
+
+
 mixin historia(versio, uusin, actionEdit, actionRevisions, actionPalauta, restoreNew)
   .ylapalkki
     .pull-left

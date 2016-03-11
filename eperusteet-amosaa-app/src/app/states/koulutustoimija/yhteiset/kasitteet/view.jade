@@ -29,6 +29,19 @@ div.kasitteet
                 span.glyphicon.glyphicon-sort-by-alphabet(ng-show="!jarjestysKaanteinen")
             th
         tbody
+          tr.kasite-placeholder-row(ng-show="!$$ekEditing")
+            td.kasite-placeholder-row(width="20%")
+              div(ng-show="newKasite.creating")
+                input.form-control(slocalized ng-model="newKasite.termi" type="text" required=true)
+            td
+              div(ng-show="newKasite.creating")
+                div.form-control.ckeditor(ckeditor ng-model="newKasite.selitys" slocalized layout="normal")
+            td(width="90px", ng-if="!newKasite.creating")
+              span.pull-right
+                +addButtonSmall("createKasite()")
+            td(width="90px", ng-if="newKasite.creating")
+              span.pull-right
+                +saveButtonSmall("postKasite()")
           tr(ng-repeat="kasite in kasitteet")
             td(width="20%")
               div(ng-show="$$ekEditing && $$ekEditingIndex === $index")

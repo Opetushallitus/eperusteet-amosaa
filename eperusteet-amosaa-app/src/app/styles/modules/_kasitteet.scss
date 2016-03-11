@@ -1,4 +1,10 @@
-a.btn-small-margin-left {
+.table-striped tbody > tr:nth-child(odd) > td, .table-striped tbody > tr:first-child > th {
+  background-color: ghostwhite;
+  border: 3px dashed #DADFE3
+}
+
+
+button.btn-small-margin-left {
   margin-left: 5px;
 }
 
