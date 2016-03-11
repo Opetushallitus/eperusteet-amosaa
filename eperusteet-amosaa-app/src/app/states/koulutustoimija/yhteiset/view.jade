@@ -13,10 +13,14 @@ div.yhteiset-nakyma
 
         div.painikkeet
           div.keskitetty.pull-right
-            button.btn.btn-default(kaanna="'esikatselu'")
             button.btn.btn-default
+              span.glyphicon.glyphicon-sunglasses
+              span=" "
+              span(kaanna="'esikatselu'")
+            button.btn.btn-default(ng-click="console.log('moi')")
+              span.fa.fa-file-pdf-o
+              span=" "
               span(kaanna="'pdf'")
-              span.fa.fa-file-pdf-o.fa-fw
 
 
   div.row

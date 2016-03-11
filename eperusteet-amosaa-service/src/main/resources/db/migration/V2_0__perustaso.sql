@@ -336,3 +336,18 @@ CREATE TABLE poistetut (
     muokkaajaoid character varying(255),
     UNIQUE(id)
 );
+
+create table dokumentti (
+    id bigint not null primary key,
+    yhteiset_id bigint REFERENCES yhteiset(id),
+    opetussuunnitelma_id bigint REFERENCES opetussuunnitelmat(id),
+    kieli character varying not null,
+    luoja character varying not null,
+    aloitusaika timestamp without time zone not null,
+    valmistumisaika timestamp without time zone,
+    tila character varying not null,
+    dokumenttidata oid,
+    virhekoodi TEXT
+    CHECK((yhteiset_id IS NULL AND opetussuunnitelma_id IS NOT NULL)
+          OR (yhteiset_id IS NOT NULL AND opetussuunnitelma_id IS NULL))
+);

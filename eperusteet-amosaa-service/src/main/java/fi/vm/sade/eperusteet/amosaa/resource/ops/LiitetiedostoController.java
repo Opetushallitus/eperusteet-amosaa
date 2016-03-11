@@ -15,6 +15,7 @@
  */
 package fi.vm.sade.eperusteet.amosaa.resource.ops;
 
+import com.wordnik.swagger.annotations.Api;
 import fi.vm.sade.eperusteet.amosaa.dto.liite.LiiteDto;
 import fi.vm.sade.eperusteet.amosaa.resource.util.CacheControl;
 import fi.vm.sade.eperusteet.amosaa.service.ops.LiiteService;
@@ -47,6 +48,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/opetussuunnitelmat/{opsId}/kuvat")
+@Api("liitetiedostot")
 public class LiitetiedostoController {
 
     private static final int BUFSIZE = 64 * 1024;
