@@ -1,4 +1,7 @@
 namespace Termisto {
+    export const sortAZ = (kasitteet: Array<any>) => {
+        return kasitteet;
+    };
     export const rakenna = (kasitteet: Array<any>) => {
         return kasitteet;
     };

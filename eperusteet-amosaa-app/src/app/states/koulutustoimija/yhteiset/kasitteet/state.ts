@@ -7,23 +7,18 @@ angular.module("app")
     },
     views: {
         "": {
-            controller: ($scope, $rootScope, kasitteet, $log) => {
-                $scope.newKasite = {
-                    placeholder: {termi: "", selitys: "", alaviite: null},
-                    creating: false
-                };
-                $scope.cancel = () => {
-                    $scope.newKasite.creating = false;
-                };
-                $scope.createKasite = () => {
-                    $log.info("creating");
-                    $scope.newKasite.creating = true;
-                };
+            controller: ($scope, $rootScope, kasitteet, $log, Termisto) => {
+                //$scope.newKasite = {};
+                $scope.creatingNewKasite = false;
+                $scope.cancel = () => $scope.creatingNewKasite = false;
+                $scope.createKasite = () => $scope.creatingNewKasite = true;
                 $scope.postKasite = (newKasite) => {
-                    //validate here
-                    $scope.newKasite.creating = false;
-                    kasitteet.post(newKasite).then((res) => {
-                        $scope.kasittet.unshift(res);
+                    if (!newKasite.avain) {
+                        newKasite.avain =  Termisto.makeKey(newKasite);
+                    }
+                    $scope.creatingNewKasite = false;
+                    kasitteet.post(newKasite).then((kasite) => {
+                        $scope.kasitteet.unshift(kasite);
                     })
                 };
                 $scope.edit = EditointikontrollitService.createListRestangular($scope, "kasitteet", kasitteet);
@@ -31,12 +26,6 @@ angular.module("app")
                     ModalConfirm.generalConfirm({ name: kasite.termi }, kasite)
                         .then(kasite => kasite.remove())
                         .then(() => _.remove($scope.kasitteet, kasite));
-
-                $scope.sortOptions = [{value:"-date", text:"Sort by publish date"},
-                    {value:"name", text:"Sort by blog name"},
-                    {value:"author.name", text:"Sort by author"}];
-
-                $scope.sortOrder = $scope.sortOptions[0].value;
 
             }
 
