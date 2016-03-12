@@ -7,39 +7,33 @@ angular.module("app")
     },
     views: {
         "": {
-            controller: ($scope, $rootScope, kasitteet, $log) => {
-                $scope.newKasite = {
-                    placeholder: {termi: "", selitys: "", alaviite: null},
-                    creating: false
-                };
-                $scope.cancel = () => {
-                    $scope.newKasite.creating = false;
-                };
-                $scope.createKasite = () => {
-                    $log.info("creating");
-                    $scope.newKasite.creating = true;
-                };
-                $scope.postKasite = (newKasite) => {
-                    //validate here
-                    $scope.newKasite.creating = false;
-                    kasitteet.post(newKasite).then((res) => {
-                        $scope.kasittet.unshift(res);
-                    })
-                };
+            controller: ($scope, kasitteet) => {
                 $scope.edit = EditointikontrollitService.createListRestangular($scope, "kasitteet", kasitteet);
                 $scope.remove = (kasite) =>
                     ModalConfirm.generalConfirm({ name: kasite.termi }, kasite)
                         .then(kasite => kasite.remove())
                         .then(() => _.remove($scope.kasitteet, kasite));
 
-                $scope.sortOptions = [{value:"-date", text:"Sort by publish date"},
-                    {value:"name", text:"Sort by blog name"},
-                    {value:"author.name", text:"Sort by author"}];
-
-                $scope.sortOrder = $scope.sortOptions[0].value;
+                $scope.sortByAlaviite = (order) => {
+                    $scope.kasitteet = Termisto.sort($scope.kasitteet, order);
+                };
+                $scope.creatingNewKasite = false;
+                $scope.setCreationState = (val) => $scope.creatingNewKasite = val;
+            }
+        },
+        "uusi_kasite_row": {
+            controller: ($scope, kasitteet) => {
+                $scope.cancel = () => $scope.setCreationState(false);
+                $scope.createKasite = () => $scope.setCreationState(true);
+                $scope.postKasite = (newKasite) => {
+                    $scope.setCreationState(false);
+                    Termisto.post(kasitteet, newKasite)
+                        .then((res) => {
+                            $scope.kasitteet.unshift(res);
+                            $scope.newKasite = {};
+                        })
+                };
 
             }
-
-
         }
 }}));

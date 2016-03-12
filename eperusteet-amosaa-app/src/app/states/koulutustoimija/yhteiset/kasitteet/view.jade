@@ -16,46 +16,23 @@ div.kasitteet
         thead
           tr
             th
-              a(href="", ng-click="vaihdaJarjestys('termi')")
+              a(href="", ng-click="sortBy = 'termi'; sortReverse = !sortReverse")
                 span(kaanna="'termi'")
-                span(ng-show="jarjestys==='termi'")=" "
-                span.glyphicon.glyphicon-sort-by-alphabet-alt(ng-show="jarjestysKaanteinen")
-                span.glyphicon.glyphicon-sort-by-alphabet(ng-show="!jarjestysKaanteinen")
+                span(ng-show="sortBy ==='termi'")=" "
+                  span.glyphicon.glyphicon-sort-by-alphabet-alt(ng-show="sortReverse")
+                  span.glyphicon.glyphicon-sort-by-alphabet(ng-show="!sortReverse")
             th
               a(href="")
                 span(kaanna="'selitys'")
             th
-              a(href="", ng-click="vaihdaJarjestys('alaviite')")
+              a(href="", ng-click="sortBy = 'alaviite'; sortReverse = !sortReverse; sortByAlaviite(sortReverse)")
                 span(kaanna="'alaviite'")
-                span(ng-show="jarjestys==='alaviite'")=" "
-                span.glyphicon.glyphicon-sort(ng-show="jarjestysKaanteinen")
-                span.glyphicon.glyphicon-sort(ng-show="!jarjestysKaanteinen")
+                span(ng-show="sortBy ==='alaviite'")=" "
+                  span.glyphicon.glyphicon-sort
             th
         tbody
-          tr.kasite-placeholder-row(ng-show="!$$ekEditing")
-            td.kasite-placeholder-row(width="20%")
-              div(ng-show="newKasite.creating")
-                input.form-control(slocalized ng-model="newKasite.termi" type="text" required=true)
-              div(ng-if="!newKasite.creating")
-                i(ng-bind-html="'lisää termi...' | kaanna")
-            td
-              div(ng-show="newKasite.creating")
-                div.form-control.ckeditor(ckeditor ng-model="newKasite.selitys" slocalized layout="normal")
-              div(ng-if="!newKasite.creating")
-                i(ng-bind-html="'lisää selitys...' | kaanna")
-            td(width="20px")
-              span.info(ng-if="!newKasite.creating")
-                ohje(teksti="kasite-alaviite-ohje" otsikko="alaviite-ohje-otsikko" suunta="top")
-              div(ng-show="$$ekEditing && $$ekEditingIndex === $index")
-                input.form-control.alaviite(type="checkbox" checked="true" ng-model="newKasite.alaviite")
-            td(width="90px")
-              span(ng-if="!newKasite.creating")
-                +addButtonSmall("createKasite()")
-              span.pull-right(ng-if="newKasite.creating")
-                +cancelButtonSmall("cancel()")
-              span.pull-right(ng-if="newKasite.creating")
-                +saveButtonSmall("postKasite()")
-          tr(ng-show="!newKasite.creating" ng-repeat="kasite in kasitteet | filter: hakuSana")
+          tr.kasite-placeholder-row(ui-view="uusi_kasite_row")
+          tr(ng-show="!creatingNewKasite" ng-repeat="kasite in kasitteet | filter: hakuSana | orderBy:sortType:sortReverse")
             td(width="20%")
               div(ng-show="$$ekEditing && $$ekEditingIndex === $index")
                 input.form-control(slocalized ng-model="kasite.termi" type="text" required=true)
@@ -66,11 +43,12 @@ div.kasitteet
                 div.form-control.ckeditor(ckeditor ng-model="kasite.selitys" slocalized layout="normal")
               div(ng-show="!$$ekEditing || $$ekEditingIndex !== $index")
                 p(ng-bind-html="kasite.selitys | kaanna")
-            td(width="20px")
-              div(ng-show="$$ekEditing && $$ekEditingIndex === $index")
-                input.form-control.alaviite(type="checkbox" checked="true" ng-model="kasite.alaviite")
+            td(width="90px")
+              div.checkbox.abc-checkbox.alaviite(ng-show="$$ekEditing && $$ekEditingIndex === $index")
+                input.styled(type="checkbox" checked="true" ng-model="kasite.alaviite")
+                label
               div(ng-show="!$$ekEditing || $$ekEditingIndex !== $index")
-                span.text-center(ng-if="!kasite.alaviite")
+                span.text-center(ng-if="kasite.alaviite")
                   +icon("check")
             td(width="90px")
               span.pull-right

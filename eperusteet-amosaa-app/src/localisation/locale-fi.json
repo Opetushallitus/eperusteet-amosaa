@@ -1,10 +1,12 @@
 {
+  "alaviite-ohje-otsikko":       "Käsite alaviite",
   "apuotsikko":                  "Apuotsikko",
   "enemman":                     "Enemman",
   "esikatselu":                  "Esikatselu",
   "hae":                         "Hae",
   "hae-peruste":                 "Hae peruste",
   "haku-nimi":                   "Hae nimistä",
+  "kasite-alaviite-ohje":        "Lisää käsite alaviiteksi PDF:llä",
   "kasitteet":                   "Käsitteet",
   "kirjoita-kommentti":          "Kirjoita kommentti",
   "lisaa-sisaltoa":              "Lisää sisältöä",

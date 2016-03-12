@@ -25,6 +25,7 @@ import lombok.Setter;
 public class TermiDto {
     private Long id;
     private String avain;
+    private Boolean alaviite;
     private LokalisoituTekstiDto termi;
     private LokalisoituTekstiDto selitys;
 }
