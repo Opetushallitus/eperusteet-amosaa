@@ -261,4 +261,13 @@ $yhteiset-top-vertical-margin: 10px;
             }
         }
     }
+    .dokumentti {
+        margin-top: $yhteiset-top-vertical-margin;
+        h2 {
+            margin-top: 0;
+            span {
+                margin-top: -8px;
+            }
+        }
+    }
 }

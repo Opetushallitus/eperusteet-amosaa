@@ -17,10 +17,6 @@ div.yhteiset-nakyma
               span.glyphicon.glyphicon-sunglasses
               span=" "
               span(kaanna="'esikatselu'")
-            button.btn.btn-default(ng-click="console.log('moi')")
-              span.fa.fa-file-pdf-o
-              span=" "
-              span(kaanna="'pdf'")
 
 
   div.row
@@ -28,13 +24,15 @@ div.yhteiset-nakyma
       div.tabit
         ul.nav.nav-tabs
           li(ui-sref-active="active")
-            a(ui-sref=".sisalto" kaanna="sisalto")
+            a(ui-sref=".sisalto" kaanna="'sisalto'")
           li(ui-sref-active="active")
-            a(ui-sref=".kasitteet" kaanna="kasitteet")
+            a(ui-sref=".kasitteet" kaanna="'kasitteet'")
           li(ui-sref-active="active")
-            a(ui-sref=".poistetut" kaanna="poistetut")
+            a(ui-sref=".poistetut" kaanna="'poistetut'")
           li(ui-sref-active="active")
-            a(ui-sref=".oikeudet" kaanna="oikeudet")
+            a(ui-sref=".oikeudet" kaanna="'oikeudet'")
+          li(ui-sref-active="active")
+            a(ui-sref=".dokumentti" kaanna="'dokumentti'")
 
   div.row
     div.col-xs-12

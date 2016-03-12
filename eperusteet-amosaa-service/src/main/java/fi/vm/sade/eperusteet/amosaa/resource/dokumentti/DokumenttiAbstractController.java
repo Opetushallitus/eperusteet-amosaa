@@ -20,11 +20,13 @@ import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiTila;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.amosaa.resource.dokumentti.util.DokumenttiTyyppi;
+import fi.vm.sade.eperusteet.amosaa.resource.util.CacheControl;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiService;
 import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -75,8 +77,9 @@ public interface DokumenttiAbstractController {
         return new ResponseEntity<>(dokumenttiDto, status);
     }
 
-    @RequestMapping(method = RequestMethod.GET, produces = "application/pdf")
-    default ResponseEntity<Object> get(
+    @RequestMapping(method = RequestMethod.GET)
+    @CacheControl(age = CacheControl.ONE_YEAR, nonpublic = false)
+    default ResponseEntity<byte[]> get(
             @PathVariable("baseId") final Long baseId,
             @PathVariable("id") final Long id,
             @RequestParam(value = "kieli", defaultValue = "fi") final String kieli) {
@@ -87,7 +90,9 @@ public interface DokumenttiAbstractController {
         }
 
         HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(new MediaType("application", "pdf"));
         headers.set("Content-disposition", "inline; filename=\"" + id + ".pdf\"");
+        headers.setContentLength(pdfdata.length);
 
         return new ResponseEntity<>(pdfdata, headers, HttpStatus.OK);
     }

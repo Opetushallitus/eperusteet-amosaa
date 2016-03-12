@@ -346,6 +346,7 @@ create table dokumentti (
     aloitusaika timestamp without time zone not null,
     valmistumisaika timestamp without time zone,
     tila character varying not null,
+    edistyminen character varying not null,
     dokumenttidata oid,
     virhekoodi TEXT
     CHECK((yhteiset_id IS NULL AND opetussuunnitelma_id IS NOT NULL)

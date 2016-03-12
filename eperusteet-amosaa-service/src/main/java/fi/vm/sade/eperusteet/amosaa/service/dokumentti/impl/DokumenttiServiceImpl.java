@@ -105,6 +105,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
         dto.setAloitusaika(new Date());
         dto.setLuoja(SecurityUtil.getAuthenticatedPrincipal().getName());
         dto.setTila(DokumenttiTila.LUODAAN);
+        dto.setEdistyminen("luonti aloitettu");
         dokumenttiRepository.save(mapper.map(dto, Dokumentti.class));
     }
 
@@ -122,6 +123,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
                 LOG.info("Ops is not implemented yet");
             }
             dokumentti.setTila(DokumenttiTila.VALMIS);
+            dto.setEdistyminen("luonti valmis");
             dokumentti.setValmistumisaika(new Date());
             dokumentti.setVirhekoodi("");
 

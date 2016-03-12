@@ -1,0 +1,67 @@
+div.dokumentti
+  div.row
+    div.col-xs-12
+      h2(kaanna="'dokumentti'")
+
+  div.row
+    dic.col-xs-12
+      h2(kaanna="'asetukset'")
+      p
+        span Aseta opetussuunnitelman / yhteisen dokumenttiin liittyvät tiedot
+      form.form-horizontal
+        div.form-group
+          label.col-xs-2(for="kansi")
+            span(kaanna="'kansilehti'")
+            span=":"
+          div.col-xs-10
+            input(type="file", id="kansi")
+        div.form-group
+          label.col-xs-2(for="header")
+            span(kaanna="'ylatunniste'")
+            span=":"
+          div.col-xs-10
+            input(type="file", id="header")
+        div.form-group
+          label.col-xs-2(for="header")
+            span(kaanna="'alatunniste'")
+            span=":"
+          div.col-xs-10
+            input(type="file", id="footer")
+        div.form-group
+          div.col-xs-2
+          div.col-xs-10
+            button.btn.btn-default
+              span.fa.fa-floppy-o
+              span=" "
+              span(kaanna="'tallenna'")
+        hr
+        button.btn.btn-primary
+          span.fa.fa-cogs
+          span=" "
+          span(kaanna="'luo-uusi-dokumentti'")
+
+        p
+          span(kaanna="'luodaan'")
+        div.progress
+          div.progress-bar(style="width:70%") 70% Lisätään kuvat
+
+        h3(kaanna="'dokumentti'")
+        p tutkinto: Autoasentajan tutkinto
+        p kunta: Kaarinan kaupunki
+        p luotu: 25.3.2016
+
+        button.btn.btn-default
+          span.fa.fa-file-pdf-o
+            span=" "
+            span(kaanna="'lataa'")
+            span=" "
+            span(kaanna="'pdf'")
+
+        span=" "
+
+        button.btn.btn-default
+          span.fa.fa-file-o
+            span=" "
+            span(kaanna="'lataa'")
+            span=" "
+            span(kaanna="'xhtml'")

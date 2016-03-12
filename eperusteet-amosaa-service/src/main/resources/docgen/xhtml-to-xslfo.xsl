@@ -254,8 +254,16 @@
 
     <xsl:template match="body">
         <fo:flow flow-name="xsl-region-body">
-            <!-- Set default font-size -->
-            <xsl:apply-templates select="*|text()" />
+            <xsl:choose>
+                <xsl:when test="*|text()">
+                    <xsl:apply-templates select="*|text()" />
+                </xsl:when>
+                <xsl:otherwise>
+                    <fo:block>
+                        <xsl:text>Content is missing</xsl:text>
+                    </fo:block>
+                </xsl:otherwise>
+            </xsl:choose>
         </fo:flow>
     </xsl:template>
 

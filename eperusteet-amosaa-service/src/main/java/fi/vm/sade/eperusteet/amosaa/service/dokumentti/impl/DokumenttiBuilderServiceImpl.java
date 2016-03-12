@@ -20,7 +20,6 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Yhteiset;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappaleViite;
-import fi.vm.sade.eperusteet.amosaa.domain.teksti.Tekstiosa;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiBuilderService;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.PdfService;
@@ -246,7 +245,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
             throws IOException, SAXException, ParserConfigurationException {
 
         if (docBase.getYhteiset().getTekstit() != null) {
-            addTekstiKappale(docBase, docBase.getYhteiset().getTekstit(), true);
+            addTekstiKappale(docBase, docBase.getYhteiset().getTekstit(), false);
         }
     }
 

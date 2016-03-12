@@ -62,6 +62,8 @@ public class Dokumentti {
     @NotNull
     private DokumenttiTila tila = DokumenttiTila.EI_OLE;
 
+    private String edistyminen;
+
     @Lob
     @Basic(fetch = FetchType.LAZY)
     @Column(name = "dokumenttidata")

@@ -1,17 +1,22 @@
 {
   "anna-nimi":                       "Anna nimi",
+  "asetukset":                       "Asetukset",
   "apuotsikko":                      "Apuotsikko",
+  "dokumentti":                      "Dokumentti",
   "enemman":                         "Enemman",
   "esikatselu":                      "Esikatselu",
+  "lataa":                           "Lataa",
+  "luo-uusi-dokumentti":             "Luo uusi dokumentti",
   "hae":                             "Hae",
   "hae-peruste":                     "Hae peruste",
   "haku-nimi":                       "Hae nimistä",
   "hakutuloksia":                    "Hakutuloksia",
+  "kansilehti":                      "Kansilehti",
   "kasitteet":                       "Käsitteet",
   "kirjoita-kommentteja":            "Suodata...",
-  "kirjoita-kommentti":              "Kirjoita kommentti",
   "kirjoita-kommentti":              "Kirjoita kommentti...",
   "lisaa-sisaltoa":                  "Lisää sisältöä",
+  "luodaan":                         "Luodaan",
   "muokattu":                        "Muokattu",
   "muokkaaja":                       "Muokkaaja",
   "muokkaajaa-ei-loytynyt":          "Muokkaajaa ei löytynyt",
@@ -39,5 +44,6 @@
   "vahemman":                        "Vähemmän",
   "versio":                          "Versio",
   "versio-historia":                 "Versiohistoria",
-  "versio-palautettu-onnistuneesti": "Versio palautettiin onnistuneesti"
+  "versio-palautettu-onnistuneesti": "Versio palautettiin onnistuneesti",
+  "xhtml":                           "XHTML"
 }
