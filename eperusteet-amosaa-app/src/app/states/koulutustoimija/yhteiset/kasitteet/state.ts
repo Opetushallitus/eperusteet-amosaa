@@ -12,6 +12,9 @@ angular.module("app")
                     placeholder: {termi: "", selitys: "", alaviite: null},
                     creating: false
                 };
+                $scope.cancel = () => {
+                    $scope.newKasite.creating = false;
+                };
                 $scope.createKasite = () => {
                     $log.info("creating");
                     $scope.newKasite.creating = true;
@@ -29,7 +32,14 @@ angular.module("app")
                         .then(kasite => kasite.remove())
                         .then(() => _.remove($scope.kasitteet, kasite));
 
+                $scope.sortOptions = [{value:"-date", text:"Sort by publish date"},
+                    {value:"name", text:"Sort by blog name"},
+                    {value:"author.name", text:"Sort by author"}];
+
+                $scope.sortOrder = $scope.sortOptions[0].value;
+
             }
+
 
         }
 }}));

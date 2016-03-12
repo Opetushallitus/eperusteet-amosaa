@@ -18,12 +18,16 @@ mixin editButton(actionEdit)
 
 
 mixin addButtonSmall(actionEdit)
-  button.btn.btn-primary.btn-sm.muokkaa(ng-click=actionEdit)&attributes(attributes)
+  button.btn.btn-primary.btn-sm.muokkaa.btn-small-margin-left(ng-click=actionEdit)&attributes(attributes)
     +icon("plus-circle")
 
 mixin saveButtonSmall(actionEdit)
   button.btn.btn-primary.btn-sm.muokkaa(ng-click=actionEdit)&attributes(attributes)
     +icon("save")
+
+mixin cancelButtonSmall(actionEdit)
+  button.btn.btn-warning.btn-sm.muokkaa.btn-small-margin-left(ng-click=actionEdit)&attributes(attributes)
+    +icon("close")
 
 
 mixin historia(versio, uusin, actionEdit, actionRevisions, actionPalauta, restoreNew)

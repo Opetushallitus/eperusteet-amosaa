@@ -5,7 +5,7 @@ div.kasitteet
         ohje(teksti="this is a test", otsikko="test title", suunta="top")
     div.col-xs-6
       div.input-group.input-group-sm
-        input.form-control(type="text", placeholder="{{'haku-termi' | kaanna}}", ng-model="termi" ng-change="paivita()")
+        input.form-control(type="text", placeholder="{{'haku-sana' | kaanna}}", ng-model="hakuSana")
         span.input-group-btn
           button.btn.btn-default(ng-click="nimi = ''")
             i.fa.fa-times
@@ -16,33 +16,46 @@ div.kasitteet
         thead
           tr
             th
-              a(href="", ng-click="vaihdaJarjestys('Termi')")
+              a(href="", ng-click="vaihdaJarjestys('termi')")
                 span(kaanna="'termi'")
                 span(ng-show="jarjestys==='termi'")=" "
                 span.glyphicon.glyphicon-sort-by-alphabet-alt(ng-show="jarjestysKaanteinen")
                 span.glyphicon.glyphicon-sort-by-alphabet(ng-show="!jarjestysKaanteinen")
             th
-              a(href="", ng-click="vaihdaJarjestys('Selitys')")
+              a(href="")
                 span(kaanna="'selitys'")
-                span(ng-show="jarjestys==='selitys'")=" "
-                span.glyphicon.glyphicon-sort-by-alphabet-alt(ng-show="jarjestysKaanteinen")
-                span.glyphicon.glyphicon-sort-by-alphabet(ng-show="!jarjestysKaanteinen")
+            th
+              a(href="", ng-click="vaihdaJarjestys('alaviite')")
+                span(kaanna="'alaviite'")
+                span(ng-show="jarjestys==='alaviite'")=" "
+                span.glyphicon.glyphicon-sort(ng-show="jarjestysKaanteinen")
+                span.glyphicon.glyphicon-sort(ng-show="!jarjestysKaanteinen")
             th
         tbody
           tr.kasite-placeholder-row(ng-show="!$$ekEditing")
             td.kasite-placeholder-row(width="20%")
               div(ng-show="newKasite.creating")
                 input.form-control(slocalized ng-model="newKasite.termi" type="text" required=true)
+              div(ng-if="!newKasite.creating")
+                i(ng-bind-html="'lisää termi...' | kaanna")
             td
               div(ng-show="newKasite.creating")
                 div.form-control.ckeditor(ckeditor ng-model="newKasite.selitys" slocalized layout="normal")
-            td(width="90px", ng-if="!newKasite.creating")
-              span.pull-right
+              div(ng-if="!newKasite.creating")
+                i(ng-bind-html="'lisää selitys...' | kaanna")
+            td(width="20px")
+              span.info(ng-if="!newKasite.creating")
+                ohje(teksti="kasite-alaviite-ohje" otsikko="alaviite-ohje-otsikko" suunta="top")
+              div(ng-show="$$ekEditing && $$ekEditingIndex === $index")
+                input.form-control.alaviite(type="checkbox" checked="true" ng-model="newKasite.alaviite")
+            td(width="90px")
+              span(ng-if="!newKasite.creating")
                 +addButtonSmall("createKasite()")
-            td(width="90px", ng-if="newKasite.creating")
-              span.pull-right
+              span.pull-right(ng-if="newKasite.creating")
+                +cancelButtonSmall("cancel()")
+              span.pull-right(ng-if="newKasite.creating")
                 +saveButtonSmall("postKasite()")
-          tr(ng-repeat="kasite in kasitteet")
+          tr(ng-show="!newKasite.creating" ng-repeat="kasite in kasitteet | filter: hakuSana")
             td(width="20%")
               div(ng-show="$$ekEditing && $$ekEditingIndex === $index")
                 input.form-control(slocalized ng-model="kasite.termi" type="text" required=true)
@@ -53,6 +66,12 @@ div.kasitteet
                 div.form-control.ckeditor(ckeditor ng-model="kasite.selitys" slocalized layout="normal")
               div(ng-show="!$$ekEditing || $$ekEditingIndex !== $index")
                 p(ng-bind-html="kasite.selitys | kaanna")
+            td(width="20px")
+              div(ng-show="$$ekEditing && $$ekEditingIndex === $index")
+                input.form-control.alaviite(type="checkbox" checked="true" ng-model="kasite.alaviite")
+              div(ng-show="!$$ekEditing || $$ekEditingIndex !== $index")
+                span.text-center(ng-if="!kasite.alaviite")
+                  +icon("check")
             td(width="90px")
               span.pull-right
                 +removeButtonSmall("remove(kasite)")
