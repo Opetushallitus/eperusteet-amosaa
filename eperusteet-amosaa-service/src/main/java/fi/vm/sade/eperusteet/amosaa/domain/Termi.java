@@ -54,6 +54,9 @@ public class Termi implements Serializable {
     @Column(name = "avain")
     private String avain;
 
+    @Column(name = "alaviite")
+    private Boolean alaviite;
+
     @ValidHtml(whitelist = ValidHtml.WhitelistType.MINIMAL)
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
