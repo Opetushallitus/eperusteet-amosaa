@@ -2,6 +2,9 @@ angular.module("app")
 .config($stateProvider => $stateProvider
 .state("root.koulutustoimija.yhteiset.oikeudet", {
     url: "/oikeudet",
+    ncyBreadcrumb: {
+        label: "{{'oikeudet' | kaanna}}"
+    },
     resolve: {
         oikeudet: (yhteiset) => yhteiset.all("oikeudet").getList(),
     },

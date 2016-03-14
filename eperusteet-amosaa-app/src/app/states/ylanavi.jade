@@ -1,18 +1,7 @@
 div.ylanavi(sticky, className="ylanavi-sticky")
   div.row
     div.col-xs-8
-      ol.breadcrumb
-        li
-          a(ui-sref="root")
-            span.glyphicon.glyphicon-home
-        li
-          a(ui-sref="root.koulutustoimija") koulutustoimija
-        li
-          a(href="") 42
-        li
-          a(href="") ops
-        li
-          a(href="") 1
+      div(ncy-breadcrumb)
 
     div.col-xs-4
       div.pull-right

@@ -2,6 +2,9 @@ angular.module("app")
 .config($stateProvider => $stateProvider
     .state("root.koulutustoimija.yhteiset.sisalto.tiedot", {
         url: "/tiedot?versio",
+        ncyBreadcrumb: {
+            label: "{{'tiedot' | kaanna}}"
+        },
         resolve: {
             historia: yhteiset => yhteiset.getList("versiot"),
             versioId: $stateParams => $stateParams.versio,

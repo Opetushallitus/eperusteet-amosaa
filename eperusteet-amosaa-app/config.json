@@ -23,6 +23,7 @@
     "./node_modules/angular-spinner/angular-spinner.js",
     "./node_modules/d3/d3.js",
     "./node_modules/moment/moment.js",
-    "./node_modules/jquery-sticky/jquery.sticky.js"
+    "./node_modules/jquery-sticky/jquery.sticky.js",
+    "./node_modules/angular-breadcrumb/dist/angular-breadcrumb.js"
   ]
 }

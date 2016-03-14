@@ -10,7 +10,6 @@ $boxtable-star-color: #bebfc1;
 
 table.boxtable {
     thead {
-
         tr {
             th {
                 border-width: 0;
@@ -18,16 +17,12 @@ table.boxtable {
                 padding-left: 0;
                 padding-right: 0;
 
-                // Remove underlines
                 a {
                     cursor: pointer;
-                    &:link, &:visited, &:hover, &:active {
-                        text-decoration: none;
-                    }
+                    text-decoration: none;
                     span {
-                        &:link, &:visited, &:hover, &:active {
-                            text-decoration: none;
-                        }
+                        text-transform: uppercase;
+                        text-decoration: none;
                     }
                 }
             }
@@ -35,9 +30,6 @@ table.boxtable {
     }
     tbody {
         tr {
-            &:hover {
-                
-            }
             td {
                 border-width: 0;
 
