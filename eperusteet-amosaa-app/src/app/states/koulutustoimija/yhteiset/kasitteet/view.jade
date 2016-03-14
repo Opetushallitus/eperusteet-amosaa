@@ -32,7 +32,8 @@ div.kasitteet
             th
         tbody
           tr.kasite-placeholder-row(ui-view="uusi_kasite_row")
-          tr(ng-show="!creatingNewKasite" ng-repeat="kasite in kasitteet | filter: hakuSana | orderBy:sortType:sortReverse")
+          tr(ng-show="!creatingNewKasite" ng-repeat="kasite in kasitteet" +
+          "| limitTo:alkioitaSivulla:(sivu - 1) * alkioitaSivulla | filter: hakuSana | orderBy:sortType:sortReverse")
             td(width="20%")
               div(ng-show="$$ekEditing && $$ekEditingIndex === $index")
                 input.form-control(slocalized ng-model="kasite.termi" type="text" required=true)
