@@ -26,7 +26,6 @@
   "dependencies": {
     "angular": "1.4.7",
     "angular-animate": "1.4.8",
-    "angular-breadcrumb": "0.4.1",
     "angular-cache": "4.4.2",
     "angular-elastic": "2.5.0",
     "angular-i18n": "1.4.8",

@@ -2,9 +2,6 @@ angular.module("app")
 .config($stateProvider => $stateProvider
 .state("root", {
     url: "/:lang",
-    ncyBreadcrumb: {
-        skip: true
-    },
     resolve: {
         kayttajanKoulutustoimijat: Api => Api.all("kayttaja/koulutustoimijat").getList(),
         kayttaja: Api => Api.one("kayttaja").get(),

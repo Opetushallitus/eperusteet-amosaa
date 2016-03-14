@@ -7,8 +7,7 @@ angular.module("app", [
     "ngAnimate",
     "ngSanitize",
     "ui.bootstrap",
-    "angular-loading-bar",
-    "ncy-angular-breadcrumb"
+    "angular-loading-bar"
 ])
 
 // Route configuration
@@ -89,12 +88,6 @@ angular.module("app", [
 .config(["usSpinnerConfigProvider", usSpinnerConfigProvider => {
     usSpinnerConfigProvider.setDefaults({color: "#29d", radius: 30, width: 8, length: 16});
 }])
-
-.config($breadcrumbProvider => {
-    $breadcrumbProvider.setOptions({
-        template: 'bootstrap3'
-    });
-})
 
 .run(($rootScope, $log, $urlMatcherFactory, $state) => {
     $rootScope.error = null;

@@ -2,9 +2,6 @@ angular.module("app")
 .config($stateProvider => $stateProvider
 .state("root.koulutustoimija.detail", {
     url: "",
-    ncyBreadcrumb: {
-        label: '{{"koulutustoimija" | kaanna}}'
-    },
     views: {
         "": {
             controller: ($scope, kayttajanKoulutustoimijat, koulutustoimija) => {

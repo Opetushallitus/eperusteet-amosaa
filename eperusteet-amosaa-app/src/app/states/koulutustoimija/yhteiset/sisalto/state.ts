@@ -2,9 +2,6 @@ angular.module("app")
 .config($stateProvider => $stateProvider
 .state("root.koulutustoimija.yhteiset.sisalto", {
     url: "/sisalto",
-    ncyBreadcrumb: {
-        label: "{{'sisalto' | kaanna}}"
-    },
     resolve: {
         sivunavi: (otsikot, yhteiset) => Tekstikappaleet.rakenna(otsikot, yhteiset._tekstit)
     },
