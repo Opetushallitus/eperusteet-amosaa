@@ -9,7 +9,7 @@ td
   div(ng-show="!creatingNewKasite" ng-click="createKasite()")
     i(ng-bind-html="'lisää selitys...' | kaanna")
 td(width="90px")
-  span.info(ng-if="!creatingNewKasite")
+  span.info(ng-if="!creatingNewKasite" ng-click="createKasite()")
     ohje(teksti="kasite-alaviite-ohje" otsikko="alaviite-ohje-otsikko" suunta="top")
   div.checkbox.abc-checkbox.alaviite(ng-show="creatingNewKasite")
     input.styled.abc-checkbox-danger(type="checkbox" checked="true" ng-model="newKasite.alaviite")
