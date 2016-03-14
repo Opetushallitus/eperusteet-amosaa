@@ -17,6 +17,7 @@
 package fi.vm.sade.eperusteet.amosaa.dto.dokumentti;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiEdistyminen;
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiTila;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import lombok.Getter;
@@ -40,6 +41,6 @@ public class DokumenttiDto {
     private Date aloitusaika;
     private Date valmistumisaika;
     private DokumenttiTila tila = DokumenttiTila.EI_OLE;
-    private String edistyminen = "";
+    private DokumenttiEdistyminen edistyminen = DokumenttiEdistyminen.TUNTEMATON;
     private String virhekoodi = "";
 }

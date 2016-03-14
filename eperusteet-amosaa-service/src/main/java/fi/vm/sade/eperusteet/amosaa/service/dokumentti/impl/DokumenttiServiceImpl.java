@@ -33,7 +33,6 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,9 +72,9 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 
         if (dokumentti != null) {
             return mapper.map(dokumentti, DokumenttiDto.class);
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     @Override
@@ -105,7 +104,6 @@ public class DokumenttiServiceImpl implements DokumenttiService {
         dto.setAloitusaika(new Date());
         dto.setLuoja(SecurityUtil.getAuthenticatedPrincipal().getName());
         dto.setTila(DokumenttiTila.LUODAAN);
-        dto.setEdistyminen("luonti aloitettu");
         dokumenttiRepository.save(mapper.map(dto, Dokumentti.class));
     }
 
@@ -118,12 +116,11 @@ public class DokumenttiServiceImpl implements DokumenttiService {
             // Luodaan pdf
             if (dokumentti.getYhteisetId() != null) {
                 Yhteiset yhteiset = yhteisetRepository.findOne(dokumentti.getYhteisetId());
-                dokumentti.setData(builder.generatePdf(yhteiset, dokumentti.getKieli()));
+                dokumentti.setData(builder.generatePdf(yhteiset, dokumentti, dokumentti.getKieli()));
             } else if (dokumentti.getOpsId() != null) {
                 LOG.info("Ops is not implemented yet");
             }
             dokumentti.setTila(DokumenttiTila.VALMIS);
-            dto.setEdistyminen("luonti valmis");
             dokumentti.setValmistumisaika(new Date());
             dokumentti.setVirhekoodi("");
 

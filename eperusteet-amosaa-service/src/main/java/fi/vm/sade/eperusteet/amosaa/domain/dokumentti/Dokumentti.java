@@ -62,7 +62,9 @@ public class Dokumentti {
     @NotNull
     private DokumenttiTila tila = DokumenttiTila.EI_OLE;
 
-    private String edistyminen;
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private DokumenttiEdistyminen edistyminen = DokumenttiEdistyminen.TUNTEMATON;
 
     @Lob
     @Basic(fetch = FetchType.LAZY)

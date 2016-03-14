@@ -16,11 +16,14 @@
 
 package fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl;
 
+import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.Dokumentti;
+import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiEdistyminen;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Yhteiset;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappaleViite;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
+import fi.vm.sade.eperusteet.amosaa.repository.dokumentti.DokumenttiRepository;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiBuilderService;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.PdfService;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.CharapterNumberGenerator;
@@ -81,10 +84,13 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
     private OrganisaatioService organisaatioService;
 
     @Autowired
+    private DokumenttiRepository dokumenttiRepository;
+
+    @Autowired
     private PdfService pdfService;
 
     @Override
-    public byte[] generatePdf(Yhteiset yhteiset, Kieli kieli)
+    public byte[] generatePdf(Yhteiset yhteiset, Dokumentti dokumentti, Kieli kieli)
             throws ParserConfigurationException, IOException, SAXException, TransformerException {
 
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -116,19 +122,31 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
         docBase.setYhteiset(yhteiset);
         docBase.setGenerator(new CharapterNumberGenerator());
         docBase.setKieli(kieli);
-
+        docBase.setDokumentti(dokumentti);
 
         // Kansilehti & Infosivu
         addMetaPages(docBase);
 
+        docBase.getDokumentti().setEdistyminen(DokumenttiEdistyminen.TEKSTIKAPPALEET);
+        dokumenttiRepository.saveAndFlush(docBase.getDokumentti());
+
         // Sisältöelementit
         addYhteisetOsuudet(docBase);
+
+        docBase.getDokumentti().setEdistyminen(DokumenttiEdistyminen.VIITTEET);
+        dokumenttiRepository.saveAndFlush(docBase.getDokumentti());
 
         // Alaviitteet
         buildFootnotes(docBase);
 
+        docBase.getDokumentti().setEdistyminen(DokumenttiEdistyminen.KUVAT);
+        dokumenttiRepository.saveAndFlush(docBase.getDokumentti());
+
         // Kuvat
         buildImages(docBase);
+
+        docBase.getDokumentti().setEdistyminen(DokumenttiEdistyminen.TYYLIT);
+        dokumenttiRepository.saveAndFlush(docBase.getDokumentti());
 
         // PDF luonti XHTML dokumentista
         return pdfService.xhtml2pdf(doc);
@@ -288,7 +306,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
     }
 
     private void buildFootnotes(DokumenttiBase docBase) {
-        XPathFactory xPathfactory = XPathFactory.newInstance();
+        /*XPathFactory xPathfactory = XPathFactory.newInstance();
         XPath xpath = xPathfactory.newXPath();
         try {
             XPathExpression expression = xpath.compile("//abbr");
@@ -302,11 +320,11 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
                     String avain = node.getAttributes().getNamedItem("data-viite").getNodeValue();
 
                     if (docBase.getYhteiset() != null && docBase.getYhteiset().getId() != null) {
-                        //TermiDto termiDto = termistoService.getTermi(docBase.getOps().getId(), avain);
+                        TermiDto termiDto = termistoService.getTermi(docBase.getOps().getId(), avain);
 
                         // todo: perusteen viite
-                        //if (termiDto == null) {}
-                        /*if (termiDto != null && termiDto.isAlaviite() && termiDto.getSelitys() != null) {
+                        if (termiDto == null) {}
+                        if (termiDto != null && termiDto.isAlaviite() && termiDto.getSelitys() != null) {
                             element.setAttribute("number", String.valueOf(noteNumber));
 
                             LokalisoituTekstiDto tekstiDto = termiDto.getSelitys();
@@ -315,14 +333,13 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
                                     .replaceAll("<[^>]+>", ""); // Tällä hetkellä tuetaan vain tekstiä
                             element.setAttribute("text", selitys);
                             noteNumber++;
-                        }*/
+                        }
                     }
                 }
             }
-
         } catch (XPathExpressionException e) {
             LOG.error(e.getLocalizedMessage());
-        }
+        }*/
     }
 
     private void buildImages(DokumenttiBase docBase) {
@@ -380,18 +397,6 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
 
         } catch (XPathExpressionException | IOException | NullPointerException e) {
             LOG.error(e.getLocalizedMessage());
-        }
-    }
-
-    private void addLokalisoituteksti(DokumenttiBase docBase, LokalisoituTeksti lTeksti, String tagi) {
-        if (lTeksti != null && lTeksti.getTeksti() != null && lTeksti.getTeksti().get(docBase.getKieli()) != null) {
-            String teksti = lTeksti.getTeksti().get(docBase.getKieli());
-            teksti = "<" + tagi + ">" + unescapeHtml5(teksti) + "</" + tagi + ">";
-
-            Document tempDoc = new W3CDom().fromJsoup(Jsoup.parseBodyFragment(teksti));
-            Node node = tempDoc.getDocumentElement().getChildNodes().item(1).getFirstChild();
-
-            docBase.getBodyElement().appendChild(docBase.getDocument().importNode(node, true));
         }
     }
 

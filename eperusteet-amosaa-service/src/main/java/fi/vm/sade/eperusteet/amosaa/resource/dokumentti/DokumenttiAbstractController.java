@@ -44,8 +44,8 @@ public interface DokumenttiAbstractController {
 
     @RequestMapping(method = RequestMethod.POST)
     default ResponseEntity<DokumenttiDto> create(
-            @PathVariable("baseId") final Long baseId,
-            @PathVariable("id") final Long id,
+            @PathVariable final Long baseId,
+            @PathVariable final Long id,
             @RequestParam(value = "kieli", defaultValue = "fi") final String kieli) throws DokumenttiException {
         DokumenttiDto dokumenttiDto = service().getDto(id, tyyppi(), Kieli.of(kieli));
 
@@ -80,8 +80,8 @@ public interface DokumenttiAbstractController {
     @RequestMapping(method = RequestMethod.GET)
     @CacheControl(age = CacheControl.ONE_YEAR, nonpublic = false)
     default ResponseEntity<byte[]> get(
-            @PathVariable("baseId") final Long baseId,
-            @PathVariable("id") final Long id,
+            @PathVariable final Long baseId,
+            @PathVariable final Long id,
             @RequestParam(value = "kieli", defaultValue = "fi") final String kieli) {
         byte[] pdfdata = service().get(id, tyyppi(), Kieli.of(kieli));
 
@@ -98,8 +98,8 @@ public interface DokumenttiAbstractController {
     }
 
     @RequestMapping(value = "/tila", method = RequestMethod.GET)
-    default ResponseEntity<DokumenttiDto> query(@PathVariable("baseId") final Long baseId,
-                                                @PathVariable("id") final Long id,
+    default ResponseEntity<DokumenttiDto> query(@PathVariable final Long baseId,
+                                                @PathVariable final Long id,
                                                 @RequestParam(value = "kieli", defaultValue = "fi") final String kieli) {
         DokumenttiDto dto = service().getDto(id, tyyppi(), Kieli.of(kieli));
         if (dto == null) {

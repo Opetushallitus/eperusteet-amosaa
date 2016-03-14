@@ -15,6 +15,7 @@
  */
 package fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util;
 
+import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.Dokumentti;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Yhteiset;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import lombok.Getter;
@@ -34,4 +35,5 @@ public class DokumenttiBase {
     Yhteiset yhteiset;
     CharapterNumberGenerator generator;
     Kieli kieli;
+    Dokumentti dokumentti;
 }

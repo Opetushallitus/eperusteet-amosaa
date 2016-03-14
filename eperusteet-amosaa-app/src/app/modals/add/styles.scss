@@ -58,6 +58,7 @@ div.tutkintohaku {
 
 $sisalto-item-height: 58px;
 $sisalto-item-border: 1px;
+$sisalto-item-background: #f3fafd;
 $sisalto-item-text: #337ab7;
 $sisalto-item-text-padding: 10px;
 $sisalto-item-icon-size: 30px;
@@ -72,13 +73,13 @@ $sisalto-item-link-hover-color: #125572;
             height: $sisalto-item-height;
             cursor: pointer;
             border: $sisalto-item-border solid $sisalto-item-color;
-            background: #fff;
+            background: white;
 
             &:hover {
+                background: $sisalto-item-background;
                 border: $sisalto-item-border solid $sisalto-item-hover-color;
 
                 .sisalto-text {
-                    color: red;
                     a {
                         color: $sisalto-item-link-hover-color;
                     }
