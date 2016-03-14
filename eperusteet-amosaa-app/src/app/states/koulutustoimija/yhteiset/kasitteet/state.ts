@@ -22,6 +22,7 @@ angular.module("app")
                 $scope.addKasiteToList = (kasite) => {
                     $scope.kasitteet.unshift(kasite);
                 }
+                $scope.alkioitaSivulla = 20;
             }
         },
         "uusi_kasite_row": {
