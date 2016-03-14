@@ -1,35 +1,50 @@
+interface LocalisedString {
+    fi?: String,
+    sv?: String
+}
+
+interface Kasite {
+    avain: String,
+    termi: LocalisedString,
+    selitys: LocalisedString,
+    alaviite?: Boolean
+}
+
 namespace Termisto {
     const termistoViestit= {
-        serverError: ()=> KaannaService.kaanna("palvelin-virhe"),
+        serverError: (err:any)=> KaannaService.kaanna("palvelin-virhe") + " " + err.toString(),
         validationError: ()=> KaannaService.kaanna("termi-puuttuu"),
         postSuccess: ()=> KaannaService.kaanna("kasite-tallenettu")
     };
-    const makeKey = (termi) => {
+    export const sort = (kasitteet: any, order: boolean) => {
+        return _.sortBy(kasitteet, (kasite: Kasite) => kasite.alaviite && kasite.alaviite === order);
+    };
+    const makeKey = (termi: LocalisedString) => {
         let key = KaannaService.kaanna(termi).replace(/[^a-zA-Z0-9]/g, '') || 'avain';
         return key + (new Date()).getTime();
     };
-    const validate = (termi) => {
+    const validate = (termi: LocalisedString) => {
         return !!KaannaService.kaanna(termi).trim();
     };
-    const readyToPost = (newKasite) => {
-        if (!validate(newKasite.termi)) {
-            NotifikaatioService.varoitus(termistoViestit.serverError);
-            return false;
+    const readyToPost = (kasite: Kasite) => {
+        if (!validate(kasite.termi)) {
+            NotifikaatioService.varoitus(termistoViestit.validationError);
+            return null;
         }
-        if (!newKasite.avain) {
-            newKasite.avain =  makeKey(newKasite.termi);
+        if (!kasite.avain) {
+            kasite.avain =  makeKey(kasite.termi);
         }
-        return newKasite;
+        return kasite;
     };
-    const handleResponse = (kasite) => {
+    const handleResponse = (kasite: Kasite) => {
         NotifikaatioService.onnistui("Uusi käsite on tallenettu");
         return kasite;
     };
-    const handleError = (err) => {
-        NotifikaatioService.varoitus(termistoViestit.validationError, err);
+    const handleError = (err: String) => {
+        NotifikaatioService.varoitus(termistoViestit.serverError(err));
     };
-    export const post = (kasitteet, newKasite) => {
-        let post = readyToPost(newKasite);
+    export const post = (kasitteet: any, kasite: Kasite) => {
+        let post = readyToPost(kasite);
         return post ? kasitteet.post(post).then(handleResponse).catch(handleError) : false;
     }
 };

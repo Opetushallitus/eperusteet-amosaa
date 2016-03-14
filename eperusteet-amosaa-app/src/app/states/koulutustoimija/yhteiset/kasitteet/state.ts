@@ -15,7 +15,7 @@ angular.module("app")
                         .then(() => _.remove($scope.kasitteet, kasite));
 
                 $scope.sortByAlaviite = (order) => {
-                    $scope.kasitteet = _.sortBy($scope.kasitteet, (k) => k.alaviite === order);
+                    $scope.kasitteet = Termisto.sort($scope.kasitteet, order);
                 };
                 $scope.creatingNewKasite = false;
                 $scope.setCreationState = (val) => $scope.creatingNewKasite = val;
