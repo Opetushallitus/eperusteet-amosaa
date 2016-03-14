@@ -16,9 +16,12 @@ namespace Termisto {
         validationError: ()=> KaannaService.kaanna("termi-puuttuu"),
         postSuccess: ()=> KaannaService.kaanna("kasite-tallenettu")
     };
-    export const sort = (kasitteet: any, order: boolean) => {
-        return _.sortBy(kasitteet, (kasite: Kasite) => kasite.alaviite && kasite.alaviite === order);
-    };
+    export const parseOne = (revision) => ({
+        id: revision.numero,
+        muokkaaja: revision.muokkaajaOid, // TODO: Hae käyttäjän nimi organisaatiopalvelusta promisena
+        kommentti: revision.kommentti,
+        date: new Date(revision.pvm)
+    });
     const makeKey = (termi: LocalisedString) => {
         let key = KaannaService.kaanna(termi).replace(/[^a-zA-Z0-9]/g, '') || 'avain';
         return key + (new Date()).getTime();
@@ -43,6 +46,15 @@ namespace Termisto {
     const handleError = (err: String) => {
         NotifikaatioService.varoitus(termistoViestit.serverError(err));
     };
+    export const sort = (kasitteet: any, order: boolean) => {
+        return _.sortBy(kasitteet, (kasite: Kasite) => kasite.alaviite && kasite.alaviite === order);
+    };
+    export const makeBlankKasite = ():Kasite => ({
+        avain: '',
+        termi: {},
+        selitys: {},
+        alaviite: false
+    });
     export const post = (kasitteet: any, kasite: Kasite) => {
         let post = readyToPost(kasite);
         return post ? kasitteet.post(post).then(handleResponse).catch(handleError) : false;

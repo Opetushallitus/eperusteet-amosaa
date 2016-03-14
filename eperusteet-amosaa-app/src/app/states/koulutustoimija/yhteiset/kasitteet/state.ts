@@ -19,18 +19,22 @@ angular.module("app")
                 };
                 $scope.creatingNewKasite = false;
                 $scope.setCreationState = (val) => $scope.creatingNewKasite = val;
+                $scope.addKasiteToList = (kasite) => {
+                    $scope.kasitteet.unshift(kasite);
+                }
             }
         },
         "uusi_kasite_row": {
             controller: ($scope, kasitteet) => {
+                $scope.newKasite = Termisto.makeBlankKasite();
                 $scope.cancel = () => $scope.setCreationState(false);
                 $scope.createKasite = () => $scope.setCreationState(true);
                 $scope.postKasite = (newKasite) => {
                     $scope.setCreationState(false);
                     Termisto.post(kasitteet, newKasite)
                         .then((res) => {
-                            $scope.kasitteet.unshift(res);
-                            $scope.newKasite = {};
+                            $scope.addKasiteToList(res);
+                            $scope.newKasite = Termisto.makeBlankKasite();
                         })
                 };
 
