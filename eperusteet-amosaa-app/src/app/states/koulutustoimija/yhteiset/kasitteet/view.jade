@@ -32,7 +32,7 @@ div.kasitteet
             th
         tbody
           tr.kasite-placeholder-row(ui-view="uusi_kasite_row")
-          tr(ng-show="!creatingNewKasite" ng-repeat="kasite in kasitteet" +
+          tr(ng-repeat="kasite in kasitteet" +
           "| limitTo:alkioitaSivulla:(sivu - 1) * alkioitaSivulla | filter: hakuSana | orderBy:sortType:sortReverse")
             td(width="20%")
               div(ng-show="$$ekEditing && $$ekEditingIndex === $index")
