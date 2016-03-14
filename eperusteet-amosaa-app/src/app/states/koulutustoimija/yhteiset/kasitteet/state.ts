@@ -7,19 +7,7 @@ angular.module("app")
     },
     views: {
         "": {
-            controller: ($scope, $rootScope, kasitteet, $log) => {
-                $scope.newKasite = {};
-                $scope.creatingNewKasite = false;
-                $scope.cancel = () => $scope.creatingNewKasite = false;
-                $scope.createKasite = () => $scope.creatingNewKasite = true;
-                $scope.postKasite = (newKasite) => {
-                    $scope.creatingNewKasite = false;
-                    Termisto.post(kasitteet, newKasite)
-                        .then((res) => {
-                            $scope.kasitteet.unshift(res);
-                            $scope.newKasite = {};
-                        })
-                };
+            controller: ($scope, kasitteet) => {
                 $scope.edit = EditointikontrollitService.createListRestangular($scope, "kasitteet", kasitteet);
                 $scope.remove = (kasite) =>
                     ModalConfirm.generalConfirm({ name: kasite.termi }, kasite)
@@ -28,10 +16,24 @@ angular.module("app")
 
                 $scope.sortByAlaviite = (order) => {
                     $scope.kasitteet = _.sortBy($scope.kasitteet, (k) => k.alaviite === order);
-                }
+                };
+                $scope.creatingNewKasite = false;
+                $scope.setCreationState = (val) => $scope.creatingNewKasite = val;
+            }
+        },
+        "uusi_kasite_row": {
+            controller: ($scope, kasitteet) => {
+                $scope.cancel = () => $scope.setCreationState(false);
+                $scope.createKasite = () => $scope.setCreationState(true);
+                $scope.postKasite = (newKasite) => {
+                    $scope.setCreationState(false);
+                    Termisto.post(kasitteet, newKasite)
+                        .then((res) => {
+                            $scope.kasitteet.unshift(res);
+                            $scope.newKasite = {};
+                        })
+                };
 
             }
-
-
         }
 }}));

@@ -12,7 +12,6 @@ namespace Termisto {
         return !!KaannaService.kaanna(termi).trim();
     };
     const readyToPost = (newKasite) => {
-        console.log("here");
         if (!validate(newKasite.termi)) {
             NotifikaatioService.varoitus(termistoViestit.serverError);
             return false;
