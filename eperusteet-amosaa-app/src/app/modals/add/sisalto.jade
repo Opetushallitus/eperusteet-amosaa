@@ -8,9 +8,7 @@ div.modal-body.modal-sisalto
         span.sisalto-icon
           +icon("file-text-o")
         div.sisalto-text
-          a(class="tekstikappale"
-            href=""
-            ng-bind="'sisaltotyyppi-' + tyyppi | kaanna")
+          a(href="", ng-bind="'sisaltotyyppi-' + tyyppi | kaanna")
 
   div.sisalto-tekstikappale(ng-show="obj.tyyppi === 'tekstikappale'")
     h3(kaanna="'anna-nimi'")
