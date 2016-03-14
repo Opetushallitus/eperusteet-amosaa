@@ -21,26 +21,28 @@ mixin addButtonSmall(actionEdit)
   button.btn.btn-primary.btn-sm.muokkaa.btn-small-margin-left(ng-disabled="$$ekEditing" ng-click=actionEdit)&attributes(attributes)
     +icon("plus-circle")
 
+
 mixin saveButtonSmall(actionEdit)
   button.btn.btn-primary.btn-sm.muokkaa(ng-click=actionEdit)&attributes(attributes)
     +icon("save")
+
 
 mixin cancelButtonSmall(actionEdit)
   button.btn.btn-warning.btn-sm.muokkaa.btn-small-margin-left(ng-click=actionEdit)&attributes(attributes)
     +icon("close")
 
 
-mixin historia(versio, uusin, actionEdit, actionRevisions, actionPalauta, restoreNew)
+mixin historia(versio, uusinMuokkaaja, uusinMuokkaus, uusinRevisio, actionEdit, actionRevisions, actionPalauta, restoreNew)
   .ylapalkki
     .pull-left
       p
         span
           b(kaanna="'muokattu'")
-        span(ng-bind=uusin + ".date | aikaleima")
+        span(ng-bind=uusinMuokkaus + " | aikaleima")
       p
         span
           b(kaanna="'muokkaaja'")
-        span(ng-bind=uusin + ".muokkaaja")
+        span(ng-bind=uusinMuokkaaja)
 
     .pull-right
       block
@@ -51,7 +53,7 @@ mixin historia(versio, uusin, actionEdit, actionRevisions, actionPalauta, restor
         span
           b(kaanna="'versio'")
         a(href="" ng-click=actionRevisions)
-          span(ng-bind=uusin + ".id")
+          span(ng-bind=uusinRevisio)
 
   div(ng-show="versio")
     br

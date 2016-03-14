@@ -29,6 +29,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
  *
  * @author nkala
  */
+// TODO: Vaihda koulutustoimijakohtaiseen autentikaatioon
 @PreAuthorize("isAuthenticated()")
 public interface KoulutustoimijaService {
 
@@ -43,6 +44,8 @@ public interface KoulutustoimijaService {
     OpetussuunnitelmaDto getOpetussuunnitelma(Long kOid, Long opsId);
 
     List<KayttajanTietoDto> getKayttajat(Long kOid);
+
+    KayttajanTietoDto getKayttaja(Long kOid, String oid);
 
     List<TiedoteDto> getTiedotteet(Long kOid);
 

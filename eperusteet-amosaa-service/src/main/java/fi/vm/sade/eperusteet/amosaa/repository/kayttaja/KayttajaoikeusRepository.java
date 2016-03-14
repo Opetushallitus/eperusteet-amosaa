@@ -33,6 +33,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface KayttajaoikeusRepository extends JpaRepository<Kayttajaoikeus, Long> {
     @Query("SELECT o.oikeus FROM Kayttajaoikeus o WHERE o.kayttaja.id = ?1 AND o.koulutustoimija.id = ?2")
+    List<KayttajaoikeusTyyppi> findKoulutustoimijaOikeus(Long kayttaja, Long koulutustoimija);
+
+    @Query("SELECT o.oikeus FROM Kayttajaoikeus o WHERE o.kayttaja.id = ?1 AND o.koulutustoimija.id = ?2")
     KayttajaoikeusTyyppi findKayttajaoikeusYhteiset(Long kayttaja, Long koulutustoimija);
 
     List<Kayttajaoikeus> findAllByKoulutustoimijaAndYhteiset(Koulutustoimija koulutustoimija, Yhteiset yhteiset);
