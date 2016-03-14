@@ -3,12 +3,12 @@ mixin icon(type)
 
 
 mixin removeButtonSmall(actionEdit)
-  button.btn.btn-warning.btn-sm.btn-small-margin-left(ng-disabled="$$ekEditing || versio" ng-click=actionEdit)&attributes(attributes)
+  button.btn.btn-warning.btn-sm.btn-small-margin-left(ng-disabled="$$ekEditing || versio || creatingNewKasite" ng-click=actionEdit)&attributes(attributes)
     +icon("trash")
 
 
 mixin editButtonSmall(actionEdit)
-  button.btn.btn-primary.btn-sm.muokkaa(ng-disabled="$$ekEditing || versio" ng-click=actionEdit)&attributes(attributes)
+  button.btn.btn-primary.btn-sm.muokkaa(ng-disabled="$$ekEditing || versio || creatingNewKasite" ng-click=actionEdit)&attributes(attributes)
     +icon("pencil")
 
 
