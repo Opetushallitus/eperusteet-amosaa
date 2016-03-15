@@ -28,8 +28,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Date;
 
 /**
@@ -108,5 +114,22 @@ public interface DokumenttiAbstractController {
         else {
             return ResponseEntity.ok(dto);
         }
+    }
+
+    @RequestMapping(value = "/lisaaKuva", method=RequestMethod.POST)
+    default ResponseEntity<Object> addImage(@PathVariable final Long baseId,
+                                            @PathVariable final Long id,
+                                            @RequestParam(value = "kieli", defaultValue = "fi") final String kieli,
+                                            @RequestPart(required = true) final MultipartFile file) throws IOException {
+        /*
+        if (!file.isEmpty()) {
+            BufferedOutputStream stream = new BufferedOutputStream(
+                    new FileOutputStream(new File("./test")));
+            FileCopyUtils.copy(file.getInputStream(), stream);
+            stream.close();
+        }
+        */
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

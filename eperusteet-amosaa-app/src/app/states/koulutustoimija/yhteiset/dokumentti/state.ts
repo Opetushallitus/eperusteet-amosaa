@@ -7,6 +7,7 @@ angular.module("app")
     views: {
         "": {
             controller: () => {
+
             }
         }
     }
