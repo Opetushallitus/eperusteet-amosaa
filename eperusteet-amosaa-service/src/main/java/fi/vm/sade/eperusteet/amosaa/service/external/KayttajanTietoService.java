@@ -47,4 +47,6 @@ public interface KayttajanTietoService {
     List<KoulutustoimijaBaseDto> koulutustoimijat();
 
     Set<String> getUserOrganizations();
+
+    KayttajanTietoDto getKayttaja(Long koulutustoimijaId, String oid);
 }

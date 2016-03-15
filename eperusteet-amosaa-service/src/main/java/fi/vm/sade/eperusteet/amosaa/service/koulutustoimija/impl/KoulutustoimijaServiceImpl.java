@@ -63,15 +63,6 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     private YhteisetRepository yhteisetRepository;
 
     @Autowired
-    private KayttajanTietoService kayttajanTietoService;
-
-    @Autowired
-    private KayttajaoikeusRepository kayttajaoikeusRepository;
-
-    @Autowired
-    private KayttajaRepository kayttajaRepository;
-
-    @Autowired
     private DtoMapper mapper;
 
     @Transactional(readOnly = false)
@@ -124,15 +115,6 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     public OpetussuunnitelmaDto getOpetussuunnitelma(Long kOid, Long opsId) {
         OpetussuunnitelmaDto result = new OpetussuunnitelmaDto();
         return result;
-    }
-
-    @Override
-    public KayttajanTietoDto getKayttaja(Long kOid, String oid) {
-        List<KayttajaoikeusTyyppi> oikeudet = kayttajaoikeusRepository.findKoulutustoimijaOikeus(kOid, kayttajaRepository.findOneByOid(oid).getId());
-        if (oikeudet.isEmpty()) {
-            throw new BusinessRuleViolationException("kayttajan-pitaa-kuulua-koulutustoimijaan");
-        }
-        return kayttajanTietoService.hae(oid);
     }
 
     @Override
