@@ -16,14 +16,14 @@
 
 package fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija;
 
-import com.wordnik.swagger.annotations.Api;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KayttajaoikeusService;
 import java.util.List;
+
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -38,7 +38,6 @@ public class KayttajaoikeusController {
     private KayttajaoikeusService service;
 
     @RequestMapping(value = "/kayttajaoikeudet", method = RequestMethod.GET)
-    @ResponseBody
     public List<KayttajaoikeusDto> getYhteisetTyoryhmat(KayttajaoikeusDto oikeusQuery) {
         return service.getKayttooikeudet(oikeusQuery);
     }

@@ -38,48 +38,45 @@ public interface TekstiKappaleViiteAbstractController {
     TekstiKappaleViiteService service();
 
     @RequestMapping(value = "/tekstit/{tkvId}", method = RequestMethod.GET)
-    @ResponseBody
-    default public TekstiKappaleViiteDto.Matala getTekstit(
-            @PathVariable("baseId") final Long baseId,
-            @PathVariable("id") final Long id,
-            @PathVariable("tkvId") final Long tkvId) {
+    default TekstiKappaleViiteDto.Matala getTekstit(
+            @PathVariable final Long baseId,
+            @PathVariable final Long id,
+            @PathVariable final Long tkvId) {
         return service().getTekstiKappaleViite(baseId, id, tkvId);
     }
 
     @RequestMapping(value = "/tekstit/otsikot", method = RequestMethod.GET)
-    @ResponseBody
-    default public List<TekstiKappaleViiteKevytDto> getOtsikot(
-            @PathVariable("baseId") final Long baseId,
-            @PathVariable("id") final Long id) {
+    default List<TekstiKappaleViiteKevytDto> getOtsikot(
+            @PathVariable final Long baseId,
+            @PathVariable final Long id) {
         return service().getTekstiKappaleViitteet(baseId, id, TekstiKappaleViiteKevytDto.class);
     }
 
     @RequestMapping(value = "/tekstit/{viiteId}", method = RequestMethod.POST)
-    @ResponseBody
-    default public TekstiKappaleViiteDto.Matala addTekstiKappaleLapsi(
-            @PathVariable("baseId") final Long baseId,
-            @PathVariable("id") final Long id,
-            @PathVariable("viiteId") final Long viiteId,
+    default TekstiKappaleViiteDto.Matala addTekstiKappaleLapsi(
+            @PathVariable final Long baseId,
+            @PathVariable final Long id,
+            @PathVariable final Long viiteId,
             @RequestBody(required = false) TekstiKappaleViiteDto.Matala tekstiKappaleViiteDto) {
         tekstiKappaleViiteDto.setLapset(new ArrayList<>());
         return service().addTekstiKappaleViite(baseId, id, viiteId, tekstiKappaleViiteDto);
     }
 
     @RequestMapping(value = "/tekstit/{viiteId}", method = RequestMethod.PUT)
-    default public TekstiKappaleViiteDto updateTekstiKappaleViite(
-            @PathVariable("baseId") final Long baseId,
-            @PathVariable("id") final Long id,
-            @PathVariable("viiteId") final Long viiteId,
+    default TekstiKappaleViiteDto updateTekstiKappaleViite(
+            @PathVariable final Long baseId,
+            @PathVariable final Long id,
+            @PathVariable final Long viiteId,
             @RequestBody final TekstiKappaleViiteDto.Puu tekstiKappaleViiteDto) {
         return service().updateTekstiKappaleViite(baseId, id, viiteId, tekstiKappaleViiteDto);
     }
 
     @RequestMapping(value = "/tekstit/{viiteId}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    default public void removeTekstiKappaleViite(
-            @PathVariable("baseId") final Long baseId,
-            @PathVariable("id") final Long id,
-            @PathVariable("viiteId") final Long viiteId) {
+    default void removeTekstiKappaleViite(
+            @PathVariable final Long baseId,
+            @PathVariable final Long id,
+            @PathVariable final Long viiteId) {
         service().removeTekstiKappaleViite(baseId, id, viiteId);
     }
 

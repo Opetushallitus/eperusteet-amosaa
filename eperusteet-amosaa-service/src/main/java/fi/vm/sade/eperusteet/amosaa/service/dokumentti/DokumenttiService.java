@@ -16,9 +16,9 @@
 
 package fi.vm.sade.eperusteet.amosaa.service.dokumentti;
 
+import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
-import fi.vm.sade.eperusteet.amosaa.resource.dokumentti.util.DokumenttiTyyppi;
 import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.access.prepost.PreAuthorize;

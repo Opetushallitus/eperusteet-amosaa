@@ -15,7 +15,7 @@
  */
 package fi.vm.sade.eperusteet.amosaa.test;
 
-import com.googlecode.flyway.core.Flyway;
+import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -26,10 +26,6 @@ public class DbInitializer {
 
     @Autowired
     private Flyway flyway;
-
-    public DbInitializer() {
-        //NOP
-    }
 
     public void initDb() {
         flyway.clean();

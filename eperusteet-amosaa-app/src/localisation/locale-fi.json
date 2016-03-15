@@ -11,6 +11,7 @@
   "hae-peruste":                     "Hae peruste",
   "haku-nimi":                       "Hae nimistä",
   "hakutuloksia":                    "Hakutuloksia",
+  "hyvaksyja":                       "Hyväksyjä",
   "kaikki-opetussuunnitelmat":       "Kaikki opetussuunnitelmat",
   "kansilehti":                      "Kansilehti",
   "kasitteet":                       "Käsitteet",
@@ -40,6 +41,8 @@
   "poistettu-otsikko":               "Poistetun nimi",
   "poistetut":                       "Poistetut",
   "poistopaivamaara":                "Pvm",
+  "paatosnumero":                    "Päätösnumero",
+  "paatospvm":                       "Päätöspäivämäärä",
   "sisalto":                         "Sisältö",
   "sisalto-kieli":                   "Sisällön kieli",
   "sisaltotyyppi-tekstikappale":     "Tekstikappale",
@@ -50,11 +53,12 @@
   "tutkinnon-nimi":                  "Tutkinnon nimi",
   "tutkinnon-tyyppi":                "Tutkinnon tyyppi",
   "tiedot":                          "Tiedot",
+  "tiivistelma":                     "Tiivistelmä",
   "toiminnot":                       "Toiminnot",
   "uusi-dokumentti":                 "Uusi dokumentti",
   "vahemman":                        "Vähemmän",
   "versio":                          "Versio",
   "versio-historia":                 "Versiohistoria",
   "versio-palautettu-onnistuneesti": "Versio palautettiin onnistuneesti",
-  "xhtml":                           "XHTML"
+  "voimaantulopvm":                  "Voimaantulopäivämäärä"
 }

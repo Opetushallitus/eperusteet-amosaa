@@ -17,9 +17,9 @@
 package fi.vm.sade.eperusteet.amosaa.resource.dokumentti;
 
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiTila;
+import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
-import fi.vm.sade.eperusteet.amosaa.resource.dokumentti.util.DokumenttiTyyppi;
 import fi.vm.sade.eperusteet.amosaa.resource.util.CacheControl;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiService;
 import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
@@ -106,7 +106,7 @@ public interface DokumenttiAbstractController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else {
-            return new ResponseEntity<>(dto, HttpStatus.OK);
+            return ResponseEntity.ok(dto);
         }
     }
 }

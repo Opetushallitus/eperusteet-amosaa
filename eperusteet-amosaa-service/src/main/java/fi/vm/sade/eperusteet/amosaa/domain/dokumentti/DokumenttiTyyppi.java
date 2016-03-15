@@ -1,4 +1,4 @@
-package fi.vm.sade.eperusteet.amosaa.resource.dokumentti.util;
+package fi.vm.sade.eperusteet.amosaa.domain.dokumentti;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 

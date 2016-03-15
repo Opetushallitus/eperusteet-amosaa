@@ -9,7 +9,7 @@
        xmlns:util="http://www.springframework.org/schema/util"
        xmlns:security="http://www.springframework.org/schema/security"
        xmlns:cache="http://www.springframework.org/schema/cache"
-       xmlns:task="http://www.springframework.org/schema/task" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:task="http://www.springframework.org/schema/task"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
@@ -19,7 +19,7 @@
        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
        http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd
-       http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+       http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
 
     <context:property-placeholder
         location="classpath:eperusteet-amosaa-service.properties, file:///${user.home:''}/oph-configuration/common.properties, file:///${user.home:''}/oph-configuration/eperusteet-amosaa.properties, file:///${user.home:''}/oph-configuration/override.properties"
@@ -96,11 +96,11 @@
         </property>
     </bean>
 
-    <bean id="flyway-clean" class="com.googlecode.flyway.core.Flyway" init-method="clean">
+    <bean id="flyway-clean" class="org.flywaydb.core.Flyway" init-method="clean">
         <property name="dataSource" ref="dataSource"/>
     </bean>
 
-    <bean id="flyway" class="com.googlecode.flyway.core.Flyway" init-method="migrate" depends-on="flyway-clean">
+    <bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate" depends-on="flyway-clean">
         <property name="dataSource" ref="dataSource"/>
     </bean>
 
