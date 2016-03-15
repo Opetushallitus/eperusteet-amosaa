@@ -34,12 +34,7 @@ import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.*;
 
 /**
  *
@@ -65,6 +60,7 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter {
 
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+        converters.add(byteArrayConverter());
         converters.add(converter());
         StringHttpMessageConverter stringHttpMessageConverter = new StringHttpMessageConverter(Charsets.UTF_8);
         stringHttpMessageConverter.setWriteAcceptCharset(false);
@@ -93,7 +89,6 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter {
         converter.getObjectMapper().setPropertyNamingStrategy(new ReferenceNamingStrategy());
         return converter;
     }
-
 
     @Bean
     ByteArrayHttpMessageConverter byteArrayConverter() {

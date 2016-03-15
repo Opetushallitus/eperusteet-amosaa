@@ -435,7 +435,7 @@
                     <argLine>${failsafeArgLine}</argLine>
                     <systemPropertyVariables>
                         <ittestdb.user>${eperusteet-amosaa.ittestdb.user}</ittestdb.user>
-                        <ittestdb.password>${eperusteeti-amosaa.ittestdb.password}</ittestdb.password>
+                        <ittestdb.password>${eperusteet-amosaa.ittestdb.password}</ittestdb.password>
                         <ittestdb.jdbcurl>${eperusteet-amosaa.ittestdb.jdbcurl}</ittestdb.jdbcurl>
                     </systemPropertyVariables>
                     <excludes>
