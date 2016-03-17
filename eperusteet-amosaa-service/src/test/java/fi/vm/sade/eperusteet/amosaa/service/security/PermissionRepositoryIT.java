@@ -30,7 +30,7 @@ import org.springframework.test.annotation.DirtiesContext;
 public class PermissionRepositoryIT extends AbstractIntegrationTest {
 
     @Autowired
-    private PermissionReporitory permissions;
+    private PermissionRepository permissions;
 
 //    @Autowired
 //    private OpetussuunnitelmaService ops;

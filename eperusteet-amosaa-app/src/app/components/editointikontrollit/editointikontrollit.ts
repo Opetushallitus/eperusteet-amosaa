@@ -63,6 +63,7 @@ namespace EditointikontrollitService {
             _$rootScope.$$ekEditing = false;
             _$rootScope.$broadcast("editointikontrollit:enable");
             _$rootScope.$broadcast("editointikontrollit:cancel");
+            _$rootScope.$broadcast("notifyCKEditor");
             _activeCallbacks.after(res);
             _activeCallbacks.done();
         })
@@ -75,10 +76,45 @@ namespace EditointikontrollitService {
                 _$rootScope.$$ekEditing = false;
                 _$rootScope.$broadcast("editointikontrollit:enable");
                 _$rootScope.$broadcast("editointikontrollit:cancel");
+                _$rootScope.$broadcast("notifyCKEditor");
                 resolve();
             })
             .catch(reject);
     });
+
+    export const createListRestangular = (
+        scope,
+        field: string,
+        resolvedObj: restangular.IElement) => {
+        scope[field] = resolvedObj.clone();
+        return (idx: number) => {
+            scope.$$ekEditingIndex = idx;
+            return EditointikontrollitService.create({
+                start: () => _$q((resolve, reject) => scope[field][idx].get()
+                    .then(res => {
+                        _.merge(resolvedObj, res);
+                        scope[field][idx] = resolvedObj.clone();
+                        resolve(res);
+                    })
+                    .catch(reject)),
+                save: (kommentti) => _$q((resolve, reject) => {
+                    _$rootScope.$broadcast("notifyCKEditor");
+                    scope[field][idx].kommentti = kommentti;
+                    return scope[field][idx].put()
+                        .then(res => {
+                            NotifikaatioService.onnistui("tallennus-onnistui");
+                            return resolve(res);
+                        })
+                        .catch(reject);
+                }),
+                cancel: (res) => _$q((resolve, reject) => {
+                    scope[field][idx] = resolvedObj.clone();
+                    resolve(res);
+                }),
+                after: (res) => _.merge(resolvedObj, res),
+            })();
+        };
+    };
 
     export const createRestangular = (
         scope,

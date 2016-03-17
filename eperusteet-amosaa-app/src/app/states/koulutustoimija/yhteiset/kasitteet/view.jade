@@ -1,14 +1,66 @@
+mixin kasitePerusDiv(prop, index)
+  div(ng-show="!$$ekEditing || $$ekEditingIndex !== " + index)
+    p(ng-bind-html=prop + " | kaanna")
+
 div.kasitteet
-  a(href="").btn.btn-default.pull-right Lisää
-  h2 Käsitteet
-    ohje(teksti="this is a test", otsikko="test title", suunta="top")
+  div.row
+    div.col-xs-6.col-xs-offset-6
+      div.input-group.input-group-sm
+        input.form-control(type="text" placeholder="{{'haku-sana' | kaanna}}" ng-model="hakuSana")
+        span.input-group-btn
+          button.btn.btn-default(ng-click="nimi = ''")
+            i.fa.fa-times
 
   div.row
-    div.col-xs-4
-      div.form-group.has-feedback.has-feedback-left
-        input.form-control(type="text", placeholder="Rajaa...")
-        i.form-control-feedback.glyphicon.glyphicon-search(style="color: gray;")
+    div.col-xs-12
+      table.table.table-striped.kasitteet-table
+        thead
+          tr
+            th
+              a(href="" ng-click="sortBy = 'termi'; sortReverse = !sortReverse")
+                span(kaanna="'termi'")
+                span(ng-show="sortBy ==='termi'")=" "
+                  span.glyphicon.glyphicon-sort-by-alphabet-alt(ng-show="sortReverse")
+                  span.glyphicon.glyphicon-sort-by-alphabet(ng-show="!sortReverse")
+            th
+              a(href="")
+                span(kaanna="'selitys'")
+            th
+              a(href="" ng-click="sortBy = 'alaviite'; sortReverse = !sortReverse; sortByAlaviite(sortReverse)")
+                span(kaanna="'alaviite'")
+                span(ng-show="sortBy ==='alaviite'")=" "
+                  span.glyphicon.glyphicon-sort
+            th
+        tbody
+          tr.kasite-placeholder-row(ui-view="uusi_kasite_row")
+          tr(ng-repeat="kasite in kasitteet " +
+          "| limitTo:alkioitaSivulla:(sivu - 1) * alkioitaSivulla | filter: hakuSana | orderBy:sortType:sortReverse")
+            td(width="20%")
+              div(ng-if="$$ekEditing && $$ekEditingIndex === $index")
+                input.form-control(slocalized ng-model="kasite.termi" type="text" required=true)
+              +kasitePerusDiv('kasite.termi', '$index')
+            td
+              div(ng-if="$$ekEditing && $$ekEditingIndex === $index")
+                div.form-control.ckeditor(ckeditor ng-model="kasite.selitys" slocalized layout="normal")
+              +kasitePerusDiv('kasite.selitys', '$index')
+            td(width="90px")
+              div.checkbox.abc-checkbox.alaviite(ng-show="$$ekEditing && $$ekEditingIndex === $index")
+                input.styled(type="checkbox" checked="true" ng-model="kasite.alaviite")
+                label
+              div(ng-show="!$$ekEditing || $$ekEditingIndex !== $index")
+                span.text-center(ng-if="kasite.alaviite")
+                  +icon("check")
+            td(width="90px")
+              span.pull-right
+                +removeButtonSmall("remove(kasite)")
+              span.pull-right
+                +editButtonSmall("edit($index)")
 
-  div.row
-    dic.col-xs-12
-      span lorem ipsum
+
+  nav.text-center
+    uib-pagination(
+      ng-model="sivu",
+      total-items="kasitteet.length",
+      items-per-page="alkioitaSivulla",
+      force-ellipses="true",
+      direction-links="false")
