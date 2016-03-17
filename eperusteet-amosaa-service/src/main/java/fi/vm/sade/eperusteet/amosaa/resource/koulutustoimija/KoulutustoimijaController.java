@@ -17,7 +17,6 @@
 package fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija;
 
 import com.wordnik.swagger.annotations.Api;
-import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.Kayttaja;
 import fi.vm.sade.eperusteet.amosaa.dto.TiedoteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
@@ -25,7 +24,6 @@ import fi.vm.sade.eperusteet.amosaa.dto.ops.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
-import fi.vm.sade.eperusteet.amosaa.service.security.PermissionManager;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -49,10 +47,6 @@ public class KoulutustoimijaController {
 
     @Autowired
     private KayttajanTietoService kayttajaTietoService;
-
-    @Autowired
-    private PermissionManager permissionManager;
-    
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody

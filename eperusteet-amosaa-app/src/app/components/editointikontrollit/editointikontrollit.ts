@@ -1,8 +1,8 @@
 interface IEditointikontrollitCallbacks {
-    start?: (val) => Promise<any>,
+    start?: (val?) => Promise<any>,
     save?: (kommentti?) => Promise<any>,
     cancel?: () => Promise<any>,
-    after?: (res) => void
+    after?: (res?) => void
     done?: () => void
 }
 
@@ -36,7 +36,7 @@ namespace EditointikontrollitService {
         return reject(err);
     });
 
-    const start = (callbacks, isGlobal: boolean) => _$q((resolve, reject) => {
+    const start = (callbacks: IEditointikontrollitCallbacks, isGlobal: boolean) => _$q((resolve, reject) => {
         callbacks = _.merge(defaultCallbacks(), callbacks);
         if (_$rootScope.$$ekEditing) {
             return reject();

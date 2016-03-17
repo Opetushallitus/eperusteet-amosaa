@@ -1,0 +1,7 @@
+li(ng-repeat="item in ngModel")
+  a(style="padding-left: {{ (item.$$depth - 1) * 10 + 10 }}px"
+    href=""
+    ui-sref-active="active"
+    ui-sref=".tekstikappale({ tkvId: item.id })"
+    ng-bind="(item.$$obj.tekstiKappale.nimi || 'nimeton-tekstikappale') | kaanna")
+  dynamic(template="states/koulutustoimija/yhteiset/sisalto/sivunaviitem.jade" ng-model="item.lapset" misc="misc")

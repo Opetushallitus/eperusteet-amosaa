@@ -1,5 +1,11 @@
 div.sisalto
   div.nakyma
-    div.row
+    div.row(ng-if="!$$sorting")
       div.vasen(ui-view="sivunavi")
       div.col-xs-12.oikea.ui-view
+    div.sisalto-sort(ng-if="$$sorting")
+      div.sisalto-list(ui-sortable="sortableOptions" ng-model="rakenne.lapset")
+        div(ng-if="lapsi.id" ng-repeat="lapsi in rakenne.lapset track by lapsi.id")
+          dynamic(template="states/koulutustoimija/yhteiset/sisalto/rakenne.jade"
+            ng-model="lapsi"
+            misc="sortableOptions")

@@ -63,7 +63,7 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
     private KoulutustoimijaRepository koulutustoimijaRepository;
 
     @Autowired
-    private KoulutustoimijaService koulutustoimijat;
+    private KoulutustoimijaService koulutustoimijaService;
 
     @Autowired
     private KayttajaRepository kayttajaRepository;
@@ -163,7 +163,7 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
     @Override
     public List<KoulutustoimijaBaseDto> koulutustoimijat() {
         return getUserOrganizations().stream ()
-                .map((orgOid) -> koulutustoimijat.getKoulutustoimija(orgOid))
+                .map((orgOid) -> koulutustoimijaService.getKoulutustoimija(orgOid))
                 .collect(Collectors.toList());
     }
 

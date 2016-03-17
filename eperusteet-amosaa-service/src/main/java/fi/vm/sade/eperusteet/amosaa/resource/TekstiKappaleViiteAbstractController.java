@@ -66,12 +66,21 @@ public interface TekstiKappaleViiteAbstractController {
     }
 
     @RequestMapping(value = "/tekstit/{viiteId}", method = RequestMethod.PUT)
-    default public TekstiKappaleViiteDto updateTekstiKappaleViite(
+    default public void updateTekstiKappaleViite(
             @PathVariable("baseId") final Long baseId,
             @PathVariable("id") final Long id,
             @PathVariable("viiteId") final Long viiteId,
             @RequestBody final TekstiKappaleViiteDto.Puu tekstiKappaleViiteDto) {
-        return service().updateTekstiKappaleViite(baseId, id, viiteId, tekstiKappaleViiteDto);
+        service().updateTekstiKappaleViite(baseId, id, viiteId, tekstiKappaleViiteDto);
+    }
+
+    @RequestMapping(value = "/tekstit/{viiteId}/rakenne", method = RequestMethod.PUT)
+    default public void updateTekstiKappaleViiteRakenne(
+            @PathVariable("baseId") final Long baseId,
+            @PathVariable("id") final Long id,
+            @PathVariable("viiteId") final Long viiteId,
+            @RequestBody final TekstiKappaleViiteDto.Puu tekstiKappaleViiteDto) {
+        service().reorderSubTree(baseId, id, viiteId, tekstiKappaleViiteDto);
     }
 
     @RequestMapping(value = "/tekstit/{viiteId}", method = RequestMethod.DELETE)

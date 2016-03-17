@@ -42,11 +42,6 @@ public class KayttajanTietoServiceMock implements KayttajanTietoService {
     }
 
     @Override
-    public Kayttaja getKayttaja() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
     public List<KoulutustoimijaBaseDto> koulutustoimijat() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }

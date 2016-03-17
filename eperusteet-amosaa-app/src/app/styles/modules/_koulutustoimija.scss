@@ -84,3 +84,43 @@
         }
     }
 }
+
+
+.sisalto-sort {
+    .sisalto-list {
+        &:empty {
+            padding-bottom: 8px;
+        }
+
+        .sisalto-item-placeholder {
+            background: #ddd;
+            padding: 16px;
+            margin-bottom: 5px;
+        }
+    }
+    .sisalto-item {
+        background: #fff;
+        padding: 6px;
+        margin-bottom: 5px;
+        border: 1px solid #ddd;
+
+        .sisalto-handle {
+            color: #fff;
+            font-size: 20px;
+            padding: 1px 0 0 9px;
+            cursor: pointer;
+            float: left;
+            left: -5px;
+            top: -5px;
+            margin: 0px;
+            width: 28px;
+            height: 28px;
+            background: #7cf;
+            position: relative;
+        }
+
+        .sisalto-nimi {
+            padding-left: 34px;
+        }
+    }
+}
