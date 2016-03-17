@@ -1,6 +1,7 @@
 package fi.vm.sade.eperusteet.amosaa.resource.dokumentti;
 
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiTyyppi;
+import fi.vm.sade.eperusteet.amosaa.repository.dokumentti.DokumenttiRepository;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,13 @@ public class YhteisetDokumenttiController implements DokumenttiAbstractControlle
     @Autowired
     DokumenttiService service;
 
+    @Autowired
+    DokumenttiRepository repository;
+
+    @Override
+    public DokumenttiRepository repository() {
+        return repository;
+    }
 
     @Override
     public DokumenttiService service() {
@@ -28,4 +36,5 @@ public class YhteisetDokumenttiController implements DokumenttiAbstractControlle
     public DokumenttiTyyppi tyyppi() {
         return DokumenttiTyyppi.YHTEISET;
     }
+
 }

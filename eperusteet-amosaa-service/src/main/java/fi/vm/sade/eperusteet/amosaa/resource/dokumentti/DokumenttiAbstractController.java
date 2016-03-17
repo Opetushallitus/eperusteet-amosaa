@@ -16,14 +16,17 @@
 
 package fi.vm.sade.eperusteet.amosaa.resource.dokumentti;
 
+import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.Dokumentti;
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiTila;
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
+import fi.vm.sade.eperusteet.amosaa.repository.dokumentti.DokumenttiRepository;
 import fi.vm.sade.eperusteet.amosaa.resource.util.CacheControl;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiService;
 import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
 import org.apache.commons.lang.time.DateUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -43,6 +46,7 @@ import java.util.Date;
  * @author iSaul
  */
 public interface DokumenttiAbstractController {
+    DokumenttiRepository repository();
 
     DokumenttiService service();
 
@@ -119,17 +123,38 @@ public interface DokumenttiAbstractController {
     @RequestMapping(value = "/lisaaKuva", method=RequestMethod.POST)
     default ResponseEntity<Object> addImage(@PathVariable final Long baseId,
                                             @PathVariable final Long id,
-                                            @RequestParam(value = "kieli", defaultValue = "fi") final String kieli,
+                                            @RequestParam final String tyyppi,
+                                            @RequestParam(defaultValue = "fi") final String kieli,
                                             @RequestPart(required = true) final MultipartFile file) throws IOException {
-        /*
-        if (!file.isEmpty()) {
-            BufferedOutputStream stream = new BufferedOutputStream(
-                    new FileOutputStream(new File("./test")));
-            FileCopyUtils.copy(file.getInputStream(), stream);
-            stream.close();
-        }
-        */
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        if (tyyppi != null) {
+            if (!file.isEmpty()) {
+                byte[] image = file.getBytes();
+
+                // todo: tarkista onko tiedosto sallittu kuva
+
+                Dokumentti dokumentti = repository().findByYhteisetIdAndKieli(id, Kieli.of(kieli));
+
+                switch (tyyppi) {
+                    case "kansi":
+                        dokumentti.setKansikuva(image);
+                        break;
+                    case "ylatunniste":
+                        dokumentti.setYlatunniste(image);
+                        break;
+                    case "alatunniste":
+                        dokumentti.setAlatunniste(image);
+                        break;
+                    default:
+                        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                }
+
+                repository().save(dokumentti);
+
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+        }
+
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }

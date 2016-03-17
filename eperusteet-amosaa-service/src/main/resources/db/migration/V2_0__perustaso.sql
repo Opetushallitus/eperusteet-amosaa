@@ -348,6 +348,9 @@ create table dokumentti (
     tila character varying not null,
     edistyminen character varying not null,
     dokumenttidata oid,
+    kansikuva oid,
+    ylatunniste oid,
+    alatunniste oid,
     virhekoodi TEXT
     CHECK((yhteiset_id IS NULL AND opetussuunnitelma_id IS NOT NULL)
           OR (yhteiset_id IS NOT NULL AND opetussuunnitelma_id IS NULL))
