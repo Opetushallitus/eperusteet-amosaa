@@ -22,7 +22,7 @@ namespace ModalRevisions {
             };
 
             $scope.toggle = (revision) => revision.$$show = !revision.$$show;
-            $scope.ok = $uibModalInstance.close;
+            $scope.ok = () => $uibModalInstance.close(data);
 
             $scope.update();
         }

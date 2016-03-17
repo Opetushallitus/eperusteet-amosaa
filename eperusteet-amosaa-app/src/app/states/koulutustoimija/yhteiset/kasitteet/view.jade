@@ -1,11 +1,15 @@
+mixin kasitePropDiv(model, index)
+  div(ng-show="!$$ekEditing || $$ekEditingIndex !== " + index)
+    p(kaanna=model)
+
 div.kasitteet
   div.row
     div.col-xs-6
-      h2(ng-bind="'kasitteet' | kaanna")
-        ohje(teksti="this is a test", otsikko="test title", suunta="top")
+      h2(kaanna="kasitteet")
+        ohje(teksti="this is a test" otsikko="test title" suunta="top")
     div.col-xs-6
       div.input-group.input-group-sm
-        input.form-control(type="text", placeholder="{{'haku-sana' | kaanna}}", ng-model="hakuSana")
+        input.form-control(type="text" placeholder="{{'haku-sana' | kaanna}}" ng-model="hakuSana")
         span.input-group-btn
           button.btn.btn-default(ng-click="nimi = ''")
             i.fa.fa-times
@@ -16,7 +20,7 @@ div.kasitteet
         thead
           tr
             th
-              a(href="", ng-click="sortBy = 'termi'; sortReverse = !sortReverse")
+              a(href="" ng-click="sortBy = 'termi'; sortReverse = !sortReverse")
                 span(kaanna="'termi'")
                 span(ng-show="sortBy ==='termi'")=" "
                   span.glyphicon.glyphicon-sort-by-alphabet-alt(ng-show="sortReverse")
@@ -25,7 +29,7 @@ div.kasitteet
               a(href="")
                 span(kaanna="'selitys'")
             th
-              a(href="", ng-click="sortBy = 'alaviite'; sortReverse = !sortReverse; sortByAlaviite(sortReverse)")
+              a(href="" ng-click="sortBy = 'alaviite'; sortReverse = !sortReverse; sortByAlaviite(sortReverse)")
                 span(kaanna="'alaviite'")
                 span(ng-show="sortBy ==='alaviite'")=" "
                   span.glyphicon.glyphicon-sort
@@ -37,13 +41,11 @@ div.kasitteet
             td(width="20%")
               div(ng-show="$$ekEditing && $$ekEditingIndex === $index")
                 input.form-control(slocalized ng-model="kasite.termi" type="text" required=true)
-              div(ng-show="!$$ekEditing || $$ekEditingIndex !== $index")
-                p(ng-bind-html="kasite.termi | kaanna")
+              +kasitePropDiv("kasite.termi", "$index")
             td
               div(ng-show="$$ekEditing && $$ekEditingIndex === $index")
                 div.form-control.ckeditor(ckeditor ng-model="kasite.selitys" slocalized layout="normal")
-              div(ng-show="!$$ekEditing || $$ekEditingIndex !== $index")
-                p(ng-bind-html="kasite.selitys | kaanna")
+              +kasitePropDiv("kasite.selitys", "$index")
             td(width="90px")
               div.checkbox.abc-checkbox.alaviite(ng-show="$$ekEditing && $$ekEditingIndex === $index")
                 input.styled(type="checkbox" checked="true" ng-model="kasite.alaviite")
