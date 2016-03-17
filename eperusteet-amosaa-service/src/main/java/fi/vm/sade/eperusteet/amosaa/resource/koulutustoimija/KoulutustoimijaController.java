@@ -108,10 +108,6 @@ public class KoulutustoimijaController {
     public ResponseEntity<KayttajanTietoDto> getKayttajat(
             @PathVariable("id") final Long id,
             @PathVariable("oid") final String oid) {
-<<<<<<< HEAD
-        return ResponseEntity.ok(koulutustoimijaService.getKayttaja(id, oid));
-=======
         return ResponseEntity.ok(kayttajaTietoService.getKayttaja(id, oid));
->>>>>>> master
     }
 }

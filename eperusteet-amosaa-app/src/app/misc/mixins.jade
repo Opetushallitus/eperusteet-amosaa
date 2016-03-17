@@ -17,28 +17,22 @@ mixin editButton(actionEdit)
     +icon("pencil")
 
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 mixin addButtonSmall(actionEdit)
   button.btn.btn-primary.btn-sm.muokkaa.btn-small-margin-left(ng-disabled="$$ekEditing" ng-click=actionEdit)&attributes(attributes)
     +icon("plus-circle")
 
+
 mixin saveButtonSmall(actionEdit)
   button.btn.btn-primary.btn-sm.muokkaa(ng-click=actionEdit)&attributes(attributes)
     +icon("save")
+
 
 mixin cancelButtonSmall(actionEdit)
   button.btn.btn-warning.btn-sm.muokkaa.btn-small-margin-left(ng-click=actionEdit)&attributes(attributes)
     +icon("close")
 
 
-mixin historia(versio, uusin, actionEdit, actionRevisions, actionPalauta, restoreNew)
-=======
 mixin historia(versio, uusinMuokkaaja, uusinMuokkaus, uusinRevisio, actionEdit, actionRevisions, actionPalauta, restoreNew)
->>>>>>> 45e3304... Lisätty käyttäjätietojen lataus
-=======
-mixin historia(versio, uusinMuokkaaja, uusinMuokkaus, uusinRevisio, actionEdit, actionRevisions, actionPalauta, restoreNew)
->>>>>>> master
   .ylapalkki
     .pull-left
       p
@@ -84,10 +78,6 @@ mixin ekdate(model, label)
 
 mixin ekstring(model, required)
   - required = required || "false"
-<<<<<<< HEAD
-  div(ng-show="$$ekEditing")
-    input.form-control(ng-model=model type="text" required=required)
-=======
   div(ng-show="$$ekEditing")
     input.form-control(ng-model=model type="text" required=required)
   div(ng-hide="$$ekEditing")
@@ -98,33 +88,18 @@ mixin ekinput(model, required)
   - required = required || "false"
   div(ng-show="$$ekEditing")
     input.form-control(slocalized ng-model=model type="text" required=required)
->>>>>>> master
   div(ng-hide="$$ekEditing")
     p(ng-bind-html=model + "| kaanna")
 
 
-<<<<<<< HEAD
-mixin ekinput(model, required)
-      - required = required || "false"
-      div(ng-show="$$ekEditing")
-        input.form-control(slocalized ng-model=model type="text" required=required)
-      div(ng-hide="$$ekEditing")
-        p(ng-bind-html=model + "| kaanna")
-
-
 mixin ekinputIndxed(model, required, indx, select)
-      - required = required || "false"
-      div(ng-show="$$ekEditing && indx !== select")
-        input.form-control(slocalized ng-model=model type="text" required=required)
-      div(ng-hide="$$ekEditing && indx === select")
-        p(ng-bind-html=model + "| kaanna")
+  - required = required || "false"
+  div(ng-show="$$ekEditing && indx !== select")
+    input.form-control(slocalized ng-model=model type="text" required=required)
+  div(ng-hide="$$ekEditing && indx === select")
+    p(ng-bind-html=model + "| kaanna")
 
 
-mixin eklangs(model)
-  div(ng-if="$$ekEditing")
-    | editoin
-    // textarea.form-control(ckeditor slocalized ng-model=model layout=layout)
-=======
 mixin eklangs(model)
   div(ng-if="$$ekEditing")
     | editoin
@@ -138,25 +113,15 @@ mixin eklangs(model)
 mixin ekeditor(model, layout)
   div(ng-if="$$ekEditing")
     textarea.form-control.ckeditor(ckeditor slocalized ng-model=model layout=layout)
->>>>>>> master
   div(ng-if="!$$ekEditing")
-    | moro
-    // div(ng-repeat="kieli in ")
-    // p(ng-bind-html=model + "| kaanna")
-
-
-mixin ekeditor(model, layout)
-      div(ng-if="$$ekEditing")
-        textarea.form-control.ckeditor(ckeditor slocalized ng-model=model layout=layout)
-      div(ng-if="!$$ekEditing")
-        p(ng-bind-html=model + "| kaanna")
+    p(ng-bind-html=model + "| kaanna")
 
 
 mixin ekeditorIndxd(model, layout, indx, select)
-      div(ng-if="$$ekEditing && indx !== select")
-        textarea.form-control.ckeditor(ckeditor slocalized ng-model=model layout=layout)
-      div(ng-if="!$$ekEditing && indx === select")
-        p(ng-bind-html=model + "| kaanna")
+  div(ng-if="$$ekEditing && indx !== select")
+    textarea.form-control.ckeditor(ckeditor slocalized ng-model=model layout=layout)
+  div(ng-if="!$$ekEditing && indx === select")
+    p(ng-bind-html=model + "| kaanna")
 
 
 mixin formfield(label)

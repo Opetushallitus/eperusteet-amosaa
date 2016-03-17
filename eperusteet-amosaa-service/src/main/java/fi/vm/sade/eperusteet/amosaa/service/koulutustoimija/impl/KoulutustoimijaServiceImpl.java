@@ -55,30 +55,12 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
 
     @Autowired
     private OrganisaatioService organisaatioService;
-<<<<<<< HEAD
 
     @Autowired
     private KoulutustoimijaRepository repository;
 
     @Autowired
     private YhteisetRepository yhteisetRepository;
-
-    @Autowired
-    private KayttajanTietoService kayttajanTietoService;
-
-    @Autowired
-    private KayttajaoikeusRepository kayttajaoikeusRepository;
-
-    @Autowired
-    private KayttajaRepository kayttajaRepository;
-=======
-
-    @Autowired
-    private KoulutustoimijaRepository repository;
-
-    @Autowired
-    private YhteisetRepository yhteisetRepository;
->>>>>>> master
 
     @Autowired
     private DtoMapper mapper;

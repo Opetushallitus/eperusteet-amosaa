@@ -1,39 +1,4 @@
 {
-<<<<<<< HEAD
-<<<<<<< HEAD
-  "alaviite-ohje-otsikko":       "Käsite alaviite",
-  "apuotsikko":                  "Apuotsikko",
-  "enemman":                     "Enemman",
-  "esikatselu":                  "Esikatselu",
-  "hae":                         "Hae",
-  "hae-peruste":                 "Hae peruste",
-  "haku-nimi":                   "Hae nimistä",
-  "kasite-alaviite-ohje":        "Lisää käsite alaviiteksi PDF:llä",
-  "kasitteet":                   "Käsitteet",
-  "kirjoita-kommentti":          "Kirjoita kommentti",
-  "lisaa-sisaltoa":              "Lisää sisältöä",
-  "muokattu":                    "Muokattu",
-  "muokkaaja":                   "Muokkaaja",
-  "oikeudet":                    "Oikeudet",
-  "oikeus-hallinta":             "Hallinta",
-  "oikeus-lisays":               "Lisäys",
-  "oikeus-luku":                 "Luku",
-  "oikeus-muokkaus":             "Muokkaus",
-  "oikeus-poisto":               "Poisto",
-  "pdf":                         "PDF",
-  "poistaja":                    "Poistaja",
-  "poistopaivamaara":            "Pvm",
-  "poistettu-otsikko":           "Poistetun nimi",
-  "poistetut":                   "Poistetut",
-  "sisalto":                     "Sisältö",
-  "sisalto-kieli":               "Sisällön kieli",
-  "toiminnot":                   "Toiminnot",
-  "sisaltotyyppi-tekstikappale": "Tekstikappale",
-  "vahemman":                    "Vähemmän",
-  "versio":                      "Versio"
-=======
-=======
->>>>>>> master
   "anna-nimi":                       "Anna nimi",
   "apuotsikko":                      "Apuotsikko",
   "enemman":                         "Enemman",
@@ -43,6 +8,7 @@
   "haku-nimi":                       "Hae nimistä",
   "hakutuloksia":                    "Hakutuloksia",
   "kasitteet":                       "Käsitteet",
+  "kasite-alaviite-ohje":            "Lisää käsite alaviiteksi PDF:llä",
   "kirjoita-kommentteja":            "Suodata...",
   "kirjoita-kommentti":              "Kirjoita kommentti",
   "kirjoita-kommentti":              "Kirjoita kommentti...",
@@ -75,8 +41,4 @@
   "versio":                          "Versio",
   "versio-historia":                 "Versiohistoria",
   "versio-palautettu-onnistuneesti": "Versio palautettiin onnistuneesti"
-<<<<<<< HEAD
->>>>>>> 45e3304... Lisätty käyttäjätietojen lataus
-=======
->>>>>>> master
 }
