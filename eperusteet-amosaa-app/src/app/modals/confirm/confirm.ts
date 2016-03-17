@@ -19,13 +19,7 @@ namespace ModalConfirm {
 
             $scope.opts = _.merge(modalOptions, options);
 
-            $scope.ok = () => {
-                if (data !== null && data !== undefined) {
-                    $uibModalInstance.close(data);
-                } else {
-                    $uibModalInstance.close();
-                }
-            };
+            $scope.ok = () => $uibModalInstance.close(data);
 
             $scope.cancel = $uibModalInstance.close;
         }

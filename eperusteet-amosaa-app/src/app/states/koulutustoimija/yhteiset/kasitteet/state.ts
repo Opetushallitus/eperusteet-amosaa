@@ -21,6 +21,7 @@ angular.module("app")
                 $scope.setCreationState = (val) => $scope.creatingNewKasite = val;
                 $scope.addKasiteToList = (kasite) => $scope.kasitteet.unshift(kasite);
                 $scope.alkioitaSivulla = 20;
+                $scope.sivu = 1;
             }
         },
         "uusi_kasite_row": {
@@ -32,7 +33,7 @@ angular.module("app")
                     $scope.setCreationState(false);
                     Termisto.post(kasitteet, newKasite)
                         .then((res) => {
-                            $scope.addKasiteToList(res);
+                            if(res) $scope.addKasiteToList(res);
                             $scope.newKasite = Termisto.makeBlankKasite();
                         })
                 };

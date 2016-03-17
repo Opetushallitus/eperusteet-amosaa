@@ -1,13 +1,10 @@
-mixin kasitePropDiv(model, index)
+mixin kasitePerusDiv(prop, index)
   div(ng-show="!$$ekEditing || $$ekEditingIndex !== " + index)
-    p(kaanna=model)
+    p(ng-bind-html=prop + " | kaanna")
 
 div.kasitteet
   div.row
-    div.col-xs-6
-      h2(kaanna="kasitteet")
-        ohje(teksti="this is a test" otsikko="test title" suunta="top")
-    div.col-xs-6
+    div.col-xs-6.col-xs-offset-6
       div.input-group.input-group-sm
         input.form-control(type="text" placeholder="{{'haku-sana' | kaanna}}" ng-model="hakuSana")
         span.input-group-btn
@@ -36,16 +33,16 @@ div.kasitteet
             th
         tbody
           tr.kasite-placeholder-row(ui-view="uusi_kasite_row")
-          tr(ng-repeat="kasite in kasitteet" +
+          tr(ng-repeat="kasite in kasitteet " +
           "| limitTo:alkioitaSivulla:(sivu - 1) * alkioitaSivulla | filter: hakuSana | orderBy:sortType:sortReverse")
             td(width="20%")
               div(ng-show="$$ekEditing && $$ekEditingIndex === $index")
                 input.form-control(slocalized ng-model="kasite.termi" type="text" required=true)
-              +kasitePropDiv("kasite.termi", "$index")
+              +kasitePerusDiv('kasite.termi', '$index')
             td
               div(ng-show="$$ekEditing && $$ekEditingIndex === $index")
                 div.form-control.ckeditor(ckeditor ng-model="kasite.selitys" slocalized layout="normal")
-              +kasitePropDiv("kasite.selitys", "$index")
+              +kasitePerusDiv('kasite.selitys', '$index')
             td(width="90px")
               div.checkbox.abc-checkbox.alaviite(ng-show="$$ekEditing && $$ekEditingIndex === $index")
                 input.styled(type="checkbox" checked="true" ng-model="kasite.alaviite")

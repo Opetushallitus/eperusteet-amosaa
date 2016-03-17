@@ -129,3 +129,7 @@ mixin formfield(label)
     .col-xs-2: span(kaanna=label)
     .col-xs-10
       block
+
+mixin kasitePropDiv(model, index)
+  div(ng-show="!$$ekEditing || $$ekEditingIndex !== " + index)
+    p(kaanna=model)

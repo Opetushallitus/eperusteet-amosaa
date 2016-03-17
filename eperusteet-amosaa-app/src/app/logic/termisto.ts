@@ -33,14 +33,15 @@ namespace Termisto {
     const validate = (termi: LocalisedString) => !!KaannaService.kaanna(termi).trim();
 
     const readyToPost = (kasite: Kasite) => {
-        if (!validate(kasite.termi)) {
-            NotifikaatioService.varoitus(termistoViestit.validationError);
-            return null;
+        if (validate(kasite.termi)) {
+            if (!kasite.avain) {
+                kasite.avain =  makeKey(kasite.termi);
+            }
+            return kasite;
         }
-        if (!kasite.avain) {
-            kasite.avain =  makeKey(kasite.termi);
-        }
-        return kasite;
+        NotifikaatioService.varoitus(termistoViestit.validationError);
+        throw new Error("missing term");
+        return;
     };
 
     const handleResponse = (kasite: Kasite) => {
