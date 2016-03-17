@@ -40,7 +40,7 @@ angular.module("app")
             }
         },
         sivunavi: {
-            controller: ($state, $q, $scope, tekstit, otsikot, yhteiset) => {
+            controller: ($q, $scope, $state, $timeout, otsikot, tekstit, yhteiset) => {
                 $scope.suodata = (item) => KaannaService.hae(item, $scope.search);
                 const updateSivunavi = () =>
                     $scope.sivunavi = Tekstikappaleet.teeRakenne(Tekstikappaleet.uniikit(otsikot), yhteiset._tekstit);
@@ -58,7 +58,8 @@ angular.module("app")
                                             _.find(otsikot, (otsikko: any) =>
                                                    otsikko.id == yhteiset._tekstit).lapset.push(res.id);
                                             updateSivunavi();
-                                            $state.go("root.koulutustoimija.yhteiset.sisalto.tekstikappale", { tkvId: res.id });
+                                            $timeout(() =>
+                                                $state.go("root.koulutustoimija.yhteiset.sisalto.tekstikappale", { tkvId: res.id }));
                                         });
                                 default: {}
                             }

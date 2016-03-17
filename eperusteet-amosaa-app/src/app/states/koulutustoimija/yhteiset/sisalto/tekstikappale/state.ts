@@ -16,9 +16,10 @@ angular.module("app")
                     tekstikappale.remove()
                         .then(() => {
                             NotifikaatioService.onnistui("poisto-tekstikappale-onnistui");
-                            EditointikontrollitService.cancel().then(() => {
-                                $state.go("root.koulutustoimija.yhteiset.poistetut", $stateParams, { reload: true });
-                            });
+                            EditointikontrollitService.cancel()
+                                .then(() => {
+                                    $state.go("root.koulutustoimija.yhteiset.poistetut", $stateParams, { reload: true });
+                                });
                         });
                 };
             }
