@@ -31,9 +31,12 @@ angular.module("app")
                 $scope.createKasite = () => $scope.setCreationState(true);
                 $scope.postKasite = (newKasite) => {
                     $scope.setCreationState(false);
-                    Termisto.post(kasitteet, newKasite)
+                    kasitteet.post(newKasite)
                         .then((res) => {
-                            if(res) $scope.addKasiteToList(res);
+                            if (res) {
+                                $scope.addKasiteToList(res);
+                            }
+                            NotifikaatioService.onnistui("tallennus-onnistui");
                             $scope.newKasite = Termisto.makeBlankKasite();
                         })
                 };

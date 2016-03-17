@@ -24,6 +24,7 @@ import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.TermistoRepositor
 import fi.vm.sade.eperusteet.amosaa.service.exception.NotExistsException;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.ops.TermistoService;
+import java.util.Calendar;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -75,6 +76,7 @@ public class TermistoServiceImpl implements TermistoService {
         Koulutustoimija toimija = koulutustoimijaRepository.findOne(baseId);
         assertExists(toimija, "Koulutustoimija ei ole olemassa");
         Termi tmp = mapper.map(dto, Termi.class);
+        tmp.setAvain(generateKey());
         tmp.setKoulutustoimija(toimija);
         tmp = termistoRepository.save(tmp);
         return mapper.map(tmp, TermiDto.class);
@@ -86,6 +88,7 @@ public class TermistoServiceImpl implements TermistoService {
         assertExists(toimija, "Koulutustoimija ei ole olemassa");
         Termi current = termistoRepository.findOne(dto.getId());
         assertExists(current, "Päivitettävää tietoa ei ole olemassa");
+        dto.setAvain(current.getAvain());
         mapper.map(dto, current);
         termistoRepository.save(current);
         return mapper.map(current, TermiDto.class);
@@ -97,6 +100,10 @@ public class TermistoServiceImpl implements TermistoService {
         assertExists(toimija, "Koulutustoimija ei ole olemassa");
         Termi termi = termistoRepository.findOneByKoulutustoimijaAndId(toimija, id);
         termistoRepository.delete(termi);
+    }
+
+    private static String generateKey() {
+        return "avain_" + String.valueOf(Calendar.getInstance().getTimeInMillis());
     }
 
     private static void assertExists(Object o, String msg) {
