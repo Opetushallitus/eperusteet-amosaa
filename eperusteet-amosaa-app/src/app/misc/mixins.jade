@@ -92,35 +92,10 @@ mixin ekinput(model, required)
     p(ng-bind-html=model + "| kaanna")
 
 
-mixin ekinputIndxed(model, required, indx, select)
-  - required = required || "false"
-  div(ng-show="$$ekEditing && indx !== select")
-    input.form-control(slocalized ng-model=model type="text" required=required)
-  div(ng-hide="$$ekEditing && indx === select")
-    p(ng-bind-html=model + "| kaanna")
-
-
-mixin eklangs(model)
-  div(ng-if="$$ekEditing")
-    | editoin
-    // textarea.form-control(ckeditor slocalized ng-model=model layout=layout)
-  div(ng-if="!$$ekEditing")
-    | moro
-    // div(ng-repeat="kieli in ")
-    // p(ng-bind-html=model + "| kaanna")
-
-
 mixin ekeditor(model, layout)
   div(ng-if="$$ekEditing")
     textarea.form-control.ckeditor(ckeditor slocalized ng-model=model layout=layout)
   div(ng-if="!$$ekEditing")
-    p(ng-bind-html=model + "| kaanna")
-
-
-mixin ekeditorIndxd(model, layout, indx, select)
-  div(ng-if="$$ekEditing && indx !== select")
-    textarea.form-control.ckeditor(ckeditor slocalized ng-model=model layout=layout)
-  div(ng-if="!$$ekEditing && indx === select")
     p(ng-bind-html=model + "| kaanna")
 
 

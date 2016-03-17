@@ -36,11 +36,11 @@ div.kasitteet
           tr(ng-repeat="kasite in kasitteet " +
           "| limitTo:alkioitaSivulla:(sivu - 1) * alkioitaSivulla | filter: hakuSana | orderBy:sortType:sortReverse")
             td(width="20%")
-              div(ng-show="$$ekEditing && $$ekEditingIndex === $index")
+              div(ng-if="$$ekEditing && $$ekEditingIndex === $index")
                 input.form-control(slocalized ng-model="kasite.termi" type="text" required=true)
               +kasitePerusDiv('kasite.termi', '$index')
             td
-              div(ng-show="$$ekEditing && $$ekEditingIndex === $index")
+              div(ng-if="$$ekEditing && $$ekEditingIndex === $index")
                 div.form-control.ckeditor(ckeditor ng-model="kasite.selitys" slocalized layout="normal")
               +kasitePerusDiv('kasite.selitys', '$index')
             td(width="90px")
