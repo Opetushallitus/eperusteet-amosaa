@@ -18,6 +18,7 @@ mixin editButton(actionEdit)
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 mixin addButtonSmall(actionEdit)
   button.btn.btn-primary.btn-sm.muokkaa.btn-small-margin-left(ng-disabled="$$ekEditing" ng-click=actionEdit)&attributes(attributes)
     +icon("plus-circle")
@@ -35,6 +36,9 @@ mixin historia(versio, uusin, actionEdit, actionRevisions, actionPalauta, restor
 =======
 mixin historia(versio, uusinMuokkaaja, uusinMuokkaus, uusinRevisio, actionEdit, actionRevisions, actionPalauta, restoreNew)
 >>>>>>> 45e3304... Lisätty käyttäjätietojen lataus
+=======
+mixin historia(versio, uusinMuokkaaja, uusinMuokkaus, uusinRevisio, actionEdit, actionRevisions, actionPalauta, restoreNew)
+>>>>>>> master
   .ylapalkki
     .pull-left
       p
@@ -80,12 +84,26 @@ mixin ekdate(model, label)
 
 mixin ekstring(model, required)
   - required = required || "false"
+<<<<<<< HEAD
+  div(ng-show="$$ekEditing")
+    input.form-control(ng-model=model type="text" required=required)
+=======
   div(ng-show="$$ekEditing")
     input.form-control(ng-model=model type="text" required=required)
   div(ng-hide="$$ekEditing")
     p(ng-bind-html=model + "| kaanna")
 
 
+mixin ekinput(model, required)
+  - required = required || "false"
+  div(ng-show="$$ekEditing")
+    input.form-control(slocalized ng-model=model type="text" required=required)
+>>>>>>> master
+  div(ng-hide="$$ekEditing")
+    p(ng-bind-html=model + "| kaanna")
+
+
+<<<<<<< HEAD
 mixin ekinput(model, required)
       - required = required || "false"
       div(ng-show="$$ekEditing")
@@ -106,6 +124,21 @@ mixin eklangs(model)
   div(ng-if="$$ekEditing")
     | editoin
     // textarea.form-control(ckeditor slocalized ng-model=model layout=layout)
+=======
+mixin eklangs(model)
+  div(ng-if="$$ekEditing")
+    | editoin
+    // textarea.form-control(ckeditor slocalized ng-model=model layout=layout)
+  div(ng-if="!$$ekEditing")
+    | moro
+    // div(ng-repeat="kieli in ")
+    // p(ng-bind-html=model + "| kaanna")
+
+
+mixin ekeditor(model, layout)
+  div(ng-if="$$ekEditing")
+    textarea.form-control.ckeditor(ckeditor slocalized ng-model=model layout=layout)
+>>>>>>> master
   div(ng-if="!$$ekEditing")
     | moro
     // div(ng-repeat="kieli in ")

@@ -31,6 +31,15 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class KayttajanTietoServiceMock implements KayttajanTietoService {
+    @Override
+    public KayttajanTietoDto getKayttaja(Long koulutustoimijaId, String oid) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Kayttaja getKayttaja() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
     @Override
     public Kayttaja getKayttaja() {

@@ -27,6 +27,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaoikeusRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
+import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import static fi.vm.sade.eperusteet.amosaa.service.external.impl.KayttajanTietoParser.parsiKayttaja;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
@@ -169,6 +170,15 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
     @Override
     public Set<String> getUserOrganizations() {
         return SecurityUtil.getOrganizations(EnumSet.allOf(RolePermission.class));
+    }
+
+    @Override
+    public KayttajanTietoDto getKayttaja(Long koulutustoimijaId, String oid) {
+        List<KayttajaoikeusTyyppi> oikeudet = kayttajaoikeusRepository.findKoulutustoimijaOikeus(koulutustoimijaId, kayttajaRepository.findOneByOid(oid).getId());
+        if (oikeudet.isEmpty()) {
+            throw new BusinessRuleViolationException("kayttajan-pitaa-kuulua-koulutustoimijaan");
+        }
+        return hae(oid);
     }
 
 }

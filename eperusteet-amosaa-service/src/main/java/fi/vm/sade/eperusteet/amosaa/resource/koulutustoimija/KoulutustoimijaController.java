@@ -17,11 +17,13 @@
 package fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija;
 
 import com.wordnik.swagger.annotations.Api;
+import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.Kayttaja;
 import fi.vm.sade.eperusteet.amosaa.dto.TiedoteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.OpetussuunnitelmaDto;
+import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionManager;
 import java.util.List;
@@ -44,6 +46,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class KoulutustoimijaController {
     @Autowired
     private KoulutustoimijaService koulutustoimijaService;
+
+    @Autowired
+    private KayttajanTietoService kayttajaTietoService;
 
     @Autowired
     private PermissionManager permissionManager;
@@ -103,6 +108,10 @@ public class KoulutustoimijaController {
     public ResponseEntity<KayttajanTietoDto> getKayttajat(
             @PathVariable("id") final Long id,
             @PathVariable("oid") final String oid) {
+<<<<<<< HEAD
         return ResponseEntity.ok(koulutustoimijaService.getKayttaja(id, oid));
+=======
+        return ResponseEntity.ok(kayttajaTietoService.getKayttaja(id, oid));
+>>>>>>> master
     }
 }

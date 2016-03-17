@@ -1,5 +1,6 @@
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
   "alaviite-ohje-otsikko":       "Käsite alaviite",
   "apuotsikko":                  "Apuotsikko",
   "enemman":                     "Enemman",
@@ -31,6 +32,8 @@
   "vahemman":                    "Vähemmän",
   "versio":                      "Versio"
 =======
+=======
+>>>>>>> master
   "anna-nimi":                       "Anna nimi",
   "apuotsikko":                      "Apuotsikko",
   "enemman":                         "Enemman",
@@ -72,5 +75,8 @@
   "versio":                          "Versio",
   "versio-historia":                 "Versiohistoria",
   "versio-palautettu-onnistuneesti": "Versio palautettiin onnistuneesti"
+<<<<<<< HEAD
 >>>>>>> 45e3304... Lisätty käyttäjätietojen lataus
+=======
+>>>>>>> master
 }
