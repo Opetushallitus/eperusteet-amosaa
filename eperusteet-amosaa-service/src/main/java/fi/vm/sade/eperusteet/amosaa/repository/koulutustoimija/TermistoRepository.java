@@ -13,30 +13,22 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * European Union Public Licence for more details.
  */
-package fi.vm.sade.eperusteet.amosaa.service.security;
 
-import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.DirtiesContext;
+package fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija;
 
+import java.util.List;
+import fi.vm.sade.eperusteet.amosaa.domain.Termi;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  *
- * @author jhyoty
+ * @author apvilkko
  */
-@DirtiesContext
-public class PermissionRepositoryIT extends AbstractIntegrationTest {
-
-    @Autowired
-    private PermissionRepository permissions;
-
-//    @Autowired
-//    private OpetussuunnitelmaService ops;
-
-    @Test
-    @Ignore
-    public void testPermissionRepository() {
-    }
+@Repository
+public interface TermistoRepository extends JpaRepository<Termi, Long> {
+    List<Termi> findAllByKoulutustoimija(Koulutustoimija koulutustoimija);
+    Termi findOneByKoulutustoimijaAndId(Koulutustoimija koulutustoimija, Long id);
+    Termi findOneByKoulutustoimijaAndAvain(Koulutustoimija koulutustoimija, String avain);
 }

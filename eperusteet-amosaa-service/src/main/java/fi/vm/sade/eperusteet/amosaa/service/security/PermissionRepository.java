@@ -13,19 +13,20 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * European Union Public Licence for more details.
  */
+package fi.vm.sade.eperusteet.amosaa.service.security;
 
-package fi.vm.sade.eperusteet.amosaa.dto.ops;
+import javax.persistence.EntityManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
-import lombok.Getter;
-import lombok.Setter;
+/**
+ * Tietokantaoperaatiot oikeuksien hallintaan
+ *
+ * @author jhyoty
+ */
+@Repository
+public class PermissionRepository {
 
-@Getter
-@Setter
-public class TermiDto {
-    private Long id;
-    private String avain;
-    private Boolean alaviite;
-    private LokalisoituTekstiDto termi;
-    private LokalisoituTekstiDto selitys;
+    @Autowired
+    private EntityManager em;
 }

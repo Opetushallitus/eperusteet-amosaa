@@ -5,6 +5,7 @@ $fa-font-path: "fonts";
 @import "vendor/bootstrap";
 @import "vendor/font_awesome";
 @import "vendor/virkailija";
+@import "vendor/checkbox";
 
 @import "../components/editointikontrollit/_styles.scss";
 @import "../components/ohje/_ohje.scss";
@@ -31,6 +32,7 @@ $fa-font-path: "fonts";
 @import "modules/koulutustoimija";
 @import "modules/yhteiset";
 @import "modules/tiedotteet";
+@import "modules/kasitteet";
 
 *::-webkit-scrollbar {
     width: 11px;

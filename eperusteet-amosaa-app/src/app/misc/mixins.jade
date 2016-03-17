@@ -2,9 +2,34 @@ mixin icon(type)
   i(class="fa fa-" + type)
 
 
+mixin removeButtonSmall(actionEdit)
+  button.btn.btn-warning.btn-sm.btn-small-margin-left(ng-disabled="$$ekEditing || versio || creatingNewKasite" ng-click=actionEdit)&attributes(attributes)
+    +icon("trash")
+
+
+mixin editButtonSmall(actionEdit)
+  button.btn.btn-primary.btn-sm.muokkaa(ng-disabled="$$ekEditing || versio || creatingNewKasite" ng-click=actionEdit)&attributes(attributes)
+    +icon("pencil")
+
+
 mixin editButton(actionEdit)
   button.btn.btn-primary.muokkaa(ng-hide="$$ekEditing || versio" ng-click=actionEdit)&attributes(attributes)
     +icon("pencil")
+
+
+mixin addButtonSmall(actionEdit)
+  button.btn.btn-primary.btn-sm.muokkaa.btn-small-margin-left(ng-disabled="$$ekEditing" ng-click=actionEdit)&attributes(attributes)
+    +icon("plus-circle")
+
+
+mixin saveButtonSmall(actionEdit)
+  button.btn.btn-primary.btn-sm.muokkaa(ng-click=actionEdit)&attributes(attributes)
+    +icon("save")
+
+
+mixin cancelButtonSmall(actionEdit)
+  button.btn.btn-warning.btn-sm.muokkaa.btn-small-margin-left(ng-click=actionEdit)&attributes(attributes)
+    +icon("close")
 
 
 mixin historia(versio, uusinMuokkaaja, uusinMuokkaus, uusinRevisio, actionEdit, actionRevisions, actionPalauta, restoreNew)
@@ -67,6 +92,14 @@ mixin ekinput(model, required)
     p(ng-bind-html=model + "| kaanna")
 
 
+mixin ekinputIndxed(model, required, indx, select)
+  - required = required || "false"
+  div(ng-show="$$ekEditing && indx !== select")
+    input.form-control(slocalized ng-model=model type="text" required=required)
+  div(ng-hide="$$ekEditing && indx === select")
+    p(ng-bind-html=model + "| kaanna")
+
+
 mixin eklangs(model)
   div(ng-if="$$ekEditing")
     | editoin
@@ -81,6 +114,13 @@ mixin ekeditor(model, layout)
   div(ng-if="$$ekEditing")
     textarea.form-control.ckeditor(ckeditor slocalized ng-model=model layout=layout)
   div(ng-if="!$$ekEditing")
+    p(ng-bind-html=model + "| kaanna")
+
+
+mixin ekeditorIndxd(model, layout, indx, select)
+  div(ng-if="$$ekEditing && indx !== select")
+    textarea.form-control.ckeditor(ckeditor slocalized ng-model=model layout=layout)
+  div(ng-if="!$$ekEditing && indx === select")
     p(ng-bind-html=model + "| kaanna")
 
 
