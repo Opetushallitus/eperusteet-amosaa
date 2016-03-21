@@ -1,13 +1,12 @@
 namespace Tekstikappaleet {
-    export const rakenna = (tekstikappaleviitteet: Array<any>, rootId: number | string) => {
-        const tkvMap = _.indexBy(tekstikappaleviitteet, "id");
+    export const uniikit = (tekstikappaleviitteet: Array<any>) =>
+        _.indexBy(tekstikappaleviitteet, "id");
 
-        const root = tkvMap[rootId] || {
-            lapset: []
-        };
-
-        return _(root.lapset)
-            .map(tkvId => _.merge(tkvMap[tkvId], { $$depth: 0 }))
-            .value();
-    };
+    export const teeRakenne = (tekstikappaleviitteet, id: number | string, depth = 0) => ({
+        id: id,
+        $$depth: depth,
+        $$obj: tekstikappaleviitteet[id],
+        lapset: _.map(tekstikappaleviitteet[id].lapset, (lapsiId: number) =>
+                        teeRakenne(tekstikappaleviitteet, lapsiId, depth + 1))
+    });
 };

@@ -2,9 +2,34 @@ mixin icon(type)
   i(class="fa fa-" + type)
 
 
+mixin removeButtonSmall(actionEdit)
+  button.btn.btn-warning.btn-sm.btn-small-margin-left(ng-disabled="$$ekEditing || versio || creatingNewKasite" ng-click=actionEdit)&attributes(attributes)
+    +icon("trash")
+
+
+mixin editButtonSmall(actionEdit)
+  button.btn.btn-primary.btn-sm.muokkaa(ng-disabled="$$ekEditing || versio || creatingNewKasite" ng-click=actionEdit)&attributes(attributes)
+    +icon("pencil")
+
+
 mixin editButton(actionEdit)
   button.btn.btn-primary.muokkaa(ng-hide="$$ekEditing || versio" ng-click=actionEdit)&attributes(attributes)
     +icon("pencil")
+
+
+mixin addButtonSmall(actionEdit)
+  button.btn.btn-primary.btn-sm.muokkaa.btn-small-margin-left(ng-disabled="$$ekEditing" ng-click=actionEdit)&attributes(attributes)
+    +icon("plus-circle")
+
+
+mixin saveButtonSmall(actionEdit)
+  button.btn.btn-primary.btn-sm.muokkaa(ng-click=actionEdit)&attributes(attributes)
+    +icon("save")
+
+
+mixin cancelButtonSmall(actionEdit)
+  button.btn.btn-warning.btn-sm.muokkaa.btn-small-margin-left(ng-click=actionEdit)&attributes(attributes)
+    +icon("close")
 
 
 mixin historia(versio, uusinMuokkaaja, uusinMuokkaus, uusinRevisio, actionEdit, actionRevisions, actionPalauta, restoreNew)
@@ -67,16 +92,6 @@ mixin ekinput(model, required)
     p(ng-bind-html=model + "| kaanna")
 
 
-mixin eklangs(model)
-  div(ng-if="$$ekEditing")
-    | editoin
-    // textarea.form-control(ckeditor slocalized ng-model=model layout=layout)
-  div(ng-if="!$$ekEditing")
-    | moro
-    // div(ng-repeat="kieli in ")
-    // p(ng-bind-html=model + "| kaanna")
-
-
 mixin ekeditor(model, layout)
   div(ng-if="$$ekEditing")
     textarea.form-control.ckeditor(ckeditor slocalized ng-model=model layout=layout)
@@ -89,3 +104,7 @@ mixin formfield(label)
     .col-xs-2: span(kaanna=label)
     .col-xs-10
       block
+
+mixin kasitePropDiv(model, index)
+  div(ng-show="!$$ekEditing || $$ekEditingIndex !== " + index)
+    p(kaanna=model)

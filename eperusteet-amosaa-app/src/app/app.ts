@@ -1,5 +1,6 @@
 angular.module("app", [
     "ui.router",
+    "ui.sortable",
     "angularSpinner",
     "restangular",
     "ngResource",

@@ -45,8 +45,6 @@ public interface KoulutustoimijaService {
 
     List<KayttajanTietoDto> getKayttajat(Long kOid);
 
-    KayttajanTietoDto getKayttaja(Long kOid, String oid);
-
     List<TiedoteDto> getTiedotteet(Long kOid);
 
     TiedoteDto getTiedote(Long kOid);

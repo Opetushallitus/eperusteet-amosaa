@@ -307,22 +307,22 @@ CREATE TABLE termi (
     koulutustoimija_id BIGINT NOT NULL REFERENCES koulutustoimija(id),
     termi_id BIGINT REFERENCES lokalisoituteksti(id),
     selitys_id BIGINT REFERENCES lokalisoituteksti(id),
-    avain TEXT NOT NULL,
+    avain TEXT NOT NULL UNIQUE,
     alaviite BOOLEAN
 );
 
 CREATE TABLE termi_aud (
-    id bigint NOT NULL PRIMARY KEY,
-    koulutustoimija_id BIGINT NOT NULL REFERENCES koulutustoimija(id),
-    termi_id BIGINT REFERENCES lokalisoituteksti(id),
-    selitys_id BIGINT REFERENCES lokalisoituteksti(id),
-    avain TEXT NOT NULL,
+    id BIGINT NOT NULL,
+    koulutustoimija_id BIGINT,
+    termi_id BIGINT,
+    selitys_id BIGINT,
+    avain TEXT,
     alaviite BOOLEAN,
-    rev INTEGER NOT NULL,
+    rev INTEGER NOT NULL REFERENCES revinfo(rev),
     revtype SMALLINT,
-    revend INTEGER
+    revend INTEGER REFERENCES revinfo(rev),
+    PRIMARY KEY (id, rev)
 );
-
 
 CREATE TABLE poistetut (
     id bigint NOT NULL PRIMARY KEY,

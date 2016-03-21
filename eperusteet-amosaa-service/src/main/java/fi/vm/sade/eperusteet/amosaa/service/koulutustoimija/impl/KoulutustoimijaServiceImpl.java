@@ -18,7 +18,6 @@ package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
-import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.KayttajaoikeusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Yhteiset;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
@@ -29,12 +28,8 @@ import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.OpetussuunnitelmaDto;
-import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaRepository;
-import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaoikeusRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.YhteisetRepository;
-import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
-import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
@@ -61,15 +56,6 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
 
     @Autowired
     private YhteisetRepository yhteisetRepository;
-
-    @Autowired
-    private KayttajanTietoService kayttajanTietoService;
-
-    @Autowired
-    private KayttajaoikeusRepository kayttajaoikeusRepository;
-
-    @Autowired
-    private KayttajaRepository kayttajaRepository;
 
     @Autowired
     private DtoMapper mapper;
@@ -124,15 +110,6 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     public OpetussuunnitelmaDto getOpetussuunnitelma(Long kOid, Long opsId) {
         OpetussuunnitelmaDto result = new OpetussuunnitelmaDto();
         return result;
-    }
-
-    @Override
-    public KayttajanTietoDto getKayttaja(Long kOid, String oid) {
-        List<KayttajaoikeusTyyppi> oikeudet = kayttajaoikeusRepository.findKoulutustoimijaOikeus(kOid, kayttajaRepository.findOneByOid(oid).getId());
-        if (oikeudet.isEmpty()) {
-            throw new BusinessRuleViolationException("kayttajan-pitaa-kuulua-koulutustoimijaan");
-        }
-        return kayttajanTietoService.hae(oid);
     }
 
     @Override

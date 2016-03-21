@@ -21,6 +21,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.OpetussuunnitelmaDto;
+import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import java.util.List;
 
@@ -44,6 +45,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class KoulutustoimijaController {
     @Autowired
     private KoulutustoimijaService koulutustoimijaService;
+
+    @Autowired
+    private KayttajanTietoService kayttajaTietoService;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
@@ -97,8 +101,8 @@ public class KoulutustoimijaController {
 
     @RequestMapping(value = "/kayttajat/{oid}", method = RequestMethod.GET)
     public ResponseEntity<KayttajanTietoDto> getKayttajat(
-            @PathVariable final Long id,
-            @PathVariable final String oid) {
-        return ResponseEntity.ok(koulutustoimijaService.getKayttaja(id, oid));
+            @PathVariable("id") final Long id,
+            @PathVariable("oid") final String oid) {
+        return ResponseEntity.ok(kayttajaTietoService.getKayttaja(id, oid));
     }
 }

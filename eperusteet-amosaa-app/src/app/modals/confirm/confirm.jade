@@ -1,0 +1,13 @@
+.modal-header
+    h3 {{opts.headText | kaanna}}
+.modal-body
+    div(ng-show="!opts.name")
+       p {{opts.bodyText | kaanna}} ?
+    div(ng-show="opts.name")
+        p {{opts.bodyText | kaanna}}
+            span &nbsp;
+            span {{opts.name | kaanna}}
+            span ?
+.modal-footer
+    button.btn.btn-default(type="button", ng-click="cancel()") {{opts.cancelBtnText | kaanna}}
+    button.btn.btn-warning(ng-click="ok()") {{opts.actionBtnText | kaanna}}

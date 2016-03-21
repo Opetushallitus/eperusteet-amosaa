@@ -15,7 +15,7 @@ div.modal-body.modal-sisalto
     input.form-control(slocalized ng-model="obj.data.tekstiKappale.nimi" type="text" required="true")
 
 div.modal-footer
-  button.btn.btn-primary(ng-disabled="!obj || !obj.tyyppi" ng-click="ok(obj)")
-    span(kaanna="'lisaa'")
   button.btn.btn-default(ng-click="ok()")
     span(kaanna="'peruuta'")
+  button.btn.btn-primary(ng-disabled="!obj || !obj.tyyppi" ng-click="ok(obj)")
+    span(kaanna="'lisaa'")
