@@ -3,12 +3,12 @@ angular.module("app")
 .state("root.koulutustoimija.yhteiset.dokumentti", {
     url: "/dokumentti",
     resolve: {
-        dokumentti: (yhteiset) => yhteiset.one("dokumentti").get(),
+        dokumentti: (yhteiset) => yhteiset.one("dokumentti", "tila").get(),
     },
     views: {
         "": {
-            controller: () => {
-
+            controller: ($scope, dokumentti) => {
+                $scope.dokumentti = dokumentti;
             }
         }
     }

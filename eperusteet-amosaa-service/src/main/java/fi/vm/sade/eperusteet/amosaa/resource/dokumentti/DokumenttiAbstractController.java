@@ -69,7 +69,8 @@ public interface DokumenttiAbstractController {
         int maxTimeInMinutes = 2;
 
         // Aloitetaan luonti jos luonti ei ole jo päällä tai maksimi luontiaika ylitetty
-        if (DateUtils.addMinutes(dokumenttiDto.getAloitusaika(), maxTimeInMinutes).before(new Date())
+        if (dokumenttiDto.getAloitusaika() == null
+                ||DateUtils.addMinutes(dokumenttiDto.getAloitusaika(), maxTimeInMinutes).before(new Date())
                 || dokumenttiDto.getTila() != DokumenttiTila.LUODAAN) {
             // Vaihdetaan dokumentin tila luonniksi
             service().setStarted(dokumenttiDto);

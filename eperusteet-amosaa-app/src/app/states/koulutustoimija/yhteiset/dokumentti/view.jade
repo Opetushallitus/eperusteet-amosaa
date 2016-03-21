@@ -1,20 +1,23 @@
 div.dokumentti
 
   div.row
-    code {{dokumentti}}
+    div.col-xs-12
+      code {{dokumentti}}
 
   div.row
     div.col-xs-12
       h2(kaanna="'dokumentti'")
-      p
-        span luoja: Sorsa Seppo
-        span=" "
-        span luotu: 25.3.2016 12:30:21
+      p(ng-if="dokumentti.tila === 'ei_ole'") Dokumenttia ei ole luotu.
+      div(ng-if="dokumentti.tila === 'valmis'")
+        p
+          span luoja: Sorsa Seppo
+          span=" "
+          span luotu: 25.3.2016 12:30:21
 
-      button.btn.btn-default
-        span(kaanna="'lataa'")
-        span=" "
-        span(kaanna="'pdf'")
+        button.btn.btn-default
+          span(kaanna="'lataa'")
+          span=" "
+          span(kaanna="'pdf'")
 
   div.row
     div.col-xs-12
