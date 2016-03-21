@@ -38,6 +38,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -49,6 +51,7 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.MemoryCacheImageOutputStream;
+import javax.persistence.EntityManager;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -91,7 +94,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
 
     @Override
     public byte[] generatePdf(Yhteiset yhteiset, Dokumentti dokumentti, Kieli kieli)
-            throws ParserConfigurationException, IOException, SAXException, TransformerException {
+            throws ParserConfigurationException, IOException, SAXException, TransformerException, InterruptedException {
 
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -128,28 +131,37 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
         addMetaPages(docBase);
 
         docBase.getDokumentti().setEdistyminen(DokumenttiEdistyminen.TEKSTIKAPPALEET);
-        dokumenttiRepository.saveAndFlush(docBase.getDokumentti());
+        saveEdistyminen(docBase);
 
         // Sisältöelementit
         addYhteisetOsuudet(docBase);
+        //Thread.sleep(5000);
 
         docBase.getDokumentti().setEdistyminen(DokumenttiEdistyminen.VIITTEET);
-        dokumenttiRepository.saveAndFlush(docBase.getDokumentti());
+        saveEdistyminen(docBase);
+
 
         // Alaviitteet
         buildFootnotes(docBase);
+        //Thread.sleep(5000);
 
         docBase.getDokumentti().setEdistyminen(DokumenttiEdistyminen.KUVAT);
-        dokumenttiRepository.saveAndFlush(docBase.getDokumentti());
+        saveEdistyminen(docBase);
 
         // Kuvat
         buildImages(docBase);
+        //Thread.sleep(5000);
 
         docBase.getDokumentti().setEdistyminen(DokumenttiEdistyminen.TYYLIT);
-        dokumenttiRepository.saveAndFlush(docBase.getDokumentti());
+        saveEdistyminen(docBase);
 
         // PDF luonti XHTML dokumentista
         return pdfService.xhtml2pdf(doc);
+    }
+
+    @Transactional
+    private void saveEdistyminen(DokumenttiBase docBase) {
+        dokumenttiRepository.saveAndFlush(docBase.getDokumentti());
     }
 
     private void addMetaPages(DokumenttiBase docBase) {

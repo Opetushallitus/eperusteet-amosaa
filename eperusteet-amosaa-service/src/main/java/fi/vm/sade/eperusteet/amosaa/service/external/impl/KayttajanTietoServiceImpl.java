@@ -142,21 +142,22 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
         }
 
         List<KoulutustoimijaBaseDto> kts = koulutustoimijat();
-        for (KoulutustoimijaBaseDto kt : kts) {
+        kts.stream()
+                .filter(kt -> kt.getId() != null)
+                .forEach(kt -> {
             Koulutustoimija kte = koulutustoimijaRepository.findOne(kt.getId());
             Yhteiset yhteiset = kte.getYhteiset();
             Kayttajaoikeus oikeus = kayttajaoikeusRepository.findOneByKayttajaAndKoulutustoimijaAndYhteiset(kayttaja, kte, yhteiset);
             if (oikeus != null) {
-                continue;
+                Kayttajaoikeus kayttajaoikeus = new Kayttajaoikeus();
+                kayttajaoikeus.setKayttaja(kayttaja);
+                kayttajaoikeus.setKoulutustoimija(kte);
+                kayttajaoikeus.setYhteiset(kte.getYhteiset());
+                kayttajaoikeus.setOikeus(KayttajaoikeusTyyppi.LUKU);
+                // TODO: Hae tähän parempi oikeus
+                kayttajaoikeusRepository.save(kayttajaoikeus);
             }
-            Kayttajaoikeus kayttajaoikeus = new Kayttajaoikeus();
-            kayttajaoikeus.setKayttaja(kayttaja);
-            kayttajaoikeus.setKoulutustoimija(kte);
-            kayttajaoikeus.setYhteiset(kte.getYhteiset());
-            kayttajaoikeus.setOikeus(KayttajaoikeusTyyppi.LUKU);
-            // TODO: Hae tähän parempi oikeus
-            kayttajaoikeusRepository.save(kayttajaoikeus);
-        }
+        });
         return kayttajatieto;
     }
 

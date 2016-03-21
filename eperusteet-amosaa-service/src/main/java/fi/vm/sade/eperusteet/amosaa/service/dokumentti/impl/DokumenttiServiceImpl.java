@@ -102,6 +102,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
         dto.setAloitusaika(new Date());
         dto.setLuoja(SecurityUtil.getAuthenticatedPrincipal().getName());
         dto.setTila(DokumenttiTila.LUODAAN);
+        dto.setVirhekoodi("");
         dokumenttiRepository.save(mapper.map(dto, Dokumentti.class));
     }
 

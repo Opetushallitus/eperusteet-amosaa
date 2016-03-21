@@ -53,7 +53,7 @@ public interface DokumenttiAbstractController {
     default ResponseEntity<DokumenttiDto> create(
             @PathVariable final Long baseId,
             @PathVariable final Long id,
-            @RequestParam(value = "kieli", defaultValue = "fi") final String kieli) throws DokumenttiException {
+            @RequestParam(defaultValue = "fi") final String kieli) throws DokumenttiException {
         DokumenttiDto dokumenttiDto = service().getDto(id, tyyppi(), Kieli.of(kieli));
 
         // Jos dokumentti ei löydy valmiiksi niin koitetaan tehdä uusi
@@ -90,7 +90,7 @@ public interface DokumenttiAbstractController {
     default ResponseEntity<byte[]> get(
             @PathVariable final Long baseId,
             @PathVariable final Long id,
-            @RequestParam(value = "kieli", defaultValue = "fi") final String kieli) {
+            @RequestParam(defaultValue = "fi") final String kieli) {
         byte[] pdfdata = service().get(id, tyyppi(), Kieli.of(kieli));
 
         if (pdfdata == null || pdfdata.length == 0) {
@@ -106,16 +106,10 @@ public interface DokumenttiAbstractController {
     }
 
     @RequestMapping(value = "/tila", method = RequestMethod.GET)
-    default ResponseEntity<DokumenttiDto> query(@PathVariable final Long baseId,
+    default DokumenttiDto query(@PathVariable final Long baseId,
                                                 @PathVariable final Long id,
-                                                @RequestParam(value = "kieli", defaultValue = "fi") final String kieli) {
-        DokumenttiDto dto = service().getDto(id, tyyppi(), Kieli.of(kieli));
-        if (dto == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        else {
-            return ResponseEntity.ok(dto);
-        }
+                                                @RequestParam(defaultValue = "fi") final String kieli) {
+        return service().getDto(id, tyyppi(), Kieli.of(kieli));
     }
 
     @RequestMapping(value = "/lisaaKuva", method=RequestMethod.POST)
@@ -123,70 +117,64 @@ public interface DokumenttiAbstractController {
                                             @PathVariable final Long id,
                                             @RequestParam final String tyyppi,
                                             @RequestParam(defaultValue = "fi") final String kieli,
-                                            @RequestPart(required = true) final MultipartFile file) {
+                                            @RequestPart(required = true) final MultipartFile file) throws IOException {
 
-        try {
-            if (tyyppi != null && !file.isEmpty()) {
-                //byte[] image = file.getBytes();
+        if (tyyppi != null && !file.isEmpty()) {
+            //byte[] image = file.getBytes();
 
-                BufferedImage bufferedImage = ImageIO.read(file.getInputStream());
+            BufferedImage bufferedImage = ImageIO.read(file.getInputStream());
 
-                /*int width = bufferedImage.getWidth();
-                int height = bufferedImage.getHeight();
+            /*int width = bufferedImage.getWidth();
+            int height = bufferedImage.getHeight();
 
-                // Muutetaan kaikkien kuvien väriavaruus RGB:ksi jotta PDF/A validointi menee läpi
-                // Asetetaan lisäksi läpinäkyvien kuvien taustaksi valkoinen väri
-                BufferedImage tempImage = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(),
-                        BufferedImage.TYPE_3BYTE_BGR);
-                tempImage.getGraphics().setColor(new Color(255, 255, 255, 0));
-                tempImage.getGraphics().fillRect (0, 0, width, height);
-                tempImage.getGraphics().drawImage(bufferedImage, 0, 0, null);
+            // Muutetaan kaikkien kuvien väriavaruus RGB:ksi jotta PDF/A validointi menee läpi
+            // Asetetaan lisäksi läpinäkyvien kuvien taustaksi valkoinen väri
+            BufferedImage tempImage = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(),
+                    BufferedImage.TYPE_3BYTE_BGR);
+            tempImage.getGraphics().setColor(new Color(255, 255, 255, 0));
+            tempImage.getGraphics().fillRect (0, 0, width, height);
+            tempImage.getGraphics().drawImage(bufferedImage, 0, 0, null);
 
-                bufferedImage = tempImage;*/
+            bufferedImage = tempImage;*/
 
-                // Muutetaan kuva PNG:ksi
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                ImageIO.write(bufferedImage, "png", baos);
-                baos.flush();
-                byte[] image = baos.toByteArray();
-                baos.close();
+            // Muutetaan kuva PNG:ksi
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(bufferedImage, "png", baos);
+            baos.flush();
+            byte[] image = baos.toByteArray();
+            baos.close();
 
-                // todo: tarkista onko tiedosto sallittu kuva
+            // Tehdään DokumenttiDto jos ei löydy jo valmiina
+            DokumenttiDto dokumenttiDto = service().getDto(id, tyyppi(), Kieli.of(kieli));
 
-                // Tehdään DokumenttiDto jos ei löydy jo valmiina
-                DokumenttiDto dokumenttiDto = service().getDto(id, tyyppi(), Kieli.of(kieli));
-
-                if (dokumenttiDto == null) {
-                    dokumenttiDto = service().createDtoFor(id, tyyppi(), Kieli.of(kieli));
-                }
-
-                if (dokumenttiDto == null) {
-                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-                }
-
-                // Haetaan domain dokumentti
-                Dokumentti dokumentti = repository().findByYhteisetIdAndKieli(id, Kieli.of(kieli));
-
-                switch (tyyppi) {
-                    case "kansi":
-                        dokumentti.setKansikuva(image);
-                        break;
-                    case "ylatunniste":
-                        dokumentti.setYlatunniste(image);
-                        break;
-                    case "alatunniste":
-                        dokumentti.setAlatunniste(image);
-                        break;
-                    default:
-                        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-                }
-
-                repository().save(dokumentti);
-
-                return new ResponseEntity<>(HttpStatus.OK);
+            if (dokumenttiDto == null) {
+                dokumenttiDto = service().createDtoFor(id, tyyppi(), Kieli.of(kieli));
             }
-        } catch (IOException ex) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+            if (dokumenttiDto == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
+            // Haetaan domain dokumentti
+            Dokumentti dokumentti = repository().findByYhteisetIdAndKieli(id, Kieli.of(kieli));
+
+            switch (tyyppi) {
+                case "kansi":
+                    dokumentti.setKansikuva(image);
+                    break;
+                case "ylatunniste":
+                    dokumentti.setYlatunniste(image);
+                    break;
+                case "alatunniste":
+                    dokumentti.setAlatunniste(image);
+                    break;
+                default:
+                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+
+            repository().save(dokumentti);
+
+            return new ResponseEntity<>(HttpStatus.OK);
         }
 
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
