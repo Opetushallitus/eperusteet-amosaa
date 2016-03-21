@@ -26,19 +26,16 @@ import fi.vm.sade.eperusteet.amosaa.resource.util.CacheControl;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiService;
 import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
 import org.apache.commons.lang.time.DateUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.util.Date;
 
 /**
@@ -125,14 +122,48 @@ public interface DokumenttiAbstractController {
                                             @PathVariable final Long id,
                                             @RequestParam final String tyyppi,
                                             @RequestParam(defaultValue = "fi") final String kieli,
-                                            @RequestPart(required = true) final MultipartFile file) throws IOException {
+                                            @RequestPart(required = true) final MultipartFile file) {
 
-        if (tyyppi != null) {
-            if (!file.isEmpty()) {
-                byte[] image = file.getBytes();
+        try {
+            if (tyyppi != null && !file.isEmpty()) {
+                //byte[] image = file.getBytes();
+
+                BufferedImage bufferedImage = ImageIO.read(file.getInputStream());
+
+                /*int width = bufferedImage.getWidth();
+                int height = bufferedImage.getHeight();
+
+                // Muutetaan kaikkien kuvien väriavaruus RGB:ksi jotta PDF/A validointi menee läpi
+                // Asetetaan lisäksi läpinäkyvien kuvien taustaksi valkoinen väri
+                BufferedImage tempImage = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(),
+                        BufferedImage.TYPE_3BYTE_BGR);
+                tempImage.getGraphics().setColor(new Color(255, 255, 255, 0));
+                tempImage.getGraphics().fillRect (0, 0, width, height);
+                tempImage.getGraphics().drawImage(bufferedImage, 0, 0, null);
+
+                bufferedImage = tempImage;*/
+
+                // Muutetaan kuva PNG:ksi
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                ImageIO.write(bufferedImage, "png", baos);
+                baos.flush();
+                byte[] image = baos.toByteArray();
+                baos.close();
 
                 // todo: tarkista onko tiedosto sallittu kuva
 
+                // Tehdään DokumenttiDto jos ei löydy jo valmiina
+                DokumenttiDto dokumenttiDto = service().getDto(id, tyyppi(), Kieli.of(kieli));
+
+                if (dokumenttiDto == null) {
+                    dokumenttiDto = service().createDtoFor(id, tyyppi(), Kieli.of(kieli));
+                }
+
+                if (dokumenttiDto == null) {
+                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                }
+
+                // Haetaan domain dokumentti
                 Dokumentti dokumentti = repository().findByYhteisetIdAndKieli(id, Kieli.of(kieli));
 
                 switch (tyyppi) {
@@ -153,6 +184,8 @@ public interface DokumenttiAbstractController {
 
                 return new ResponseEntity<>(HttpStatus.OK);
             }
+        } catch (IOException ex) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

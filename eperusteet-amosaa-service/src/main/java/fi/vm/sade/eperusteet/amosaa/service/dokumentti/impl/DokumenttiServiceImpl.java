@@ -83,8 +83,6 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     public DokumenttiDto createDtoFor(Long id, DokumenttiTyyppi tyyppi, Kieli kieli) {
         Dokumentti dokumentti = new Dokumentti();
         dokumentti.setTila(DokumenttiTila.EI_OLE);
-        dokumentti.setAloitusaika(new Date());
-        dokumentti.setLuoja(SecurityUtil.getAuthenticatedPrincipal().getName());
         dokumentti.setKieli(kieli);
         if (tyyppi == DokumenttiTyyppi.YHTEISET && yhteisetRepository.findOne(id) != null) {
             dokumentti.setYhteisetId(id);

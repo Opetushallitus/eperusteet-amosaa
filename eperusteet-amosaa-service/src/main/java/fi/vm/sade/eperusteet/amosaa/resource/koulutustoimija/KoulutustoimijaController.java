@@ -101,8 +101,8 @@ public class KoulutustoimijaController {
 
     @RequestMapping(value = "/kayttajat/{oid}", method = RequestMethod.GET)
     public ResponseEntity<KayttajanTietoDto> getKayttajat(
-            @PathVariable("id") final Long id,
-            @PathVariable("oid") final String oid) {
+            @PathVariable final Long id,
+            @PathVariable final String oid) {
         return ResponseEntity.ok(kayttajaTietoService.getKayttaja(id, oid));
     }
 }

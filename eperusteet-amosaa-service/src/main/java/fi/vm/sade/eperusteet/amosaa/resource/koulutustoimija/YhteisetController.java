@@ -55,9 +55,6 @@ public class YhteisetController implements AbstractRevisionController, TekstiKap
     @Autowired
     private PoistettuService poistetutService;
 
-//    @Autowired
-//    private KoulutustoimijaRepository koulutustoimijaRepository;
-
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public YhteisetDto getYhteiset(

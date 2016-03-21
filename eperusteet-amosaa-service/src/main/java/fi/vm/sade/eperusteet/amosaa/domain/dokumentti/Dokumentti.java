@@ -43,7 +43,6 @@ public class Dokumentti {
     @Column(name = "opetussuunnitelma_id")
     private Long opsId;
 
-    @NotNull
     private String luoja;
 
     @Column(insertable = true, updatable = false)
@@ -52,7 +51,6 @@ public class Dokumentti {
     private Kieli kieli;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @NotNull
     private Date aloitusaika;
 
     @Temporal(TemporalType.TIMESTAMP)
