@@ -16,7 +16,6 @@
 
 package fi.vm.sade.eperusteet.amosaa.service.dokumentti;
 
-import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
@@ -32,10 +31,10 @@ import org.springframework.transaction.annotation.Transactional;
 public interface DokumenttiService {
 
     @PreAuthorize("isAuthenticated()")
-    DokumenttiDto getDto(Long id, DokumenttiTyyppi tyyppi, Kieli kieli);
+    DokumenttiDto getDto(Long id, Kieli kieli);
 
     @PreAuthorize("isAuthenticated()")
-    DokumenttiDto createDtoFor(Long id, DokumenttiTyyppi tyyppi, Kieli kieli);
+    DokumenttiDto createDtoFor(Long id, Kieli kieli);
 
     @PreAuthorize("isAuthenticated()")
     void setStarted(DokumenttiDto dto);
@@ -45,6 +44,6 @@ public interface DokumenttiService {
     void generateWithDto(DokumenttiDto dto) throws DokumenttiException;
 
     @PreAuthorize("isAuthenticated()")
-    byte[] get(Long id, DokumenttiTyyppi tyyppi, Kieli kieli);
+    byte[] get(Long id, Kieli kieli);
 
 }

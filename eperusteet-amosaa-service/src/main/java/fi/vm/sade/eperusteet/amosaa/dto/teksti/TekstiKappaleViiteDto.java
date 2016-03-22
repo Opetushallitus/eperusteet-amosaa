@@ -32,7 +32,6 @@ import lombok.Setter;
 public class TekstiKappaleViiteDto {
     private Long id;
     private TekstiKappaleDto tekstiKappale;
-    private Long owner;
     private boolean pakollinen;
     private boolean valmis;
 

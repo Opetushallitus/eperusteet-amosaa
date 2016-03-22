@@ -31,8 +31,7 @@ public class KayttajaoikeusDto {
     private Long id;
     private KayttajanTietoDto kayttajatieto;
     private Reference kayttaja;
-//    private Reference ops;
-    private Reference yhteiset;
+    private Reference opetussuunnitelma;
     private Reference koulutustoimija;
     private KayttajaoikeusTyyppi oikeus;
 }

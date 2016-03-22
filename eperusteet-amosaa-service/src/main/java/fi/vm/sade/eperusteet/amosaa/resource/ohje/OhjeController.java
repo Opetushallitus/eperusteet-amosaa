@@ -51,7 +51,7 @@ public class OhjeController {
 
     @RequestMapping(value = "/tekstikappale/{uuid}", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<List<OhjeDto>> getTekstiKappaleOhje(@PathVariable("uuid") final UUID uuid) {
+    public ResponseEntity<List<OhjeDto>> getTekstiKappaleOhje(@PathVariable final UUID uuid) {
         List<OhjeDto> ohjeDtos = service.getTekstiKappaleOhjeet(uuid);
         if (ohjeDtos == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -61,21 +61,21 @@ public class OhjeController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<OhjeDto> getOhje(@PathVariable("id") final Long id) {
+    public ResponseEntity<OhjeDto> getOhje(@PathVariable final Long id) {
         return new ResponseEntity<>(service.getOhje(id), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<OhjeDto> updateOhje(
-            @PathVariable("id") final Long id,
+            @PathVariable final Long id,
             @RequestBody OhjeDto ohjeDto) {
         ohjeDto.setId(id);
         return new ResponseEntity<>(service.updateOhje(ohjeDto), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public void deleteOhje(@PathVariable("id") final Long id) {
+    public void deleteOhje(@PathVariable final Long id) {
         service.removeOhje(id);
     }
 }

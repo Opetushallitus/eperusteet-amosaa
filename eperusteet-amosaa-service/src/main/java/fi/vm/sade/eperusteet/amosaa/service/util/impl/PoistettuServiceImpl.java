@@ -19,13 +19,14 @@ package fi.vm.sade.eperusteet.amosaa.service.util.impl;
 import fi.vm.sade.eperusteet.amosaa.domain.Poistettu;
 import fi.vm.sade.eperusteet.amosaa.domain.PoistettuTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
-import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Yhteiset;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappaleViite;
 import fi.vm.sade.eperusteet.amosaa.dto.PoistettuDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
+import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.PoistettuRepository;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
-import fi.vm.sade.eperusteet.amosaa.service.revision.RevisionService;
 import fi.vm.sade.eperusteet.amosaa.service.util.PoistettuService;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 import java.util.Calendar;
@@ -44,21 +45,21 @@ public class PoistettuServiceImpl implements PoistettuService {
     PoistettuRepository repository;
 
     @Autowired
-    RevisionService revisionService;
+    KoulutustoimijaRepository koulutustoimijaRepository;
 
     @Autowired
-    KoulutustoimijaRepository koulutustoimijaRepository;
+    OpetussuunnitelmaRepository opsRepository;
 
     @Override
     @Transactional(readOnly = false)
-    public PoistettuDto lisaaPoistettu(Koulutustoimija koulutustoimija, Yhteiset yhteiset, TekstiKappaleViite osa) {
+    public PoistettuDto lisaaPoistettu(Koulutustoimija koulutustoimija, Opetussuunnitelma ops, TekstiKappaleViite osa) {
         if (osa == null || osa.getTekstiKappale() == null || osa.getTekstiKappale().getNimi() == null) {
             return null;
         }
         Poistettu poistettu = new Poistettu();
         poistettu.setMuokkaajaOid(SecurityUtil.getAuthenticatedPrincipal().getName());
         poistettu.setKoulutustoimija(koulutustoimija);
-        poistettu.setYhteiset(yhteiset);
+        poistettu.setOpetussuunnitelma(ops);
         poistettu.setPoistettu(osa.getId());
         poistettu.setPvm(Calendar.getInstance().getTime());
         poistettu.setNimi(osa.getTekstiKappale().getNimi());
@@ -69,7 +70,8 @@ public class PoistettuServiceImpl implements PoistettuService {
     @Override
     public List<PoistettuDto> poistetut(Long koulutustoimijaId) {
         Koulutustoimija koulutustoimija = koulutustoimijaRepository.findOne(koulutustoimijaId);
-        List<Poistettu> poistetut = repository.findAllByYhteiset(koulutustoimija.getYhteiset());
+        Opetussuunnitelma ops = opsRepository.findOneYhteinen(koulutustoimija, OpsTyyppi.YHTEINEN);
+        List<Poistettu> poistetut = repository.findAllByOpetussuunnitelma(ops);
         return mapper.mapAsList(poistetut, PoistettuDto.class);
     }
 }

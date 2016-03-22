@@ -1,12 +1,39 @@
-div
-  h2 Opetussuunnitelmat
-  table.table.table-striped
-    thead
-      tr
-        th nimi
-        th kuvaus
-    tbody
-      tr(ng-repeat="ops in opetussuunnitelmat")
-        td
-          a(ng-href="{{ ops.$$url }}", ng-bind="ops.nimi.fi")
-        td(ng-bind="ops.kuvaus.fi")
+div.ops-nakyma
+  div.row
+    div.col-xs-12
+      div.ylatunniste
+        a.pull-left(href="")
+          div.muokkaa
+            i.fa.fa-pencil
+        div.pull-left
+          h2(ng-bind="ops.nimi | kaanna")
+          h2
+            span
+              i.fa.fa-magic
+
+        div.painikkeet
+          div.keskitetty.pull-right
+            button.btn.btn-default
+              span.glyphicon.glyphicon-sunglasses
+              span=" "
+              span(kaanna="'esikatselu'")
+
+
+  div.row
+    div.col-xs-12
+      div.tabit
+        ul.nav.nav-tabs
+          li(ui-sref-active="active")
+            a(ui-sref=".sisalto" kaanna="'sisalto'")
+          li(ui-sref-active="active")
+            a(ui-sref=".kasitteet" kaanna="'kasitteet'")
+          li(ui-sref-active="active")
+            a(ui-sref=".poistetut" kaanna="'poistetut'")
+          li(ui-sref-active="active")
+            a(ui-sref=".oikeudet" kaanna="'oikeudet'")
+          li(ui-sref-active="active")
+            a(ui-sref=".dokumentti" kaanna="'dokumentti'")
+
+  div.row
+    div.col-xs-12
+      div.ui-view

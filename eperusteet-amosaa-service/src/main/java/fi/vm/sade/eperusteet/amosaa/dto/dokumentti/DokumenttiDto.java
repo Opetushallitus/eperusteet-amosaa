@@ -20,10 +20,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiEdistyminen;
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiTila;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
+import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.Date;
 
 /**
  *
@@ -34,7 +33,6 @@ import java.util.Date;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DokumenttiDto {
     private Long id;
-    private Long yhteisetId;
     private Long opsId;
     private String luoja;
     private Kieli kieli;

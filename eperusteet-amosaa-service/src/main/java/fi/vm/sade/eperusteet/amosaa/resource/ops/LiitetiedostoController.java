@@ -66,9 +66,9 @@ public class LiitetiedostoController {
     @RequestMapping(value = "/{id}", method = RequestMethod.POST)
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'MUOKKAUS')")
     public void reScaleImg(
-            @PathVariable("opsId")
+            @PathVariable
             @P("opsId") Long opsId,
-            @PathVariable("id") UUID id,
+            @PathVariable UUID id,
             @RequestParam("width") Integer width,
             @RequestParam("height") Integer height,
             @RequestParam("file") Part file
@@ -81,7 +81,7 @@ public class LiitetiedostoController {
     @RequestMapping(method = RequestMethod.POST)
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'MUOKKAUS')")
     public ResponseEntity<String> upload(
-        @PathVariable("opsId")
+        @PathVariable
         @P("opsId") Long opsId,
         @RequestParam("nimi") String nimi,
         @RequestParam("file") Part file,
@@ -142,8 +142,8 @@ public class LiitetiedostoController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @CacheControl(age = CacheControl.ONE_YEAR)
     public void get(
-        @PathVariable("opsId") Long opsId,
-        @PathVariable("id") UUID id,
+        @PathVariable Long opsId,
+        @PathVariable UUID id,
         @RequestHeader(value = "If-None-Match", required = false) String etag,
         HttpServletResponse response) throws IOException {
 
@@ -167,13 +167,13 @@ public class LiitetiedostoController {
 //    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 //    @ResponseStatus(HttpStatus.NO_CONTENT)
 //    public void delete(
-//        @PathVariable("opsId") Long opsId,
-//        @PathVariable("id") UUID id) {
+//        @PathVariable Long opsId,
+//        @PathVariable UUID id) {
 //        liitteet.delete(opsId, id);
 //    }
 //
 //    @RequestMapping(method = RequestMethod.GET)
-//    public List<LiiteDto> getAll(@PathVariable("opsId") Long opsId) {
+//    public List<LiiteDto> getAll(@PathVariable Long opsId) {
 //        return liitteet.getAll(opsId);
 //    }
 

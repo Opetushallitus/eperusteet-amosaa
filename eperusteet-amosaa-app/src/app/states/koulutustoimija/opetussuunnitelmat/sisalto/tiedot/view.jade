@@ -1,0 +1,30 @@
+.tiedot
+  +historia("versio",
+    "uusin.$$nimi",
+    "uusin.date",
+    "uusin.id",
+    "edit()",
+    "listRevisions()",
+    "restoreRevision()",
+    "restoreNew()")
+  .tekstit
+    .container-fluid
+      h3(kaanna="'tiedot'")
+      +formfield("'nimi'")
+        +ekinput("ops.nimi")
+
+      +formfield("'tiivistelma'")
+        +ekeditor("ops.kuvaus", "simplified")
+
+      +formfield("'paatosnumero'")
+        +ekstring("ops.paatosnumero")
+
+      +formfield("'hyvaksyja'")
+        +ekstring("ops.hyvaksyja")
+
+      +formfield("'paatospvm'")
+        +ekdate("ops.paatospaivamaara", "'paatospvm'")
+
+      +formfield("'voimaantulopvm'")
+        +ekdate("ops.voimaantulo", "'voimaantulopvm'")
+

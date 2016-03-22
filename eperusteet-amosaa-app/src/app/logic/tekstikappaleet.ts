@@ -1,4 +1,7 @@
 namespace Tekstikappaleet {
+    export const root = (tekstikappaleviitteet: Array<any>) =>
+        _.find(tekstikappaleviitteet, (tkv) => !tkv.vanhempi);
+
     export const uniikit = (tekstikappaleviitteet: Array<any>) =>
         _.indexBy(tekstikappaleviitteet, "id");
 

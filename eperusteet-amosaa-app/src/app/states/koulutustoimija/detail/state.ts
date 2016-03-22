@@ -15,13 +15,13 @@ angular.module("app")
             }
         },
         opetussuunnitelmat: {
-            controller: ($scope, perusteet) => {
-                $scope.opsit = perusteet;
+            controller: ($scope) => {
+                $scope.opsit = [];
             }
         },
-        yhteiset: {
-            controller: ($scope, yhteiset) => {
-                $scope.yhteiset = yhteiset;
+        yhteinen: {
+            controller: ($scope, yhteinen) => {
+                $scope.yhteinen = yhteinen;
             }
         },
         tiedotteet: {

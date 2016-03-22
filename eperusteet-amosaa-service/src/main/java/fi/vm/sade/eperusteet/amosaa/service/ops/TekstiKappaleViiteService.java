@@ -16,6 +16,7 @@
 package fi.vm.sade.eperusteet.amosaa.service.ops;
 
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.TekstiKappaleViiteDto;
+import fi.vm.sade.eperusteet.amosaa.service.revision.RevisionService;
 import java.util.List;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,21 +25,22 @@ import org.springframework.security.access.prepost.PreAuthorize;
  * @author mikkom
  */
 @PreAuthorize("isAuthenticated()")
-public interface TekstiKappaleViiteService {
-    TekstiKappaleViiteDto.Matala getTekstiKappaleViite(@P("baseId") Long baseId, @P("id") Long id, Long viiteId);
+public interface TekstiKappaleViiteService extends RevisionService {
+    TekstiKappaleViiteDto.Matala getTekstiKappaleViite(@P("ktId") Long ktId, @P("id") Long id, Long viiteId);
 
-    <T> T getTekstiKappaleViite(@P("baseId") Long baseId, @P("id") Long id, Long viiteId, Class<T> t);
+    <T> T getTekstiKappaleViite(@P("ktId") Long ktId, @P("id") Long id, Long viiteId, Class<T> t);
 
-    <T> List<T> getTekstiKappaleViitteet(@P("baseId") Long baseId, @P("id") Long id, Class<T> t);
+    <T> List<T> getTekstiKappaleViitteet(@P("ktId") Long ktId, @P("id") Long id, Class<T> t);
 
-    TekstiKappaleViiteDto.Matala addTekstiKappaleViite(@P("baseId") Long baseId, @P("id") Long id, Long viiteId,
+    TekstiKappaleViiteDto.Matala addTekstiKappaleViite(@P("ktId") Long ktId, @P("id") Long id, Long viiteId,
                                                        TekstiKappaleViiteDto.Matala viiteDto);
 
-    TekstiKappaleViiteDto updateTekstiKappaleViite(@P("baseId") Long baseId, @P("id") Long id, Long rootViiteId, TekstiKappaleViiteDto uusi);
+    TekstiKappaleViiteDto updateTekstiKappaleViite(@P("ktId") Long ktId, @P("id") Long id, Long rootViiteId, TekstiKappaleViiteDto uusi);
 
-    void removeTekstiKappaleViite(@P("baseId") Long baseId, @P("id") Long id, Long viiteId);
+    void removeTekstiKappaleViite(@P("ktId") Long ktId, @P("id") Long id, Long viiteId);
 
-    TekstiKappaleViiteDto.Puu kloonaaTekstiKappale(@P("baseId") Long baseId, @P("id") Long id, Long viiteId);
+    TekstiKappaleViiteDto.Puu kloonaaTekstiKappale(@P("ktId") Long ktId, @P("id") Long id, Long viiteId);
 
-    void reorderSubTree(@P("baseId") Long baseId, @P("id") Long id, Long rootViiteId, TekstiKappaleViiteDto.Puu uusi);
+    void reorderSubTree(@P("ktId") Long ktId, @P("id") Long id, Long rootViiteId, TekstiKappaleViiteDto.Puu uusi);
 }
+

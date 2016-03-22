@@ -1,0 +1,18 @@
+div.otsikkotaso.ops-osa
+  h3(kaanna="'koulutustoimija-yhteinen-osat'")
+  table.table.boxtable
+    tbody
+      tr
+        td
+          div
+            div(name="state")
+        td
+          div
+            a(href="" ui-sref="root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot({ opsId: yhteinen.id })")
+              span(kaanna="yhteinen.nimi")
+        td
+          div
+            a(href="" ui-sref="root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot({ opsId: ops.id })")
+              div(name="go")
+                span.glyphicon.glyphicon-chevron-right
+

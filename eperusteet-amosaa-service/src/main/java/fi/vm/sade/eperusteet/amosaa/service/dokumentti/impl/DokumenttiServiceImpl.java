@@ -18,17 +18,17 @@ package fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl;
 
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.Dokumentti;
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiTila;
-import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiTyyppi;
-import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Yhteiset;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.amosaa.repository.dokumentti.DokumenttiRepository;
-import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.YhteisetRepository;
+import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiBuilderService;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiService;
 import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
+import java.util.Date;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,8 +36,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Date;
 
 /**
  *
@@ -54,7 +52,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     private DtoMapper mapper;
 
     @Autowired
-    private YhteisetRepository yhteisetRepository;
+    private OpetussuunnitelmaRepository opsRepository;
 
     @Autowired
     private DokumenttiBuilderService builder;
@@ -62,13 +60,8 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     @Override
     @Transactional
     @PreAuthorize("isAuthenticated()")
-    public DokumenttiDto getDto(Long id, DokumenttiTyyppi tyyppi, Kieli kieli) {
-        Dokumentti dokumentti = null;
-        if (tyyppi == DokumenttiTyyppi.YHTEISET) {
-            dokumentti = dokumenttiRepository.findByYhteisetIdAndKieli(id, kieli);
-        } else if (tyyppi == DokumenttiTyyppi.OPS) {
-            dokumentti = dokumenttiRepository.findByOpsIdAndKieli(id, kieli);
-        }
+    public DokumenttiDto getDto(Long id, Kieli kieli) {
+        Dokumentti dokumentti = dokumenttiRepository.findByOpsIdAndKieli(id, kieli);
 
         if (dokumentti != null) {
             return mapper.map(dokumentti, DokumenttiDto.class);
@@ -80,16 +73,14 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     @Override
     @Transactional
     @PreAuthorize("isAuthenticated()")
-    public DokumenttiDto createDtoFor(Long id, DokumenttiTyyppi tyyppi, Kieli kieli) {
+    public DokumenttiDto createDtoFor(Long id, Kieli kieli) {
         Dokumentti dokumentti = new Dokumentti();
         dokumentti.setTila(DokumenttiTila.EI_OLE);
         dokumentti.setKieli(kieli);
-        if (tyyppi == DokumenttiTyyppi.YHTEISET && yhteisetRepository.findOne(id) != null) {
-            dokumentti.setYhteisetId(id);
+        if (opsRepository.findOne(id) != null) {
+            dokumentti.setOpsId(id);
             Dokumentti saved = dokumenttiRepository.save(dokumentti);
             return mapper.map(saved, DokumenttiDto.class);
-        } else if (tyyppi == DokumenttiTyyppi.OPS) {
-            dokumentti.setOpsId(id);
         }
 
         return null;
@@ -113,9 +104,9 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 
         try {
             // Luodaan pdf
-            if (dokumentti.getYhteisetId() != null) {
-                Yhteiset yhteiset = yhteisetRepository.findOne(dokumentti.getYhteisetId());
-                dokumentti.setData(builder.generatePdf(yhteiset, dokumentti, dokumentti.getKieli()));
+            if (dokumentti.getOpsId()!= null) {
+                Opetussuunnitelma ops = opsRepository.findOne(dokumentti.getOpsId());
+                dokumentti.setData(builder.generatePdf(ops, dokumentti, dokumentti.getKieli()));
             } else if (dokumentti.getOpsId() != null) {
                 LOG.info("Ops is not implemented yet");
             }
@@ -136,14 +127,10 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 
     @Override
     @Transactional(readOnly = true)
-    public byte[] get(Long id, DokumenttiTyyppi tyyppi, Kieli kieli) {
-        if (tyyppi == DokumenttiTyyppi.YHTEISET) {
-            Dokumentti dokumentti = dokumenttiRepository.findByYhteisetIdAndKieli(id, kieli);
-            if (dokumentti != null) {
-                return dokumentti.getData();
-            }
-        } else if (tyyppi == DokumenttiTyyppi.OPS) {
-            LOG.info("Ops is not implemented yet");
+    public byte[] get(Long id, Kieli kieli) {
+        Dokumentti dokumentti = dokumenttiRepository.findByOpsIdAndKieli(id, kieli);
+        if (dokumentti != null) {
+            return dokumentti.getData();
         }
 
         return null;

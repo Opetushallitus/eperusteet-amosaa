@@ -17,7 +17,7 @@
 package fi.vm.sade.eperusteet.amosaa.domain;
 
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
-import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Yhteiset;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 import java.io.Serializable;
@@ -65,7 +65,7 @@ public class Poistettu  implements Serializable, ReferenceableEntity {
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @Getter
     @Setter
-    private Yhteiset yhteiset;
+    private Opetussuunnitelma opetussuunnitelma;
 
     @Getter
     @Setter

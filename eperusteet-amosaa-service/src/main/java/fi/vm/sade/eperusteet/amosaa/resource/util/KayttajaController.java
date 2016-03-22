@@ -59,7 +59,7 @@ public class KayttajaController {
 
     @RequestMapping(value = "/{id}/nimi", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<KayttajanTietoDto> getKayttajanNimi(@PathVariable("id") Long id) {
+    public ResponseEntity<KayttajanTietoDto> getKayttajanNimi(@PathVariable Long id) {
         return ResponseEntity.ok(kayttajat.haeNimi(id));
     }
 }

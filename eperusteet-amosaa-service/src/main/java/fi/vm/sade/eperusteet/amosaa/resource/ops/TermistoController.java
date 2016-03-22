@@ -15,8 +15,8 @@
  */
 package fi.vm.sade.eperusteet.amosaa.resource.ops;
 
-import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.TermiDto;
+import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.service.ops.TermistoService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +25,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
-import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,7 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author apvilkko
  */
 @RestController
-@RequestMapping("/koulutustoimijat/{baseId}")
+@RequestMapping("/koulutustoimijat/{ktId}")
 @InternalApi
 public class TermistoController {
 
@@ -47,47 +47,48 @@ public class TermistoController {
 
     @RequestMapping(value = "/termisto", method = GET)
     public ResponseEntity<List<TermiDto>> getAll(
-            @PathVariable("baseId") final Long baseId) {
-        return ResponseEntity.ok(termistoService.getTermit(baseId));
+            @PathVariable final Long ktId) {
+        return ResponseEntity.ok(termistoService.getTermit(ktId));
     }
 
-    @RequestMapping(value = "/termisto/{id}", method = GET)
+    @RequestMapping(value = "/termisto/{termiId}", method = GET)
     public ResponseEntity<TermiDto> get(
-            @PathVariable("baseId") final Long baseId,
-            @PathVariable("id") final Long id) {
-        return ResponseEntity.ok(termistoService.getTermi(baseId, id));
+            @PathVariable final Long ktId,
+            @PathVariable final Long termiId) {
+        return ResponseEntity.ok(termistoService.getTermi(ktId, termiId));
     }
 
     @RequestMapping(value = "/termisto/{avain}/avain", method = GET)
     public ResponseEntity<TermiDto> get(
-            @PathVariable("baseId") final Long baseId,
-            @PathVariable("avain") final String avain) {
-        return ResponseEntity.ok(termistoService.getTermiByAvain(baseId, avain));
+            @PathVariable final Long ktId,
+            @PathVariable final String avain) {
+        return ResponseEntity.ok(termistoService.getTermiByAvain(ktId, avain));
     }
 
     @RequestMapping(value = "/termisto", method = POST)
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<TermiDto> addTermi(
-            @PathVariable("baseId") final Long baseId,
+            @PathVariable final Long ktId,
             @RequestBody TermiDto dto) {
         dto.setId(null);
-        return ResponseEntity.ok(termistoService.addTermi(baseId, dto));
+        return ResponseEntity.ok(termistoService.addTermi(ktId, dto));
     }
 
-    @RequestMapping(value = "/termisto/{id}", method = PUT)
+    @RequestMapping(value = "/termisto/{termiId}", method = PUT)
     public ResponseEntity<TermiDto> updateTermi(
-            @PathVariable("baseId") final Long baseId,
-            @PathVariable("id") final Long id,
+            @PathVariable final Long ktId,
+            @PathVariable final Long termiId,
             @RequestBody TermiDto dto) {
-        dto.setId(id);
-        return ResponseEntity.ok(termistoService.updateTermi(baseId, dto));
+        dto.setId(termiId);
+        return ResponseEntity.ok(termistoService.updateTermi(ktId, dto));
     }
 
-    @RequestMapping(value = "/termisto/{id}", method = DELETE)
+    @RequestMapping(value = "/termisto/{termiId}", method = DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteTermi(
-            @PathVariable("baseId") final Long baseId,
-            @PathVariable("id") final Long id) {
-        termistoService.deleteTermi(baseId, id);
+            @PathVariable final Long ktId,
+            @PathVariable final Long termiId) {
+        termistoService.deleteTermi(ktId, termiId);
     }
 }
+

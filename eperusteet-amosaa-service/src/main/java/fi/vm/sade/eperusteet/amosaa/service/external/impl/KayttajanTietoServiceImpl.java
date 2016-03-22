@@ -18,15 +18,11 @@ package fi.vm.sade.eperusteet.amosaa.service.external.impl;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.Kayttaja;
-import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.Kayttajaoikeus;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.KayttajaoikeusTyyppi;
-import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
-import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Yhteiset;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaoikeusRepository;
-import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import static fi.vm.sade.eperusteet.amosaa.service.external.impl.KayttajanTietoParser.parsiKayttaja;
@@ -58,9 +54,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class KayttajanTietoServiceImpl implements KayttajanTietoService {
     @Autowired
     private KayttajaClient client;
-
-    @Autowired
-    private KoulutustoimijaRepository koulutustoimijaRepository;
 
     @Autowired
     private KoulutustoimijaService koulutustoimijaService;
@@ -140,24 +133,6 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
             kayttajatieto = new KayttajanTietoDto();
             kayttajatieto.setOidHenkilo(getUserOid());
         }
-
-        List<KoulutustoimijaBaseDto> kts = koulutustoimijat();
-        kts.stream()
-                .filter(kt -> kt.getId() != null)
-                .forEach(kt -> {
-            Koulutustoimija kte = koulutustoimijaRepository.findOne(kt.getId());
-            Yhteiset yhteiset = kte.getYhteiset();
-            Kayttajaoikeus oikeus = kayttajaoikeusRepository.findOneByKayttajaAndKoulutustoimijaAndYhteiset(kayttaja, kte, yhteiset);
-            if (oikeus != null) {
-                Kayttajaoikeus kayttajaoikeus = new Kayttajaoikeus();
-                kayttajaoikeus.setKayttaja(kayttaja);
-                kayttajaoikeus.setKoulutustoimija(kte);
-                kayttajaoikeus.setYhteiset(kte.getYhteiset());
-                kayttajaoikeus.setOikeus(KayttajaoikeusTyyppi.LUKU);
-                // TODO: Hae tähän parempi oikeus
-                kayttajaoikeusRepository.save(kayttajaoikeus);
-            }
-        });
         return kayttajatieto;
     }
 
