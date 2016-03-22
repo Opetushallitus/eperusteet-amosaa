@@ -122,8 +122,9 @@ angular.module("app")
         $scope.closeMessage = () => $scope.message = null;
 
         $scope.saveNew = () => {
-            TermistoData.set($scope.model.newTermi).then(() => {
+            TermistoData.add($scope.model.newTermi).then(() => {
                 $scope.message = 'termi-plugin-tallennettu';
+                NotifikaatioService.onnistui("tallennus-onnistui");
                 $timeout(() => {
                     $scope.closeMessage();
                 }, 8000);

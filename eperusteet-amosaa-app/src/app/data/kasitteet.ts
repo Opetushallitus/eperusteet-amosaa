@@ -2,7 +2,7 @@ namespace TermistoData {
     let _Api, _stateParams, _termisto;
 
     const termistoAPI = (ktId) => {
-        return _Api.all("koulutustoimijat").one(ktId).all('termisto');
+        return ktId ? _Api.all("koulutustoimijat").one(ktId).all('termisto') : null;
     };
 
     export const init = (Api, $stateParams) => {
@@ -14,7 +14,7 @@ namespace TermistoData {
         if (_termisto) {
             return _termisto;
         }
-        _termisto = termistoAPI(ktId).getList();
+        _termisto = termistoAPI ? termistoAPI(ktId).getList(): null;
         return _termisto;
     };
 
@@ -22,25 +22,31 @@ namespace TermistoData {
         return getTermisto(ktId);
     };
 
+    const filterByKey = (kasitteet, key) => {
+        return _.filter(kasitteet, (kasite:any) => kasite.avain === key)[0];
+    };
+
     const getByKey = (key, termisto = _termisto) => {
-        return termisto ? _.filter(termisto, (kasite:any) => kasite.avain === key)[0] : [];
+        return termisto.then((kasitteet) => {
+            return filterByKey(kasitteet, key);
+        })
     };
 
-    const refreshTermisto = () => {
-        _termisto = termistoAPI(_stateParams.ktId);
-        return _termisto.getList();
+    export const refresh = () => {
+        _termisto = null;
+        return getTermisto(_stateParams.ktId);
     };
 
-    export const getByAvain = (ktId, avain) => {
-        if (!_termisto) { getAll(ktId) }
-        let cached = getByKey(avain, null);
-        return cached ? cached : getByKey(avain, refreshTermisto());
-
+    export const getByAvain = (avain, ktId = _stateParams.ktId) => {
+        if (_termisto && getByKey(avain)) {
+            return getByKey(avain);
+        };
+        return refresh().then((res) => getByKey(avain));
     };
 
-    export const set = (kasite) => {
+    export const add = (kasite) => {
         return termistoAPI(_stateParams.ktId).post(kasite).then(() => {
-            return refreshTermisto();
+            return refresh().then((res) => res);
         });
     };
 }

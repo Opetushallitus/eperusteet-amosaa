@@ -17,10 +17,10 @@
 angular.module("app")
     .directive('termistoteksti', function() {
         return {
-            restrict: 'E',
+            restrict: 'EA',
             scope: { teksti: '=' },
             transclude: true,
-            template: '<div termisto-viitteet="teksti" ng-bind-html="teksti | kaanna | kuvalinkit | unsafe"></div>'
+            template: '<div termisto-viitteet="teksti" ng-bind-html="teksti | kaanna | unsafe"></div>'
         };
     })
     .directive('termistoViitteet', function ($stateParams, $document, $timeout) {
@@ -47,7 +47,7 @@ angular.module("app")
                     element.find(TERMI_MATCHER).each(function () {
                         var jqEl: any = angular.element(this);
                         var viiteId: any = jqEl.attr('data-viite');
-                        TermistoData.getWithAvain($stateParams.ktId,viiteId).then(function(res) {
+                        TermistoData.getByAvain(viiteId, $stateParams.ktId).then(function(res) {
                             var popover = jqEl.popover({
                                     placement: 'auto',
                                     html: true,

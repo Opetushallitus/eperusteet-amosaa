@@ -40,6 +40,7 @@
   "suodata-versioita":               "Suodata versioita",
   "tallenna":                        "Tallenna",
   "tallennus-onnistui":              "Tallennus onnistui",
+  "termi-plugin-tallennettu":        "Tallennus onnistui",
   "termi-plugin-title":              "Lisää viittaus tai muokkaa viittausta käsitteeseen",
   "termi-plugin-label-teksti":       "Teksti johon viittaus liitetään",
   "termi-plugin-label-termi":        "Käsite johon viitataan",
