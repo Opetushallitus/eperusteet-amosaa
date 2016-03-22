@@ -103,6 +103,7 @@ namespace EditointikontrollitService {
                     return scope[field][idx].put()
                         .then(res => {
                             NotifikaatioService.onnistui("tallennus-onnistui");
+                            TermistoData.refresh();
                             return resolve(res);
                         })
                         .catch(reject);

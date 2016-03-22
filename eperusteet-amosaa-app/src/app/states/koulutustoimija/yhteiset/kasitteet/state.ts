@@ -12,7 +12,10 @@ angular.module("app")
                 $scope.remove = (kasite) =>
                     ModalConfirm.generalConfirm({ name: kasite.termi }, kasite)
                         .then(kasite => kasite.remove())
-                        .then(() => _.remove($scope.kasitteet, kasite));
+                        .then(() => {
+                            _.remove($scope.kasitteet, kasite)
+                            TermistoData.refresh();
+                        });
 
                 $scope.sortByAlaviite = (order) => {
                     $scope.kasitteet = Termisto.sort($scope.kasitteet, order);
@@ -35,6 +38,7 @@ angular.module("app")
                         .then((res) => {
                             if (res) {
                                 $scope.addKasiteToList(res);
+                                TermistoData.refresh();
                             }
                             NotifikaatioService.onnistui("tallennus-onnistui");
                             $scope.newKasite = Termisto.makeBlankKasite();

@@ -51,94 +51,93 @@ angular.module("app")
     ]
 })
 
-// .controller("TermiPluginController", ($scope, $stateParams, $timeout, KasitteetService, Kaanna, Algoritmit) => {
-//     $scope.service = KasitteetService;
-//     $scope.filtered = [];
-//     $scope.termit = [];
-//     $scope.model = {
-//         chosen: null,
-//         newTermi: { termi: null }
-//     };
-//     let callback = angular.noop;
-//     let setDeferred = null;
-//
-//     function setChosenValue (value) {
-//         let found = _.find($scope.termit, (termi: any) => {
-//             return termi.avain === value;
-//         });
-//         $scope.model.chosen = found || null;
-//     }
-//
-//     function doSort(items) {
-//         return _.sortBy(items, (item: any) => {
-//             return Kaanna.kaanna(item.termi).toLowerCase();
-//         });
-//     }
-//
-//     $scope.init = () => {
-//         $scope.service.get($stateParams.id).then((res) => {
-//             $scope.termit = res;
-//             $scope.filtered = doSort(res);
-//             if (setDeferred) {
-//                 setChosenValue(_.cloneDeep(setDeferred));
-//                 setDeferred = null;
-//             }
-//         });
-//     };
-//
-//     $scope.filterTermit = (value) => {
-//         $scope.filtered = _.filter(doSort($scope.termit), (item) => {
-//             return Algoritmit.match(value, item.termi);
-//         });
-//     };
-//
-//     // data from angular model to plugin
-//     $scope.registerListener = (cb) => {
-//         callback = cb;
-//     };
-//     $scope.$watch("model.chosen", (value) => {
-//         callback(value);
-//     });
-//
-//     // data from plugin to angular model
-//     $scope.setValue = (value) => {
-//         $scope.$apply(() => {
-//             if (_.isEmpty($scope.termit)) {
-//                 setDeferred = value;
-//             } else {
-//                 setChosenValue(value);
-//             }
-//         });
-//     };
-//
-//     $scope.addNew = () => {
-//         $scope.adding = !$scope.adding;
-//         if ($scope.adding) {
-//             $scope.model.newTermi = { termi: null };
-//         }
-//     };
-//
-//     $scope.closeMessage = () => {
-//         $scope.message = null;
-//     };
-//
-//     $scope.saveNew = () => {
-//         $scope.service.save($stateParams.id, $scope.model.newTermi).then(() => {
-//             $scope.message = "termi-plugin-tallennettu";
-//             $timeout(() => {
-//                 $scope.closeMessage();
-//             }, 8000);
-//             $scope.adding = false;
-//             setDeferred = _.clone($scope.model.newTermi.avain);
-//             $scope.init();
-//         });
-//     };
-//
-//     $scope.cancelNew = () => {
-//         $scope.adding = false;
-//     };
-// })
-//
+    .controller('TermiPluginController', function ($scope, $stateParams, $timeout) {
+        //const termisto = Api.all("koulutustoimijat").one($stateParams.ktId).all('termisto').getList();
+        $scope.filtered = [];
+        $scope.termit = [];
+        $scope.model = {
+            chosen: null,
+            newTermi: {avain: null, termi: null, selitys: null}
+        };
+        var callback = angular.noop;
+        var setDeferred = null;
+
+        function setChosenValue (value) {
+            var found = _.find($scope.termit, function (termi: Kasite) {
+                return termi.avain === value;
+            });
+            $scope.model.chosen = found || null;
+        }
+
+        function doSort(items) {
+            return _.sortBy(items, (item: Kasite) => {
+                return KaannaService.kaanna(item.termi).toLowerCase();
+            });
+        }
+
+        $scope.init = function () {
+            TermistoData.getAll().then((res) => {
+                $scope.termit = res;
+                $scope.filtered = doSort(res);
+                if (setDeferred) {
+                    setChosenValue(_.cloneDeep(setDeferred));
+                    setDeferred = null;
+                }
+            });
+        };
+
+        $scope.filterTermit = function (value) {
+            $scope.filtered = _.filter(doSort($scope.termit), function (item) {
+                return Algoritmit.match(value, item.termi);
+            });
+        };
+
+        // data from angular model to plugin
+        $scope.registerListener = function (cb) {
+            callback = cb;
+        };
+
+        $scope.$watch('model.chosen', function (value) {
+            callback(value);
+        });
+
+        // data from plugin to angular model
+        $scope.setValue = function (value) {
+            $scope.$apply(function () {
+                if (_.isEmpty($scope.termit)) {
+                    setDeferred = value;
+                } else {
+                    setChosenValue(value);
+                }
+            });
+        };
+
+        $scope.addNew = () => {
+            $scope.adding = !$scope.adding;
+            if ($scope.adding) {
+                $scope.model.newTermi = {avain: null, termi: null, selitys: null}
+            }
+        };
+
+        $scope.closeMessage = () => $scope.message = null;
+
+        $scope.saveNew = () => {
+            TermistoData.add($scope.model.newTermi).then(() => {
+                $scope.message = 'termi-plugin-tallennettu';
+                NotifikaatioService.onnistui("tallennus-onnistui");
+                $timeout(() => {
+                    $scope.closeMessage();
+                }, 8000);
+                $scope.adding = false;
+                setDeferred = _.clone($scope.model.newTermi.avain);
+                $scope.init();
+            });
+        };
+
+        $scope.cancelNew = () => $scope.adding = false;
+    })
+
+
 .directive("ckeditor", ($q, $filter, $rootScope, editorLayouts, $timeout) => {
     return {
         priority: 10,
