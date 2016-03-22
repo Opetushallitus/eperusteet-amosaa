@@ -3,7 +3,7 @@ namespace AmosaaApi {
     export const init = ($injector) => {
         i = inject($injector, ["Api"]);
     };
-};
+}
 
 angular.module("app")
 .run(AmosaaApi.init)

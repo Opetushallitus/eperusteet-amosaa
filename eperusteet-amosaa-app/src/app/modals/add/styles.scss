@@ -56,41 +56,60 @@ div.tutkintohaku {
     }
 }
 
+$sisalto-item-height: 58px;
+$sisalto-item-border: 1px;
+$sisalto-item-background: #f3fafd;
+$sisalto-item-text: #337ab7;
+$sisalto-item-text-padding: 10px;
+$sisalto-item-icon-size: 30px;
+$sisalto-item-icon-padding: 8px 14px 8px 14px;
+$sisalto-item-color: #199dd0;
+$sisalto-item-hover-color: #147ba2;
+$sisalto-item-link-hover-color: #125572;
+
 .modal-sisalto {
     .sisalto-valinta {
         .sisalto-item {
-            min-height: 58px;
+            height: $sisalto-item-height;
             cursor: pointer;
-            border: 1px solid #9be;
-            background: #9be;
+            border: $sisalto-item-border solid $sisalto-item-color;
+            background: white;
 
             &:hover {
-                border: 1px solid #acf;
-                background: #acf;
-            }
+                background: $sisalto-item-background;
+                border: $sisalto-item-border solid $sisalto-item-hover-color;
 
-            a {
-                position: relative;
-                top: 8px;
-                left: 5px;
+                .sisalto-text {
+                    a {
+                        color: $sisalto-item-link-hover-color;
+                    }
+                }
+
+                .sisalto-icon {
+                    background: $sisalto-item-hover-color;
+                }
             }
 
             .sisalto-text {
+                color: $sisalto-item-text;
                 float: left;
-                padding: 10px;
-                position: absolute;
-                margin-left: 54px;
-                background: #fff;
-                width: 512px;
-                height: 56px;
+                padding: $sisalto-item-text-padding;
+                height: $sisalto-item-height - 2 * $sisalto-item-border;
+                line-height: $sisalto-item-height
+                        - 2 * $sisalto-item-border
+                        - 2 * $sisalto-item-text-padding;
+                a {
+                    text-decoration: none;
+                }
             }
 
             .sisalto-icon {
                 float: left;
-                color: #fff;
-                height: 56px;
-                padding: 8px 14px 8px 14px;
-                font-size: 30px;
+                color: white;
+                background: $sisalto-item-color;
+                height: $sisalto-item-height - 2 * $sisalto-item-border;
+                padding: $sisalto-item-icon-padding;
+                font-size: $sisalto-item-icon-size;
             }
         }
     }

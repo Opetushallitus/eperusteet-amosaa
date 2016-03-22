@@ -225,7 +225,7 @@ $yhteiset-top-vertical-margin: 10px;
 
     .kasitteet {
         margin-top: $yhteiset-top-vertical-margin;
-        h2 {
+        h2:first-child {
             margin-top: 0;
             span {
                 margin-top: -8px;
@@ -235,7 +235,7 @@ $yhteiset-top-vertical-margin: 10px;
 
     .poistetut {
         margin-top: $yhteiset-top-vertical-margin;
-        h2 {
+        h2:first-child {
             margin-top: 0;
             span {
                 margin-top: -8px;
@@ -258,6 +258,16 @@ $yhteiset-top-vertical-margin: 10px;
             }
             td:nth-child(4) {
                 width: 15%;
+            }
+        }
+    }
+    .dokumentti {
+        margin-top: $yhteiset-top-vertical-margin;
+
+        .row:first-child > * > h2 {
+            margin-top: 0;
+            span {
+                margin-top: -8px;
             }
         }
     }

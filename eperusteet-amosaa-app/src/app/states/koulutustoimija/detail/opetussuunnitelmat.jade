@@ -1,5 +1,5 @@
 div.otsikkotaso.kaikki-opetussuunnitelmat
-  h3 Kaikki opetussuunnitelmat
+  h3(kaanna="'kaikki-opetussuunnitelmat'")
 
   div.row
     div.col-xs-5
@@ -10,7 +10,7 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
       div.checkbox
         label
           input(type="checkbox")
-          span Tarkennettu haku
+          span(kaanna="'tarkennettu-haku'")
     div.col-xs-2
       div.pull-right
         button.btn.btn-default(kaanna="'lisaa-uusi'" ng-click="addOpetussuunnitelma()")
@@ -20,20 +20,26 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
       tr
         th
         th
-          a(href="#") TUTKINNON NIMI&nbsp;
+          a(href="#")
+            span(kaanna="'tutkinnon-nimi'")
+            span=" "
             span.glyphicon.glyphicon-sort-by-attributes
         th
-          a(href="#") Osaamisala&nbsp;
+          a(href="#")
+            span(kaanna="'osaamisala'")
+            span=" "
             span.glyphicon.glyphicon-sort-by-attributes
         th
-          a(href="#") TUTKINNON TYYPPI&nbsp;
+          a(href="#")
+            span(kaanna="'tutkinnon-tyyppi'")
+            span=" "
             span.glyphicon.glyphicon-sort-by-attributes
     tbody
       tr(ng-repeat="ops in opsit.data")
         td
           div
-            div(name="state")
-            div(name="favourite")
+            div
+            div
               a(href="#")
                 span.glyphicon.glyphicon-star
         td
@@ -48,5 +54,5 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
         td
           div
             a(href="#")
-              div(name="go")
+              div
                 span.glyphicon.glyphicon-chevron-right

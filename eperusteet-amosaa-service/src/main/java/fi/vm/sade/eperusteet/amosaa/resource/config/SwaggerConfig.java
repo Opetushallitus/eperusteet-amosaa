@@ -18,66 +18,134 @@ package fi.vm.sade.eperusteet.amosaa.resource.config;
 import com.fasterxml.classmate.GenericType;
 import com.fasterxml.classmate.TypeResolver;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.mangofactory.swagger.configuration.SpringSwaggerConfig;
-import com.mangofactory.swagger.models.alternates.Alternates;
-import com.mangofactory.swagger.models.dto.ApiInfo;
-import com.mangofactory.swagger.paths.RelativeSwaggerPathProvider;
-import com.mangofactory.swagger.plugin.EnableSwagger;
-import com.mangofactory.swagger.plugin.SwaggerSpringMvcPlugin;
-import java.util.Optional;
-import java.util.concurrent.Callable;
-import javax.servlet.ServletContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StopWatch;
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.Contact;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.paths.AbstractPathProvider;
+import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger1.annotations.EnableSwagger;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
+import javax.servlet.ServletContext;
+
+import java.util.Optional;
+import java.util.concurrent.Callable;
+
+import static com.google.common.base.Strings.isNullOrEmpty;
 
 /**
  *
- * @author jhyoty
+ * @author isaul
  */
 @Configuration
-@EnableSwagger
+@EnableSwagger //Enable swagger 1.2 spec
+@EnableSwagger2 //Enable swagger 2.0 spec
 @Profile(value = {"!dev"})
 public class SwaggerConfig {
+    private static final Logger LOG = LoggerFactory.getLogger(SwaggerConfig.class);
 
     @Autowired
-    private SpringSwaggerConfig springSwaggerConfig;
+    private TypeResolver typeResolver;
 
     @Bean
-    public SwaggerSpringMvcPlugin swaggerPlugin(ServletContext ctx) {
+    public Docket swagger2Api(ServletContext ctx) {
+        LOG.debug("Starting Swagger v2");
+        StopWatch watch = new StopWatch();
+        watch.start();
 
-        RelativeSwaggerPathProvider relativeSwaggerPathProvider = new RelativeSwaggerPathProvider(ctx);
-        relativeSwaggerPathProvider.setApiResourcePrefix("api");
-        final TypeResolver typeResolver = new TypeResolver();
-        SwaggerSpringMvcPlugin plugin = new SwaggerSpringMvcPlugin(this.springSwaggerConfig)
-            .pathProvider(null)
-            .apiInfo(apiInfo())
-            .pathProvider(relativeSwaggerPathProvider)
-            .directModelSubstitute(JsonNode.class, Object.class)
-            .genericModelSubstitutes(ResponseEntity.class, Optional.class)
-            .alternateTypeRules(
-                Alternates.newRule(typeResolver.resolve(new GenericType<Callable<ResponseEntity<Object>>>() {
-                }), typeResolver.resolve(Object.class))
-            );
-        return plugin;
+        Docket docket = new Docket(DocumentationType.SWAGGER_2)
+                .groupName("v2")
+                .apiInfo(apiInfo())
+                .pathProvider(new RelativeSwaggerPathProvider(ctx))
+                .select()
+                .apis(RequestHandlerSelectors.any())
+                .paths(PathSelectors.any())
+                .build()
+                .directModelSubstitute(JsonNode.class, Object.class)
+                .genericModelSubstitutes(ResponseEntity.class, Optional.class)
+                .alternateTypeRules(
+                        springfox.documentation.schema.AlternateTypeRules
+                                .newRule(typeResolver.resolve(new GenericType<Callable<ResponseEntity<Object>>>() {
+                                }), typeResolver.resolve(Object.class)));
 
+        watch.stop();
+        LOG.debug("Started Swagger v2 in {} ms", watch.getTotalTimeMillis());
+
+        return docket;
+    }
+
+    @Bean
+    public Docket swagger12Api(ServletContext ctx) {
+        LOG.debug("Starting Swagger");
+        StopWatch watch = new StopWatch();
+        watch.start();
+
+        Docket docket = new Docket(DocumentationType.SWAGGER_12)
+                .apiInfo(apiInfo())
+                .pathProvider(new RelativeSwaggerPathProvider(ctx))
+                .select()
+                    .apis(RequestHandlerSelectors.any())
+                    .paths(PathSelectors.any())
+                    .build()
+                .directModelSubstitute(JsonNode.class, Object.class)
+                .genericModelSubstitutes(ResponseEntity.class, Optional.class)
+                .alternateTypeRules(
+                        springfox.documentation.schema.AlternateTypeRules
+                                .newRule(typeResolver.resolve(new GenericType<Callable<ResponseEntity<Object>>>() {
+                                }), typeResolver.resolve(Object.class)));
+        watch.stop();
+        LOG.debug("Started Swagger in {} ms", watch.getTotalTimeMillis());
+
+        return docket;
     }
 
     /**
      * API Info as it appears on the swagger-ui page
      */
     private ApiInfo apiInfo() {
+
+        Contact contact = null;
         ApiInfo apiInfo = new ApiInfo(
-            "Oppijan verkkopalvelukokonaisuus / ePerusteet ammatillisen opetussuunnitelmat",
-            "Spring MVC API based on the swagger 1.2 spec",
-            "https://confluence.csc.fi/display/oppija/Rajapinnat+toisen+asteen+ja+perusasteen+toimijoille",
-            null,
-            "EUPL 1.1",
-            "http://ec.europa.eu/idabc/eupl"
-        );
+                "Oppijan verkkopalvelukokonaisuus / ePerusteet ammatillisen opetussuunnitelmat",
+                "",
+                "Spring MVC API based on the swagger 1.2 spec",
+                "https://confluence.csc.fi/display/oppija/Rajapinnat+toisen+asteen+ja+perusasteen+toimijoille",
+                contact,
+                "EUPL 1.1",
+                "http://ec.europa.eu/idabc/eupl");
+
         return apiInfo;
     }
 
+    public class RelativeSwaggerPathProvider extends AbstractPathProvider {
+        public String ROOT = "/";
+        private final ServletContext servletContext;
+
+        public RelativeSwaggerPathProvider(ServletContext servletContext) {
+            super();
+            this.servletContext = servletContext;
+        }
+
+        @Override
+        protected String applicationPath() {
+            return isNullOrEmpty(servletContext.getContextPath())
+                    ? ROOT : servletContext.getContextPath() + "/api";
+        }
+
+        @Override
+        protected String getDocumentationPath() {
+            return ROOT;
+        }
+    }
 }
+

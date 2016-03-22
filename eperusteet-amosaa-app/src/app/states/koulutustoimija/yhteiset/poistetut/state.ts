@@ -7,7 +7,7 @@ angular.module("app")
     },
     views: {
         "": {
-            controller: ($scope, poistetut, yhteiset) => {
+            controller: ($scope, poistetut) => {
                 $scope.vaihdaJarjestys = Taulukot.bindSivutus($scope, "poistoAika", poistetut);
                 $scope.suodata = (item) => KaannaService.hae(item.nimi, $scope.search);
             }

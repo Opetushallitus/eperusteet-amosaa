@@ -16,7 +16,6 @@
 
 package fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija;
 
-import com.wordnik.swagger.annotations.Api;
 import fi.vm.sade.eperusteet.amosaa.dto.PoistettuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.YhteisetDto;
@@ -28,6 +27,8 @@ import fi.vm.sade.eperusteet.amosaa.service.ops.TekstiKappaleViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.revision.RevisionService;
 import fi.vm.sade.eperusteet.amosaa.service.util.PoistettuService;
 import java.util.List;
+
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -54,22 +55,19 @@ public class YhteisetController implements AbstractRevisionController, TekstiKap
     @Autowired
     private PoistettuService poistetutService;
 
-//    @Autowired
-//    private KoulutustoimijaRepository koulutustoimijaRepository;
-
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public YhteisetDto getYhteiset(
-            @PathVariable("baseId") final Long baseId,
-            @PathVariable("id") final Long id) {
+            @PathVariable final Long baseId,
+            @PathVariable final Long id) {
         return service.getYhteiset(baseId, id);
     }
 
     @RequestMapping(method = RequestMethod.PUT)
     @ResponseBody
     public YhteisetDto updateYhteiset(
-            @PathVariable("baseId") final Long baseId,
-            @PathVariable("id") final Long id,
+            @PathVariable final Long baseId,
+            @PathVariable final Long id,
             @RequestBody(required = false) YhteisetDto body) {
         return service.updateYhteiset(baseId, id, body);
     }
@@ -82,31 +80,31 @@ public class YhteisetController implements AbstractRevisionController, TekstiKap
     @RequestMapping(value = "/poistetut", method = RequestMethod.GET)
     @ResponseBody
     public List<PoistettuDto> getYhteisetPoistetut(
-            @PathVariable("baseId") final Long baseId,
-            @PathVariable("id") final Long id) {
+            @PathVariable final Long baseId,
+            @PathVariable final Long id) {
         return poistetutService.poistetut(baseId);
     }
 
     @RequestMapping(value = "/sisalto", method = RequestMethod.GET)
     @ResponseBody
     public YhteisetSisaltoDto getYhteisetSisalto(
-            @PathVariable("baseId") final Long baseId,
-            @PathVariable("id") final Long id) {
+            @PathVariable final Long baseId,
+            @PathVariable final Long id) {
         return service.getYhteisetSisalto(baseId, id);
     }
 
     @RequestMapping(value = "/oikeudet", method = RequestMethod.GET)
     public List<KayttajaoikeusDto> getOikeudet(
-            @PathVariable("baseId") final Long baseId,
-            @PathVariable("id") final Long id) {
+            @PathVariable final Long baseId,
+            @PathVariable final Long id) {
         return service.getOikeudet(baseId, id);
     }
 
     @RequestMapping(value = "/oikeudet/{oikeusId}", method = RequestMethod.PUT)
     public KayttajaoikeusDto updateOikeus(
-            @PathVariable("baseId") final Long baseId,
-            @PathVariable("id") final Long id,
-            @PathVariable("oikeusId") final Long oikeusId,
+            @PathVariable final Long baseId,
+            @PathVariable final Long id,
+            @PathVariable final Long oikeusId,
             @RequestBody(required = false) KayttajaoikeusDto body) {
         return service.updateOikeus(baseId, id, oikeusId, body);
     }

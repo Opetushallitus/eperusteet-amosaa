@@ -15,7 +15,6 @@
  */
 package fi.vm.sade.eperusteet.amosaa.resource.ops;
 
-import com.mangofactory.swagger.annotations.ApiIgnore;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.KommenttiDto;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
@@ -30,6 +29,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * @author mikkom

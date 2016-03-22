@@ -15,7 +15,6 @@
  */
 package fi.vm.sade.eperusteet.amosaa.resource.ohje;
 
-import com.mangofactory.swagger.annotations.ApiIgnore;
 import fi.vm.sade.eperusteet.amosaa.dto.ohje.OhjeDto;
 import fi.vm.sade.eperusteet.amosaa.service.ohje.OhjeService;
 import java.util.List;
@@ -28,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.UUID;
 

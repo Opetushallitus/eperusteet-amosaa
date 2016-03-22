@@ -84,12 +84,12 @@ angular.module("app", [
     });
 })
 
-.config(["cfpLoadingBarProvider", function(cfpLoadingBarProvider) {
+.config(["cfpLoadingBarProvider", cfpLoadingBarProvider => {
     cfpLoadingBarProvider.includeSpinner = false;
     cfpLoadingBarProvider.latencyThreshold = 0;
 }])
 
-.config(["usSpinnerConfigProvider", function (usSpinnerConfigProvider) {
+.config(["usSpinnerConfigProvider", usSpinnerConfigProvider => {
     usSpinnerConfigProvider.setDefaults({color: "#29d", radius: 30, width: 8, length: 16});
 }])
 
