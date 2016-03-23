@@ -185,7 +185,7 @@ angular.module("app")
             editor = CKEDITOR.inline(element[0], {
                 toolbar: toolbarLayout,
                 removePlugins: "resize,elementspath,scayt,wsc,image",
-                extraPlugins: "divarea,sharedspace,epimage,termi",
+                extraPlugins: "quicktable,epimage,termi",
                 disallowedContent: "br; tr td{width,height}",
                 extraAllowedContent: "img[!data-uid,src]; abbr[data-viite]",
                 disableObjectResizing: true, // doesn"t seem to work with inline editor
