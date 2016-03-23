@@ -32,27 +32,26 @@ angular.module("app")
     simplified: [
         {name: "clipboard", items: ["Cut", "Copy", "Paste", "-", "Undo", "Redo"]},
         {name: "basicstyles", items: ["Bold", "Italic", "Underline", "Strike", "-", "RemoveFormat"]},
-        {name: "paragraph", items: ["NumberedList", "BulletedList", "-", "Outdent", "Indent"]},
+        {name: "paragraph", items: ["NumberedList", "BulletedList"]},
         {name: "tools", items: ["About"]}
     ],
     light: [
         {name: "clipboard", items: ["Cut", "Copy", "Paste", "-", "Undo", "Redo"]},
         {name: "basicstyles", items: ["Bold", "Italic", "Underline", "Strike", "-", "RemoveFormat"]},
-        {name: "paragraph", items: ["NumberedList", "BulletedList", "-", "Outdent", "Indent"]},
+        {name: "paragraph", items: ["NumberedList", "BulletedList"]},
         {name: "insert", items: ["Table", "Link", "Termi"]},
         {name: "tools", items: ["About"]}
     ],
     normal: [
         {name: "clipboard", items: ["Cut", "Copy", "Paste", "PasteText", "PasteFromWord", "-", "Undo", "Redo"]},
         {name: "basicstyles", items: ["Bold", "Italic", "Underline", "Strike", "-", "RemoveFormat"]},
-        {name: "paragraph", items: ["NumberedList", "BulletedList", "-", "Outdent", "Indent", "-", "Blockquote"]},
+        {name: "paragraph", items: ["NumberedList", "BulletedList", "Blockquote"]},
         {name: "insert", items: ["Table", "HorizontalRule", "SpecialChar", "Link", "Termi", "epimage"]},
         {name: "tools", items: ["About"]}
     ]
 })
 
     .controller('TermiPluginController', function ($scope, $stateParams, $timeout) {
-        //const termisto = Api.all("koulutustoimijat").one($stateParams.ktId).all('termisto').getList();
         $scope.filtered = [];
         $scope.termit = [];
         $scope.model = {
