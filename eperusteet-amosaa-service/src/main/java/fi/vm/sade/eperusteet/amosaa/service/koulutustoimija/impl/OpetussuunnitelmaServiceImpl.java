@@ -16,11 +16,13 @@
 
 package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.impl;
 
+import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.Kayttajaoikeus;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.revision.Revision;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappaleViite;
 import fi.vm.sade.eperusteet.amosaa.dto.PoistettuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
@@ -28,6 +30,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaoikeusRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
+import fi.vm.sade.eperusteet.amosaa.repository.teksti.TekstikappaleviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
@@ -62,11 +65,57 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     @Autowired
     private KayttajanTietoService kayttajatietoService;
 
+    @Autowired
+    private TekstikappaleviiteRepository tkvRepository;
+
     @Override
     public List<OpetussuunnitelmaBaseDto> getOpetussuunnitelmat(Long ktId) {
         Koulutustoimija koulutustoimija = koulutustoimijaRepository.findOne(ktId);
         List<Opetussuunnitelma> opsit = repository.findAllByKoulutustoimija(koulutustoimija);
         return mapper.mapAsList(opsit, OpetussuunnitelmaBaseDto.class);
+    }
+
+    @Override
+    public List<OpetussuunnitelmaBaseDto> getOpetussuunnitelmatByTyyppi(OpsTyyppi tyyppi) {
+        List<Opetussuunnitelma> opetussuunnitelmat = repository.findAllByTyyppi(tyyppi);
+        return mapper.mapAsList(opetussuunnitelmat, OpetussuunnitelmaBaseDto.class);
+    }
+
+    @Override
+    public OpetussuunnitelmaBaseDto addOpetussuunnitelma(Long ktId, OpetussuunnitelmaDto opsDto) {
+        Koulutustoimija kt = koulutustoimijaRepository.findOne(ktId);
+        Opetussuunnitelma ops = mapper.map(opsDto, Opetussuunnitelma.class);
+
+        if (kt.isOph()) {
+            opsDto.setTyyppi(OpsTyyppi.POHJA);
+        }
+        else {
+            switch (opsDto.getTyyppi()) {
+                case OPS:
+                    break;
+                case YHTEINEN:
+                    Opetussuunnitelma pohja = repository.findOne(opsDto.getPohja().getIdLong());
+                    if (pohja == null) {
+                        throw new BusinessRuleViolationException("pohjaa-ei-loytynyt");
+                    }
+                    ops.setPohja(pohja);
+                    break;
+                case YLEINEN:
+                    break;
+                case POHJA:
+                    throw new BusinessRuleViolationException("ainoastaan-oph-voi-tehda-pohjia");
+                default:
+                    throw new BusinessRuleViolationException("opstyypille-ei-toteutusta");
+            }
+        }
+
+        ops.setKoulutustoimija(kt);
+        ops.setTila(Tila.LUONNOS);
+        ops = repository.save(ops);
+        TekstiKappaleViite tkv = new TekstiKappaleViite();
+        tkv.setOwner(ops);
+        tkvRepository.save(tkv);
+        return mapper.map(ops, OpetussuunnitelmaBaseDto.class);
     }
 
     @Override

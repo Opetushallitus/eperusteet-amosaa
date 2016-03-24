@@ -24,10 +24,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
  */
 
 public enum OpsTyyppi {
-
+    POHJA("pohja"), // OPH:n yhteisien osien pohja
     OPS("ops"), // Normaali opetussuunnitelma
     YLEINEN("yleinen"), // Opetussuunnitelmien kesken jaettava opetussuunnitelma
-    YHTEINEN("yhteiset"); // Koulutustoimijan yhteiset osat
+    YHTEINEN("yhteinen"); // Koulutustoimijan yhteiset osat
 
     private final String tyyppi;
 

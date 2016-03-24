@@ -16,8 +16,10 @@
 
 package fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
+import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,4 +35,10 @@ public class OpetussuunnitelmaBaseDto {
     LokalisoituTekstiDto nimi;
     Tila tila;
     OpsTyyppi tyyppi;
+    
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    Reference pohja;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    String peruste;
 }

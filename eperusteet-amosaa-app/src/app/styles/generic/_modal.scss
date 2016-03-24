@@ -23,3 +23,19 @@ $modal-button-size: 90px;
     }
   }
 }
+
+.select-list {
+  .select-item {
+    margin: 2px;
+
+    input {
+      cursor: pointer;
+      float: left;
+    }
+  }
+
+  .select-label {
+    cursor: pointer;
+    margin-left: 20px;
+  }
+}

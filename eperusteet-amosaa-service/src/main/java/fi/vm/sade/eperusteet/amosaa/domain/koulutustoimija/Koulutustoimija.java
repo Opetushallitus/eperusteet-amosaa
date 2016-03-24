@@ -19,6 +19,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.AbstractAuditedEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
+import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 import java.io.Serializable;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -63,4 +64,8 @@ public class Koulutustoimija extends AbstractAuditedEntity implements Serializab
     @Getter
     @Setter
     private String organisaatio = "";
+
+    public boolean isOph() {
+        return SecurityUtil.OPH_OID.equals(this.organisaatio);
+    }
 }

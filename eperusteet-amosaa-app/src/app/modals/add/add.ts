@@ -2,34 +2,68 @@ namespace ModalAdd {
     let i;
     export const init = ($injector) => {
         i = inject($injector, ["$rootScope", "$uibModal", "$q"]);
-    }; const filterPerusteet = (perusteet = [], query = "") => _(perusteet)
+    };
+
+    const filterPerusteet = (perusteet = [], query = "") => _(perusteet)
         .filter((peruste) => KaannaService.hae(peruste.nimi, query))
         .value();
 
-    export const opetussuunnitelma = () => i.$uibModal.open({
-        resolve: {
-            perusteet: Eperusteet => Eperusteet.one("perusteet").get()
-        },
-        templateUrl: "modals/add/opetussuunnitelma.jade",
-        controller: ($uibModalInstance, $scope, $state, perusteet) => {
-            $scope.perusteet = filterPerusteet(perusteet.data);
-            $scope.peruste = undefined;
-            $scope.ops = {};
-            $scope.ok = $uibModalInstance.close;
+    export const yhteinen = () => i.$uibModal.open({
+            resolve: {
+                pohjat: Api => Api.all("opetussuunnitelmat").all("pohjat").getList()
+            },
+            templateUrl: "modals/add/yhteinen.jade",
+            controller: ($scope, $state, $uibModalInstance, pohjat) => {
+                $scope.pohjat = pohjat;
+                $scope.ok = $uibModalInstance.close;
+                $scope.yhteinen = {
+                    tyyppi: "yhteinen"
+                };
 
-            $scope.update = (input) => {
-                if (!_.isEmpty(input)) {
-                    $scope.peruste = undefined;
-                }
-                $scope.perusteet = filterPerusteet(perusteet.data, input);
-            };
-
-            $scope.valitsePeruste = (peruste) => {
-                $scope.input = "";
-                $scope.peruste = peruste;
+                $scope.valitsePohja = (pohja) => {
+                    $scope.valittuPohja = pohja;
+                    $scope.yhteinen._pohja = "" + pohja.id;
+                };
             }
-        }
-    }).result;
+        }).result;
+
+    export const pohja = () => i.$uibModal.open({
+            resolve: { },
+            templateUrl: "modals/add/pohja.jade",
+            controller: ($scope, $state, $uibModalInstance) => {
+                $scope.ok = $uibModalInstance.close;
+                $scope.pohja = {
+                    tyyppi: "pohja"
+                };
+            }
+        }).result;
+
+    export const opetussuunnitelma = () => i.$uibModal.open({
+            resolve: {
+                perusteet: Eperusteet => Eperusteet.one("perusteet").get()
+            },
+            templateUrl: "modals/add/opetussuunnitelma.jade",
+            controller: ($scope, $state, $uibModalInstance, perusteet) => {
+                $scope.perusteet = filterPerusteet(perusteet.data);
+                $scope.peruste = undefined;
+                $scope.ops = {
+                    tyyppi: "ops",
+                };
+                $scope.ok = $uibModalInstance.close;
+
+                $scope.update = (input) => {
+                    if (!_.isEmpty(input)) {
+                        $scope.peruste = undefined;
+                    }
+                    $scope.perusteet = filterPerusteet(perusteet.data, input);
+                };
+
+                $scope.valitsePeruste = (peruste) => {
+                    $scope.input = "";
+                    $scope.peruste = peruste;
+                }
+            }
+        }).result;
 
     export const sisaltoAdder = (sallitut = ["tekstikappale"]) => i.$uibModal.open({
             resolve: { },

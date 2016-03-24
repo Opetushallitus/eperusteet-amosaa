@@ -1,10 +1,10 @@
 div.otsikkotaso.kaikki-opetussuunnitelmat
-  h3(kaanna="'kaikki-opetussuunnitelmat'")
+  h3(kaanna="'yhteisien-osien-pohjat'")
 
   div(ng-hide="opetussuunnitelmat.length > 0")
     div.alert.alert-info
-      div(kaanna="'koulutustoimijalla-ei-ole-opetussuunnitelmia'")
-      button.btn.btn-primary.pull-right(style="position: relative; top: -26px" kaanna="'lisaa-uusi'" ng-click="addOpetussuunnitelma()")
+      div(kaanna="'yhteisien-osien-pohjia-ei-viela-luotu'")
+      button.btn.btn-primary.pull-right(style="position: relative; top: -26px" kaanna="'lisaa-uusi'" ng-click="addPohja()")
 
   div(ng-show="opetussuunnitelmat.length > 0")
     div.row
@@ -19,7 +19,7 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
             span(kaanna="'tarkennettu-haku'")
       div.col-xs-2
         div.pull-right
-          button.btn.btn-default(kaanna="'lisaa-uusi'" ng-click="addOpetussuunnitelma()")
+          button.btn.btn-default(kaanna="'lisaa-uusi'" ng-click="addPohja()")
 
     table.table.boxtable
       thead
@@ -27,37 +27,22 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
           th
           th
             a(href="#")
-              span(kaanna="'tutkinnon-nimi'")
-              span=" "
-              span.glyphicon.glyphicon-sort-by-attributes
-          th
-            a(href="#")
-              span(kaanna="'osaamisala'")
-              span=" "
-              span.glyphicon.glyphicon-sort-by-attributes
-          th
-            a(href="#")
-              span(kaanna="'tutkinnon-tyyppi'")
+              span(kaanna="'pohjan-nimi'")
               span=" "
               span.glyphicon.glyphicon-sort-by-attributes
           th
       tbody
-        tr(ng-repeat="ops in fopsit = (opetussuunnitelmat | filter: { tyyppi: 'ops' })")
+        tr(ng-repeat="ops in opetussuunnitelmat")
           td
             div
               div
               div
-                a(href="")
+                a(href="#")
                   span.glyphicon.glyphicon-star
           td
             div
               a(href="" ui-sref="root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot({ opsId: ops.id })")
                 span.ellipsis(kaanna="ops.nimi")
-          td
-            div
-              span.ellipsis(ng-show="ops.osaamisalat.length > 0", kaanna="ops.osaamisalat[0].nimi")
-          td
-            div(kaanna="ops.koulutustyyppi")
           td
             div
               a(href="" ui-sref="root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot({ opsId: ops.id })")

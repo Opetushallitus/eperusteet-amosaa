@@ -1,6 +1,12 @@
 div.otsikkotaso.ops-osa
   h3(kaanna="'koulutustoimija-yhteinen-osat'")
-  table.table.boxtable
+
+  div(ng-if="!yhteinen")
+    div.alert.alert-info
+      div(kaanna="'koulutustoimijan-yhteista-osaa-ei-luotu'")
+      button.btn.btn-primary.pull-right(style="position: relative; top: -26px" kaanna="'lisaa-uusi'" ng-click="addYhteinen()")
+
+  table.table.boxtable(ng-if="yhteinen")
     tbody
       tr
         td
@@ -12,7 +18,7 @@ div.otsikkotaso.ops-osa
               span(kaanna="yhteinen.nimi")
         td
           div
-            a(href="" ui-sref="root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot({ opsId: ops.id })")
+            a(href="" ui-sref="root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot({ opsId: yhteinen.id })")
               div(name="go")
                 span.glyphicon.glyphicon-chevron-right
 

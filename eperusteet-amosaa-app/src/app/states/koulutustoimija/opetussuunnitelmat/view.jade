@@ -1,7 +1,7 @@
 div.ops-nakyma
   div.row
     div.col-xs-12
-      div.ylatunniste
+      div.ylatunniste(class="{{ 'ylatunniste-' + ops.tyyppi }}")
         a.pull-left(href="")
           div.muokkaa
             i.fa.fa-pencil
@@ -30,9 +30,9 @@ div.ops-nakyma
           li(ui-sref-active="active")
             a(ui-sref=".poistetut" kaanna="'poistetut'")
           li(ui-sref-active="active")
-            a(ui-sref=".oikeudet" kaanna="'oikeudet'")
+            a(ui-sref=".oikeudet" kaanna="'oikeudet'" ng-if="ops.tyyppi !== 'pohja'")
           li(ui-sref-active="active")
-            a(ui-sref=".dokumentti" kaanna="'dokumentti'")
+            a(ui-sref=".dokumentti" kaanna="'dokumentti'" ng-if="ops.tyyppi !== 'pohja'")
 
   div.row
     div.col-xs-12

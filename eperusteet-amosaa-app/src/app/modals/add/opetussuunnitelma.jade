@@ -2,7 +2,7 @@ div.modal-header
   h2(kaanna="'lisaa-opetussuunnitelma'")
 
 div.modal-body
-  div.tutkintohaku
+  div.content-spacing.tutkintohaku
     .form-group.has-feedback.has-feedback-left
       input.form-control(type="text"
         placeholder="{{ 'hae-peruste' | kaanna }}"
@@ -52,7 +52,13 @@ div.modal-body
           h4(kaanna="'kuvaus'")
           p.content(ng-bind="peruste.kuvaus | kaanna")
 
+  .content-spacing(ng-show="peruste")
+    h3(kaanna="'anna-nimi'")
+    input.form-control(slocalized ng-model="ops.nimi" type="text" required="true")
+
+ 
+
 
 div.modal-footer
-  button.btn.btn-primary(ng-click="ok()", kaanna="'tallenna'")
+  button.btn.btn-primary(ng-click="ok(ops)", kaanna="'tallenna'")
   button.btn.btn-default(ng-click="ok()", kaanna="'peruuta'")

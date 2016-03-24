@@ -8,8 +8,23 @@ $ops-valikko-min-height: 600px;
 $ops-top-vertical-margin: 10px;
 
 .ops-nakyma {
+    .ylatunniste-yhteinen {
+        background-color: #dbf4ff; // FIXME
+    }
+
+    .ylatunniste-kooste {
+        background-color: #ddfff2; // FIXME
+    }
+
+    .ylatunniste-pohja {
+        background-color: #fff6e8; // FIXME
+    }
+
+    .ylatunniste-ops {
+        background-color: #f3fafd; // FIXME
+    }
+
     .ylatunniste {
-        background-color: #f3fafd;
         height: $ops-ylatunniste-height;
         padding: $ops-ylatunniste-padding;
 

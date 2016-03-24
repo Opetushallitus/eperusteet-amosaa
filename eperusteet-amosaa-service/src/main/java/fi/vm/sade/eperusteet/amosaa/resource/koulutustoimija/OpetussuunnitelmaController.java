@@ -55,6 +55,14 @@ public class OpetussuunnitelmaController {
         return service.getOpetussuunnitelmat(ktId);
     }
 
+    @RequestMapping(method = RequestMethod.POST)
+    @ResponseBody
+    public OpetussuunnitelmaBaseDto add(
+            @PathVariable final Long ktId,
+            @RequestBody OpetussuunnitelmaDto opsDto) {
+        return service.addOpetussuunnitelma(ktId, opsDto);
+    }
+
     @RequestMapping(value = "/{opsId}", method = RequestMethod.GET)
     @ResponseBody
     public OpetussuunnitelmaDto get(

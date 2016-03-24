@@ -34,4 +34,6 @@ public interface OpetussuunnitelmaRepository extends JpaWithVersioningRepository
     Opetussuunnitelma findOneYhteinen(Koulutustoimija koulutustoimija, OpsTyyppi tyyppi);
     
     List<Opetussuunnitelma> findAllByKoulutustoimija(Koulutustoimija koulutustoimija);
+
+    List<Opetussuunnitelma> findAllByTyyppi(OpsTyyppi tyyppi);
 }

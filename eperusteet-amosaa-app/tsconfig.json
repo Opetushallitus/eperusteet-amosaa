@@ -35,6 +35,7 @@
     "src/app/logic/tekstikappaleet.ts",
     "src/app/logic/termisto.ts",
     "src/app/logic/algoritmit.ts",
+    "src/app/logic/koulutustoimijat.ts",
     "src/app/misc/filters.ts",
     "src/app/modals/add/add.ts",
     "src/app/modals/confirm/confirm.ts",

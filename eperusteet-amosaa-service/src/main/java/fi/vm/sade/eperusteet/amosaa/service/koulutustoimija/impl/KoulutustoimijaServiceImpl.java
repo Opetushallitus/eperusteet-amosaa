@@ -17,13 +17,9 @@
 package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
-import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
-import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
-import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappaleViite;
 import fi.vm.sade.eperusteet.amosaa.dto.TiedoteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
@@ -37,7 +33,6 @@ import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -79,17 +74,6 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
         koulutustoimija.setNimi(nimi);
         koulutustoimija.setOrganisaatio(kOid);
         koulutustoimija = repository.save(koulutustoimija);
-
-        Opetussuunnitelma ops = new Opetussuunnitelma();
-        ops.setNimi(nimi);
-        ops.setJulkaisukielet(Collections.EMPTY_SET);
-        ops.setTila(Tila.LUONNOS);
-        ops.setTyyppi(OpsTyyppi.YHTEINEN);
-        ops.setKoulutustoimija(koulutustoimija);
-        ops = opetussuunnitelmaRepository.save(ops);
-        TekstiKappaleViite tkv = new TekstiKappaleViite();
-        tkv.setOwner(ops);
-        tkvRepository.save(tkv);
         return koulutustoimija;
     }
 

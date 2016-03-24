@@ -76,7 +76,7 @@ public class TekstiKappaleViiteController {
             @PathVariable final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long tkvId,
-            @RequestBody final TekstiKappaleViiteDto.Puu tekstiKappaleViiteDto) {
+            @RequestBody final TekstiKappaleViiteDto tekstiKappaleViiteDto) {
         service.updateTekstiKappaleViite(ktId, opsId, tkvId, tekstiKappaleViiteDto);
     }
 
