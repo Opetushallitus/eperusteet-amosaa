@@ -17,6 +17,7 @@
 package fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl;
 
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.Dokumentti;
+import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiEdistyminen;
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiTila;
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Yhteiset;
@@ -122,6 +123,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
             dokumentti.setTila(DokumenttiTila.VALMIS);
             dokumentti.setValmistumisaika(new Date());
             dokumentti.setVirhekoodi("");
+            dokumentti.setEdistyminen(DokumenttiEdistyminen.TUNTEMATON);
 
             // Tallennetaan valmis dokumentti
             dokumenttiRepository.save(dokumentti);

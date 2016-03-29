@@ -51,7 +51,6 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.MemoryCacheImageOutputStream;
-import javax.persistence.EntityManager;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -94,7 +93,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
 
     @Override
     public byte[] generatePdf(Yhteiset yhteiset, Dokumentti dokumentti, Kieli kieli)
-            throws ParserConfigurationException, IOException, SAXException, TransformerException, InterruptedException {
+            throws ParserConfigurationException, IOException, SAXException, TransformerException {
 
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -131,14 +130,14 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
         addMetaPages(docBase);
 
         docBase.getDokumentti().setEdistyminen(DokumenttiEdistyminen.TEKSTIKAPPALEET);
-        saveEdistyminen(docBase);
+        dokumenttiRepository.save(docBase.getDokumentti());
 
         // Sisältöelementit
         addYhteisetOsuudet(docBase);
         //Thread.sleep(5000);
 
         docBase.getDokumentti().setEdistyminen(DokumenttiEdistyminen.VIITTEET);
-        saveEdistyminen(docBase);
+        dokumenttiRepository.save(docBase.getDokumentti());
 
 
         // Alaviitteet
@@ -146,24 +145,18 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
         //Thread.sleep(5000);
 
         docBase.getDokumentti().setEdistyminen(DokumenttiEdistyminen.KUVAT);
-        saveEdistyminen(docBase);
+        dokumenttiRepository.save(docBase.getDokumentti());
 
         // Kuvat
         buildImages(docBase);
         //Thread.sleep(5000);
 
         docBase.getDokumentti().setEdistyminen(DokumenttiEdistyminen.TYYLIT);
-        saveEdistyminen(docBase);
+        dokumenttiRepository.save(docBase.getDokumentti());
 
         // PDF luonti XHTML dokumentista
         return pdfService.xhtml2pdf(doc);
     }
-
-    @Transactional
-    private void saveEdistyminen(DokumenttiBase docBase) {
-        dokumenttiRepository.saveAndFlush(docBase.getDokumentti());
-    }
-
     private void addMetaPages(DokumenttiBase docBase) {
         Element title = docBase.getDocument().createElement("title");
         String nimi = getTextString(docBase.getYhteiset().getNimi(), docBase.getKieli());

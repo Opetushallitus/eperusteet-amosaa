@@ -30,6 +30,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -112,6 +113,7 @@ public interface DokumenttiAbstractController {
         return service().getDto(id, tyyppi(), Kieli.of(kieli));
     }
 
+    @Transactional
     @RequestMapping(value = "/lisaaKuva", method=RequestMethod.POST)
     default ResponseEntity<Object> addImage(@PathVariable final Long baseId,
                                             @PathVariable final Long id,
@@ -175,6 +177,61 @@ public interface DokumenttiAbstractController {
             repository().save(dokumentti);
 
             return new ResponseEntity<>(HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @Transactional
+    @RequestMapping(value = "/lataaKuva", method=RequestMethod.GET)
+    @CacheControl(age = CacheControl.ONE_YEAR, nonpublic = false)
+    default ResponseEntity<Object> addImage(@PathVariable final Long baseId,
+                                            @PathVariable final Long id,
+                                            @RequestParam final String tyyppi,
+                                            @RequestParam(defaultValue = "fi") final String kieli) {
+        if (tyyppi != null) {
+            // Tehdään DokumenttiDto jos ei löydy jo valmiina
+            DokumenttiDto dokumenttiDto = service().getDto(id, tyyppi(), Kieli.of(kieli));
+
+            if (dokumenttiDto == null) {
+                dokumenttiDto = service().createDtoFor(id, tyyppi(), Kieli.of(kieli));
+            }
+
+            if (dokumenttiDto == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
+            // Haetaan kuva
+            Dokumentti dokumentti = repository().findByYhteisetIdAndKieli(id, Kieli.of(kieli));
+            if (dokumentti == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
+            byte[] image;
+
+            switch (tyyppi) {
+                case "kansi":
+                    image = dokumentti.getKansikuva();
+                    break;
+                case "ylatunniste":
+                    image = dokumentti.getYlatunniste();
+                    break;
+                case "alatunniste":
+                    image = dokumentti.getAlatunniste();
+                    break;
+                default:
+                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+
+            if (image == null || image.length == 0) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.IMAGE_PNG);
+            headers.setContentLength(image.length);
+
+            return new ResponseEntity<>(image, headers, HttpStatus.OK);
         }
 
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
