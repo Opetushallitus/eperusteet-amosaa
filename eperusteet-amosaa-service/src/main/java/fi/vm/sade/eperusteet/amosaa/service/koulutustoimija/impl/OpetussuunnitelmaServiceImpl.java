@@ -19,6 +19,7 @@ package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.impl;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.Kayttaja;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.Kayttajaoikeus;
+import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.KayttajaoikeusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
@@ -159,6 +160,13 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         // FIXME lisää oikeustarkistelu muokkaajalle
         
         Kayttajaoikeus oikeus = kayttajaoikeusRepository.findOneByKayttajaAndOpetussuunnitelma(kayttaja, ops);
+
+        if (oikeusDto.getOikeus() == KayttajaoikeusTyyppi.LUKU) {
+            if (oikeus != null) {
+                kayttajaoikeusRepository.delete(oikeus);
+            }
+            return null;
+        }
 
         if (oikeus == null) {
             oikeus = new Kayttajaoikeus();

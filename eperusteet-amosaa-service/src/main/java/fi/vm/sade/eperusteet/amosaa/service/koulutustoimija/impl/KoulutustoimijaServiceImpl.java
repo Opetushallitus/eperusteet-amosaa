@@ -70,7 +70,9 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     @Override
     @Transactional(readOnly = false)
     public KoulutustoimijaBaseDto getKoulutustoimija(String kOid) {
-        return mapper.map(getOrInitialize(kOid), KoulutustoimijaBaseDto.class);
+        Koulutustoimija kt = getOrInitialize(kOid);
+        KoulutustoimijaBaseDto ktDto = mapper.map(kt, KoulutustoimijaBaseDto.class);
+        return ktDto;
     }
 
     @Override
