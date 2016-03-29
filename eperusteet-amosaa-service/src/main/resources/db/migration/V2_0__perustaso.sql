@@ -310,3 +310,16 @@ create table dokumentti (
     alatunniste OID,
     virhekoodi TEXT
 );
+
+CREATE TABLE tiedote (
+    id BIGINT NOT NULL PRIMARY KEY,
+    koulutustoimija_id BIGINT NOT NULL REFERENCES koulutustoimija(id),
+    otsikko TEXT,
+    teksti TEXT,
+    julkinen BOOLEAN,
+    tarkea BOOLEAN,
+    luoja CHARACTER VARYING(255),
+    luottu TIMESTAMP WITHOUT TIME ZONE,
+    muokkaja CHARACTER VARYING(255),
+    muokattu TIMESTAMP WITHOUT TIME ZONE
+);
