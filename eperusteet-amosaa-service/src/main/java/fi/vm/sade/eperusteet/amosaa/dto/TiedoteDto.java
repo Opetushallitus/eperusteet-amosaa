@@ -18,6 +18,7 @@ package fi.vm.sade.eperusteet.amosaa.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import java.util.Date;
 
 /**
  *
@@ -26,5 +27,13 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TiedoteDto {
-
+    private Long id;
+    private String otsikko;
+    private String teksti;
+    private Boolean julkinen;
+    private Boolean tarkea;
+    private Date luottu;
+    private String luoja;
+    private Date muokattu;
+    private String muokkaaja;
 }

@@ -40,4 +40,3 @@ public interface TermistoService {
 
     void deleteTermi(@P("ktId") Long ktId, @P("id") Long id);
 }
-
