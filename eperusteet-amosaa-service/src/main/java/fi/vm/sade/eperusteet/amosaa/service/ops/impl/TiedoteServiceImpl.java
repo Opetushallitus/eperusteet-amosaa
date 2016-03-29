@@ -1,13 +1,12 @@
 package fi.vm.sade.eperusteet.amosaa.service.ops.impl;
 
-import fi.vm.sade.eperusteet.amosaa.domain.Termi;
 import fi.vm.sade.eperusteet.amosaa.domain.Tiedote;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.dto.TiedoteDto;
-import fi.vm.sade.eperusteet.amosaa.dto.ops.TermiDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.TiedoteRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
+import fi.vm.sade.eperusteet.amosaa.service.ops.TiedoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +17,7 @@ import static fi.vm.sade.eperusteet.amosaa.service.util.Nulls.assertExists;
 /**
  * Created by richard.vancamp on 29/03/16.
  */
-public class TiedoteServiceImpl {
+public class TiedoteServiceImpl implements TiedoteService {
 
     @Autowired
     private DtoMapper mapper;
