@@ -21,14 +21,9 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.dto.TiedoteDto;
-import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
-import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
-import fi.vm.sade.eperusteet.amosaa.repository.teksti.TekstikappaleviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
@@ -53,12 +48,6 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     private KoulutustoimijaRepository repository;
 
     @Autowired
-    private OpetussuunnitelmaRepository opetussuunnitelmaRepository;
-
-    @Autowired
-    private TekstikappaleviiteRepository tkvRepository;
-
-    @Autowired
     private DtoMapper mapper;
 
     @Transactional(readOnly = false)
@@ -74,6 +63,7 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
         koulutustoimija.setNimi(nimi);
         koulutustoimija.setOrganisaatio(kOid);
         koulutustoimija = repository.save(koulutustoimija);
+
         return koulutustoimija;
     }
 
@@ -86,30 +76,6 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     @Override
     public KoulutustoimijaDto getKoulutustoimija(Long kId) {
         return mapper.map(repository.findOne(kId), KoulutustoimijaDto.class);
-    }
-
-    @Override
-    public List<KoulutustoimijaBaseDto> getKoulutustoimijat() {
-        ArrayList<KoulutustoimijaBaseDto> result = new ArrayList<>();
-        return result;
-    }
-
-    @Override
-    public List<OpetussuunnitelmaBaseDto> getOpetussuunnitelmat(Long kOid) {
-        ArrayList<OpetussuunnitelmaBaseDto> result = new ArrayList<>();
-        return result;
-    }
-
-    @Override
-    public OpetussuunnitelmaDto getOpetussuunnitelma(Long kOid, Long opsId) {
-        OpetussuunnitelmaDto result = new OpetussuunnitelmaDto();
-        return result;
-    }
-
-    @Override
-    public List<KayttajanTietoDto> getKayttajat(Long kOid) {
-//        kayttajaRepository.
-        return new ArrayList<>();
     }
 
     @Override

@@ -17,6 +17,7 @@
 package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.impl;
 
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
+import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.Kayttaja;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.Kayttajaoikeus;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
@@ -27,17 +28,17 @@ import fi.vm.sade.eperusteet.amosaa.dto.PoistettuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
+import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaoikeusRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.TekstikappaleviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
-import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
+import fi.vm.sade.eperusteet.amosaa.service.ops.TekstiKappaleViiteService;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,10 +64,13 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     private KayttajaoikeusRepository kayttajaoikeusRepository;
 
     @Autowired
-    private KayttajanTietoService kayttajatietoService;
+    private KayttajaRepository kayttajaRepository;
 
     @Autowired
     private TekstikappaleviiteRepository tkvRepository;
+
+    @Autowired
+    private TekstiKappaleViiteService tkvService;
 
     @Override
     public List<OpetussuunnitelmaBaseDto> getOpetussuunnitelmat(Long ktId) {
@@ -85,6 +89,9 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     public OpetussuunnitelmaBaseDto addOpetussuunnitelma(Long ktId, OpetussuunnitelmaDto opsDto) {
         Koulutustoimija kt = koulutustoimijaRepository.findOne(ktId);
         Opetussuunnitelma ops = mapper.map(opsDto, Opetussuunnitelma.class);
+        ops.setKoulutustoimija(kt);
+        ops.setTila(Tila.LUONNOS);
+        ops = repository.save(ops);
 
         if (kt.isOph()) {
             opsDto.setTyyppi(OpsTyyppi.POHJA);
@@ -92,12 +99,16 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         else {
             switch (opsDto.getTyyppi()) {
                 case OPS:
+                    // FIXME tarkista perusteen löytyminen
+
                     break;
                 case YHTEINEN:
                     Opetussuunnitelma pohja = repository.findOne(opsDto.getPohja().getIdLong());
                     if (pohja == null) {
                         throw new BusinessRuleViolationException("pohjaa-ei-loytynyt");
                     }
+                    TekstiKappaleViite pohjatkv = tkvRepository.findOneRoot(pohja);
+                    tkvRepository.save(tkvService.kopioiHierarkia(pohjatkv, ops));
                     ops.setPohja(pohja);
                     break;
                 case YLEINEN:
@@ -109,12 +120,11 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
             }
         }
 
-        ops.setKoulutustoimija(kt);
-        ops.setTila(Tila.LUONNOS);
-        ops = repository.save(ops);
-        TekstiKappaleViite tkv = new TekstiKappaleViite();
-        tkv.setOwner(ops);
-        tkvRepository.save(tkv);
+        if (opsDto.getTyyppi() != OpsTyyppi.YHTEINEN) {
+            TekstiKappaleViite tkv = new TekstiKappaleViite();
+            tkv.setOwner(ops);
+            tkvRepository.save(tkv);
+        }
         return mapper.map(ops, OpetussuunnitelmaBaseDto.class);
     }
 
@@ -131,9 +141,9 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     }
 
     @Override
-    public OpetussuunnitelmaDto update(Long ktId, Long id, OpetussuunnitelmaDto body) {
-        Opetussuunnitelma ops = repository.findOne(id);
-        body.setId(id);
+    public OpetussuunnitelmaDto update(Long ktId, Long opsId, OpetussuunnitelmaDto body) {
+        Opetussuunnitelma ops = repository.findOne(opsId);
+        body.setId(opsId);
         body.setTila(ops.getTila());
         repository.setRevisioKommentti(body.getKommentti());
         Opetussuunnitelma updated = mapper.map(body, ops);
@@ -141,26 +151,32 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     }
 
     @Override
-    public KayttajaoikeusDto updateOikeus(Long ktId, Long id, Long oikeusId, KayttajaoikeusDto oikeusDto) {
-        Kayttajaoikeus oikeus = kayttajaoikeusRepository.findOne(oikeusId);
+    public KayttajaoikeusDto updateOikeus(Long ktId, Long opsId, Long kayttajaId, KayttajaoikeusDto oikeusDto) {
+        Koulutustoimija kt = koulutustoimijaRepository.findOne(ktId);
+        Opetussuunnitelma ops = repository.findOne(opsId);
+        Kayttaja kayttaja = kayttajaRepository.findOne(kayttajaId);
 
-        if (!Objects.equals(oikeus.getKoulutustoimija().getId(), ktId)
-                || !Objects.equals(oikeus.getOpetussuunnitelma().getId(), id)
-                || !oikeusDto.getKayttaja().getId().equals(oikeusDto.getKayttaja().getId())) {
-            throw new BusinessRuleViolationException("Päivitys virheellinen");
+        // FIXME lisää oikeustarkistelu muokkaajalle
+        
+        Kayttajaoikeus oikeus = kayttajaoikeusRepository.findOneByKayttajaAndOpetussuunnitelma(kayttaja, ops);
+
+        if (oikeus == null) {
+            oikeus = new Kayttajaoikeus();
+            oikeus.setKoulutustoimija(kt);
+            oikeus.setKayttaja(kayttaja);
+            oikeus.setOpetussuunnitelma(ops);
         }
+
         oikeus.setOikeus(oikeusDto.getOikeus());
+        oikeus = kayttajaoikeusRepository.save(oikeus);
         return mapper.map(oikeus, KayttajaoikeusDto.class);
     }
 
     @Override
-    public List<KayttajaoikeusDto> getOikeudet(Long ktId, Long id) {
+    public List<KayttajaoikeusDto> getOikeudet(Long ktId, Long opsId) {
         Koulutustoimija kt = koulutustoimijaRepository.findOne(ktId);
-        Opetussuunnitelma ops = repository.findOneYhteinen(kt, OpsTyyppi.YHTEINEN);
+        Opetussuunnitelma ops = repository.findOne(opsId);
         List<KayttajaoikeusDto> oikeusDtot = mapper.mapAsList(kayttajaoikeusRepository.findAllByKoulutustoimijaAndOpetussuunnitelma(kt, ops), KayttajaoikeusDto.class);
-        for (KayttajaoikeusDto oikeus : oikeusDtot) {
-            oikeus.setKayttajatieto(kayttajatietoService.haeNimi(oikeus.getKayttaja().getIdLong()));
-        }
         return oikeusDtot;
     }
 

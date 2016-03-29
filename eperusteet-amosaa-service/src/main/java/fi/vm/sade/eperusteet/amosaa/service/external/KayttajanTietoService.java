@@ -16,6 +16,7 @@
 package fi.vm.sade.eperusteet.amosaa.service.external;
 
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.Kayttaja;
+import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import java.util.List;
@@ -38,6 +39,8 @@ public interface KayttajanTietoService {
 
     KayttajanTietoDto hae(String oid);
 
+    KayttajanTietoDto hae(Long id);
+
     Kayttaja getKayttaja();
 
     Future<KayttajanTietoDto> haeAsync(String oid);
@@ -48,5 +51,7 @@ public interface KayttajanTietoService {
 
     Set<String> getUserOrganizations();
 
-    KayttajanTietoDto getKayttaja(Long koulutustoimijaId, String oid);
+    KayttajanTietoDto getKayttaja(Long koulutustoimijaId, Long oid);
+
+    List<KayttajaDto> getKayttajat(Long ktId);
 }

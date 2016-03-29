@@ -75,6 +75,10 @@ public class Opetussuunnitelma extends AbstractAuditedEntity implements Serializ
     @NotNull
     private OpsTyyppi tyyppi = OpsTyyppi.OPS;
 
+    @Getter
+    @Setter
+    private String peruste;
+
     @ValidHtml(whitelist = ValidHtml.WhitelistType.MINIMAL)
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)

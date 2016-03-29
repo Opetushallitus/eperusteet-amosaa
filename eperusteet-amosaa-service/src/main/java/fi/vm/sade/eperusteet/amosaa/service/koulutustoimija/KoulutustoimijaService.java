@@ -17,11 +17,8 @@
 package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija;
 
 import fi.vm.sade.eperusteet.amosaa.dto.TiedoteDto;
-import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
 import java.util.List;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -36,14 +33,6 @@ public interface KoulutustoimijaService {
     KoulutustoimijaBaseDto getKoulutustoimija(String kOid);
 
     KoulutustoimijaDto getKoulutustoimija(Long ktId);
-
-    List<KoulutustoimijaBaseDto> getKoulutustoimijat();
-
-    List<OpetussuunnitelmaBaseDto> getOpetussuunnitelmat(Long ktId);
-
-    OpetussuunnitelmaDto getOpetussuunnitelma(Long ktId, Long opsId);
-
-    List<KayttajanTietoDto> getKayttajat(Long ktId);
 
     List<TiedoteDto> getTiedotteet(Long ktId);
 

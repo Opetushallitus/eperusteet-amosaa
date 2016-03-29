@@ -46,4 +46,6 @@ public interface KayttajaoikeusRepository extends JpaRepository<Kayttajaoikeus, 
     Kayttajaoikeus findOneByKayttajaAndKoulutustoimijaAndOpetussuunnitelma(Kayttaja a, Koulutustoimija b, Opetussuunnitelma c);
 
     List<Kayttajaoikeus> findAllByKayttajaAndKoulutustoimija(Kayttaja kayttaja, Koulutustoimija koulutustoimija);
+
+    Kayttajaoikeus findOneByKayttajaAndOpetussuunnitelma(Kayttaja kayttaja, Opetussuunnitelma ops);
 }

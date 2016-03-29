@@ -158,6 +158,7 @@ CREATE TABLE opetussuunnitelma (
     esikatseltavissa BOOLEAN,
     paatospaivamaara TIMESTAMP WITHOUT TIME ZONE,
     pohja_id BIGINT REFERENCES opetussuunnitelma(id),
+    peruste CHARACTER VARYING(255),
     luoja CHARACTER VARYING(255),
     paatosnumero CHARACTER VARYING(255) UNIQUE,
     hyvaksyja CHARACTER VARYING(255),
@@ -169,7 +170,7 @@ CREATE TABLE opetussuunnitelma (
     tyyppi CHARACTER VARYING(255) NOT NULL,
     CHECK ((tyyppi = 'OPS' AND peruste IS NOT NULL)
         OR (tyyppi = 'YHTEINEN' AND pohja_id IS NOT NULL)
-        OR (tyyppi = 'KOOSTE' OR tyyppi 'POHJA'))
+        OR (tyyppi = 'KOOSTE' OR tyyppi = 'POHJA'))
 );
 
 CREATE TABLE opetussuunnitelma_aud (
@@ -181,6 +182,7 @@ CREATE TABLE opetussuunnitelma_aud (
     esikatseltavissa BOOLEAN,
     paatospaivamaara TIMESTAMP WITHOUT TIME ZONE,
     pohja_id BIGINT REFERENCES opetussuunnitelma(id),
+    peruste CHARACTER VARYING(255),
     paatosnumero CHARACTER VARYING(255),
     hyvaksyja CHARACTER VARYING(255),
     voimaantulo TIMESTAMP WITHOUT TIME ZONE,
@@ -309,4 +311,11 @@ create table dokumentti (
     ylatunniste OID,
     alatunniste OID,
     virhekoodi TEXT
+);
+
+CREATE TABLE koulutustoimijakayttaja (
+    id BIGINT NOT NULL PRIMARY KEY,
+    koulutustoimija_id BIGINT NOT NULL REFERENCES koulutustoimija(id),
+    kayttaja_id BIGINT NOT NULL REFERENCES kayttaja(id),
+    UNIQUE (kayttaja_id, koulutustoimija_id)
 );

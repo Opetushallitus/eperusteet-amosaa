@@ -95,13 +95,13 @@ public class OpetussuunnitelmaController {
         return service.getOikeudet(ktId, opsId);
     }
 
-    @RequestMapping(value = "/{opsId}/oikeudet/{oikeusId}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{opsId}/oikeudet/{kayttajaId}", method = RequestMethod.POST)
     public KayttajaoikeusDto updateOikeus(
             @PathVariable final Long ktId,
             @PathVariable final Long opsId,
-            @PathVariable final Long oikeusId,
+            @PathVariable final Long kayttajaId,
             @RequestBody(required = false) KayttajaoikeusDto body) {
-        return service.updateOikeus(ktId, opsId, oikeusId, body);
+        return service.updateOikeus(ktId, opsId, kayttajaId, body);
     }
 
     @RequestMapping(value = "/{opsId}/versiot/uusin", method = RequestMethod.GET)

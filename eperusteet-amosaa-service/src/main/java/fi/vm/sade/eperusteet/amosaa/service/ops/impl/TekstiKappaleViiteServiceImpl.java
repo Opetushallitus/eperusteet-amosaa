@@ -115,6 +115,11 @@ public class TekstiKappaleViiteServiceImpl implements TekstiKappaleViiteService 
     @Transactional(readOnly = false)
     public TekstiKappaleViiteDto updateTekstiKappaleViite(Long ktId, Long opsId, Long viiteId, TekstiKappaleViiteDto uusi) {
         TekstiKappaleViite viite = findViite(opsId, viiteId);
+        Opetussuunnitelma ops = opsRepository.findOne(opsId);
+        if (viite.getOwner() != ops) {
+            throw new BusinessRuleViolationException("vain-oman-editointi-sallittu");
+        }
+
         // Nopea ratkaisu sisällön häviämiseen, korjaantuu oikein uuden näkymän avulla
         if (uusi.getTekstiKappale().getTeksti() == null) {
             uusi.getTekstiKappale().setTeksti(mapper.map(viite.getTekstiKappale(), TekstiKappaleDto.class).getTeksti());
@@ -200,6 +205,25 @@ public class TekstiKappaleViiteServiceImpl implements TekstiKappaleViiteService 
                 throw new BusinessRuleViolationException("Lainattua tekstikappaletta ei voida muokata");
             }
         }
+    }
+
+    // Kopioi viitehierarkian ja siirtää irroitetut paikoilleen
+    // UUID parentin tunniste
+    @Override
+    public TekstiKappaleViite kopioiHierarkia(TekstiKappaleViite original, Opetussuunnitelma owner) {
+        TekstiKappaleViite result = new TekstiKappaleViite();
+        result.setTekstiKappale(original.getTekstiKappale());
+        result.setOwner(owner);
+        List<TekstiKappaleViite> lapset = original.getLapset();
+
+        if (lapset != null) {
+            for (TekstiKappaleViite lapsi : lapset) {
+                TekstiKappaleViite uusiLapsi = kopioiHierarkia(lapsi, owner);
+                uusiLapsi.setVanhempi(result);
+                result.getLapset().add(uusiLapsi);
+            }
+        }
+        return repository.save(result);
     }
 
     private TekstiKappaleViite updateTraverse(Long ktId, TekstiKappaleViite parent, TekstiKappaleViiteDto.Puu uusi,
