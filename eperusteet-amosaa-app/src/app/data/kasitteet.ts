@@ -1,24 +1,27 @@
 namespace TermistoData {
-    let _Api, _stateParams, _termisto;
+    let i, _termisto;
 
     const termistoAPI = (ktId) => {
-        return ktId ? _Api.all("koulutustoimijat").one(ktId).all('termisto') : null;
+        return i.Api.all("koulutustoimijat").one(ktId).all('termisto');
     };
 
-    export const init = (Api, $stateParams) => {
-        _Api = Api;
-        _stateParams = $stateParams;
+    export const init = ($injector) => {
+        i = inject($injector, ["Api", "$stateParams", "$q"]);
     };
-
-    const getTermisto = (ktId = _stateParams.ktId) => {
+    
+    const getTermisto = (ktId = i.$stateParams.ktId) => {
+        var deferred = i.$q.defer();
         if (_termisto) {
-            return _termisto;
+            deferred.resolve(_termisto);
         }
-        _termisto = termistoAPI ? termistoAPI(ktId).getList(): null;
-        return _termisto;
+        else {
+            _termisto = termistoAPI(ktId).getList();
+            deferred.resolve(_termisto);
+        }
+        return deferred.promise;
     };
 
-    export const getAll = (ktId = _stateParams.ktId) => {
+    export const getAll = (ktId = i.$stateParams.ktId) => {
         return getTermisto(ktId);
     };
 
@@ -34,10 +37,10 @@ namespace TermistoData {
 
     export const refresh = () => {
         _termisto = null;
-        return getTermisto(_stateParams.ktId);
+        return getTermisto(i.$stateParams.ktId);
     };
 
-    export const getByAvain = (avain, ktId = _stateParams.ktId) => {
+    export const getByAvain = (avain, ktId = i.$stateParams.ktId) => {
         if (_termisto && getByKey(avain)) {
             return getByKey(avain);
         };
@@ -45,7 +48,7 @@ namespace TermistoData {
     };
 
     export const add = (kasite) => {
-        return termistoAPI(_stateParams.ktId).post(kasite).then(() => {
+        return termistoAPI(i.$stateParams.ktId).post(kasite).then(() => {
             return refresh().then((res) => res);
         });
     };
