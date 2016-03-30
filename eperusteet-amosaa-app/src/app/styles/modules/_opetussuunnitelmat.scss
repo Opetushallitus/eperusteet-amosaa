@@ -1,0 +1,289 @@
+$ops-ylatunniste-height: 60px;
+$ops-ylatunniste-padding: 5px;
+$ops-muokkaa-height: $ops-ylatunniste-height - 2 * $ops-ylatunniste-padding;
+$ops-muokkaa-ikoni-height: 30px;
+$ops-sivunavi-width: 280px;
+$ops-haku-padding: 5px;
+$ops-valikko-min-height: 600px;
+$ops-top-vertical-margin: 10px;
+
+.ops-nakyma {
+    .ylatunniste-yhteinen {
+        background-color: #dbf4ff; // FIXME
+    }
+
+    .ylatunniste-kooste {
+        background-color: #ddfff2; // FIXME
+    }
+
+    .ylatunniste-pohja {
+        background-color: #fff6e8; // FIXME
+    }
+
+    .ylatunniste-ops {
+        background-color: #f3fafd; // FIXME
+    }
+
+    .ylatunniste {
+        height: $ops-ylatunniste-height;
+        padding: $ops-ylatunniste-padding;
+
+        .muokkaa {
+            width: $ops-muokkaa-height;
+            height: $ops-muokkaa-height;
+            background-color: #fcae27;
+
+            i {
+                width: $ops-muokkaa-height;
+                height: $ops-muokkaa-height;
+                text-align: center;
+                padding-top: ($ops-muokkaa-height - $ops-muokkaa-ikoni-height) / 2;
+                font-size: $ops-muokkaa-ikoni-height;
+                text-decoration: none;
+                color: white;
+            }
+        }
+
+        h2 {
+            display: inline;
+            margin: 0 0 0 20px;
+            a {
+                margin-right: 10px;
+                i {
+                    color: #10546d;
+                    text-decoration: none;
+                }
+                i:hover {
+                    color: #1982aa;
+                }
+            }
+        }
+
+        .painikkeet {
+            height: $ops-muokkaa-height;
+            button {
+                margin-right: 5px;
+            }
+            .keskitetty {
+                position: relative;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+        }
+    }
+    .tabit {
+        margin-top: 10px;
+
+        .nav.nav-tabs {
+            li {
+                margin-right: 4px;
+            }
+            li > a {
+                background: #f1f9fc;
+            }
+            li > a:hover {
+                cursor: pointer;
+            }
+
+            li.active > a {
+                background: #fff;
+                font-weight: normal;
+            }
+        }
+    }
+
+    .sisalto {
+        .sivunavi {
+            .haku {
+                margin-bottom: $ops-top-vertical-margin;
+
+                .form-inline {
+                    .form-group {
+                        display: inline-block;
+                        margin-bottom: 0;
+                        vertical-align: middle;
+                    }
+
+                    .form-control {
+                        display: inline-block;
+                        vertical-align: middle;
+                    }
+                }
+
+                input {
+                    width: $ops-sivunavi-width - 2 * ($input-height-base + $ops-haku-padding) - $ops-haku-padding;
+                }
+
+                a {
+                    width: $input-height-base;
+                    height: $input-height-base;
+                    margin-left: $ops-haku-padding;
+                    text-decoration: none;
+                    i {
+                        text-decoration: none;
+                    }
+                }
+            }
+
+            .valikko {
+                ul {
+                    list-style-type: none;
+                    margin: 0;
+                    padding: 0;
+                    border: 1px solid #DEDEDF;
+                    min-height: $ops-valikko-min-height;
+                    li {
+                        padding: 0;
+                        a {
+                            margin: 0;
+                            display: block;
+                            width: 100%;
+                            height: 100%;
+                            padding: 10px;
+                        }
+                        .active {
+                            background-color: #135870;
+                            color: white;
+                        }
+                    }
+                }
+            }
+        }
+
+        .nakyma {
+            .vasen {
+                padding: 8px 0 4px 14px;
+                width: 290px;
+                position: absolute;
+                bottom: 0;
+                top: 0;
+                height: 100%;
+                z-index: 1;
+            }
+
+            .oikea {
+                padding-left:  300px;
+            }
+
+            margin-top: $ops-top-vertical-margin;
+
+            .content {
+                // float: left;
+            }
+
+            .ylapalkki {
+                height: $input-height-base + $ops-top-vertical-margin;
+                border-bottom: 1px solid #DEDEDF;
+
+                p {
+                    line-height: $input-height-base;
+                    display: inline;
+                    margin-right: 25px;
+                    span {
+                        color: gray;
+                        b {
+                            margin-right: 5px;
+                        }
+                    }
+                }
+                p:last-child {
+                    margin-right: 0;
+                }
+
+                input {
+                    width: 47px;
+                }
+
+                .muokkaa {
+                    margin-left: 25px;
+                }
+                a {
+                    width: $input-height-base;
+                    height: $input-height-base;
+                    text-decoration: none;
+                    i {
+                        text-decoration: none;
+                    }
+                }
+            }
+
+            .tiedot {
+                .tekstit {
+                    margin: 0 -1 * ($grid-gutter-width / 2);
+                    span {
+                        color: gray;
+                    }
+                }
+            }
+
+            .tekstikappaleet {
+                h2, h3, h4, h5, h6 {
+                    padding-left: 30px;
+                    margin-top: 10px;
+                    position: relative;
+                    a {
+                        position: absolute;
+                        text-decoration: none;
+                        left: 0;
+                        i {
+                            text-decoration: none;
+                            color: #a1cbdc;
+                        }
+                    }
+                }
+                .tekstikappale {
+                    margin-left: 30px;
+                }
+            }
+        }
+    }
+
+    .kasitteet {
+        margin-top: $ops-top-vertical-margin;
+        h2:first-child {
+            margin-top: 0;
+            span {
+                margin-top: -8px;
+            }
+        }
+    }
+
+    .poistetut {
+        margin-top: $ops-top-vertical-margin;
+        h2:first-child {
+            margin-top: 0;
+            span {
+                margin-top: -8px;
+            }
+        }
+
+        table {
+            a, a > span {
+                text-decoration: none;
+
+            }
+            td:nth-child(1) {
+                width: 40%;
+            }
+            td:nth-child(2) {
+                width: 20%;
+            }
+            td:nth-child(3) {
+                width: 25%;
+            }
+            td:nth-child(4) {
+                width: 15%;
+            }
+        }
+    }
+    .dokumentti {
+        margin-top: $ops-top-vertical-margin;
+
+        .row:first-child > * > h2 {
+            margin-top: 0;
+            span {
+                margin-top: -8px;
+            }
+        }
+    }
+}

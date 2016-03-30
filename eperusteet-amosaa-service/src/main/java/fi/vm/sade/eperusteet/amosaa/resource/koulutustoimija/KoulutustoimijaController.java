@@ -17,15 +17,13 @@
 package fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija;
 
 import fi.vm.sade.eperusteet.amosaa.dto.TiedoteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
-import fi.vm.sade.eperusteet.amosaa.dto.ops.OpetussuunnitelmaBaseDto;
-import fi.vm.sade.eperusteet.amosaa.dto.ops.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
-import java.util.List;
-
 import io.swagger.annotations.Api;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,60 +47,45 @@ public class KoulutustoimijaController {
     @Autowired
     private KayttajanTietoService kayttajaTietoService;
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{ktId}", method = RequestMethod.GET)
     @ResponseBody
     public KoulutustoimijaDto get(
-            @PathVariable final Long id) {
-        return koulutustoimijaService.getKoulutustoimija(id);
+            @PathVariable final Long ktId) {
+        return koulutustoimijaService.getKoulutustoimija(ktId);
     }
 
-    @RequestMapping(value = "/{id}/opetussuunnitelmat", method = RequestMethod.GET)
-    @ResponseBody
-    public List<OpetussuunnitelmaBaseDto> getOpetussuunnitelmat(
-            @PathVariable final Long id) {
-        return koulutustoimijaService.getOpetussuunnitelmat(id);
-    }
-
-    @RequestMapping(value = "/{id}/opetussuunnitelmat/{opsId}", method = RequestMethod.GET)
-    @ResponseBody
-    public OpetussuunnitelmaDto getOpetussuunnitelma(
-            @PathVariable final Long id,
-            @PathVariable final Long opsId) {
-        return koulutustoimijaService.getOpetussuunnitelma(id, opsId);
-    }
-
-    @RequestMapping(value = "/{id}/tiedotteet", method = RequestMethod.GET)
+    @RequestMapping(value = "/{ktId}/tiedotteet", method = RequestMethod.GET)
     @ResponseBody
     public List<TiedoteDto> getTiedotteet(
-            @PathVariable final Long id) {
-        return koulutustoimijaService.getTiedotteet(id);
+            @PathVariable final Long ktId) {
+        return koulutustoimijaService.getTiedotteet(ktId);
     }
 
-    @RequestMapping(value = "/{id}/tiedote/{tiedoteId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{ktId}/tiedote/{tiedoteId}", method = RequestMethod.GET)
     @ResponseBody
     public TiedoteDto getTiedote(
-            @PathVariable final Long id,
+            @PathVariable final Long ktId,
             @PathVariable final Long tiedoteId) {
-        return koulutustoimijaService.getTiedote(id);
+        return koulutustoimijaService.getTiedote(ktId);
     }
 
-    @RequestMapping(value = "/{id}/omattiedotteet", method = RequestMethod.GET)
+    @RequestMapping(value = "/{ktId}/omattiedotteet", method = RequestMethod.GET)
     @ResponseBody
     public List<TiedoteDto> getOmatTiedotteet(
-            @PathVariable final Long id) {
-        return koulutustoimijaService.getOmatTiedotteet(id);
+            @PathVariable final Long ktId) {
+        return koulutustoimijaService.getOmatTiedotteet(ktId);
     }
 
-    @RequestMapping(value = "/kayttajat", method = RequestMethod.GET)
-    public ResponseEntity<List<KayttajanTietoDto>> getKayttajat(
-            @PathVariable final Long id) {
-        return new ResponseEntity<>(koulutustoimijaService.getKayttajat(id), HttpStatus.OK);
+    @RequestMapping(value = "/{ktId}/kayttajat", method = RequestMethod.GET)
+    public ResponseEntity<List<KayttajaDto>> getKayttajat(
+            @PathVariable final Long ktId) {
+        return new ResponseEntity<>(kayttajaTietoService.getKayttajat(ktId), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/kayttajat/{oid}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{ktId}/kayttajat/{kayttajaId}", method = RequestMethod.GET)
     public ResponseEntity<KayttajanTietoDto> getKayttajat(
-            @PathVariable final Long id,
-            @PathVariable final String oid) {
-        return ResponseEntity.ok(kayttajaTietoService.getKayttaja(id, oid));
+            @PathVariable final Long ktId,
+            @PathVariable final Long kayttajaId) {
+        return ResponseEntity.ok(kayttajaTietoService.getKayttaja(ktId, kayttajaId));
     }
 }

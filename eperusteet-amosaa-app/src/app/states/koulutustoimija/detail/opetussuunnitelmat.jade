@@ -1,58 +1,65 @@
 div.otsikkotaso.kaikki-opetussuunnitelmat
   h3(kaanna="'kaikki-opetussuunnitelmat'")
 
-  div.row
-    div.col-xs-5
-      div.form-group.has-feedback.has-feedback-left
-        input.form-control(type="text")
-        i.form-control-feedback.glyphicon.glyphicon-search(style="color: gray;")
-    div.checkbox-text.col-xs-5
-      div.checkbox
-        label
-          input(type="checkbox")
-          span(kaanna="'tarkennettu-haku'")
-    div.col-xs-2
-      div.pull-right
-        button.btn.btn-default(kaanna="'lisaa-uusi'" ng-click="addOpetussuunnitelma()")
+  div(ng-hide="opetussuunnitelmat.length > 0")
+    div.alert.alert-info
+      div(kaanna="'koulutustoimijalla-ei-ole-opetussuunnitelmia'")
+      button.btn.btn-primary.pull-right(style="position: relative; top: -26px" kaanna="'lisaa-uusi'" ng-click="addOpetussuunnitelma()")
 
-  table.table.boxtable
-    thead
-      tr
-        th
-        th
-          a(href="#")
-            span(kaanna="'tutkinnon-nimi'")
-            span=" "
-            span.glyphicon.glyphicon-sort-by-attributes
-        th
-          a(href="#")
-            span(kaanna="'osaamisala'")
-            span=" "
-            span.glyphicon.glyphicon-sort-by-attributes
-        th
-          a(href="#")
-            span(kaanna="'tutkinnon-tyyppi'")
-            span=" "
-            span.glyphicon.glyphicon-sort-by-attributes
-    tbody
-      tr(ng-repeat="ops in opsit.data")
-        td
-          div
-            div
-            div
-              a(href="#")
-                span.glyphicon.glyphicon-star
-        td
-          div
+  div(ng-show="opetussuunnitelmat.length > 0")
+    div.row
+      div.col-xs-5
+        div.form-group.has-feedback.has-feedback-left
+          input.form-control(type="text")
+          i.form-control-feedback.glyphicon.glyphicon-search(style="color: gray;")
+      div.checkbox-text.col-xs-5
+        div.checkbox
+          label
+            input(type="checkbox")
+            span(kaanna="'tarkennettu-haku'")
+      div.col-xs-2
+        div.pull-right
+          button.btn.btn-default(kaanna="'lisaa-uusi'" ng-click="addOpetussuunnitelma()")
+
+    table.table.boxtable
+      thead
+        tr
+          th
+          th
             a(href="#")
-              span.ellipsis(kaanna="ops.nimi")
-        td
-          div
-            span.ellipsis(ng-show="ops.osaamisalat.length > 0", kaanna="ops.osaamisalat[0].nimi")
-        td
-          div(kaanna="ops.koulutustyyppi")
-        td
-          div
+              span(kaanna="'tutkinnon-nimi'")
+              span=" "
+              span.glyphicon.glyphicon-sort-by-attributes
+          th
             a(href="#")
+              span(kaanna="'osaamisala'")
+              span=" "
+              span.glyphicon.glyphicon-sort-by-attributes
+          th
+            a(href="#")
+              span(kaanna="'tutkinnon-tyyppi'")
+              span=" "
+              span.glyphicon.glyphicon-sort-by-attributes
+          th
+      tbody
+        tr(ng-repeat="ops in opetussuunnitelmat")
+          td
+            div
               div
-                span.glyphicon.glyphicon-chevron-right
+              div
+                a(href="")
+                  span.glyphicon.glyphicon-star
+          td
+            div
+              a(href="" ui-sref="root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot({ opsId: ops.id })")
+                span.ellipsis(kaanna="ops.nimi")
+          td
+            div
+              span.ellipsis(ng-show="ops.osaamisalat.length > 0", kaanna="ops.osaamisalat[0].nimi")
+          td
+            div(kaanna="ops.koulutustyyppi")
+          td
+            div
+              a(href="" ui-sref="root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot({ opsId: ops.id })")
+                div
+                  span.glyphicon.glyphicon-chevron-right

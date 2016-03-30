@@ -83,7 +83,7 @@ namespace NotifikaatioService {
             _viesti: _.constant(viesti)
         },
         templateUrl: "components/notifikaatiot/jarjestelmavirhe.jade",
-        controller: ($uibModalInstance, $scope, $state, _viesti) => {
+        controller: ($scope, $state, $uibModalInstance, _viesti) => {
             $scope.viesti = _viesti;
             $scope.ok = $uibModalInstance.close;
         }

@@ -1,6 +1,9 @@
 angular.module("app", [
     "ui.router",
     "ui.sortable",
+    "ui.event",
+    "ui.highlight",
+    "ui.select",
     "angularSpinner",
     "restangular",
     "ngResource",

@@ -6,6 +6,7 @@ $fa-font-path: "fonts";
 @import "vendor/font_awesome";
 @import "vendor/virkailija";
 @import "vendor/checkbox";
+@import "vendor/ui_select";
 
 @import "../components/editointikontrollit/_styles.scss";
 @import "../components/ohje/_ohje.scss";
@@ -30,7 +31,7 @@ $fa-font-path: "fonts";
 @import "modules/ylanavi";
 @import "modules/murupolku";
 @import "modules/koulutustoimija";
-@import "modules/yhteiset";
+@import "modules/opetussuunnitelmat";
 @import "modules/tiedotteet";
 @import "modules/kasitteet";
 

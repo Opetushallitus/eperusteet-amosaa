@@ -17,7 +17,7 @@
 package fi.vm.sade.eperusteet.amosaa.service.dokumentti;
 
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.Dokumentti;
-import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Yhteiset;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import org.xml.sax.SAXException;
 

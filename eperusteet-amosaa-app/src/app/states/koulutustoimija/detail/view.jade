@@ -1,22 +1,54 @@
-div.koulutustoimija
-  div.row
-    div.col-xs-6
-      h2.otsikko
-        span(kaanna="koulutustoimija.nimi")
-        span.dropdown(ng-show="koulutustoimijat.length > 1")
-          a.dropdown-toggle(href="", data-toggle="dropdown")
-            i.fa.fa-chevron-down.fa-fw
-          ul.dropdown-menu.dropdown-menu-right
-            li(ng-class="{ 'active': kt.id === koulutustoimija.id }" ng-repeat="kt in koulutustoimijat")
-              a(href="" ui-sref="root.koulutustoimija.detail({ ktId: kt.id })")
-                span(kaanna="kt.nimi")
+mixin ophImpl()
+  div.koulutustoimija
+    div.row
+      div.col-xs-6
+        h2.otsikko
+          span(kaanna="koulutustoimija.nimi")
+          span.dropdown(ng-show="koulutustoimijat.length > 1")
+            a.dropdown-toggle(href="", data-toggle="dropdown")
+              i.fa.fa-chevron-down.fa-fw
+            ul.dropdown-menu.dropdown-menu-right
+              li(ng-class="{ 'active': kt.id === koulutustoimija.id }" ng-repeat="kt in koulutustoimijat")
+                a(href="" ui-sref="root.koulutustoimija.detail({ ktId: kt.id })")
+                  span(kaanna="kt.nimi")
 
-    div.col-xs-6.tiedotteet-selite
-      div.pull-right
-        a(href="" kaanna="'tiedotteet'")
-        span.icon
-          i.fa.fa-exclamation
+      div.col-xs-6.tiedotteet-selite
+        div.pull-right
+          a(href="" kaanna="'tiedotteet'")
+          span.icon
+            i.fa.fa-exclamation
 
-  div(ui-view="tiedotteet")
-  div(ui-view="yhteiset")
-  div(ui-view="opetussuunnitelmat")
+    div(ui-view="tiedotteet")
+    div(ui-view="pohjat")
+
+
+mixin ktImpl()
+  div.koulutustoimija
+    div.row
+      div.col-xs-6
+        h2.otsikko
+          span(kaanna="koulutustoimija.nimi")
+          span.dropdown(ng-show="koulutustoimijat.length > 1")
+            a.dropdown-toggle(href="", data-toggle="dropdown")
+              i.fa.fa-chevron-down.fa-fw
+            ul.dropdown-menu.dropdown-menu-right
+              li(ng-class="{ 'active': kt.id === koulutustoimija.id }" ng-repeat="kt in koulutustoimijat")
+                a(href="" ui-sref="root.koulutustoimija.detail({ ktId: kt.id })")
+                  span(kaanna="kt.nimi")
+
+      div.col-xs-6.tiedotteet-selite
+        div.pull-right
+          a(href="" kaanna="'tiedotteet'")
+          span.icon
+            i.fa.fa-exclamation
+
+    div(ui-view="tiedotteet")
+    div(ui-view="yhteinen")
+    div(ui-view="opetussuunnitelmat")
+
+
+div(ng-if="isOph")
+  +ophImpl()
+
+div(ng-if="!isOph")
+  +ktImpl()

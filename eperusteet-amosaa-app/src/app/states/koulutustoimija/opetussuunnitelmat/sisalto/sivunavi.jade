@@ -1,0 +1,17 @@
+div.sivunavi
+  div.haku
+    div.form-inline
+      div.form-group.has-feedback.has-feedback-left
+        input.form-control(type="text" ng-model="search" placeholder="{{ 'hae' | kaanna }}")
+        i.form-control-feedback.glyphicon.glyphicon-search(style="color: gray;")
+        a.btn.btn-default.square(href="" ng-click="add()")
+          +icon("plus")
+        a.btn.btn-default.square(href="" ng-click="startSorting()")
+          +icon("arrows-v")
+
+  div.valikko
+    ul
+      li
+        a(href="" ui-sref-active="active" ui-sref=".tiedot" kaanna="'tiedot'")
+      dynamic(template="states/koulutustoimija/opetussuunnitelmat/sisalto/sivunaviitem.jade" ng-model="sivunavi.lapset")
+

@@ -17,12 +17,10 @@
 package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija;
 
 import fi.vm.sade.eperusteet.amosaa.dto.TiedoteDto;
-import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
-import fi.vm.sade.eperusteet.amosaa.dto.ops.OpetussuunnitelmaBaseDto;
-import fi.vm.sade.eperusteet.amosaa.dto.ops.OpetussuunnitelmaDto;
 import java.util.List;
+import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
@@ -33,21 +31,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 @PreAuthorize("isAuthenticated()")
 public interface KoulutustoimijaService {
 
-    KoulutustoimijaBaseDto getKoulutustoimija(String kOid);
+    KoulutustoimijaBaseDto getKoulutustoimija(String ktOid);
 
-    KoulutustoimijaDto getKoulutustoimija(Long kId);
+    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
+    KoulutustoimijaDto getKoulutustoimija(@P("ktId") Long ktId);
 
-    List<KoulutustoimijaBaseDto> getKoulutustoimijat();
+    List<TiedoteDto> getTiedotteet(@P("ktId") Long ktId);
 
-    List<OpetussuunnitelmaBaseDto> getOpetussuunnitelmat(Long kOid);
+    TiedoteDto getTiedote(@P("ktId") Long ktId);
 
-    OpetussuunnitelmaDto getOpetussuunnitelma(Long kOid, Long opsId);
-
-    List<KayttajanTietoDto> getKayttajat(Long kOid);
-
-    List<TiedoteDto> getTiedotteet(Long kOid);
-
-    TiedoteDto getTiedote(Long kOid);
-
-    List<TiedoteDto> getOmatTiedotteet(Long kOid);
+    List<TiedoteDto> getOmatTiedotteet(@P("ktId") Long ktId);
 }

@@ -1,0 +1,74 @@
+angular.module("app")
+.config($stateProvider => $stateProvider
+.state("root.koulutustoimija.opetussuunnitelmat.sisalto", {
+    url: "/sisalto",
+    resolve: {
+    },
+    views: {
+        "": {
+            controller: ($q, $scope, $timeout, $state, reresolver, otsikot, tekstit, sisaltoRoot) => {
+                $scope.startSorting = () => {
+                    $scope.rakenne = Tekstikappaleet.teeRakenne(Tekstikappaleet.uniikit(otsikot), sisaltoRoot.id);
+                    $scope.sortableOptions = {
+                        // update: (e, ui) => {},
+                        connectWith: ".sisalto-list",
+                        handle: ".sisalto-handle",
+                        cursorAt: { top: 2, left: 2 },
+                        cursor: "move",
+                        delay: 100,
+                        tolerance: "pointer",
+                        placeholder: "sisalto-item-placeholder"
+                    };
+
+                    $scope.$$sorting = true;
+                    EditointikontrollitService.create({
+                        cancel: () => $q((resolve, reject) => {
+                            $scope.$$sorting = false;
+                            resolve();
+                        }),
+                        save: (kommentti) => $q((resolve, reject) => {
+                            tekstit.one("rakenne").customPUT($scope.rakenne)
+                                .then(() => {
+                                    resolve();
+                                    NotifikaatioService.onnistui("tallennus-onnistui");
+                                    $timeout(() => $state.reload("root.koulutustoimija.opetussuunnitelmat"));
+                                });
+                        }),
+                        after: () => $scope.$$sorting = false
+                    })();
+                };
+            }
+        },
+        sivunavi: {
+            controller: ($q, $scope, $state, $timeout, otsikot, tekstit, sisaltoRoot) => {
+                const updateSivunavi = _.callAndGive(() =>
+                    $scope.sivunavi = Tekstikappaleet.teeRakenne(Tekstikappaleet.uniikit(otsikot), sisaltoRoot.id));
+
+                $scope.suodata = (item) => KaannaService.hae(item, $scope.search);
+
+                $scope.add = () => {
+                    ModalAdd.sisaltoAdder()
+                        .then(uusi => {
+                            if (!uusi) {
+                                return;
+                            }
+                            switch(uusi.tyyppi) {
+                                case "tekstikappale":
+                                    tekstit.post("", uusi.data)
+                                        .then(res => {
+                                            res.$$depth = 0;
+                                            otsikot.push(res);
+                                            _.find(otsikot, (otsikko: any) =>
+                                                   otsikko.id == sisaltoRoot.id).lapset.push(res.id);
+                                            updateSivunavi();
+                                            $timeout(() =>
+                                                $state.go("root.koulutustoimija.opetussuunnitelmat.sisalto.tekstikappale", { tkvId: res.id }));
+                                        });
+                                default: {}
+                            }
+                        });
+                };
+            }
+        },
+    }
+}));

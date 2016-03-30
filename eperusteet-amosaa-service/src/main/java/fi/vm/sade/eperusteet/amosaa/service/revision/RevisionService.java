@@ -17,7 +17,6 @@
 package fi.vm.sade.eperusteet.amosaa.service.revision;
 
 import fi.vm.sade.eperusteet.amosaa.domain.revision.Revision;
-import fi.vm.sade.eperusteet.amosaa.repository.version.JpaWithVersioningRepository;
 import java.util.List;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,34 +26,16 @@ import org.springframework.transaction.annotation.Transactional;
  * @author nkala
  */
 @Transactional
+@PreAuthorize("isAuthenticated()")
 public interface RevisionService {
 
-    @PreAuthorize("isAuthenticated()")
-    default List<Revision> getRevisions(Long ktId, Long id) {
-        return getRepository().getRevisions(id);
-    }
+    List<Revision> getRevisions(Long ktId, Long opsId);
 
-    @PreAuthorize("isAuthenticated()")
-    default Revision getLatestRevision(Long ktId, Long id) {
-        return getRepository().getLatestRevision(id);
-    }
+    Revision getLatestRevision(Long ktId, Long opsId);
 
-    @PreAuthorize("isAuthenticated()")
-    default Integer getLatestRevisionId(Long ktId, Long id) {
-        return getRepository().getLatestRevisionId(id);
-    }
+    Integer getLatestRevisionId(Long ktId, Long opsId);
 
-    @PreAuthorize("isAuthenticated()")
-    default Object getData(Long ktId, Long id, Integer rev) {
-        return convertToDto(getRepository().findRevision(id, rev));
-    }
+    Object getData(Long ktId, Long opsId, Integer rev);
 
-    @PreAuthorize("isAuthenticated()")
-    default Revision getRemoved(Long ktId, Long id) {
-        return getRepository().getLatestRevision(id);
-    }
-
-    Object convertToDto(Object obj);
-
-    JpaWithVersioningRepository getRepository();
+    Revision getRemoved(Long ktId, Long opsId);
 }

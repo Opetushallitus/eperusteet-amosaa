@@ -18,7 +18,7 @@ package fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija;
 
 import fi.vm.sade.eperusteet.amosaa.domain.Poistettu;
 import fi.vm.sade.eperusteet.amosaa.domain.PoistettuTyyppi;
-import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Yhteiset;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -29,6 +29,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface PoistettuRepository extends JpaRepository<Poistettu, Long> {
-    List<Poistettu> findAllByYhteiset(Yhteiset yhteiset);
-    List<Poistettu> findAllByYhteisetAndTyyppi(Yhteiset yhteiset, PoistettuTyyppi tyyppi);
+    List<Poistettu> findAllByOpetussuunnitelma(Opetussuunnitelma ops);
+    List<Poistettu> findAllByOpetussuunnitelmaAndTyyppi(Opetussuunnitelma ops, PoistettuTyyppi tyyppi);
 }

@@ -15,10 +15,12 @@
  */
 package fi.vm.sade.eperusteet.amosaa.repository.teksti;
 
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappaleViite;
 import fi.vm.sade.eperusteet.amosaa.repository.version.JpaWithVersioningRepository;
 import java.util.List;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -28,6 +30,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TekstikappaleviiteRepository extends JpaWithVersioningRepository<TekstiKappaleViite, Long> {
     List<TekstiKappaleViite> findAllByTekstiKappale(TekstiKappale tekstiKappale);
-    List<TekstiKappaleViite> findAllByOwner(Long owner);
-    TekstiKappaleViite findOneByOwnerAndId(Long owner, Long id);
+    List<TekstiKappaleViite> findAllByOwner(Opetussuunnitelma owner);
+    List<TekstiKappaleViite> findAllByOwnerId(Long owner);
+    TekstiKappaleViite findOneByOwnerAndId(Opetussuunnitelma owner, Long id);
+    TekstiKappaleViite findOneByOwnerIdAndId(Long owner, Long id);
+
+    @Query(value = "SELECT tkv from TekstiKappaleViite tkv where tkv.owner = ?1 AND tkv.vanhempi IS NULL")
+    TekstiKappaleViite findOneRoot(Opetussuunnitelma owner);
 }

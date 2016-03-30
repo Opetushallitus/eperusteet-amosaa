@@ -15,10 +15,10 @@
  */
 package fi.vm.sade.eperusteet.amosaa.service.ops.impl;
 
-import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Yhteiset;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.liite.Liite;
 import fi.vm.sade.eperusteet.amosaa.dto.liite.LiiteDto;
-import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.YhteisetRepository;
+import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.liite.LiiteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.exception.NotExistsException;
 import fi.vm.sade.eperusteet.amosaa.service.exception.ServiceException;
@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.UUID;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +45,7 @@ public class LiiteServiceImpl implements LiiteService {
     private LiiteRepository liitteet;
 
     @Autowired
-    private YhteisetRepository yhteiset;
+    private OpetussuunnitelmaRepository opsRepository;
 
     @Autowired
     DtoMapper mapper;
@@ -77,7 +76,7 @@ public class LiiteServiceImpl implements LiiteService {
     @Transactional
     public UUID add(Long opsId, String tyyppi, String nimi, long length, InputStream is) {
         Liite liite = liitteet.add(tyyppi, nimi, length, is);
-        Yhteiset ops = yhteiset.findOne(opsId);
+        Opetussuunnitelma ops = opsRepository.findOne(opsId);
 //        ops.attachLiite(liite);
         return liite.getId();
     }

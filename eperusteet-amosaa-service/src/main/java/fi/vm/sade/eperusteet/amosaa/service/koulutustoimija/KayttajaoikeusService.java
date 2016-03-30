@@ -18,12 +18,13 @@ package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija;
 
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
 import java.util.List;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
  *
  * @author nkala
  */
+@PreAuthorize("isAuthenticated()")
 public interface KayttajaoikeusService {
-    // FIXME OIKEUDET
     List<KayttajaoikeusDto> getKayttooikeudet(KayttajaoikeusDto oikeusQuery);
 }
