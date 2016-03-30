@@ -32,6 +32,6 @@ import java.io.IOException;
  */
 public interface DokumenttiBuilderService {
 
-    byte[] generatePdf(Yhteiset yhteiset, Dokumentti dokumentti, Kieli kieli)
+    byte[] generatePdf(Opetussuunnitelma ops, Dokumentti dokumentti, Kieli kieli)
             throws ParserConfigurationException, IOException, SAXException, TransformerException;
 }

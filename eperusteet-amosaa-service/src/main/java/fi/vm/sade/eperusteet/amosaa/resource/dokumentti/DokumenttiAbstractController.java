@@ -198,10 +198,10 @@ public interface DokumenttiAbstractController {
                                             @RequestParam(defaultValue = "fi") final String kieli) {
         if (tyyppi != null) {
             // Tehdään DokumenttiDto jos ei löydy jo valmiina
-            DokumenttiDto dokumenttiDto = service().getDto(id, tyyppi(), Kieli.of(kieli));
+            DokumenttiDto dokumenttiDto = service().getDto(id, Kieli.of(kieli));
 
             if (dokumenttiDto == null) {
-                dokumenttiDto = service().createDtoFor(id, tyyppi(), Kieli.of(kieli));
+                dokumenttiDto = service().createDtoFor(id, Kieli.of(kieli));
             }
 
             if (dokumenttiDto == null) {
@@ -209,7 +209,7 @@ public interface DokumenttiAbstractController {
             }
 
             // Haetaan kuva
-            Dokumentti dokumentti = repository().findByYhteisetIdAndKieli(id, Kieli.of(kieli));
+            Dokumentti dokumentti = repository().findByOpsIdAndKieli(id, Kieli.of(kieli));
             if (dokumentti == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }

@@ -87,7 +87,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
     private PdfService pdfService;
 
     @Override
-    public byte[] generatePdf(Yhteiset yhteiset, Dokumentti dokumentti, Kieli kieli)
+    public byte[] generatePdf(Opetussuunnitelma ops, Dokumentti dokumentti, Kieli kieli)
             throws ParserConfigurationException, IOException, SAXException, TransformerException {
 
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -279,7 +279,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
         for (TekstiKappaleViite lapsi : viite.getLapset()) {
             if (lapsi.getTekstiKappale() != null && lapsi.getTekstiKappale().getNimi() != null) {
 
-                // Ei näytetä yhteisen osien Pääkappaleiden otsikoita
+                // Ei näytetä osien Pääkappaleiden otsikoita
                 // Opetuksen järjestäminen ja Opetuksen toteuttamisen lähtökohdat
                 if (paataso) {
                     addTekstiKappale(docBase, lapsi, false);
