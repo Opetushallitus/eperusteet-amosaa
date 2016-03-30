@@ -40,9 +40,9 @@ public class DokumenttiController {
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<DokumenttiDto> create(
-            @PathVariable final Long ktId,
-            @PathVariable final Long opsId,
-            @RequestParam(value = "kieli", defaultValue = "fi") final String kieli) throws DokumenttiException {
+            @PathVariable Long ktId,
+            @PathVariable Long opsId,
+            @RequestParam(value = "kieli", defaultValue = "fi") String kieli) throws DokumenttiException {
         DokumenttiDto dokumenttiDto = service.getDto(opsId, Kieli.of(kieli));
         if (dokumenttiDto == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -71,9 +71,9 @@ public class DokumenttiController {
     @RequestMapping(method = RequestMethod.GET)
     @CacheControl(age = CacheControl.ONE_YEAR, nonpublic = false)
     public ResponseEntity<byte[]> get(
-            @PathVariable final Long ktId,
-            @PathVariable final Long opsId,
-            @RequestParam(value = "kieli", defaultValue = "fi") final String kieli) {
+            @PathVariable Long ktId,
+            @PathVariable Long opsId,
+            @RequestParam(value = "kieli", defaultValue = "fi") String kieli) {
         byte[] pdfdata = service.get(opsId, Kieli.of(kieli));
 
         if (pdfdata == null || pdfdata.length == 0) {
@@ -89,9 +89,9 @@ public class DokumenttiController {
     }
 
     @RequestMapping(value = "/tila", method = RequestMethod.GET)
-    public ResponseEntity<DokumenttiDto> query(@PathVariable final Long ktId,
-                                                @PathVariable final Long opsId,
-                                                @RequestParam(value = "kieli", defaultValue = "fi") final String kieli) {
+    public ResponseEntity<DokumenttiDto> query(@PathVariable Long ktId,
+                                                @PathVariable Long opsId,
+                                                @RequestParam(value = "kieli", defaultValue = "fi") String kieli) {
 
         // Tehdään DokumenttiDto jos ei löydy jo valmiina
         DokumenttiDto dokumenttiDto = service.getDto(opsId, Kieli.of(kieli));
@@ -108,12 +108,12 @@ public class DokumenttiController {
     }
 
     @Transactional
-    @RequestMapping(value = "/lisaaKuva", method=RequestMethod.POST)
-    public ResponseEntity<Object> addImage(@PathVariable final Long ktId,
-                                            @PathVariable final Long opsId,
-                                            @RequestParam final String tyyppi,
-                                            @RequestParam(defaultValue = "fi") final String kieli,
-                                            @RequestPart(required = true) final MultipartFile file) {
+    @RequestMapping(value = "/kuva", method=RequestMethod.POST)
+    public ResponseEntity<Object> addImage(@PathVariable Long ktId,
+                                            @PathVariable Long opsId,
+                                            @RequestParam String tyyppi,
+                                            @RequestParam(defaultValue = "fi") String kieli,
+                                            @RequestPart(required = true) MultipartFile file) {
 
         try {
             if (tyyppi != null && !file.isEmpty()) {
@@ -178,23 +178,22 @@ public class DokumenttiController {
     }
 
     @Transactional
-    @RequestMapping(value = "/lataaKuva", method=RequestMethod.GET)
-    @CacheControl(age = CacheControl.ONE_YEAR, nonpublic = false)
-    public ResponseEntity<Object> addImage(@PathVariable final Long ktId,
-                                            @PathVariable final Long opsId,
-                                            @RequestParam final String tyyppi,
-                                            @RequestParam(defaultValue = "fi") final String kieli) {
+    @RequestMapping(value = "/kuva", method=RequestMethod.GET)
+    public ResponseEntity<Object> addImage(@PathVariable Long ktId,
+                                            @PathVariable Long opsId,
+                                            @RequestParam String tyyppi,
+                                            @RequestParam(defaultValue = "fi") String kieli) {
         if (tyyppi != null) {
             // Tehdään DokumenttiDto jos ei löydy jo valmiina
             DokumenttiDto dokumenttiDto = service.getDto(opsId, Kieli.of(kieli));
             if (dokumenttiDto == null) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(HttpStatus.OK);
             }
 
             // Haetaan kuva
             Dokumentti dokumentti = repository.findByOpsIdAndKieli(opsId, Kieli.of(kieli));
             if (dokumentti == null) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(HttpStatus.OK);
             }
 
             byte[] image;
@@ -214,7 +213,7 @@ public class DokumenttiController {
             }
 
             if (image == null || image.length == 0) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(HttpStatus.OK);
             }
 
             HttpHeaders headers = new HttpHeaders();

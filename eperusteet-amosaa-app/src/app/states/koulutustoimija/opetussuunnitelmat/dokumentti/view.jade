@@ -1,3 +1,36 @@
+mixin gicon(type)
+  i(class="glyphicon glyphicon-" + type)
+
+mixin gtext(type, name)
+  +gicon(type)
+  span=" "
+  span(kaanna=name)
+
+mixin kuva(tyyppi)
+  div(ng-hide=tyyppi + "Uploader.queue.length !== 0")
+    p(style="height: 120px;")
+      a(ng-href="{{ kuva." + tyyppi + " }}" target="_blank")
+        img(ng-src="{{ kuva." + tyyppi + " }}"
+            height="120px")
+    span.btn.btn-danger
+      +gtext('trash', 'poista')
+    span=" "
+    span.btn.btn-default.btn-file
+      span(kaanna="'valitse-uusi-kuva'")
+      input(type='file' nv-file-select nv-file-drop uploader=tyyppi + 'Uploader')
+
+  span(ng-repeat="item in " + tyyppi + "Uploader.queue")
+    p(ng-bind="item.file.name" style="height: 120px;")
+    button.btn.btn-default(type='button'
+                          ng-click='item.remove()'
+                          ng-disabled='item.isReady || item.isUploading || item.isSuccess')
+      span(kaanna="'peruuta'")
+    span=" "
+    button.btn.btn-success(type='button'
+                           ng-click='item.upload()'
+                           ng-disabled='item.isReady || item.isUploading || item.isSuccess')
+      +gtext('upload', 'laheta')
+
 div.dokumentti
   div.row
     div.col-xs-12
@@ -7,13 +40,13 @@ div.dokumentti
 
       div(ng-hide="dokumenttiDto.tila === 'luodaan'")
         p(ng-show="dokumenttiDto.tila === 'valmis'")
-          b {{ 'luoja' | kaanna }}:
+          b(kaanna="'luoja'")
           span=" "
-          span {{ dokumenttiDto.luoja }}
+          span(kaanna="dokumenttiDto.luoja")
           span=" "
-          b {{ 'luotu' | kaanna }}:
+          b(kaanna="'luotu'")
           span=" "
-          span {{ dokumenttiDto.valmistumisaika | aikaleima }}
+          span(ng-bind="dokumenttiDto.valmistumisaika | aikaleima")
 
         a(ng-href="{{ linkki }}" target="_blank" ng-show="dokumenttiDto.tila === 'valmis'")
           button.btn.btn-default {{ 'lataa' | kaanna }} {{ 'pdf' | kaanna }}
@@ -45,27 +78,16 @@ div.dokumentti
             span(kaanna="'kansilehti'")
             span=":"
           div.col-xs-10
-            input(id="kansi"
-                  type='file'
-                  name='file'
-                  onchange='angular.element(this).scope().uploadFile(this.files)')
-            img(ng-src="{{ kansi }}" height="100" onerror="this.style.display = 'none'")
+            +kuva('kansi')
         div.form-group
           label.col-xs-2(for="header")
             span(kaanna="'ylatunniste'")
             span=":"
           div.col-xs-10
-            input(type="file" id="header")
-            img(ng-src="{{ ylatunniste }}" height="100" onerror="this.style.display = 'none'")
+            +kuva('ylatunniste')
         div.form-group
           label.col-xs-2(for="header")
             span(kaanna="'alatunniste'")
             span=":"
           div.col-xs-10
-            input(type="file" id="footer")
-            img(ng-src="{{ alatunniste }}" height="100" onerror="this.style.display = 'none'")
-        //div.form-group
-          div.col-xs-2
-          div.col-xs-10
-            button.btn.btn-default
-              span(kaanna="'tallenna'")
+            +kuva('alatunniste')

@@ -8,7 +8,39 @@ angular.module("app")
     },
     views: {
         "": {
-            controller: ($scope, $timeout, dokumentti, dokumenttiDto, $http) => {
+            controller: ($scope, $timeout, dokumentti, dokumenttiDto, $http, FileUploader) => {
+                var dokumenttiUrl = dokumentti.getRestangularUrl();
+                $scope.kuva = {};
+
+                // Kuvien päivitys
+                var paivitaKuva = (tyyppi) => {
+                    $scope.kuva[tyyppi] = dokumenttiUrl
+                        + "/kuva?tyyppi=" + tyyppi + "&kieli=" + KieliService.getSisaltokieli()
+                        + "&" + new Date().getTime()
+                };
+
+                paivitaKuva("kansi");
+                paivitaKuva("ylatunniste");
+                paivitaKuva("alatunniste");
+
+                // Kuvien lataus
+                var createUploader = (tyyppi) => {
+                    var uploader = new FileUploader({
+                        url: dokumenttiUrl + "/kuva?tyyppi=" + tyyppi + "&kieli=" + KieliService.getSisaltokieli(),
+                        queueLimit: '1',
+                        removeAfterUpload: true
+                    });
+                    uploader.onSuccessItem = () => {
+                        paivitaKuva(tyyppi);
+                    };
+                    return uploader;
+                };
+
+                $scope.kansiUploader = createUploader("kansi");
+                $scope.ylatunnisteUploader = createUploader("ylatunniste");
+                $scope.alatunnisteUploader = createUploader("alatunniste");
+
+                // Generointi
                 $scope.dokumenttiDto = dokumenttiDto;
                 $scope.generoi = () => {
                     dokumentti.post("", "", {
@@ -18,11 +50,10 @@ angular.module("app")
                     });
                 };
 
-                $scope.linkki = dokumentti.getRestangularUrl() + "?kieli=" + KieliService.getSisaltokieli();
-                $scope.kansi = dokumentti.getRestangularUrl() + "/lataaKuva?tyyppi=kansi&kieli=" + KieliService.getSisaltokieli();
-                $scope.ylatunniste = dokumentti.getRestangularUrl() + "/lataaKuva?tyyppi=ylatunniste&kieli=" + KieliService.getSisaltokieli();
-                $scope.alatunniste = dokumentti.getRestangularUrl() + "/lataaKuva?tyyppi=alatunniste&kieli=" + KieliService.getSisaltokieli();
+                // Linkit
+                $scope.linkki = dokumenttiUrl + "?kieli=" + KieliService.getSisaltokieli();
 
+                // Edistyminen
                 $scope.edistymisetCount = 5;
                 $scope.edistymiset = {
                     "tuntematon": 5,
@@ -32,26 +63,7 @@ angular.module("app")
                     "tyylit": 4,
                 };
 
-                $scope.uploadFile = (files) => {
-                    var fd = new FormData();
-                    //Take the first selected file
-                    fd.append("file", files[0]);
-
-                    $http.post(dokumentti.getRestangularUrl()
-                        + "/lisaaKuva?tyyppi=kansi&kieli="
-                        + KieliService.getSisaltokieli(), fd, {
-                        withCredentials: true,
-                        headers: {'Content-Type': undefined },
-                        transformRequest: angular.identity
-                    }).success(function () {
-                        console.log("success")
-                    }).error(function () {
-                        console.log("error");
-                    });
-
-                };
-
-
+                //
                 var poll = () => {
                     dokumentti.one("tila").get().then((dokumenttiDto) => {
                         $scope.dokumenttiDto = dokumenttiDto;

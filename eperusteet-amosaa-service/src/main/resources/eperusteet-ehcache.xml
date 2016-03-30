@@ -3,8 +3,7 @@
   xsi:noNamespaceSchemaLocation="../config/ehcache.xsd"
   updateCheck="false"
   monitoring="autodetect"
-  dynamicConfig="true"
->
+  dynamicConfig="true">
 
     <!--
     The diskStore element is optional. It must be configured if you have overflowToDisk or diskPersistent enabled

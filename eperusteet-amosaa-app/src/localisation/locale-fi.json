@@ -1,4 +1,5 @@
 {
+"alatunniste":                                  "Alatunniste",
 "anna-nimi":                                    "Anna nimi",
 "apuotsikko":                                   "Apuotsikko",
 "asetukset":                                    "Asetukset",
@@ -25,6 +26,7 @@
 "koulutustoimija-yhteiset-osat":                "Koulutustoimijan yhteiset osat",
 "koulutustoimijalla-ei-ole-opetussuunnitelmia": "Opetussuunnitelmia ei ole vielä lisätty.",
 "koulutustoimijan-yhteista-osaa-ei-luotu":      "Koulutustoimijan yhteistä osaa ei ole luotu",
+"kuva-puuttuu":                                 "Kuva puuttuu",
 "kuvaus":                                       "Kuvaus",
 "lataa":                                        "Lataa",
 "lisaa":                                        "Lisää",
@@ -39,6 +41,7 @@
 "luodaan-dokumenttia":                          "Luodaan dokumenttia...",
 "luoja":                                        "Luoja",
 "luotu":                                        "Luotu",
+"laheta":                                       "Lähetä",
 "muokattu":                                     "Muokattu",
 "muokkaaja":                                    "Muokkaaja",
 "muokkaajaa-ei-loytynyt":                       "Muokkaajaa ei löytynyt",
@@ -55,6 +58,7 @@
 "paatospvm":                                    "Päätöspäivämäärä",
 "pdf":                                          "PDF",
 "peruuta":                                      "Peruuta",
+"poista":                                       "Poista",
 "poistaja":                                     "Poistaja",
 "poistettu-otsikko":                            "Poistetun nimi",
 "poistetut":                                    "Poistetut",
@@ -80,6 +84,7 @@
 "tutkinto":                                     "Tutkinto",
 "uusi-dokumentti":                              "Uusi dokumentti",
 "vahemman":                                     "Vähemmän",
+"valitse-uusi-kuva":                            "Valitse uusi kuva",
 "valitse-pohja":                                "Valitse pohja",
 "versio":                                       "Versio",
 "versio-historia":                              "Versiohistoria",
@@ -87,5 +92,6 @@
 "voimaantulopvm":                               "Voimaantulopäivämäärä",
 "voimassa-olo-alkoi":                           "Voimassaolo alkoi",
 "yhteisien-osien-pohjat":                       "Yhteisien osien pohjat",
-"yhteisien-osien-pohjia-ei-viela-luotu":        "Yhteisien osien pohjia ei luotu"
+"yhteisien-osien-pohjia-ei-viela-luotu":        "Yhteisien osien pohjia ei luotu",
+"ylatunniste":                                  "Ylätunniste"
 }
