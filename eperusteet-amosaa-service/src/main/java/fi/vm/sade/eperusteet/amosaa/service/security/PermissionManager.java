@@ -15,27 +15,20 @@
  */
 package fi.vm.sade.eperusteet.amosaa.service.security;
 
+import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.KayttajaoikeusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaoikeusRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
-import fi.vm.sade.eperusteet.amosaa.service.exception.NotExistsException;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.Organization;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.RolePermission;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.RolePrefix;
-import fi.vm.sade.eperusteet.amosaa.service.util.Pair;
-import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -116,13 +109,13 @@ public class PermissionManager {
             case KOMMENTOINTI:
                 permissions = EnumSet.allOf(RolePermission.class);
                 break;
+            case MUOKKAUS:
+                permissions = EnumSet.of(RolePermission.CRUD, RolePermission.READ_UPDATE, RolePermission.ADMIN);
+                break;
             case TILANVAIHTO:
             case LUONTI:
             case POISTO:
                 permissions = EnumSet.of(RolePermission.CRUD, RolePermission.ADMIN);
-                break;
-            case MUOKKAUS:
-                permissions = EnumSet.of(RolePermission.CRUD, RolePermission.READ_UPDATE, RolePermission.ADMIN);
                 break;
             case HALLINTA:
                 permissions = EnumSet.of(RolePermission.ADMIN);
@@ -132,21 +125,55 @@ public class PermissionManager {
                 break;
         }
 
-        String organisaatio;
+        String organisaatioOid;
+        Opetussuunnitelma ops = null;
+        Koulutustoimija koulutustoimija = null;
+
         switch (target) {
             case OPETUSSUUNNITELMA:
-                Opetussuunnitelma ops = opsRepository.findOne((Long)targetId);
-                organisaatio = ops.getKoulutustoimija().getOrganisaatio();
+                if (targetId == null) {
+                    return false;
+                }
+
+                // Optiomoi
+                ops = opsRepository.findOne((Long)targetId);
+                koulutustoimija = ops.getKoulutustoimija();
+                organisaatioOid = koulutustoimija.getOrganisaatio();
                 break;
             case KOULUTUSTOIMIJA:
-                organisaatio = koulutustoimijaRepository.findOne((Long)targetId).getOrganisaatio();
+                if (targetId == null) {
+                    return false;
+                }
+
+                // Optiomoi
+                koulutustoimija = koulutustoimijaRepository.findOne((Long)targetId);
+                organisaatioOid = koulutustoimija.getOrganisaatio();
                 break;
             default:
-                organisaatio = null;
+                organisaatioOid = null;
         }
 
-        return hasAnyRole(authentication, RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA,
-                          permissions, organisaatio != null ? new Organization(organisaatio) : Organization.ANY);
+        Organization organisaatio = organisaatioOid != null ? new Organization(organisaatioOid) : Organization.ANY;
+
+        // Jos käyttäjällä on jokin rooli organisaatiossa niin on lupa lukea
+        if ((perm == Permission.LUKU || perm == Permission.KOMMENTOINTI)
+                && hasAnyRole(authentication, RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA, permissions, organisaatio)) {
+            return true;
+        }
+
+        // Jos käyttäjällä on organisaatiossa hallintaoikeus
+        if (hasRole(authentication, RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA, RolePermission.ADMIN, organisaatio)) {
+            return true;
+        }
+
+        if (target == TargetType.KOULUTUSTOIMIJA) {
+            return hasAnyRole(authentication, RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA, permissions, organisaatio);
+        }
+        else if (target == TargetType.OPETUSSUUNNITELMA) {
+            KayttajaoikeusTyyppi oikeus = kayttajaoikeusRepository.findKayttajaoikeus(authentication.getName(), (Long)targetId);
+            return oikeus != null; // FIXME: Tarkista tarkempi oikeus
+        }
+        return false;
     }
 
     private static boolean hasRole(Authentication authentication, RolePrefix prefix,
@@ -166,76 +193,5 @@ public class PermissionManager {
             return authority.equals(prefix.name() + "_" + permission.name());
         }
         return authority.equals(prefix.name() + "_" + permission.name() + "_" + org.getOrganization().get());
-    }
-
-    @Transactional(readOnly = true)
-    @PreAuthorize("isAuthenticated()")
-    public Map<TargetType, Set<Permission>> getOpsPermissions() {
-        Map<TargetType, Set<Permission>> permissionMap = new HashMap<>();
-
-        Set<Permission> opsPermissions =
-            EnumSet.allOf(RolePermission.class).stream()
-                   .map(p -> new Pair<>(p, SecurityUtil.getOrganizations(Collections.singleton(p))))
-                   .filter(pair -> !pair.getSecond().isEmpty())
-                   .flatMap(pair -> fromRolePermission(pair.getFirst()).stream())
-                   .collect(Collectors.toSet());
-        permissionMap.put(TargetType.OPETUSSUUNNITELMA, opsPermissions);
-
-//        Set<Permission> pohjaPermissions =
-//            EnumSet.allOf(RolePermission.class).stream()
-//                   .map(p -> new Pair<>(p, SecurityUtil.getOrganizations(Collections.singleton(p))))
-//                   .filter(pair -> pair.getSecond().contains(SecurityUtil.OPH_OID))
-//                   .flatMap(pair -> fromRolePermission(pair.getFirst()).stream())
-//                   .collect(Collectors.toSet());
-//        permissionMap.put(TargetType.POHJA, pohjaPermissions);
-
-        return permissionMap;
-    }
-
-    @Transactional(readOnly = true)
-    @PreAuthorize("isAuthenticated()")
-    public Set<Permission> getKoulutustoimijaPermissions(Long id) {
-
-        Koulutustoimija koulutustoimija = koulutustoimijaRepository.findOne(id);
-        if (koulutustoimija == null) {
-            throw new NotExistsException(MSG_OPS_EI_OLEMASSA);
-        }
-
-        String organisaatio = koulutustoimija.getOrganisaatio();
-        Set<Permission> permissions
-            = EnumSet.allOf(RolePermission.class).stream()
-            .map(p -> new Pair<>(p, SecurityUtil.getOrganizations(Collections.singleton(p))))
-            .filter(pair -> pair.getSecond().contains(organisaatio))
-            .flatMap(pair -> fromRolePermission(pair.getFirst()).stream())
-            .collect(Collectors.toSet());
-
-        return new HashSet<>(permissions);
-    }
-
-    @Transactional(readOnly = true)
-    @PreAuthorize("isAuthenticated()")
-    public Map<TargetType, Set<Permission>> getOpsPermissions(Long id) {
-        Map<TargetType, Set<Permission>> permissionMap = new HashMap<>();
-        return permissionMap;
-    }
-
-    private static Set<Permission> fromRolePermission(RolePermission rolePermission) {
-        Set<Permission> permissions = new HashSet<>();
-        switch (rolePermission) {
-            case ADMIN:
-                permissions.add(Permission.HALLINTA);
-            case CRUD:
-                permissions.add(Permission.LUONTI);
-                permissions.add(Permission.POISTO);
-            case READ_UPDATE:
-                permissions.add(Permission.LUKU);
-                permissions.add(Permission.MUOKKAUS);
-                permissions.add(Permission.TILANVAIHTO);
-            case READ:
-                permissions.add(Permission.LUKU);
-                permissions.add(Permission.KOMMENTOINTI);
-                break;
-        }
-        return permissions;
     }
 }

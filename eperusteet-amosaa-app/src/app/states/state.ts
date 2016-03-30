@@ -1,3 +1,11 @@
+namespace Murupolku {
+    const svars = {};
+
+    export const register = (sname, name) => svars[sname] = name;
+    export const get = (sname) => _.clone(svars[sname]);
+};
+
+
 angular.module("app")
 .config($stateProvider => $stateProvider
 .state("root", {
@@ -28,10 +36,24 @@ angular.module("app")
             controller: "NotifikaatioController"
         },
         ylanavi: {
-            controller: ($scope, $state) => {
+            controller: ($scope, $state, $interpolate) => {
                 $scope.langs = KieliService.getSisaltokielet();
-                $scope.$on("help:updated", (x, helpUrl) => $scope.helpUrl = helpUrl);
-                $scope.$on("$stateChangeStart", (x, helpUrl) => $scope.helpUrl = undefined);
+                $scope.$on("help:updated", (event, helpUrl) => $scope.helpUrl = helpUrl);
+                $scope.$on("$stateChangeStart", (event, helpUrl) => $scope.helpUrl = undefined);
+                $scope.$on("$stateChangeSuccess", (event, toState, toParams, fromState, fromParams) => {
+                    const path = toState.name.split(".");
+                    $scope.muruPath = _(_.rest(path)
+                        .reduce((acc: Array<string>, next: string) =>
+                                _.append(acc, _.last(acc) + "." + next), ["root"]))
+                        .reject(state => _.endsWith(state, ".detail"))
+                        .map($state.get)
+                        .map((sconfig: any) => ({
+                            name: Murupolku.get(sconfig.name) || "muru-" + sconfig.name,
+                            state: sconfig.name + (sconfig.abstract ? ".detail" : "")
+                        }))
+                        .value()
+                        .slice(1);
+                });
                 OhjeService.updateHelp($state.current.name);
             }
         },

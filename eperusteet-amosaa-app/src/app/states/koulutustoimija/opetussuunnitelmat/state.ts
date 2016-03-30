@@ -8,6 +8,7 @@ angular.module("app")
         sisaltoRoot: (otsikot) => Tekstikappaleet.root(otsikot),
         tekstit: (ops, sisaltoRoot) => ops.one("tekstit", sisaltoRoot.id),
     },
+    onEnter: (ops) => Murupolku.register("root.koulutustoimija.opetussuunnitelmat", ops.nimi),
     views: {
         "": {
             controller: ($scope, ops) => {

@@ -2,6 +2,12 @@ abbr[data-viite] {
   border-bottom: 1px dotted #999;
 }
 
+//this offsets styles in yhteiset which are hitting the popover
+.popover-title {
+  margin: 0 !important;
+  padding: 8px 14px !important;
+}
+
 .table-striped.kasitteet-table {
   .thead > tr > th {
     color: #b3bdc6;

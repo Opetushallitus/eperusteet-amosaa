@@ -3,16 +3,11 @@ div.ylanavi(sticky, className="ylanavi-sticky")
     div.col-xs-8
       ol.breadcrumb
         li
-          a(ui-sref="root")
+          a(href="" ui-sref="root" ui-sref-opts="{ reload: true }")
             span.glyphicon.glyphicon-home
-        li
-          a(ui-sref="root.koulutustoimija") koulutustoimija
-        li
-          a(href="") 42
-        li
-          a(href="") ops
-        li
-          a(href="") 1
+        li(ng-repeat="muru in muruPath")
+          a(href="" ui-sref="{{ muru.state }}" ui-sref-opts="{ reload: true }")
+            span(kaanna="muru.name")
     div.col-xs-4
       div.pull-right
         span.dropdown.kielivalitsin
@@ -31,7 +26,7 @@ div.ylanavi(sticky, className="ylanavi-sticky")
           uib-popover-template="helpUrl"
           popover-trigger="mouseenter"
           popover-animation="true"
-          popover-placement="bottom"
-          popover-title="{{ 'apuotsikko' | kaanna }}")
+          popover-placement="bottom-right"
+          popover-title="{{ 'nakyma-ohje' | kaanna }}")
           i.fa.fa-circle.fa-stack-2x
           i.fa.fa-info.fa-stack-1x.fa-inverse
