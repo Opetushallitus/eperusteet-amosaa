@@ -19,7 +19,6 @@ package fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import fi.vm.sade.eperusteet.amosaa.dto.liite.LiiteDto;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import java.util.Date;
 import java.util.Set;
 import lombok.Getter;
@@ -33,7 +32,6 @@ import lombok.Setter;
 @Setter
 public class OpetussuunnitelmaDto extends OpetussuunnitelmaBaseDto {
     private String kommentti;
-    private LokalisoituTekstiDto kuvaus;
     private Set<Kieli> julkaisukielet;
     private Set<LiiteDto> liitteet;
     private Date paatospaivamaara;

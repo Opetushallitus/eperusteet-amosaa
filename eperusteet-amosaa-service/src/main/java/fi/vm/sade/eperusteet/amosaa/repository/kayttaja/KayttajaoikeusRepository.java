@@ -38,6 +38,9 @@ public interface KayttajaoikeusRepository extends JpaRepository<Kayttajaoikeus, 
     @Query("SELECT o.oikeus FROM Kayttajaoikeus o WHERE o.kayttaja.id = ?1 AND o.koulutustoimija.id = ?2")
     KayttajaoikeusTyyppi findKayttajaoikeus(Long kayttaja, Long koulutustoimija);
 
+    @Query("SELECT o.oikeus FROM Kayttajaoikeus o WHERE o.kayttaja.oid = ?1 AND o.opetussuunnitelma.id = ?2")
+    KayttajaoikeusTyyppi findKayttajaoikeus(String kayttajaOid, Long opsId);
+
     List<Kayttajaoikeus> findAllByKoulutustoimijaAndOpetussuunnitelma(Koulutustoimija koulutustoimija, Opetussuunnitelma ops);
 
     @Query("SELECT o FROM Kayttajaoikeus o WHERE o.kayttaja.id = ?1 AND o.koulutustoimija.id = ?2")

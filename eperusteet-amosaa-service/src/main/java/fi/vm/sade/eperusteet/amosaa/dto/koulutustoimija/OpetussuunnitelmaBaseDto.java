@@ -31,14 +31,15 @@ import lombok.Setter;
 @Getter
 @Setter
 public class OpetussuunnitelmaBaseDto {
-    Long id;
-    LokalisoituTekstiDto nimi;
-    Tila tila;
-    OpsTyyppi tyyppi;
+    private Long id;
+    private LokalisoituTekstiDto nimi;
+    private Tila tila;
+    private OpsTyyppi tyyppi;
+    private LokalisoituTekstiDto kuvaus;
     
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    Reference pohja;
+    private Reference pohja;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    String peruste;
+    private String peruste;
 }

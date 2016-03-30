@@ -20,15 +20,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
-import fi.vm.sade.eperusteet.amosaa.dto.TiedoteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
-import java.util.ArrayList;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,23 +75,5 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     @Override
     public KoulutustoimijaDto getKoulutustoimija(Long kId) {
         return mapper.map(repository.findOne(kId), KoulutustoimijaDto.class);
-    }
-
-    @Override
-    public List<TiedoteDto> getTiedotteet(Long kOid) {
-        ArrayList<TiedoteDto> result = new ArrayList<>();
-        return result;
-    }
-
-    @Override
-    public TiedoteDto getTiedote(Long kOid) {
-        TiedoteDto result = new TiedoteDto();
-        return result;
-    }
-
-    @Override
-    public List<TiedoteDto> getOmatTiedotteet(Long kOid) {
-        ArrayList<TiedoteDto> result = new ArrayList<>();
-        return result;
     }
 }
