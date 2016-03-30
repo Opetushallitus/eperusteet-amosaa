@@ -17,6 +17,7 @@
 package fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija;
 
 import fi.vm.sade.eperusteet.amosaa.dto.TiedoteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
@@ -75,16 +76,16 @@ public class KoulutustoimijaController {
         return koulutustoimijaService.getOmatTiedotteet(ktId);
     }
 
-    @RequestMapping(value = "/kayttajat", method = RequestMethod.GET)
-    public ResponseEntity<List<KayttajanTietoDto>> getKayttajat(
+    @RequestMapping(value = "/{ktId}/kayttajat", method = RequestMethod.GET)
+    public ResponseEntity<List<KayttajaDto>> getKayttajat(
             @PathVariable final Long ktId) {
-        return new ResponseEntity<>(koulutustoimijaService.getKayttajat(ktId), HttpStatus.OK);
+        return new ResponseEntity<>(kayttajaTietoService.getKayttajat(ktId), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/kayttajat/{kayttajaId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{ktId}/kayttajat/{kayttajaId}", method = RequestMethod.GET)
     public ResponseEntity<KayttajanTietoDto> getKayttajat(
             @PathVariable final Long ktId,
-            @PathVariable final String kayttajaId) {
+            @PathVariable final Long kayttajaId) {
         return ResponseEntity.ok(kayttajaTietoService.getKayttaja(ktId, kayttajaId));
     }
 }

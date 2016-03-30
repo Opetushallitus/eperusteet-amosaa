@@ -36,6 +36,7 @@ public interface OpetussuunnitelmaService extends RevisionService {
 
     List<OpetussuunnitelmaBaseDto> getOpetussuunnitelmat(@P("ktId") Long ktId);
 
+    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
     OpetussuunnitelmaDto getOpetussuunnitelma(@P("ktId") Long ktId, @P("opsId") Long opsId);
 
     List<PoistettuDto> getPoistetut(@P("ktId") Long ktId, @P("opsId") Long opsId);
@@ -46,6 +47,6 @@ public interface OpetussuunnitelmaService extends RevisionService {
 
     OpetussuunnitelmaDto update(@P("ktId") Long ktId, @P("opsId") Long opsId, OpetussuunnitelmaDto body);
 
-    OpetussuunnitelmaBaseDto addOpetussuunnitelma(Long ktId, OpetussuunnitelmaDto opsDto);
+    OpetussuunnitelmaBaseDto addOpetussuunnitelma(@P("ktId") Long ktId, OpetussuunnitelmaDto opsDto);
 }
 

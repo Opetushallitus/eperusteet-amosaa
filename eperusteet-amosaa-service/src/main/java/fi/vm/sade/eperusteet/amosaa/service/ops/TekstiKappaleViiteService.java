@@ -15,6 +15,8 @@
  */
 package fi.vm.sade.eperusteet.amosaa.service.ops;
 
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappaleViite;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.TekstiKappaleViiteDto;
 import fi.vm.sade.eperusteet.amosaa.service.revision.RevisionService;
 import java.util.List;
@@ -42,5 +44,7 @@ public interface TekstiKappaleViiteService extends RevisionService {
     TekstiKappaleViiteDto.Puu kloonaaTekstiKappale(@P("ktId") Long ktId, @P("id") Long id, Long viiteId);
 
     void reorderSubTree(@P("ktId") Long ktId, @P("id") Long id, Long rootViiteId, TekstiKappaleViiteDto.Puu uusi);
+
+    TekstiKappaleViite kopioiHierarkia(TekstiKappaleViite original, Opetussuunnitelma owner);
 }
 

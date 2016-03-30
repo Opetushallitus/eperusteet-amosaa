@@ -170,7 +170,7 @@ CREATE TABLE opetussuunnitelma (
     tyyppi CHARACTER VARYING(255) NOT NULL,
     CHECK ((tyyppi = 'OPS' AND peruste IS NOT NULL)
         OR (tyyppi = 'YHTEINEN' AND pohja_id IS NOT NULL)
-        OR (tyyppi = 'KOOSTE' OR tyyppi 'POHJA'))
+        OR (tyyppi = 'KOOSTE' OR tyyppi = 'POHJA'))
 );
 
 CREATE TABLE opetussuunnitelma_aud (
@@ -313,15 +313,22 @@ create table dokumentti (
     virhekoodi TEXT
 );
 
-CREATE TABLE tiedote (
+CREATE TABLE koulutustoimijakayttaja (
     id BIGINT NOT NULL PRIMARY KEY,
     koulutustoimija_id BIGINT NOT NULL REFERENCES koulutustoimija(id),
-    otsikko TEXT,
-    teksti TEXT,
-    julkinen BOOLEAN,
-    tarkea BOOLEAN,
-    luoja CHARACTER VARYING(255),
-    luottu TIMESTAMP WITHOUT TIME ZONE,
-    muokkaja CHARACTER VARYING(255),
-    muokattu TIMESTAMP WITHOUT TIME ZONE
+    kayttaja_id BIGINT NOT NULL REFERENCES kayttaja(id),
+    UNIQUE (kayttaja_id, koulutustoimija_id)
+);
+
+CREATE TABLE tiedote (
+    id                 BIGINT NOT NULL PRIMARY KEY,
+    koulutustoimija_id BIGINT NOT NULL REFERENCES koulutustoimija (id),
+    otsikko            TEXT,
+    teksti             TEXT,
+    julkinen           BOOLEAN,
+    tarkea             BOOLEAN,
+    luoja              CHARACTER VARYING(255),
+    luottu             TIMESTAMP WITHOUT TIME ZONE,
+    muokkaja           CHARACTER VARYING(255),
+    muokattu           TIMESTAMP WITHOUT TIME ZONE
 );

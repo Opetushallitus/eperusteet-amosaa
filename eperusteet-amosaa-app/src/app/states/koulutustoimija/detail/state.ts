@@ -12,6 +12,7 @@ angular.module("app")
                 $scope.isOph = Koulutustoimijat.isOpetushallitus(koulutustoimija);
                 $scope.koulutustoimijat = kayttajanKoulutustoimijat;
                 $scope.koulutustoimija = koulutustoimija;
+                $scope.checkOph = Koulutustoimijat.isOpetushallitus;
             }
         },
         pohjat: {
@@ -24,7 +25,7 @@ angular.module("app")
         },
         opetussuunnitelmat: {
             controller: ($scope, koulutustoimija, opetussuunnitelmat, opsSaver) => {
-                $scope.opetussuunnitelmat = opetussuunnitelmat;
+                $scope.opetussuunnitelmat = _.reject(opetussuunnitelmat, (ops: any) => ops.tyyppi === "yhteinen");
                 $scope.addOpetussuunnitelma = () => ModalAdd.opetussuunnitelma()
                     .then(opsSaver)
                     .then((res) => $scope.opetussuunnitelmat.push(res));
@@ -35,7 +36,9 @@ angular.module("app")
                 $scope.yhteinen = yhteinen;
                 $scope.addYhteinen = () => ModalAdd.yhteinen()
                     .then(opsSaver)
-                    .then((res) => _.merge(yhteinen, res));
+                    .then((res) => {
+                        $scope.yhteinen = _.merge(yhteinen, res)
+                    });
             }
         },
         tiedotteet: {

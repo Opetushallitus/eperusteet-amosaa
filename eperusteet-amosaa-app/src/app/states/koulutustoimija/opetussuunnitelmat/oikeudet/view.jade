@@ -27,15 +27,15 @@ div.poistetut
               a(href="")
                 span(kaanna="'oikeus'")
         tbody
-          tr(ng-show="suodata(oikeus)" ng-repeat="oikeus in oikeudet | orderBy:'$$kayttajanimi'")
+          tr(ng-show="suodata(kayttaja)" ng-repeat="kayttaja in kayttajat")
             td
-              span(ng-show="oikeus.$$kayttajanimi" ng-bind="oikeus.$$kayttajanimi")
-              span(ng-hide="oikeus.$$kayttajanimi" kaanna="'haetaan-kayttajanimea'")
+              span(ng-show="kayttaja.$$nimi" ng-bind="kayttaja.$$nimi")
+              span(ng-hide="kayttaja.$$nimi" kaanna="'haetaan-kayttajanimea'")
             td
-              span(ng-bind="'oikeus-' + oikeus.oikeus | kaanna")
+              span(ng-bind="'oikeus-' + oikeudet[kayttaja.id].oikeus | kaanna")
               span.dropdown
                 a.dropdown-toggle(href="" data-toggle="dropdown")
                   i.fa.fa-chevron-down.fa-fw
                 ul.dropdown-menu.dropdown-menu-right
                   li(ng-repeat="ovaihtoehto in vaihtoehdot")
-                    a(href="" ng-bind="'oikeus-' + ovaihtoehto | kaanna" ng-click="valitse(ovaihtoehto, oikeus)")
+                    a(href="" ng-bind="'oikeus-' + ovaihtoehto | kaanna" ng-click="valitse(ovaihtoehto, kayttaja)")

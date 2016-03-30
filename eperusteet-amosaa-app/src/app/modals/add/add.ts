@@ -16,6 +16,7 @@ namespace ModalAdd {
             controller: ($scope, $state, $uibModalInstance, pohjat) => {
                 $scope.pohjat = pohjat;
                 $scope.ok = $uibModalInstance.close;
+                $scope.peruuta = $uibModalInstance.dismiss;
                 $scope.yhteinen = {
                     tyyppi: "yhteinen"
                 };
@@ -32,6 +33,7 @@ namespace ModalAdd {
             templateUrl: "modals/add/pohja.jade",
             controller: ($scope, $state, $uibModalInstance) => {
                 $scope.ok = $uibModalInstance.close;
+                $scope.peruuta = $uibModalInstance.dismiss;
                 $scope.pohja = {
                     tyyppi: "pohja"
                 };
@@ -50,6 +52,7 @@ namespace ModalAdd {
                     tyyppi: "ops",
                 };
                 $scope.ok = $uibModalInstance.close;
+                $scope.peruuta = $uibModalInstance.dismiss;
 
                 $scope.update = (input) => {
                     if (!_.isEmpty(input)) {
@@ -61,6 +64,7 @@ namespace ModalAdd {
                 $scope.valitsePeruste = (peruste) => {
                     $scope.input = "";
                     $scope.peruste = peruste;
+                    $scope.ops.peruste = peruste.diaarinumero;
                 }
             }
         }).result;
