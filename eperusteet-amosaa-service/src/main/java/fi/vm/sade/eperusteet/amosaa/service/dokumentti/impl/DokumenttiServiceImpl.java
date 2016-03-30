@@ -60,20 +60,18 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 
     @Override
     @Transactional
-    @PreAuthorize("isAuthenticated()")
     public DokumenttiDto getDto(Long id, Kieli kieli) {
         Dokumentti dokumentti = dokumenttiRepository.findByOpsIdAndKieli(id, kieli);
 
         if (dokumentti != null) {
             return mapper.map(dokumentti, DokumenttiDto.class);
+        } else {
+            return createDtoFor(id, kieli);
         }
-
-        return null;
     }
 
     @Override
     @Transactional
-    @PreAuthorize("isAuthenticated()")
     public DokumenttiDto createDtoFor(Long id, Kieli kieli) {
         Dokumentti dokumentti = new Dokumentti();
         dokumentti.setTila(DokumenttiTila.EI_OLE);

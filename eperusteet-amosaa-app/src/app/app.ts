@@ -11,7 +11,8 @@ angular.module("app", [
     "ngAnimate",
     "ngSanitize",
     "ui.bootstrap",
-    "angular-loading-bar"
+    "angular-loading-bar",
+    "angularFileUpload"
 ])
 
 // Route configuration
