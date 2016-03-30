@@ -5,6 +5,8 @@ angular.module("app")
     resolve: {
         tekstikappale: (ops, $stateParams) => ops.one("tekstit", $stateParams.tkvId).get()
     },
+    onEnter: (tekstikappale) =>
+        Murupolku.register("root.koulutustoimija.opetussuunnitelmat.sisalto.tekstikappale", tekstikappale.tekstiKappale.nimi),
     views: {
         "": {
             controller: ($state, $stateParams, $location, $scope, $rootScope, $document, $timeout, tekstikappale, nimiLataaja) => {

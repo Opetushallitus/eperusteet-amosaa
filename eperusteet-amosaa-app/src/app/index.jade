@@ -13,7 +13,7 @@ html(lang="fi" ng-app="app")
     title="ePerusteet-amosaa"
   body
     // Debug
-    div.container(style="border-left: 1px dashed lightgray; border-right: 1px dashed lightgray; border-bottom: 1px dashed lightgray;")
+    div.container(ng-if="true" style="border-left: 1px dashed lightgray; border-right: 1px dashed lightgray; border-bottom: 1px dashed lightgray;")
       div.row
         .col-xs-12
           ul.list-inline
@@ -21,7 +21,7 @@ html(lang="fi" ng-app="app")
             li: a(ui-sref="root", ui-sref-opts="{ reload: true }") koulutustoimija
             li: a(href="", ui-sref="root.routelist", ui-sref-opts="{ reload: true }") routelist
 
-    div.container(style="border-left: 1px dashed lightgray; border-right: 1px dashed lightgray;")
+    div.container
       div(ui-view="notifikaatiot")
       div.ui-view
       div.editointi-wrapper

@@ -5,6 +5,7 @@ declare module _ {
         print(): any;
         matchStrings(search: string, target: string): boolean;
         fromPairs(x: Array<any>): any;
+        append<T>(x: Array<T>, el: T): Array<T>;
         fromPairs(): any;
     }
 
@@ -14,6 +15,11 @@ declare module _ {
 }
 
 _.mixin({
+    append: (arr, el) => {
+        let result = _.clone(arr);
+        result.push(el);
+        return result;
+    },
     matchStrings: (search: string = "", target: string = "") =>
         !search || (target && target.toLocaleLowerCase().indexOf(search.toLowerCase()) !== -1),
     callAndGive: (f: Function, ...args) => {

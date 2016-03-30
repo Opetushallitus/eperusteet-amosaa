@@ -26,7 +26,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 /**
  * @author mikkom
  */
-@PreAuthorize("isAuthenticated()")
 public interface TekstiKappaleViiteService extends RevisionService {
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
     TekstiKappaleViiteDto.Matala getTekstiKappaleViite(@P("ktId") Long ktId, @P("opsId") Long opsId, Long viiteId);

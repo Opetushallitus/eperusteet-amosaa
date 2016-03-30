@@ -83,8 +83,8 @@ public class TekstiKappaleViiteServiceImpl implements TekstiKappaleViiteService 
     }
 
     @Override
-    public <T> List<T> getTekstiKappaleViitteet(Long ktId, Long id, Class<T> t) {
-        List<TekstiKappaleViite> tkvs = repository.findAllByOwnerId(id);
+    public <T> List<T> getTekstiKappaleViitteet(Long ktId, Long opsId, Class<T> t) {
+        List<TekstiKappaleViite> tkvs = repository.findAllByOwnerId(opsId);
         return mapper.mapAsList(tkvs, t);
     }
 
@@ -97,10 +97,11 @@ public class TekstiKappaleViiteServiceImpl implements TekstiKappaleViiteService 
     @Override
     @Transactional(readOnly = false)
     public TekstiKappaleViiteDto.Matala addTekstiKappaleViite(
-            @P("ktId") Long ktId,
-            @P("id") Long id, Long viiteId,
-        TekstiKappaleViiteDto.Matala viiteDto) {
-        TekstiKappaleViite parentViite = findViite(id, viiteId);
+            Long ktId,
+            Long opsId,
+            Long viiteId,
+            TekstiKappaleViiteDto.Matala viiteDto) {
+        TekstiKappaleViite parentViite = findViite(opsId, viiteId);
         TekstiKappaleViite uusiViite = mapper.map(viiteDto, TekstiKappaleViite.class);
         uusiViite.setOwner(parentViite.getOwner());
         viiteDto.setTekstiKappale(tekstiKappaleService.add(uusiViite, viiteDto.getTekstiKappale()));
@@ -173,13 +174,13 @@ public class TekstiKappaleViiteServiceImpl implements TekstiKappaleViiteService 
         return mapper.map(viite, TekstiKappaleViiteDto.Puu.class);
     }
 
-    private List<TekstiKappaleViite> findViitteet(Long id, Long viiteId) {
-        TekstiKappaleViite viite = findViite(id, viiteId);
+    private List<TekstiKappaleViite> findViitteet(Long opsId, Long viiteId) {
+        TekstiKappaleViite viite = findViite(opsId, viiteId);
         return repository.findAllByTekstiKappale(viite.getTekstiKappale());
     }
 
-    private TekstiKappaleViite findViite(Long id, Long viiteId) {
-        return assertExists(repository.findOneByOwnerIdAndId(id, viiteId), "Tekstikappaleviitettä ei ole olemassa");
+    private TekstiKappaleViite findViite(Long opsId, Long viiteId) {
+        return assertExists(repository.findOneByOwnerIdAndId(opsId, viiteId), "Tekstikappaleviitettä ei ole olemassa");
     }
 
     private void clearChildren(TekstiKappaleViite viite, Set<TekstiKappaleViite> refs) {
@@ -191,9 +192,9 @@ public class TekstiKappaleViiteServiceImpl implements TekstiKappaleViiteService 
         viite.getLapset().clear();
     }
 
-    private void updateTekstiKappale(Long id, TekstiKappaleViite viite, TekstiKappaleDto uusiTekstiKappale, boolean requireLock) {
+    private void updateTekstiKappale(Long opsId, TekstiKappaleViite viite, TekstiKappaleDto uusiTekstiKappale, boolean requireLock) {
         if (uusiTekstiKappale != null) {
-            if (Objects.equals(id, viite.getOwner().getId())) {
+            if (Objects.equals(opsId, viite.getOwner().getId())) {
                 if (viite.getTekstiKappale() != null) {
                     final Long tid = viite.getTekstiKappale().getId();
                     if (requireLock || lockMgr.getLock(tid) != null) {
