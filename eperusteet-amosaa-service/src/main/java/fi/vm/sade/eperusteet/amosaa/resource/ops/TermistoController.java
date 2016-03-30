@@ -91,4 +91,3 @@ public class TermistoController {
         termistoService.deleteTermi(ktId, termiId);
     }
 }
-

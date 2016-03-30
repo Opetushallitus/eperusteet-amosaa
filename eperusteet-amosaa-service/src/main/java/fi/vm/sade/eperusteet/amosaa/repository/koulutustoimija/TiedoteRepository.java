@@ -11,6 +11,6 @@ import java.util.List;
  * Created by richard.vancamp on 29/03/16.
  */
 public interface TiedoteRepository extends JpaWithVersioningRepository<Tiedote, Long> {
-    List<Tiedote> findAll(Koulutustoimija koulutustoimija);
+    List<Tiedote> findAllByKoulutustoimija(Koulutustoimija koulutustoimija);
     Tiedote findOneByKoulutustoimijaAndId(Koulutustoimija koulutustoimija, Long id);
 }

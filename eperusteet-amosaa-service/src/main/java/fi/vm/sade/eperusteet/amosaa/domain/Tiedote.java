@@ -39,7 +39,6 @@ public class Tiedote implements Serializable{
 
     private String otsikko;
 
-    @ValidHtml(whitelist = ValidHtml.WhitelistType.SIMPLIFIED)
     private String teksti;
 
     private Boolean julkinen;

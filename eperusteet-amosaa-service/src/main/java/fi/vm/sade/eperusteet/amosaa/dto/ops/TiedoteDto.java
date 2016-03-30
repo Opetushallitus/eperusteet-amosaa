@@ -14,7 +14,7 @@
  * European Union Public Licence for more details.
  */
 
-package fi.vm.sade.eperusteet.amosaa.dto;
+package fi.vm.sade.eperusteet.amosaa.dto.ops;
 
 import lombok.Getter;
 import lombok.Setter;

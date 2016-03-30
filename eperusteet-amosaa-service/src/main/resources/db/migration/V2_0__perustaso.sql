@@ -313,13 +313,6 @@ create table dokumentti (
     virhekoodi TEXT
 );
 
-CREATE TABLE koulutustoimijakayttaja (
-    id BIGINT NOT NULL PRIMARY KEY,
-    koulutustoimija_id BIGINT NOT NULL REFERENCES koulutustoimija(id),
-    kayttaja_id BIGINT NOT NULL REFERENCES kayttaja(id),
-    UNIQUE (kayttaja_id, koulutustoimija_id)
-);
-
 CREATE TABLE tiedote (
     id                 BIGINT NOT NULL PRIMARY KEY,
     koulutustoimija_id BIGINT NOT NULL REFERENCES koulutustoimija (id),
@@ -329,6 +322,30 @@ CREATE TABLE tiedote (
     tarkea             BOOLEAN,
     luoja              CHARACTER VARYING(255),
     luottu             TIMESTAMP WITHOUT TIME ZONE,
-    muokkaja           CHARACTER VARYING(255),
+    muokkaaja          CHARACTER VARYING(255),
     muokattu           TIMESTAMP WITHOUT TIME ZONE
+);
+
+CREATE TABLE tiedote_aud (
+    id                 BIGINT NOT NULL,
+    koulutustoimija_id BIGINT,
+    otsikko            TEXT,
+    teksti             TEXT,
+    julkinen           BOOLEAN,
+    tarkea             BOOLEAN,
+    luoja              CHARACTER VARYING(255),
+    luottu             TIMESTAMP WITHOUT TIME ZONE,
+    muokkaaja          CHARACTER VARYING(255),
+    muokattu           TIMESTAMP WITHOUT TIME ZONE,
+    rev                INTEGER NOT NULL REFERENCES revinfo(rev),
+    revtype            SMALLINT,
+    revend             INTEGER REFERENCES revinfo(rev),
+    PRIMARY KEY (id, rev)
+);
+
+CREATE TABLE koulutustoimijakayttaja (
+    id BIGINT NOT NULL PRIMARY KEY,
+    koulutustoimija_id BIGINT NOT NULL REFERENCES koulutustoimija(id),
+    kayttaja_id BIGINT NOT NULL REFERENCES kayttaja(id),
+    UNIQUE (kayttaja_id, koulutustoimija_id)
 );

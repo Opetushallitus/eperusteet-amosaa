@@ -16,7 +16,7 @@
 
 package fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija;
 
-import fi.vm.sade.eperusteet.amosaa.dto.TiedoteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.ops.TiedoteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
@@ -52,28 +52,6 @@ public class KoulutustoimijaController {
     public KoulutustoimijaDto get(
             @PathVariable final Long ktId) {
         return koulutustoimijaService.getKoulutustoimija(ktId);
-    }
-
-    @RequestMapping(value = "/{ktId}/tiedotteet", method = RequestMethod.GET)
-    @ResponseBody
-    public List<TiedoteDto> getTiedotteet(
-            @PathVariable final Long ktId) {
-        return koulutustoimijaService.getTiedotteet(ktId);
-    }
-
-    @RequestMapping(value = "/{ktId}/tiedote/{tiedoteId}", method = RequestMethod.GET)
-    @ResponseBody
-    public TiedoteDto getTiedote(
-            @PathVariable final Long ktId,
-            @PathVariable final Long tiedoteId) {
-        return koulutustoimijaService.getTiedote(ktId);
-    }
-
-    @RequestMapping(value = "/{ktId}/omattiedotteet", method = RequestMethod.GET)
-    @ResponseBody
-    public List<TiedoteDto> getOmatTiedotteet(
-            @PathVariable final Long ktId) {
-        return koulutustoimijaService.getOmatTiedotteet(ktId);
     }
 
     @RequestMapping(value = "/{ktId}/kayttajat", method = RequestMethod.GET)

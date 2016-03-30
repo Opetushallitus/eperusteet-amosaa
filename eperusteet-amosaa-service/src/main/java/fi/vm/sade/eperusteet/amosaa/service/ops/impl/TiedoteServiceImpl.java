@@ -2,12 +2,13 @@ package fi.vm.sade.eperusteet.amosaa.service.ops.impl;
 
 import fi.vm.sade.eperusteet.amosaa.domain.Tiedote;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
-import fi.vm.sade.eperusteet.amosaa.dto.TiedoteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.ops.TiedoteDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.TiedoteRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.ops.TiedoteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -17,6 +18,9 @@ import static fi.vm.sade.eperusteet.amosaa.service.util.Nulls.assertExists;
 /**
  * Created by richard.vancamp on 29/03/16.
  */
+
+@Service
+@Transactional
 public class TiedoteServiceImpl implements TiedoteService {
 
     @Autowired
@@ -30,9 +34,9 @@ public class TiedoteServiceImpl implements TiedoteService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<TiedoteDto> getAll(Long ktId) {
+    public List<TiedoteDto> getTiedotteet(Long ktId) {
         Koulutustoimija toimija = koulutustoimijaRepository.findOne(ktId);;
-        List<Tiedote> tiedotteet = tiedoteRepository.findAll(toimija);
+        List<Tiedote> tiedotteet = tiedoteRepository.findAllByKoulutustoimija(toimija);
         return mapper.mapAsList(tiedotteet, TiedoteDto.class);
     }
 
