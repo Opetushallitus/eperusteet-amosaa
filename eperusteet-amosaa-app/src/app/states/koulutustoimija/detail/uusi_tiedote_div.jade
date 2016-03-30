@@ -1,25 +1,30 @@
+mixin controls
+    span.pull-right
+        a.btn.btn-primary(ng-click="postTiedote(newTiedote)" kaanna="ok")
+        a.btn.btn-warning.btn-small-margin-left(ng-click="cancel()" kaanna="peruttaa")
+
 div.add-tiedote-form
     div.uusi-tiedote
         div.uusi-tiedote-laatikko.clearfix
-            form.form-horizontal.col-xs-11
+            form.form-horizontal.col-xs-12
+                .col-xs-12
+                    legend(kaanna="uusi-tiedote")
                 .form-group
-                    label.col-xs-1.control-label(for="tiedote-otsikko") otsikko
+                    label.col-xs-1.control-label(for="tiedote-otsikko" kaanna="otsikko")
                     .col-xs-10
-                        input.form-control#tiedote-otsikko(slocalized ng-model="newTiedote.otsikko" type="text" required=true)
+                        input.form-control#tiedote-otsikko(ng-model="newTiedote.otsikko" type="text" required=true)
                 .form-group
-                    label.col-xs-1.control-label(for="tiedote-teksti") teksti
+                    label.col-xs-1.control-label(for="tiedote-teksti" kaanna="teksti")
                     .col-xs-10
                         div.form-control.ckeditor#tiedote-teksti(ckeditor ng-model="newTiedote.teksti" layout="normal")
                 .form-group
-                    label.col-xs-1.control-label(for="tiedote-muokkaaja") muokkaaja
+                    label.col-xs-1.control-label(for="tiedote-muokkaaja" kaanna="luoja")
                     .col-xs-10
-                        input.form-control#tiedote-muokkaaja(slocalized ng-model="newTiedote.muokkaaja" type="text" required=true)
+                        input.form-control#tiedote-muokkaaja(ng-model="newTiedote.muokkaaja" type="text" required=true)
                 .form-group
                     label.col-xs-1.control-label(kaanna="tarkea")
-                    .col-xs-10
+                    .col-xs-2
                         input(type="checkbox" checked="true" ng-model="newTiedote.tarkea")
-            div.col-xs-1
-                span.pull-right
-                    +addButtonSmall("createTiedote()")
-                span.pull-right
-                    +cancelButtonSmall("cancel()")
+                    .col-xs-8
+                        +controls
+

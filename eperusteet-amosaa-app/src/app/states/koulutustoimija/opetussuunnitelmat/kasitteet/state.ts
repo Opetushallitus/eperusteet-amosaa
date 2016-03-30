@@ -13,7 +13,7 @@ angular.module("app")
                     ModalConfirm.generalConfirm({ name: kasite.termi }, kasite)
                         .then(kasite => kasite.remove())
                         .then(() => {
-                            _.remove($scope.kasitteet, kasite)
+                            _.remove($scope.kasitteet, kasite);
                             TermistoData.refresh();
                         });
 

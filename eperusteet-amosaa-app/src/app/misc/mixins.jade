@@ -27,8 +27,8 @@ mixin saveButtonSmall(actionEdit)
     +icon("save")
 
 
-mixin cancelButtonSmall(actionEdit)
-  button.btn.btn-warning.btn-sm.muokkaa.btn-small-margin-left(ng-click=actionEdit)&attributes(attributes)
+mixin cancelButtonSmall(actionEdit, className)
+  button.btn.btn-warning.btn-sm.muokkaa(class=className ng-click=actionEdit)&attributes(attributes)
     +icon("close")
 
 

@@ -54,14 +54,11 @@ angular.module("app")
 
                 $scope.creatingNewTiedote = false;
                 $scope.setCreationState = (val) => $scope.creatingNewTiedote = val;
-                $scope.addTiedoteToList = (tiedote) => $scope.tiedotteet0 = _.merge(tiedotteet, tiedote);
+                $scope.addTiedoteToList = (tiedote) => $scope.tiedotteet.unshift(tiedote);
             }
         },
         uusi_tiedote_div: {
             controller: ($scope, tiedotteet) => {
-                $scope.newTiedote = {
-                    luottu: new Date()
-                };
                 $scope.cancel = () => $scope.setCreationState(false);
                 $scope.postTiedote = (newTiedote) => {
                     $scope.setCreationState(false);
@@ -69,6 +66,7 @@ angular.module("app")
                         .then((res) => {
                             if (res) {
                                 $scope.addTiedoteToList(res);
+                                $scope.newTiedote = {};
                             }
                             NotifikaatioService.onnistui("tallennus-onnistui");
                         })
