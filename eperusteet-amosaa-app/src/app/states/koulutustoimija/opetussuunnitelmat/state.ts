@@ -1,18 +1,18 @@
 angular.module("app")
 .config($stateProvider => $stateProvider
-.state("root.etusivu.koulutustoimija.opetussuunnitelmat", {
-    url: "/opetussuunnitelmat",
-    abstract: true,
+.state("root.koulutustoimija.opetussuunnitelmat", {
+    url: "/ops/:opsId",
     resolve: {
-        opetussuunnitelmat: () => Fake.Opetussuunnitelmat(),
-        perusteet: Eperusteet => Eperusteet.one("perusteet").get()
-    }
-})
-.state("root.etusivu.koulutustoimija.opetussuunnitelmat.index", {
-    url: "",
-    resolve: { },
-    controller: ($scope, $state, opetussuunnitelmat) => {
-        const urlGenerator = (id) => $state.href("^.opetussuunnitelma", { id: id });
-        $scope.opetussuunnitelmat = Opetussuunnitelmat.parsiPerustiedot(opetussuunnitelmat, urlGenerator);
+        ops: ($stateParams, koulutustoimija) => koulutustoimija.one("opetussuunnitelmat", $stateParams.opsId).get(),
+        otsikot: (ops) => ops.all("otsikot").getList(),
+        sisaltoRoot: (otsikot) => Tekstikappaleet.root(otsikot),
+        tekstit: (ops, sisaltoRoot) => ops.one("tekstit", sisaltoRoot.id),
+    },
+    views: {
+        "": {
+            controller: ($scope, ops) => {
+                $scope.ops = ops;
+            }
+        }
     }
 }));

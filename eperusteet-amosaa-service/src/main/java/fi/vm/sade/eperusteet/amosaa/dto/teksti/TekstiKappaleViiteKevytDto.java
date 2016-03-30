@@ -32,7 +32,6 @@ public class TekstiKappaleViiteKevytDto {
     @JsonProperty("_tekstiKappale")
     private Reference tekstiKappaleRef;
     private TekstiKappaleKevytDto tekstiKappale;
-    private Long owner;
     private boolean pakollinen;
     private boolean valmis;
     private List<Reference> lapset;

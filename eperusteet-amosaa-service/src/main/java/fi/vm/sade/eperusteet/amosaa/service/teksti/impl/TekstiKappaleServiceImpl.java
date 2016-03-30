@@ -16,18 +16,16 @@
 package fi.vm.sade.eperusteet.amosaa.service.teksti.impl;
 
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
-import fi.vm.sade.eperusteet.amosaa.domain.teksti.Omistussuhde;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappaleViite;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.TekstiKappaleDto;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.TekstiKappaleRepository;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.teksti.TekstiKappaleService;
+import static fi.vm.sade.eperusteet.amosaa.service.util.Nulls.assertExists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import static fi.vm.sade.eperusteet.amosaa.service.util.Nulls.assertExists;
 
 /**
  *

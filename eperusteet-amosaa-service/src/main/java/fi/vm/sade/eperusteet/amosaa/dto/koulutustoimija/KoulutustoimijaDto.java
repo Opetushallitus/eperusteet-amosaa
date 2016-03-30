@@ -28,5 +28,4 @@ import lombok.Setter;
 @Setter
 public class KoulutustoimijaDto extends KoulutustoimijaBaseDto {
     LokalisoituTekstiDto kuvaus;
-    YhteisetBaseDto yhteiset;
 }

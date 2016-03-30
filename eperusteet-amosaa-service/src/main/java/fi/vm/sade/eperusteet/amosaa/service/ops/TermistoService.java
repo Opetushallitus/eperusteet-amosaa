@@ -28,15 +28,16 @@ import org.springframework.security.access.prepost.PreAuthorize;
 @PreAuthorize("isAuthenticated()")
 public interface TermistoService {
 
-    List<TermiDto> getTermit(@P("baseId") Long baseId);
+    List<TermiDto> getTermit(@P("ktId") Long ktId);
 
-    TermiDto getTermi(@P("baseId") Long baseId, Long id);
+    TermiDto getTermi(@P("ktId") Long ktId, Long id);
 
-    TermiDto getTermiByAvain(@P("baseId") Long baseId, String avain);
+    TermiDto getTermiByAvain(@P("ktId") Long ktId, String avain);
 
-    TermiDto addTermi(@P("baseId") Long baseId, TermiDto dto);
+    TermiDto addTermi(@P("ktId") Long ktId, TermiDto dto);
 
-    TermiDto updateTermi(@P("baseId") Long baseId, TermiDto dto);
+    TermiDto updateTermi(@P("ktId") Long ktId, TermiDto dto);
 
-    void deleteTermi(@P("baseId") Long baseId, @P("id") Long id);
+    void deleteTermi(@P("ktId") Long ktId, @P("id") Long id);
 }
+

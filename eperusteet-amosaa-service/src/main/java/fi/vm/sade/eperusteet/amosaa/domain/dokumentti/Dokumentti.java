@@ -17,12 +17,11 @@
 package fi.vm.sade.eperusteet.amosaa.domain.dokumentti;
 
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
-import lombok.Getter;
-import lombok.Setter;
-
+import java.util.Date;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  *
@@ -36,9 +35,6 @@ public class Dokumentti {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
-
-    @Column(name = "yhteiset_id")
-    private Long yhteisetId;
 
     @Column(name = "opetussuunnitelma_id")
     private Long opsId;

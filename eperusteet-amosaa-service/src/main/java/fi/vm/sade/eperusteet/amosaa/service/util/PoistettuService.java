@@ -17,7 +17,7 @@
 package fi.vm.sade.eperusteet.amosaa.service.util;
 
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
-import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Yhteiset;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappaleViite;
 import fi.vm.sade.eperusteet.amosaa.dto.PoistettuDto;
 import java.util.List;
@@ -29,6 +29,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
  */
 @PreAuthorize("isAuthenticated()")
 public interface PoistettuService {
-    PoistettuDto lisaaPoistettu(Koulutustoimija koulutustoimija, Yhteiset yhteiset, TekstiKappaleViite osa);
+    PoistettuDto lisaaPoistettu(Koulutustoimija koulutustoimija, Opetussuunnitelma ops, TekstiKappaleViite osa);
     List<PoistettuDto> poistetut(Long koulutustoimija);
 }

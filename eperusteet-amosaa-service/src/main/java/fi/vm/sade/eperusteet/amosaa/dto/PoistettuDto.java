@@ -32,7 +32,7 @@ public class PoistettuDto extends RevisionDto {
     private Long id;
     private LokalisoituTekstiDto nimi;
     private Reference koulutustoimija;
-    private Reference yhteiset;
+    private Reference opetussuunnitelma;
     private Long poistettu;
     private PoistettuTyyppi tyyppi;
     private Date pvm;

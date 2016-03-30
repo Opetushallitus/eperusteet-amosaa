@@ -20,7 +20,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.Kayttaja;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.Kayttajaoikeus;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.KayttajaoikeusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
-import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Yhteiset;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -36,14 +36,16 @@ public interface KayttajaoikeusRepository extends JpaRepository<Kayttajaoikeus, 
     List<KayttajaoikeusTyyppi> findKoulutustoimijaOikeus(Long kayttaja, Long koulutustoimija);
 
     @Query("SELECT o.oikeus FROM Kayttajaoikeus o WHERE o.kayttaja.id = ?1 AND o.koulutustoimija.id = ?2")
-    KayttajaoikeusTyyppi findKayttajaoikeusYhteiset(Long kayttaja, Long koulutustoimija);
+    KayttajaoikeusTyyppi findKayttajaoikeus(Long kayttaja, Long koulutustoimija);
 
-    List<Kayttajaoikeus> findAllByKoulutustoimijaAndYhteiset(Koulutustoimija koulutustoimija, Yhteiset yhteiset);
+    List<Kayttajaoikeus> findAllByKoulutustoimijaAndOpetussuunnitelma(Koulutustoimija koulutustoimija, Opetussuunnitelma ops);
 
     @Query("SELECT o FROM Kayttajaoikeus o WHERE o.kayttaja.id = ?1 AND o.koulutustoimija.id = ?2")
     List<Kayttajaoikeus> findAllKayttajaoikeus(Long kayttaja, Long koulutustoimija);
 
-    Kayttajaoikeus findOneByKayttajaAndKoulutustoimijaAndYhteiset(Kayttaja a, Koulutustoimija b, Yhteiset c);
+    Kayttajaoikeus findOneByKayttajaAndKoulutustoimijaAndOpetussuunnitelma(Kayttaja a, Koulutustoimija b, Opetussuunnitelma c);
 
     List<Kayttajaoikeus> findAllByKayttajaAndKoulutustoimija(Kayttaja kayttaja, Koulutustoimija koulutustoimija);
+
+    Kayttajaoikeus findOneByKayttajaAndOpetussuunnitelma(Kayttaja kayttaja, Opetussuunnitelma ops);
 }

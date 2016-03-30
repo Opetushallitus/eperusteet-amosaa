@@ -19,17 +19,15 @@ import fi.vm.sade.eperusteet.amosaa.domain.AbstractAuditedEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
+import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 import java.io.Serializable;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
@@ -63,14 +61,11 @@ public class Koulutustoimija extends AbstractAuditedEntity implements Serializab
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     private LokalisoituTeksti kuvaus;
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
-    @Getter
-    @Setter
-    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
-    @NotNull
-    private Yhteiset yhteiset;
-
     @Getter
     @Setter
     private String organisaatio = "";
+
+    public boolean isOph() {
+        return SecurityUtil.OPH_OID.equals(this.organisaatio);
+    }
 }

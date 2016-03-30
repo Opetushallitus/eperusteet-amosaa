@@ -17,7 +17,7 @@
 package fi.vm.sade.eperusteet.amosaa.domain.kayttaja;
 
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
-import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Yhteiset;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import java.io.Serializable;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -64,7 +64,7 @@ public class Kayttajaoikeus implements Serializable {
     @Getter
     @Setter
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
-    private Yhteiset yhteiset;
+    private Opetussuunnitelma opetussuunnitelma;
 
     @Enumerated(value = EnumType.STRING)
     @Getter

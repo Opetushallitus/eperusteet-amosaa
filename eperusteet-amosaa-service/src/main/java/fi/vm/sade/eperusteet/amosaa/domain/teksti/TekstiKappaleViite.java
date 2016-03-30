@@ -16,13 +16,12 @@
 package fi.vm.sade.eperusteet.amosaa.domain.teksti;
 
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -33,7 +32,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.BatchSize;
@@ -72,48 +70,23 @@ public class TekstiKappaleViite implements ReferenceableEntity, Serializable {
     @Setter
     private TekstiKappale tekstiKappale;
 
-    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Getter
     @Setter
-    private Long owner;
+    private Opetussuunnitelma owner;
 
-    @OneToMany(mappedBy = "vanhempi", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "vanhempi", fetch = FetchType.LAZY)
     @OrderColumn
     @Getter
     @Setter
     @BatchSize(size = 100)
-    private List<TekstiKappaleViite> lapset;
+    private List<TekstiKappaleViite> lapset = new ArrayList<>();
 
     public TekstiKappaleViite() {
     }
 
-    public TekstiKappaleViite(Long owner) {
+    public TekstiKappaleViite(Opetussuunnitelma owner) {
         this.owner = owner;
-    }
-
-    // Kopioi viitehierarkian ja siirtää irroitetut paikoilleen
-    // UUID parentin tunniste
-    public TekstiKappaleViite kopioiHierarkia(Map<UUID, TekstiKappaleViite> irroitetut) {
-        TekstiKappaleViite result = new TekstiKappaleViite();
-        result.setTekstiKappale(this.getTekstiKappale());
-        result.setOwner(this.getOwner());
-
-        if (lapset != null) {
-            List<TekstiKappaleViite> ilapset = new ArrayList<>();
-            for (TekstiKappaleViite lapsi : lapset) {
-                TekstiKappaleViite uusiLapsi = lapsi.kopioiHierarkia(irroitetut);
-                uusiLapsi.setVanhempi(result);
-                ilapset.add(uusiLapsi);
-            }
-            for (Map.Entry<UUID, TekstiKappaleViite> lapsi : irroitetut.entrySet()) {
-                if (this.getTekstiKappale().getTunniste() == lapsi.getKey()) {
-                    ilapset.add(lapsi.getValue());
-                    irroitetut.remove(lapsi.getKey());
-                }
-            }
-            result.setLapset(ilapset);
-        }
-        return result;
     }
 
     public TekstiKappaleViite getRoot() {

@@ -1,0 +1,8 @@
+li(ng-repeat="item in ngModel")
+  a(style="padding-left: {{ (item.$$depth - 1) * 20 + 10 }}px"
+    href=""
+    ui-sref-active="active"
+    ui-sref="root.koulutustoimija.opetussuunnitelmat.sisalto.tekstikappale({ tkvId: item.id })"
+    ng-bind="(item.$$obj.tekstiKappale.nimi || 'nimeton-tekstikappale') | kaanna")
+  dynamic(template="states/koulutustoimija/opetussuunnitelmat/sisalto/sivunaviitem.jade" ng-model="item.lapset" misc="misc")
+

@@ -49,31 +49,31 @@ public class TermistoServiceImpl implements TermistoService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<TermiDto> getTermit(Long baseId) {
-        Koulutustoimija toimija = koulutustoimijaRepository.findOne(baseId);
+    public List<TermiDto> getTermit(Long ktId) {
+        Koulutustoimija toimija = koulutustoimijaRepository.findOne(ktId);
         List<Termi> termit = termistoRepository.findAllByKoulutustoimija(toimija);
         return mapper.mapAsList(termit, TermiDto.class);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public TermiDto getTermi(Long baseId, Long id) {
-        Koulutustoimija toimija = koulutustoimijaRepository.findOne(baseId);
+    public TermiDto getTermi(Long ktId, Long id) {
+        Koulutustoimija toimija = koulutustoimijaRepository.findOne(ktId);
         Termi termi = termistoRepository.findOneByKoulutustoimijaAndId(toimija, id);
         return mapper.map(termi, TermiDto.class);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public TermiDto getTermiByAvain(Long baseId, String avain) {
-        Koulutustoimija toimija = koulutustoimijaRepository.findOne(baseId);
+    public TermiDto getTermiByAvain(Long ktId, String avain) {
+        Koulutustoimija toimija = koulutustoimijaRepository.findOne(ktId);
         Termi termi = termistoRepository.findOneByKoulutustoimijaAndAvain(toimija, avain);
         return mapper.map(termi, TermiDto.class);
     }
 
     @Override
-    public TermiDto addTermi(Long baseId, TermiDto dto) {
-        Koulutustoimija toimija = koulutustoimijaRepository.findOne(baseId);
+    public TermiDto addTermi(Long ktId, TermiDto dto) {
+        Koulutustoimija toimija = koulutustoimijaRepository.findOne(ktId);
         assertExists(toimija, "Koulutustoimija ei ole olemassa");
         Termi tmp = mapper.map(dto, Termi.class);
         tmp.setAvain(generateKey());
@@ -83,8 +83,8 @@ public class TermistoServiceImpl implements TermistoService {
     }
 
     @Override
-    public TermiDto updateTermi(Long baseId, TermiDto dto) {
-        Koulutustoimija toimija = koulutustoimijaRepository.findOne(baseId);
+    public TermiDto updateTermi(Long ktId, TermiDto dto) {
+        Koulutustoimija toimija = koulutustoimijaRepository.findOne(ktId);
         assertExists(toimija, "Koulutustoimija ei ole olemassa");
         Termi current = termistoRepository.findOne(dto.getId());
         assertExists(current, "Päivitettävää tietoa ei ole olemassa");
@@ -95,8 +95,8 @@ public class TermistoServiceImpl implements TermistoService {
     }
 
     @Override
-    public void deleteTermi(Long baseId, Long id) {
-        Koulutustoimija toimija = koulutustoimijaRepository.findOne(baseId);
+    public void deleteTermi(Long ktId, Long id) {
+        Koulutustoimija toimija = koulutustoimijaRepository.findOne(ktId);
         assertExists(toimija, "Koulutustoimija ei ole olemassa");
         Termi termi = termistoRepository.findOneByKoulutustoimijaAndId(toimija, id);
         termistoRepository.delete(termi);

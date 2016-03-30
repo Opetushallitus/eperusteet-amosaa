@@ -16,7 +16,7 @@
 package fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util;
 
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.Dokumentti;
-import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Yhteiset;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,7 +32,7 @@ public class DokumenttiBase {
     Document document;
     Element headElement;
     Element bodyElement;
-    Yhteiset yhteiset;
+    Opetussuunnitelma opetussuunnitelma;
     CharapterNumberGenerator generator;
     Kieli kieli;
     Dokumentti dokumentti;

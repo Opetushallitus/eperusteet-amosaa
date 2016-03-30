@@ -18,45 +18,18 @@ package fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl;
 
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.Dokumentti;
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiEdistyminen;
-import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Yhteiset;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappaleViite;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 import fi.vm.sade.eperusteet.amosaa.repository.dokumentti.DokumenttiRepository;
+import fi.vm.sade.eperusteet.amosaa.repository.teksti.TekstikappaleviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiBuilderService;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.PdfService;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.CharapterNumberGenerator;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiBase;
-import fi.vm.sade.eperusteet.amosaa.service.external.KoodistoService;
-import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.LiiteService;
-import org.apache.xml.security.utils.Base64;
-import org.jsoup.Jsoup;
-import org.jsoup.helper.W3CDom;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-
-import javax.imageio.IIOImage;
-import javax.imageio.ImageIO;
-import javax.imageio.ImageWriteParam;
-import javax.imageio.ImageWriter;
-import javax.imageio.stream.MemoryCacheImageOutputStream;
-import javax.persistence.EntityManager;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.xpath.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -65,6 +38,29 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.MemoryCacheImageOutputStream;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.*;
+import org.apache.xml.security.utils.Base64;
+import org.jsoup.Jsoup;
+import org.jsoup.helper.W3CDom;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -81,19 +77,16 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
     private LiiteService liiteService;
 
     @Autowired
-    private KoodistoService koodistoService;
-
-    @Autowired
-    private OrganisaatioService organisaatioService;
-
-    @Autowired
     private DokumenttiRepository dokumenttiRepository;
+
+    @Autowired
+    private TekstikappaleviiteRepository tkvRepository;
 
     @Autowired
     private PdfService pdfService;
 
     @Override
-    public byte[] generatePdf(Yhteiset yhteiset, Dokumentti dokumentti, Kieli kieli)
+    public byte[] generatePdf(Opetussuunnitelma ops, Dokumentti dokumentti, Kieli kieli)
             throws ParserConfigurationException, IOException, SAXException, TransformerException, InterruptedException {
 
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -122,7 +115,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
         docBase.setDocument(doc);
         docBase.setHeadElement(headElement);
         docBase.setBodyElement(bodyElement);
-        docBase.setYhteiset(yhteiset);
+        docBase.setOpetussuunnitelma(ops);
         docBase.setGenerator(new CharapterNumberGenerator());
         docBase.setKieli(kieli);
         docBase.setDokumentti(dokumentti);
@@ -134,8 +127,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
         saveEdistyminen(docBase);
 
         // Sisältöelementit
-        addYhteisetOsuudet(docBase);
-        //Thread.sleep(5000);
+        addOsuudet(docBase);
 
         docBase.getDokumentti().setEdistyminen(DokumenttiEdistyminen.VIITTEET);
         saveEdistyminen(docBase);
@@ -166,11 +158,11 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
 
     private void addMetaPages(DokumenttiBase docBase) {
         Element title = docBase.getDocument().createElement("title");
-        String nimi = getTextString(docBase.getYhteiset().getNimi(), docBase.getKieli());
+        String nimi = getTextString(docBase.getOpetussuunnitelma().getNimi(), docBase.getKieli());
         title.appendChild(docBase.getDocument().createTextNode(nimi));
         docBase.getHeadElement().appendChild(title);
 
-        String kuvaus = getTextString(docBase.getYhteiset().getKuvaus(), docBase.getKieli());
+        String kuvaus = getTextString(docBase.getOpetussuunnitelma().getKuvaus(), docBase.getKieli());
         if (kuvaus != null && kuvaus.length() != 0) {
             Element description = docBase.getDocument().createElement("meta");
             description.setAttribute("name", "description");
@@ -178,7 +170,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
             docBase.getHeadElement().appendChild(description);
         }
 
-        /*Set<KoodistoKoodi> koodistoKoodit = docBase.getYhteiset().getKunnat();
+        /*Set<KoodistoKoodi> koodistoKoodit = docBase.getOpetussuunnitelma().getKunnat();
         if (koodistoKoodit != null) {
             Element municipalities = docBase.getDocument().createElement("kunnat");
             for (KoodistoKoodi koodistoKoodi : koodistoKoodit) {
@@ -200,7 +192,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
         // Organisaatiot
         Element organisaatiot = docBase.getDocument().createElement("organisaatiot");
 
-        /*docBase.getYhteiset().getOrganisaatiot().stream()
+        /*docBase.getOpetussuunnitelma().getOrganisaatiot().stream()
                 .map(org -> organisaatioService.getOrganisaatio(org))
                 .filter(node -> {
                     JsonNode tyypit = node.get("tyypit");
@@ -228,7 +220,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
 
 
         // Päätöspäivämäärä
-        Date paatospaivamaara = docBase.getYhteiset().getPaatospaivamaara();
+        Date paatospaivamaara = docBase.getOpetussuunnitelma().getPaatospaivamaara();
         Element dateEl = docBase.getDocument().createElement("meta");
         dateEl.setAttribute("name", "date");
         if (paatospaivamaara != null) {
@@ -271,11 +263,12 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
         docBase.getHeadElement().appendChild(koulutEl);
     }
 
-    private void addYhteisetOsuudet(DokumenttiBase docBase)
+    private void addOsuudet(DokumenttiBase docBase)
             throws IOException, SAXException, ParserConfigurationException {
 
-        if (docBase.getYhteiset().getTekstit() != null) {
-            addTekstiKappale(docBase, docBase.getYhteiset().getTekstit(), false);
+        TekstiKappaleViite tekstit = tkvRepository.findOneRoot(docBase.getOpetussuunnitelma());
+        if (tekstit != null) {
+            addTekstiKappale(docBase, tekstit, false);
         }
     }
 
@@ -331,7 +324,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
                 if (node.getAttributes() != null & node.getAttributes().getNamedItem("data-viite") != null) {
                     String avain = node.getAttributes().getNamedItem("data-viite").getNodeValue();
 
-                    if (docBase.getYhteiset() != null && docBase.getYhteiset().getId() != null) {
+                    if (docBase.getOpetussuunnitelma() != null && docBase.getOpetussuunnitelma().getId() != null) {
                         TermiDto termiDto = termistoService.getTermi(docBase.getOps().getId(), avain);
 
                         // todo: perusteen viite
@@ -369,7 +362,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
 
                 // Ladataan kuvan data muistiin
                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                liiteService.export(docBase.getYhteiset().getId(), uuid, byteArrayOutputStream);
+                liiteService.export(docBase.getOpetussuunnitelma().getId(), uuid, byteArrayOutputStream);
 
                 // Tehdään muistissa olevasta datasta kuva
                 InputStream in = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());

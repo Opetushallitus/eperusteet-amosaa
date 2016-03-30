@@ -1,0 +1,41 @@
+div.poistetut
+  div.row
+    div.col-xs-6
+      h2(ng-bind="'oikeudet' | kaanna")
+        ohje(teksti="this is a test" otsikko="test title" suunta="top")
+    div.col-xs-6
+      div.input-group.input-group-sm
+        input.form-control(
+          type="text"
+          placeholder="{{'haku-nimi' | kaanna}}"
+          ng-model="search"
+          ng-change="paivita()")
+        span.input-group-btn
+          button.btn.btn-default(ng-click="search = ''")
+            +icon("times")
+
+  div.row
+    div.col-xs-12
+      table.table.table-striped
+        thead
+          tr
+            th
+              a(href="")
+                span(kaanna="'henkilo-nimi'")
+                span(ng-show="jarjestys === 'nimi'")
+            th
+              a(href="")
+                span(kaanna="'oikeus'")
+        tbody
+          tr(ng-show="suodata(kayttaja)" ng-repeat="kayttaja in kayttajat")
+            td
+              span(ng-show="kayttaja.$$nimi" ng-bind="kayttaja.$$nimi")
+              span(ng-hide="kayttaja.$$nimi" kaanna="'haetaan-kayttajanimea'")
+            td
+              span(ng-bind="'oikeus-' + oikeudet[kayttaja.id].oikeus | kaanna")
+              span.dropdown
+                a.dropdown-toggle(href="" data-toggle="dropdown")
+                  i.fa.fa-chevron-down.fa-fw
+                ul.dropdown-menu.dropdown-menu-right
+                  li(ng-repeat="ovaihtoehto in vaihtoehdot")
+                    a(href="" ng-bind="'oikeus-' + ovaihtoehto | kaanna" ng-click="valitse(ovaihtoehto, kayttaja)")

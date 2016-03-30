@@ -15,15 +15,15 @@
  */
 package fi.vm.sade.eperusteet.amosaa.service.security;
 
-import fi.vm.sade.eperusteet.amosaa.domain.Tila;
-import fi.vm.sade.eperusteet.amosaa.domain.Tyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
+import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaoikeusRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
+import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.service.exception.NotExistsException;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.Organization;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.RolePermission;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.RolePrefix;
-import fi.vm.sade.eperusteet.amosaa.service.util.CollectionUtil;
 import fi.vm.sade.eperusteet.amosaa.service.util.Pair;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 import java.io.Serializable;
@@ -31,7 +31,6 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -41,6 +40,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 /**
  *
  * @author mikkom
@@ -49,7 +49,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PermissionManager {
 
     public enum TargetType {
-        POHJA("pohja"),
+        KOULUTUSTOIMIJA("koulutustoimija"),
         TARKASTELU("tarkastelu"),
         OPETUSSUUNNITELMA("opetussuunnitelma");
 
@@ -95,6 +95,12 @@ public class PermissionManager {
     @Autowired
     private KoulutustoimijaRepository koulutustoimijaRepository;
 
+    @Autowired
+    private OpetussuunnitelmaRepository opsRepository;
+
+    @Autowired
+    private KayttajaoikeusRepository kayttajaoikeusRepository;
+
     @Transactional(readOnly = true)
     public boolean hasPermission(Authentication authentication, Serializable targetId, TargetType target,
         Permission perm) {
@@ -126,15 +132,21 @@ public class PermissionManager {
                 break;
         }
 
+        String organisaatio;
         switch (target) {
-            case POHJA:
             case OPETUSSUUNNITELMA:
-                return hasAnyRole(authentication, RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA,
-                                  permissions, Organization.ANY);
+                Opetussuunnitelma ops = opsRepository.findOne((Long)targetId);
+                organisaatio = ops.getKoulutustoimija().getOrganisaatio();
+                break;
+            case KOULUTUSTOIMIJA:
+                organisaatio = koulutustoimijaRepository.findOne((Long)targetId).getOrganisaatio();
+                break;
             default:
-                return hasAnyRole(authentication, RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA,
-                                  permissions, Organization.ANY);
+                organisaatio = null;
         }
+
+        return hasAnyRole(authentication, RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA,
+                          permissions, organisaatio != null ? new Organization(organisaatio) : Organization.ANY);
     }
 
     private static boolean hasRole(Authentication authentication, RolePrefix prefix,
@@ -169,13 +181,13 @@ public class PermissionManager {
                    .collect(Collectors.toSet());
         permissionMap.put(TargetType.OPETUSSUUNNITELMA, opsPermissions);
 
-        Set<Permission> pohjaPermissions =
-            EnumSet.allOf(RolePermission.class).stream()
-                   .map(p -> new Pair<>(p, SecurityUtil.getOrganizations(Collections.singleton(p))))
-                   .filter(pair -> pair.getSecond().contains(SecurityUtil.OPH_OID))
-                   .flatMap(pair -> fromRolePermission(pair.getFirst()).stream())
-                   .collect(Collectors.toSet());
-        permissionMap.put(TargetType.POHJA, pohjaPermissions);
+//        Set<Permission> pohjaPermissions =
+//            EnumSet.allOf(RolePermission.class).stream()
+//                   .map(p -> new Pair<>(p, SecurityUtil.getOrganizations(Collections.singleton(p))))
+//                   .filter(pair -> pair.getSecond().contains(SecurityUtil.OPH_OID))
+//                   .flatMap(pair -> fromRolePermission(pair.getFirst()).stream())
+//                   .collect(Collectors.toSet());
+//        permissionMap.put(TargetType.POHJA, pohjaPermissions);
 
         return permissionMap;
     }

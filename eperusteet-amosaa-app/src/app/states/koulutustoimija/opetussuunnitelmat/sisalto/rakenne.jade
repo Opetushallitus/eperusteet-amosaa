@@ -1,0 +1,11 @@
+div
+  div.sisalto-item
+    div.sisalto-handle
+      +icon("arrows-v")
+    div.sisalto-nimi(kaanna="ngModel.$$obj.tekstiKappale.nimi")
+  div.sisalto-list(ui-sortable="misc" ng-model="ngModel.lapset")
+    div(style="padding: 4px" ng-show="ngModel.lapset.length === 0")
+    div(ng-repeat="child in ngModel.lapset track by child.id")
+      div(style="margin-left: 30px")
+        dynamic(template="states/koulutustoimija/opetussuunnitelmat/sisalto/rakenne.jade" ng-model="child" misc="misc")
+

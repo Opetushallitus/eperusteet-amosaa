@@ -1,0 +1,50 @@
+div.otsikkotaso.kaikki-opetussuunnitelmat
+  h3(kaanna="'yhteisien-osien-pohjat'")
+
+  div(ng-hide="opetussuunnitelmat.length > 0")
+    div.alert.alert-info
+      div(kaanna="'yhteisien-osien-pohjia-ei-viela-luotu'")
+      button.btn.btn-primary.pull-right(style="position: relative; top: -26px" kaanna="'lisaa-uusi'" ng-click="addPohja()")
+
+  div(ng-show="opetussuunnitelmat.length > 0")
+    div.row
+      div.col-xs-5
+        div.form-group.has-feedback.has-feedback-left
+          input.form-control(type="text")
+          i.form-control-feedback.glyphicon.glyphicon-search(style="color: gray;")
+      div.checkbox-text.col-xs-5
+        div.checkbox
+          label
+            input(type="checkbox")
+            span(kaanna="'tarkennettu-haku'")
+      div.col-xs-2
+        div.pull-right
+          button.btn.btn-default(kaanna="'lisaa-uusi'" ng-click="addPohja()")
+
+    table.table.boxtable
+      thead
+        tr
+          th
+          th
+            a(href="#")
+              span(kaanna="'pohjan-nimi'")
+              span=" "
+              span.glyphicon.glyphicon-sort-by-attributes
+          th
+      tbody
+        tr(ng-repeat="ops in opetussuunnitelmat")
+          td
+            div
+              div
+              div
+                a(href="#")
+                  span.glyphicon.glyphicon-star
+          td
+            div
+              a(href="" ui-sref="root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot({ opsId: ops.id })")
+                span.ellipsis(kaanna="ops.nimi")
+          td
+            div
+              a(href="" ui-sref="root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot({ opsId: ops.id })")
+                div
+                  span.glyphicon.glyphicon-chevron-right
