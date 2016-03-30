@@ -59,7 +59,9 @@ angular.module("app")
         },
         uusi_tiedote_div: {
             controller: ($scope, tiedotteet) => {
-                $scope.newTiedote = {};
+                $scope.newTiedote = {
+                    luottu: new Date()
+                };
                 $scope.cancel = () => $scope.setCreationState(false);
                 $scope.postTiedote = (newTiedote) => {
                     $scope.setCreationState(false);

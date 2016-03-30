@@ -3,6 +3,10 @@ $tiedoite-vertical-padding: 5px;
 $tiedoite-border: 1px;
 $tiedoite-row-gap: 4px;
 
+.tiedote-editing-btn {
+  margin-bottom: 5px;
+}
+
 .add-tiedote-form {
 
   margin-bottom: 10px;
@@ -13,23 +17,15 @@ $tiedoite-row-gap: 4px;
       border: 1px dashed lightgray;
       background-color: #f3fafd;
       position: relative;
+      padding: 10px;
     }
 
-    // Content
-    .tiedote-otsikko {
-      padding: $tiedoite-vertical-padding;
-
-      p {
-        margin-bottom: 0;
-        &:last-child {
-          color: gray;
-        }
-      }
+    input[type=checkbox]:checked + label:before {
+      content: "\f046";
     }
-
-    .tiedote-sisalto {
-      padding: 0 40px;
-      padding-bottom: 10px;
+    /* checked icon */
+    input[type=checkbox]:checked + label:before {
+      letter-spacing: 5px;
     }
 
   }

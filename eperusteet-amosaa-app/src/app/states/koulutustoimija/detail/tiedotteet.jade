@@ -1,6 +1,6 @@
 div.row
     div.col-xs-12
-        a.btn.btn-primary.pull-right(ng-if="!creatingNewTiedote" ng-click="setCreationState(true)" kaanna="lisaa-uusi")
+        a.btn.btn-primary.pull-right.tiedote-editing-btn(ng-if="!creatingNewTiedote" ng-click="setCreationState(true)" kaanna="lisaa-uusi")
     div.col-xs-12(ui-view="uusi_tiedote_div" ng-if="creatingNewTiedote")
     div.col-xs-12
         div.tiedotteet
