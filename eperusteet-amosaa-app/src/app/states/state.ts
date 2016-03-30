@@ -22,6 +22,7 @@ angular.module("app")
             controller: ($scope, $state, $stateParams, kayttajanKoulutustoimijat) => {
                 if (_.isEmpty(kayttajanKoulutustoimijat)) {
                     console.log("Ei koulutustoimijoita");
+                    $state.go("root.virhe", { tyyppi: "ei-koulutustoimijoita" });
                 }
                 else if ($state.current.name === "root") {
                     // TODO: Valitse preferattu koulutustoimija

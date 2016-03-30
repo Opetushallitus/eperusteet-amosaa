@@ -1,2 +1,13 @@
-code {{}}
-p test
+mixin eiKoulutustoimijoita()
+  h3(kaanna="'virhe-ei-koulutustoimijoita-otsikko'")
+  p(kaanna="'virhe-ei-koulutustoimijoita'")
+  div(style="text-align: center")
+    div(class="fa fa-frown-o sad-face")
+
+div.virhe(ng-show="tyyppi === 'ei-koulutustoimijoita'")
+  +eiKoulutustoimijoita()
+
+div.virhe(ng-show="!tyyppi")
+  h3 Jokin meni pieleen.
+  div(style="text-align: center")
+    div(class="fa fa-frown-o sad-face")
