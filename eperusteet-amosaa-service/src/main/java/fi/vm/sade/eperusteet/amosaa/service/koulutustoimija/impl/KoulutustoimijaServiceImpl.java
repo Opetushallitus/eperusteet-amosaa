@@ -80,21 +80,4 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
         return mapper.map(repository.findOne(kId), KoulutustoimijaDto.class);
     }
 
-    @Override
-    public List<TiedoteDto> getTiedotteet(Long kOid) {
-        ArrayList<TiedoteDto> result = new ArrayList<>();
-        return result;
-    }
-
-    @Override
-    public TiedoteDto getTiedote(Long kOid) {
-        TiedoteDto result = new TiedoteDto();
-        return result;
-    }
-
-    @Override
-    public List<TiedoteDto> getOmatTiedotteet(Long kOid) {
-        ArrayList<TiedoteDto> result = new ArrayList<>();
-        return result;
-    }
 }

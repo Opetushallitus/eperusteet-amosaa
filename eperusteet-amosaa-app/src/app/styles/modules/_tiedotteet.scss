@@ -3,6 +3,38 @@ $tiedoite-vertical-padding: 5px;
 $tiedoite-border: 1px;
 $tiedoite-row-gap: 4px;
 
+.add-tiedote-form {
+
+  margin-bottom: 10px;
+
+  .uusi-tiedote {
+
+    .uusi-tiedote-laatikko {
+      border: 1px dashed lightgray;
+      background-color: #f3fafd;
+      position: relative;
+    }
+
+    // Content
+    .tiedote-otsikko {
+      padding: $tiedoite-vertical-padding;
+
+      p {
+        margin-bottom: 0;
+        &:last-child {
+          color: gray;
+        }
+      }
+    }
+
+    .tiedote-sisalto {
+      padding: 0 40px;
+      padding-bottom: 10px;
+    }
+
+  }
+}
+
 .tiedotteet {
   margin-bottom: 10px;
 

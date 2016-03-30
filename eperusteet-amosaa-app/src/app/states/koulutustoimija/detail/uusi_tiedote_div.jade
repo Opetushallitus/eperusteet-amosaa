@@ -1,0 +1,21 @@
+div.add-tiedote-form
+    div.uusi-tiedote
+        div.uusi-tiedote-laatikko
+            form.form-horizontal.col-xs-11
+                .form-group
+                    label.col-xs-1.control-label(for="tiedote-otsikko") otsikko
+                    .col-xs-10
+                        input.form-control#tiedote-otsikko(slocalized ng-model="newTiedote.otsikko" type="text" required=true)
+                .form-group
+                    label.col-xs-1.control-label(for="tiedote-teksti") teksti
+                    .col-xs-10
+                        div.form-control.ckeditor#tiedote-teksti(ckeditor ng-model="newTiedote.teksti" layout="normal")
+                .form-group
+                    label.col-xs-1.control-label(kaanna="tarkea")
+                    .col-xs-10
+                        input.styled(type="checkbox" checked="true" ng-model="newTiedote.tarkea")
+            div.col-xs-1
+                span.pull-right
+                    +addButtonSmall("createTiedote()")
+                span.pull-right
+                    +cancelButtonSmall("cancel()")
