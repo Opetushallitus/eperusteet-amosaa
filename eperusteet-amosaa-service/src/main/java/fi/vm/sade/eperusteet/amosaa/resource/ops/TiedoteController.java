@@ -38,6 +38,13 @@ public class TiedoteController {
         return ResponseEntity.ok(tiedoteService.getTiedotteet(ktId));
     }
 
+    @RequestMapping(value = "/{id}", method = GET)
+    public ResponseEntity<TiedoteDto> getTiedote(
+            @PathVariable final Long ktId,
+            @PathVariable final Long id) {
+        return ResponseEntity.ok(tiedoteService.getTiedote(ktId, id));
+    }
+
     @RequestMapping(method = POST)
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<TiedoteDto> addTiedote(

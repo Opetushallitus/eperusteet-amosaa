@@ -3,6 +3,18 @@ $tiedoite-vertical-padding: 5px;
 $tiedoite-border: 1px;
 $tiedoite-row-gap: 4px;
 
+table.tiedote-author-date td {
+  color: #808080;
+  &:first-child {
+    padding-left: 0px;
+  }
+  padding-right: 5px;
+  padding-left: 5px;
+  &.separator & :not(:last-child){
+    border-right: 1px solid lightgrey;
+  }
+}
+
 .btn-small-margin-top {
   margin-top: 5px;
 }

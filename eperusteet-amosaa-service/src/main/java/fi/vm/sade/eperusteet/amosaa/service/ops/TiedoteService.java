@@ -15,6 +15,8 @@ public interface TiedoteService {
 
     List<TiedoteDto> getTiedotteet(@P("ktId") Long ktId);
 
+    TiedoteDto getTiedote(@P("ktId") Long ktId, Long id);
+
     TiedoteDto addTiedote(@P("ktId") Long ktId, TiedoteDto dto);
 
     TiedoteDto updateTiedote(@P("ktId") Long ktId, TiedoteDto dto);

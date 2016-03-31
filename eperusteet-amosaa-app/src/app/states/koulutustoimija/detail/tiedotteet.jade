@@ -1,6 +1,19 @@
+mixin author-time-signature
+    table.tiedote-author-date(ng-if="!$$ekEditing || $$ekEditingIndex != $index")
+        tr
+            td(ng-if="tiedote.luoja")
+                span {{ tiedote.luoja }}
+            td.separator(ng-if="tiedote.luottu")
+                span {{ tiedote.luottu | date }}
+            td(ng-if="tiedote.muokkaaja")
+                i muokkattu:&nbsp;
+                span {{ tiedote.muokkaaja }}
+            td(ng-if="tiedote.muokattu")
+                span {{ tiedote.muokkattu | date }}
+
 div.row
     div.col-xs-12
-        a.btn.btn-primary.pull-right.tiedote-editing-btn(ng-if="!creatingNewTiedote" ng-click="setCreationState(true)" kaanna="lisaa-uusi")
+        a.btn.btn-primary.pull-right.tiedote-editing-btn(ng-if="!creatingNewTiedote" ng-click="setCreationState(true)" kaanna="lisaa-uusi-tiedote")
     div.col-xs-12(ui-view="uusi_tiedote_div" ng-if="creatingNewTiedote")
     div.col-xs-12
         div.tiedotteet(ng-repeat="tiedote in tiedotteet")
@@ -13,12 +26,24 @@ div.row
                         div.pull-left
                             .icon
                                 i.fa.fa-question
-                    a(href="#" ng-click="remove(tiedote)").pull-right
+                    a(ng-if="!$$ekEditing || $$ekEditingIndex != $index" href="#" ng-click="remove(tiedote)").pull-right
                         span.fa.fa-times
+                    a(ng-if="!$$ekEditing || $$ekEditingIndex != $index" href="#" ng-click="edit($index)").pull-right
+                        span.fa.fa-pencil
                     .tiedote-otsikko
-                        p {{ tiedote.otsikko }}
-                        p OPH 12.1.2016
-                    .tiedote-sisalto(id="tiedote1-sisalto" ng-bind-html="tiedote.teksti")
+                        div(ng-if="$$ekEditing && $$ekEditingIndex === $index")
+                            input.form-control(ng-model="tiedote.teksti" type="text" required=true)
+                        p(ng-if="!$$ekEditing || $$ekEditingIndex != $index") {{ tiedote.otsikko }}
+                        +author-time-signature
+                    .tiedote-sisalto(ng-if="$$ekEditing || $$ekEditingIndex === $index")
+                        div.form-control.ckeditor(ckeditor ng-model="kasite.selitys" layout="normal")
+                    .tiedote-sisalto(ng-if="!$$ekEditing || $$ekEditingIndex != $index" id="tiedote1-sisalto" ng-bind-html="tiedote.teksti")
+                    .tiedote-muokkaja(ng-if="$$ekEditing || $$ekEditingIndex === $index")
+                        input.form-control(ng-model="tiedote.muokkaaja" type="text" required=true placeholder="muokkaaja")
+                    .tiedote-tarkea(ng-if="$$ekEditing || $$ekEditingIndex === $index")
+                        label.col-xs-1.control-label(kaanna="tarkea")
+                            .col-xs-2
+                                input(type="checkbox" checked="true" ng-model="newTiedote.tarkea")
                     .expand
                         a(href="" onclick="$('#tiedote1-sisalto').fadeOut().slideToggle(400).dequeue();")
                             i.glyphicon.glyphicon-option-horizontal

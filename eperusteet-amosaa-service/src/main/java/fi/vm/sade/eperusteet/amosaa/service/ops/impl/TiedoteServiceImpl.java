@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Calendar;
 import java.util.List;
 
 import static fi.vm.sade.eperusteet.amosaa.service.util.Nulls.assertExists;
@@ -41,11 +42,20 @@ public class TiedoteServiceImpl implements TiedoteService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public TiedoteDto getTiedote(Long ktId, Long id) {
+        Koulutustoimija toimija = koulutustoimijaRepository.findOne(ktId);;
+        Tiedote tiedote= tiedoteRepository.findOneByKoulutustoimijaAndId(toimija, id);
+        return mapper.map(tiedote, TiedoteDto.class);
+    }
+
+    @Override
     public TiedoteDto addTiedote(Long ktId, TiedoteDto dto) {
         Koulutustoimija toimija = koulutustoimijaRepository.findOne(ktId);
         assertExists(toimija, "Koulutustoimija ei ole olemassa");
         Tiedote tmp = mapper.map(dto, Tiedote.class);
         tmp.setKoulutustoimija(toimija);
+        tmp.setLuottu(Calendar.getInstance().getTime());
         tmp = tiedoteRepository.save(tmp);
         return mapper.map(tmp, TiedoteDto.class);
     }
@@ -56,6 +66,7 @@ public class TiedoteServiceImpl implements TiedoteService {
         assertExists(toimija, "Koulutustoimija ei ole olemassa");
         Tiedote current = tiedoteRepository.findOne(dto.getId());
         assertExists(current, "Päivitettävää tietoa ei ole olemassa");
+        current.setMuokattu(Calendar.getInstance().getTime());
         mapper.map(dto, current);
         tiedoteRepository.save(current);
         return mapper.map(current, TiedoteDto.class);
