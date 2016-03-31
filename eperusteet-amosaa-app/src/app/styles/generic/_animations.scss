@@ -1,0 +1,7 @@
+.fade-out.ng-leave {
+  transition:0.5s linear all;
+  opacity:1;
+}
+.fade-out.ng-leave.ng-leave-active {
+  opacity:0;
+}

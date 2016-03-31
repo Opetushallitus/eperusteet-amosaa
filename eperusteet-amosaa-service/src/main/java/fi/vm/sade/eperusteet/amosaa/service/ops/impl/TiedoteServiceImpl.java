@@ -66,8 +66,8 @@ public class TiedoteServiceImpl implements TiedoteService {
         assertExists(toimija, "Koulutustoimija ei ole olemassa");
         Tiedote current = tiedoteRepository.findOne(dto.getId());
         assertExists(current, "Päivitettävää tietoa ei ole olemassa");
-        current.setMuokattu(Calendar.getInstance().getTime());
-        mapper.map(dto, current);
+        Tiedote tmp = mapper.map(dto, current);
+        tmp.setMuokattu(Calendar.getInstance().getTime());
         tiedoteRepository.save(current);
         return mapper.map(current, TiedoteDto.class);
     }

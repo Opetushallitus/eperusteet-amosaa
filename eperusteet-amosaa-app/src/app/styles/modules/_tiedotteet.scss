@@ -8,11 +8,16 @@ table.tiedote-author-date td {
   &:first-child {
     padding-left: 0px;
   }
-  padding-right: 5px;
-  padding-left: 5px;
-  &.separator & :not(:last-child){
+  &:nth-child(2) {
+    padding-right: 10px;
+  }
+  &.has-muokkaaja {
     border-right: 1px solid lightgrey;
   }
+  &:nth-child(3){
+    padding-left: 10px;
+  }
+  padding-left: 5px;
 }
 
 .btn-small-margin-top {
@@ -34,14 +39,14 @@ table.tiedote-author-date td {
       background-color: #f3fafd;
       position: relative;
       padding: 10px;
-    }
 
-    input[type=checkbox]:checked + label:before {
-      content: "\f046";
-    }
-    /* checked icon */
-    input[type=checkbox]:checked + label:before {
-      letter-spacing: 5px;
+      .checkbox.abc-checkbox {
+        margin-left: 15px;
+      }
+
+      .controls-padding-right {
+        padding-right: 30px;
+      }
     }
 
   }
@@ -103,6 +108,18 @@ table.tiedote-author-date td {
       .tiedote-sisalto {
         padding: 0 40px;
         padding-bottom: 10px;
+        &.muokkaaja {
+          padding-top: 10px;
+        }
+        &.abc-checkbox {
+          margin-left: 20px;
+        }
+      }
+
+      .tiedote-otsikko-editointi {
+        padding: 0 40px;
+        padding-bottom: 10px;
+        padding-top: 10px;
       }
 
       // Expand text
