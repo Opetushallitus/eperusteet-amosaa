@@ -41,7 +41,7 @@ div.kasitteet
               +kasitePerusDiv('kasite.termi', '$index')
             td
               div(ng-if="$$ekEditing && $$ekEditingIndex === $index")
-                div.form-control.ckeditor(ckeditor ng-model="kasite.selitys" slocalized layout="normal")
+                div(ckeditor ng-model="kasite.selitys" slocalized layout="normal")
               +kasitePerusDiv('kasite.selitys', '$index')
             td(width="90px")
               div.checkbox.abc-checkbox.alaviite(ng-show="$$ekEditing && $$ekEditingIndex === $index")
