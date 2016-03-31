@@ -1,4 +1,5 @@
 .ylanavi {
+    width: 100%;
     .ohje {
         margin: 5px 5px 5px 5px;
         position: relative;
@@ -18,14 +19,7 @@
 
 .ylanavi-sticky {
     & > .ylanavi {
-        background-color: #FFFFFF;
-        z-index: $zindex-navbar;
-        box-shadow: 0 4px 2px -3px gray;
-    }
-}
-
-.ylanavi-sticky {
-    & > .ylanavi {
+        width: 100%;
         background-color: #FFFFFF;
         z-index: $zindex-navbar;
         box-shadow: 0 4px 2px -3px gray;

@@ -4,8 +4,9 @@ angular.module("app")
     url: "",
     resolve: {
         tiedotteet: (koulutustoimija) => koulutustoimija.all('tiedotteet').getList(),
-        opsSaver: (opetussuunnitelmat) => (uusiOps) => uusiOps && opetussuunnitelmat
+        opsSaver: ($state, opetussuunnitelmat) => (uusiOps) => uusiOps && opetussuunnitelmat
             .post(uusiOps)
+            .then((res) => $state.go("root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot", { opsId: res.id }))
     },
     views: {
         "": {

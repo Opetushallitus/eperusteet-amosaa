@@ -30,23 +30,29 @@ import org.springframework.security.access.prepost.PreAuthorize;
  *
  * @author nkala
  */
-@PreAuthorize("isAuthenticated()")
 public interface OpetussuunnitelmaService extends RevisionService {
+    @PreAuthorize("isAuthenticated()")
     List<OpetussuunnitelmaBaseDto> getOpetussuunnitelmatByTyyppi(OpsTyyppi tyyppi);
 
+    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
     List<OpetussuunnitelmaBaseDto> getOpetussuunnitelmat(@P("ktId") Long ktId);
 
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
     OpetussuunnitelmaDto getOpetussuunnitelma(@P("ktId") Long ktId, @P("opsId") Long opsId);
 
+    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
     List<PoistettuDto> getPoistetut(@P("ktId") Long ktId, @P("opsId") Long opsId);
 
+    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
     List<KayttajaoikeusDto> getOikeudet(@P("ktId") Long ktId, @P("opsId") Long opsId);
 
+    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'HALLINTA')")
     KayttajaoikeusDto updateOikeus(@P("ktId") Long ktId, @P("opsId") Long opsId, Long oikeusId, KayttajaoikeusDto oikeus);
 
+    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'MUOKKAUS')")
     OpetussuunnitelmaDto update(@P("ktId") Long ktId, @P("opsId") Long opsId, OpetussuunnitelmaDto body);
 
+    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUONTI')")
     OpetussuunnitelmaBaseDto addOpetussuunnitelma(@P("ktId") Long ktId, OpetussuunnitelmaDto opsDto);
 }
 

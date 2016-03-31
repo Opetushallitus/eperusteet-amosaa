@@ -30,7 +30,7 @@ div.poistetut
           tr(ng-show="suodata(kayttaja)" ng-repeat="kayttaja in kayttajat")
             td
               span(ng-show="kayttaja.$$nimi" ng-bind="kayttaja.$$nimi")
-              span(ng-hide="kayttaja.$$nimi" kaanna="'haetaan-kayttajanimea'")
+              span(ng-hide="kayttaja.$$nimi") ...
             td
               span(ng-bind="'oikeus-' + oikeudet[kayttaja.id].oikeus | kaanna")
               span.dropdown

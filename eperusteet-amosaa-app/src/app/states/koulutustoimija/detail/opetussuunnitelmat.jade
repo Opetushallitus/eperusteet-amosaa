@@ -57,7 +57,8 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
             div
               span.ellipsis(ng-show="ops.osaamisalat.length > 0", kaanna="ops.osaamisalat[0].nimi")
           td
-            div(kaanna="ops.koulutustyyppi")
+            // div(kaanna="ops.koulutustyyppi")
+            div
           td
             div
               a(href="" ui-sref="root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot({ opsId: ops.id })")

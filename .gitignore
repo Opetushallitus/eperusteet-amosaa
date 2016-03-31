@@ -7,8 +7,8 @@
 /eperusteet-amosaa-app/node/
 /eperusteet-amosaa-app/tests/node_modules/
 /eperusteet-amosaa-app/tests/typings/
-/eperusteet-amosaa-app/**/*.js
-/eperusteet-amosaa-app/**/*.map
+/eperusteet-amosaa-app/src/app/**/*.js
+/eperusteet-amosaa-app/src/app/**/*.map
 target/**
 **/target/**
 

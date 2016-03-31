@@ -50,12 +50,6 @@ public class Kayttajaoikeus implements Serializable {
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     private Kayttaja kayttaja;
 
-//    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-//    @Getter
-//    @Setter
-//    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
-//    private Opetussuunnitelma ops;
-
     @Getter
     @Setter
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
