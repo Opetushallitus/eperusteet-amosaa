@@ -18,11 +18,8 @@
 angular.module("app")
 .run(() => {
     CKEDITOR.disableAutoInline = true;
-    // load external plugins
-    // let basePath = CKEDITOR.basePath;
-    // basePath = basePath.substr(0, basePath.indexOf("/"));
-    // CKEDITOR.plugins.addExternal("epimage", basePath + "ckeditor-plugins/epimage/", "plugin.js");
-    // CKEDITOR.plugins.addExternal("termi", basePath + "ckeditor-plugins/termi/", "plugin.js");
+    const basePath = CKEDITOR.basePath;
+    CKEDITOR.basePath = _.first(basePath.split("#")) + "ckeditor/";
 })
 .constant("editorLayouts", {
     minimal: [

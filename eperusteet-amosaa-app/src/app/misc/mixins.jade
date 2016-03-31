@@ -94,7 +94,7 @@ mixin ekinput(model, required)
 
 mixin ekeditor(model, layout)
   div(ng-if="$$ekEditing")
-    textarea.form-control.ckeditor(ckeditor slocalized ng-model=model layout=layout)
+    div(ckeditor slocalized ng-model=model layout=layout)
   div(ng-if="!$$ekEditing")
     p(ng-bind-html=model + "| kaanna")
 
