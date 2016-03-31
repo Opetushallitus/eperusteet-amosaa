@@ -22,7 +22,7 @@ div.row
     div.col-xs-12(ui-view="uusi_tiedote_div" ng-if="creatingNewTiedote")
     div.col-xs-12
         div.tiedotteet(ng-repeat="tiedote in tiedotteet")
-            div.tiedote.fade-out(id="tiedote1")
+            div.tiedote.fade-in-out
                 div.tiedote-laatikko
                     div.pull-left(ng-show="tiedote.tarkea")
                         .icon
@@ -42,28 +42,15 @@ div.row
                     .tiedote-sisalto(ng-if="$$ekEditing && $$ekEditingIndex === $index")
                         div.form-control.ckeditor(ckeditor ng-model="tiedote.teksti" layout="normal")
                     .tiedote-sisalto(ng-if="!$$ekEditing || $$ekEditingIndex != $index" id="tiedote1-sisalto" ng-bind-html="tiedote.teksti")
-                    .tiedote-sisalto.muokkaaja(ng-if="$$ekEditing && $$ekEditingIndex === $index")
-                        input.form-control(ng-model="tiedote.muokkaaja" type="text" required=true placeholder="muokkaaja")
                     .tiedote-sisalto.checkbox.abc-checkbox(ng-if="$$ekEditing && $$ekEditingIndex === $index")
                         input.styled(type="checkbox" checked="true" ng-model="tiedote.tarkea")
                         label
-                            strong tarkea
+                            strong(kaanna="tarkea")
+                        span.julkinen-btn-margin-left
+                            input.styled(type="checkbox" checked="true" ng-model="tiedote.julkinen")
+                            label
+                                strong(kaanna="julkinen")
                     .expand(ng-if="!$$ekEditing || $$ekEditingIndex != $index")
                         a(href="" onclick="$('#tiedote1-sisalto').fadeOut().slideToggle(400).dequeue();")
-                            i.glyphicon.glyphicon-option-horizontal
-
-            div.tiedote(id="tiedote2")
-                div.tiedote-laatikko
-                    div.pull-left
-                        .icon
-                            i.fa.fa-question
-                    a(href="" onclick="$('#tiedote2').fadeTo(400, 0).slideUp(600, function() { jQuery(this).remove() }).dequeue();").pull-right
-                        span.fa.fa-times
-                    .tiedote-otsikko
-                        p Huomioikaa työryhmien omien osuuksien palautuspäivä 31.1.2016
-                        p Hervannan OAL 12.1.2016
-                    .tiedote-sisalto(id="tiedote2-sisalto") Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                    .expand
-                        a(href="" onclick="$('#tiedote2-sisalto').fadeOut().slideToggle(400).dequeue();")
                             i.glyphicon.glyphicon-option-horizontal
 

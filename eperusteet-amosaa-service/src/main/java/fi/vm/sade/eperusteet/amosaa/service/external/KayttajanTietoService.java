@@ -35,6 +35,8 @@ public interface KayttajanTietoService {
 
     // FIXME korjaa autentikaatiotasot
 
+    String getUserOid();
+
     KayttajanTietoDto haeKirjautaunutKayttaja();
 
     KayttajanTietoDto hae(String oid);

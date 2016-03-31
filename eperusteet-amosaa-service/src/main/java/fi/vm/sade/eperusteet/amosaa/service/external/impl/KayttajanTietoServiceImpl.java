@@ -119,7 +119,8 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
         }
     }
 
-    private String getUserOid() {
+    @Override
+    public String getUserOid() {
         return SecurityUtil.getAuthenticatedPrincipal().getName();
     }
 
