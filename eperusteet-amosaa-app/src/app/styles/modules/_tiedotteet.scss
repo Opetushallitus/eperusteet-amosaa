@@ -3,6 +3,59 @@ $tiedoite-vertical-padding: 5px;
 $tiedoite-border: 1px;
 $tiedoite-row-gap: 4px;
 
+table.tiedote-author-date td {
+  color: #808080;
+  &:first-child {
+    padding-left: 0px;
+  }
+  &:nth-child(2) {
+    padding-right: 10px;
+  }
+  &.has-muokkaaja {
+    border-right: 1px solid lightgrey;
+  }
+  &:nth-child(3){
+    padding-left: 10px;
+  }
+  padding-left: 5px;
+}
+
+.julkinen-btn-margin-left {
+  margin-left: 40px;
+}
+
+.btn-small-margin-top {
+  margin-top: 5px;
+}
+
+.tiedote-editing-btn {
+  margin-bottom: 5px;
+}
+
+.add-tiedote-form {
+
+  margin-bottom: 10px;
+
+  .uusi-tiedote {
+
+    .uusi-tiedote-laatikko {
+      border: 1px dashed lightgray;
+      background-color: #f3fafd;
+      position: relative;
+      padding: 10px;
+
+      .checkbox.abc-checkbox {
+        margin-left: 15px;
+      }
+
+      .controls-padding-right {
+        padding-right: 45px;
+      }
+    }
+
+  }
+}
+
 .tiedotteet {
   margin-bottom: 10px;
 
@@ -59,6 +112,18 @@ $tiedoite-row-gap: 4px;
       .tiedote-sisalto {
         padding: 0 40px;
         padding-bottom: 10px;
+        &.muokkaaja {
+          padding-top: 10px;
+        }
+        &.abc-checkbox {
+          margin-left: 20px;
+        }
+      }
+
+      .tiedote-otsikko-editointi {
+        padding: 0 40px;
+        padding-bottom: 10px;
+        padding-top: 10px;
       }
 
       // Expand text

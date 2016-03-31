@@ -3,6 +3,7 @@ angular.module("app")
 .state("root.koulutustoimija.detail", {
     url: "",
     resolve: {
+        tiedotteet: (koulutustoimija) => koulutustoimija.all('tiedotteet').getList(),
         opsSaver: ($state, opetussuunnitelmat) => (uusiOps) => uusiOps && opetussuunnitelmat
             .post(uusiOps)
             .then((res) => $state.go("root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot", { opsId: res.id }))
@@ -43,7 +44,34 @@ angular.module("app")
             }
         },
         tiedotteet: {
-            controller: ($scope) => {
+            controller: ($scope, tiedotteet) => {
+                $scope.edit = EditointikontrollitService.createListRestangular($scope, "tiedotteet", tiedotteet);
+                $scope.remove = (tiedote) =>
+                    ModalConfirm.generalConfirm({ name: tiedote.otsikko }, tiedote)
+                        .then(tiedote => tiedote.remove())
+                        .then(() => {
+                            _.remove($scope.tiedotteet, tiedote);
+                        });
+
+                $scope.creatingNewTiedote = false;
+                $scope.setCreationState = (val) => $scope.creatingNewTiedote = val;
+                $scope.addTiedoteToList = (tiedote) => $scope.tiedotteet.unshift(tiedote);
+            }
+        },
+        uusi_tiedote_div: {
+            controller: ($scope, tiedotteet) => {
+                $scope.cancel = () => $scope.setCreationState(false);
+                $scope.postTiedote = (newTiedote) => {
+                    $scope.setCreationState(false);
+                    tiedotteet.post(newTiedote)
+                        .then((res) => {
+                            if (res) {
+                                $scope.addTiedoteToList(res);
+                                $scope.newTiedote = {};
+                            }
+                            NotifikaatioService.onnistui("tallennus-onnistui");
+                        })
+                };
             }
         }
     }

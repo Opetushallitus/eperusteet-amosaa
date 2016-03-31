@@ -1,0 +1,31 @@
+mixin uusi-tiedote-controls
+    span.pull-right
+        a.btn.btn-primary(ng-click="postTiedote(newTiedote)" kaanna="ok")
+        a.btn.btn-warning.btn-small-margin-left(ng-click="cancel()" kaanna="peruuta")
+
+div.add-tiedote-form.fx-fade-normal
+    div.uusi-tiedote
+        div.uusi-tiedote-laatikko.clearfix
+            form.form-horizontal.col-xs-12
+                .col-xs-12
+                    legend(kaanna="uusi-tiedote")
+                .form-group
+                    label.col-xs-1.control-label(for="tiedote-otsikko" kaanna="otsikko")
+                    .col-xs-10
+                        input.form-control#tiedote-otsikko(ng-model="newTiedote.otsikko" type="text" required=true)
+                .form-group
+                    label.col-xs-1.control-label(for="tiedote-teksti" kaanna="sisalto")
+                    .col-xs-10
+                        div.form-control.ckeditor#tiedote-teksti(ckeditor ng-model="newTiedote.teksti" layout="normal")
+                .form-group
+                    label.col-xs-1.control-label(kaanna="tarkea")
+                    .col-xs-1.checkbox.abc-checkbox
+                        input.styled(type="checkbox" checked="true" ng-model="newTiedote.tarkea")
+                        label &nbsp;
+                    label.col-xs-1.control-label(kaanna="julkinen")
+                    .col-xs-2.checkbox.abc-checkbox
+                        input.styled(type="checkbox" checked="true" ng-model="newTiedote.julkinen")
+                        label &nbsp;
+                    .col-xs-6.controls-padding-right
+                        +uusi-tiedote-controls
+

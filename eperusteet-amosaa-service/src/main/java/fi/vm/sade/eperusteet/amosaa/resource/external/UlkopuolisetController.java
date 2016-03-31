@@ -62,11 +62,11 @@ public class UlkopuolisetController {
         return new ResponseEntity<>(eperusteetService.findPerusteet(), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/tiedotteet", method = GET)
+   /* @RequestMapping(value = "/tiedotteet", method = GET)
     @ResponseBody
     public ResponseEntity<JsonNode> getTiedotteet(@RequestParam(value = "jalkeen", required = false) final Long jalkeen) {
         return new ResponseEntity<>(eperusteetService.getTiedotteet(jalkeen), HttpStatus.OK);
-    }
+    }*/
 
     @RequestMapping(value = "/koodisto/{koodisto}", method = GET)
     @ResponseBody
