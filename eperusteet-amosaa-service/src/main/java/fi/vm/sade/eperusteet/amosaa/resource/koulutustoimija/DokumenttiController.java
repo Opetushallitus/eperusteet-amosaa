@@ -9,6 +9,8 @@ import fi.vm.sade.eperusteet.amosaa.resource.util.CacheControl;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiService;
 import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
 import io.swagger.annotations.Api;
+import java.io.IOException;
+import java.util.Date;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -19,19 +21,15 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.Date;
-
 /**
  * @author isaul
  */
 @RestController
 @RequestMapping("/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/dokumentti")
 @Api(value = "dokumentit")
+@Transactional
 public class DokumenttiController {
+    
     @Autowired
     DokumenttiService service;
 
@@ -70,6 +68,7 @@ public class DokumenttiController {
 
     @RequestMapping(method = RequestMethod.GET)
     @CacheControl(age = CacheControl.ONE_YEAR, nonpublic = false)
+    @Transactional(readOnly = true)
     public ResponseEntity<byte[]> get(
             @PathVariable Long ktId,
             @PathVariable Long opsId,
@@ -107,7 +106,6 @@ public class DokumenttiController {
         }
     }
 
-    @Transactional
     @RequestMapping(value = "/kuva", method=RequestMethod.POST)
     public ResponseEntity<Object> addImage(@PathVariable Long ktId,
                                             @PathVariable Long opsId,

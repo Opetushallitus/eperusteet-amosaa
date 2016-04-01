@@ -73,20 +73,27 @@ div.dokumentti
 
       form.form-horizontal
         div.form-group
-          label.col-xs-2(for="kansi")
-            span(kaanna="'kansilehti'")
-            span=":"
-          div.col-xs-10
-            +kuva('kansi')
+          div.row
+            label.col-xs-2(for="kansi")
+              span(kaanna="'kansilehti'")
+              span=":"
+            div.col-xs-10
+              +kuva('kansi')
+
         div.form-group
-          label.col-xs-2(for="header")
-            span(kaanna="'ylatunniste'")
-            span=":"
-          div.col-xs-10
-            +kuva('ylatunniste')
+          div.row
+            label.col-xs-2(for="header")
+              span(kaanna="'ylatunniste'")
+              span=":"
+            div.col-xs-10
+              +kuva('ylatunniste')
+
         div.form-group
-          label.col-xs-2(for="header")
-            span(kaanna="'alatunniste'")
-            span=":"
-          div.col-xs-10
-            +kuva('alatunniste')
+          div.row
+            label.col-xs-2(for="header")
+              span(kaanna="'alatunniste'")
+              span=":"
+            div.col-xs-10
+              span wat
+              // FIXME tämä rikkoo jotain
+              // +kuva('ylatunniste')
