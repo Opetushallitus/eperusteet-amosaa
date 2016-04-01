@@ -22,6 +22,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Future;
+import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -30,30 +31,40 @@ import org.springframework.stereotype.Service;
  * @author mikkom
  */
 @Service
-@PreAuthorize("isAuthenticated()")
 public interface KayttajanTietoService {
 
-    // FIXME korjaa autentikaatiotasot
+    // FIXME Tarkasta halutaanko näitä tiukentaa
 
+    @PreAuthorize("isAuthenticated()")
     String getUserOid();
 
+    @PreAuthorize("isAuthenticated()")
     KayttajanTietoDto haeKirjautaunutKayttaja();
 
+    @PreAuthorize("isAuthenticated()")
     KayttajanTietoDto hae(String oid);
 
+    @PreAuthorize("isAuthenticated()")
     KayttajanTietoDto hae(Long id);
 
+    @PreAuthorize("isAuthenticated()")
     Kayttaja getKayttaja();
 
+    @PreAuthorize("isAuthenticated()")
     Future<KayttajanTietoDto> haeAsync(String oid);
 
+    @PreAuthorize("isAuthenticated()")
     KayttajanTietoDto haeNimi(Long id);
 
+    @PreAuthorize("isAuthenticated()")
     List<KoulutustoimijaBaseDto> koulutustoimijat();
 
+    @PreAuthorize("isAuthenticated()")
     Set<String> getUserOrganizations();
 
-    KayttajanTietoDto getKayttaja(Long koulutustoimijaId, Long oid);
+    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
+    KayttajanTietoDto getKayttaja(@P("ktId") Long ktId, Long oid);
 
-    List<KayttajaDto> getKayttajat(Long ktId);
+    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
+    List<KayttajaDto> getKayttajat(@P("ktId") Long ktId);
 }

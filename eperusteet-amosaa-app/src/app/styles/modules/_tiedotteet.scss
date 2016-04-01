@@ -30,6 +30,9 @@ table.tiedote-author-date td {
 
 .tiedote-editing-btn {
   margin-bottom: 5px;
+  position: relative;
+  top: -46px;
+  margin-right: 10px;
 }
 
 .add-tiedote-form {
@@ -71,6 +74,16 @@ table.tiedote-author-date td {
       background-color: #f3fafd;
       position: relative;
 
+      .tiedote-actions {
+        position: relative;
+        top: 7px;
+        right: 5px;
+        font-size: 20px;
+
+        a {
+          margin: -2px;
+        }
+      }
 
       .icon {
         padding: 0 10px;

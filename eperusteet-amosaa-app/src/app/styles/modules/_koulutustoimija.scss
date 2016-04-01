@@ -1,6 +1,15 @@
 .koulutustoimija {
     $box-color: #D1D2D4;
 
+    .tiedotelistaus {
+        padding: 10px;
+    }
+
+    .tiedotelaatikko {
+        position: relative;
+        top: -36px;
+    }
+
     .otsikkotaso {
         margin-top: 25px;
     }

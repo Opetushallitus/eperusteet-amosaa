@@ -16,12 +16,9 @@ namespace ModalConfirm {
         templateUrl: "modals/confirm/confirm.jade",
         size: 'sm',
         controller: ($uibModalInstance, $scope) => {
-
             $scope.opts = _.merge(modalOptions, options);
-
             $scope.ok = () => $uibModalInstance.close(data);
-
-            $scope.cancel = $uibModalInstance.close;
+            $scope.cancel = $uibModalInstance.dismiss;
         }
     }).result;
 

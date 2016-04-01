@@ -35,7 +35,6 @@ import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.RolePer
 import fi.vm.sade.eperusteet.amosaa.service.util.RestClientFactory;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 import fi.vm.sade.generic.rest.CachingRestClient;
-import java.util.Calendar;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
@@ -138,7 +137,6 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
         if (kayttaja == null) {
             Kayttaja uusi = new Kayttaja();
             uusi.setOid(oid);
-            uusi.setTiedotekuittaus(Calendar.getInstance().getTime());
             kayttaja = kayttajaRepository.save(uusi);
         }
         return kayttaja;

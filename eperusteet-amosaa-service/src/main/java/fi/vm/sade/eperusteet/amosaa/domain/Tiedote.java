@@ -1,12 +1,8 @@
 package fi.vm.sade.eperusteet.amosaa.domain;
 
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
-import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
-import lombok.Getter;
-import lombok.Setter;
-import org.hibernate.envers.Audited;
-
-import javax.persistence.Column;
+import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -16,9 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.Size;
-import java.io.Serializable;
-import java.util.Date;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Created by richard.vancamp on 29/03/16.
@@ -27,7 +22,6 @@ import java.util.Date;
 @Table(name = "tiedote")
 @Getter
 @Setter
-@Audited
 public class Tiedote implements Serializable{
 
     @Id
@@ -46,7 +40,7 @@ public class Tiedote implements Serializable{
     private Boolean tarkea;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date luottu;
+    private Date luotu;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date muokattu;

@@ -235,7 +235,6 @@ CREATE TABLE tekstikappaleviite_aud (
 
 CREATE TABLE kayttaja (
     id BIGINT NOT NULL PRIMARY KEY,
-    tiedotekuittaus TIMESTAMP NOT NULL,
     oid VARCHAR(255) NOT NULL UNIQUE
 );
 
@@ -321,26 +320,9 @@ CREATE TABLE tiedote (
     julkinen           BOOLEAN,
     tarkea             BOOLEAN,
     luoja              CHARACTER VARYING(255),
-    luottu             TIMESTAMP WITHOUT TIME ZONE,
+    luotu              TIMESTAMP WITHOUT TIME ZONE,
     muokkaaja          CHARACTER VARYING(255),
     muokattu           TIMESTAMP WITHOUT TIME ZONE
-);
-
-CREATE TABLE tiedote_aud (
-    id                 BIGINT NOT NULL,
-    koulutustoimija_id BIGINT,
-    otsikko            TEXT,
-    teksti             TEXT,
-    julkinen           BOOLEAN,
-    tarkea             BOOLEAN,
-    luoja              CHARACTER VARYING(255),
-    luottu             TIMESTAMP WITHOUT TIME ZONE,
-    muokkaaja          CHARACTER VARYING(255),
-    muokattu           TIMESTAMP WITHOUT TIME ZONE,
-    rev                INTEGER NOT NULL REFERENCES revinfo(rev),
-    revtype            SMALLINT,
-    revend             INTEGER REFERENCES revinfo(rev),
-    PRIMARY KEY (id, rev)
 );
 
 CREATE TABLE koulutustoimijakayttaja (
@@ -348,4 +330,11 @@ CREATE TABLE koulutustoimijakayttaja (
     koulutustoimija_id BIGINT NOT NULL REFERENCES koulutustoimija(id),
     kayttaja_id BIGINT NOT NULL REFERENCES kayttaja(id),
     UNIQUE (kayttaja_id, koulutustoimija_id)
+);
+
+CREATE TABLE kayttaja_kuittaus (
+    id BIGINT NOT NULL PRIMARY KEY,
+    kayttaja BIGINT NOT NULL,
+    tiedote BIGINT NOT NULL,
+    UNIQUE(kayttaja, tiedote)
 );

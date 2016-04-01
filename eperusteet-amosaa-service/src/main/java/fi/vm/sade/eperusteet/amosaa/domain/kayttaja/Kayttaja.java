@@ -18,14 +18,11 @@ package fi.vm.sade.eperusteet.amosaa.domain.kayttaja;
 
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import java.io.Serializable;
-import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -41,11 +38,6 @@ public class Kayttaja implements Serializable, ReferenceableEntity {
     @Getter
     @Setter
     private Long id;
-
-    @Getter
-    @Setter
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date tiedotekuittaus;
 
     @Getter
     @Setter

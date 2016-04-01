@@ -1,8 +1,11 @@
 package fi.vm.sade.eperusteet.amosaa.service.ops.impl;
 
 import fi.vm.sade.eperusteet.amosaa.domain.Tiedote;
+import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.Kayttaja;
+import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.KayttajaKuittaus;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.TiedoteDto;
+import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaKuittausRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.TiedoteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
@@ -11,6 +14,8 @@ import fi.vm.sade.eperusteet.amosaa.service.ops.TiedoteService;
 import static fi.vm.sade.eperusteet.amosaa.service.util.Nulls.assertExists;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,19 +40,28 @@ public class TiedoteServiceImpl implements TiedoteService {
     @Autowired
     KayttajanTietoService kayttajanTietoService;
 
+    @Autowired
+    KayttajaKuittausRepository kuittausRepository;
+
     @Override
     @Transactional(readOnly = true)
     public List<TiedoteDto> getTiedotteet(Long ktId) {
         Koulutustoimija toimija = koulutustoimijaRepository.findOne(ktId);
+        Koulutustoimija oph = koulutustoimijaRepository.findOph();
         List<Tiedote> tiedotteet = tiedoteRepository.findAllByKoulutustoimija(toimija);
-        return mapper.mapAsList(tiedotteet, TiedoteDto.class);
+        tiedotteet.addAll(tiedoteRepository.findAllByKoulutustoimijaAndJulkinenTrue(oph));
+        Set<Long> kuitatut = kuittausRepository.findAllByKayttaja(kayttajanTietoService.getKayttaja().getId());
+        Set<Tiedote> uniikit = tiedotteet.stream()
+                .filter(tiedote -> !kuitatut.contains(tiedote.getId()))
+                .collect(Collectors.toSet());
+        return mapper.mapAsList(uniikit, TiedoteDto.class);
     }
 
     @Override
     @Transactional(readOnly = true)
     public TiedoteDto getTiedote(Long ktId, Long id) {
         Koulutustoimija toimija = koulutustoimijaRepository.findOne(ktId);
-        Tiedote tiedote= tiedoteRepository.findOneByKoulutustoimijaAndId(toimija, id);
+        Tiedote tiedote = tiedoteRepository.findOneByKoulutustoimijaAndId(toimija, id);
         return mapper.map(tiedote, TiedoteDto.class);
     }
 
@@ -57,7 +71,7 @@ public class TiedoteServiceImpl implements TiedoteService {
         assertExists(toimija, "Koulutustoimija ei ole olemassa");
         Tiedote tmp = mapper.map(dto, Tiedote.class);
         tmp.setKoulutustoimija(toimija);
-//        tmp.setLuotu(Calendar.getInstance().getTime());
+        tmp.setLuotu(Calendar.getInstance().getTime());
         tmp.setLuoja(kayttajanTietoService.getUserOid());
         tmp = tiedoteRepository.save(tmp);
         return mapper.map(tmp, TiedoteDto.class);
@@ -84,5 +98,10 @@ public class TiedoteServiceImpl implements TiedoteService {
         tiedoteRepository.delete(tiedote);
     }
 
+    @Override
+    public void kuittaaLuetuksi(Long ktId, Long id) {
+        Kayttaja kayttaja = kayttajanTietoService.getKayttaja();
+        kuittausRepository.save(new KayttajaKuittaus(kayttaja.getId(), id));
+    }
 
 }

@@ -3,18 +3,20 @@ angular.module("app")
 .state("root.koulutustoimija.detail", {
     url: "",
     resolve: {
-        tiedotteet: (koulutustoimija) => koulutustoimija.all('tiedotteet').getList(),
+        tiedotteet: (koulutustoimija) => koulutustoimija.all("tiedotteet").getList(),
         opsSaver: ($state, opetussuunnitelmat) => (uusiOps) => uusiOps && opetussuunnitelmat
             .post(uusiOps)
             .then((res) => $state.go("root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot", { opsId: res.id }))
     },
     views: {
         "": {
-            controller: ($scope, kayttajanKoulutustoimijat, koulutustoimija) => {
+            controller: ($scope, kayttajanKoulutustoimijat, koulutustoimija, tiedotteet) => {
                 $scope.isOph = Koulutustoimijat.isOpetushallitus(koulutustoimija);
                 $scope.koulutustoimijat = kayttajanKoulutustoimijat;
                 $scope.koulutustoimija = koulutustoimija;
                 $scope.checkOph = Koulutustoimijat.isOpetushallitus;
+                $scope.tiedotteet = tiedotteet;
+                $scope.toggleTiedotteet = () => $scope.$$showTiedotteet = !$scope.$$showTiedotteet;
             }
         },
         pohjat: {
@@ -46,12 +48,24 @@ angular.module("app")
         tiedotteet: {
             controller: ($scope, tiedotteet) => {
                 $scope.edit = EditointikontrollitService.createListRestangular($scope, "tiedotteet", tiedotteet);
-                $scope.remove = (tiedote) =>
-                    ModalConfirm.generalConfirm({ name: tiedote.otsikko }, tiedote)
+                $scope.remove = (tiedote) => {
+                    if (!tiedote) {
+                        return;
+                    }
+                    return ModalConfirm.generalConfirm({ name: tiedote.otsikko }, tiedote)
                         .then(tiedote => tiedote.remove())
                         .then(() => {
+                            NotifikaatioService.onnistui("tiedote-poistettu");
                             _.remove($scope.tiedotteet, tiedote);
+                            EditointikontrollitService.cancel();
                         });
+                };
+
+                $scope.kuittaa = (tiedote) => {
+                    tiedote.one("kuittaa").customPOST();
+                    _.remove($scope.tiedotteet, tiedote);
+                    NotifikaatioService.onnistui("tiedote-kuitattu");
+                };
 
                 $scope.creatingNewTiedote = false;
                 $scope.setCreationState = (val) => $scope.creatingNewTiedote = val;
@@ -59,9 +73,10 @@ angular.module("app")
             }
         },
         uusi_tiedote_div: {
-            controller: ($scope, tiedotteet) => {
+            controller: ($rootScope, $scope, tiedotteet) => {
                 $scope.cancel = () => $scope.setCreationState(false);
                 $scope.postTiedote = (newTiedote) => {
+                    $rootScope.$broadcast("notifyCKEditor");
                     $scope.setCreationState(false);
                     tiedotteet.post(newTiedote)
                         .then((res) => {
