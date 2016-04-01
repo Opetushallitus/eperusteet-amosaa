@@ -29,14 +29,22 @@ import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiService;
 import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Date;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.imageio.ImageIO;
+
 
 /**
  *
@@ -134,5 +142,58 @@ public class DokumenttiServiceImpl implements DokumenttiService {
         }
 
         return null;
+    }
+
+    @Transactional
+    public boolean addImage(DokumenttiDto dto, String tyyppi, String kieli, MultipartFile file) throws IOException {
+
+        if (!file.isEmpty()) {
+
+            BufferedImage bufferedImage = ImageIO.read(file.getInputStream());
+
+            int width = bufferedImage.getWidth();
+            int height = bufferedImage.getHeight();
+
+            // Muutetaan kaikkien kuvien väriavaruus RGB:ksi jotta PDF/A validointi menee läpi
+            // Asetetaan lisäksi läpinäkyvien kuvien taustaksi valkoinen väri
+            BufferedImage tempImage = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(),
+                    BufferedImage.TYPE_3BYTE_BGR);
+            tempImage.getGraphics().setColor(new Color(255, 255, 255, 0));
+            tempImage.getGraphics().fillRect (0, 0, width, height);
+            tempImage.getGraphics().drawImage(bufferedImage, 0, 0, null);
+
+            bufferedImage = tempImage;
+
+            // Muutetaan kuva PNG:ksi
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(bufferedImage, "jpg", baos);
+            baos.flush();
+            byte[] image = baos.toByteArray();
+            baos.close();
+
+            // todo: tarkista onko tiedosto sallittu kuva
+
+            // Haetaan domain dokumentti
+            Dokumentti dokumentti = dokumenttiRepository.findByOpsIdAndKieli(dto.getOpsId(), Kieli.of(kieli));
+
+            switch (tyyppi) {
+                case "kansi":
+                    dokumentti.setKansikuva(image);
+                    break;
+                case "ylatunniste":
+                    dokumentti.setYlatunniste(image);
+                    break;
+                case "alatunniste":
+                    dokumentti.setAlatunniste(image);
+                    break;
+                default:
+                    return false;
+            }
+
+            dokumenttiRepository.save(dokumentti);
+            return true;
+        }
+
+        return false;
     }
 }

@@ -41,4 +41,7 @@ public class DokumenttiDto {
     private DokumenttiTila tila = DokumenttiTila.EI_OLE;
     private DokumenttiEdistyminen edistyminen = DokumenttiEdistyminen.TUNTEMATON;
     private String virhekoodi = "";
+    private byte[] kansikuva;
+    private byte[] ylatunniste;
+    private byte[] alatunniste;
 }

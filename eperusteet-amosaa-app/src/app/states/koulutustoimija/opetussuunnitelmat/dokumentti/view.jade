@@ -8,10 +8,9 @@ mixin gtext(type, name)
 
 mixin kuva(tyyppi)
   div(ng-hide=tyyppi + "Uploader.queue.length !== 0")
-    p(style="height: 120px;")
+    p
       a(ng-href="{{ kuva." + tyyppi + " }}" target="_blank")
-        img(ng-src="{{ kuva." + tyyppi + " }}"
-            height="120px")
+        img(ng-src="{{ kuva." + tyyppi + " }}" class="img-responsive")
     span.btn.btn-danger(ng-click="poistaKuva('" + tyyppi + "')")
       +gtext('trash', 'poista')
     span=" "

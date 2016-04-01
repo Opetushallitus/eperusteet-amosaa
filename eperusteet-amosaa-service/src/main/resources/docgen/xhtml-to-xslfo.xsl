@@ -55,7 +55,7 @@
                                               extent="20mm" />
                             <fo:region-after region-name="ra-right"
                                              extent="20mm" />
-                            <fo:region-start extent="30mm"/>
+                            <fo:region-start extent="30mm" />
                             <fo:region-end region-name="re-right" extent="30mm"
                                            reference-orientation="90" display-align="after"
                                            background-image="gradient.svg"
@@ -97,6 +97,7 @@
 
             <!-- Table of contents pages -->
             <fo:page-sequence master-reference="blank">
+
                 <fo:flow flow-name="xsl-region-body">
                     <xsl:call-template name="toc" />
                 </fo:flow>
@@ -104,14 +105,15 @@
 
             <!-- Document content pages -->
             <fo:page-sequence master-reference="standard" initial-page-number="1">
-
                 <fo:static-content flow-name="rb-right">
                     <fo:block font-size="10pt" text-align="start">
+                        <xsl:apply-templates select="/html/head/ylatunniste" />
                     </fo:block>
                 </fo:static-content>
                 <fo:static-content flow-name="ra-right">
                     <fo:block text-align="end" font-size="10pt" color="#6C6D70">
                         <fo:page-number />
+                        <xsl:apply-templates select="/html/head/alatunniste" />
                     </fo:block>
                 </fo:static-content>
                 <fo:static-content flow-name="rb-left">
@@ -963,7 +965,7 @@
     <xsl:template name="cover">
         <fo:block font-weight="bold" font-size="28pt" text-align="center">
             <xsl:value-of select="/html/head/title" />
-            <!-- todo: cover image here -->
+            <xsl:apply-templates select="/html/head/kansi" />
         </fo:block>
     </xsl:template>
 

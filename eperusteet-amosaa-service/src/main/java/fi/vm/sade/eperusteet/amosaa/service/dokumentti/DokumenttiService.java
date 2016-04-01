@@ -23,6 +23,9 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 /**
  *
@@ -42,6 +45,9 @@ public interface DokumenttiService {
     @PreAuthorize("isAuthenticated()")
     @Async(value = "docTaskExecutor")
     void generateWithDto(DokumenttiDto dto) throws DokumenttiException;
+
+    @PreAuthorize("isAuthenticated()")
+    boolean addImage(DokumenttiDto dto, String tyyppi, String kieli, MultipartFile image) throws IOException;
 
     @PreAuthorize("isAuthenticated()")
     byte[] get(Long id, Kieli kieli);

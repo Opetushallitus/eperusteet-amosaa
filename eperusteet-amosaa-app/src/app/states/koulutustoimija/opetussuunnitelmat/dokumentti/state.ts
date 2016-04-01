@@ -40,6 +40,8 @@ angular.module("app")
                     $http({
                         method: 'DELETE',
                         url: dokumenttiUrl + "/kuva?tyyppi=" + tyyppi + "&kieli=" + KieliService.getSisaltokieli()
+                    }).then(() => {
+                        paivitaKuva(tyyppi);
                     });
                 };
 

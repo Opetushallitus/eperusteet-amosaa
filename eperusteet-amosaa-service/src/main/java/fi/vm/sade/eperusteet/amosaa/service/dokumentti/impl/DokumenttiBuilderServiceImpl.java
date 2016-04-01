@@ -136,14 +136,15 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
 
         // Alaviitteet
         buildFootnotes(docBase);
-        //Thread.sleep(5000);
 
         docBase.getDokumentti().setEdistyminen(DokumenttiEdistyminen.KUVAT);
         saveEdistyminen(docBase);
 
         // Kuvat
         buildImages(docBase);
-        //Thread.sleep(5000);
+        buildKansi(docBase);
+        buildYlatunniste(docBase);
+        buildAlatunniste(docBase);
 
         docBase.getDokumentti().setEdistyminen(DokumenttiEdistyminen.TYYLIT);
         saveEdistyminen(docBase);
@@ -404,6 +405,57 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
         } catch (XPathExpressionException | IOException | NullPointerException e) {
             LOG.error(e.getLocalizedMessage());
         }
+    }
+
+    private void buildKansi(DokumenttiBase docBase) {
+        Element head = docBase.getHeadElement();
+        Element kansi = docBase.getDocument().createElement("kansi");
+        Element kuva = docBase.getDocument().createElement("img");
+
+        byte[] image = docBase.getDokumentti().getKansikuva();
+        if (image == null) {
+            return;
+        }
+
+        String base64 = Base64.encode(image);
+        kuva.setAttribute("src", "data:image/jpg;base64," + base64);
+
+        kansi.appendChild(kuva);
+        head.appendChild(kansi);
+    }
+
+    private void buildYlatunniste(DokumenttiBase docBase) {
+        Element head = docBase.getHeadElement();
+        Element kansi = docBase.getDocument().createElement("ylatunniste");
+        Element kuva = docBase.getDocument().createElement("img");
+
+        byte[] image = docBase.getDokumentti().getYlatunniste();
+        if (image == null) {
+            return;
+        }
+
+        String base64 = Base64.encode(image);
+        kuva.setAttribute("src", "data:image/jpg;base64," + base64);
+
+        kansi.appendChild(kuva);
+        head.appendChild(kansi);
+    }
+
+    private void buildAlatunniste(DokumenttiBase docBase) {
+        Element head = docBase.getHeadElement();
+        Element kansi = docBase.getDocument().createElement("alatunniste");
+        Element kuva = docBase.getDocument().createElement("img");
+
+        byte[] image = docBase.getDokumentti().getAlatunniste();
+        if (image == null) {
+            return;
+        }
+
+        String base64 = Base64.encode(image);
+        kuva.setAttribute("src", "data:image/jpg;base64," + base64);
+
+        kansi.appendChild(kuva);
+        head.appendChild(kansi);
     }
 
     private void addHeader(DokumenttiBase docBase, String text) {

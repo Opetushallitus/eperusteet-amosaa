@@ -111,162 +111,102 @@ public class DokumenttiController {
     @RequestMapping(value = "/kuva", method=RequestMethod.POST)
     public ResponseEntity<Object> addImage(@PathVariable Long ktId,
                                             @PathVariable Long opsId,
-                                            @RequestParam String tyyppi,
+                                            @RequestParam(required = true) String tyyppi,
                                             @RequestParam(defaultValue = "fi") String kieli,
-                                            @RequestPart(required = true) MultipartFile file) {
-
-        try {
-            if (tyyppi != null && !file.isEmpty()) {
-                //byte[] image = file.getBytes();
-
-                BufferedImage bufferedImage = ImageIO.read(file.getInputStream());
-
-                /*int width = bufferedImage.getWidth();
-                int height = bufferedImage.getHeight();
-
-                // Muutetaan kaikkien kuvien väriavaruus RGB:ksi jotta PDF/A validointi menee läpi
-                // Asetetaan lisäksi läpinäkyvien kuvien taustaksi valkoinen väri
-                BufferedImage tempImage = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(),
-                        BufferedImage.TYPE_3BYTE_BGR);
-                tempImage.getGraphics().setColor(new Color(255, 255, 255, 0));
-                tempImage.getGraphics().fillRect (0, 0, width, height);
-                tempImage.getGraphics().drawImage(bufferedImage, 0, 0, null);
-
-                bufferedImage = tempImage;*/
-
-                // Muutetaan kuva PNG:ksi
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                ImageIO.write(bufferedImage, "png", baos);
-                baos.flush();
-                byte[] image = baos.toByteArray();
-                baos.close();
-
-                // todo: tarkista onko tiedosto sallittu kuva
-
-                // Tehdään DokumenttiDto jos ei löydy jo valmiina
-                DokumenttiDto dokumenttiDto = service.getDto(opsId, Kieli.of(kieli));
-                if (dokumenttiDto == null) {
-                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-                }
-
-                // Haetaan domain dokumentti
-                Dokumentti dokumentti = repository.findByOpsIdAndKieli(opsId, Kieli.of(kieli));
-
-                switch (tyyppi) {
-                    case "kansi":
-                        dokumentti.setKansikuva(image);
-                        break;
-                    case "ylatunniste":
-                        dokumentti.setYlatunniste(image);
-                        break;
-                    case "alatunniste":
-                        dokumentti.setAlatunniste(image);
-                        break;
-                    default:
-                        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-                }
-
-                repository.save(dokumentti);
-
-                return new ResponseEntity<>(HttpStatus.OK);
-            }
-        } catch (IOException ex) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+                                            @RequestPart(required = true) MultipartFile file) throws IOException {
+        DokumenttiDto dokumenttiDto = service.getDto(opsId, Kieli.of(kieli));
+        if (dokumenttiDto == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (service.addImage(dokumenttiDto, tyyppi, kieli, file)) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @RequestMapping(value = "/kuva", method=RequestMethod.GET)
     public ResponseEntity<Object> addImage(@PathVariable Long ktId,
                                             @PathVariable Long opsId,
-                                            @RequestParam String tyyppi,
+                                            @RequestParam(required = true) String tyyppi,
                                             @RequestParam(defaultValue = "fi") String kieli) {
-        if (tyyppi != null) {
-            // Tehdään DokumenttiDto jos ei löydy jo valmiina
-            DokumenttiDto dokumenttiDto = service.getDto(opsId, Kieli.of(kieli));
-            if (dokumenttiDto == null) {
-                return new ResponseEntity<>(HttpStatus.OK);
-            }
-
-            // Haetaan kuva
-            Dokumentti dokumentti = repository.findByOpsIdAndKieli(opsId, Kieli.of(kieli));
-            if (dokumentti == null) {
-                return new ResponseEntity<>(HttpStatus.OK);
-            }
-
-            byte[] image;
-
-            switch (tyyppi) {
-                case "kansi":
-                    image = dokumentti.getKansikuva();
-                    break;
-                case "ylatunniste":
-                    image = dokumentti.getYlatunniste();
-                    break;
-                case "alatunniste":
-                    image = dokumentti.getAlatunniste();
-                    break;
-                default:
-                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-
-            if (image == null || image.length == 0) {
-                return new ResponseEntity<>(HttpStatus.OK);
-            }
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.IMAGE_PNG);
-            headers.setContentLength(image.length);
-
-            return new ResponseEntity<>(image, headers, HttpStatus.OK);
+        // Tehdään DokumenttiDto jos ei löydy jo valmiina
+        DokumenttiDto dokumenttiDto = service.getDto(opsId, Kieli.of(kieli));
+        if (dokumenttiDto == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        // Haetaan kuva
+        Dokumentti dokumentti = repository.findByOpsIdAndKieli(opsId, Kieli.of(kieli));
+        if (dokumentti == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        byte[] image;
+
+        switch (tyyppi) {
+            case "kansi":
+                image = dokumentti.getKansikuva();
+                break;
+            case "ylatunniste":
+                image = dokumentti.getYlatunniste();
+                break;
+            case "alatunniste":
+                image = dokumentti.getAlatunniste();
+                break;
+            default:
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        if (image == null || image.length == 0) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_PNG);
+        headers.setContentLength(image.length);
+
+        return new ResponseEntity<>(image, headers, HttpStatus.OK);
     }
 
     @Transactional
     @RequestMapping(value = "/kuva", method=RequestMethod.DELETE)
     public ResponseEntity<Object> deleteImage(@PathVariable Long ktId,
                                            @PathVariable Long opsId,
-                                           @RequestParam String tyyppi,
+                                           @RequestParam(required = true) String tyyppi,
                                            @RequestParam(defaultValue = "fi") String kieli) {
 
-        if (tyyppi != null) {
-            // Tehdään DokumenttiDto jos ei löydy jo valmiina
-            DokumenttiDto dokumenttiDto = service.getDto(opsId, Kieli.of(kieli));
+        // Tehdään DokumenttiDto jos ei löydy jo valmiina
+        DokumenttiDto dokumenttiDto = service.getDto(opsId, Kieli.of(kieli));
 
-            if (dokumenttiDto == null) {
-                return new ResponseEntity<>(HttpStatus.OK);
-            }
-
-            // Haetaan kuva
-            Dokumentti dokumentti = repository.findByOpsIdAndKieli(opsId, Kieli.of(kieli));
-            if (dokumentti == null) {
-                return new ResponseEntity<>(HttpStatus.OK);
-            }
-
-            switch (tyyppi) {
-                case "kansi":
-                    dokumentti.setKansikuva(null);
-                    repository.save(dokumentti);
-                    break;
-                case "ylatunniste":
-                    dokumentti.setYlatunniste(null);
-                    repository.save(dokumentti);
-                    break;
-                case "alatunniste":
-                    dokumentti.setAlatunniste(null);
-                    repository.save(dokumentti);
-                    break;
-                default:
-                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-
+        if (dokumenttiDto == null) {
             return new ResponseEntity<>(HttpStatus.OK);
         }
 
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        // Haetaan kuva
+        Dokumentti dokumentti = repository.findByOpsIdAndKieli(opsId, Kieli.of(kieli));
+        if (dokumentti == null) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+
+        switch (tyyppi) {
+            case "kansi":
+                dokumentti.setKansikuva(null);
+                break;
+            case "ylatunniste":
+                dokumentti.setYlatunniste(null);
+                break;
+            case "alatunniste":
+                dokumentti.setAlatunniste(null);
+                break;
+            default:
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        repository.save(dokumentti);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
