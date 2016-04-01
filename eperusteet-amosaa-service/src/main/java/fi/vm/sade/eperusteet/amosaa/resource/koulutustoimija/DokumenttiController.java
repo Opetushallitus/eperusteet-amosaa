@@ -226,4 +226,47 @@ public class DokumenttiController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    @Transactional
+    @RequestMapping(value = "/kuva", method=RequestMethod.DELETE)
+    public ResponseEntity<Object> deleteImage(@PathVariable Long ktId,
+                                           @PathVariable Long opsId,
+                                           @RequestParam String tyyppi,
+                                           @RequestParam(defaultValue = "fi") String kieli) {
+
+        if (tyyppi != null) {
+            // Tehdään DokumenttiDto jos ei löydy jo valmiina
+            DokumenttiDto dokumenttiDto = service.getDto(opsId, Kieli.of(kieli));
+
+            if (dokumenttiDto == null) {
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+
+            // Haetaan kuva
+            Dokumentti dokumentti = repository.findByOpsIdAndKieli(opsId, Kieli.of(kieli));
+            if (dokumentti == null) {
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+
+            switch (tyyppi) {
+                case "kansi":
+                    dokumentti.setKansikuva(null);
+                    repository.save(dokumentti);
+                    break;
+                case "ylatunniste":
+                    dokumentti.setYlatunniste(null);
+                    repository.save(dokumentti);
+                    break;
+                case "alatunniste":
+                    dokumentti.setAlatunniste(null);
+                    repository.save(dokumentti);
+                    break;
+                default:
+                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
 }

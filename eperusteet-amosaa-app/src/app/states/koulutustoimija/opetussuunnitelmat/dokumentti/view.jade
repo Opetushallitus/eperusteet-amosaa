@@ -12,7 +12,7 @@ mixin kuva(tyyppi)
       a(ng-href="{{ kuva." + tyyppi + " }}" target="_blank")
         img(ng-src="{{ kuva." + tyyppi + " }}"
             height="120px")
-    span.btn.btn-danger
+    span.btn.btn-danger(ng-click="poistaKuva('" + tyyppi + "')")
       +gtext('trash', 'poista')
     span=" "
     span.btn.btn-default.btn-file

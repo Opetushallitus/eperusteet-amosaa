@@ -36,6 +36,13 @@ angular.module("app")
                     return uploader;
                 };
 
+                $scope.poistaKuva = (tyyppi) => {
+                    $http({
+                        method: 'DELETE',
+                        url: dokumenttiUrl + "/kuva?tyyppi=" + tyyppi + "&kieli=" + KieliService.getSisaltokieli()
+                    });
+                };
+
                 $scope.kansiUploader = createUploader("kansi");
                 $scope.ylatunnisteUploader = createUploader("ylatunniste");
                 $scope.alatunnisteUploader = createUploader("alatunniste");
