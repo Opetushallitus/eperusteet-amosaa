@@ -1,3 +1,7 @@
+mixin tiedotteet()
+    div(ui-view="tiedotteet")
+
+
 mixin ophImpl()
   div.koulutustoimija
     div.row
@@ -18,7 +22,7 @@ mixin ophImpl()
           span.icon
             i.fa.fa-exclamation
 
-    div(ui-view="tiedotteet")
+    +tiedotteet()
     div(ui-view="pohjat")
 
 
@@ -42,7 +46,7 @@ mixin ktImpl()
           span.icon
             i.fa.fa-exclamation
 
-    div(ui-view="tiedotteet")
+    +tiedotteet()
     div(ui-view="yhteinen")
     div(ui-view="opetussuunnitelmat")
 

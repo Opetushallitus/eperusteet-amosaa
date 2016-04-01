@@ -1,56 +1,56 @@
 mixin author-time-signature
-    table.tiedote-author-date(ng-if="!$$ekEditing || $$ekEditingIndex != $index")
-        tr
-            td(ng-if="tiedote.luoja")
-                i(ng-show="tiedote.muokattu") luottu:&nbsp;
-                span {{ tiedote.luoja }}
-            td(ng-if="tiedote.luottu" ng-class="{'has-muokkaaja': tiedote.muokattu}")
-                span {{ tiedote.luottu | date }}
-            td(ng-if="tiedote.muokkaaja")
-                i muokkattu:&nbsp;
-                span {{ tiedote.muokkaaja }}
-            td(ng-if="tiedote.muokattu")
-                span {{ tiedote.muokattu | date }}
+  table.tiedote-author-date(ng-if="!$$ekEditing || $$ekEditingIndex != $index")
+    tr
+      td
+        i(kaanna="tiedote.muokattu")
+        span(ng-bind="tiedote.luoja")
+      td(ng-class="{'has-muokkaaja': tiedote.muokattu}")
+        span(ng-bind="tiedote.luotu | date")
+      td
+        i(kaanna="'muokkattu'")
+        span(ng-bind="tiedote.muokkaaja")
+      td
+        span(ng-bind="tiedote.muokattu | date")
 
 mixin lisaa-uusi-tiedote-btn
-    div.col-xs-12
-        button.btn.btn-primary.pull-right.tiedote-editing-btn(ng-disabled="$$ekEditing"
-        ng-if="!creatingNewTiedote" ng-click="setCreationState(true)" kaanna="lisaa-uusi-tiedote")
+  div.col-xs-12
+    button.btn.btn-primary.pull-right.tiedote-editing-btn(ng-disabled="$$ekEditing"
+    ng-if="!creatingNewTiedote" ng-click="setCreationState(true)" kaanna="lisaa-uusi-tiedote")
 
 div.row
-    +lisaa-uusi-tiedote-btn
-    div.col-xs-12(ui-view="uusi_tiedote_div" ng-if="creatingNewTiedote")
-    div.col-xs-12
-        div.tiedotteet(ng-repeat="tiedote in tiedotteet")
-            div.tiedote.fade-in-out
-                div.tiedote-laatikko
-                    div.pull-left(ng-show="tiedote.tarkea")
-                        .icon
-                            i.fa.fa-exclamation
-                    div.pull-left(ng-show="!tiedote.tarkea")
-                        .icon
-                            i.fa.fa-question
-                    a(ng-if="!$$ekEditing || $$ekEditingIndex !== $index" href="#" ng-click="remove(tiedote)").pull-right
-                        span.fa.fa-times
-                    a(ng-if="!$$ekEditing || $$ekEditingIndex !== $index" href="#" ng-click="edit($index)").pull-right
-                        span.fa.fa-pencil
-                    .tiedote-otsikko-editointi(ng-if="$$ekEditing && $$ekEditingIndex === $index")
-                        input.form-control(ng-model="tiedote.otsikko" type="text" required=true placeholder="otsikko")
-                    .tiedote-otsikko
-                        p(ng-if="!$$ekEditing || $$ekEditingIndex !== $index") {{ tiedote.otsikko }}
-                        +author-time-signature
-                    .tiedote-sisalto(ng-if="$$ekEditing && $$ekEditingIndex === $index")
-                        div.form-control.ckeditor(ckeditor ng-model="tiedote.teksti" layout="normal")
-                    .tiedote-sisalto(ng-if="!$$ekEditing || $$ekEditingIndex != $index" id="tiedote1-sisalto" ng-bind-html="tiedote.teksti")
-                    .tiedote-sisalto.checkbox.abc-checkbox(ng-if="$$ekEditing && $$ekEditingIndex === $index")
-                        input.styled(type="checkbox" checked="true" ng-model="tiedote.tarkea")
-                        label
-                            strong(kaanna="tarkea")
-                        span.julkinen-btn-margin-left
-                            input.styled(type="checkbox" checked="true" ng-model="tiedote.julkinen")
-                            label
-                                strong(kaanna="julkinen")
-                    .expand(ng-if="!$$ekEditing || $$ekEditingIndex != $index")
-                        a(href="")
-                            i.glyphicon.glyphicon-option-horizontal
+  +lisaa-uusi-tiedote-btn
+  div.col-xs-12(ui-view="uusi_tiedote_div" ng-if="creatingNewTiedote")
+  div.col-xs-12
+    div.tiedotteet(ng-repeat="tiedote in tiedotteet")
+      div.tiedote.fade-in-out
+        div.tiedote-laatikko
+          div.pull-left(ng-show="tiedote.tarkea")
+            .icon
+                i.fa.fa-exclamation
+          div.pull-left(ng-show="!tiedote.tarkea")
+            .icon
+                i.fa.fa-question
+          a(ng-if="!$$ekEditing || $$ekEditingIndex !== $index" href="#" ng-click="remove(tiedote)").pull-right
+            span.fa.fa-times
+          a(ng-if="!$$ekEditing || $$ekEditingIndex !== $index" href="#" ng-click="edit($index)").pull-right
+            span.fa.fa-pencil
+          .tiedote-otsikko-editointi(ng-if="$$ekEditing && $$ekEditingIndex === $index")
+            input.form-control(ng-model="tiedote.otsikko" type="text" required=true placeholder="otsikko")
+          .tiedote-otsikko
+            p(ng-if="!$$ekEditing || $$ekEditingIndex !== $index") {{ tiedote.otsikko }}
+            +author-time-signature
+          .tiedote-sisalto(ng-if="$$ekEditing && $$ekEditingIndex === $index")
+            div.form-control.ckeditor(ckeditor ng-model="tiedote.teksti" layout="normal")
+          .tiedote-sisalto(ng-if="!$$ekEditing || $$ekEditingIndex != $index" id="tiedote1-sisalto" ng-bind-html="tiedote.teksti")
+          .tiedote-sisalto.checkbox.abc-checkbox(ng-if="$$ekEditing && $$ekEditingIndex === $index")
+            input.styled(type="checkbox" checked="true" ng-model="tiedote.tarkea")
+            label
+              strong(kaanna="tarkea")
+            span.julkinen-btn-margin-left
+              input.styled(type="checkbox" checked="true" ng-model="tiedote.julkinen")
+              label
+                strong(kaanna="julkinen")
+          .expand(ng-if="!$$ekEditing || $$ekEditingIndex != $index")
+            a(href="")
+              i.glyphicon.glyphicon-option-horizontal
 
