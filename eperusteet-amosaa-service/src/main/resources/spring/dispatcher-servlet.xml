@@ -9,7 +9,6 @@
     <context:annotation-config/>
     <context:component-scan base-package="fi.vm.sade.eperusteet.amosaa.resource"/>
     <aop:aspectj-autoproxy proxy-target-class="true"/>
-
     <bean id="multipartResolver"
           class="org.springframework.web.multipart.support.StandardServletMultipartResolver">
     </bean>

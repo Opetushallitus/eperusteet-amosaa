@@ -72,7 +72,7 @@ public class PdfServiceImpl implements PdfService {
         InputStream xmlInputStream = new ByteArrayInputStream(xmlStream.toByteArray());
         convertXML2FO(xmlInputStream, xslt, foStream);
         //LOG.info("Generated XSL-FO:");
-        //printStream(foStream);
+        printStream(foStream);
 
         // Muunnetaan saatu fo malli pdf:ksi
         InputStream foInputStream = new ByteArrayInputStream(foStream.toByteArray());
@@ -96,7 +96,7 @@ public class PdfServiceImpl implements PdfService {
         transformer.transform(src, res);
     }
 
-    public void convertXML2FO(InputStream xml, File xslt, OutputStream fo)
+    private void convertXML2FO(InputStream xml, File xslt, OutputStream fo)
             throws IOException, TransformerException {
         TransformerFactory factory = TransformerFactory.newInstance();
         Transformer transformer = factory.newTransformer(new StreamSource(xslt));
@@ -108,7 +108,7 @@ public class PdfServiceImpl implements PdfService {
     }
 
     @SuppressWarnings("unchecked")
-    public void convertFO2PDF(InputStream fo, OutputStream pdf)
+    private void convertFO2PDF(InputStream fo, OutputStream pdf)
             throws IOException, SAXException, TransformerException {
 
         FopFactory fopFactory = FopFactory.newInstance(config.getFile());

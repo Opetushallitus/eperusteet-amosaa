@@ -6,7 +6,7 @@ module KieliService {
        _$state = $state;
        _$stateParams = $stateParams;
        _$translate = $translate;
-    }
+    };
 
     export let SISALTOKIELET = [
         "fi",

@@ -30,24 +30,6 @@ import fi.vm.sade.eperusteet.amosaa.service.dokumentti.PdfService;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.CharapterNumberGenerator;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiBase;
 import fi.vm.sade.eperusteet.amosaa.service.ops.LiiteService;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import javax.imageio.IIOImage;
-import javax.imageio.ImageIO;
-import javax.imageio.ImageWriteParam;
-import javax.imageio.ImageWriter;
-import javax.imageio.stream.MemoryCacheImageOutputStream;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.xpath.*;
 import org.apache.xml.security.utils.Base64;
 import org.jsoup.Jsoup;
 import org.jsoup.helper.W3CDom;
@@ -61,6 +43,25 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.MemoryCacheImageOutputStream;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  *
@@ -87,7 +88,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
 
     @Override
     public byte[] generatePdf(Opetussuunnitelma ops, Dokumentti dokumentti, Kieli kieli)
-            throws ParserConfigurationException, IOException, SAXException, TransformerException, InterruptedException {
+            throws ParserConfigurationException, IOException, SAXException, TransformerException {
 
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -135,14 +136,15 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
 
         // Alaviitteet
         buildFootnotes(docBase);
-        //Thread.sleep(5000);
 
         docBase.getDokumentti().setEdistyminen(DokumenttiEdistyminen.KUVAT);
         saveEdistyminen(docBase);
 
         // Kuvat
         buildImages(docBase);
-        //Thread.sleep(5000);
+        buildKansi(docBase);
+        buildYlatunniste(docBase);
+        buildAlatunniste(docBase);
 
         docBase.getDokumentti().setEdistyminen(DokumenttiEdistyminen.TYYLIT);
         saveEdistyminen(docBase);
@@ -278,7 +280,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
         for (TekstiKappaleViite lapsi : viite.getLapset()) {
             if (lapsi.getTekstiKappale() != null && lapsi.getTekstiKappale().getNimi() != null) {
 
-                // Ei näytetä yhteisen osien Pääkappaleiden otsikoita
+                // Ei näytetä osien Pääkappaleiden otsikoita
                 // Opetuksen järjestäminen ja Opetuksen toteuttamisen lähtökohdat
                 if (paataso) {
                     addTekstiKappale(docBase, lapsi, false);
@@ -403,6 +405,57 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
         } catch (XPathExpressionException | IOException | NullPointerException e) {
             LOG.error(e.getLocalizedMessage());
         }
+    }
+
+    private void buildKansi(DokumenttiBase docBase) {
+        Element head = docBase.getHeadElement();
+        Element kansi = docBase.getDocument().createElement("kansi");
+        Element kuva = docBase.getDocument().createElement("img");
+
+        byte[] image = docBase.getDokumentti().getKansikuva();
+        if (image == null) {
+            return;
+        }
+
+        String base64 = Base64.encode(image);
+        kuva.setAttribute("src", "data:image/jpg;base64," + base64);
+
+        kansi.appendChild(kuva);
+        head.appendChild(kansi);
+    }
+
+    private void buildYlatunniste(DokumenttiBase docBase) {
+        Element head = docBase.getHeadElement();
+        Element kansi = docBase.getDocument().createElement("ylatunniste");
+        Element kuva = docBase.getDocument().createElement("img");
+
+        byte[] image = docBase.getDokumentti().getYlatunniste();
+        if (image == null) {
+            return;
+        }
+
+        String base64 = Base64.encode(image);
+        kuva.setAttribute("src", "data:image/jpg;base64," + base64);
+
+        kansi.appendChild(kuva);
+        head.appendChild(kansi);
+    }
+
+    private void buildAlatunniste(DokumenttiBase docBase) {
+        Element head = docBase.getHeadElement();
+        Element kansi = docBase.getDocument().createElement("alatunniste");
+        Element kuva = docBase.getDocument().createElement("img");
+
+        byte[] image = docBase.getDokumentti().getAlatunniste();
+        if (image == null) {
+            return;
+        }
+
+        String base64 = Base64.encode(image);
+        kuva.setAttribute("src", "data:image/jpg;base64," + base64);
+
+        kansi.appendChild(kuva);
+        head.appendChild(kansi);
     }
 
     private void addHeader(DokumenttiBase docBase, String text) {
