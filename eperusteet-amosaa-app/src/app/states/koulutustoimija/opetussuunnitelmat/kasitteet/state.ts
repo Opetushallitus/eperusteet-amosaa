@@ -28,12 +28,13 @@ angular.module("app")
             }
         },
         "uusi_kasite_row": {
-            controller: ($scope, kasitteet) => {
+            controller: ($rootScope, $scope, kasitteet) => {
                 $scope.newKasite = Termisto.makeBlankKasite();
                 $scope.cancel = () => $scope.setCreationState(false);
                 $scope.createKasite = () => $scope.setCreationState(true);
                 $scope.postKasite = (newKasite) => {
                     $scope.setCreationState(false);
+                    $rootScope.$broadcast("notifyCKEditor");
                     kasitteet.post(newKasite)
                         .then((res) => {
                             if (res) {
