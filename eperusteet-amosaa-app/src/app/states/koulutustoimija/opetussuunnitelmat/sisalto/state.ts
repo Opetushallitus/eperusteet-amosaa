@@ -41,10 +41,31 @@ angular.module("app")
         },
         sivunavi: {
             controller: ($q, $scope, $state, $timeout, otsikot, tekstit, sisaltoRoot) => {
-                const updateSivunavi = _.callAndGive(() =>
-                    $scope.sivunavi = Tekstikappaleet.teeRakenne(Tekstikappaleet.uniikit(otsikot), sisaltoRoot.id));
+                const updateSivunavi = _.callAndGive(() => {
+                    $scope.sivunavi = Tekstikappaleet.teeRakenne(Tekstikappaleet.uniikit(otsikot), sisaltoRoot.id);
+                });
 
-                $scope.suodata = (item) => KaannaService.hae(item, $scope.search);
+                const traverseItems = (item) => {
+                    let childsVisible = false;
+                    _.each(item.lapset, (item) => {
+                        let itemVisible = traverseItems(item);
+                        if (itemVisible) {
+                            childsVisible = true;
+                        }
+                    });
+
+                    const
+                        isMatchingName = KaannaService.hae(item.$$obj.tekstiKappale.nimi || {}, $scope.search);
+
+                    item.$$hidden = !isMatchingName && !childsVisible;
+                    return item.$$hidden;
+                };
+
+                $scope.suodata = (search) => {
+                    _.each($scope.sivunavi.lapset, (item) => {
+                        traverseItems(item);
+                    });
+                };
 
                 $scope.add = () => {
                     ModalAdd.sisaltoAdder()
@@ -58,8 +79,7 @@ angular.module("app")
                                         .then(res => {
                                             res.$$depth = 0;
                                             otsikot.push(res);
-                                            _.find(otsikot, (otsikko: any) =>
-                                                   otsikko.id == sisaltoRoot.id).lapset.push(res.id);
+                                            _.find(otsikot, (otsikko: any) => otsikko.id == sisaltoRoot.id).lapset.push(res.id);
                                             updateSivunavi();
                                             $timeout(() =>
                                                 $state.go("root.koulutustoimija.opetussuunnitelmat.sisalto.tekstikappale", { tkvId: res.id }));

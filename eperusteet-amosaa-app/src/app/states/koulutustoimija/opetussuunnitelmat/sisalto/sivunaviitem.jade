@@ -1,4 +1,4 @@
-li(ng-repeat="item in ngModel")
+li(ng-show="!item.$$hidden" ng-repeat="item in ngModel")
   a(style="padding-left: {{ (item.$$depth - 1) * 20 + 10 }}px"
     href=""
     ui-sref-active="active"

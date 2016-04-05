@@ -37,9 +37,11 @@ module KaannaService {
     }
 
     export const hae = (obj, query: string = "") =>
-        _.any(obj, (v: string = "") => v
+        _.any(obj, (v: string = "") => {
+            return v
                 .toLowerCase()
-                .indexOf(query.toLowerCase()) !== -1);
+                .indexOf(query.toLowerCase()) !== -1;
+        });
 
     export const kaannaSisalto = (input, useFallback?) => _.isEmpty(input)
         ? ""

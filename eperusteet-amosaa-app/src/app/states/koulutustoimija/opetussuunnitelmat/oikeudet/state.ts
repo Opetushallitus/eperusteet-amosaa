@@ -11,7 +11,7 @@ angular.module("app")
         "": {
             controller: ($scope, ops, oikeudet, kayttaja, ktKayttajat, kayttajanTieto) => {
                 $scope.vaihtoehdot = Kayttaja.oikeusVaihtoehdot();
-                $scope.suodata = (item) => _.matchStrings($scope.search, item.$$kayttajanimi);
+                $scope.suodata = (item) => _.matchStrings($scope.search, item.$$nimi);
                 $scope.kayttajat = ktKayttajat;
                 $scope.oikeudet = _.indexBy(oikeudet, "_kayttaja");
 
