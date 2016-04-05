@@ -29,6 +29,18 @@ angular.module("app", [
     moment.locale("fi");
 })
 
+.config(($httpProvider) => {
+    $httpProvider.interceptors.push(["$q", ($q) => ({
+        response: (res) => res,
+        responseError: (res) => {
+            if (res.status === 403) {
+                NotifikaatioService.varoitus("ei-oikeutta-suorittaa");
+            }
+            return $q.reject(res);
+        }
+    })]);
+})
+
 // Generate template or templateUrl automatically for states when not defined
 // Defaults to <state path>/view.jade or <ui-view></ui-view> depending on abstract
 .config(($stateProvider) => {
@@ -122,7 +134,6 @@ angular.module("app", [
     });
 })
 
-// FIXME: Move to own file
-// Global $scope functions
 .run(($rootScope) => {
+
 });

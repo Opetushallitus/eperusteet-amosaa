@@ -16,17 +16,17 @@
 
 package fi.vm.sade.eperusteet.amosaa.service.util;
 
+import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.RolePermission;
+import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.RolePrefix;
 import java.security.Principal;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import static fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.RolePermission;
-import static fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.RolePrefix;
 
 
 /**
@@ -54,6 +54,14 @@ public final class SecurityUtil {
 
     public static Set<String> getOrganizations(Set<RolePermission> permissions) {
         return getOrganizations(SecurityContextHolder.getContext().getAuthentication(), permissions);
+    }
+
+    public static Set<String> getOrganizations() {
+        return getOrganizations(SecurityContextHolder.getContext().getAuthentication());
+    }
+
+    public static Set<String> getOrganizations(Authentication authentication) {
+        return getOrganizations(authentication, new HashSet<>(Arrays.asList(RolePermission.values())));
     }
 
     public static Set<String> getOrganizations(Authentication authentication, Set<RolePermission> permissions) {

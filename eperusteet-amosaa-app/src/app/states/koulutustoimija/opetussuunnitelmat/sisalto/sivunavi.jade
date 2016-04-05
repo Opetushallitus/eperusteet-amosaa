@@ -4,9 +4,9 @@ div.sivunavi
       div.form-group.has-feedback.has-feedback-left
         input.form-control(type="text" ng-model="search" placeholder="{{ 'hae' | kaanna }}")
         i.form-control-feedback.glyphicon.glyphicon-search(style="color: gray;")
-        a.btn.btn-default.square(href="" ng-click="add()")
+        button.btn.btn-default.square(href="" ng-click="add()" oikeustarkastelu)
           +icon("plus")
-        a.btn.btn-default.square(href="" ng-click="startSorting()")
+        button.btn.btn-default.square(href="" ng-click="startSorting()" oikeustarkastelu="muokkaus")
           +icon("arrows-v")
 
   div.valikko

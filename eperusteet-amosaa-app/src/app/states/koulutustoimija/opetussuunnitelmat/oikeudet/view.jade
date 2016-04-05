@@ -32,8 +32,8 @@ div.poistetut
               span(ng-show="kayttaja.$$nimi" ng-bind="kayttaja.$$nimi")
               span(ng-hide="kayttaja.$$nimi") ...
             td
-              span(ng-bind="'oikeus-' + oikeudet[kayttaja.id].oikeus | kaanna")
-              span.dropdown
+              span(ng-bind="'oikeus-' + oikeus(kayttaja) | kaanna")
+              span.dropdown(oikeustarkastelu="hallinta")
                 a.dropdown-toggle(href="" data-toggle="dropdown")
                   i.fa.fa-chevron-down.fa-fw
                 ul.dropdown-menu.dropdown-menu-right

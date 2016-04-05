@@ -24,6 +24,7 @@ angular.module("app")
                                 });
                         });
                 };
+
                 const clickHandler = (event) => {
                     var ohjeEl = angular.element(event.target).closest('.popover, .popover-element');
                     if (ohjeEl.length === 0) {

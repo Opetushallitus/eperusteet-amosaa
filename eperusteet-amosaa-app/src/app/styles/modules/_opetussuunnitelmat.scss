@@ -114,7 +114,7 @@ $ops-top-vertical-margin: 10px;
                     width: $ops-sivunavi-width - 2 * ($input-height-base + $ops-haku-padding) - $ops-haku-padding;
                 }
 
-                a {
+                button {
                     width: $input-height-base;
                     height: $input-height-base;
                     margin-left: $ops-haku-padding;

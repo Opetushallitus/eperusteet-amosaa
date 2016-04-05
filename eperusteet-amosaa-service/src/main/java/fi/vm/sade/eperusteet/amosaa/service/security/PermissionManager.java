@@ -24,11 +24,17 @@ import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.Opetussuunnitelma
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.Organization;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.RolePermission;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.RolePrefix;
+import fi.vm.sade.eperusteet.amosaa.service.util.Pair;
+import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -193,5 +199,37 @@ public class PermissionManager {
             return authority.equals(prefix.name() + "_" + permission.name());
         }
         return authority.equals(prefix.name() + "_" + permission.name() + "_" + org.getOrganization().get());
+    }
+
+    @Transactional(readOnly = true)
+    @PreAuthorize("isAuthenticated()")
+    public Map<RolePermission, Set<Long>> getOrganisaatioOikeudet() {
+        return EnumSet.allOf(RolePermission.class).stream()
+                .map(r -> new Pair<>(r, SecurityUtil.getOrganizations(Collections.singleton(r)).stream()
+                    .map(oid -> koulutustoimijaRepository.findOneByOrganisaatio(oid))
+                    .filter(kt -> kt != null)
+                    .map(kt -> kt.getId())
+                    .collect(Collectors.toSet())))
+                .collect(Collectors.toMap(Pair::getFirst, Pair::getSecond));
+    }
+
+    private static Set<Permission> fromRolePermission(RolePermission rolePermission) {
+        Set<Permission> permissions = new HashSet<>();
+        switch (rolePermission) {
+            case ADMIN:
+                permissions.add(Permission.HALLINTA);
+            case CRUD:
+                permissions.add(Permission.LUONTI);
+                permissions.add(Permission.POISTO);
+                permissions.add(Permission.TILANVAIHTO);
+            case READ_UPDATE:
+                permissions.add(Permission.LUKU);
+                permissions.add(Permission.MUOKKAUS);
+            case READ:
+                permissions.add(Permission.LUKU);
+                permissions.add(Permission.KOMMENTOINTI);
+                break;
+        }
+        return permissions;
     }
 }

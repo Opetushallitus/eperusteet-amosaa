@@ -33,7 +33,7 @@ div.kasitteet
                   span.glyphicon.glyphicon-sort
             th
         tbody
-          tr.kasite-placeholder-row(ui-view="uusi_kasite_row")
+          tr.kasite-placeholder-row(ui-view="uusi_kasite_row" oikeustarkastelu)
           tr(ng-repeat="kasite in kasitteet " +
           "| limitTo:alkioitaSivulla:(sivu - 1) * alkioitaSivulla | filter: hakuSana | orderBy:sortType:sortReverse")
             td(width="20%")
@@ -52,9 +52,9 @@ div.kasitteet
                 span.text-center(ng-if="kasite.alaviite")
                   +icon("check")
             td(width="90px")
-              span.pull-right
+              span.pull-right(oikeustarkastelu)
                 +removeButtonSmall("remove(kasite)")
-              span.pull-right
+              span.pull-right(oikeustarkastelu)
                 +editButtonSmall("edit($index)")
 
 
