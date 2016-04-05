@@ -7,33 +7,28 @@ mixin tiedotteet()
   div.tiedotelistaus(ng-show="$$showTiedotteet" ui-view="tiedotteet")
 
 
-mixin ophImpl()
+mixin ktNimi()
   div.koulutustoimija
     h2.otsikko
       span(kaanna="koulutustoimija.nimi")
-      span.dropdown(ng-show="koulutustoimijat.length > 1")
-        a.dropdown-toggle(href="", data-toggle="dropdown")
+      span.dropdown
+        a.dropdown-toggle(href="" data-toggle="dropdown")
           i.fa.fa-chevron-down.fa-fw
         ul.dropdown-menu.dropdown-menu-right
-          li(ng-class="{ 'active': kt.id === koulutustoimija.id }" ng-repeat="kt in koulutustoimijat")
-            a(href="" ui-sref="root.koulutustoimija.detail({ ktId: kt.id })")
-              span(kaanna="kt.nimi")
+          // li(ng-class="{ 'active': kt.id === koulutustoimija.id }" ng-repeat="kt in koulutustoimijat")
+          li(ng-repeat="kt in koulutustoimijat")
+            a(href="" ui-sref="root.koulutustoimija.detail({ ktId: kt.id })" kaanna="kt.nimi")
     +tiedotteet()
+    block
+
+
+mixin ophImpl()
+  +ktNimi
     div(ui-view="pohjat")
 
 
 mixin ktImpl()
-  div.koulutustoimija
-    h2.otsikko
-      span(kaanna="koulutustoimija.nimi")
-      span.dropdown(ng-show="koulutustoimijat.length > 1")
-        a.dropdown-toggle(href="", data-toggle="dropdown")
-          i.fa.fa-chevron-down.fa-fw
-        ul.dropdown-menu.dropdown-menu-right
-          li(ng-class="{ 'active': kt.id === koulutustoimija.id }" ng-repeat="kt in koulutustoimijat")
-            a(href="" ui-sref="root.koulutustoimija.detail({ ktId: kt.id })")
-              span(kaanna="kt.nimi")
-    +tiedotteet()
+  +ktNimi
     div(ui-view="yhteinen")
     div(ui-view="opetussuunnitelmat")
 

@@ -16,19 +16,18 @@ mixin kuva(tyyppi)
     span=" "
     span.btn.btn-default.btn-file
       span(kaanna="'valitse-uusi-kuva'")
-      input(type='file' nv-file-select nv-file-drop uploader=tyyppi + 'Uploader')
-
+      // input(type='file' nv-file-select nv-file-drop uploader=tyyppi + 'Uploader')
   span(ng-repeat="item in " + tyyppi + "Uploader.queue")
     p(ng-bind="item.file.name" style="height: 120px;")
     button.btn.btn-default(type='button'
-                          ng-click='item.remove()'
-                          ng-disabled='item.isReady || item.isUploading || item.isSuccess')
+                          ng-click="item.remove()"
+                          ng-disabled="item.isReady || item.isUploading || item.isSuccess")
       span(kaanna="'peruuta'")
     span=" "
-    button.btn.btn-success(type='button'
-                           ng-click='item.upload()'
-                           ng-disabled='item.isReady || item.isUploading || item.isSuccess')
-      +gtext('upload', 'laheta')
+    button.btn.btn-success(type="button"
+                           ng-click="item.upload()"
+                           ng-disabled="item.isReady || item.isUploading || item.isSuccess")
+      +gtext("upload", "laheta")
 
 div.dokumentti
   div.row
@@ -71,14 +70,14 @@ div.dokumentti
     div.col-xs-12
       h2(kaanna="'lisaasetukset'")
 
-      form.form-horizontal
+      // form.form-horizontal
         div.form-group
           div.row
             label.col-xs-2(for="kansi")
               span(kaanna="'kansilehti'")
               span=":"
             div.col-xs-10
-              +kuva('kansi')
+              +kuva("kansi")
 
         div.form-group
           div.row
@@ -86,7 +85,7 @@ div.dokumentti
               span(kaanna="'ylatunniste'")
               span=":"
             div.col-xs-10
-              +kuva('ylatunniste')
+              +kuva("ylatunniste")
 
         div.form-group
           div.row
@@ -94,6 +93,4 @@ div.dokumentti
               span(kaanna="'alatunniste'")
               span=":"
             div.col-xs-10
-              span wat
-              // FIXME tämä rikkoo jotain
-              // +kuva('ylatunniste')
+              +kuva("ylatunniste")
