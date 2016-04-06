@@ -15,40 +15,37 @@
  */
 package fi.vm.sade.eperusteet.amosaa.domain.teksti;
 
-import fi.vm.sade.eperusteet.amosaa.domain.AbstractAuditedReferenceableEntity;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
+
+import fi.vm.sade.eperusteet.amosaa.domain.AbstractAuditedReferenceableEntity;
 import lombok.Getter;
 import lombok.Setter;
 
 /**
  *
- * @author mikkom
+ * @author isaul
  */
 @Entity
 @Table(name = "kommentti")
 public class Kommentti extends AbstractAuditedReferenceableEntity {
     @Getter
     @Setter
+    @Column(name = "tekstikappaleviite_id")
+    private Long tekstikappaleviiteId;
+
+    @Getter
+    @Setter
+    @Column(name = "parent_id")
+    private Long parentId;
+
+    @Getter
+    @Setter
     private Boolean poistettu;
 
     @Getter
     @Setter
-    private String nimi;
-
-    @Getter
-    @Setter
     @Column(length = 1024)
-    @Size(max = 1024,message = "Kommentin maksimipituus on {max} merkkiä")
+    @Size(max = 1024, message = "Kommentin maksimipituus on {max} merkkiä")
     private String sisalto;
-
-    @Getter
-    @Setter
-    private Long ylinId;
-
-    @Getter
-    @Setter
-    private Long parentId;
 }

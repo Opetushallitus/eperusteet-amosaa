@@ -55,24 +55,10 @@ public class KommenttiServiceImpl implements KommenttiService {
     @Autowired
     private PermissionManager permissionManager;
 
-//    @Override
-//    @Transactional(readOnly = true)
-//    public List<KommenttiDto> getAllByOpetussuunnitelma(Long opsId) {
-//        List<Kommentti> kommentit = repository.findByOpetussuunnitelmaId(opsId);
-//        return mapper.mapAsList(kommentit, KommenttiDto.class);
-//    }
-
     @Override
     @Transactional(readOnly = true)
-    public List<KommenttiDto> getAllByParent(Long id) {
-        List<Kommentti> kommentit = repository.findByParentId(id);
-        return mapper.mapAsList(kommentit, KommenttiDto.class);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<KommenttiDto> getAllByYlin(Long id) {
-        List<Kommentti> kommentit = repository.findByYlinId(id);
+    public List<KommenttiDto> getAllByTekstikappaleviite(Long opsId, Long tkvId) {
+        List<Kommentti> kommentit = repository.findByTekstikappaleviiteId(tkvId);
         return mapper.mapAsList(kommentit, KommenttiDto.class);
     }
 
@@ -83,12 +69,14 @@ public class KommenttiServiceImpl implements KommenttiService {
         return mapper.map(kommentti, KommenttiDto.class);
     }
 
+    @Override
     @Transactional
-    private void addName(Kommentti kommentti) {
-        KayttajanTietoDto ktd = kayttajat.hae(kommentti.getLuoja());
-        if (ktd != null) {
-            kommentti.setNimi(ktd.getKutsumanimi() + " " + ktd.getSukunimi());
-        }
+    public KommenttiDto add(@P("opsId") Long opsId, KommenttiDto kommenttiDto) {
+        Kommentti kommentti = mapper.map(kommenttiDto, Kommentti.class);
+        kommentti.setSisalto(clip(kommenttiDto.getSisalto()));
+
+        kommentti = repository.save(kommentti);
+        return mapper.map(kommentti, KommenttiDto.class);
     }
 
     private static String clip(String kommentti) {
@@ -112,19 +100,6 @@ public class KommenttiServiceImpl implements KommenttiService {
     }
 
     @Override
-    public KommenttiDto add(@P("k") KommenttiDto kommenttiDto) {
-        Kommentti kommentti = mapper.map(kommenttiDto, Kommentti.class);
-        kommentti.setSisalto(clip(kommenttiDto.getSisalto()));
-        if (kommentti.getParentId() != null) {
-            Kommentti parent = repository.findOne(kommentti.getParentId());
-            kommentti.setYlinId(parent.getYlinId() == null ? parent.getId() : parent.getYlinId());
-        }
-        kommentti = repository.save(kommentti);
-        addName(kommentti);
-        return mapper.map(kommentti, KommenttiDto.class);
-    }
-
-    @Override
     public KommenttiDto update(Long kommenttiId, KommenttiDto kommenttiDto) {
         Kommentti kommentti = repository.findOne(kommenttiId);
         assertExists(kommentti, "Päivitettävää kommenttia ei ole olemassa");
@@ -141,13 +116,4 @@ public class KommenttiServiceImpl implements KommenttiService {
         kommentti.setSisalto(null);
         kommentti.setPoistettu(true);
     }
-
-    @Override
-    public void deleteReally(Long kommenttiId) {
-        Kommentti kommentti = repository.findOne(kommenttiId);
-        assertExists(kommentti, "Poistettavaa kommenttia ei ole olemassa");
-        assertRights(kommentti, Permission.HALLINTA);
-        repository.delete(kommenttiId);
-    }
-
 }

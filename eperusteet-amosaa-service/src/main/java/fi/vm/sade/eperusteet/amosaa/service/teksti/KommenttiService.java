@@ -23,30 +23,21 @@ import java.util.List;
 
 /**
  *
- * @author mikkom
+ * @author isaul
  */
 public interface KommenttiService {
-//    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
-//    public List<KommenttiDto> getAllByOpetussuunnitelma(Long opsId);
+    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
+    List<KommenttiDto> getAllByTekstikappaleviite(@P("opsId") Long opsId, Long tkvId);
 
     @PreAuthorize("isAuthenticated()")
-    public List<KommenttiDto> getAllByParent(Long id);
+    KommenttiDto get(Long kommenttiId);
+
+    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
+    KommenttiDto add(@P("opsId") Long opsId, KommenttiDto kommenttiDto);
 
     @PreAuthorize("isAuthenticated()")
-    public List<KommenttiDto> getAllByYlin(Long id);
+    KommenttiDto update(Long kommenttiId, KommenttiDto kommenttiDto);
 
     @PreAuthorize("isAuthenticated()")
-    public KommenttiDto get(Long kommenttiId);
-
-    @PreAuthorize("hasPermission(#k.opetussuunnitelmaId, 'opetussuunnitelma', 'LUKU')")
-    public KommenttiDto add(@P("k") final KommenttiDto kommenttiDto);
-
-    @PreAuthorize("isAuthenticated()")
-    public KommenttiDto update(Long kommenttiId, final KommenttiDto kommenttiDto);
-
-    @PreAuthorize("isAuthenticated()")
-    public void delete(Long kommenttiId);
-
-    @PreAuthorize("isAuthenticated()")
-    public void deleteReally(Long kommenttiId);
+    void delete(Long kommenttiId);
 }

@@ -16,13 +16,12 @@ CREATE TABLE lukko (
 
 CREATE TABLE kommentti (
     id BIGINT NOT NULL PRIMARY KEY,
+    luotu timestamp without time zone,
     luoja character varying(255),
     muokattu timestamp without time zone,
-    luotu timestamp without time zone,
     muokkaaja character varying(255),
-    nimi character varying(255),
-    parentid BIGINT,
-    ylinid BIGINT,
+    tekstikappaleviite_id BIGINT,
+    parent_id BIGINT,
     poistettu BOOLEAN,
     sisalto character varying(1024)
 );

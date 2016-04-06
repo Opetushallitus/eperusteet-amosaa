@@ -19,3 +19,14 @@ div.tekstikappaleet
     div(ng-if="!$$ekEditing")
       h1(style="margin-bottom: 16px; margin-top: 16px" kaanna="tkv.tekstiKappale.nimi")
       p(style="margin-bottom: 16px" termisto-viitteet="tkv.tekstiKappale.teksti" ng-bind-html="tkv.tekstiKappale.teksti | kaanna | unsafe")
+
+  hr
+
+  div.kommentointi
+    h1(kaanna="keskustelu")
+    a(href="", ng-if="!$$ekEditing")
+      +icon("plus")
+      span=" "
+      span(kaanna="'lisaa-kommentti'")
+    div(ng-if="$$ekEditing")
+      div(style="margin-bottom: 16px" ckeditor slocalized ng-model="tkv.tekstiKappale.kommentti" layout="normal")

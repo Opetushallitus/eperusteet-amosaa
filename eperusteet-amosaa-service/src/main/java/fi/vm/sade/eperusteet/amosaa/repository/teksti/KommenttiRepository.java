@@ -24,13 +24,10 @@ import java.util.List;
 
 /**
  *
- * @author mikkom
+ * @author isaul
  */
 @Repository
 public interface KommenttiRepository extends JpaRepository<Kommentti, Long> {
-//    List<Kommentti> findByOpetussuunnitelmaId(Long opetussuunnitelmaId);
-
+    List<Kommentti> findByTekstikappaleviiteId(Long tekstikappaleviiteId);
     List<Kommentti> findByParentId(Long parentId);
-
-    List<Kommentti> findByYlinId(Long ylinId);
 }

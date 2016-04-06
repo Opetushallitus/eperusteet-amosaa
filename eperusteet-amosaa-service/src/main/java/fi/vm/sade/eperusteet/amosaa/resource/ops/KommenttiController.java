@@ -15,76 +15,56 @@
  */
 package fi.vm.sade.eperusteet.amosaa.resource.ops;
 
-import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.KommenttiDto;
-import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import fi.vm.sade.eperusteet.amosaa.service.teksti.KommenttiService;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import springfox.documentation.annotations.ApiIgnore;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
- * @author mikkom
+ * @author isaul
  */
 @RestController
-@RequestMapping("/kommentit")
-@ApiIgnore
+@RequestMapping("/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tekstit/{tkvId}/kommentit")
+//@ApiIgnore
 public class KommenttiController {
 
     @Autowired
-    private KommenttiService service;
+    private KommenttiService kommenttiService;
 
-    @Autowired
-    KayttajanTietoService kayttajanTietoService;
-
-    private KommenttiDto rikastaKommentti(KommenttiDto kommentti) {
-        if (kommentti != null) {
-            KayttajanTietoDto kayttaja = kayttajanTietoService.hae(kommentti.getMuokkaaja());
-            if (kayttaja != null) {
-                String kutsumanimi = kayttaja.getKutsumanimi();
-                String etunimet = kayttaja.getEtunimet();
-                String etunimi = kutsumanimi != null ? kutsumanimi : etunimet;
-                kommentti.setNimi(etunimi + " " + kayttaja.getSukunimi());
-            }
-        }
-        return kommentti;
+    @RequestMapping(method = GET)
+    public ResponseEntity<List<KommenttiDto>> getAll(@PathVariable final long ktId,
+                                                     @PathVariable final long opsId,
+                                                     @PathVariable final long tkvId) {
+        List<KommenttiDto> t = kommenttiService.getAllByTekstikappaleviite(opsId, tkvId);
+        return new ResponseEntity<>(t, HttpStatus.OK);
     }
 
-    private KommenttiDto rikastaKommentti(KommenttiDto kommentti, Map<String, Future<KayttajanTietoDto>> kayttajat) {
-        if (kayttajat.containsKey(kommentti.getMuokkaaja())) {
-            try {
-                KayttajanTietoDto kayttaja = kayttajat.get(kommentti.getMuokkaaja()).get(5, TimeUnit.SECONDS);
-                if (kayttaja != null) {
-                    String kutsumanimi = kayttaja.getKutsumanimi();
-                    String etunimet = kayttaja.getEtunimet();
-                    String etunimi = kutsumanimi != null ? kutsumanimi : etunimet;
-                    kommentti.setNimi(etunimi + " " + kayttaja.getSukunimi());
-                }
-            } catch (InterruptedException | ExecutionException | TimeoutException ex) {
-                //ei välitetä epäonnistumisesta
-            }
-        }
-        return kommentti;
+    @RequestMapping(method = POST)
+    public ResponseEntity<KommenttiDto> add(@PathVariable final long ktId,
+                                            @PathVariable final long opsId,
+                                            @PathVariable final long tkvId,
+                                            @RequestBody KommenttiDto body) {
+        return new ResponseEntity<>(kommenttiService.add(opsId, body), HttpStatus.CREATED);
     }
 
-    private List<KommenttiDto> rikastaKommentit(List<KommenttiDto> kommentit) {
-
-        Map<String, Future<KayttajanTietoDto>> kayttajat = kommentit.stream()
-            .map(KommenttiDto::getMuokkaaja)
-            .distinct()
-            .collect(Collectors.toMap(s -> s, s -> kayttajanTietoService.haeAsync(s)));
-
-        return kommentit.stream()
-            .map(k -> rikastaKommentti(k, kayttajat))
-            .collect(Collectors.toList());
+    @RequestMapping(value = "/{id}", method = GET)
+    public ResponseEntity<KommenttiDto> get(@PathVariable final long id) {
+        KommenttiDto kommenttiDto = kommenttiService.get(id);
+        return new ResponseEntity<>(kommenttiDto, kommenttiDto == null ? HttpStatus.NOT_FOUND : HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/{id}", method = PUT)
+    public ResponseEntity<KommenttiDto> update(@PathVariable final long id, @RequestBody KommenttiDto body) {
+        return new ResponseEntity<>(kommenttiService.update(id, body), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/{id}", method = DELETE)
+    public void delete(@PathVariable final long id) {
+        kommenttiService.delete(id);
+    }
 }

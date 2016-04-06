@@ -22,20 +22,19 @@ import lombok.Setter;
 import java.util.Date;
 
 /**
- * @author mikkom
+ * @author isaul
  */
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class KommenttiDto {
-    private String nimi;
-    private String sisalto;
-    private String muokkaaja;
-    private Date luotu;
-    private Date muokattu;
     private Long id;
-    private Long ylinId;
+    private Date luotu;
+    private String luoja;
+    private Date muokattu;
+    private String muokkaaja;
+    private Long tekstikappaleviiteId;
     private Long parentId;
-    private Long opetussuunnitelmaId;
     private Boolean poistettu;
+    private String sisalto;
 }
