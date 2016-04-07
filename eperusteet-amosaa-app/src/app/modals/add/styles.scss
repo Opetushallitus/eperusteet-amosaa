@@ -71,24 +71,31 @@ $sisalto-item-link-hover-color: #125572;
     .sisalto-valinta {
         .sisalto-item {
             height: $sisalto-item-height;
-            cursor: pointer;
             border: $sisalto-item-border solid $sisalto-item-color;
             background: white;
+            margin-bottom: 10px;
 
-            &:hover {
-                background: $sisalto-item-background;
-                border: $sisalto-item-border solid $sisalto-item-hover-color;
-
-                .sisalto-text {
-                    a {
-                        color: $sisalto-item-link-hover-color;
-                    }
-                }
-
-                .sisalto-icon {
-                    background: $sisalto-item-hover-color;
+            .sisalto-valinta {
+                margin: 12px;
+                button {
+                    margin-left: 12px;
                 }
             }
+
+            // &:hover {
+            //     background: $sisalto-item-background;
+            //     border: $sisalto-item-border solid $sisalto-item-hover-color;
+
+            //     .sisalto-text {
+            //         a {
+            //             color: $sisalto-item-link-hover-color;
+            //         }
+            //     }
+
+            //     .sisalto-icon {
+            //         background: $sisalto-item-hover-color;
+            //     }
+            // }
 
             .sisalto-text {
                 color: $sisalto-item-text;

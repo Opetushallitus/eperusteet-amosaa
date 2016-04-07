@@ -1,4 +1,14 @@
-div.tekstikappaleet
+mixin valinnat()
+  .tkv-valinnat
+    .tkv-valinta
+      +checkbox("'valmis'", "tkv.valmis")
+    .tkv-valinta(ng-if="ops.tyyppi === 'pohja'")
+      +checkbox("'pakollinen'", "tkv.pakollinen")
+    .tkv-valinta(ng-if="ops.tyyppi === 'pohja'")
+      +checkbox("'liikuttaminen-estetty'", "tkv.liikkumaton")
+  .clearfix
+
+.tekstikappaleet
   .ylapalkki
     +historia("versio",
       "tkv.tekstiKappale.$$nimi",
@@ -11,8 +21,9 @@ div.tekstikappaleet
       button.btn.btn-primary.muokkaa(ng-show="$$ekEditing" ng-click="remove()" kaanna="'poista'")
 
   div
+    +valinnat
     div(ng-if="$$ekEditing")
-      h1(kaanna="'nimi'")
+      h1(kaanna="'nimi'" style="margin-bottom: 16px; margin-top: 16px" )
       input.form-control(style="margin-bottom: 16px; margin-top: 16px" slocalized ng-model="tkv.tekstiKappale.nimi" type="text" required="true")
       h1(kaanna="'sisalto'")
       div(style="margin-bottom: 16px" ckeditor slocalized ng-model="tkv.tekstiKappale.teksti" layout="normal")

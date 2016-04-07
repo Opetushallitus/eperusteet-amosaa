@@ -55,6 +55,11 @@ public class EperusteetServiceMock implements EperusteetService {
     }
 
     @Override
+    public String getPerusteString(String diaarinumero) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
     public PerusteDto getPeruste(String diaariNumero) {
         throw new UnsupportedOperationException("Toteuta");
     }

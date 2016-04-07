@@ -36,6 +36,9 @@ angular.module("app", [
             if (res.status === 403) {
                 NotifikaatioService.varoitus("ei-oikeutta-suorittaa");
             }
+            else if (res.status >= 500) {
+                NotifikaatioService.varoitus("palvelin-virhetilanne");
+            }
             return $q.reject(res);
         }
     })]);
@@ -116,7 +119,7 @@ angular.module("app", [
         }
     });
 })
-.run(($rootScope, $log, $urlMatcherFactory, $state) => {
+.run(($rootScope, $timeout, $log, $urlMatcherFactory, $state) => {
     $rootScope.$on("$stateChangeStart", (event, state, params) => {
         // if (!params.lang || _.isNumber(_.parseInt(params.lang))) {
         //     $state.go("root", { lang: "fi" }, { reload: true });
@@ -127,9 +130,8 @@ angular.module("app", [
         }
     });
     $rootScope.$on("$stateChangeSuccess", (event, state, params) => {
-        if ($state.is("root.**")) {
-            console.log(params);
-            // $state.go("root");
+        if (!_.some(["fi", "sv", "en"], (val) => val === params.lang)) {
+            $timeout(() => $state.go(state.name, { lang: "fi" }, { reload: true }));
         }
     });
 })

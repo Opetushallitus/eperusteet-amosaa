@@ -99,11 +99,19 @@ mixin ekeditor(model, layout)
     p(ng-bind-html=model + "| kaanna")
 
 
+mixin checkbox(name, model)
+  .checkbox
+    label
+      input.checked(type="checkbox" ng-model=model ng-disabled="!$$ekEditing")
+      span(kaanna=name)
+
+
 mixin formfield(label)
   div.row(style="margin-bottom: 20px")
     .col-xs-2: span(kaanna=label)
     .col-xs-10
       block
+
 
 mixin kasitePropDiv(model, index)
   div(ng-show="!$$ekEditing || $$ekEditingIndex !== " + index)

@@ -18,6 +18,7 @@ package fi.vm.sade.eperusteet.amosaa.service.ops.impl;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.revision.Revision;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappaleViite;
@@ -121,6 +122,10 @@ public class TekstiKappaleViiteServiceImpl implements TekstiKappaleViiteService 
             throw new BusinessRuleViolationException("vain-oman-editointi-sallittu");
         }
 
+        if (ops.getTyyppi() != OpsTyyppi.POHJA) {
+            uusi.setLiikkumaton(viite.isLiikkumaton());
+        }
+
         // Nopea ratkaisu sisällön häviämiseen, korjaantuu oikein uuden näkymän avulla
         if (uusi.getTekstiKappale().getTeksti() == null) {
             uusi.getTekstiKappale().setTeksti(mapper.map(viite.getTekstiKappale(), TekstiKappaleDto.class).getTeksti());
@@ -139,6 +144,8 @@ public class TekstiKappaleViiteServiceImpl implements TekstiKappaleViiteService 
     @Transactional(readOnly = false)
     public void removeTekstiKappaleViite(Long ktId, Long opsId, Long viiteId) {
         TekstiKappaleViite viite = findViite(opsId, viiteId);
+        Koulutustoimija koulutustoimija = koulutustoimijaRepository.findOne(ktId);
+        Opetussuunnitelma ops = opsRepository.findOne(opsId);
 
         if (viite.getVanhempi() == null) {
             throw new BusinessRuleViolationException("Sisällön juurielementtiä ei voi poistaa");
@@ -148,13 +155,11 @@ public class TekstiKappaleViiteServiceImpl implements TekstiKappaleViiteService 
             throw new BusinessRuleViolationException("Sisällöllä on lapsia, ei voida poistaa");
         }
 
-        if (viite.isPakollinen()) {
+        if (viite.isPakollinen() && ops.getTyyppi() != OpsTyyppi.POHJA) {
             throw new BusinessRuleViolationException("Pakollista tekstikappaletta ei voi poistaa");
         }
 
 //        repository.lock(viite.getRoot());
-        Koulutustoimija koulutustoimija = koulutustoimijaRepository.findOne(ktId);
-        Opetussuunnitelma ops = opsRepository.findOne(opsId);
         poistetutService.lisaaPoistettu(koulutustoimija, ops, viite);
 
         viite.getVanhempi().getLapset().remove(viite);
@@ -215,6 +220,8 @@ public class TekstiKappaleViiteServiceImpl implements TekstiKappaleViiteService 
         TekstiKappaleViite result = new TekstiKappaleViite();
         result.setTekstiKappale(original.getTekstiKappale());
         result.setOwner(owner);
+        result.setLiikkumaton(original.isLiikkumaton());
+        result.setPakollinen(original.isPakollinen());
         List<TekstiKappaleViite> lapset = original.getLapset();
 
         if (lapset != null) {

@@ -23,18 +23,24 @@ import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.KayttajaoikeusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
+import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.domain.revision.Revision;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappaleViite;
 import fi.vm.sade.eperusteet.amosaa.dto.PoistettuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteBaseDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
 import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaoikeusRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
+import fi.vm.sade.eperusteet.amosaa.repository.peruste.CachedPerusteRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.TekstikappaleviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
+import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.ops.TekstiKappaleViiteService;
@@ -62,6 +68,9 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     private OpetussuunnitelmaRepository repository;
 
     @Autowired
+    private EperusteetService eperusteetService;
+
+    @Autowired
     private KayttajaoikeusRepository kayttajaoikeusRepository;
 
     @Autowired
@@ -72,6 +81,9 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
     @Autowired
     private TekstiKappaleViiteService tkvService;
+
+    @Autowired
+    private CachedPerusteRepository cachedPerusteRepository;
 
     @Override
     public List<OpetussuunnitelmaBaseDto> getOpetussuunnitelmat(Long ktId) {
@@ -100,8 +112,23 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         else {
             switch (opsDto.getTyyppi()) {
                 case OPS:
-                    // FIXME tarkista perusteen löytyminen
+                    PerusteDto peruste = eperusteetService.getPeruste(opsDto.getPerusteDiaarinumero());
+                    if (peruste == null) {
+                        throw new BusinessRuleViolationException("perustetta-ei-loytynyt");
+                    }
 
+                    CachedPeruste cperuste = cachedPerusteRepository.findOneByDiaarinumeroAndLuotu(peruste.getDiaarinumero(), peruste.getGlobalVersion().getAikaleima());
+                    if (cperuste == null) {
+                        cperuste = new CachedPeruste();
+                        cperuste.setPerusteenId(peruste.getId());
+                        cperuste.setNimi(LokalisoituTeksti.of(peruste.getNimi().getTekstit()));
+                        cperuste.setDiaarinumero(peruste.getDiaarinumero());
+                        cperuste.setLuotu(peruste.getGlobalVersion().getAikaleima());
+                        cperuste.setPeruste(eperusteetService.getPerusteData(peruste.getId()));
+                        cperuste = cachedPerusteRepository.save(cperuste);
+                    }
+
+                    ops.setPeruste(cperuste);
                     break;
                 case YHTEINEN:
                     Opetussuunnitelma pohja = repository.findOne(opsDto.getPohja().getIdLong());
@@ -144,6 +171,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     @Override
     public OpetussuunnitelmaDto update(Long ktId, Long opsId, OpetussuunnitelmaDto body) {
         Opetussuunnitelma ops = repository.findOne(opsId);
+        body.setPeruste(mapper.map(ops.getPeruste(), CachedPerusteBaseDto.class));
         body.setId(opsId);
         body.setTila(ops.getTila());
         repository.setRevisioKommentti(body.getKommentti());

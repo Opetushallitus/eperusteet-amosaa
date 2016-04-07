@@ -1,7 +1,7 @@
 div.ops-nakyma
   div.row
     div.col-xs-12
-      div.ylatunniste(class="{{ 'ylatunniste-' + ops.tyyppi }}")
+      div.ylatunniste
         a.pull-left(href="")
           div.muokkaa
             i.fa.fa-pencil
@@ -10,6 +10,10 @@ div.ops-nakyma
           h2
             span
               i.fa.fa-magic
+          div.peruste-nimi(ng-if="ops.tyyppi === 'ops'")
+            p(ng-href="{{ 'https://eperusteet.opintopolku.fi/#/fi/esitys/' + ops.peruste.perusteenId + '/ops/tiedot' }}" kaanna="ops.peruste.nimi")
+          div.peruste-nimi(ng-if="ops.tyyppi === 'pohja'")
+            p(kaanna="'yhteisien-osien-pohja'")
 
         div.painikkeet
           div.keskitetty.pull-right

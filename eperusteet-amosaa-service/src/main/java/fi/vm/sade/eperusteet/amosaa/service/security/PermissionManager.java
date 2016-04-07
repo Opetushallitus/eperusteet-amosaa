@@ -153,6 +153,9 @@ public class PermissionManager {
 
                 // Optiomoi
                 koulutustoimija = koulutustoimijaRepository.findOne((Long)targetId);
+                if (koulutustoimija == null) {
+                    return false;
+                }
                 organisaatioOid = koulutustoimija.getOrganisaatio();
                 break;
             default:

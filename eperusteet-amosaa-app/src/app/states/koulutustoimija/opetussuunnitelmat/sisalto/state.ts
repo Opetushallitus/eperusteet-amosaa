@@ -40,7 +40,7 @@ angular.module("app")
             }
         },
         sivunavi: {
-            controller: ($q, $scope, $state, $timeout, otsikot, tekstit, sisaltoRoot) => {
+            controller: ($q, $scope, $state, $timeout, otsikot, tekstit, sisaltoRoot, ops) => {
                 const updateSivunavi = _.callAndGive(() => {
                     $scope.sivunavi = Tekstikappaleet.teeRakenne(Tekstikappaleet.uniikit(otsikot), sisaltoRoot.id);
                 });
@@ -68,7 +68,7 @@ angular.module("app")
                 };
 
                 $scope.add = () => {
-                    ModalAdd.sisaltoAdder()
+                    ModalAdd.sisaltoAdder(ops.tyyppi === 'ops' && ["tekstikappale", "tutkinnonosa", "tutkinnonosaryhma", "muodostuminen"])
                         .then(uusi => {
                             if (!uusi) {
                                 return;
