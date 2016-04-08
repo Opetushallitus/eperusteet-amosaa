@@ -18,8 +18,11 @@ package fi.vm.sade.eperusteet.amosaa.service.external.impl;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
+import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteInfoDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKaikkiDto;
+import fi.vm.sade.eperusteet.amosaa.repository.peruste.CachedPerusteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.amosaa.service.util.JsonMapper;
@@ -33,6 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -42,12 +46,16 @@ import org.springframework.web.client.RestTemplate;
 @Service
 @Profile(value = "default")
 @SuppressWarnings("TransactionalAnnotations")
+@Transactional
 public class EperusteetServiceImpl implements EperusteetService {
     private static final Logger logger = LoggerFactory.getLogger(EperusteetServiceImpl.class);
 
     @Value("${fi.vm.sade.eperusteet.amosaa.eperusteet-service: ''}")
     private String eperusteetServiceUrl;
-    
+
+    @Autowired
+    CachedPerusteRepository cachedPerusteRepository;
+
     @Autowired
     private JsonMapper jsonMapper;
 
@@ -56,6 +64,18 @@ public class EperusteetServiceImpl implements EperusteetService {
     @Override
     public PerusteDto getPeruste(Long id) {
         throw new UnsupportedOperationException("toteuta");
+    }
+
+    @Override
+    public PerusteKaikkiDto getPerusteSisalto(CachedPeruste cperuste) {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            JsonNode node = mapper.readTree(cperuste.getPeruste());
+            PerusteKaikkiDto peruste = mapper.treeToValue(node, PerusteKaikkiDto.class);
+            return peruste;
+        } catch (IOException ex) {
+            throw new BusinessRuleViolationException("perusteen-parsinta-epaonnistui");
+        }
     }
 
     @Override

@@ -16,17 +16,34 @@
 
 package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
-import lombok.Getter;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonCreator;
 
 /**
  *
- * @author nkala
+ * @author harrik
  */
-@Getter
-@Setter
-public class CachedPerusteBaseDto {
-    private Long id;
-    private LokalisoituTekstiDto nimi;
+public enum TutkinnonOsaTyyppi {
+    NORMAALI("normaali"),
+    TUTKE2("tutke2");
+            
+    private final String tyyppi;
+
+    private TutkinnonOsaTyyppi(String tyyppi) {
+        this.tyyppi = tyyppi;
+    }
+
+    @Override
+    public String toString() {
+        return tyyppi;
+    }
+
+    @JsonCreator
+    public static TutkinnonOsaTyyppi of(String tyyppi) {
+        for (TutkinnonOsaTyyppi s : values()) {
+            if (s.tyyppi.equalsIgnoreCase(tyyppi)) {
+                return s;
+            }
+        }
+        throw new IllegalArgumentException(tyyppi + " ei ole kelvollinen tyyppi");
+    }
 }

@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2013 The Finnish Board of Education - Opetushallitus
- * 
+ *
  * This program is free software: Licensed under the EUPL, Version 1.1 or - as
  * soon as they will be approved by the European Commission - subsequent versions
  * of the EUPL (the "Licence");
- * 
+ *
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at: http://ec.europa.eu/idabc/eupl
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
@@ -16,17 +16,35 @@
 
 package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
-import lombok.Getter;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonCreator;
 
 /**
  *
  * @author nkala
  */
-@Getter
-@Setter
-public class CachedPerusteBaseDto {
-    private Long id;
-    private LokalisoituTekstiDto nimi;
+public enum PerusteenOsaTunniste {
+    NORMAALI("normaali"),
+    LAAJAALAINENOSAAMINEN("laajaalainenosaaminen"),
+    RAKENNE("rakenne");
+
+    private final String tunniste;
+
+    private PerusteenOsaTunniste(String tunniste) {
+        this.tunniste = tunniste;
+    }
+
+    @Override
+    public String toString() {
+        return tunniste;
+    }
+
+    @JsonCreator
+    public static PerusteenOsaTunniste of(String tila) {
+        for (PerusteenOsaTunniste s : values()) {
+            if (s.tunniste.equalsIgnoreCase(tila)) {
+                return s;
+            }
+        }
+        throw new IllegalArgumentException(tila + " ei ole kelvollinen tunniste");
+    }
 }

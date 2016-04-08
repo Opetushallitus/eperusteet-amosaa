@@ -68,7 +68,7 @@ angular.module("app")
                 };
 
                 $scope.add = () => {
-                    ModalAdd.sisaltoAdder(ops.tyyppi === 'ops' && ["tekstikappale", "tutkinnonosa", "tutkinnonosaryhma", "muodostuminen"])
+                    ModalAdd.sisaltoAdder(Opetussuunnitelmat.sallitutSisaltoTyypit(ops))
                         .then(uusi => {
                             if (!uusi) {
                                 return;
@@ -84,7 +84,9 @@ angular.module("app")
                                             $timeout(() =>
                                                 $state.go("root.koulutustoimija.opetussuunnitelmat.sisalto.tekstikappale", { tkvId: res.id }));
                                         });
-                                default: {}
+                                default: {
+                                    NotifikaatioService.normaali("Ei toteutettu vielä");
+                                }
                             }
                         });
                 };

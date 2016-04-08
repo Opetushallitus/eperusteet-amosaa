@@ -130,7 +130,6 @@ CREATE TABLE peruste_cache (
     diaarinumero CHARACTER VARYING(255) NOT NULL,
     nimi_id BIGINT NOT NULL REFERENCES lokalisoituteksti(id),
     luotu TIMESTAMP WITHOUT TIME ZONE NOT NULL,
-    perusteenid BIGINT NOT NULL,
     peruste TEXT NOT NULL
 );
 

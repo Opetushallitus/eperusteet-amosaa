@@ -13,20 +13,22 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * European Union Public Licence for more details.
  */
-
 package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
 /**
  *
- * @author nkala
+ * @author jhyoty
  */
 @Getter
 @Setter
-public class CachedPerusteBaseDto {
+public class ArviointiDto {
+
     private Long id;
-    private LokalisoituTekstiDto nimi;
+    private LokalisoituTekstiDto lisatiedot;
+    private List<ArvioinninKohdealueDto> arvioinninKohdealueet;
 }

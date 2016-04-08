@@ -1,3 +1,4 @@
+
 /*
  * Copyright (c) 2013 The Finnish Board of Education - Opetushallitus
  * 
@@ -16,17 +17,36 @@
 
 package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
-import lombok.Getter;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonCreator;
 
 /**
  *
- * @author nkala
+ * @author harrik
  */
-@Getter
-@Setter
-public class CachedPerusteBaseDto {
-    private Long id;
-    private LokalisoituTekstiDto nimi;
+public enum PerusteTila {
+    
+    LUONNOS("luonnos"),
+    VALMIS("valmis"),
+    POISTETTU("poistettu");
+            
+    private final String tila;
+
+    private PerusteTila(String tila) {
+        this.tila = tila;
+    }
+
+    @Override
+    public String toString() {
+        return tila;
+    }
+
+    @JsonCreator
+    public static PerusteTila of(String tila) {
+        for (PerusteTila s : values()) {
+            if (s.tila.equalsIgnoreCase(tila)) {
+                return s;
+            }
+        }
+        throw new IllegalArgumentException(tila + " ei ole kelvollinen tila");
+    }
 }

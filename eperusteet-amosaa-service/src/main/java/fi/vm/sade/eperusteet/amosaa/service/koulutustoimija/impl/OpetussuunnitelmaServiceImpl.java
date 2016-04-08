@@ -31,7 +31,6 @@ import fi.vm.sade.eperusteet.amosaa.dto.PoistettuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
 import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaoikeusRepository;
@@ -120,7 +119,6 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                     CachedPeruste cperuste = cachedPerusteRepository.findOneByDiaarinumeroAndLuotu(peruste.getDiaarinumero(), peruste.getGlobalVersion().getAikaleima());
                     if (cperuste == null) {
                         cperuste = new CachedPeruste();
-                        cperuste.setPerusteenId(peruste.getId());
                         cperuste.setNimi(LokalisoituTeksti.of(peruste.getNimi().getTekstit()));
                         cperuste.setDiaarinumero(peruste.getDiaarinumero());
                         cperuste.setLuotu(peruste.getGlobalVersion().getAikaleima());
@@ -171,7 +169,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     @Override
     public OpetussuunnitelmaDto update(Long ktId, Long opsId, OpetussuunnitelmaDto body) {
         Opetussuunnitelma ops = repository.findOne(opsId);
-        body.setPeruste(mapper.map(ops.getPeruste(), CachedPerusteBaseDto.class));
+//        body.setPeruste(mapper.map(ops.getPeruste(), CachedPerusteBaseDto.class));
         body.setId(opsId);
         body.setTila(ops.getTila());
         repository.setRevisioKommentti(body.getKommentti());

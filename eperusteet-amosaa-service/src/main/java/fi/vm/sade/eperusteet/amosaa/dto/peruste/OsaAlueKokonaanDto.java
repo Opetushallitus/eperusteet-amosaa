@@ -13,22 +13,18 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * European Union Public Licence for more details.
  */
-package fi.vm.sade.eperusteet.amosaa.service.external.impl.perustedto;
+package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
 /**
  *
- * @author jhyoty
+ * @author harrik
  */
 @Getter
 @Setter
-public class TekstiKappaleViiteDto {
-    private Long id;
-    @JsonProperty(value = "perusteenOsa")
-    private TekstiKappaleDto tesktiKappale;
-    private List<TekstiKappaleViiteDto> lapset;
+public class OsaAlueKokonaanDto extends OsaAlueDto {
+    private List<OsaamistavoiteLaajaDto> osaamistavoitteet;
 }

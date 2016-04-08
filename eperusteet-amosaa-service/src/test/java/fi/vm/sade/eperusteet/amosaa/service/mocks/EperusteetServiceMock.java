@@ -15,20 +15,14 @@
  */
 package fi.vm.sade.eperusteet.amosaa.service.mocks;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
+import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteInfoDto;
-import fi.vm.sade.eperusteet.amosaa.resource.config.ReferenceNamingStrategy;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
-import fi.vm.sade.eperusteet.amosaa.service.external.impl.perustedto.EperusteetPerusteDto;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -44,7 +38,11 @@ import org.springframework.stereotype.Service;
 public class EperusteetServiceMock implements EperusteetService {
 
     public static final String DIAARINUMERO = "mock-diaarinumero";
-    private EperusteetPerusteDto perusteDto = null;
+
+    @Override
+    public PerusteKaikkiDto getPerusteSisalto(CachedPeruste cperuste) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
     @Autowired
     private DtoMapper mapper;
@@ -79,20 +77,6 @@ public class EperusteetServiceMock implements EperusteetService {
     @Override
     public JsonNode getTiedotteet(Long jalkeen) {
         return null;
-    }
-
-    public void setPeruste(InputStream is) throws IOException {
-        if (is == null) {
-            perusteDto = null;
-        } else {
-            final ObjectMapper om = new ObjectMapper();
-            om.enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING);
-            om.enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING);
-            om.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-            om.registerModule(new Jdk8Module());
-            om.setPropertyNamingStrategy(new ReferenceNamingStrategy());
-            perusteDto = om.readValue(is, EperusteetPerusteDto.class);
-        }
     }
 
 }

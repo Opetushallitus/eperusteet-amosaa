@@ -16,6 +16,7 @@
 
 package fi.vm.sade.eperusteet.amosaa.domain.peruste;
 
+import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 import java.io.Serializable;
@@ -39,7 +40,7 @@ import lombok.Setter;
  */
 @Entity
 @Table(name = "peruste_cache")
-public class CachedPeruste implements Serializable {
+public class CachedPeruste implements Serializable, ReferenceableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Getter
@@ -56,10 +57,6 @@ public class CachedPeruste implements Serializable {
     @Getter
     @Setter
     private String diaarinumero;
-
-    @Getter
-    @Setter
-    private Long perusteenId;
 
     @Getter
     @Setter
