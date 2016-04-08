@@ -2,8 +2,8 @@ div.ops-nakyma
   div.row
     div.col-xs-12
       div.ylatunniste
-        a.pull-left(href="")
-          div.muokkaa
+        a.pull-left(href="" ng-click="muutaTila()")
+          div.muokkaa(class="{{ 'tilavari-' + ops.tila }}")
             i.fa.fa-pencil
         div.pull-left
           h2(ng-bind="ops.nimi | kaanna")
@@ -11,7 +11,7 @@ div.ops-nakyma
             span
               i.fa.fa-magic
           div.peruste-nimi(ng-if="ops.tyyppi === 'ops'")
-            p(ng-href="{{ 'https://eperusteet.opintopolku.fi/#/fi/esitys/' + ops.peruste.perusteenId + '/ops/tiedot' }}" kaanna="ops.peruste.nimi")
+            p(kaanna="ops.peruste.nimi")
           div.peruste-nimi(ng-if="ops.tyyppi === 'pohja'")
             p(kaanna="'yhteisien-osien-pohja'")
 

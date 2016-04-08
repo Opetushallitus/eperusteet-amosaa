@@ -1,0 +1,54 @@
+$status-color-luonnos: #fbb03b;
+$status-color-kommentointi: #3a8fbe;
+$status-color-valmis: green;
+$status-color-viimeistely: green;
+$status-color-julkaistu: purple;
+$status-color-poistettu: #c44;
+
+.tilavari-luonnos { background-color: $status-color-luonnos; }
+.tilavari-valmis { background-color: $status-color-valmis; }
+.tilavari-julkaistu { background-color: $status-color-julkaistu; }
+.tilavari-poistettu { background-color: $status-color-poistettu; }
+
+.tilat {
+    .nykyinen-tila {
+    }
+    .muut-tilat {
+        .tila {
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            cursor: pointer;
+
+            &:hover {
+                border: 1px solid #eee;
+            }
+
+            .tilakuvake {
+                user-select: none;
+                float: left;
+                height: 48px;
+                width: 48px;
+                margin: 2px;
+                color: #fff;
+
+                i {
+                    font-size: 28px;
+                    position: relative;
+                    top: 10px;
+                    left: 12px;
+                }
+            }
+            .tilakuvaus {
+                position: relative;
+                top: 3px;
+                left: 5px;
+
+                label {
+                }
+
+                p {
+                }
+            }
+        }
+    }
+}

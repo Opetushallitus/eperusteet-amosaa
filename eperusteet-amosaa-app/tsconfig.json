@@ -40,6 +40,7 @@
     "src/app/logic/koulutustoimijat.ts",
     "src/app/misc/filters.ts",
     "src/app/modals/add/add.ts",
+    "src/app/modals/tilat/tilanvaihto.ts",
     "src/app/modals/confirm/confirm.ts",
     "src/app/modals/revisions/revisions.ts",
     "src/app/states/state.ts",

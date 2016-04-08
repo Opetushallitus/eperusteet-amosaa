@@ -238,4 +238,16 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     public Revision getRemoved(Long ktId, Long opsId) {
         return repository.getLatestRevision(opsId);
     }
+
+    @Override
+    public OpetussuunnitelmaBaseDto updateTila(Long ktId, Long opsId, Tila tila) {
+        Opetussuunnitelma ops = repository.findOne(opsId);
+        Koulutustoimija kt = koulutustoimijaRepository.findOne(ktId);
+        Tila nykyinen = ops.getTila();
+        if (nykyinen.mahdollisetSiirtymat().contains(tila)) {
+            ops.setTila(tila);
+        }
+        return mapper.map(ops, OpetussuunnitelmaBaseDto.class);
+    }
+
 }

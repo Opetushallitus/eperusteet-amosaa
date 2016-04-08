@@ -49,8 +49,6 @@ div.row
               input.styled(type="checkbox" checked="true" ng-model="tiedote.julkinen")
               label
                 strong(kaanna="julkinen")
-            // div.pull-right
-            //   button.btn.btn-danger(kaanna="'poista'" ng-click="remove(tiedote)")
 
           .expand(ng-if="!$$ekEditing || $$ekEditingIndex != $index" ng-click="tiedote.$$isOpen = !tiedote.$$isOpen")
             a(href="")

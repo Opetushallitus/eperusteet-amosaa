@@ -45,6 +45,10 @@ angular.module("app")
                     $scope.sivunavi = Tekstikappaleet.teeRakenne(Tekstikappaleet.uniikit(otsikot), sisaltoRoot.id);
                 });
 
+                // $scope.$on("sivunavi:forcedUpdate", () => {
+                //     console.log("Forcing update");
+                // });
+
                 const traverseItems = (item) => {
                     let childsVisible = false;
                     _.each(item.lapset, (item) => {
@@ -84,8 +88,10 @@ angular.module("app")
                                             $timeout(() =>
                                                 $state.go("root.koulutustoimija.opetussuunnitelmat.sisalto.tekstikappale", { tkvId: res.id }));
                                         });
+                                    break;
                                 default: {
                                     NotifikaatioService.normaali("Ei toteutettu vielä");
+                                    break;
                                 }
                             }
                         });

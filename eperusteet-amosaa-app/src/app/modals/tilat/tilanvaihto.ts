@@ -8,17 +8,21 @@ namespace TilanvaihtoModal {
         luonnos: ["valmis", "poistettu"],
         valmis: ["luonnos", "julkaistu", "poistettu"],
         poistettu: ["luonnos"],
-        julkaistu: ["luonnos"]
+        julkaistu: ["luonnos", "poistettu"]
     });
 
-    export const pohja = (ops) => i.$uibModal.open({
+    export const vaihdaTila = (ops) => i.$uibModal.open({
             resolve: { },
             templateUrl: "modals/tilat/tilanvaihto.jade",
             controller: ($scope, $state, $uibModalInstance) => {
                 $scope.ok = $uibModalInstance.close;
                 $scope.peruuta = $uibModalInstance.dismiss;
-                $scope.sallitutTilat();
+                $scope.sallitutTilat = sallitutTilat();
                 $scope.ops = ops;
+                $scope.valitseTila = (tila) => {
+                    ops.customPOST(null, "tila/" + tila)
+                        .then($uibModalInstance.close);
+                };
             }
         }).result;
 }

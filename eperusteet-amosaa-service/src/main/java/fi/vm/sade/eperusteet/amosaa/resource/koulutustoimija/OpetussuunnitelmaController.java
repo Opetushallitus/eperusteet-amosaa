@@ -16,6 +16,7 @@
 
 package fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija;
 
+import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.revision.Revision;
 import fi.vm.sade.eperusteet.amosaa.dto.PoistettuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
@@ -127,6 +128,14 @@ public class OpetussuunnitelmaController {
             @PathVariable final Long opsId,
             @PathVariable final Integer revId) {
         return service.getData(ktId, opsId, revId);
+    }
+
+    @RequestMapping(value = "/{opsId}/tila/{tila}", method = RequestMethod.POST)
+    public OpetussuunnitelmaBaseDto updateTila(
+            @PathVariable final Long ktId,
+            @PathVariable final Long opsId,
+            @PathVariable final Tila tila) {
+        return service.updateTila(ktId, opsId, tila);
     }
 
 //    @RequestMapping(value = "/tekstit/{viiteId}/versiot", method = GET)
