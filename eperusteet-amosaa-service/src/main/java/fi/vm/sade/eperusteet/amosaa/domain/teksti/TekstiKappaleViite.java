@@ -18,6 +18,8 @@ package fi.vm.sade.eperusteet.amosaa.domain.teksti;
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Suorituspolku;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Tutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -33,6 +35,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import lombok.Getter;
@@ -86,6 +89,16 @@ public class TekstiKappaleViite implements ReferenceableEntity, Serializable {
     @Getter
     @Setter
     private Opetussuunnitelma owner;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @Getter
+    @Setter
+    private Tutkinnonosa tosa;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @Getter
+    @Setter
+    private Suorituspolku suorituspolku;
 
     @OneToMany(mappedBy = "vanhempi", fetch = FetchType.LAZY)
     @OrderColumn
