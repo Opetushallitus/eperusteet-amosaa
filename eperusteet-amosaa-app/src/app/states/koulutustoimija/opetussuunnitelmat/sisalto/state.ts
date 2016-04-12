@@ -10,7 +10,8 @@ angular.module("app")
                 $scope.startSorting = () => {
                     $scope.rakenne = Tekstikappaleet.teeRakenne(Tekstikappaleet.uniikit(otsikot), sisaltoRoot.id);
                     $scope.sortableOptions = {
-                        // update: (e, ui) => {},
+                        update: (e, ui) => {
+                        },
                         connectWith: ".sisalto-list",
                         handle: ".sisalto-handle",
                         cursorAt: { top: 2, left: 2 },

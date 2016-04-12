@@ -4,9 +4,7 @@ div.sisalto
       div.vasen(ui-view="sivunavi")
       div.col-xs-12.oikea.ui-view
     div.sisalto-sort(ng-if="$$sorting")
-      div.sisalto-list(ui-sortable="sortableOptions" ng-model="rakenne.lapset")
-        div(ng-if="lapsi.id" ng-repeat="lapsi in rakenne.lapset track by lapsi.id")
-          dynamic(template="states/koulutustoimija/opetussuunnitelmat/sisalto/rakenne.jade"
-            ng-model="lapsi"
-            misc="sortableOptions")
-
+      dynamic(template="states/koulutustoimija/opetussuunnitelmat/sisalto/rakenne.jade"
+        ng-model="rakenne"
+        misc="sortableOptions"
+        depth="0")
