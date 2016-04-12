@@ -38,6 +38,16 @@ $fa-font-path: "fonts";
 @import "modules/tiedotteet";
 @import "modules/kasitteet";
 
+@keyframes subtle-transition {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.subtle-transition {
+    animation-duration: 0.5s;
+    animation-name: subtle-transition;
+}
+
 *::-webkit-scrollbar {
     width: 11px;
 }
