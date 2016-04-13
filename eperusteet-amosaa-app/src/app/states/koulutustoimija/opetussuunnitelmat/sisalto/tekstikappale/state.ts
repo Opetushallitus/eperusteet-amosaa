@@ -48,7 +48,7 @@ angular.module("app")
             }
         },
         kommentointi: {
-            controller: ($scope, kommentit, Varmistusdialogi) => {
+            controller: ($rootScope, $scope, kommentit, tekstikappale, Varmistusdialogi) => {
                 $scope.kommentit = _(kommentit)
                     .filter((kommentti: any) => kommentti.parentId === 0)
                     .map((kommentti: any) => {
@@ -61,18 +61,43 @@ angular.module("app")
                     })
                     .value();
 
-                $scope.muokkaaKommenttia = () => {
-
+                $scope.vastaaKommenttiin = (kommentti, parentId) => {
+                    $rootScope.$broadcast("notifyCKEditor");
+                    kommentti.parentId = parentId;
+                    tekstikappale.all("kommentit").post(kommentti)
+                        .then((uusi) => console.log(uusi));
                 };
+
+                $scope.lisaaKommentti = (kommentti) => {
+                    $scope.vastaaKommenttiin(kommentti, 0);
+                };
+
+                $scope.muokkaaKommentti = (kommentti) => {
+                    $rootScope.$broadcast("notifyCKEditor");
+                    kommentti.save()
+                        .then((uusi) => _.merge(kommentti, uusi.plain()));
+                    kommentti.isMuokkaus = !kommentti.isMuokkaus;
+                };
+
+                console.log(_($scope.kommentit)
+                    .find({id: 128})
+                );
+
                 $scope.poistaKommentti = (kommentti) => {
                     Varmistusdialogi.dialogi({
                         otsikko: 'vahvista-poisto',
                         teksti: 'poistetaanko-kommentti',
                         primaryBtn: 'poista',
                         successCb: () => {
-                            kommentti.remove().then(() =>  {
-                                $scope.kommentit = _.without($scope.kommentit, kommentti);
-                            });
+                            kommentti.remove()
+                                .then(() => {
+                                    if (kommentti.parentId == 0) {
+                                        $scope.kommentit = _.without($scope.kommentit, kommentti)
+                                    } else {
+                                        let parentKommentti: any = _($scope.kommentit).find({id: 128});
+                                        parentKommentti.lapset = _.without(parentKommentti.lapset, kommentti);
+                                    }
+                                });
                         }
                     })();
                 };

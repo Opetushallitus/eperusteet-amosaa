@@ -49,7 +49,7 @@ public class Tekstiosa implements Serializable {
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @Getter
     @Setter
-    @ValidHtml(whitelist = ValidHtml.WhitelistType.MINIMAL)
+    @ValidHtml(whitelist = ValidHtml.WhitelistType.NONE)
     private LokalisoituTeksti otsikko;
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.LAZY)
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)

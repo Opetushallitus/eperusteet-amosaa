@@ -47,7 +47,7 @@ public class Koulutustoimija extends AbstractAuditedEntity implements Serializab
     @Setter
     private Long id;
 
-    @ValidHtml(whitelist = ValidHtml.WhitelistType.MINIMAL)
+    @ValidHtml(whitelist = ValidHtml.WhitelistType.NONE)
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @Getter
     @Setter

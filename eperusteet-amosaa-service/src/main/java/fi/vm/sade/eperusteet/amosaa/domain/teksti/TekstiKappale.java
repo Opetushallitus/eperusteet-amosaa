@@ -58,7 +58,7 @@ public class TekstiKappale extends AbstractAuditedEntity
     @Column(updatable = false)
     private UUID tunniste;
 
-    @ValidHtml(whitelist = ValidHtml.WhitelistType.MINIMAL)
+    @ValidHtml(whitelist = ValidHtml.WhitelistType.NONE)
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @Getter

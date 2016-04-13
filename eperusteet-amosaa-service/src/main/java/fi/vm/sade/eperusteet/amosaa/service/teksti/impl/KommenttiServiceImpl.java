@@ -71,22 +71,24 @@ public class KommenttiServiceImpl implements KommenttiService {
     public List<KommenttiDto> getAllByTekstikappaleviite(Long opsId, Long tkvId) {
         List<Kommentti> kommentit = repository.findByTekstikappaleviiteIdAndPoistettuFalseOrderByLuotu(tkvId);
         List<KommenttiDto> kommenttiDtos = mapper.mapAsList(kommentit, KommenttiDto.class);
-        return getNamesForKommentit(kommenttiDtos);
+        return addNameToKommentit(kommenttiDtos);
     }
 
-    private List<KommenttiDto> getNamesForKommentit(List<KommenttiDto> kommentit) {
+    private List<KommenttiDto> addNameToKommentit(List<KommenttiDto> kommentit) {
         return kommentit.stream()
-                .map(kommentti -> {
-                    KayttajanTietoDto kayttaja = kayttajanTietoService.hae(kommentti.getMuokkaaja());
-                    if (kayttaja != null) {
-                        String kutsumanimi = kayttaja.getKutsumanimi();
-                        String etunimet = kayttaja.getEtunimet();
-                        String etunimi = kutsumanimi != null ? kutsumanimi : etunimet;
-                        kommentti.setNimi(etunimi + " " + kayttaja.getSukunimi());
-                    }
-                    return kommentti;
-                })
+                .map(this::addNameToKommentti)
                 .collect(Collectors.toList());
+    }
+
+    private KommenttiDto addNameToKommentti(KommenttiDto kommenttiDto) {
+        KayttajanTietoDto kayttaja = kayttajanTietoService.hae(kommenttiDto.getMuokkaaja());
+        if (kayttaja != null) {
+            String kutsumanimi = kayttaja.getKutsumanimi();
+            String etunimet = kayttaja.getEtunimet();
+            String etunimi = kutsumanimi != null ? kutsumanimi : etunimet;
+            kommenttiDto.setNimi(etunimi + " " + kayttaja.getSukunimi());
+        }
+        return kommenttiDto;
     }
 
     @Override
@@ -103,7 +105,9 @@ public class KommenttiServiceImpl implements KommenttiService {
         kommentti.setSisalto(clip(kommenttiDto.getSisalto()));
         kommentti.setPoistettu(false);
         kommentti = repository.save(kommentti);
-        return mapper.map(kommentti, KommenttiDto.class);
+
+        KommenttiDto uusiDto = mapper.map(repository.save(kommentti), KommenttiDto.class);
+        return addNameToKommentti(uusiDto);
     }
 
     private static String clip(String kommentti) {
@@ -132,7 +136,8 @@ public class KommenttiServiceImpl implements KommenttiService {
         assertExists(kommentti, "Päivitettävää kommenttia ei ole olemassa");
         assertRights(kommentti, opsId, Permission.LUKU);
         kommentti.setSisalto(clip(kommenttiDto.getSisalto()));
-        return mapper.map(repository.save(kommentti), KommenttiDto.class);
+        KommenttiDto uusiDto = mapper.map(repository.save(kommentti), KommenttiDto.class);
+        return addNameToKommentti(uusiDto);
     }
 
     @Override

@@ -24,8 +24,7 @@ import javax.validation.ConstraintValidatorContext;
  *
  * @author mikkom
  */
-public class ValidHtmlValidator extends ValidHtmlValidatorBase implements
-        ConstraintValidator<ValidHtml, LokalisoituTeksti> {
+public class ValidHtmlValidator extends ValidHtmlValidatorBase implements ConstraintValidator<ValidHtml, LokalisoituTeksti> {
 
     @Override
     public void initialize(ValidHtml constraintAnnotation) {

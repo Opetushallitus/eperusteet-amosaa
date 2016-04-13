@@ -23,7 +23,7 @@ angular.module("app")
 })
 .constant("editorLayouts", {
     minimal: [
-        {name: "clipboard", items: ["Cut", "Copy", "-", "Undo", "Redo"]},
+        {name: "clipboard", items: ["Cut", "Copy", "Paste", "-", "Undo", "Redo"]},
         {name: "tools", items: ["About"]}
     ],
     simplified: [
@@ -146,6 +146,11 @@ angular.module("app")
         link: (scope: any, element, attrs, ctrl) => {
             let placeholderText = null;
             let editingEnabled = (scope.editMode || "true") === "true";
+            let inlineEditor: boolean = true;
+
+            if (attrs.classic === "") {
+                inlineEditor = false;
+            }
 
             if (editingEnabled) {
                 element.addClass("edit-mode");
@@ -179,7 +184,7 @@ angular.module("app")
             let ready = false;
             let deferredcall = null;
 
-            editor = CKEDITOR.inline(element[0], {
+            let opts = {
                 toolbar: toolbarLayout,
                 removePlugins: "resize,elementspath,scayt,wsc,image",
                 extraPlugins: "quicktable,epimage,termi",
@@ -196,7 +201,13 @@ angular.module("app")
                 customData: {
                     kaanna: KaannaService.kaanna
                 }
-            });
+            };
+
+            if (inlineEditor) {
+                editor = CKEDITOR.inline(element[0], opts);
+            } else {
+                editor = CKEDITOR.replace(element[0], opts);
+            }
 
             // poistetaan enterin käyttö, jos kyseessä on yhden rivin syöttö
             if (!element.is("div")) {

@@ -266,6 +266,7 @@ $ops-top-vertical-margin: 10px;
                         background-color: #f6f6f6;
                         border-bottom: 1px solid #149ecb;
                         margin-top: 10px;
+                        padding-bottom: 10px;
                         overflow: auto;
 
                         .kommentti-avatar {
@@ -285,18 +286,20 @@ $ops-top-vertical-margin: 10px;
                         }
                         .kommentti-painikkeet {
                             float: right;
-                            margin-top: 5px;
+                            margin-top: 10px;
                             margin-right: 10px;
                             & > a {
                                 margin-left: 10px;
                                 text-decoration: none;
                                 i {
+                                    font-size: 20px;
                                     text-decoration: none;
                                 }
                             }
                         }
                         .kommentti-sisalto {
-                            float: left;
+                            margin-right: 10px;
+                            margin-left: 84px;
 
                             .kommentti-nimi {
                                 font-size: 18px;
@@ -305,11 +308,15 @@ $ops-top-vertical-margin: 10px;
                                 line-height: 1;
                             }
                             .kommentti-teksti {
-                                margin-top: 10px;
+                                button {
+                                    margin-top: 5px;
+                                    margin-left: 5px;
+                                }
+
                             }
                         }
                         .kommentti-footer {
-                            margin-top: 15px;
+                            margin: 10px 0 0 0;
                         }
                     }
                     .kommentti-lapsi {
@@ -320,10 +327,12 @@ $ops-top-vertical-margin: 10px;
                         background-color: #f6f6f6;
                         padding: 10px;
                         display: block;
+
                         button {
                             margin-top: 5px;
                             margin-left: 5px;
                         }
+
                     }
                 }
             }

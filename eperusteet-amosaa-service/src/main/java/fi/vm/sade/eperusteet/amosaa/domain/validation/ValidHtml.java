@@ -32,7 +32,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  */
 @Target({ FIELD, ANNOTATION_TYPE })
 @Retention(RUNTIME)
-@Constraint(validatedBy = {ValidHtmlValidator.class, ValidHtmlCollectionValidator.class})
+@Constraint(validatedBy = {ValidHtmlValidator.class, ValidHtmlCollectionValidator.class, ValidHtmlStringValidator.class})
 @Documented
 public @interface ValidHtml {
 
@@ -44,7 +44,8 @@ public @interface ValidHtml {
     Class<? extends Payload>[] payload() default { };
 
     public enum WhitelistType {
-        MINIMAL(Whitelist.none()),
+        NONE(Whitelist.none()),
+        MINIMAL(Whitelist.none().addTags("p")),
         SIMPLIFIED(Whitelist.none().addTags("p","strong","em","s","ol","li","ul")),
         NORMAL(Whitelist.none()
                         .addTags("p","strong","em","s","ol","li","ul","blockquote","table","caption","tbody","tr","td","hr","pre", "th", "thead", "a", "abbr")

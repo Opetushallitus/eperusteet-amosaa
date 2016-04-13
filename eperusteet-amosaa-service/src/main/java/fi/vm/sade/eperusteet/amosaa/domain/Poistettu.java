@@ -50,7 +50,7 @@ public class Poistettu  implements Serializable, ReferenceableEntity {
     @Setter
     private Long id;
 
-    @ValidHtml(whitelist = ValidHtml.WhitelistType.MINIMAL)
+    @ValidHtml(whitelist = ValidHtml.WhitelistType.NONE)
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @Getter
     @Setter

@@ -31,7 +31,7 @@ angular.module("app")
 
 .filter("nimikirjaimet", () => {
     return (nimi) => {
-        return _.reduce(nimi.split(' '), (memo, osa) => {
+        return _.reduce((nimi || "").split(' '), (memo, osa) => {
             return memo + (osa ? osa[0] : '');
         }, '').toUpperCase();
     }

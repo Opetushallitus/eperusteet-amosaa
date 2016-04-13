@@ -58,7 +58,7 @@ public class Termi implements Serializable {
     @Column(name = "alaviite")
     private Boolean alaviite;
 
-    @ValidHtml(whitelist = ValidHtml.WhitelistType.MINIMAL)
+    @ValidHtml(whitelist = ValidHtml.WhitelistType.NONE)
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     private LokalisoituTeksti termi;

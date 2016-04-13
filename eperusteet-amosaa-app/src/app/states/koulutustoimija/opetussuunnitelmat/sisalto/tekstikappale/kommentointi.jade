@@ -1,26 +1,38 @@
+mixin kirjoita-kommentti(kommentti, tallenna, peruuta)
+  div(ckeditor layout="minimal" ng-model=kommentti + ".sisalto")
+  div.pull-right
+    button.btn.btn-default(kaanna="'peruuta'" ng-click=peruuta)
+    button.btn.btn-primary(kaanna="'tallenna'" ng-click=tallenna)
+
 mixin kommentti(kommentti, ...tyyppi)
   div(class="kommentti " + tyyppi)
     div.kommentti-avatar
       div.nimikirjain-avatar(ng-bind=kommentti + ".nimi | nimikirjaimet")
+
     div.kommentti-painikkeet
-      a(ng-click="")
-        +icon("pencil")
-      a(href="" ng-click="poistaKommentti(" + kommentti + ")")
-        +icon("times")
+      a(href="" ng-click=kommentti + ".isMuokkaus = !" + kommentti + ".isMuokkaus" ng-hide=kommentti + ".isMuokkaus")
+        +icon("pencil-square-o")
+      a(href="" ng-click="poistaKommentti(" + kommentti + ")" ng-hide=kommentti + ".isMuokkaus")
+        +icon("trash-o")
+
     div.kommentti-sisalto
       p.kommentti-nimi(ng-bind=kommentti + ".nimi")
-      p.kommentti-teksti(ng-bind-html=kommentti + ".sisalto")
+
+      div.kommentti-teksti
+        div(ng-if="!" + kommentti + ".isMuokkaus")
+          p(ng-bind-html=kommentti + ".sisalto")
+        div(ng-if=kommentti + ".isMuokkaus")
+          +kirjoita-kommentti(kommentti, "muokkaaKommentti(" + kommentti + ")", kommentti + ".isMuokkaus = !" + kommentti + ".isMuokkaus")
+
       p.kommentti-footer
         strong(kaanna="'muokattu'")
         span=" "
         span(ng-bind=kommentti + ".muokattu | aikaleima")
         span=" "
-        a(ng-click="" kaanna="'vastaa'")
-  div(class="kommentti-vastaa " + tyyppi ng-hide="false")
-    div(ckeditor, ng-model=kommentti + ".sisalto")
-    div.pull-right
-      button.btn.btn-default(kaanna="'peruuta'" ng-click="")
-      button.btn.btn-primary(kaanna="'tallenna'" ng-click=kommentti + ".save()")
+        a(href="" ng-click=kommentti + ".isVastaus = !" + kommentti + ".isVastaus" kaanna="'vastaa'" ng-if=kommentti + " !== lapsi")
+
+  div(class="kommentti-vastaa " + tyyppi ng-if=kommentti + ".isVastaus")
+    +kirjoita-kommentti(kommentti + ".vastaus", "vastaaKommenttiin(" + kommentti + ".vastaus, kommentti.id)", kommentti + ".isVastaus = !" + kommentti + ".isVastaus")
     div.clearfix
 
 div.kommentointi

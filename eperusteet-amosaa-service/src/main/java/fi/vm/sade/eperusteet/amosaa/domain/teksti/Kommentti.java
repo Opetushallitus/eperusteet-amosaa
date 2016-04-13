@@ -20,6 +20,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import fi.vm.sade.eperusteet.amosaa.domain.AbstractAuditedReferenceableEntity;
+import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -51,6 +52,7 @@ public class Kommentti extends AbstractAuditedReferenceableEntity {
     @Setter
     @NotNull
     @Column(length = 1024)
+    @ValidHtml(whitelist = ValidHtml.WhitelistType.MINIMAL)
     @Size(max = 1024, message = "Kommentin maksimipituus on {max} merkkiä")
     private String sisalto;
 }
