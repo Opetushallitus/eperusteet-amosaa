@@ -23,11 +23,12 @@ import com.fasterxml.jackson.annotation.JsonCreator;
  * @author nkala
  */
 public enum SisaltoTyyppi {
-    POHJATK("pohjatk"), // Pohjassa luotu tekstikappale johon liitetty ohjeistus
     TEKSTIKAPPALE("tekstikappale"),
+    TUTKINNONOSAT("tutkinnonosat"),
     TUTKINNONOSA("tutkinnonosa"),
     TOSARYHMA("tutkinnonosaryhma"),
-    MUODOSTUMINEN("muodostuminen");
+    SUORITUSPOLUT("suorituspolut"),
+    SUORITUSPOLKU("suorituspolku");
 
     private final String tyyppi;
 

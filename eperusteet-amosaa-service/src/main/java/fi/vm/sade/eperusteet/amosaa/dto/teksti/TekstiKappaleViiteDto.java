@@ -17,6 +17,7 @@ package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import java.util.List;
 import lombok.Getter;
@@ -36,6 +37,7 @@ public class TekstiKappaleViiteDto {
     private boolean valmis;
     private boolean liikkumaton;
     private Reference owner;
+    private SisaltoTyyppi tyyppi;
     private LokalisoituTekstiDto ohjeteksti;
     private LokalisoituTekstiDto perusteteksti;
 

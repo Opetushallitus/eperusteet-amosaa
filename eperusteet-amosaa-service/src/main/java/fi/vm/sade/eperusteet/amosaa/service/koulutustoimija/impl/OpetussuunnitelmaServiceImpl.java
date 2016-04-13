@@ -16,6 +16,7 @@
 
 package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.impl;
 
+import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.Kayttaja;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.Kayttajaoikeus;
@@ -25,7 +26,9 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.domain.revision.Revision;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappaleViite;
 import fi.vm.sade.eperusteet.amosaa.dto.PoistettuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
@@ -37,6 +40,7 @@ import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaoikeusRepository
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.peruste.CachedPerusteRepository;
+import fi.vm.sade.eperusteet.amosaa.repository.teksti.TekstiKappaleRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.TekstikappaleviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
@@ -76,6 +80,9 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     private KayttajaRepository kayttajaRepository;
 
     @Autowired
+    private TekstiKappaleRepository tkRepository;
+
+    @Autowired
     private TekstikappaleviiteRepository tkvRepository;
 
     @Autowired
@@ -97,6 +104,38 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         return mapper.mapAsList(opetussuunnitelmat, OpetussuunnitelmaBaseDto.class);
     }
 
+    private void alustaOpetussuunnitelma(Opetussuunnitelma ops, TekstiKappaleViite rootTkv) {
+        // Lisätään tutkinnonosille oma sisältöviite
+        {
+            TekstiKappaleViite tosat = new TekstiKappaleViite();
+            TekstiKappale tk = new TekstiKappale();
+            tk.setNimi(LokalisoituTeksti.of(Kieli.FI, "Tutkinnon osat"));
+            tk.setValmis(true);
+            tosat.setTekstiKappale(tkRepository.save(tk));
+            tosat.setLiikkumaton(true);
+            tosat.setVanhempi(rootTkv);
+            tosat.setPakollinen(true);
+            tosat.setTyyppi(SisaltoTyyppi.TUTKINNONOSAT);
+            tosat.setOwner(ops);
+            rootTkv.getLapset().add(tkvRepository.save(tosat));
+        }
+
+        // Lisätään suorituspoluille oma sisältöviite
+        {
+            TekstiKappaleViite suorituspolut = new TekstiKappaleViite();
+            TekstiKappale tk = new TekstiKappale();
+            tk.setNimi(LokalisoituTeksti.of(Kieli.FI, "Suorituspolut"));
+            tk.setValmis(true);
+            suorituspolut.setTekstiKappale(tkRepository.save(tk));
+            suorituspolut.setPakollinen(true);
+            suorituspolut.setTyyppi(SisaltoTyyppi.SUORITUSPOLUT);
+            suorituspolut.setOwner(ops);
+            suorituspolut.setLiikkumaton(true);
+            suorituspolut.setVanhempi(rootTkv);
+            rootTkv.getLapset().add(tkvRepository.save(suorituspolut));
+        }
+    }
+
     @Override
     public OpetussuunnitelmaBaseDto addOpetussuunnitelma(Long ktId, OpetussuunnitelmaDto opsDto) {
         Koulutustoimija kt = koulutustoimijaRepository.findOne(ktId);
@@ -104,6 +143,13 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         ops.setKoulutustoimija(kt);
         ops.setTila(Tila.LUONNOS);
         ops = repository.save(ops);
+
+        TekstiKappaleViite rootTkv = null;
+        if (opsDto.getTyyppi() != OpsTyyppi.YHTEINEN) {
+            rootTkv = new TekstiKappaleViite();
+            rootTkv.setOwner(ops);
+            rootTkv = tkvRepository.save(rootTkv);
+        }
 
         if (kt.isOph()) {
             opsDto.setTyyppi(OpsTyyppi.POHJA);
@@ -125,8 +171,8 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                         cperuste.setPeruste(eperusteetService.getPerusteData(peruste.getId()));
                         cperuste = cachedPerusteRepository.save(cperuste);
                     }
-
                     ops.setPeruste(cperuste);
+                    alustaOpetussuunnitelma(ops, rootTkv);
                     break;
                 case YHTEINEN:
                     Opetussuunnitelma pohja = repository.findOne(opsDto.getPohja().getIdLong());
@@ -144,12 +190,6 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                 default:
                     throw new BusinessRuleViolationException("opstyypille-ei-toteutusta");
             }
-        }
-
-        if (opsDto.getTyyppi() != OpsTyyppi.YHTEINEN) {
-            TekstiKappaleViite tkv = new TekstiKappaleViite();
-            tkv.setOwner(ops);
-            tkvRepository.save(tkv);
         }
         return mapper.map(ops, OpetussuunnitelmaBaseDto.class);
     }
