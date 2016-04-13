@@ -34,7 +34,10 @@ public class TekstiKappaleViiteDto {
     private TekstiKappaleDto tekstiKappale;
     private boolean pakollinen;
     private boolean valmis;
+    private boolean liikkumaton;
     private Reference owner;
+    private LokalisoituTekstiDto ohjeteksti;
+    private LokalisoituTekstiDto perusteteksti;
 
     @JsonProperty("_tekstiKappale")
     private Reference tekstiKappaleRef;

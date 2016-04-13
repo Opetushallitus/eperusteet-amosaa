@@ -124,6 +124,14 @@ CREATE TABLE tekstiosa_aud (
     PRIMARY KEY(id, rev)
 );
 
+CREATE TABLE peruste_cache (
+    id BIGINT NOT NULL PRIMARY KEY,
+    diaarinumero CHARACTER VARYING(255) NOT NULL,
+    nimi_id BIGINT NOT NULL REFERENCES lokalisoituteksti(id),
+    luotu TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+    peruste TEXT NOT NULL
+);
+
 CREATE TABLE koulutustoimija (
     id BIGINT NOT NULL PRIMARY KEY,
     organisaatio VARCHAR(255) UNIQUE NOT NULL CHECK (organisaatio <> ''),
@@ -157,7 +165,8 @@ CREATE TABLE opetussuunnitelma (
     esikatseltavissa BOOLEAN,
     paatospaivamaara TIMESTAMP WITHOUT TIME ZONE,
     pohja_id BIGINT REFERENCES opetussuunnitelma(id),
-    peruste CHARACTER VARYING(255),
+    perustediaarinumero CHARACTER VARYING(255),
+    peruste_id BIGINT REFERENCES peruste_cache(id),
     luoja CHARACTER VARYING(255),
     paatosnumero CHARACTER VARYING(255) UNIQUE,
     hyvaksyja CHARACTER VARYING(255),
@@ -166,10 +175,10 @@ CREATE TABLE opetussuunnitelma (
     muokattu TIMESTAMP WITHOUT TIME ZONE,
     muokkaaja CHARACTER VARYING(255),
     tila CHARACTER VARYING(255) NOT NULL,
-    tyyppi CHARACTER VARYING(255) NOT NULL,
-    CHECK ((tyyppi = 'OPS' AND peruste IS NOT NULL)
-        OR (tyyppi = 'YHTEINEN' AND pohja_id IS NOT NULL)
-        OR (tyyppi = 'KOOSTE' OR tyyppi = 'POHJA'))
+    tyyppi CHARACTER VARYING(255) NOT NULL
+--     CHECK ((tyyppi = 'OPS' AND peruste_id IS NOT NULL)
+--         OR (tyyppi = 'YHTEINEN' AND pohja_id IS NOT NULL)
+--         OR (tyyppi = 'KOOSTE' OR tyyppi = 'POHJA'))
 );
 
 CREATE TABLE opetussuunnitelma_aud (
@@ -181,7 +190,8 @@ CREATE TABLE opetussuunnitelma_aud (
     esikatseltavissa BOOLEAN,
     paatospaivamaara TIMESTAMP WITHOUT TIME ZONE,
     pohja_id BIGINT REFERENCES opetussuunnitelma(id),
-    peruste CHARACTER VARYING(255),
+    perustediaarinumero CHARACTER VARYING(255),
+    peruste_id BIGINT REFERENCES peruste_cache(id),
     paatosnumero CHARACTER VARYING(255),
     hyvaksyja CHARACTER VARYING(255),
     voimaantulo TIMESTAMP WITHOUT TIME ZONE,
@@ -209,14 +219,95 @@ CREATE TABLE opetussuunnitelma_julkaisukielet_aud (
     revend INTEGER
 );
 
+-- Perustepalvelun tutkinnon osa ilman yhteisiä ominaisuuksia
+CREATE TABLE omatutkinnonosa (
+    id BIGINT NOT NULL PRIMARY KEY,
+    luoja character varying(255),
+    luotu timestamp without time zone,
+    muokattu timestamp without time zone,
+    muokkaaja character varying(255)
+);
+
+CREATE TABLE omatutkinnonosa_aud (
+    id BIGINT NOT NULL,
+    rev INTEGER NOT NULL,
+    revtype SMALLINT,
+    revend INTEGER,
+    luoja character varying(255),
+    luotu timestamp without time zone,
+    muokattu timestamp without time zone,
+    muokkaaja character varying(255),
+    PRIMARY KEY (id, rev)
+);
+
+CREATE TABLE suorituspolku (
+    id BIGINT NOT NULL PRIMARY KEY,
+    luoja character varying(255),
+    luotu timestamp without time zone,
+    muokattu timestamp without time zone,
+    muokkaaja character varying(255)
+);
+
+CREATE TABLE suorituspolku_aud (
+    id BIGINT NOT NULL,
+    rev INTEGER NOT NULL,
+    revtype SMALLINT,
+    revend INTEGER,
+    luoja character varying(255),
+    luotu timestamp without time zone,
+    muokattu timestamp without time zone,
+    muokkaaja character varying(255),
+    PRIMARY KEY (id, rev)
+);
+
+CREATE TABLE tutkinnonosa (
+    id BIGINT NOT NULL PRIMARY KEY,
+    luoja character varying(255),
+    luotu timestamp without time zone,
+    muokattu timestamp without time zone,
+    muokkaaja character varying(255),
+    tyyppi CHARACTER VARYING(255) NOT NULL,
+    -- Perusteesta:
+    perusteentutkinnonosa BIGINT,
+    -- Oma ja sisäinen:
+    omatutkinnonosa_id BIGINT REFERENCES omatutkinnonosa(id)
+    -- Vieras:
+        -- Tunniste/URL toiseen osaan metatiedoilla
+);
+
+CREATE TABLE tutkinnonosa_aud (
+    id BIGINT NOT NULL,
+    rev INTEGER NOT NULL,
+    revtype SMALLINT,
+    revend INTEGER,
+    luoja character varying(255),
+    luotu timestamp without time zone,
+    muokattu timestamp without time zone,
+    muokkaaja character varying(255),
+    tyyppi CHARACTER VARYING(255) NOT NULL,
+    perusteentutkinnonosa BIGINT,
+    omatutkinnonosa_id BIGINT REFERENCES omatutkinnonosa(id),
+    PRIMARY KEY (id, rev)
+);
+
 CREATE TABLE tekstikappaleviite (
     id BIGINT NOT NULL PRIMARY KEY,
-    tekstikappale_id BIGINT REFERENCES tekstikappale(id),
     owner_id BIGINT NOT NULL REFERENCES opetussuunnitelma(id),
+    tekstikappale_id BIGINT REFERENCES tekstikappale(id),
     vanhempi_id BIGINT,
     lapset_order INTEGER,
     pakollinen BOOLEAN,
-    valmis BOOLEAN
+    liikkumaton BOOLEAN,
+    valmis BOOLEAN,
+
+    tyyppi CHARACTER VARYING(255) NOT NULL,
+    -- Ohje:
+    ohjeteksti_id BIGINT REFERENCES lokalisoituteksti(id),
+    perusteteksti_id BIGINT REFERENCES lokalisoituteksti(id),
+    -- Suorituspolku:
+    suorituspolku_id BIGINT REFERENCES suorituspolku(id),
+    -- Tutkinnon osa:
+    tosa_id BIGINT REFERENCES tutkinnonosa(id)
 );
 
 CREATE TABLE tekstikappaleviite_aud (
@@ -227,8 +318,14 @@ CREATE TABLE tekstikappaleviite_aud (
     tekstikappale_id BIGINT,
     vanhempi_id BIGINT,
     pakollinen BOOLEAN,
+    liikkumaton BOOLEAN,
+    tyyppi CHARACTER VARYING(255) NOT NULL,
+    ohjeteksti_id BIGINT REFERENCES lokalisoituteksti(id),
+    perusteteksti_id BIGINT REFERENCES lokalisoituteksti(id),
     owner_id BIGINT,
     valmis BOOLEAN,
+    suorituspolku_id BIGINT,
+    tosa_id BIGINT,
     PRIMARY KEY (id, rev)
 );
 

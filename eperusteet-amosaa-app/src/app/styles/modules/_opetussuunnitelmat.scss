@@ -8,30 +8,14 @@ $ops-valikko-min-height: 600px;
 $ops-top-vertical-margin: 10px;
 
 .ops-nakyma {
-    .ylatunniste-yhteinen {
-        background-color: #dbf4ff; // FIXME
-    }
-
-    .ylatunniste-kooste {
-        background-color: #ddfff2; // FIXME
-    }
-
-    .ylatunniste-pohja {
-        background-color: #fff6e8; // FIXME
-    }
-
-    .ylatunniste-ops {
-        background-color: #f3fafd; // FIXME
-    }
-
     .ylatunniste {
+        background-color: #f3fafd; // FIXME
         height: $ops-ylatunniste-height;
         padding: $ops-ylatunniste-padding;
 
         .muokkaa {
             width: $ops-muokkaa-height;
             height: $ops-muokkaa-height;
-            background-color: #fcae27;
 
             i {
                 width: $ops-muokkaa-height;
@@ -56,6 +40,16 @@ $ops-top-vertical-margin: 10px;
                 i:hover {
                     color: #1982aa;
                 }
+            }
+        }
+
+        .peruste-nimi {
+            position: relative;
+            top: 8px;
+            margin: 0 0 0 20px;
+
+            p {
+                color: #999;
             }
         }
 
@@ -217,6 +211,18 @@ $ops-top-vertical-margin: 10px;
             }
 
             .tekstikappaleet {
+                .perusteteksti {
+                    background-color: #efeff9;
+                    padding: 5px 5px 2px 5px;
+                    margin-bottom: 15px;
+                }
+
+                .ohjeteksti {
+                    background-color: #e2fff0;
+                    padding: 5px 5px 2px 5px;
+                    margin-bottom: 5px;
+                }
+
                 h2, h3, h4, h5, h6 {
                     padding-left: 30px;
                     margin-top: 10px;
@@ -229,6 +235,20 @@ $ops-top-vertical-margin: 10px;
                             text-decoration: none;
                             color: #a1cbdc;
                         }
+                    }
+
+                }
+                .tkv-valinnat {
+                    float: right;
+                    position: relative;
+                    top: 10px;
+                    margin: 0;
+                    padding: 0;
+                    height: 0;
+
+                    .tkv-valinta {
+                        float: left;
+                        margin-right: 26px;
                     }
                 }
                 .tekstikappale {

@@ -17,20 +17,27 @@ package fi.vm.sade.eperusteet.amosaa.service.external;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
+import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteInfoDto;
-
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKaikkiDto;
 import java.util.List;
 import java.util.Set;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Service;
 
 /**
  *
  * @author nkala
  */
+@Service
+@PreAuthorize("permitAll()")
 public interface EperusteetService {
     PerusteDto getPeruste(Long id);
     PerusteDto getPeruste(String diaariNumero);
+    String getPerusteData(Long id);
     List<PerusteInfoDto> findPerusteet();
     List<PerusteInfoDto> findPerusteet(Set<KoulutusTyyppi> tyypit);
     JsonNode getTiedotteet(Long jalkeen);
+    PerusteKaikkiDto getPerusteSisalto(CachedPeruste cacheId);
 }

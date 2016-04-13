@@ -41,5 +41,5 @@ public class OpetussuunnitelmaBaseDto {
     private Reference pohja;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String peruste;
+    private String perusteDiaarinumero;
 }

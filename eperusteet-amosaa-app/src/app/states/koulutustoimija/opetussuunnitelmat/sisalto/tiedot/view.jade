@@ -1,4 +1,4 @@
-.tiedot
+.tiedot.subtle-transition
   +historia("versio",
     "uusin.$$nimi",
     "uusin.date",
@@ -16,15 +16,16 @@
       +formfield("'tiivistelma'")
         +ekeditor("ops.kuvaus", "simplified")
 
-      +formfield("'paatosnumero'")
-        +ekstring("ops.paatosnumero")
+      span(ng-show="ops.tyyppi !== 'pohja'")
+        +formfield("'paatosnumero'")
+          +ekstring("ops.paatosnumero")
 
-      +formfield("'hyvaksyja'")
-        +ekstring("ops.hyvaksyja")
+        +formfield("'hyvaksyja'")
+          +ekstring("ops.hyvaksyja")
 
-      +formfield("'paatospvm'")
-        +ekdate("ops.paatospaivamaara", "'paatospvm'")
+        +formfield("'paatospvm'")
+          +ekdate("ops.paatospaivamaara", "'paatospvm'")
 
-      +formfield("'voimaantulopvm'")
-        +ekdate("ops.voimaantulo", "'voimaantulopvm'")
+        +formfield("'voimaantulopvm'")
+          +ekdate("ops.voimaantulo", "'voimaantulopvm'")
 

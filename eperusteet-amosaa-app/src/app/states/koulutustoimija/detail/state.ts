@@ -6,7 +6,11 @@ angular.module("app")
         tiedotteet: (koulutustoimija) => koulutustoimija.all("tiedotteet").getList(),
         opsSaver: ($state, opetussuunnitelmat) => (uusiOps) => uusiOps && opetussuunnitelmat
             .post(uusiOps)
-            .then((res) => $state.go("root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot", { opsId: res.id }))
+            .then((res) => $state.go("root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot", {
+                opsId: res.id
+            }, {
+                reload: true // Reloads koulutustoimijainfo and user permissions
+            }))
     },
     views: {
         "": {

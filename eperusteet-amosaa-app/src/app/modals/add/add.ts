@@ -64,7 +64,7 @@ namespace ModalAdd {
                 $scope.valitsePeruste = (peruste) => {
                     $scope.input = "";
                     $scope.peruste = peruste;
-                    $scope.ops.peruste = peruste.diaarinumero;
+                    $scope.ops.perusteDiaarinumero = peruste.diaarinumero;
                 }
             }
         }).result;

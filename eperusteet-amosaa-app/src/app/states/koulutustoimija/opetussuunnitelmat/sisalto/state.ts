@@ -10,7 +10,8 @@ angular.module("app")
                 $scope.startSorting = () => {
                     $scope.rakenne = Tekstikappaleet.teeRakenne(Tekstikappaleet.uniikit(otsikot), sisaltoRoot.id);
                     $scope.sortableOptions = {
-                        // update: (e, ui) => {},
+                        update: (e, ui) => {
+                        },
                         connectWith: ".sisalto-list",
                         handle: ".sisalto-handle",
                         cursorAt: { top: 2, left: 2 },
@@ -40,10 +41,14 @@ angular.module("app")
             }
         },
         sivunavi: {
-            controller: ($q, $scope, $state, $timeout, otsikot, tekstit, sisaltoRoot) => {
+            controller: ($q, $scope, $state, $timeout, otsikot, tekstit, sisaltoRoot, ops) => {
                 const updateSivunavi = _.callAndGive(() => {
                     $scope.sivunavi = Tekstikappaleet.teeRakenne(Tekstikappaleet.uniikit(otsikot), sisaltoRoot.id);
                 });
+
+                // $scope.$on("sivunavi:forcedUpdate", () => {
+                //     console.log("Forcing update");
+                // });
 
                 const traverseItems = (item) => {
                     let childsVisible = false;
@@ -68,7 +73,7 @@ angular.module("app")
                 };
 
                 $scope.add = () => {
-                    ModalAdd.sisaltoAdder()
+                    ModalAdd.sisaltoAdder(Opetussuunnitelmat.sallitutSisaltoTyypit(ops))
                         .then(uusi => {
                             if (!uusi) {
                                 return;
@@ -84,7 +89,11 @@ angular.module("app")
                                             $timeout(() =>
                                                 $state.go("root.koulutustoimija.opetussuunnitelmat.sisalto.tekstikappale", { tkvId: res.id }));
                                         });
-                                default: {}
+                                    break;
+                                default: {
+                                    NotifikaatioService.normaali("Ei toteutettu vielä");
+                                    break;
+                                }
                             }
                         });
                 };

@@ -13,6 +13,8 @@ angular.module("app")
         "": {
             controller: ($scope, ops) => {
                 $scope.ops = ops;
+                $scope.muutaTila = () => TilanvaihtoModal.vaihdaTila(ops)
+                        .then(paivitetty => _.merge(ops, paivitetty.plain()));
             }
         }
     }

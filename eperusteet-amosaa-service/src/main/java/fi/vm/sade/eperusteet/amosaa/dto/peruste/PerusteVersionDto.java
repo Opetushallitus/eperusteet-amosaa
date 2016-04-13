@@ -14,7 +14,7 @@
  *  European Union Public Licence for more details.
  */
 
-package fi.vm.sade.eperusteet.amosaa.service.external.impl.perustedto;
+package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -23,8 +23,8 @@ import java.util.Date;
 
 /**
  * User: tommiratamaa
- * Date: 16.11.2015
- * Time: 14.58
+ * Date: 12.11.2015
+ * Time: 20.04
  */
 @Getter
 @Setter

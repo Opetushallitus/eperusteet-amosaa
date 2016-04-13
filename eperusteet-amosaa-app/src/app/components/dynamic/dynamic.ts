@@ -12,10 +12,12 @@ module DynamicImpl {
                 template: "@",
                 ngModel: "=",
                 misc: "=",
+                depth: "="
             },
             controller: controller,
             link: (scope, el) => {
                 const renderer = () => el.replaceWith($compile($templateCache.get(scope.template))(scope));
+                renderer();
                 if (scope.ngModel) {
                     // Give angular a break with big trees
                     ++renderAmount % 40 === 0

@@ -7,4 +7,13 @@ module Opetussuunnitelmat {
             $$url: urlGenerator(p.id)
         }))
         .value();
+
+    export const sallitutSisaltoTyypit = (ops) => {
+        if (ops.tyyppi === "ops" || ops.tyyppi === "kooste") {
+            return ["tekstikappale", "tutkinnonosa", "tutkinnonosaryhma", "muodostuminen"];
+        }
+        else {
+            return ["tekstikappale"];
+        }
+    };
 }

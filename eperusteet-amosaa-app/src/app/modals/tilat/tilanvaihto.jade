@@ -1,0 +1,26 @@
+mixin tilalaatikko(tila, kuvake)
+  div(ng-if="tila === '" + tila + "'" ng-click="valitseTila(tila)")
+    div.tilakuvake(class="tilavari-" + tila)
+      i.fa.fa-pencil
+    div.tilakuvaus
+      label(kaanna="'tila-" + tila + "'")
+      p(kaanna="'tilakuvaus-" + tila + "'")
+
+
+div.modal-header
+  h2(kaanna="'vaihda-tilaa'")
+
+div.modal-body
+  div.tilat
+    div.nykyinen-tila
+    div.muut-tilat
+      .clearfix
+      div.tila(ng-repeat="tila in sallitutTilat[ops.tila]")
+        +tilalaatikko("luonnos", "pencil")
+        +tilalaatikko("valmis", "pencil")
+        +tilalaatikko("julkaistu", "pencil")
+        +tilalaatikko("poistettu", "pencil")
+
+div.modal-footer
+  button.btn.btn-default(ng-click="peruuta()")
+    span(kaanna="'peruuta'")

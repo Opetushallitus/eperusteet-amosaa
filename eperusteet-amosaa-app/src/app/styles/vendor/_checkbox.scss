@@ -33,8 +33,6 @@ $check-icon: $fa-var-check !default;
   }
 }
 
-
-
 .checkbox{
   padding-left: 20px;
 
@@ -44,19 +42,19 @@ $check-icon: $fa-var-check !default;
     position: relative;
     padding-left: 5px;
 
-    &::before{
-      content: "";
-      display: inline-block;
-      position: absolute;
-      width: 17px;
-      height: 17px;
-      left: 0;
-      margin-left: -20px;
-      border: 1px solid $input-border;
-      border-radius: 3px;
-      background-color: #fff;
-      @include transition(border 0.15s ease-in-out, color 0.15s ease-in-out);
-    }
+    // &::before{
+    //   content: "";
+    //   display: inline-block;
+    //   position: absolute;
+    //   width: 17px;
+    //   height: 17px;
+    //   left: 0;
+    //   margin-left: -20px;
+    //   border: 1px solid $input-border;
+    //   border-radius: 3px;
+    //   background-color: #fff;
+    //   @include transition(border 0.15s ease-in-out, color 0.15s ease-in-out);
+    // }
 
     &::after{
       display: inline-block;
@@ -73,41 +71,46 @@ $check-icon: $fa-var-check !default;
     }
   }
 
-  input[type="checkbox"],
-  input[type="radio"] {
-    opacity: 0;
-    z-index: 1;
+  // input[type="checkbox"],
+  // input[type="radio"] {
+  //   opacity: 0;
+  //   z-index: 1;
 
-    &:focus + label::before{
-      @include tab-focus();
-    }
+  //   &:focus + label::before{
+  //     @include tab-focus();
+  //   }
 
-    &:checked + label::after{
-      font-family: $font-family-icon;
-      content: $check-icon;
-    }
+  //   &:checked {
+  //     font-family: $font-family-icon;
+  //     content: "\f00c";
+  //   }
 
-    &:indeterminate + label::after{
-      display: block;
-      content: "";
-      width: 10px;
-      height: 3px;
-      background-color: #555555;
-      border-radius: 2px;
-      margin-left: -16.5px;
-      margin-top: 7px;
-    }
+  //   &:checked + label::after{
+  //     font-family: $font-family-icon;
+  //     content: "\f00c";
+  //   }
 
-    &:disabled + label{
-      opacity: 0.65;
+  //   &:indeterminate + label::after{
+  //     display: block;
+  //     content: "";
+  //     width: 10px;
+  //     height: 3px;
+  //     background-color: #555555;
+  //     border-radius: 2px;
+  //     margin-left: -16.5px;
+  //     margin-top: 7px;
+  //   }
 
-      &::before{
-        background-color: $input-bg-disabled;
-        cursor: not-allowed;
-      }
-    }
+  //   &:disabled + label{
+  //     opacity: 0.65;
 
-  }
+  //     &::before{
+  //       background-color: $input-bg-disabled;
+  //       cursor: not-allowed;
+  //     }
+  //   }
+
+  // }
 
   &.checkbox-circle label::before{
     border-radius: 50%;
