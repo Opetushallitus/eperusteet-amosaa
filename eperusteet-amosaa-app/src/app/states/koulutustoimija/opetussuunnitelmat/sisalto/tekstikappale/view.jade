@@ -37,11 +37,11 @@ mixin teksti(kentta)
       div(style="margin-bottom: 16px" ckeditor slocalized ng-model="tkv.tekstiKappale.teksti" layout="normal")
     div(ng-if="!$$ekEditing")
       h1(style="margin-bottom: 16px; margin-top: 16px" kaanna="tkv.tekstiKappale.nimi")
-      div.ohjeteksti
+      div.ohjeteksti(ng-if="tkv.ohjeteksti")
         a(href="" ng-click="$$showOhjeteksti = !$$showOhjeteksti" kaanna="'toggle-ohjeteksti'")
         div(style="margin-top: 10px;" ng-show="$$showOhjeteksti")
           +teksti("tkv.ohjeteksti")
-      div.perusteteksti
+      div.perusteteksti(ng-if="tkv.ohjeteksti")
         a(href="" ng-click="$$showPerusteteksti = !$$showPerusteteksti" kaanna="'toggle-perusteteksti'")
         div(style="margin-top: 10px;" ng-show="$$showPerusteteksti")
           +teksti("tkv.perusteteksti")

@@ -15,6 +15,7 @@
  */
 package fi.vm.sade.eperusteet.amosaa.service.ops.impl;
 
+import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
@@ -109,7 +110,7 @@ public class TekstiKappaleViiteServiceImpl implements TekstiKappaleViiteService 
         viiteDto.setTekstiKappale(tekstiKappaleService.add(uusiViite, viiteDto.getTekstiKappale()));
         uusiViite.setVanhempi(parentViite);
         parentViite.getLapset().add(0, uusiViite);
-
+        uusiViite.setTyyppi(SisaltoTyyppi.TEKSTIKAPPALE);
         uusiViite = repository.save(uusiViite);
         return mapper.map(uusiViite, TekstiKappaleViiteDto.Matala.class);
     }
