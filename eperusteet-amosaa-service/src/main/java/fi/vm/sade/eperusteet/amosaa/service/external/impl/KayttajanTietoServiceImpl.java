@@ -153,6 +153,7 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
     }
 
     @Override
+    @Transactional(readOnly = false)
     public List<KoulutustoimijaBaseDto> koulutustoimijat() {
         Kayttaja kayttaja = getKayttaja();
         List<KoulutustoimijaBaseDto> kts = getUserOrganizations().stream()

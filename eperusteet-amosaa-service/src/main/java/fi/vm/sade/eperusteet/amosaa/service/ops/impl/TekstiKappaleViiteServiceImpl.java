@@ -20,6 +20,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.revision.Revision;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappaleViite;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.TekstiKappaleDto;
@@ -125,6 +126,11 @@ public class TekstiKappaleViiteServiceImpl implements TekstiKappaleViiteService 
         if (ops.getTyyppi() != OpsTyyppi.POHJA) {
             uusi.setLiikkumaton(viite.isLiikkumaton());
         }
+        else {
+            viite.setPakollinen(uusi.isPakollinen());
+            viite.setOhjeteksti(LokalisoituTeksti.of(uusi.getOhjeteksti()));
+            viite.setPerusteteksti(LokalisoituTeksti.of(uusi.getPerusteteksti()));
+        }
 
         // Nopea ratkaisu sisällön häviämiseen, korjaantuu oikein uuden näkymän avulla
         if (uusi.getTekstiKappale().getTeksti() == null) {
@@ -134,7 +140,6 @@ public class TekstiKappaleViiteServiceImpl implements TekstiKappaleViiteService 
 //        repository.lock(viite.getRoot());
 //        lockMgr.lock(viite.getTekstiKappale().getId());
         updateTekstiKappale(opsId, viite, uusi.getTekstiKappale(), false);
-        viite.setPakollinen(uusi.isPakollinen());
         viite.setValmis(uusi.isValmis());
         viite = repository.save(viite);
         return mapper.map(viite, TekstiKappaleViiteDto.class);
@@ -218,10 +223,12 @@ public class TekstiKappaleViiteServiceImpl implements TekstiKappaleViiteService 
     @Override
     public TekstiKappaleViite kopioiHierarkia(TekstiKappaleViite original, Opetussuunnitelma owner) {
         TekstiKappaleViite result = new TekstiKappaleViite();
-        result.setTekstiKappale(original.getTekstiKappale());
+        result.setTekstiKappale(original.getTekstiKappale().copy());
         result.setOwner(owner);
         result.setLiikkumaton(original.isLiikkumaton());
         result.setPakollinen(original.isPakollinen());
+        result.setOhjeteksti(original.getOhjeteksti());
+        result.setPerusteteksti(original.getPerusteteksti());
         List<TekstiKappaleViite> lapset = original.getLapset();
 
         if (lapset != null) {

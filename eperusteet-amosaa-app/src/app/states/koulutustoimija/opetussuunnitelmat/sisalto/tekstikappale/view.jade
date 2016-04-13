@@ -8,6 +8,9 @@ mixin valinnat()
       +checkbox("'liikuttaminen-estetty'", "tkv.liikkumaton")
   .clearfix
 
+mixin teksti(kentta)
+  p(style="margin-bottom: 16px" termisto-viitteet=kentta ng-bind-html=kentta + "| kaanna | unsafe")
+
 .tekstikappaleet.subtle-transition
   .ylapalkki
     +historia("versio",
@@ -25,8 +28,21 @@ mixin valinnat()
     div(ng-if="$$ekEditing")
       h1(kaanna="'nimi'" style="margin-bottom: 16px; margin-top: 16px" )
       input.form-control(style="margin-bottom: 16px; margin-top: 16px" slocalized ng-model="tkv.tekstiKappale.nimi" type="text" required="true")
+      div(ng-if="ops.tyyppi === 'pohja'")
+        h1(kaanna="'tekstikappale-ohjeteksti'")
+        div(style="margin-bottom: 16px" ckeditor slocalized ng-model="tkv.ohjeteksti" layout="normal")
+        h1(kaanna="'tekstikappale-perusteteksti'")
+        div(style="margin-bottom: 16px" ckeditor slocalized ng-model="tkv.perusteteksti" layout="normal")
       h1(kaanna="'sisalto'")
       div(style="margin-bottom: 16px" ckeditor slocalized ng-model="tkv.tekstiKappale.teksti" layout="normal")
     div(ng-if="!$$ekEditing")
       h1(style="margin-bottom: 16px; margin-top: 16px" kaanna="tkv.tekstiKappale.nimi")
-      p(style="margin-bottom: 16px" termisto-viitteet="tkv.tekstiKappale.teksti" ng-bind-html="tkv.tekstiKappale.teksti | kaanna | unsafe")
+      div.ohjeteksti
+        a(href="" ng-click="$$showOhjeteksti = !$$showOhjeteksti" kaanna="'toggle-ohjeteksti'")
+        div(style="margin-top: 10px;" ng-show="$$showOhjeteksti")
+          +teksti("tkv.ohjeteksti")
+      div.perusteteksti
+        a(href="" ng-click="$$showPerusteteksti = !$$showPerusteteksti" kaanna="'toggle-perusteteksti'")
+        div(style="margin-top: 10px;" ng-show="$$showPerusteteksti")
+          +teksti("tkv.perusteteksti")
+      +teksti("tkv.tekstiKappale.teksti")

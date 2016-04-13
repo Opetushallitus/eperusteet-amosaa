@@ -300,10 +300,11 @@ CREATE TABLE tekstikappaleviite (
     pakollinen BOOLEAN,
     liikkumaton BOOLEAN,
     valmis BOOLEAN,
+
     tyyppi CHARACTER VARYING(255) NOT NULL,
-    -- Ohje?:
-        -- ohjeteksti_id lokalisoituteksti
-        -- perusteteksti_id lokalisoituteksti
+    -- Ohje:
+    ohjeteksti_id BIGINT REFERENCES lokalisoituteksti(id),
+    perusteteksti_id BIGINT REFERENCES lokalisoituteksti(id),
     -- Suorituspolku:
     suorituspolku_id BIGINT REFERENCES suorituspolku(id),
     -- Tutkinnon osa:
@@ -320,6 +321,8 @@ CREATE TABLE tekstikappaleviite_aud (
     pakollinen BOOLEAN,
     liikkumaton BOOLEAN,
     tyyppi CHARACTER VARYING(255) NOT NULL,
+    ohjeteksti_id BIGINT REFERENCES lokalisoituteksti(id),
+    perusteteksti_id BIGINT REFERENCES lokalisoituteksti(id),
     owner_id BIGINT,
     valmis BOOLEAN,
     suorituspolku_id BIGINT,

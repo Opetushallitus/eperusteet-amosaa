@@ -15,9 +15,7 @@
  */
 package fi.vm.sade.eperusteet.amosaa.domain.teksti;
 
-import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
-import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
-import fi.vm.sade.eperusteet.amosaa.service.exception.ValidointiException;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 import java.io.Serializable;
 import java.text.Normalizer;
@@ -114,6 +112,10 @@ public class LokalisoituTeksti implements Serializable {
             return null;
         }
         return new LokalisoituTeksti(tmp);
+    }
+
+    public static LokalisoituTeksti of(LokalisoituTekstiDto tekstiDto) {
+        return of(tekstiDto.getTekstit());
     }
 
     public static LokalisoituTeksti of(Kieli kieli, String teksti) {
