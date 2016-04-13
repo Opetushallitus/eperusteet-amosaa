@@ -87,7 +87,7 @@ angular.module("app")
                                             _.find(otsikot, (otsikko: any) => otsikko.id == sisaltoRoot.id).lapset.push(res.id);
                                             updateSivunavi();
                                             $timeout(() =>
-                                                $state.go("root.koulutustoimija.opetussuunnitelmat.sisalto.tekstikappale", { tkvId: res.id }));
+                                                $state.go("root.koulutustoimija.opetussuunnitelmat.sisalto.osa", { osaId: res.id }));
                                         });
                                     break;
                                 default: {

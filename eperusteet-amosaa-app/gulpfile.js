@@ -54,7 +54,9 @@ gulp
             config.app + 'views/**/*.jade',
             config.app + 'misc/guidance/**/*.jade',
             config.app + 'modals/**/*.jade',
-            config.app + 'states/**/*.jade'])
+            config.app + 'states/*.jade',
+            config.app + 'states/koulutustoimija/**/*.jade',
+            config.app + 'states/virhe/**/*.jade'])
         .pipe(mkStream(function(file, cb) {
             var fpath = file.path.slice((file.cwd + config.app).length + 1);
 

@@ -55,7 +55,7 @@
     "src/app/states/koulutustoimija/opetussuunnitelmat/dokumentti/state.ts",
     "src/app/states/koulutustoimija/opetussuunnitelmat/sisalto/state.ts",
     "src/app/states/koulutustoimija/opetussuunnitelmat/sisalto/tiedot/state.ts",
-    "src/app/states/koulutustoimija/opetussuunnitelmat/sisalto/tekstikappale/state.ts",
+    "src/app/states/koulutustoimija/opetussuunnitelmat/sisalto/osa/state.ts",
     "src/app/states/oph/state.ts",
     "src/app/states/virhe/state.ts",
     "src/app/data/fakes.ts",

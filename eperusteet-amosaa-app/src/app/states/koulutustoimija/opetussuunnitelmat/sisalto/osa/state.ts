@@ -1,21 +1,21 @@
 angular.module("app")
 .config($stateProvider => $stateProvider
-.state("root.koulutustoimija.opetussuunnitelmat.sisalto.tekstikappale", {
-    url: "/tekstikappale/:tkvId",
+.state("root.koulutustoimija.opetussuunnitelmat.sisalto.osa", {
+    url: "/osa/:osaId",
     resolve: {
-        tekstikappale: (ops, $stateParams) => ops.one("tekstit", $stateParams.tkvId).get()
+        osa: (ops, $stateParams) => ops.one("tekstit", $stateParams.osaId).get()
     },
-    onEnter: (tekstikappale) =>
-        Murupolku.register("root.koulutustoimija.opetussuunnitelmat.sisalto.tekstikappale", tekstikappale.tekstiKappale.nimi),
+    onEnter: (osa) =>
+        Murupolku.register("root.koulutustoimija.opetussuunnitelmat.sisalto.osa", osa.tekstiKappale.nimi),
     views: {
         "": {
-            controller: ($state, $stateParams, $location, $scope, $rootScope, $document, $timeout, tekstikappale, nimiLataaja) => {
-                tekstikappale.lapset = undefined;
-                $scope.edit = EditointikontrollitService.createRestangular($scope, "tkv", tekstikappale);
-                nimiLataaja(tekstikappale.tekstiKappale.muokkaaja)
-                    .then(nimi => $scope.tkv.tekstiKappale.$$nimi = nimi);
+            controller: ($state, $stateParams, $location, $scope, $rootScope, $document, $timeout, osa, nimiLataaja) => {
+                osa.lapset = undefined;
+                $scope.edit = EditointikontrollitService.createRestangular($scope, "osa", osa);
+                nimiLataaja(osa.tekstiKappale.muokkaaja)
+                    .then(nimi => $scope.osa.tekstiKappale.$$nimi = nimi);
                 $scope.remove = () => {
-                    tekstikappale.remove()
+                    osa.remove()
                         .then(() => {
                             NotifikaatioService.onnistui("poisto-tekstikappale-onnistui");
                             EditointikontrollitService.cancel()
@@ -45,6 +45,24 @@ angular.module("app")
 
                 installClickHandler();
             }
-        }
+        },
+        tekstikappale: {
+            controller: ($scope, osa) => {}
+        },
+        tutkinnonosat: {
+            controller: ($scope, osa) => {}
+        },
+        tutkinnonosa: {
+            controller: ($scope, osa) => {}
+        },
+        tutkinnonosaryhma: {
+            controller: ($scope, osa) => {}
+        },
+        suorituspolut: {
+            controller: ($scope, osa) => {}
+        },
+        suorituspolku: {
+            controller: ($scope, osa) => {}
+        },
     }
 }));
