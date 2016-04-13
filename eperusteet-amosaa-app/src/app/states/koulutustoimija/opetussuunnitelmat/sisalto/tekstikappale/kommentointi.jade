@@ -1,0 +1,38 @@
+mixin kommentti(kommentti, ...tyyppi)
+  div(class="kommentti " + tyyppi)
+    div.kommentti-avatar
+      div.nimikirjain-avatar(ng-bind=kommentti + ".nimi | nimikirjaimet")
+    div.kommentti-painikkeet
+      a(ng-click="")
+        +icon("pencil")
+      a(href="" ng-click="poistaKommentti(" + kommentti + ")")
+        +icon("times")
+    div.kommentti-sisalto
+      p.kommentti-nimi(ng-bind=kommentti + ".nimi")
+      p.kommentti-teksti(ng-bind-html=kommentti + ".sisalto")
+      p.kommentti-footer
+        strong(kaanna="'muokattu'")
+        span=" "
+        span(ng-bind=kommentti + ".muokattu | aikaleima")
+        span=" "
+        a(ng-click="" kaanna="'vastaa'")
+  div(class="kommentti-vastaa " + tyyppi ng-hide="false")
+    div(ckeditor, ng-model=kommentti + ".sisalto")
+    div.pull-right
+      button.btn.btn-default(kaanna="'peruuta'" ng-click="")
+      button.btn.btn-primary(kaanna="'tallenna'" ng-click=kommentti + ".save()")
+    div.clearfix
+
+div.kommentointi
+  h1(kaanna="keskustelu")
+  a(href="", ng-if="!$$ekEditing")
+    +icon("plus")
+    span=" "
+    span(kaanna="'lisaa-kommentti'")
+  div(ng-if="$$ekEditing")
+  div(style="margin-bottom: 16px" ckeditor slocalized ng-model="tkv.tekstiKappale.kommentti" layout="normal")
+
+  div(ng-repeat="kommentti in kommentit")
+    +kommentti("kommentti")
+    div(ng-repeat="lapsi in kommentti.lapset")
+      +kommentti("lapsi", "kommentti-lapsi")

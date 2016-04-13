@@ -122,5 +122,7 @@
   "yhteisien-osien-pohjat":"Yhteisien osien pohjat",
   "yhteisien-osien-pohjia-ei-viela-luotu":"Yhteisien osien pohjia ei luotu",
   "ylatunniste":"Ylätunniste",
-  "lisaa-kommentti": "Lisää kommentti"
+  "lisaa-kommentti": "Lisää kommentti",
+  "poistetaanko-kommentti": "Poistetaanko kommentti?",
+  "vahvista-poisto": "Vahvista poisto"
 }

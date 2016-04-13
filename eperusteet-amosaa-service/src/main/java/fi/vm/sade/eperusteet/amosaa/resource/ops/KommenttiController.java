@@ -49,22 +49,33 @@ public class KommenttiController {
                                             @PathVariable final long opsId,
                                             @PathVariable final long tkvId,
                                             @RequestBody KommenttiDto body) {
+        body.setTekstikappaleviiteId(tkvId);
         return new ResponseEntity<>(kommenttiService.add(opsId, body), HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/{id}", method = GET)
-    public ResponseEntity<KommenttiDto> get(@PathVariable final long id) {
-        KommenttiDto kommenttiDto = kommenttiService.get(id);
+    public ResponseEntity<KommenttiDto> get(@PathVariable final long ktId,
+                                            @PathVariable final long opsId,
+                                            @PathVariable final long tkvId,
+                                            @PathVariable final long id) {
+        KommenttiDto kommenttiDto = kommenttiService.get(opsId, id);
         return new ResponseEntity<>(kommenttiDto, kommenttiDto == null ? HttpStatus.NOT_FOUND : HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}", method = PUT)
-    public ResponseEntity<KommenttiDto> update(@PathVariable final long id, @RequestBody KommenttiDto body) {
-        return new ResponseEntity<>(kommenttiService.update(id, body), HttpStatus.OK);
+    public ResponseEntity<KommenttiDto> update(@PathVariable final long ktId,
+                                               @PathVariable final long opsId,
+                                               @PathVariable final long tkvId,
+                                               @PathVariable final long id,
+                                               @RequestBody KommenttiDto body) {
+        return new ResponseEntity<>(kommenttiService.update(opsId, id, body), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}", method = DELETE)
-    public void delete(@PathVariable final long id) {
-        kommenttiService.delete(id);
+    public void delete(@PathVariable final long ktId,
+                       @PathVariable final long opsId,
+                       @PathVariable final long tkvId,
+                       @PathVariable final long id) {
+        kommenttiService.delete(opsId, id);
     }
 }

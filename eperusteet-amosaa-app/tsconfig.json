@@ -22,6 +22,7 @@
     "src/app/components/datepicker/datepicker.ts",
     "src/app/components/utils/utils.ts",
     "src/app/components/utils/errText.ts",
+    "src/app/components/varmistusdialogi/varmistusdialogi.ts",
     "src/app/components/sticky/sticky.ts",
     "src/app/components/dynamic/dynamic.ts",
     "src/app/components/reresolver/reresolver.ts",

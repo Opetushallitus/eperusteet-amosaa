@@ -22,11 +22,4 @@ div.tekstikappaleet
 
   hr
 
-  div.kommentointi
-    h1(kaanna="keskustelu")
-    a(href="", ng-if="!$$ekEditing")
-      +icon("plus")
-      span=" "
-      span(kaanna="'lisaa-kommentti'")
-    div(ng-if="$$ekEditing")
-      div(style="margin-bottom: 16px" ckeditor slocalized ng-model="tkv.tekstiKappale.kommentti" layout="normal")
+  div(ui-view="kommentointi")

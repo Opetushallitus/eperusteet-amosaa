@@ -27,4 +27,12 @@ angular.module("app")
     (value, selectedArray, field) =>
         _.reject(value, (object) =>
             _.some(selectedArray, (selected) =>
-                object[field] === selected[field])));
+                object[field] === selected[field])))
+
+.filter("nimikirjaimet", () => {
+    return (nimi) => {
+        return _.reduce(nimi.split(' '), (memo, osa) => {
+            return memo + (osa ? osa[0] : '');
+        }, '').toUpperCase();
+    }
+});

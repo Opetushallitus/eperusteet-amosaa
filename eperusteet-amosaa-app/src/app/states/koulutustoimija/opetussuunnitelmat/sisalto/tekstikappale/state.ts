@@ -3,7 +3,8 @@ angular.module("app")
 .state("root.koulutustoimija.opetussuunnitelmat.sisalto.tekstikappale", {
     url: "/tekstikappale/:tkvId",
     resolve: {
-        tekstikappale: (ops, $stateParams) => ops.one("tekstit", $stateParams.tkvId).get()
+        tekstikappale: (ops, $stateParams) => ops.one("tekstit", $stateParams.tkvId).get(),
+        kommentit: (tekstikappale) => tekstikappale.all("kommentit").getList()
     },
     onEnter: (tekstikappale) =>
         Murupolku.register("root.koulutustoimija.opetussuunnitelmat.sisalto.tekstikappale", tekstikappale.tekstiKappale.nimi),
@@ -44,6 +45,37 @@ angular.module("app")
                 });
 
                 installClickHandler();
+            }
+        },
+        kommentointi: {
+            controller: ($scope, kommentit, Varmistusdialogi) => {
+                $scope.kommentit = _(kommentit)
+                    .filter((kommentti: any) => kommentti.parentId === 0)
+                    .map((kommentti: any) => {
+                        kommentti.lapset = _.filter(kommentit, (lapsi: any) => {
+                            if (lapsi.parentId === kommentti.id) {
+                                return lapsi;
+                            }
+                        });
+                        return kommentti;
+                    })
+                    .value();
+
+                $scope.muokkaaKommenttia = () => {
+
+                };
+                $scope.poistaKommentti = (kommentti) => {
+                    Varmistusdialogi.dialogi({
+                        otsikko: 'vahvista-poisto',
+                        teksti: 'poistetaanko-kommentti',
+                        primaryBtn: 'poista',
+                        successCb: () => {
+                            kommentti.remove().then(() =>  {
+                                $scope.kommentit = _.without($scope.kommentit, kommentti);
+                            });
+                        }
+                    })();
+                };
             }
         }
     }

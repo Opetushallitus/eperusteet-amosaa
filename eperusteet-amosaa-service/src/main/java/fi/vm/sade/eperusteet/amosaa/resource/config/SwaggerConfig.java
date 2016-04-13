@@ -118,7 +118,7 @@ public class SwaggerConfig {
         ApiInfo apiInfo = new ApiInfo(
                 "Oppijan verkkopalvelukokonaisuus / ePerusteet ammatillisen opetussuunnitelmat",
                 "",
-                "Spring MVC API based on the swagger 1.2 spec",
+                "Spring MVC API based on the swagger 2.0 and 1.2 specification",
                 "https://confluence.csc.fi/display/oppija/Rajapinnat+toisen+asteen+ja+perusasteen+toimijoille",
                 contact,
                 "EUPL 1.1",
@@ -127,11 +127,11 @@ public class SwaggerConfig {
         return apiInfo;
     }
 
-    public class RelativeSwaggerPathProvider extends AbstractPathProvider {
-        public String ROOT = "/";
+    private class RelativeSwaggerPathProvider extends AbstractPathProvider {
+        String ROOT = "/";
         private final ServletContext servletContext;
 
-        public RelativeSwaggerPathProvider(ServletContext servletContext) {
+        RelativeSwaggerPathProvider(ServletContext servletContext) {
             super();
             this.servletContext = servletContext;
         }

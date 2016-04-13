@@ -37,14 +37,15 @@ div.dokumentti
       p(ng-show="dokumenttiDto.tila === 'epaonnistui'" kaanna="'dokumentti-epaonnistui'")
 
       div(ng-hide="dokumenttiDto.tila === 'luodaan'")
-        p(ng-show="dokumenttiDto.tila === 'valmis'")
-          b(kaanna="'luoja'")
-          span=" "
-          span(kaanna="dokumenttiDto.luoja")
-          span=" "
-          b(kaanna="'luotu'")
-          span=" "
-          span(ng-bind="dokumenttiDto.valmistumisaika | aikaleima")
+        p.tiedot(ng-show="dokumenttiDto.tila === 'valmis'")
+          span
+            b(kaanna="'luotu'")
+            span=" "
+            span(ng-bind="dokumenttiDto.valmistumisaika | aikaleima")
+          span
+            b(kaanna="'luoja'")
+            span=" "
+            span(kaanna="dokumenttiDto.luoja")
 
         a(ng-href="{{ linkki }}" target="_blank" ng-show="dokumenttiDto.tila === 'valmis'")
           button.btn.btn-default {{ 'lataa' | kaanna }} {{ 'pdf' | kaanna }}
@@ -55,8 +56,7 @@ div.dokumentti
           span(kaanna="'luo-uusi-dokumentti'")
 
       div(ng-show="dokumenttiDto.tila === 'luodaan'")
-        p
-          span(kaanna="'luodaan-dokumenttia'")
+        p(kaanna="'luodaan-dokumenttia'")
         div.row
           div.col-xs-8
             div.progress
@@ -66,11 +66,11 @@ div.dokumentti
                 span=" "
                 span {{ dokumenttiDto.edistyminen }}
 
-  div.row
+//div.row
     div.col-xs-12
       h2(kaanna="'lisaasetukset'")
 
-      // form.form-horizontal
+       form.form-horizontal
         div.form-group
           div.row
             label.col-xs-2(for="kansi")

@@ -37,4 +37,5 @@ public class KommenttiDto {
     private Long parentId;
     private Boolean poistettu;
     private String sisalto;
+    private String nimi;
 }

@@ -29,15 +29,15 @@ public interface KommenttiService {
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
     List<KommenttiDto> getAllByTekstikappaleviite(@P("opsId") Long opsId, Long tkvId);
 
-    @PreAuthorize("isAuthenticated()")
-    KommenttiDto get(Long kommenttiId);
+    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
+    KommenttiDto get(@P("opsId") Long opsId, Long kommenttiId);
 
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
     KommenttiDto add(@P("opsId") Long opsId, KommenttiDto kommenttiDto);
 
-    @PreAuthorize("isAuthenticated()")
-    KommenttiDto update(Long kommenttiId, KommenttiDto kommenttiDto);
+    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
+    KommenttiDto update(@P("opsId") Long opsId, Long kommenttiId, KommenttiDto kommenttiDto);
 
-    @PreAuthorize("isAuthenticated()")
-    void delete(Long kommenttiId);
+    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
+    void delete(@P("opsId") Long opsId, Long kommenttiId);
 }
