@@ -224,7 +224,8 @@ public class TekstiKappaleViiteServiceImpl implements TekstiKappaleViiteService 
     @Override
     public TekstiKappaleViite kopioiHierarkia(TekstiKappaleViite original, Opetussuunnitelma owner) {
         TekstiKappaleViite result = new TekstiKappaleViite();
-        result.setTekstiKappale(original.getTekstiKappale().copy());
+        TekstiKappale originalTk = original.getTekstiKappale();
+        result.setTekstiKappale(originalTk != null ? tekstiKappaleRepository.save(originalTk.copy()) : null);
         result.setOwner(owner);
         result.setLiikkumaton(original.isLiikkumaton());
         result.setPakollinen(original.isPakollinen());
