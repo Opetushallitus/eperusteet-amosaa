@@ -115,6 +115,9 @@ public class LokalisoituTeksti implements Serializable {
     }
 
     public static LokalisoituTeksti of(LokalisoituTekstiDto tekstiDto) {
+        if (tekstiDto == null) {
+            return null;
+        }
         return of(tekstiDto.getTekstit());
     }
 
