@@ -16,8 +16,8 @@
 package fi.vm.sade.eperusteet.amosaa.service.ops;
 
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
-import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappaleViite;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.TekstiKappaleViiteDto;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.service.revision.RevisionService;
 import java.util.List;
 import org.springframework.security.access.method.P;
@@ -26,9 +26,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 /**
  * @author mikkom
  */
-public interface TekstiKappaleViiteService extends RevisionService {
+public interface SisaltoViiteService extends RevisionService {
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
-    TekstiKappaleViiteDto.Matala getTekstiKappaleViite(@P("ktId") Long ktId, @P("opsId") Long opsId, Long viiteId);
+    SisaltoViiteDto.Matala getTekstiKappaleViite(@P("ktId") Long ktId, @P("opsId") Long opsId, Long viiteId);
 
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
     <T> T getTekstiKappaleViite(@P("ktId") Long ktId, @P("opsId") Long opsId, Long viiteId, Class<T> t);
@@ -37,21 +37,21 @@ public interface TekstiKappaleViiteService extends RevisionService {
     <T> List<T> getTekstiKappaleViitteet(@P("ktId") Long ktId, @P("opsId") Long opsId, Class<T> t);
 
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'MUOKKAUS')")
-    TekstiKappaleViiteDto.Matala addTekstiKappaleViite(@P("ktId") Long ktId, @P("opsId") Long opsId, Long viiteId,
-                                                       TekstiKappaleViiteDto.Matala viiteDto);
+    SisaltoViiteDto.Matala addTekstiKappaleViite(@P("ktId") Long ktId, @P("opsId") Long opsId, Long viiteId,
+                                                       SisaltoViiteDto.Matala viiteDto);
 
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'MUOKKAUS')")
-    TekstiKappaleViiteDto updateTekstiKappaleViite(@P("ktId") Long ktId, @P("opsId") Long opsId, Long rootViiteId, TekstiKappaleViiteDto uusi);
+    SisaltoViiteDto updateSisaltoViite(@P("ktId") Long ktId, @P("opsId") Long opsId, Long rootViiteId, SisaltoViiteDto uusi);
 
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'MUOKKAUS')")
     void removeTekstiKappaleViite(@P("ktId") Long ktId, @P("opsId") Long opsId, Long viiteId);
 
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'MUOKKAUS')")
-    TekstiKappaleViiteDto.Puu kloonaaTekstiKappale(@P("ktId") Long ktId, @P("opsId") Long opsId, Long viiteId);
+    SisaltoViiteDto.Puu kloonaaTekstiKappale(@P("ktId") Long ktId, @P("opsId") Long opsId, Long viiteId);
 
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'MUOKKAUS')")
-    void reorderSubTree(@P("ktId") Long ktId, @P("opsId") Long opsId, Long rootViiteId, TekstiKappaleViiteDto.Puu uusi);
+    void reorderSubTree(@P("ktId") Long ktId, @P("opsId") Long opsId, Long rootViiteId, SisaltoViiteDto.Puu uusi);
 
-    TekstiKappaleViite kopioiHierarkia(TekstiKappaleViite original, Opetussuunnitelma owner);
+    SisaltoViite kopioiHierarkia(SisaltoViite original, Opetussuunnitelma owner);
 }
 

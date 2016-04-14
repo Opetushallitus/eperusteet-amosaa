@@ -20,7 +20,10 @@ angular.module("app")
                             NotifikaatioService.onnistui("poisto-tekstikappale-onnistui");
                             EditointikontrollitService.cancel()
                                 .then(() => {
-                                    $state.go("root.koulutustoimija.opetussuunnitelmat.poistetut", $stateParams, { reload: true });
+                                    $timeout(() => {
+                                        $state.reload("root");
+                                        $state.go("root.koulutustoimija.opetussuunnitelmat.poistetut", $stateParams, { reload: true });
+                                    });
                                 });
                         });
                 };
@@ -53,7 +56,10 @@ angular.module("app")
             controller: ($scope, osa) => {}
         },
         tutkinnonosa: {
-            controller: ($scope, osa) => {}
+            controller: ($scope, osa) => {
+                osa.tosa.arvioinnista = osa.tosa.arvioinnista || {};
+                osa.tosa.tavatjaymparisto = osa.tosa.tavatjaymparisto || {};
+            }
         },
         tutkinnonosaryhma: {
             controller: ($scope, osa) => {}

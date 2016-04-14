@@ -21,10 +21,9 @@ import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiEdistyminen;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
-import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappaleViite;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 import fi.vm.sade.eperusteet.amosaa.repository.dokumentti.DokumenttiRepository;
-import fi.vm.sade.eperusteet.amosaa.repository.teksti.TekstikappaleviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiBuilderService;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.PdfService;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.CharapterNumberGenerator;
@@ -62,6 +61,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 
 /**
  *
@@ -81,7 +81,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
     private DokumenttiRepository dokumenttiRepository;
 
     @Autowired
-    private TekstikappaleviiteRepository tkvRepository;
+    private SisaltoviiteRepository tkvRepository;
 
     @Autowired
     private PdfService pdfService;
@@ -268,16 +268,16 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
     private void addOsuudet(DokumenttiBase docBase)
             throws IOException, SAXException, ParserConfigurationException {
 
-        TekstiKappaleViite tekstit = tkvRepository.findOneRoot(docBase.getOpetussuunnitelma());
+        SisaltoViite tekstit = tkvRepository.findOneRoot(docBase.getOpetussuunnitelma());
         if (tekstit != null) {
             addTekstiKappale(docBase, tekstit, false);
         }
     }
 
-    private void addTekstiKappale(DokumenttiBase docBase, TekstiKappaleViite viite, boolean paataso)
+    private void addTekstiKappale(DokumenttiBase docBase, SisaltoViite viite, boolean paataso)
             throws ParserConfigurationException, IOException, SAXException {
 
-        for (TekstiKappaleViite lapsi : viite.getLapset()) {
+        for (SisaltoViite lapsi : viite.getLapset()) {
             if (lapsi.getTekstiKappale() != null && lapsi.getTekstiKappale().getNimi() != null) {
 
                 // Ei näytetä osien Pääkappaleiden otsikoita

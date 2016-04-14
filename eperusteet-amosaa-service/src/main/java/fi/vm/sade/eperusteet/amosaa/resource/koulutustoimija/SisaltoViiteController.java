@@ -17,10 +17,10 @@ package fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija;
  */
 
 import fi.vm.sade.eperusteet.amosaa.domain.revision.Revision;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.TekstiKappaleViiteDto;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.TekstiKappaleViiteKevytDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteKevytDto;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
-import fi.vm.sade.eperusteet.amosaa.service.ops.TekstiKappaleViiteService;
+import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import io.swagger.annotations.Api;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,14 +40,14 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}")
-@Api(value = "tekstit")
-public class TekstiKappaleViiteController {
+@Api(value = "sisältö")
+public class SisaltoViiteController {
 
     @Autowired
-    private TekstiKappaleViiteService service;
+    private SisaltoViiteService service;
 
     @RequestMapping(value = "/tekstit/{tkvId}", method = RequestMethod.GET)
-    TekstiKappaleViiteDto.Matala getTekstit(
+    SisaltoViiteDto.Matala getTekstit(
             @PathVariable final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long tkvId) {
@@ -55,18 +55,18 @@ public class TekstiKappaleViiteController {
     }
 
     @RequestMapping(value = "/otsikot", method = RequestMethod.GET)
-    List<TekstiKappaleViiteKevytDto> getOtsikot(
+    List<SisaltoViiteKevytDto> getOtsikot(
             @PathVariable final Long ktId,
             @PathVariable final Long opsId) {
-        return service.getTekstiKappaleViitteet(ktId, opsId, TekstiKappaleViiteKevytDto.class);
+        return service.getTekstiKappaleViitteet(ktId, opsId, SisaltoViiteKevytDto.class);
     }
 
     @RequestMapping(value = "/tekstit/{tkvId}", method = RequestMethod.POST)
-    TekstiKappaleViiteDto.Matala addTekstiKappaleLapsi(
+    SisaltoViiteDto.Matala addTekstiKappaleLapsi(
             @PathVariable final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long tkvId,
-            @RequestBody(required = false) TekstiKappaleViiteDto.Matala tekstiKappaleViiteDto) {
+            @RequestBody(required = false) SisaltoViiteDto.Matala tekstiKappaleViiteDto) {
         tekstiKappaleViiteDto.setLapset(new ArrayList<>());
         return service.addTekstiKappaleViite(ktId, opsId, tkvId, tekstiKappaleViiteDto);
     }
@@ -76,8 +76,8 @@ public class TekstiKappaleViiteController {
             @PathVariable final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long tkvId,
-            @RequestBody final TekstiKappaleViiteDto tekstiKappaleViiteDto) {
-        service.updateTekstiKappaleViite(ktId, opsId, tkvId, tekstiKappaleViiteDto);
+            @RequestBody final SisaltoViiteDto tekstiKappaleViiteDto) {
+        service.updateSisaltoViite(ktId, opsId, tkvId, tekstiKappaleViiteDto);
     }
 
     @RequestMapping(value = "/tekstit/{tkvId}/rakenne", method = RequestMethod.PUT)
@@ -85,7 +85,7 @@ public class TekstiKappaleViiteController {
             @PathVariable final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long tkvId,
-            @RequestBody final TekstiKappaleViiteDto.Puu tekstiKappaleViiteDto) {
+            @RequestBody final SisaltoViiteDto.Puu tekstiKappaleViiteDto) {
         service.reorderSubTree(ktId, opsId, tkvId, tekstiKappaleViiteDto);
     }
 

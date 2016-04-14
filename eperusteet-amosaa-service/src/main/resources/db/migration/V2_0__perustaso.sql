@@ -220,6 +220,27 @@ CREATE TABLE opetussuunnitelma_julkaisukielet_aud (
     revend INTEGER
 );
 
+-- Jokin täysin muunkaltaiseen sisältöön viittaava tutkinnon osa
+CREATE TABLE vierastutkinnonosa (
+    id BIGINT NOT NULL PRIMARY KEY,
+    luoja character varying(255),
+    luotu timestamp without time zone,
+    muokattu timestamp without time zone,
+    muokkaaja character varying(255)
+);
+
+CREATE TABLE vierastutkinnonosa_aud (
+    id BIGINT NOT NULL,
+    rev INTEGER NOT NULL,
+    revtype SMALLINT,
+    revend INTEGER,
+    luoja character varying(255),
+    luotu timestamp without time zone,
+    muokattu timestamp without time zone,
+    muokkaaja character varying(255),
+    PRIMARY KEY (id, rev)
+);
+
 -- Perustepalvelun tutkinnon osa ilman yhteisiä ominaisuuksia
 CREATE TABLE omatutkinnonosa (
     id BIGINT NOT NULL PRIMARY KEY,
@@ -267,12 +288,15 @@ CREATE TABLE tutkinnonosa (
     luotu timestamp without time zone,
     muokattu timestamp without time zone,
     muokkaaja character varying(255),
+    tavatjaymparisto_id BIGINT REFERENCES tekstiosa(id),
+    arvioinnista_id BIGINT REFERENCES tekstiosa(id),
     tyyppi CHARACTER VARYING(255) NOT NULL,
     -- Perusteesta:
     perusteentutkinnonosa BIGINT,
     -- Oma ja sisäinen:
-    omatutkinnonosa_id BIGINT REFERENCES omatutkinnonosa(id)
+    omatutkinnonosa_id BIGINT REFERENCES omatutkinnonosa(id),
     -- Vieras:
+    vierastutkinnonosa_id BIGINT REFERENCES vierastutkinnonosa(id)
         -- Tunniste/URL toiseen osaan metatiedoilla
 );
 
@@ -285,13 +309,22 @@ CREATE TABLE tutkinnonosa_aud (
     luotu timestamp without time zone,
     muokattu timestamp without time zone,
     muokkaaja character varying(255),
+    tavatjaymparisto_id BIGINT,
+    arvioinnista_id BIGINT,
     tyyppi CHARACTER VARYING(255) NOT NULL,
     perusteentutkinnonosa BIGINT,
-    omatutkinnonosa_id BIGINT REFERENCES omatutkinnonosa(id),
+    omatutkinnonosa_id BIGINT,
+    vierastutkinnonosa_id BIGINT,
     PRIMARY KEY (id, rev)
 );
 
-CREATE TABLE tekstikappaleviite (
+CREATE TABLE tutkinnonosa_vapaa_teksti (
+    id BIGINT NOT NULL PRIMARY KEY,
+    tutkinnonosa_id BIGINT NOT NULL REFERENCES tutkinnonosa(id),
+    tekstiosa_id BIGINT NOT NULL REFERENCES tekstiosa(id)
+);
+
+CREATE TABLE sisaltoviite (
     id BIGINT NOT NULL PRIMARY KEY,
     owner_id BIGINT NOT NULL REFERENCES opetussuunnitelma(id),
     tekstikappale_id BIGINT REFERENCES tekstikappale(id),
@@ -311,7 +344,7 @@ CREATE TABLE tekstikappaleviite (
     tosa_id BIGINT REFERENCES tutkinnonosa(id)
 );
 
-CREATE TABLE tekstikappaleviite_aud (
+CREATE TABLE sisaltoviite_aud (
     id BIGINT NOT NULL,
     rev INTEGER NOT NULL,
     revtype SMALLINT,

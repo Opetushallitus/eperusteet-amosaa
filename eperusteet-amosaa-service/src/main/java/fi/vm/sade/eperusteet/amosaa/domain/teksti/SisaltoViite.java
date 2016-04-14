@@ -51,8 +51,8 @@ import org.hibernate.envers.RelationTargetAuditMode;
  */
 @Entity
 @Audited
-@Table(name = "tekstikappaleviite")
-public class TekstiKappaleViite implements ReferenceableEntity, Serializable {
+@Table(name = "sisaltoviite")
+public class SisaltoViite implements ReferenceableEntity, Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -80,7 +80,7 @@ public class TekstiKappaleViite implements ReferenceableEntity, Serializable {
     @ManyToOne
     @Getter
     @Setter
-    private TekstiKappaleViite vanhempi;
+    private SisaltoViite vanhempi;
 
     @ManyToOne
     @Getter
@@ -121,31 +121,31 @@ public class TekstiKappaleViite implements ReferenceableEntity, Serializable {
     @Getter
     @Setter
     @BatchSize(size = 100)
-    private List<TekstiKappaleViite> lapset = new ArrayList<>();
+    private List<SisaltoViite> lapset = new ArrayList<>();
 
-    public TekstiKappaleViite() {
+    public SisaltoViite() {
     }
 
-    public TekstiKappaleViite(Opetussuunnitelma owner) {
+    public SisaltoViite(Opetussuunnitelma owner) {
         this.owner = owner;
     }
 
-    public TekstiKappaleViite getRoot() {
-        TekstiKappaleViite root = this;
+    public SisaltoViite getRoot() {
+        SisaltoViite root = this;
         while (root.getVanhempi() != null) {
             root = root.getVanhempi();
         }
         return root;
     }
 
-    static public void validoi(Validointi validointi, TekstiKappaleViite viite, Set<Kieli> julkaisukielet) {
+    static public void validoi(Validointi validointi, SisaltoViite viite, Set<Kieli> julkaisukielet) {
         if (viite == null || viite.getLapset() == null) {
             return;
         }
 
         LokalisoituTeksti teksti = viite.getTekstiKappale() != null ? viite.getTekstiKappale().getNimi() : null;
 
-        for (TekstiKappaleViite lapsi : viite.getLapset()) {
+        for (SisaltoViite lapsi : viite.getLapset()) {
             if (lapsi.pakollinen) {
                 if (lapsi.getTekstiKappale() != null) {
                     LokalisoituTeksti.validoi(validointi, julkaisukielet, lapsi.getTekstiKappale().getNimi(), teksti);

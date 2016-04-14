@@ -1,3 +1,7 @@
+mixin gicon(type)
+  span(class="glyphicon glyphicon-" + type)
+
+
 mixin icon(type)
   i(class="fa fa-" + type)
 
@@ -116,3 +120,20 @@ mixin formfield(label)
 mixin kasitePropDiv(model, index)
   div(ng-show="!$$ekEditing || $$ekEditingIndex !== " + index)
     p(kaanna=model)
+
+
+mixin teksti(kentta)
+  p(style="margin-bottom: 16px" termisto-viitteet=kentta ng-bind-html=kentta + "| kaanna | unsafe")
+
+
+mixin contentToggler(toggleField, name)
+  div.content-toggler
+    div.content-toggler-header(ng-click=toggleField + " = !" + toggleField)
+      span.ct-otsikko
+        span(ng-if=toggleField)
+          +gicon("chevron-down")
+        span(ng-if="!" + toggleField)
+          +gicon("chevron-right")
+        label(kaanna=name)
+    div(ng-if=toggleField)
+      block
