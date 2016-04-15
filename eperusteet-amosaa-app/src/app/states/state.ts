@@ -3,7 +3,7 @@ namespace Murupolku {
 
     export const register = (sname, name) => svars[sname] = name;
     export const get = (sname) => _.clone(svars[sname]);
-};
+}
 
 
 angular.module("app")

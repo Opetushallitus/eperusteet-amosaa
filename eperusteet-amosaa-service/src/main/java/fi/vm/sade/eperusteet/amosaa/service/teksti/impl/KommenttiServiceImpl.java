@@ -69,7 +69,7 @@ public class KommenttiServiceImpl implements KommenttiService {
     @Override
     @Transactional(readOnly = true)
     public List<KommenttiDto> getAllByTekstikappaleviite(Long opsId, Long tkvId) {
-        List<Kommentti> kommentit = repository.findByTekstikappaleviiteIdAndPoistettuFalseOrderByLuotuDesc(tkvId);
+        List<Kommentti> kommentit = repository.findByTekstikappaleviiteIdOrderByLuotuDesc(tkvId);
         List<KommenttiDto> kommenttiDtos = mapper.mapAsList(kommentit, KommenttiDto.class);
         return addNameToKommentit(kommenttiDtos);
     }
@@ -77,6 +77,7 @@ public class KommenttiServiceImpl implements KommenttiService {
     private List<KommenttiDto> addNameToKommentit(List<KommenttiDto> kommentit) {
         return kommentit.stream()
                 .map(this::addNameToKommentti)
+                .map(this::hideRemovedSisalto)
                 .collect(Collectors.toList());
     }
 
@@ -86,9 +87,21 @@ public class KommenttiServiceImpl implements KommenttiService {
             String kutsumanimi = kayttaja.getKutsumanimi();
             String etunimet = kayttaja.getEtunimet();
             String etunimi = kutsumanimi != null ? kutsumanimi : etunimet;
-            kommenttiDto.setNimi(etunimi + " " + kayttaja.getSukunimi());
+            String sukunimi = kayttaja.getSukunimi();
+            if (etunimi != null && sukunimi != null) {
+                kommenttiDto.setNimi(etunimi + " " + kayttaja.getSukunimi());
+            } else {
+                kommenttiDto.setNimi(kayttaja.getOidHenkilo());
+            }
         }
         return kommenttiDto;
+    }
+
+    private KommenttiDto hideRemovedSisalto(KommenttiDto kommenttiDto) {
+        if (kommenttiDto.getPoistettu()) {
+            kommenttiDto.setSisalto(null);
+        }
+        return  kommenttiDto;
     }
 
     @Override
@@ -146,5 +159,13 @@ public class KommenttiServiceImpl implements KommenttiService {
         assertExists(kommentti, "Poistettavaa kommenttia ei ole olemassa");
         assertRights(kommentti, opsId, Permission.LUONTI);
         kommentti.setPoistettu(true);
+        repository.save(kommentti);
+
+        // Poistetaan lapset myös
+        /*repository.findByParentId(kommenttiId).stream()
+                .forEach((k) -> {
+                k.setPoistettu(true);
+                repository.save(k);
+        });*/
     }
 }

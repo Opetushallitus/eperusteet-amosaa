@@ -355,6 +355,12 @@ $ops-top-vertical-margin: 10px;
                         }
 
                     }
+                    .kommentti-poistettu {
+                        background-color: #f6f6f6;
+                        border-bottom: 1px solid #149ecb;
+                        margin-top: 10px;
+                        padding: 10px 10px 0 10px;
+                    }
                     .inactive {
                         color: gray;
                         pointer-events: none;
