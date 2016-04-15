@@ -18,12 +18,10 @@ package fi.vm.sade.eperusteet.amosaa.service.teksti.impl;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kommentti;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.KommenttiDto;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.TekstiKappaleDto;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.KommenttiRepository;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
-import fi.vm.sade.eperusteet.amosaa.service.ops.TekstiKappaleViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionManager;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionManager.Permission;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionManager.TargetType;
@@ -31,7 +29,6 @@ import fi.vm.sade.eperusteet.amosaa.service.teksti.KommenttiService;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import fi.vm.sade.eperusteet.amosaa.service.teksti.TekstiKappaleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
@@ -53,9 +50,6 @@ public class KommenttiServiceImpl implements KommenttiService {
 
     @Autowired
     private KayttajanTietoService kayttajat;
-
-    @Autowired
-    private TekstiKappaleViiteService tekstikappaleviiteService;
 
     @Autowired
     private DtoMapper mapper;

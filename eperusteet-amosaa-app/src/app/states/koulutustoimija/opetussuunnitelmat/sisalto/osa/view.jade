@@ -61,3 +61,6 @@ mixin valinnat()
   div(ng-if="osa.tyyppi === 'tutkinnonosaryhma'" ui-view="tutkinnonosaryhma")
   div(ng-if="osa.tyyppi === 'suorituspolut'"     ui-view="suorituspolut")
   div(ng-if="osa.tyyppi === 'suorituspolku'"     ui-view="suorituspolku")
+
+  hr
+  div(ui-view="kommentointi")
