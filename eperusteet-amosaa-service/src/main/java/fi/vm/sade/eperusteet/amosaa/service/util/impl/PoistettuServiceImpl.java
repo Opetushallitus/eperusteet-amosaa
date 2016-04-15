@@ -21,7 +21,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.PoistettuTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
-import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappaleViite;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.dto.PoistettuDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
@@ -52,7 +52,7 @@ public class PoistettuServiceImpl implements PoistettuService {
 
     @Override
     @Transactional(readOnly = false)
-    public PoistettuDto lisaaPoistettu(Koulutustoimija koulutustoimija, Opetussuunnitelma ops, TekstiKappaleViite osa) {
+    public PoistettuDto lisaaPoistettu(Koulutustoimija koulutustoimija, Opetussuunnitelma ops, SisaltoViite osa) {
         if (osa == null || osa.getTekstiKappale() == null || osa.getTekstiKappale().getNimi() == null) {
             return null;
         }

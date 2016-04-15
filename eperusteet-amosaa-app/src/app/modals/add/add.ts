@@ -79,10 +79,8 @@ namespace ModalAdd {
                 $scope.valitse = (tyyppi) => {
                     $scope.obj = {
                         tyyppi: tyyppi,
-                        data: {
-                            tekstiKappale: {
-                                nimi: {}
-                            },
+                        tekstiKappale: {
+                            nimi: {}
                         }
                     };
                 };

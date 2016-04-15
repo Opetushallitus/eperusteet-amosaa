@@ -30,6 +30,7 @@ $fa-font-path: "fonts";
 @import "generic/animations";
 
 @import "modules/virhe";
+@import "modules/mixins";
 @import "modules/main";
 @import "modules/ylanavi";
 @import "modules/murupolku";
@@ -37,6 +38,7 @@ $fa-font-path: "fonts";
 @import "modules/opetussuunnitelmat";
 @import "modules/tiedotteet";
 @import "modules/kasitteet";
+@import "modules/tutkinnonosa";
 
 @keyframes subtle-transition {
     from { opacity: 0; }

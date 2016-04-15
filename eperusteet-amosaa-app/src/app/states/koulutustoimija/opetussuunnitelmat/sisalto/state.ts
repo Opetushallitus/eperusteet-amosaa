@@ -78,23 +78,16 @@ angular.module("app")
                             if (!uusi) {
                                 return;
                             }
-                            switch(uusi.tyyppi) {
-                                case "tekstikappale":
-                                    tekstit.post("", uusi.data)
-                                        .then(res => {
-                                            res.$$depth = 0;
-                                            otsikot.push(res);
-                                            _.find(otsikot, (otsikko: any) => otsikko.id == sisaltoRoot.id).lapset.push(res.id);
-                                            updateSivunavi();
-                                            $timeout(() =>
-                                                $state.go("root.koulutustoimija.opetussuunnitelmat.sisalto.tekstikappale", { tkvId: res.id }));
-                                        });
-                                    break;
-                                default: {
-                                    NotifikaatioService.normaali("Ei toteutettu vielä");
-                                    break;
-                                }
-                            }
+                            console.log(uusi);
+                            tekstit.post("", uusi)
+                                .then(res => {
+                                    res.$$depth = 0;
+                                    otsikot.push(res);
+                                    _.find(otsikot, (otsikko: any) => otsikko.id == sisaltoRoot.id).lapset.push(res.id);
+                                    updateSivunavi();
+                                    $timeout(() =>
+                                        $state.go("root.koulutustoimija.opetussuunnitelmat.sisalto.osa", { osaId: res.id }));
+                                });
                         });
                 };
             }

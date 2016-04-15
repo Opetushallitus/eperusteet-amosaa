@@ -137,5 +137,7 @@ angular.module("app", [
 })
 
 .run(($rootScope) => {
-
+    // $.get("templates.html", function(data) {
+    //     $("#includedTemplates").replaceWith(data);
+    // });
 });

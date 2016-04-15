@@ -1,0 +1,23 @@
+mixin tosaToteutus()
+  div(ng-if="$$ekEditing")
+    +contentToggler("$$showTavatjaymparisto", "'tavat-ja-ymparisto'")
+      div(style="margin-bottom: 16px" ckeditor slocalized ng-model="osa.tosa.tavatjaymparisto.teksti" layout="normal")
+
+    +contentToggler("$$showArvioinnista", "'osaamisen-arvioinnista'")
+      div(style="margin-bottom: 16px" ckeditor slocalized ng-model="osa.tosa.arvioinnista.teksti" layout="normal")
+
+  div(ng-if="!$$ekEditing")
+    +contentToggler("$$showTavatjaymparisto", "'tavat-ja-ymparisto'")
+      +teksti("osa.tosa.tavatjaymparisto.teksti")
+
+    +contentToggler("$$showArvioinnista", "'osaamisen-arvioinnista'")
+      +teksti("osa.tosa.arvioinnista.teksti")
+
+
+mixin tosaSisalto()
+  div(ng-hide="$$showToteutus")
+
+
+div.tutkinnonosa
+  +tosaToteutus
+  +tosaSisalto

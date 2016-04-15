@@ -1,7 +1,7 @@
 div.modal-header
   h2(ng-show="obj.tyyppi === 'tutkinnonosa'" kaanna="'otsikko-tutkinnonosa'")
   h2(ng-show="obj.tyyppi === 'tutkinnonosaryhma'" kaanna="'otsikko-tutkinnonosaryhma'")
-  h2(ng-show="obj.tyyppi === 'muodostuminen'" kaanna="'otsikko-muodostuminen'")
+  h2(ng-show="obj.tyyppi === 'suorituspolku'" kaanna="'otsikko-suorituspolku'")
   h2(ng-show="obj.tyyppi === 'tekstikappale'" kaanna="'otsikko-tekstikappale'")
   h2(ng-show="!obj.tyyppi" kaanna="'lisaa-sisaltoa'")
 
@@ -10,28 +10,16 @@ div.modal-body.modal-sisalto
     div(ng-repeat="tyyppi in sallitut")
       div.sisalto-item
         .pull-right.sisalto-valinta
-          button.btn.btn-primary(kaanna="'lisaa'" ng-click="valitse(tyyppi)" ng-disabled="tyyppi !== 'tekstikappale'")
+          button.btn.btn-primary(kaanna="'lisaa'" ng-click="valitse(tyyppi)" ng-disabled="tyyppi === 'tutkinnonosaryhma' || tyyppi === 'suorituspolku'")
           button.btn.btn-primary(kaanna="'tuo'" disabled)
         span.sisalto-icon
           +icon("file-text-o")
         div.sisalto-text
           span(kaanna="'sisaltotyyppi-' + tyyppi")
 
-  div.sisalto-tekstikappale(ng-show="obj.tyyppi === 'muodostuminen'")
+  div.sisalto-tekstikappale(ng-show="obj")
     h3(kaanna="'anna-nimi'")
-    input.form-control(slocalized ng-model="obj.data.tekstiKappale.nimi" type="text" required="true")
-
-  div.sisalto-tekstikappale(ng-show="obj.tyyppi === 'tutkinnonosaryhma'")
-    h3(kaanna="'anna-nimi'")
-    input.form-control(slocalized ng-model="obj.data.tekstiKappale.nimi" type="text" required="true")
-
-  div.sisalto-tekstikappale(ng-show="obj.tyyppi === 'tutkinnonosa'")
-    h3(kaanna="'anna-nimi'")
-    input.form-control(slocalized ng-model="obj.data.tekstiKappale.nimi" type="text" required="true")
-
-  div.sisalto-tekstikappale(ng-show="obj.tyyppi === 'tekstikappale'")
-    h3(kaanna="'anna-nimi'")
-    input.form-control(slocalized ng-model="obj.data.tekstiKappale.nimi" type="text" required="true")
+    input.form-control(slocalized ng-model="obj.tekstiKappale.nimi" type="text" required="true")
 
 div.modal-footer
   button.btn.btn-default(ng-click="ok()")

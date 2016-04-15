@@ -15,7 +15,6 @@
  */
 package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
@@ -25,46 +24,17 @@ import lombok.Setter;
 
 /**
  *
- * @author mikkom
+ * @author nkala
  */
 @Getter
 @Setter
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class TekstiKappaleViiteDto {
+public class SisaltoViiteKevytDto {
     private Long id;
-    private TekstiKappaleDto tekstiKappale;
-    private boolean pakollinen;
-    private boolean valmis;
-    private boolean liikkumaton;
-    private Reference owner;
-    private SisaltoTyyppi tyyppi;
-    private LokalisoituTekstiDto ohjeteksti;
-    private LokalisoituTekstiDto perusteteksti;
-
     @JsonProperty("_tekstiKappale")
     private Reference tekstiKappaleRef;
-
-    public TekstiKappaleViiteDto() { }
-
-    public TekstiKappaleViiteDto(TekstiKappaleDto tekstiKappale) {
-        this.tekstiKappale = tekstiKappale;
-    }
-
-    @Getter
-    @Setter
-    public static class Matala extends TekstiKappaleViiteDto {
-        private List<Reference> lapset;
-
-        public Matala() {}
-
-        public Matala(TekstiKappaleDto tekstiKappale) {
-            super(tekstiKappale);
-        }
-    }
-
-    @Getter
-    @Setter
-    public static class Puu extends TekstiKappaleViiteDto {
-        private List<Puu> lapset;
-    }
+    private TekstiKappaleKevytDto tekstiKappale;
+    private SisaltoTyyppi tyyppi;
+    private boolean pakollinen;
+    private boolean valmis;
+    private List<Reference> lapset;
 }

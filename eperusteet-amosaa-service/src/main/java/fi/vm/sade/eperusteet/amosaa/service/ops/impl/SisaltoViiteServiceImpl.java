@@ -22,18 +22,21 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.revision.Revision;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
-import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappaleViite;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Tutkinnonosa;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.TekstiKappaleDto;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.TekstiKappaleViiteDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
+import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.TekstiKappaleRepository;
-import fi.vm.sade.eperusteet.amosaa.repository.teksti.TekstikappaleviiteRepository;
+import fi.vm.sade.eperusteet.amosaa.repository.tutkinnonosa.TutkinnonosaRepository;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.locking.LockManager;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
-import fi.vm.sade.eperusteet.amosaa.service.ops.TekstiKappaleViiteService;
+import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.teksti.TekstiKappaleService;
 import static fi.vm.sade.eperusteet.amosaa.service.util.Nulls.assertExists;
 import fi.vm.sade.eperusteet.amosaa.service.util.PoistettuService;
@@ -53,7 +56,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional(readOnly = true)
-public class TekstiKappaleViiteServiceImpl implements TekstiKappaleViiteService {
+public class SisaltoViiteServiceImpl implements SisaltoViiteService {
 
     @Autowired
     private DtoMapper mapper;
@@ -68,10 +71,13 @@ public class TekstiKappaleViiteServiceImpl implements TekstiKappaleViiteService 
     private OpetussuunnitelmaRepository opsRepository;
 
     @Autowired
-    private TekstikappaleviiteRepository repository;
+    private SisaltoviiteRepository repository;
 
     @Autowired
     private TekstiKappaleRepository tekstiKappaleRepository;
+
+    @Autowired
+    private TutkinnonosaRepository tutkinnonosaRepository;
 
     @Autowired
     private TekstiKappaleService tekstiKappaleService;
@@ -81,44 +87,65 @@ public class TekstiKappaleViiteServiceImpl implements TekstiKappaleViiteService 
 
     @Override
     public <T> T getTekstiKappaleViite(@P("ktId") Long ktId, Long opsId, Long viiteId, Class<T> t) {
-        TekstiKappaleViite viite = findViite(opsId, viiteId);
+        SisaltoViite viite = findViite(opsId, viiteId);
         return mapper.map(viite, t);
     }
 
     @Override
     public <T> List<T> getTekstiKappaleViitteet(Long ktId, Long opsId, Class<T> t) {
-        List<TekstiKappaleViite> tkvs = repository.findAllByOwnerId(opsId);
+        List<SisaltoViite> tkvs = repository.findAllByOwnerId(opsId);
         return mapper.mapAsList(tkvs, t);
     }
 
     @Override
-    public TekstiKappaleViiteDto.Matala getTekstiKappaleViite(Long ktId, Long opsId, Long viiteId) {
-        TekstiKappaleViite viite = findViite(opsId, viiteId);
-        return mapper.map(viite, TekstiKappaleViiteDto.Matala.class);
+    public SisaltoViiteDto.Matala getTekstiKappaleViite(Long ktId, Long opsId, Long viiteId) {
+        SisaltoViite viite = findViite(opsId, viiteId);
+        return mapper.map(viite, SisaltoViiteDto.Matala.class);
     }
 
     @Override
     @Transactional(readOnly = false)
-    public TekstiKappaleViiteDto.Matala addTekstiKappaleViite(
+    public SisaltoViiteDto.Matala addTekstiKappaleViite(
             Long ktId,
             Long opsId,
             Long viiteId,
-            TekstiKappaleViiteDto.Matala viiteDto) {
-        TekstiKappaleViite parentViite = findViite(opsId, viiteId);
-        TekstiKappaleViite uusiViite = mapper.map(viiteDto, TekstiKappaleViite.class);
+            SisaltoViiteDto.Matala viiteDto) {
+        // Ei sallita ohjelmallisesti luotujen sisältöjen luomista uudelleen
+        if (viiteDto.getTyyppi() == null || !SisaltoTyyppi.salliLuonti(viiteDto.getTyyppi())) {
+            throw new BusinessRuleViolationException("ei-sallittu-tyyppi");
+        }
+        
+        // TODO: Tarkistetaan onko sisältö lisätty oikeantyyppiseen sisältöelementtiin
+
+        SisaltoViite parentViite = findViite(opsId, viiteId);
+        SisaltoViite uusiViite = mapper.map(viiteDto, SisaltoViite.class);
         uusiViite.setOwner(parentViite.getOwner());
         viiteDto.setTekstiKappale(tekstiKappaleService.add(uusiViite, viiteDto.getTekstiKappale()));
         uusiViite.setVanhempi(parentViite);
         parentViite.getLapset().add(0, uusiViite);
-        uusiViite.setTyyppi(SisaltoTyyppi.TEKSTIKAPPALE);
         uusiViite = repository.save(uusiViite);
-        return mapper.map(uusiViite, TekstiKappaleViiteDto.Matala.class);
+
+        switch (uusiViite.getTyyppi()) {
+            case TOSARYHMA:
+                break;
+            case SUORITUSPOLKU:
+                break;
+            case TUTKINNONOSA:
+                Tutkinnonosa tosa = new Tutkinnonosa();
+                tosa.setTyyppi(TutkinnonosaTyyppi.OMA);
+                uusiViite.setTosa(tutkinnonosaRepository.save(tosa));
+                break;
+            default:
+                break;
+        }
+
+        return mapper.map(uusiViite, SisaltoViiteDto.Matala.class);
     }
 
     @Override
     @Transactional(readOnly = false)
-    public TekstiKappaleViiteDto updateTekstiKappaleViite(Long ktId, Long opsId, Long viiteId, TekstiKappaleViiteDto uusi) {
-        TekstiKappaleViite viite = findViite(opsId, viiteId);
+    public SisaltoViiteDto updateSisaltoViite(Long ktId, Long opsId, Long viiteId, SisaltoViiteDto uusi) {
+        SisaltoViite viite = findViite(opsId, viiteId);
         Opetussuunnitelma ops = opsRepository.findOne(opsId);
         if (viite.getOwner() != ops) {
             throw new BusinessRuleViolationException("vain-oman-editointi-sallittu");
@@ -138,18 +165,26 @@ public class TekstiKappaleViiteServiceImpl implements TekstiKappaleViiteService 
             uusi.getTekstiKappale().setTeksti(mapper.map(viite.getTekstiKappale(), TekstiKappaleDto.class).getTeksti());
         }
 
+        if (viite.getTyyppi() == SisaltoTyyppi.TUTKINNONOSA) {
+            if (!Objects.equals(uusi.getTosa().getId(), viite.getTosa().getId())) {
+                throw new BusinessRuleViolationException("tutkinnonosan-viitetta-ei-voi-vaihtaa");
+            }
+            Tutkinnonosa mappedOsa = mapper.map(uusi.getTosa(), Tutkinnonosa.class);
+            viite.setTosa(mappedOsa);
+        }
+
 //        repository.lock(viite.getRoot());
 //        lockMgr.lock(viite.getTekstiKappale().getId());
         updateTekstiKappale(opsId, viite, uusi.getTekstiKappale(), false);
         viite.setValmis(uusi.isValmis());
         viite = repository.save(viite);
-        return mapper.map(viite, TekstiKappaleViiteDto.class);
+        return mapper.map(viite, SisaltoViiteDto.class);
     }
 
     @Override
     @Transactional(readOnly = false)
     public void removeTekstiKappaleViite(Long ktId, Long opsId, Long viiteId) {
-        TekstiKappaleViite viite = findViite(opsId, viiteId);
+        SisaltoViite viite = findViite(opsId, viiteId);
         Koulutustoimija koulutustoimija = koulutustoimijaRepository.findOne(ktId);
         Opetussuunnitelma ops = opsRepository.findOne(opsId);
 
@@ -174,28 +209,28 @@ public class TekstiKappaleViiteServiceImpl implements TekstiKappaleViiteService 
 
     @Override
     @Transactional(readOnly = false)
-    public TekstiKappaleViiteDto.Puu kloonaaTekstiKappale(Long ktId, Long opsId, Long viiteId) {
-        TekstiKappaleViite viite = findViite(opsId, viiteId);
+    public SisaltoViiteDto.Puu kloonaaTekstiKappale(Long ktId, Long opsId, Long viiteId) {
+        SisaltoViite viite = findViite(opsId, viiteId);
         TekstiKappale originaali = viite.getTekstiKappale();
         // TODO: Tarkista onko tekstikappaleeseen lukuoikeutta
         TekstiKappale klooni = originaali.copy();
         klooni.setTila(Tila.LUONNOS);
         viite.setTekstiKappale(tekstiKappaleRepository.save(klooni));
         viite = repository.save(viite);
-        return mapper.map(viite, TekstiKappaleViiteDto.Puu.class);
+        return mapper.map(viite, SisaltoViiteDto.Puu.class);
     }
 
-    private List<TekstiKappaleViite> findViitteet(Long opsId, Long viiteId) {
-        TekstiKappaleViite viite = findViite(opsId, viiteId);
+    private List<SisaltoViite> findViitteet(Long opsId, Long viiteId) {
+        SisaltoViite viite = findViite(opsId, viiteId);
         return repository.findAllByTekstiKappale(viite.getTekstiKappale());
     }
 
-    private TekstiKappaleViite findViite(Long opsId, Long viiteId) {
+    private SisaltoViite findViite(Long opsId, Long viiteId) {
         return assertExists(repository.findOneByOwnerIdAndId(opsId, viiteId), "Tekstikappaleviitettä ei ole olemassa");
     }
 
-    private void clearChildren(TekstiKappaleViite viite, Set<TekstiKappaleViite> refs) {
-        for (TekstiKappaleViite lapsi : viite.getLapset()) {
+    private void clearChildren(SisaltoViite viite, Set<SisaltoViite> refs) {
+        for (SisaltoViite lapsi : viite.getLapset()) {
             refs.add(lapsi);
             clearChildren(lapsi, refs);
         }
@@ -203,7 +238,7 @@ public class TekstiKappaleViiteServiceImpl implements TekstiKappaleViiteService 
         viite.getLapset().clear();
     }
 
-    private void updateTekstiKappale(Long opsId, TekstiKappaleViite viite, TekstiKappaleDto uusiTekstiKappale, boolean requireLock) {
+    private void updateTekstiKappale(Long opsId, SisaltoViite viite, TekstiKappaleDto uusiTekstiKappale, boolean requireLock) {
         if (uusiTekstiKappale != null) {
             if (Objects.equals(opsId, viite.getOwner().getId())) {
                 if (viite.getTekstiKappale() != null) {
@@ -222,19 +257,20 @@ public class TekstiKappaleViiteServiceImpl implements TekstiKappaleViiteService 
     // Kopioi viitehierarkian ja siirtää irroitetut paikoilleen
     // UUID parentin tunniste
     @Override
-    public TekstiKappaleViite kopioiHierarkia(TekstiKappaleViite original, Opetussuunnitelma owner) {
-        TekstiKappaleViite result = new TekstiKappaleViite();
-        result.setTekstiKappale(original.getTekstiKappale().copy());
+    public SisaltoViite kopioiHierarkia(SisaltoViite original, Opetussuunnitelma owner) {
+        SisaltoViite result = new SisaltoViite();
+        TekstiKappale originalTk = original.getTekstiKappale();
+        result.setTekstiKappale(originalTk != null ? tekstiKappaleRepository.save(originalTk.copy()) : null);
         result.setOwner(owner);
         result.setLiikkumaton(original.isLiikkumaton());
         result.setPakollinen(original.isPakollinen());
         result.setOhjeteksti(original.getOhjeteksti());
         result.setPerusteteksti(original.getPerusteteksti());
-        List<TekstiKappaleViite> lapset = original.getLapset();
+        List<SisaltoViite> lapset = original.getLapset();
 
         if (lapset != null) {
-            for (TekstiKappaleViite lapsi : lapset) {
-                TekstiKappaleViite uusiLapsi = kopioiHierarkia(lapsi, owner);
+            for (SisaltoViite lapsi : lapset) {
+                SisaltoViite uusiLapsi = kopioiHierarkia(lapsi, owner);
                 uusiLapsi.setVanhempi(result);
                 result.getLapset().add(uusiLapsi);
             }
@@ -242,15 +278,15 @@ public class TekstiKappaleViiteServiceImpl implements TekstiKappaleViiteService 
         return repository.save(result);
     }
 
-    private TekstiKappaleViite updateTraverse(Long ktId, TekstiKappaleViite parent, TekstiKappaleViiteDto.Puu uusi,
-        Set<TekstiKappaleViite> refs) {
-        TekstiKappaleViite viite = repository.findOne(uusi.getId());
+    private SisaltoViite updateTraverse(Long ktId, SisaltoViite parent, SisaltoViiteDto.Puu uusi,
+        Set<SisaltoViite> refs) {
+        SisaltoViite viite = repository.findOne(uusi.getId());
         if (viite == null || !refs.remove(viite)) {
             throw new BusinessRuleViolationException("Viitepuun päivitysvirhe, annettua alipuun juuren viitettä ei löydy");
         }
         viite.setVanhempi(parent);
 
-        List<TekstiKappaleViite> lapset = viite.getLapset();
+        List<SisaltoViite> lapset = viite.getLapset();
         lapset.clear();
 
         if (uusi.getLapset() != null) {
@@ -264,8 +300,8 @@ public class TekstiKappaleViiteServiceImpl implements TekstiKappaleViiteService 
 
     @Override
     @Transactional(readOnly = false)
-    public void reorderSubTree(Long ktId, Long opsId, Long rootViiteId, TekstiKappaleViiteDto.Puu uusi) {
-        TekstiKappaleViite viite = findViite(opsId, rootViiteId);
+    public void reorderSubTree(Long ktId, Long opsId, Long rootViiteId, SisaltoViiteDto.Puu uusi) {
+        SisaltoViite viite = findViite(opsId, rootViiteId);
         Opetussuunnitelma ops = opsRepository.findOne(opsId);
 
         if (ops == null) {
@@ -273,9 +309,9 @@ public class TekstiKappaleViiteServiceImpl implements TekstiKappaleViiteService 
         }
 
         repository.lock(viite.getRoot());
-        Set<TekstiKappaleViite> refs = Collections.newSetFromMap(new IdentityHashMap<>());
+        Set<SisaltoViite> refs = Collections.newSetFromMap(new IdentityHashMap<>());
         refs.add(viite);
-        TekstiKappaleViite parent = viite.getVanhempi();
+        SisaltoViite parent = viite.getVanhempi();
         clearChildren(viite, refs);
         updateTraverse(ktId, parent, uusi, refs);
     }
@@ -297,7 +333,7 @@ public class TekstiKappaleViiteServiceImpl implements TekstiKappaleViiteService 
 
     @Override
     public Object getData(Long ktId, Long opsId, Integer rev) {
-        return mapper.map(repository.findRevision(opsId, rev), TekstiKappaleViite.class);
+        return mapper.map(repository.findRevision(opsId, rev), SisaltoViite.class);
     }
 
     @Override

@@ -17,7 +17,7 @@ package fi.vm.sade.eperusteet.amosaa.service.teksti.impl;
 
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
-import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappaleViite;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.TekstiKappaleDto;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.TekstiKappaleRepository;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
@@ -50,7 +50,7 @@ public class TekstiKappaleServiceImpl implements TekstiKappaleService {
     }
 
     @Override
-    public TekstiKappaleDto add(TekstiKappaleViite viite, TekstiKappaleDto tekstiKappaleDto) {
+    public TekstiKappaleDto add(SisaltoViite viite, TekstiKappaleDto tekstiKappaleDto) {
         TekstiKappale tekstiKappale = mapper.map(tekstiKappaleDto, TekstiKappale.class);
         tekstiKappale.setTila(Tila.LUONNOS);
         viite.setTekstiKappale(tekstiKappale);
@@ -69,7 +69,7 @@ public class TekstiKappaleServiceImpl implements TekstiKappaleService {
     }
 
     @Override
-    public TekstiKappaleDto mergeNew(TekstiKappaleViite viite, TekstiKappaleDto tekstiKappaleDto) {
+    public TekstiKappaleDto mergeNew(SisaltoViite viite, TekstiKappaleDto tekstiKappaleDto) {
         if ( viite.getTekstiKappale() == null || viite.getTekstiKappale().getId() == null ) {
             throw new IllegalArgumentException("Virheellinen viite");
         }

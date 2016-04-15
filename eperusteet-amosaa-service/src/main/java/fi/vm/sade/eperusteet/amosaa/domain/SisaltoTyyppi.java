@@ -16,6 +16,7 @@
 package fi.vm.sade.eperusteet.amosaa.domain;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import java.util.EnumSet;
 
 
 /**
@@ -58,5 +59,9 @@ public enum SisaltoTyyppi {
             }
         }
         return false;
+    }
+
+    public static boolean salliLuonti(SisaltoTyyppi tyyppi) {
+        return EnumSet.of(SUORITUSPOLKU, TUTKINNONOSA, TEKSTIKAPPALE, TOSARYHMA).contains(tyyppi);
     }
 }

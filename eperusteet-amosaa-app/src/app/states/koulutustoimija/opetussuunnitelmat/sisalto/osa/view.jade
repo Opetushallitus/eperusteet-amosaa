@@ -1,0 +1,63 @@
+mixin valinnat()
+  .tkv-valinnat
+    .tkv-valinta
+      +checkbox("'valmis'", "osa.valmis")
+    .tkv-valinta(ng-if="ops.tyyppi === 'pohja'")
+      +checkbox("'pakollinen'", "osa.pakollinen")
+    .tkv-valinta(ng-if="ops.tyyppi === 'pohja'")
+      +checkbox("'liikuttaminen-estetty'", "osa.liikkumaton")
+  .clearfix
+
+.tekstikappaleet.subtle-transition
+  .ylapalkki
+    +historia("versio",
+      "osa.tekstiKappale.$$nimi",
+      "osa.tekstiKappale.muokattu",
+      "1",
+      "edit()",
+      "listRevisions()",
+      "restoreRevision()",
+      "restoreNew()")
+      button.btn.btn-primary.muokkaa(ng-show="$$ekEditing" ng-click="remove()" kaanna="'poista'")
+
+  div
+    +valinnat
+    div(ng-if="$$ekEditing")
+      h1(kaanna="'nimi'" style="margin-bottom: 16px; margin-top: 16px" )
+      input.form-control(style="margin-bottom: 16px; margin-top: 16px" slocalized ng-model="osa.tekstiKappale.nimi" type="text" required="true")
+      div(ng-if="ops.tyyppi === 'pohja'")
+        +contentToggler("$$showOhje", "'tekstikappale-ohjeteksti'")
+          div(style="margin-bottom: 16px" ckeditor slocalized ng-model="osa.ohjeteksti" layout="normal")
+        +contentToggler("$$showPerusteteksti", "'tekstikappale-perusteteksti'")
+          div(style="margin-bottom: 16px" ckeditor slocalized ng-model="osa.perusteteksti" layout="normal")
+      div(ng-if="ops.tyyppi !== 'pohja'")
+        div.ohjeteksti(ng-if="osa.ohjeteksti")
+          a(href="" ng-click="$$showOhjeteksti = !$$showOhjeteksti" kaanna="'toggle-ohjeteksti'")
+          div(style="margin-top: 10px;" ng-show="$$showOhjeteksti")
+            +teksti("osa.ohjeteksti")
+        div.perusteteksti(ng-if="osa.ohjeteksti")
+          a(href="" ng-click="$$showPerusteteksti = !$$showPerusteteksti" kaanna="'toggle-perusteteksti'")
+          div(style="margin-top: 10px;" ng-show="$$showPerusteteksti")
+            +teksti("osa.perusteteksti")
+
+      +contentToggler("$$showSisalto", "'sisalto'")
+        div(style="margin-bottom: 16px" ckeditor slocalized ng-model="osa.tekstiKappale.teksti" layout="normal")
+
+    div(ng-if="!$$ekEditing")
+      h1(style="margin-bottom: 16px; margin-top: 16px" kaanna="osa.tekstiKappale.nimi")
+      div.ohjeteksti(ng-if="osa.ohjeteksti")
+        a(href="" ng-click="$$showOhjeteksti = !$$showOhjeteksti" kaanna="'toggle-ohjeteksti'")
+        div(style="margin-top: 10px;" ng-show="$$showOhjeteksti")
+          +teksti("osa.ohjeteksti")
+      div.perusteteksti(ng-if="osa.ohjeteksti")
+        a(href="" ng-click="$$showPerusteteksti = !$$showPerusteteksti" kaanna="'toggle-perusteteksti'")
+        div(style="margin-top: 10px;" ng-show="$$showPerusteteksti")
+          +teksti("osa.perusteteksti")
+      +teksti("osa.tekstiKappale.teksti")
+
+  div(ng-if="osa.tyyppi === 'tekstikappale'"     ui-view="tekstikappale")
+  div(ng-if="osa.tyyppi === 'tutkinnonosat'"     ui-view="tutkinnonosat")
+  div(ng-if="osa.tyyppi === 'tutkinnonosa'"      ui-view="tutkinnonosa")
+  div(ng-if="osa.tyyppi === 'tutkinnonosaryhma'" ui-view="tutkinnonosaryhma")
+  div(ng-if="osa.tyyppi === 'suorituspolut'"     ui-view="suorituspolut")
+  div(ng-if="osa.tyyppi === 'suorituspolku'"     ui-view="suorituspolku")

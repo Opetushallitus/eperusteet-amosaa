@@ -29,7 +29,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.revision.Revision;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
-import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappaleViite;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.dto.PoistettuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
@@ -41,17 +41,17 @@ import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRe
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.peruste.CachedPerusteRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.TekstiKappaleRepository;
-import fi.vm.sade.eperusteet.amosaa.repository.teksti.TekstikappaleviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
-import fi.vm.sade.eperusteet.amosaa.service.ops.TekstiKappaleViiteService;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
+import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 
 /**
  *
@@ -83,10 +83,10 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     private TekstiKappaleRepository tkRepository;
 
     @Autowired
-    private TekstikappaleviiteRepository tkvRepository;
+    private SisaltoviiteRepository tkvRepository;
 
     @Autowired
-    private TekstiKappaleViiteService tkvService;
+    private SisaltoViiteService tkvService;
 
     @Autowired
     private CachedPerusteRepository cachedPerusteRepository;
@@ -104,10 +104,10 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         return mapper.mapAsList(opetussuunnitelmat, OpetussuunnitelmaBaseDto.class);
     }
 
-    private void alustaOpetussuunnitelma(Opetussuunnitelma ops, TekstiKappaleViite rootTkv) {
+    private void alustaOpetussuunnitelma(Opetussuunnitelma ops, SisaltoViite rootTkv) {
         // Lisätään tutkinnonosille oma sisältöviite
         {
-            TekstiKappaleViite tosat = new TekstiKappaleViite();
+            SisaltoViite tosat = new SisaltoViite();
             TekstiKappale tk = new TekstiKappale();
             tk.setNimi(LokalisoituTeksti.of(Kieli.FI, "Tutkinnon osat"));
             tk.setValmis(true);
@@ -122,7 +122,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
         // Lisätään suorituspoluille oma sisältöviite
         {
-            TekstiKappaleViite suorituspolut = new TekstiKappaleViite();
+            SisaltoViite suorituspolut = new SisaltoViite();
             TekstiKappale tk = new TekstiKappale();
             tk.setNimi(LokalisoituTeksti.of(Kieli.FI, "Suorituspolut"));
             tk.setValmis(true);
@@ -144,9 +144,9 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         ops.setTila(Tila.LUONNOS);
         ops = repository.save(ops);
 
-        TekstiKappaleViite rootTkv = null;
+        SisaltoViite rootTkv = null;
         if (opsDto.getTyyppi() != OpsTyyppi.YHTEINEN) {
-            rootTkv = new TekstiKappaleViite();
+            rootTkv = new SisaltoViite();
             rootTkv.setOwner(ops);
             rootTkv = tkvRepository.save(rootTkv);
         }
@@ -179,7 +179,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                     if (pohja == null) {
                         throw new BusinessRuleViolationException("pohjaa-ei-loytynyt");
                     }
-                    TekstiKappaleViite pohjatkv = tkvRepository.findOneRoot(pohja);
+                    SisaltoViite pohjatkv = tkvRepository.findOneRoot(pohja);
                     tkvRepository.save(tkvService.kopioiHierarkia(pohjatkv, ops));
                     ops.setPohja(pohja);
                     break;
