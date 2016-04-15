@@ -126,12 +126,6 @@ angular.module("app")
                                 .then(() => {
                                     kommentti.poistettu = true;
                                     kommentti.sisalto = "";
-                                    /*if (kommentti.parentId == 0) {
-                                        $scope.kommentit = _.without($scope.kommentit, kommentti)
-                                    } else {
-                                        let parentKommentti: any = _($scope.kommentit).find({id: kommentti.parentId});
-                                        parentKommentti.$$lapset = _.without(parentKommentti.lapset, kommentti);
-                                    }*/
                                 });
                         }
                     })();

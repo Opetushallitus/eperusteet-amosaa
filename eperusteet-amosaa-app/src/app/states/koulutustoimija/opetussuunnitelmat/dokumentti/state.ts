@@ -72,18 +72,17 @@ angular.module("app")
                     tyylit: 4,
                 };
 
-                //
                 const poll = () => {
                     dokumentti.one("tila").get().then((dokumenttiDto) => {
                         $scope.dokumenttiDto = dokumenttiDto;
                         if (dokumenttiDto.tila === 'luodaan') {
-                            // $timeout(poll, 1000);
+                            $timeout(poll, 1000);
                         }
                     });
                 };
 
                 if (dokumenttiDto && dokumenttiDto.tila === 'luodaan') {
-                    // $timeout(poll, 1000);
+                    $timeout(poll, 1000);
                 }
             }
         }

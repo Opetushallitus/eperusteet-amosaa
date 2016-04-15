@@ -56,6 +56,13 @@ mixin kommentti(kommentti, ...tyyppi)
                         kommentti +".$$isVastaus = false")
     div.clearfix
 
+mixin kommentti-poistettu(kommentti, ...tyyppi)
+  div(class="kommentti-poistettu " + tyyppi)
+    p
+      strong(kaanna="'viesti-poistettu'")
+      span=" "
+      span(ng-bind=kommentti + ".muokattu | aikaleima")
+
 div.kommentointi
   h1(kaanna="keskustelu")
 
@@ -71,11 +78,9 @@ div.kommentointi
     div(ng-hide="kommentti.poistettu")
       +kommentti("kommentti")
     div(ng-show="kommentti.poistettu")
-      div.kommentti-poistettu
-        p
-          strong(kaanna="'viesti-poistettu'")
-          span=" "
-          span(ng-bind="kommentti.muokattu | aikaleima")
+      +kommentti-poistettu("kommentti")
     div(ng-repeat="lapsi in kommentti.$$lapset")
       div(ng-hide="lapsi.poistettu")
         +kommentti("lapsi", "kommentti-lapsi")
+      div(ng-show="lapsi.poistettu")
+        +kommentti-poistettu("lapsi", "kommentti-lapsi")

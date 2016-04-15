@@ -147,7 +147,7 @@ public class KommenttiServiceImpl implements KommenttiService {
     public KommenttiDto update(Long opsId, Long kommenttiId, KommenttiDto kommenttiDto) {
         Kommentti kommentti = repository.findOne(kommenttiId);
         assertExists(kommentti, "Päivitettävää kommenttia ei ole olemassa");
-        assertRights(kommentti, opsId, Permission.LUKU);
+        assertRights(kommentti, opsId, Permission.HALLINTA);
         kommentti.setSisalto(clip(kommenttiDto.getSisalto()));
         KommenttiDto uusiDto = mapper.map(repository.save(kommentti), KommenttiDto.class);
         return addNameToKommentti(uusiDto);
@@ -157,15 +157,8 @@ public class KommenttiServiceImpl implements KommenttiService {
     public void delete(Long opsId, Long kommenttiId) {
         Kommentti kommentti = repository.findOne(kommenttiId);
         assertExists(kommentti, "Poistettavaa kommenttia ei ole olemassa");
-        assertRights(kommentti, opsId, Permission.LUONTI);
+        assertRights(kommentti, opsId, Permission.HALLINTA);
         kommentti.setPoistettu(true);
         repository.save(kommentti);
-
-        // Poistetaan lapset myös
-        /*repository.findByParentId(kommenttiId).stream()
-                .forEach((k) -> {
-                k.setPoistettu(true);
-                repository.save(k);
-        });*/
     }
 }
