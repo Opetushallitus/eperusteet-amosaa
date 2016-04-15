@@ -1,33 +1,31 @@
-mixin gicon(type)
-  i(class="glyphicon glyphicon-" + type)
-
 mixin gtext(type, name)
   +gicon(type)
   span=" "
   span(kaanna=name)
 
 mixin kuva(tyyppi)
-  div(ng-hide=tyyppi + "Uploader.queue.length !== 0")
-    p
-      a(ng-href="{{ kuva." + tyyppi + " }}" target="_blank")
-        img(ng-src="{{ kuva." + tyyppi + " }}" class="img-responsive")
-    span.btn.btn-danger(ng-click="poistaKuva('" + tyyppi + "')")
-      +gtext("trash", "poista")
-    span=" "
-    span.btn.btn-default.btn-file
-      span(kaanna="'valitse-uusi-kuva'")
-      input(type="file" nv-file-select="" nv-file-drop="" uploader=tyyppi + "Uploader")
-  span(ng-repeat="item in " + tyyppi + "Uploader.queue")
-    p(ng-bind="item.file.name" style="height: 120px;")
-    button.btn.btn-default(type="button"
-                          ng-click="item.remove()"
-                          ng-disabled="item.isReady || item.isUploading || item.isSuccess")
-      span(kaanna="'peruuta'")
-    span=" "
-    button.btn.btn-success(type="button"
-                           ng-click="item.upload()"
-                           ng-disabled="item.isReady || item.isUploading || item.isSuccess")
-      +gtext("upload", "laheta")
+  div
+    div(ng-hide=tyyppi + "Uploader.queue.length !== 0")
+      p
+        a(ng-href="{{ kuva." + tyyppi + " }}" target="_blank")
+          img(ng-src="{{ kuva." + tyyppi + " }}" class="img-responsive")
+      span.btn.btn-danger(ng-click="poistaKuva('" + tyyppi + "')")
+        +gtext("trash", "poista")
+      span=" "
+      span.btn.btn-default.btn-file
+        span(kaanna="'valitse-uusi-kuva'")
+        input(type="file" nv-file-select="" nv-file-drop="" uploader=tyyppi + "Uploader")
+    span(ng-repeat="item in " + tyyppi + "Uploader.queue")
+      p(ng-bind="item.file.name" style="height: 120px;")
+      button.btn.btn-default(type="button"
+                            ng-click="item.remove()"
+                            ng-disabled="item.isReady || item.isUploading || item.isSuccess")
+        span(kaanna="'peruuta'")
+      span=" "
+      button.btn.btn-success(type="button"
+                             ng-click="item.upload()"
+                             ng-disabled="item.isReady || item.isUploading || item.isSuccess")
+        +gtext("upload", "laheta")
 
 div.dokumentti
   div.row
