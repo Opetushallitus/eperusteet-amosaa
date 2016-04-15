@@ -69,7 +69,7 @@ public class KommenttiServiceImpl implements KommenttiService {
     @Override
     @Transactional(readOnly = true)
     public List<KommenttiDto> getAllByTekstikappaleviite(Long opsId, Long tkvId) {
-        List<Kommentti> kommentit = repository.findByTekstikappaleviiteIdAndPoistettuFalseOrderByLuotu(tkvId);
+        List<Kommentti> kommentit = repository.findByTekstikappaleviiteIdAndPoistettuFalseOrderByLuotuDesc(tkvId);
         List<KommenttiDto> kommenttiDtos = mapper.mapAsList(kommentit, KommenttiDto.class);
         return addNameToKommentit(kommenttiDtos);
     }

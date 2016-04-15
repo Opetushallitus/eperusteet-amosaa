@@ -301,22 +301,43 @@ $ops-top-vertical-margin: 10px;
                             margin-right: 10px;
                             margin-left: 84px;
 
+                            .kommentti-muokattu {
+
+                            }
                             .kommentti-nimi {
                                 font-size: 18px;
-                                font-weight: 500;
                                 margin-top: 10px;
+                                margin-bottom: 0;
+                                font-weight: 500;
                                 line-height: 1;
                             }
                             .kommentti-teksti {
+                                word-break: break-all;
+
                                 button {
                                     margin-top: 5px;
                                     margin-left: 5px;
                                 }
-
                             }
                         }
                         .kommentti-footer {
-                            margin: 10px 0 0 0;
+                            margin: 0;
+                        }
+                    }
+                    .kommentti-textarea {
+                        resize: vertical;
+                        min-height: 100px;
+                        &:hover {
+                            background-color: white;
+                        }
+                    }
+                    .kommentti-ylitys {
+                        color: #a94442;
+                    }
+                    .kommentti-uusi {
+                        button {
+                            margin-top: 5px;
+                            margin-left: 5px;
                         }
                     }
                     .kommentti-lapsi {
@@ -333,6 +354,11 @@ $ops-top-vertical-margin: 10px;
                             margin-left: 5px;
                         }
 
+                    }
+                    .inactive {
+                        color: gray;
+                        pointer-events: none;
+                        cursor: default;
                     }
                 }
             }

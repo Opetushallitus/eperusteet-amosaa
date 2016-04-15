@@ -1,5 +1,10 @@
 mixin kirjoita-kommentti(kommentti, tallenna, peruuta)
-  div(ckeditor layout="minimal" ng-model=kommentti + ".sisalto")
+  textarea.form-control.kommentti-textarea(maxlength='{{ $$kommenttiMaxLength.maara }}' ng-model=kommentti + ".sisaltoKlooni")
+
+  p(ng-show=kommentti + ".sisalto === $$kommenttiMaxLength.maara") Liikaa tekstiä
+
+  span.kommentti-ylitys(ng-show=kommentti + ".sisalto.length >= $$kommenttiMaxLength.maara") {{ "kommentti-ei-saa-ylittaa" | kaanna:$$kommenttiMaxLength }}
+
   div.pull-right
     button.btn.btn-default(kaanna="'peruuta'" ng-click=peruuta)
     button.btn.btn-primary(kaanna="'tallenna'" ng-click=tallenna)
@@ -10,39 +15,57 @@ mixin kommentti(kommentti, ...tyyppi)
       div.nimikirjain-avatar(ng-bind=kommentti + ".nimi | nimikirjaimet")
 
     div.kommentti-painikkeet
-      a(href="" ng-click=kommentti + ".isMuokkaus = !" + kommentti + ".isMuokkaus" ng-hide=kommentti + ".isMuokkaus")
+      a(href="" ng-click=kommentti + ".isMuokkaus = !" + kommentti + ".isMuokkaus"
+        ng-hide=kommentti + ".isMuokkaus" ng-class="$$ekEditing ? 'inactive' : ''")
         +icon("pencil-square-o")
-      a(href="" ng-click="poistaKommentti(" + kommentti + ")" ng-hide=kommentti + ".isMuokkaus")
+      a(href="" ng-click="poistaKommentti(" + kommentti + ")" ng-hide=kommentti + ".isMuokkaus"
+        ng-class="$$ekEditing ? 'inactive' : ''")
         +icon("trash-o")
 
     div.kommentti-sisalto
-      p.kommentti-nimi(ng-bind=kommentti + ".nimi")
+      p.kommentti-nimi
+        span(ng-bind=kommentti + ".nimi")
+
+      p.kommentti-muokattu
+        strong(kaanna="'lahetetty'")
+        span=" "
+        span(ng-bind=kommentti + ".luotu | aikaleima")
+        span(ng-show=kommentti + ".muokattu !== " + kommentti + ".luotu")
+          span=" ("
+          strong(kaanna="'muokattu'")
+          span=" "
+          span(ng-bind=kommentti + ".muokattu | aikaleima")
+          span=")"
 
       div.kommentti-teksti
         div(ng-if="!" + kommentti + ".isMuokkaus")
           p(ng-bind-html=kommentti + ".sisalto")
         div(ng-if=kommentti + ".isMuokkaus")
-          +kirjoita-kommentti(kommentti, "muokkaaKommentti(" + kommentti + ")", kommentti + ".isMuokkaus = !" + kommentti + ".isMuokkaus")
+          +kirjoita-kommentti(kommentti, "muokkaaKommentti(" + kommentti + ")", kommentti + ".isMuokkaus = false")
 
       p.kommentti-footer
-        strong(kaanna="'muokattu'")
-        span=" "
-        span(ng-bind=kommentti + ".muokattu | aikaleima")
-        span=" "
-        a(href="" ng-click=kommentti + ".isVastaus = !" + kommentti + ".isVastaus" kaanna="'vastaa'" ng-if=kommentti + " !== lapsi")
+        a(href=""
+          ng-click=kommentti + ".isVastaus = !" + kommentti + ".isVastaus"
+          kaanna="'vastaa'"
+          ng-if=kommentti + " !== lapsi"
+          ng-class="$$ekEditing ? 'inactive' : ''")
 
   div(class="kommentti-vastaa " + tyyppi ng-if=kommentti + ".isVastaus")
-    +kirjoita-kommentti(kommentti + ".vastaus", "vastaaKommenttiin(" + kommentti + ".vastaus, kommentti.id)", kommentti + ".isVastaus = !" + kommentti + ".isVastaus")
+    +kirjoita-kommentti(kommentti + ".vastaus",
+                        "vastaaKommentti(" + kommentti + ".vastaus, " + kommentti + ".id)",
+                        kommentti +".isVastaus = false")
     div.clearfix
 
 div.kommentointi
   h1(kaanna="keskustelu")
-  a(href="", ng-if="!$$ekEditing")
+
+  a(href="" ng-click="uusi.isVastaus = !uusi.isVastaus" ng-hide="uusi.isVastaus" ng-class="$$ekEditing ? 'inactive' : ''")
     +icon("plus")
     span=" "
     span(kaanna="'lisaa-kommentti'")
-  div(ng-if="$$ekEditing")
-  div(style="margin-bottom: 16px" ckeditor slocalized ng-model="tkv.tekstiKappale.kommentti" layout="normal")
+  div.kommentti-uusi(ng-if="uusi.isVastaus")
+    +kirjoita-kommentti("uusi", "lisaaKommentti(uusi)", "uusi.isVastaus = false")
+  div.clearfix
 
   div(ng-repeat="kommentti in kommentit")
     +kommentti("kommentti")

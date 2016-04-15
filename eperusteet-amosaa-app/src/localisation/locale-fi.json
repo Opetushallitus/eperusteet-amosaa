@@ -149,5 +149,7 @@
   "ylatunniste":"Ylätunniste",
   "lisaa-kommentti": "Lisää kommentti",
   "poistetaanko-kommentti": "Poistetaanko kommentti?",
-  "vahvista-poisto": "Vahvista poisto"
+  "vahvista-poisto": "Vahvista poisto",
+  "kommentti-ei-saa-ylittaa": "Kommentti ei saa olla yli {{ maara }} merkkiä pitkä.",
+  "lahetetty": "Lähetetty"
 }

@@ -28,6 +28,6 @@ import java.util.List;
  */
 @Repository
 public interface KommenttiRepository extends JpaRepository<Kommentti, Long> {
-    List<Kommentti> findByTekstikappaleviiteIdAndPoistettuFalseOrderByLuotu(Long tekstikappaleviiteId);
+    List<Kommentti> findByTekstikappaleviiteIdAndPoistettuFalseOrderByLuotuDesc(Long tekstikappaleviiteId);
     List<Kommentti> findByParentId(Long parentId);
 }

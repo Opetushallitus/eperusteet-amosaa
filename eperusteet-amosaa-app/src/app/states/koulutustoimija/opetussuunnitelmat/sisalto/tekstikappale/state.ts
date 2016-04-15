@@ -49,6 +49,10 @@ angular.module("app")
         },
         kommentointi: {
             controller: ($rootScope, $scope, kommentit, tekstikappale, Varmistusdialogi) => {
+                $scope.$$kommenttiMaxLength = {
+                    maara: 1024
+                };
+                
                 $scope.kommentit = _(kommentit)
                     .filter((kommentti: any) => kommentti.parentId === 0)
                     .map((kommentti: any) => {
@@ -57,31 +61,44 @@ angular.module("app")
                                 return lapsi;
                             }
                         });
+                        kommentti.sisaltoKlooni = kommentti.sisalto;
+                        kommentti.vastaus = {
+                            sisalto: "",
+                            sisaltoKlooni: ""
+                        };
                         return kommentti;
                     })
                     .value();
 
-                $scope.vastaaKommenttiin = (kommentti, parentId) => {
+                $scope.vastaaKommentti = (kommentti, parentId) => {
                     $rootScope.$broadcast("notifyCKEditor");
                     kommentti.parentId = parentId;
+                    kommentti.sisalto = kommentti.sisaltoKlooni;
                     tekstikappale.all("kommentit").post(kommentti)
-                        .then((uusi) => console.log(uusi));
+                        .then((uusi) => {
+                            uusi.lapset = [];
+                            if (parentId === 0) {
+                                $scope.kommentit.unshift(uusi);
+                                kommentti.isVastaus = false;
+                            } else {
+                                let parentKommentti: any = _($scope.kommentit).find({ id: uusi.parentId });
+                                parentKommentti.lapset.unshift(uusi);
+                                parentKommentti.isVastaus = false;
+                            }
+                        });
                 };
 
                 $scope.lisaaKommentti = (kommentti) => {
-                    $scope.vastaaKommenttiin(kommentti, 0);
+                    $scope.vastaaKommentti(kommentti, 0);
                 };
 
                 $scope.muokkaaKommentti = (kommentti) => {
                     $rootScope.$broadcast("notifyCKEditor");
+                    kommentti.sisalto = kommentti.sisaltoKlooni;
                     kommentti.save()
                         .then((uusi) => _.merge(kommentti, uusi.plain()));
-                    kommentti.isMuokkaus = !kommentti.isMuokkaus;
+                    kommentti.isMuokkaus = false;
                 };
-
-                console.log(_($scope.kommentit)
-                    .find({id: 128})
-                );
 
                 $scope.poistaKommentti = (kommentti) => {
                     Varmistusdialogi.dialogi({
@@ -94,7 +111,7 @@ angular.module("app")
                                     if (kommentti.parentId == 0) {
                                         $scope.kommentit = _.without($scope.kommentit, kommentti)
                                     } else {
-                                        let parentKommentti: any = _($scope.kommentit).find({id: 128});
+                                        let parentKommentti: any = _($scope.kommentit).find({id: kommentti.parentId});
                                         parentKommentti.lapset = _.without(parentKommentti.lapset, kommentti);
                                     }
                                 });
