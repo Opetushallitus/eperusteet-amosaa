@@ -131,9 +131,15 @@ mixin contentToggler(toggleField, name)
     div.content-toggler-header(ng-click=toggleField + " = !" + toggleField)
       span.ct-otsikko
         span(ng-if=toggleField)
-          +gicon("chevron-down")
-        span(ng-if="!" + toggleField)
           +gicon("chevron-right")
+        span(ng-if="!" + toggleField)
+          +gicon("chevron-down")
         label(kaanna=name)
-    div(ng-if=toggleField)
+    div(ng-if="!" + toggleField)
       block
+
+
+mixin toggler(field, yes, no)
+  span.toggler(ng-click=field + " = !" + field)
+    span.bubble(ng-class="{ 'active': " + field + " }" kaanna=yes)
+    span.bubble(ng-class="{ 'active': !" + field + " }" kaanna=no)

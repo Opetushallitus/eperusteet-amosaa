@@ -1,2 +1,16 @@
-div 
-  span suorituspolut
+div
+  hr
+  h1(kaanna="'suorituspolku'")
+
+  div.haku(style="margin-bottom: 10px;")
+    div.form-inline
+      div.form-group.has-feedback.has-feedback-left
+        input.form-control(ng-change="suodata(search)" type="text" ng-model="search" placeholder="{{ 'hae' | kaanna }}")
+        i.form-control-feedback.glyphicon.glyphicon-search(style="color: gray;")
+
+  div.pull-right(style="position: relative; top: -36px")
+    +toggler("$$kaikkiAuki", "'auki'", "'kiinni'")
+
+  div.suorituspolku
+    div.sp-ryhma-lapset(ng-repeat="osa in perusteRakenne.osat")
+      dynamic(template="states/koulutustoimija/opetussuunnitelmat/sisalto/osa/polunrakenne.jade" misc="misc" ng-model="osa" depth="depth + 1")

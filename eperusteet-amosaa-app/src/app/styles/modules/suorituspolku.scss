@@ -1,0 +1,89 @@
+@mixin sp-toggler($color, $background-color) {
+  background: $color;
+  color: $background-color;
+  height: 28px;
+  width: 28px;
+  float: left;
+  cursor: pointer;
+  padding: 6px 8px 8px 8px;
+  user-select: none;
+  margin-right: 10px;
+
+  .chevron {
+  }
+}
+
+.suorituspolku {
+  .sp-laatikko {
+    .sp-sisalto-tosa {
+      .laajuus {
+        float: right;
+        position: relative;
+        top: -23px;
+        margin-right: 10px;
+      }
+    }
+
+    .sp-sisalto-osaamisala {
+      font-weight: bold;
+      background-color: #F3FAFD;
+      .sp-toggler {
+        @include sp-toggler(#F3FAFD, #000)
+      }
+    }
+
+    .sp-sisalto-ryhma {
+      background-color: #F1F2F3;
+      .sp-toggler {
+        @include sp-toggler(#155971, #fff)
+      }
+    }
+
+    .sp-sisalto {
+      border: 1px solid #dBdCdD;
+      margin-bottom: 5px;
+      height: 30px;
+
+      .sp-toolbar {
+        height: 29px;
+        float: right;
+        top: -29px;
+        position: relative;
+
+        .sp-edit {
+          float: right;
+          padding: 6px 10px 6px 10px;
+          color: #AAABAB;
+          border-left: 1px solid #ddd;
+        }
+
+        .sp-muodostuminen {
+          float: right;
+          height: 29px;
+          padding: 5px 8px 5px 8px;
+          background-color: #AAABAB;
+          color: white;
+        }
+      }
+
+      .sp-nimi {
+        margin-left: 14px;
+        padding: 5px;
+
+        .sp-osaamisala {
+          font-weight: normal;
+          margin-left: 20px;
+        }
+      }
+    }
+
+    .sp-tutkinnonosa {
+    }
+
+    .sp-ryhma {
+      .sp-ryhma-lapset {
+        margin-left: 30px;
+      }
+    }
+  }
+}

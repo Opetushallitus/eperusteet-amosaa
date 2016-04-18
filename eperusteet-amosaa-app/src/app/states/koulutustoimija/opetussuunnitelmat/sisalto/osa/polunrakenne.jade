@@ -1,0 +1,24 @@
+div.sp-laatikko
+  div.sp-tutkinnonosa(ng-if="ngModel._tutkinnonOsaViite" ng-init="tosa = misc.tosat[ngModel._tutkinnonOsaViite];")
+    div.sp-sisalto.sp-sisalto-tosa
+      div.sp-nimi(kaanna="tosa.nimi")
+      span.laajuus(ng-bind="tosa.laajuus")
+
+  div.sp-ryhma(ng-if="ngModel.rooli && ngModel.rooli !== 'määrittelemätön'")
+    div.sp-sisalto(class="{{ 'sp-sisalto-' + (ngModel.osaamisala ? 'osaamisala' : 'ryhma') }}")
+      div.sp-toggler(ng-class="{ 'sp-toggler-osaamisala': ngModel.osaamisala, 'sp-toggler-ryhma': !ngModel.osaamisala }" ng-click="ngModel.$$show = !ngModel.$$show")
+        div.chevron
+          span.glyphicon.glyphicon-chevron-down(ng-show="ngModel.$$show")
+          span.glyphicon.glyphicon-chevron-right(ng-hide="ngModel.$$show")
+      div.sp-nimi
+        span(kaanna="ngModel.nimi")
+        span.sp-osaamisala(ng-if="ngModel.osaamisala" ng-bind="ngModel.osaamisala.osaamisalakoodiArvo")
+      div.sp-toolbar
+        div.sp-muodostuminen
+          span 90 osp
+        div.sp-edit
+          +gicon("pencil")
+
+    div.sp-ryhma-lapset(ng-if="ngModel.$$show" ng-repeat="osa in ngModel.osat")
+      dynamic(template="states/koulutustoimija/opetussuunnitelmat/sisalto/osa/polunrakenne.jade" misc="misc" ng-model="osa" depth="depth + 1")
+
