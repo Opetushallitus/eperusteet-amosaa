@@ -60,6 +60,9 @@ public interface KayttajanTietoService {
     List<KoulutustoimijaBaseDto> koulutustoimijat();
 
     @PreAuthorize("isAuthenticated()")
+    boolean updateKoulutustoimijat();
+
+    @PreAuthorize("isAuthenticated()")
     Set<String> getUserOrganizations();
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")

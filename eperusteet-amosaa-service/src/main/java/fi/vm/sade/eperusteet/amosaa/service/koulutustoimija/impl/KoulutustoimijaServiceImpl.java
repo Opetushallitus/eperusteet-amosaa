@@ -26,6 +26,9 @@ import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRe
 import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,7 +51,7 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     private DtoMapper mapper;
 
     @Transactional(readOnly = false)
-    private Koulutustoimija getOrInitialize(String kOid) {
+    private Koulutustoimija initialize(String kOid) {
         Koulutustoimija koulutustoimija = repository.findOneByOrganisaatio(kOid);
         if (koulutustoimija != null) {
             return koulutustoimija;
@@ -60,16 +63,27 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
         koulutustoimija.setNimi(nimi);
         koulutustoimija.setOrganisaatio(kOid);
         koulutustoimija = repository.save(koulutustoimija);
-
         return koulutustoimija;
     }
 
     @Override
+    public List<KoulutustoimijaBaseDto> initKoulutustoimijat(Set<String> kOid) {
+        return kOid.stream()
+                .map(ktOid -> initialize(ktOid))
+                .filter(kt -> kt != null)
+                .map(kt -> mapper.map(kt, KoulutustoimijaBaseDto.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     @Transactional(readOnly = false)
-    public KoulutustoimijaBaseDto getKoulutustoimija(String kOid) {
-        Koulutustoimija kt = getOrInitialize(kOid);
-        KoulutustoimijaBaseDto ktDto = mapper.map(kt, KoulutustoimijaBaseDto.class);
-        return ktDto;
+    public List<KoulutustoimijaBaseDto> getKoulutustoimijat(Set<String> kOid) {
+        return kOid.stream()
+                .map(ktId -> {
+                    Koulutustoimija kt = repository.findOneByOrganisaatio(ktId);
+                    return mapper.map(kt, KoulutustoimijaBaseDto.class);
+                })
+                .collect(Collectors.toList());
     }
 
     @Override

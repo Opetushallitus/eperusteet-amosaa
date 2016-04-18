@@ -11,10 +11,11 @@ angular.module("app")
 .state("root", {
     url: "/:lang",
     resolve: {
-        kayttajanKoulutustoimijat: Api => Api.all("kayttaja/koulutustoimijat").getList(),
-        kayttaja: Api => Api.one("kayttaja").get(),
-        oikeudet: Api => Api.all("kayttaja/oikeudet").getList(),
-        orgoikeudet: Api => Api.one("kayttaja/organisaatiooikeudet").get(),
+        kkAlustus: Api => Api.one("kayttaja/koulutustoimijat").customPOST({}),
+        kayttajanKoulutustoimijat: (kkAlustus, Api) => Api.all("kayttaja/koulutustoimijat").getList(),
+        kayttaja: (kkAlustus, Api) => Api.one("kayttaja").get(),
+        oikeudet: (kkAlustus, Api) => Api.all("kayttaja/oikeudet").getList(),
+        orgoikeudet: (kkAlustus, Api) => Api.one("kayttaja/organisaatiooikeudet").get(),
     },
     views: {
         "": {
