@@ -63,5 +63,6 @@ mixin valinnat()
   div(ng-if="osa.tyyppi === 'suorituspolut'"     ui-view="suorituspolut")
   div(ng-if="osa.tyyppi === 'suorituspolku'"     ui-view="suorituspolku")
 
-  hr
-  div(ui-view="kommentointi")
+  div(style="margin-top: 60px" ng-hide="$$ekEditing")
+    hr
+    div(ui-view="kommentointi")

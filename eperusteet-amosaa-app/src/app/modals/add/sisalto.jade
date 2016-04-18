@@ -10,7 +10,7 @@ div.modal-body.modal-sisalto
     div(ng-repeat="tyyppi in sallitut")
       div.sisalto-item
         .pull-right.sisalto-valinta
-          button.btn.btn-primary(kaanna="'lisaa'" ng-click="valitse(tyyppi)" ng-disabled="tyyppi === 'tutkinnonosaryhma' || tyyppi === 'suorituspolku'")
+          button.btn.btn-primary(kaanna="'lisaa'" ng-click="valitse(tyyppi)")
           button.btn.btn-primary(kaanna="'tuo'" disabled)
         span.sisalto-icon
           +icon("file-text-o")

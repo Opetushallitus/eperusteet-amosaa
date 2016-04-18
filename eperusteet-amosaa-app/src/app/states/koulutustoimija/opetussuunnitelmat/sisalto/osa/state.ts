@@ -65,7 +65,7 @@ angular.module("app")
         tutkinnonosaryhma: {
             controller: ($scope, osa) => {}
         },
-        suorituspolut: {
+        suorituspolku: {
             controller: ($scope, osa) => {
 
                 $scope.misc = {
@@ -2517,7 +2517,7 @@ angular.module("app")
                 }
             };
         },
-        suorituspolku: {
+        suorituspolut: {
             controller: ($scope, osa) => {}
         },
         kommentointi: {

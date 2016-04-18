@@ -2,4 +2,3 @@
 <Context antiJARLocking="true" path="/eperusteet-amosaa-service">
   <ResourceLink global="jdbc/eperusteet-amosaa" name="jdbc/eperusteet-amosaa" type="javax.sql.DataSource"/>
 </Context>
-
