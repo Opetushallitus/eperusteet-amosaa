@@ -134,6 +134,14 @@ $ops-top-vertical-margin: 10px;
                             width: 100%;
                             height: 100%;
                             padding: 10px;
+
+                            .pakollinen {
+                                font-weight: bold;
+                            }
+
+                            .liikkumaton {
+                                font-style: italic;
+                            }
                         }
                         .active {
                             background-color: #135870;
@@ -239,13 +247,7 @@ $ops-top-vertical-margin: 10px;
 
                 }
                 .tkv-valinnat {
-                    float: right;
-                    position: relative;
-                    top: 10px;
-                    margin: 0;
-                    padding: 0;
-                    height: 0;
-
+                    margin-top: -10px;
                     .tkv-valinta {
                         float: left;
                         margin-right: 26px;

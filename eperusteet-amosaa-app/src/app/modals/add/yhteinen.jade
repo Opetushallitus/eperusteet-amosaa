@@ -6,7 +6,7 @@ div.modal-body.modal-sisalto
     div.alert.alert-warning
       div(kaanna="'yhteisien-osien-pohjia-ei-viela-luotu'")
 
-  .content-spacing(ng-show="pohjat.length > 0")
+  .content-spacing(ng-show="pohjat.length > 1")
     h3(kaanna="'valitse-pohja'")
     div.select-list
       div.select-item(ng-repeat="pohja in pohjat" ng-click="valitsePohja(pohja)")

@@ -16,6 +16,7 @@
 
 'use strict';
 
+// FIXME: Tee tästä namespace
 angular.module("app")
     .service('Varmistusdialogi', ($uibModal) => {
 

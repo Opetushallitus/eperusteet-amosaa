@@ -10,23 +10,33 @@ angular.module("app")
         Murupolku.register("root.koulutustoimija.opetussuunnitelmat.sisalto.osa", osa.tekstiKappale.nimi),
     views: {
         "": {
-            controller: ($state, $stateParams, $location, $scope, $rootScope, $document, $timeout, osa, nimiLataaja) => {
+            controller: ($state, $stateParams, $location, $scope, $rootScope, $document, $timeout, osa, nimiLataaja, Varmistusdialogi) => {
                 osa.lapset = undefined;
-                $scope.edit = EditointikontrollitService.createRestangular($scope, "osa", osa);
+                $scope.edit = EditointikontrollitService.createRestangular($scope, "osa", osa, {
+                    after: () => {
+                        $rootScope.$broadcast("sivunavi:forcedUpdate", $scope.osa);
+                    }
+                });
+
                 nimiLataaja(osa.tekstiKappale.muokkaaja)
                     .then(nimi => $scope.osa.tekstiKappale.$$nimi = nimi);
                 $scope.remove = () => {
-                    osa.remove()
-                        .then(() => {
-                            NotifikaatioService.onnistui("poisto-tekstikappale-onnistui");
-                            EditointikontrollitService.cancel()
-                                .then(() => {
-                                    $timeout(() => {
-                                        $state.reload("root");
-                                        $state.go("root.koulutustoimija.opetussuunnitelmat.poistetut", $stateParams, { reload: true });
+                    Varmistusdialogi.dialogi({
+                        otsikko: "haluatko-varmasti-poistaa-sisallon",
+                        teksti: "sisalto-poistetaa-mahdollinen-palauttaa",
+                    })(() => {
+                        osa.remove()
+                            .then(() => {
+                                NotifikaatioService.onnistui("poisto-tekstikappale-onnistui");
+                                EditointikontrollitService.cancel()
+                                    .then(() => {
+                                        $timeout(() => {
+                                            $state.reload("root");
+                                            $state.go("root.koulutustoimija.opetussuunnitelmat.poistetut", $stateParams, { reload: true });
+                                        });
                                     });
-                                });
-                        });
+                            });
+                    });
                 };
 
                 const clickHandler = (event) => {

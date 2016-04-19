@@ -28,23 +28,26 @@ import org.springframework.security.access.prepost.PreAuthorize;
  */
 public interface SisaltoViiteService extends RevisionService {
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
-    SisaltoViiteDto.Matala getTekstiKappaleViite(@P("ktId") Long ktId, @P("opsId") Long opsId, Long viiteId);
+    SisaltoViiteDto.Matala getSisaltoViite(@P("ktId") Long ktId, @P("opsId") Long opsId, Long viiteId);
 
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
-    <T> T getTekstiKappaleViite(@P("ktId") Long ktId, @P("opsId") Long opsId, Long viiteId, Class<T> t);
+    <T> T getSisaltoViite(@P("ktId") Long ktId, @P("opsId") Long opsId, Long viiteId, Class<T> t);
 
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
-    <T> List<T> getTekstiKappaleViitteet(@P("ktId") Long ktId, @P("opsId") Long opsId, Class<T> t);
+    <T> List<T> getSisaltoViitteet(@P("ktId") Long ktId, @P("opsId") Long opsId, Class<T> t);
+
+    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'POISTO')")
+    void restoreSisaltoViite(@P("ktId") Long ktId, @P("opsId") Long opsId, Long poistettuId);
 
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'MUOKKAUS')")
-    SisaltoViiteDto.Matala addTekstiKappaleViite(@P("ktId") Long ktId, @P("opsId") Long opsId, Long viiteId,
+    SisaltoViiteDto.Matala addSisaltoViite(@P("ktId") Long ktId, @P("opsId") Long opsId, Long viiteId,
                                                        SisaltoViiteDto.Matala viiteDto);
 
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'MUOKKAUS')")
     SisaltoViiteDto updateSisaltoViite(@P("ktId") Long ktId, @P("opsId") Long opsId, Long rootViiteId, SisaltoViiteDto uusi);
 
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'MUOKKAUS')")
-    void removeTekstiKappaleViite(@P("ktId") Long ktId, @P("opsId") Long opsId, Long viiteId);
+    void removeSisaltoViite(@P("ktId") Long ktId, @P("opsId") Long opsId, Long viiteId);
 
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'MUOKKAUS')")
     SisaltoViiteDto.Puu kloonaaTekstiKappale(@P("ktId") Long ktId, @P("opsId") Long opsId, Long viiteId);

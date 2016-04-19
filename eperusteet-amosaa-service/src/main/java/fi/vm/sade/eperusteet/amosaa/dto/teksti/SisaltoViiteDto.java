@@ -37,6 +37,7 @@ public class SisaltoViiteDto {
     private boolean valmis;
     private boolean liikkumaton;
     private Reference owner;
+    private Reference vanhempi;
     private SisaltoTyyppi tyyppi;
     private LokalisoituTekstiDto ohjeteksti;
     private LokalisoituTekstiDto perusteteksti;

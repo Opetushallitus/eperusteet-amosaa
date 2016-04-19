@@ -36,5 +36,7 @@ public class SisaltoViiteKevytDto {
     private SisaltoTyyppi tyyppi;
     private boolean pakollinen;
     private boolean valmis;
+    private boolean liikkumaton;
+    private Reference vanhempi;
     private List<Reference> lapset;
 }

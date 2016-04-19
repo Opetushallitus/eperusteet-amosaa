@@ -40,12 +40,12 @@ angular.module("app")
             }
         },
         yhteinen: {
-            controller: ($scope, yhteinen, koulutustoimija, opetussuunnitelmat, opsSaver) => {
-                $scope.yhteinen = yhteinen;
+            controller: ($scope, yhteiset, koulutustoimija, opetussuunnitelmat, opsSaver) => {
+                $scope.yhteiset = yhteiset;
                 $scope.addYhteinen = () => ModalAdd.yhteinen()
                     .then(opsSaver)
                     .then((res) => {
-                        $scope.yhteinen = _.merge(yhteinen, res)
+                        $scope.yhteiset.push(res);
                     });
             }
         },

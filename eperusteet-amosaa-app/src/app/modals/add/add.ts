@@ -25,6 +25,10 @@ namespace ModalAdd {
                     $scope.valittuPohja = pohja;
                     $scope.yhteinen._pohja = "" + pohja.id;
                 };
+
+                if (_.size($scope.pohjat) === 1) {
+                    $scope.valitsePohja(_.first($scope.pohjat));
+                }
             }
         }).result;
 

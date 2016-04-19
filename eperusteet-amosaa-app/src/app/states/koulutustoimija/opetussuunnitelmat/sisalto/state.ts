@@ -28,7 +28,8 @@ angular.module("app")
                             resolve();
                         }),
                         save: (kommentti) => $q((resolve, reject) => {
-                            tekstit.one("rakenne").customPUT($scope.rakenne)
+                            tekstit.one("rakenne")
+                                .customPUT($scope.rakenne)
                                 .then(() => {
                                     resolve();
                                     NotifikaatioService.onnistui("tallennus-onnistui");
@@ -46,9 +47,11 @@ angular.module("app")
                     $scope.sivunavi = Tekstikappaleet.teeRakenne(Tekstikappaleet.uniikit(otsikot), sisaltoRoot.id);
                 });
 
-                // $scope.$on("sivunavi:forcedUpdate", () => {
-                //     console.log("Forcing update");
-                // });
+                // TODO: find cleaner solution (Low priority)
+                $scope.$on("sivunavi:forcedUpdate", (event, osa) => {
+                    const uniikit = Tekstikappaleet.uniikit(otsikot);
+                    _.merge(uniikit[osa.id], osa.plain());
+                });
 
                 const traverseItems = (item) => {
                     let childsVisible = false;
@@ -75,15 +78,22 @@ angular.module("app")
                 $scope.add = () => {
                     ModalAdd.sisaltoAdder(Opetussuunnitelmat.sallitutSisaltoTyypit(ops))
                         .then(uusi => {
+                            let parentNode = tekstit.clone();
+                            if (uusi.tyyppi === "tutkinnonosa") {
+                                parentNode.id = Tekstikappaleet.tutkinnonosat(otsikot).id;
+                            }
+                            else if (uusi.tyyppi === "suorituspolku") {
+                                parentNode.id = Tekstikappaleet.suorituspolut(otsikot).id;
+                            }
+
                             if (!uusi) {
                                 return;
                             }
-                            console.log(uusi);
-                            tekstit.post("", uusi)
+                            parentNode.post("", uusi)
                                 .then(res => {
                                     res.$$depth = 0;
                                     otsikot.push(res);
-                                    _.find(otsikot, (otsikko: any) => otsikko.id == sisaltoRoot.id).lapset.push(res.id);
+                                    _.find(otsikot, (otsikko: any) => otsikko.id == parentNode.id).lapset.push(res.id);
                                     updateSivunavi();
                                     $timeout(() =>
                                         $state.go("root.koulutustoimija.opetussuunnitelmat.sisalto.osa", { osaId: res.id }));

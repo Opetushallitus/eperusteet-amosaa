@@ -46,6 +46,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.apache.commons.lang.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
@@ -86,26 +87,26 @@ public class SisaltoViiteServiceImpl implements SisaltoViiteService {
     private LockManager lockMgr;
 
     @Override
-    public <T> T getTekstiKappaleViite(@P("ktId") Long ktId, Long opsId, Long viiteId, Class<T> t) {
+    public <T> T getSisaltoViite(@P("ktId") Long ktId, Long opsId, Long viiteId, Class<T> t) {
         SisaltoViite viite = findViite(opsId, viiteId);
         return mapper.map(viite, t);
     }
 
     @Override
-    public <T> List<T> getTekstiKappaleViitteet(Long ktId, Long opsId, Class<T> t) {
+    public <T> List<T> getSisaltoViitteet(Long ktId, Long opsId, Class<T> t) {
         List<SisaltoViite> tkvs = repository.findAllByOwnerId(opsId);
         return mapper.mapAsList(tkvs, t);
     }
 
     @Override
-    public SisaltoViiteDto.Matala getTekstiKappaleViite(Long ktId, Long opsId, Long viiteId) {
+    public SisaltoViiteDto.Matala getSisaltoViite(Long ktId, Long opsId, Long viiteId) {
         SisaltoViite viite = findViite(opsId, viiteId);
         return mapper.map(viite, SisaltoViiteDto.Matala.class);
     }
 
     @Override
     @Transactional(readOnly = false)
-    public SisaltoViiteDto.Matala addTekstiKappaleViite(
+    public SisaltoViiteDto.Matala addSisaltoViite(
             Long ktId,
             Long opsId,
             Long viiteId,
@@ -127,10 +128,20 @@ public class SisaltoViiteServiceImpl implements SisaltoViiteService {
 
         switch (uusiViite.getTyyppi()) {
             case TOSARYHMA:
+                if (parentViite.getTyyppi() != SisaltoTyyppi.TUTKINNONOSA) {
+                    throw new BusinessRuleViolationException("ryhman-voi-liittaa-ainoastaan-tutkinnonosiin");
+                }
                 break;
             case SUORITUSPOLKU:
+                if (parentViite.getTyyppi() != SisaltoTyyppi.SUORITUSPOLUT) {
+                    throw new BusinessRuleViolationException("suorituspolun-voi-liittaa-ainoastaan-suorituspolkuihin");
+                }
                 break;
             case TUTKINNONOSA:
+                if (parentViite.getTyyppi() != SisaltoTyyppi.TUTKINNONOSAT
+                        && parentViite.getTyyppi() != SisaltoTyyppi.TOSARYHMA) {
+                    throw new BusinessRuleViolationException("tutkinnonosan-voi-liittaa-ainoastaan-tutkinnonosaryhmaan-tai-tutkinnon-osiin");
+                }
                 Tutkinnonosa tosa = new Tutkinnonosa();
                 tosa.setTyyppi(TutkinnonosaTyyppi.OMA);
                 uusiViite.setTosa(tutkinnonosaRepository.save(tosa));
@@ -140,6 +151,21 @@ public class SisaltoViiteServiceImpl implements SisaltoViiteService {
         }
 
         return mapper.map(uusiViite, SisaltoViiteDto.Matala.class);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void restoreSisaltoViite(Long ktId, Long opsId, Long poistettuId) {
+        throw new NotImplementedException("Ei toteutettu vielä.");
+    }
+
+    @Transactional(readOnly = false)
+    private void updateTutkinnonOsa(SisaltoViite viite, SisaltoViiteDto uusi) {
+        if (!Objects.equals(uusi.getTosa().getId(), viite.getTosa().getId())) {
+            throw new BusinessRuleViolationException("tutkinnonosan-viitetta-ei-voi-vaihtaa");
+        }
+        Tutkinnonosa mappedOsa = mapper.map(uusi.getTosa(), Tutkinnonosa.class);
+        viite.setTosa(mappedOsa);
     }
 
     @Override
@@ -156,6 +182,7 @@ public class SisaltoViiteServiceImpl implements SisaltoViiteService {
         }
         else {
             viite.setPakollinen(uusi.isPakollinen());
+            viite.setLiikkumaton(uusi.isLiikkumaton());
             viite.setOhjeteksti(LokalisoituTeksti.of(uusi.getOhjeteksti()));
             viite.setPerusteteksti(LokalisoituTeksti.of(uusi.getPerusteteksti()));
         }
@@ -165,16 +192,16 @@ public class SisaltoViiteServiceImpl implements SisaltoViiteService {
             uusi.getTekstiKappale().setTeksti(mapper.map(viite.getTekstiKappale(), TekstiKappaleDto.class).getTeksti());
         }
 
-        if (viite.getTyyppi() == SisaltoTyyppi.TUTKINNONOSA) {
-            if (!Objects.equals(uusi.getTosa().getId(), viite.getTosa().getId())) {
-                throw new BusinessRuleViolationException("tutkinnonosan-viitetta-ei-voi-vaihtaa");
-            }
-            Tutkinnonosa mappedOsa = mapper.map(uusi.getTosa(), Tutkinnonosa.class);
-            viite.setTosa(mappedOsa);
+        switch (viite.getTyyppi()) {
+            case TUTKINNONOSA:
+                updateTutkinnonOsa(viite, uusi);
+                break;
+            default:
+                break;
         }
 
-//        repository.lock(viite.getRoot());
-//        lockMgr.lock(viite.getTekstiKappale().getId());
+        repository.lock(viite.getRoot());
+        lockMgr.lock(viite.getTekstiKappale().getId());
         updateTekstiKappale(opsId, viite, uusi.getTekstiKappale(), false);
         viite.setValmis(uusi.isValmis());
         viite = repository.save(viite);
@@ -183,7 +210,7 @@ public class SisaltoViiteServiceImpl implements SisaltoViiteService {
 
     @Override
     @Transactional(readOnly = false)
-    public void removeTekstiKappaleViite(Long ktId, Long opsId, Long viiteId) {
+    public void removeSisaltoViite(Long ktId, Long opsId, Long viiteId) {
         SisaltoViite viite = findViite(opsId, viiteId);
         Koulutustoimija koulutustoimija = koulutustoimijaRepository.findOne(ktId);
         Opetussuunnitelma ops = opsRepository.findOne(opsId);
@@ -198,6 +225,11 @@ public class SisaltoViiteServiceImpl implements SisaltoViiteService {
 
         if (viite.isPakollinen() && ops.getTyyppi() != OpsTyyppi.POHJA) {
             throw new BusinessRuleViolationException("Pakollista tekstikappaletta ei voi poistaa");
+        }
+
+        if (viite.getTyyppi() == SisaltoTyyppi.TUTKINNONOSAT
+                || viite.getTyyppi() == SisaltoTyyppi.SUORITUSPOLUT) {
+            throw new BusinessRuleViolationException("Pakollisia sisältöjä ei voi poistaa");
         }
 
 //        repository.lock(viite.getRoot());
@@ -229,6 +261,7 @@ public class SisaltoViiteServiceImpl implements SisaltoViiteService {
         return assertExists(repository.findOneByOwnerIdAndId(opsId, viiteId), "Tekstikappaleviitettä ei ole olemassa");
     }
 
+    @Transactional(readOnly = false)
     private void clearChildren(SisaltoViite viite, Set<SisaltoViite> refs) {
         for (SisaltoViite lapsi : viite.getLapset()) {
             refs.add(lapsi);
@@ -257,6 +290,7 @@ public class SisaltoViiteServiceImpl implements SisaltoViiteService {
     // Kopioi viitehierarkian ja siirtää irroitetut paikoilleen
     // UUID parentin tunniste
     @Override
+    @Transactional(readOnly = false)
     public SisaltoViite kopioiHierarkia(SisaltoViite original, Opetussuunnitelma owner) {
         SisaltoViite result = new SisaltoViite();
         TekstiKappale originalTk = original.getTekstiKappale();
@@ -278,12 +312,23 @@ public class SisaltoViiteServiceImpl implements SisaltoViiteService {
         return repository.save(result);
     }
 
+    private void validoiRakenne(SisaltoViite vanha, SisaltoViiteDto.Puu uusi) {
+        // TODO: Tutkinnon osat vain yksi
+        // TODO: Tutkinnon osien ryhmät
+        // TODO: Suorituspolut vain yksi
+        // TODO: Suorituspolkujen toteutukset suorituspolut-otsikon alla
+        List<SisaltoViite> lapset = vanha.getLapset();
+    }
+
+    @Transactional(readOnly = false)
     private SisaltoViite updateTraverse(Long ktId, SisaltoViite parent, SisaltoViiteDto.Puu uusi,
         Set<SisaltoViite> refs) {
         SisaltoViite viite = repository.findOne(uusi.getId());
+
         if (viite == null || !refs.remove(viite)) {
             throw new BusinessRuleViolationException("Viitepuun päivitysvirhe, annettua alipuun juuren viitettä ei löydy");
         }
+        
         viite.setVanhempi(parent);
 
         List<SisaltoViite> lapset = viite.getLapset();
@@ -307,6 +352,8 @@ public class SisaltoViiteServiceImpl implements SisaltoViiteService {
         if (ops == null) {
             throw new BusinessRuleViolationException("Opetussuunnitelmaa ei olemassa.");
         }
+
+        validoiRakenne(viite, uusi);
 
         repository.lock(viite.getRoot());
         Set<SisaltoViite> refs = Collections.newSetFromMap(new IdentityHashMap<>());

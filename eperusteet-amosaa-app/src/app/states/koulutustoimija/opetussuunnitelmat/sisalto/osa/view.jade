@@ -18,13 +18,13 @@ mixin valinnat()
       "listRevisions()",
       "restoreRevision()",
       "restoreNew()")
-      button.btn.btn-primary.muokkaa(ng-show="$$ekEditing" ng-click="remove()" kaanna="'poista'")
+      button.btn.btn-primary.muokkaa(ng-show="$$ekEditing && !osa.pakollinen" ng-click="remove()" kaanna="'poista'")
 
   div
-    +valinnat
     div(ng-if="$$ekEditing")
       h1(kaanna="'nimi'" style="margin-bottom: 16px; margin-top: 16px" )
       input.form-control(style="margin-bottom: 16px; margin-top: 16px" slocalized ng-model="osa.tekstiKappale.nimi" type="text" required="true")
+      +valinnat
       div(ng-if="ops.tyyppi === 'pohja'")
         +contentToggler("$$showOhje", "'tekstikappale-ohjeteksti'")
           div(style="margin-bottom: 16px" ckeditor slocalized ng-model="osa.ohjeteksti" layout="normal")
@@ -44,7 +44,9 @@ mixin valinnat()
         div(style="margin-bottom: 16px" ckeditor slocalized ng-model="osa.tekstiKappale.teksti" layout="normal")
 
     div(ng-if="!$$ekEditing")
-      h1(style="margin-bottom: 16px; margin-top: 16px" kaanna="osa.tekstiKappale.nimi")
+      h1(style="margin-bottom: 16px; margin-top: 16px")
+        span(kaanna="osa.tekstiKappale.nimi")
+        span.glyphicon.glyphicon-check(ng-show="osa.valmis" style="color: #00af00; font-size: 12px; padding: 4px; position: relative; top: -2px")
       div.ohjeteksti(ng-if="osa.ohjeteksti")
         a(href="" ng-click="$$showOhjeteksti = !$$showOhjeteksti" kaanna="'toggle-ohjeteksti'")
         div(style="margin-top: 10px;" ng-show="$$showOhjeteksti")

@@ -12,7 +12,7 @@ angular.module("app")
                     .then(res => resolve(Kayttajatiedot.parsiEsitysnimi(res)))
                     .catch(() => resolve(KaannaService.kaanna("muokkaajaa-ei-loytynyt")))),
         opetussuunnitelmat: (koulutustoimija) => koulutustoimija.all("opetussuunnitelmat").getList(),
-        yhteinen: (opetussuunnitelmat) => _.find(opetussuunnitelmat, { tyyppi: "yhteinen" }),
+        yhteiset: (opetussuunnitelmat) => _.filter(opetussuunnitelmat, { tyyppi: "yhteinen" }),
     },
     onEnter: (koulutustoimija) => Murupolku.register("root.koulutustoimija", koulutustoimija.nimi),
     controller: (koulutustoimija) => { }

@@ -150,9 +150,9 @@ gulp
     return connect.server({
         root: config.build,
         port: 9030,
-        /*livereload: {
-            port: 35769
-        },*/
+        // livereload: {
+        //     port: 35769
+        // },
         middleware: function (connect, opt) {
             return [
                 createProxy('https://testi.virkailija.opintopolku.fi/eperusteet-service', '/eperusteet-service'),

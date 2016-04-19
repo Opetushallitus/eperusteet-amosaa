@@ -28,8 +28,8 @@ import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.domain.revision.Revision;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
-import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
 import fi.vm.sade.eperusteet.amosaa.dto.PoistettuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
@@ -40,18 +40,18 @@ import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaoikeusRepository
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.peruste.CachedPerusteRepository;
+import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.TekstiKappaleRepository;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
+import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
-import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 
 /**
  *
@@ -104,6 +104,12 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         return mapper.mapAsList(opetussuunnitelmat, OpetussuunnitelmaBaseDto.class);
     }
 
+    @Override
+    public List<OpetussuunnitelmaBaseDto> getPohjat() {
+        List<Opetussuunnitelma> opetussuunnitelmat = repository.findAllByTyyppiAndTila(OpsTyyppi.POHJA, Tila.JULKAISTU);
+        return mapper.mapAsList(opetussuunnitelmat, OpetussuunnitelmaBaseDto.class);
+    }
+
     private void alustaOpetussuunnitelma(Opetussuunnitelma ops, SisaltoViite rootTkv) {
         // Lisätään tutkinnonosille oma sisältöviite
         {
@@ -137,6 +143,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     }
 
     @Override
+    @Transactional(readOnly = false)
     public OpetussuunnitelmaBaseDto addOpetussuunnitelma(Long ktId, OpetussuunnitelmaDto opsDto) {
         Koulutustoimija kt = koulutustoimijaRepository.findOne(ktId);
         Opetussuunnitelma ops = mapper.map(opsDto, Opetussuunnitelma.class);
@@ -179,6 +186,10 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                     if (pohja == null) {
                         throw new BusinessRuleViolationException("pohjaa-ei-loytynyt");
                     }
+                    else if (pohja.getTila() != Tila.JULKAISTU) {
+                        throw new BusinessRuleViolationException("vain-julkaistua-pohjaa-voi-kayttaa");
+                    }
+
                     SisaltoViite pohjatkv = tkvRepository.findOneRoot(pohja);
                     tkvRepository.save(tkvService.kopioiHierarkia(pohjatkv, ops));
                     ops.setPohja(pohja);
