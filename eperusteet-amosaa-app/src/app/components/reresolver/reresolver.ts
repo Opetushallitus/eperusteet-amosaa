@@ -8,7 +8,6 @@ namespace Reresolver {
         if (item.restangularized) {
             return (item.restangularCollection ? item.getList() : item.get())
                 .then(res => {
-                    console.log(res)
                     return resolve(_.merge(item, res))
                 });
         }
@@ -17,7 +16,7 @@ namespace Reresolver {
         }
     });
 
-};
+}
 
 angular.module("app")
 .run(Reresolver.init)

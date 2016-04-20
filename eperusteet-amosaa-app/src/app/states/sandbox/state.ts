@@ -48,12 +48,10 @@ angular.module("app")
                         resolve();
                     }, 1000)),
                     save: () => $q((resolve, reject) => $timeout(() => {
-                        console.log("save local");
                         $scope.isEditing = false;
                         resolve();
                     }, 1000)),
                     cancel: () => $q((resolve, reject) => $timeout(() => {
-                        console.log("cancel local");
                         $scope.isEditing = false;
                         resolve();
                     }, 1000)),

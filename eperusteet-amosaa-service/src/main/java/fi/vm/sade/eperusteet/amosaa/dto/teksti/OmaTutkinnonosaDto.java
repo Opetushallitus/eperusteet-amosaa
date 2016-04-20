@@ -29,4 +29,10 @@ import lombok.Setter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class OmaTutkinnonosaDto {
     private Long id;
+    private LokalisoituTekstiDto tavoitteet;
+    private LokalisoituTekstiDto ammattitaitovaatimukset;
+    private LokalisoituTekstiDto ammattitaidonOsoittamistavat;
+    private LokalisoituTekstiDto kuvaus;
+    private String koodiUri;
+    private String koodiArvo;
 }

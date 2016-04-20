@@ -75,6 +75,7 @@
         <property name="persistenceProviderClass" value="org.hibernate.jpa.HibernatePersistenceProvider"/>
         <property name="jpaPropertyMap">
             <map>
+                <entry key="hibernate.ejb.naming_strategy" value="fi.vm.sade.eperusteet.amosaa.resource.config.CustomNamingStrategy" />
                 <entry key="hibernate.hbm2ddl.auto" value="validate"/>
                 <entry key="hibernate.show_sql" value="${hibernate.show_sql:false}"/>
                 <entry key="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL9Dialect"/>

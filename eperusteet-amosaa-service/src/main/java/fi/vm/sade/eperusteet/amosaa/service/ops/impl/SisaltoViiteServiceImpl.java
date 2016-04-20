@@ -154,6 +154,7 @@ public class SisaltoViiteServiceImpl implements SisaltoViiteService {
         if (ops.getTyyppi() != OpsTyyppi.POHJA) {
             uusi.setLiikkumaton(viite.isLiikkumaton());
         }
+
         else {
             viite.setPakollinen(uusi.isPakollinen());
             viite.setOhjeteksti(LokalisoituTeksti.of(uusi.getOhjeteksti()));

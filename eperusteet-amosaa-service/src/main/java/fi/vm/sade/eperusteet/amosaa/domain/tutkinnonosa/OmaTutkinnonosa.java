@@ -19,14 +19,13 @@ package fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.domain.AbstractAuditedEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import java.io.Serializable;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
+import org.hibernate.envers.RelationTargetAuditMode;
 
 /**
  *
@@ -41,4 +40,38 @@ public class OmaTutkinnonosa extends AbstractAuditedEntity implements Serializab
     @Getter
     @Setter
     private Long id;
+
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    @Getter
+    @Setter
+    private LokalisoituTeksti tavoitteet;
+
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    @Getter
+    @Setter
+    private LokalisoituTeksti ammattitaitovaatimukset;
+
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    @Getter
+    @Setter
+    private LokalisoituTeksti ammattitaidonOsoittamistavat;
+
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    @Getter
+    @Setter
+    private LokalisoituTeksti kuvaus;
+
+    @Column(name = "koodi_uri")
+    @Getter
+    @Setter
+    private String koodiUri;
+
+    @Column(name = "koodi_arvo")
+    @Getter
+    @Setter
+    private String koodiArvo;
 }

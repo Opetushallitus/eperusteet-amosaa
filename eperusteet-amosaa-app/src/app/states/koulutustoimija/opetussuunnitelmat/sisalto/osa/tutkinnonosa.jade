@@ -17,6 +17,31 @@ mixin tosaToteutus()
 
 mixin tosaSisalto()
   div(ng-hide="$$showToteutus")
+    div(ng-if="$$ekEditing")
+      +contentToggler("$$showTavoitteet", "'tavoitteet'")
+        div(style="margin-bottom: 16px" ckeditor slocalized ng-model="osa.tosa.omatutkinnonosa.kuvaus" layout="normal")
+
+      +contentToggler("$$showTavoitteet", "'ammattitaitovaatimukset'")
+        div(style="margin-bottom: 16px" ckeditor slocalized ng-model="osa.tosa.omatutkinnonosa.ammattitaitovaatimukset" layout="normal")
+
+      +contentToggler("$$showTavoitteet", "'ammattitaidonOsoittamistavat'")
+        div(style="margin-bottom: 16px" ckeditor slocalized ng-model="osa.tosa.omatutkinnonosa.ammattitaidonOsoittamistavat" layout="normal")
+
+      +contentToggler("$$showTavoitteet", "'kuvaus'")
+        div(style="margin-bottom: 16px" ckeditor slocalized ng-model="osa.tosa.omatutkinnonosa.kuvaus" layout="normal")
+
+    div(ng-if="!$$ekEditing")
+      +contentToggler("$$showTavoitteet", "'tavoitteet'")
+         +teksti("osa.tosa.omatutkinnonosa.tavoitteet")
+
+      +contentToggler("$$showTavoitteet", "'ammattitaitovaatimukset'")
+        +teksti("osa.tosa.omatutkinnonosa.ammattitaitovaatimukset")
+
+      +contentToggler("$$showTavoitteet", "'ammattitaidon-osoittamistavat'")
+        +teksti("osa.tosa.omatutkinnonosa.ammattitaidonOsoittamistavat")
+
+      +contentToggler("$$showTavoitteet", "'kuvaus'")
+        +teksti("osa.tosa.omatutkinnonosa.kuvaus")
 
 
 div.tutkinnonosa
@@ -25,3 +50,5 @@ div.tutkinnonosa
 
   +tosaToteutus
   +tosaSisalto
+
+  pre {{ osa.tosa | json }}

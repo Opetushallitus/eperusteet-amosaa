@@ -78,7 +78,6 @@ angular.module("app")
                             if (!uusi) {
                                 return;
                             }
-                            console.log(uusi);
                             tekstit.post("", uusi)
                                 .then(res => {
                                     res.$$depth = 0;

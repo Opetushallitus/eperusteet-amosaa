@@ -4,14 +4,14 @@ angular.module("app")
     url: "/routelist",
     resolve: {},
     controller: ($scope, $state) => {
-        $scope.params = _($state.get())
+        /*$scope.params = _($state.get())
             .map(state => state.url.split("/"))
             .compact()
             .flatten(true)
             .filter(param => _.size(param) > 1 && param[0] === ":")
             .map(param => [param.slice(1), "1"])
             .fromPairs()
-            .value();
+            .value();*/
 
         $scope.params.lang = "fi";
 

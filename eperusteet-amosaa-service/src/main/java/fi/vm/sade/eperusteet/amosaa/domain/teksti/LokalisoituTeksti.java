@@ -41,7 +41,7 @@ import org.hibernate.annotations.Immutable;
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 @Immutable
-@Table(name = "lokalisoituteksti")
+@Table(name = "lokalisoitu_teksti")
 public class LokalisoituTeksti implements Serializable {
 
     @Id
@@ -50,7 +50,7 @@ public class LokalisoituTeksti implements Serializable {
 
     @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
     @Immutable
-    @CollectionTable(name = "lokalisoituteksti_teksti")
+    @CollectionTable(name = "lokalisoitu_teksti_teksti")
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Teksti> teksti;
 

@@ -2515,7 +2515,7 @@ angular.module("app")
                     } ],
                     "versioId" : 127378
                 }
-            };
+            }
         },
         suorituspolku: {
             controller: ($scope, osa) => {}
