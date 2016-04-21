@@ -95,16 +95,16 @@ angular.module("app")
             controller: ($scope, osa) => {}
         },
         suorituspolku: {
-            controller: ($scope, osa, peruste: REl, perusteTosat, perusteRakenne, perusteTosaViitteet) => {
+            controller: ($scope, osa, peruste: REl) => {
                 osa.suorituspolku = osa.suorituspolku || {};
 
-                const tosat = _.indexBy(perusteTosat, "id");
-                const tosaViitteet = _(_.cloneDeep(perusteTosaViitteet))
+                const tosat = _.indexBy(Perusteet.getTutkinnonOsat(peruste), "id");
+                const tosaViitteet = _(_.cloneDeep(Perusteet.getTosaViitteet(Perusteet.getSuoritustapa(peruste))))
                     .each(viite => viite.$$tosa = tosat[viite._tutkinnonOsa])
                     .indexBy("id")
                     .value();
 
-                $scope.perusteRakenne = _.cloneDeep(perusteRakenne);
+                $scope.perusteRakenne = _.cloneDeep(Perusteet.getRakenne(Perusteet.getSuoritustapa(peruste)));
                 $scope.misc = {
                     editNode: (node) => SuoritustapaRyhmat.editoi(osa, node, tosaViitteet),
                     tosat: tosaViitteet
