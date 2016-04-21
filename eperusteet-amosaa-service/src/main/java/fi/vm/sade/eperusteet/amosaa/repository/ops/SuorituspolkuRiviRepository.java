@@ -14,23 +14,20 @@
  * European Union Public Licence for more details.
  */
 
-package fi.vm.sade.eperusteet.amosaa.dto.teksti;
+package fi.vm.sade.eperusteet.amosaa.repository.ops;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import fi.vm.sade.eperusteet.amosaa.dto.ops.SuorituspolkuRiviDto;
-import java.util.HashSet;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.SuorituspolkuRivi;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Suorituspolku;
 import java.util.Set;
-import lombok.Getter;
-import lombok.Setter;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author nkala
  */
-@Getter
-@Setter
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class SuorituspolkuDto {
-    private Long id;
-    private Set<SuorituspolkuRiviDto> rivit = new HashSet<>();
+@Repository
+public interface SuorituspolkuRiviRepository extends JpaRepository<SuorituspolkuRivi, Long> {
+    Set<SuorituspolkuRivi> findAllBySuorituspolku(Suorituspolku sp);
+    void deleteBySuorituspolku(Suorituspolku sp);
 }

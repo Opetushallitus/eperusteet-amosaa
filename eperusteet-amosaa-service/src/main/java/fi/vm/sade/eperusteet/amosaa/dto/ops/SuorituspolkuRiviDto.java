@@ -14,12 +14,9 @@
  * European Union Public Licence for more details.
  */
 
-package fi.vm.sade.eperusteet.amosaa.dto.teksti;
+package fi.vm.sade.eperusteet.amosaa.dto.ops;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import fi.vm.sade.eperusteet.amosaa.dto.ops.SuorituspolkuRiviDto;
-import java.util.HashSet;
-import java.util.Set;
+import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,8 +26,8 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class SuorituspolkuDto {
-    private Long id;
-    private Set<SuorituspolkuRiviDto> rivit = new HashSet<>();
+public class SuorituspolkuRiviDto {
+    private Reference suorituspolku;
+    private Long rakennemoduuli;
+    private Long jrno;
 }

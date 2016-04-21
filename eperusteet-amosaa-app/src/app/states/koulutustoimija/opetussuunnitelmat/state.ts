@@ -7,7 +7,7 @@ angular.module("app")
         otsikot: (ops) => ops.all("otsikot").getList(),
         sisaltoRoot: (otsikot) => Tekstikappaleet.root(otsikot),
         tekstit: (ops, sisaltoRoot) => ops.one("tekstit", sisaltoRoot.id),
-        peruste: (Api, ops) => Api.all("perusteet").get(ops.peruste.id),
+        peruste: ($q, Api, ops) => ops.tyyppi === "ops" ? Api.all("perusteet").get(ops.peruste.id) : $q.when({}),
         perusteTosat: peruste => Perusteet.getTutkinnonOsat(peruste),
         perusteRakenne: peruste => Perusteet.getRakenne(Perusteet.getSuoritustapa(peruste)),
         perusteTosaViitteet: peruste => Perusteet.getTosaViitteet(Perusteet.getSuoritustapa(peruste)),

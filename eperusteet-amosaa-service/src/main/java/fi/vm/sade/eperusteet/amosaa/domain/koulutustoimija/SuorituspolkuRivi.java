@@ -14,21 +14,18 @@
  * European Union Public Licence for more details.
  */
 
-package fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa;
+package fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija;
 
-import fi.vm.sade.eperusteet.amosaa.domain.AbstractAuditedEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
-import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.SuorituspolkuRivi;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Suorituspolku;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -37,13 +34,11 @@ import org.hibernate.envers.Audited;
 /**
  *
  * @author nkala
- *
- * Suorituspolku on erikoistettu versio muodostumissäännöstöstä.
  */
 @Entity
 @Audited
-@Table(name = "suorituspolku")
-public class Suorituspolku extends AbstractAuditedEntity implements Serializable, ReferenceableEntity  {
+@Table(name = "suorituspolku_rivi")
+public class SuorituspolkuRivi implements Serializable, ReferenceableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Getter
@@ -51,6 +46,15 @@ public class Suorituspolku extends AbstractAuditedEntity implements Serializable
     private Long id;
 
     @Getter
-    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "suorituspolku")
-    private Set<SuorituspolkuRivi> suorituspolkurivit = new HashSet<>();
+    @Setter
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Suorituspolku suorituspolku;
+
+    @Getter
+    @Setter
+    private Long rakennemoduuli;
+
+    @Getter
+    @Setter
+    private Long jrno;
 }

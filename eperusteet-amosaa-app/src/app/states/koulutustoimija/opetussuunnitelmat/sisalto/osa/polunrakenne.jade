@@ -15,7 +15,8 @@ div.sp-laatikko
         span.sp-osaamisala(ng-if="ngModel.osaamisala" ng-bind="ngModel.osaamisala.osaamisalakoodiArvo")
       div.sp-toolbar
         div.sp-edit
-          +gicon("pencil")
+          a(href="" ng-click="misc.editNode(ngModel)")
+            +gicon("pencil")
 
     div.sp-ryhma-lapset(ng-if="ngModel.$$show" ng-repeat="osa in ngModel.osat")
       dynamic(template="states/koulutustoimija/opetussuunnitelmat/sisalto/osa/polunrakenne.jade" misc="misc" ng-model="osa" depth="depth + 1")

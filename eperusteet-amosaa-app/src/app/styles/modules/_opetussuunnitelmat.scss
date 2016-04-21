@@ -428,3 +428,23 @@ $ops-top-vertical-margin: 10px;
         }
     }
 }
+
+.modal-body {
+    .sp-ryhmat {
+        .sp-ryhma {
+            margin: 4px 0 4px 0;
+            padding: 4px 3px 4px 3px;
+            border: 1px solid #eee;
+            font-size: 13px;
+
+            .sisalto-handle {
+                color: #999;
+                margin: 0 6px 0 6px;
+            }
+            .sp-tools {
+                float: right;
+                margin: 1px 3px 0 0;
+            }
+        }
+    }
+}

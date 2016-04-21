@@ -1,4 +1,23 @@
+namespace SuoritustapaRyhmat {
+    let i;
+    export const init = ($injector) => {
+        i = inject($injector, ["$rootScope", "$uibModal", "$q"]);
+    };
+
+    export const editoi = (osa, node, tutkinnonosat) => i.$uibModal.open({
+            resolve: { },
+            templateUrl: "modals/suoritustaparyhma.jade",
+            controller: ($scope, $state, $uibModalInstance) => {
+                $scope.tosat = tutkinnonosat;
+                $scope.node = node;
+                $scope.ok = $uibModalInstance.close;
+                $scope.peruuta = $uibModalInstance.dismiss;
+            }
+        }).result;
+};
+
 angular.module("app")
+.run(SuoritustapaRyhmat.init)
 .config($stateProvider => $stateProvider
 .state("root.koulutustoimija.opetussuunnitelmat.sisalto.osa", {
     url: "/osa/:osaId",
@@ -76,14 +95,19 @@ angular.module("app")
             controller: ($scope, osa) => {}
         },
         suorituspolku: {
-            controller: ($scope, osa, peruste, perusteTosat, perusteRakenne, perusteTosaViitteet) => {
+            controller: ($scope, osa, peruste: REl, perusteTosat, perusteRakenne, perusteTosaViitteet) => {
+                osa.suorituspolku = osa.suorituspolku || {};
+
                 const tosat = _.indexBy(perusteTosat, "id");
-                $scope.perusteRakenne = perusteRakenne;
+                const tosaViitteet = _(_.cloneDeep(perusteTosaViitteet))
+                    .each(viite => viite.$$tosa = tosat[viite._tutkinnonOsa])
+                    .indexBy("id")
+                    .value();
+
+                $scope.perusteRakenne = _.cloneDeep(perusteRakenne);
                 $scope.misc = {
-                    tosat: _(perusteTosaViitteet)
-                        .each(viite => viite.$$tosa = tosat[viite._tutkinnonOsa])
-                        .indexBy("id")
-                        .value()
+                    editNode: (node) => SuoritustapaRyhmat.editoi(osa, node, tosaViitteet),
+                    tosat: tosaViitteet
                 };
             }
         },
@@ -107,7 +131,7 @@ angular.module("app")
                     // Oikeudet
                     kommentti.$$muokkausSallittu = kommentti.luoja === kayttaja.oidHenkilo;
                     kommentti.$$poistaSallittu = Oikeudet.onVahintaan("hallinta",
-                            Oikeudet.opsOikeus($stateParams.opsId)) || kommentti.luoja === kayttaja.oidHenkilo;
+                            Oikeudet.opsOikeus($stateParams.opsId)) || kommentti.luoja === kayttaja.oidHenkilo;
                 };
 
                 $scope.kommentit = _(kommentit)
