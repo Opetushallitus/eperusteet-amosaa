@@ -30,6 +30,7 @@
     "src/app/app.ts",
     "src/app/logic/kayttajatiedot.ts",
     "src/app/logic/sorting.ts",
+    "src/app/logic/perusteet.ts",
     "src/app/logic/opetussuunnitelmat.ts",
     "src/app/logic/lmixins.ts",
     "src/app/logic/taulukko.ts",

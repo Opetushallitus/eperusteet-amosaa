@@ -1,7 +1,7 @@
 div.sp-laatikko
   div.sp-tutkinnonosa(ng-if="ngModel._tutkinnonOsaViite" ng-init="tosa = misc.tosat[ngModel._tutkinnonOsaViite];")
     div.sp-sisalto.sp-sisalto-tosa
-      div.sp-nimi(kaanna="tosa.nimi")
+      div.sp-nimi(kaanna="tosa.$$tosa.nimi")
       span.laajuus(ng-bind="tosa.laajuus")
 
   div.sp-ryhma(ng-if="ngModel.rooli && ngModel.rooli !== 'määrittelemätön'")
