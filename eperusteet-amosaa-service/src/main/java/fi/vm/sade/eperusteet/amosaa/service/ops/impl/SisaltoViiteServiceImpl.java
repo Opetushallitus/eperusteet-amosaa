@@ -40,6 +40,7 @@ import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.teksti.TekstiKappaleService;
 import static fi.vm.sade.eperusteet.amosaa.service.util.Nulls.assertExists;
 import fi.vm.sade.eperusteet.amosaa.service.util.PoistettuService;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.List;
@@ -312,7 +313,37 @@ public class SisaltoViiteServiceImpl implements SisaltoViiteService {
         return repository.save(result);
     }
 
+    private void kaikkiPuunAvaimet(SisaltoViite puu, List<Long> result) {
+        result.add(puu.getId());
+        for (SisaltoViite sv : puu.getLapset()) {
+            kaikkiPuunAvaimet(sv, result);
+        }
+    }
+
+    private void kaikkiPuunAvaimet(SisaltoViiteDto.Puu puu, List<Long> result) {
+        result.add(puu.getId());
+        for (SisaltoViiteDto.Puu sv : puu.getLapset()) {
+            kaikkiPuunAvaimet(sv, result);
+        }
+    }
+
     private void validoiRakenne(SisaltoViite vanha, SisaltoViiteDto.Puu uusi) {
+        // Tarkista ettei rakenteen elementit muutu järjestyksen vaihtuessa
+        ArrayList<Long> vanhatAvaimet = new ArrayList<>();
+        ArrayList<Long> uudetAvaimet = new ArrayList<>();
+        kaikkiPuunAvaimet(vanha, vanhatAvaimet);
+        kaikkiPuunAvaimet(uusi, uudetAvaimet);
+        Collections.sort(vanhatAvaimet);
+        Collections.sort(uudetAvaimet);
+        
+        if (!vanhatAvaimet.equals(uudetAvaimet)) {
+            throw new BusinessRuleViolationException("solmuja-ei-saa-lisata-eika-poistaa-jarjestamisessa");
+        }
+
+        if (!Objects.equals(vanha.getId(), uusi.getId())) {
+            throw new BusinessRuleViolationException("puun-juurisolmue-ei-voi-vaihtaa");
+        }
+
         // TODO: Tutkinnon osat vain yksi
         // TODO: Tutkinnon osien ryhmät
         // TODO: Suorituspolut vain yksi
