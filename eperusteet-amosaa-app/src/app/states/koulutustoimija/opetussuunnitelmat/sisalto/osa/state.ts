@@ -23,18 +23,47 @@ angular.module("app")
     url: "/osa/:osaId",
     resolve: {
         osa: (ops, $stateParams) => ops.one("tekstit", $stateParams.osaId).get(),
-        kommentit: (osa) => osa.all("kommentit").getList()
+        historia: osa => osa.getList("versiot"),
+        versioId: $stateParams => $stateParams.versio,
+        versio: (versioId, historia) => versioId && historia.get(versioId),
+        kommentit: (osa) => osa.all("kommentit").getList(),
     },
     onEnter: (osa) =>
         Murupolku.register("root.koulutustoimija.opetussuunnitelmat.sisalto.osa", osa.tekstiKappale.nimi),
     views: {
         "": {
-            controller: ($state, $stateParams, $location, $scope, $rootScope, $document, $timeout, osa, nimiLataaja, Varmistusdialogi) => {
+            controller: ($state, $stateParams, $location, $scope, $rootScope, $document, $timeout,
+                         osa, nimiLataaja, Varmistusdialogi, historia, versioId, versio) => {
+                // Version handling
+                $scope.versio = versio;
+                [$scope.uusin, $scope.historia] = Revisions.parseAll(historia);
+                nimiLataaja($scope.uusin.muokkaaja).then(nimi => $scope.uusin.$$nimi = nimi);
+                $scope.listRevisions = () => ModalRevisions.viewRevisions($scope.historia)
+                    .then(res => $state.go($state.current.name, { versio: res }));
+                if (versio) {
+                    $scope.uusin = Revisions.get($scope.historia, versioId);
+                    _.merge($scope.ops, versio.plain());
+                    $scope.restoreRevision = () => {
+                        $scope.ops.put().then(res => {
+                            _.merge(osa, versio.plain());
+                            $scope.osa = osa;
+                            NotifikaatioService.onnistui("versio-palautettu-onnistuneesti");
+                            $scope.restoreNew();
+                        });
+                    };
+                }
+
+
+                // Item handling
                 osa.lapset = undefined;
                 $scope.edit = EditointikontrollitService.createRestangular($scope, "osa", osa, {
                     after: () => {
                         $rootScope.$broadcast("sivunavi:forcedUpdate", $scope.osa);
-                    }
+                    },
+                    done: () => historia.get("uusin").then(res => {
+                        $scope.uusin = Revisions.parseOne(res);
+                        $scope.historia.unshift($scope.uusin);
+                    })
                 });
 
                 nimiLataaja(osa.tekstiKappale.muokkaaja)

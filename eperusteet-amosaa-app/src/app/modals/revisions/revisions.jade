@@ -16,10 +16,10 @@ div.modal-body
     .history-item(ng-repeat="revision in revisions")
       .hi-topic(ng-click="toggle(revision)")
         span.hi-id
-          a(href="" ng-click="ok(revision.id)" ng-bind="revision.id")
+          a(href="" ng-click="ok(revision.id)" ng-bind="revision.$$number")
         span.hi-muokkaaja(ng-bind="revision.muokkaaja")
         span.hi-aikaleima(ng-bind="revision.date | aikaleima")
-      .hi-kommentti(ng-show="revision.kommentti && (revision.$$show || search)")
+      .hi-kommentti(ng-show="revision.kommentti")
         p(ng-bind="revision.kommentti")
 
   nav

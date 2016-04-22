@@ -17,8 +17,8 @@ package fi.vm.sade.eperusteet.amosaa.service.ops;
 
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
+import fi.vm.sade.eperusteet.amosaa.dto.RevisionDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
-import fi.vm.sade.eperusteet.amosaa.service.revision.RevisionService;
 import java.util.List;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,7 +26,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 /**
  * @author mikkom
  */
-public interface SisaltoViiteService extends RevisionService {
+public interface SisaltoViiteService {
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
     SisaltoViiteDto.Matala getSisaltoViite(@P("ktId") Long ktId, @P("opsId") Long opsId, Long viiteId);
 
@@ -56,5 +56,17 @@ public interface SisaltoViiteService extends RevisionService {
     void reorderSubTree(@P("ktId") Long ktId, @P("opsId") Long opsId, Long rootViiteId, SisaltoViiteDto.Puu uusi);
 
     SisaltoViite kopioiHierarkia(SisaltoViite original, Opetussuunnitelma owner);
+
+    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
+    RevisionDto getLatestRevision(@P("opsId") Long opsId, Long viiteId);
+
+    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
+    List<RevisionDto> getRevisions(@P("opsId") Long opsId, Long viiteId);
+
+    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
+    SisaltoViiteDto getData(@P("opsId") Long opsId, Long viiteId, Integer revId);
+
+    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'MUOKKAUS')")
+    void revertToVersion(@P("opsId") Long opsId, Long viiteId, Integer versio);
 }
 

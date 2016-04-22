@@ -28,6 +28,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Suorituspolku;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Tutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
+import fi.vm.sade.eperusteet.amosaa.dto.RevisionDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.SuorituspolkuRiviDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SuorituspolkuDto;
@@ -125,6 +126,7 @@ public class SisaltoViiteServiceImpl implements SisaltoViiteService {
 
         SisaltoViite parentViite = findViite(opsId, viiteId);
         SisaltoViite uusiViite = mapper.map(viiteDto, SisaltoViite.class);
+        uusiViite.setVersio(0L);
         uusiViite.setOwner(parentViite.getOwner());
         viiteDto.setTekstiKappale(tekstiKappaleService.add(uusiViite, viiteDto.getTekstiKappale()));
         uusiViite.setVanhempi(parentViite);
@@ -228,8 +230,11 @@ public class SisaltoViiteServiceImpl implements SisaltoViiteService {
             default:
                 break;
         }
+
+        repository.setRevisioKommentti(uusi.getKommentti());
         updateTekstiKappale(opsId, viite, uusi.getTekstiKappale(), false);
         viite.setValmis(uusi.isValmis());
+        viite.setVersio((viite.getVersio() != null ? viite.getVersio() : 0) + 1);
         viite = repository.save(viite);
         return mapper.map(viite, SisaltoViiteDto.class);
     }
@@ -428,28 +433,28 @@ public class SisaltoViiteServiceImpl implements SisaltoViiteService {
     }
 
     @Override
-    public List<Revision> getRevisions(Long ktId, Long opsId) {
-        return repository.getRevisions(opsId);
+    public RevisionDto getLatestRevision(Long opsId, Long viiteId) {
+        return mapper.map(repository.getLatestRevision(viiteId), RevisionDto.class);
     }
 
     @Override
-    public Revision getLatestRevision(Long ktId, Long opsId) {
-        return repository.getLatestRevision(opsId);
+    public SisaltoViiteDto getData(Long opsId, Long viiteId, Integer revId) {
+        SisaltoViite viite = repository.findRevision(viiteId, revId);
+        return mapper.map(viite, SisaltoViiteDto.class);
     }
 
     @Override
-    public Integer getLatestRevisionId(Long ktId, Long opsId) {
-        return repository.getLatestRevisionId(opsId);
+    public List<RevisionDto> getRevisions(Long opsId, Long viiteId) {
+        SisaltoViite viite = repository.findOne(viiteId);
+        if (!Objects.equals(opsId, viite.getOwner().getId())) {
+            throw new BusinessRuleViolationException("viitteen-taytyy-kuulua-opetussuunnitelmaan");
+        }
+        List<Revision> revisions = repository.getRevisions(viiteId);
+        return mapper.mapAsList(revisions, RevisionDto.class);
     }
 
     @Override
-    public Object getData(Long ktId, Long opsId, Integer rev) {
-        return mapper.map(repository.findRevision(opsId, rev), SisaltoViite.class);
-    }
-
-    @Override
-    public Revision getRemoved(Long ktId, Long opsId) {
-        return repository.getLatestRevision(opsId);
+    public void revertToVersion(Long opsId, Long viiteId, Integer versio) {
     }
 
 }

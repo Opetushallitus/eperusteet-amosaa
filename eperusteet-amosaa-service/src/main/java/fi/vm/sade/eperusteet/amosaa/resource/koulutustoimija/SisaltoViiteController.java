@@ -16,7 +16,7 @@ package fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija;
  * European Union Public Licence for more details.
  */
 
-import fi.vm.sade.eperusteet.amosaa.domain.revision.Revision;
+import fi.vm.sade.eperusteet.amosaa.dto.RevisionDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteKevytDto;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
@@ -100,29 +100,29 @@ public class SisaltoViiteController {
 
     @RequestMapping(value = "/tekstit/{tkvId}/versiot/uusin", method = RequestMethod.GET)
     @InternalApi
-    Revision getLatestRevision(
+    RevisionDto getLatestRevision(
             @PathVariable final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long tkvId) {
-        return service.getLatestRevision(ktId, opsId);
+        return service.getLatestRevision(opsId, tkvId);
     }
 
     @RequestMapping(value = "/tekstit/{tkvId}/versiot", method = RequestMethod.GET)
     @InternalApi
-    List<Revision> getRevisions(
+    List<RevisionDto> getRevisions(
             @PathVariable final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long tkvId) {
-        return service.getRevisions(ktId, opsId);
+        return service.getRevisions(opsId, tkvId);
     }
 
     @RequestMapping(value = "/tekstit/{tkvId}/versiot/{revId}", method = RequestMethod.GET)
     @InternalApi
-    Object getRevisions(
+    SisaltoViiteDto getRevisions(
             @PathVariable final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long tkvId,
             @PathVariable final Integer revId) {
-        return service.getData(ktId, opsId, revId);
+        return service.getData(opsId, tkvId, revId);
     }
 }

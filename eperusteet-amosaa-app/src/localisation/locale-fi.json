@@ -159,9 +159,13 @@
   "yhteisien-osien-pohjia-ei-viela-luotu":"Yhteisien osien pohjia ei luotu",
   "ylatunniste":"Ylätunniste",
   "lisaa-kommentti": "Lisää kommentti",
+  "tarkastelet-vanhempaa-versiota": "Tarkastelet osion vanhempaa versiota",
   "poistetaanko-kommentti": "Poistetaanko kommentti?",
+  "ota-versio-kayttoon": "Ota tämä versio käyttöön",
+  "palaa-uusimpaan": "Palaa uusimpaan versioon",
   "vahvista-poisto": "Vahvista poisto",
   "kommentti-ei-saa-ylittaa": "Kommentti ei saa olla yli {{ maara }} merkkiä pitkä.",
   "lahetetty": "Lähetetty",
-  "viesti-poistettu": "Viesti poistettu"
+  "viesti-poistettu": "Viesti poistettu",
+  "versiohistoria": "Versiohistoria"
 }

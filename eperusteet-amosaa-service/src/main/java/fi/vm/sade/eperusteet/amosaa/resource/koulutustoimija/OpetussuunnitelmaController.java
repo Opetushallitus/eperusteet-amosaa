@@ -86,7 +86,7 @@ public class OpetussuunnitelmaController {
     public List<PoistettuDto> getPoistetut(
             @PathVariable final Long ktId,
             @PathVariable final Long opsId) {
-        return poistetutService.poistetut(ktId);
+        return poistetutService.poistetut(ktId, opsId);
     }
 
     @RequestMapping(value = "/{opsId}/oikeudet", method = RequestMethod.GET)
@@ -138,28 +138,6 @@ public class OpetussuunnitelmaController {
         return service.updateTila(ktId, opsId, tila);
     }
 
-//    @RequestMapping(value = "/tekstit/{viiteId}/versiot", method = GET)
-//    public ResponseEntity<List<RevisionDto>> getVersionsForTekstiKappaleViite(
-//            @PathVariable final long viiteId) {
-//
-//        return new ResponseEntity<>(tekstiKappaleViiteService.getVersions(viiteId), HttpStatus.OK);
-//    }
-//
-//    @RequestMapping(value = "/tekstit/{viiteId}/versio/{versio}", method = GET)
-//    public TekstiKappaleDto getVersionForTekstiKappaleViite(
-//            @PathVariable final Long opsId,
-//            @PathVariable final long viiteId,
-//            @PathVariable final long versio) {
-//        return tekstiKappaleViiteService.findTekstikappaleVersion(opsId, viiteId, versio);
-//    }
-//
-//    @RequestMapping(value = "/tekstit/{viiteId}/revert/{versio}", method = RequestMethod.POST)
-//    public void revertTekstikappaleToVersion(
-//        @PathVariable final Long opsId,
-//        @PathVariable final Long viiteId,*
-//        @PathVariable final Integer versio){
-//        tekstiKappaleViiteService.revertToVersion(opsId, viiteId, versio);
-//    }
 
 //    @RequestMapping(value = "/tekstit/{parentId}/lapsi/{childId}", method = RequestMethod.POST)
 //    @ResponseBody

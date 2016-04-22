@@ -77,7 +77,7 @@ public class Poistettu  implements Serializable, ReferenceableEntity {
     @Setter
     @NotNull
     @Enumerated(value = EnumType.STRING)
-    private PoistettuTyyppi tyyppi;
+    private SisaltoTyyppi tyyppi;
 
     @Getter
     @Setter

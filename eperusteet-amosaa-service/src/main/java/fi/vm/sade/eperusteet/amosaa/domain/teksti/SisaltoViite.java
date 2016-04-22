@@ -74,6 +74,10 @@ public class SisaltoViite implements ReferenceableEntity, Serializable {
 
     @Getter
     @Setter
+    private Long versio;
+
+    @Getter
+    @Setter
     @Enumerated(value = EnumType.STRING)
     private SisaltoTyyppi tyyppi = SisaltoTyyppi.TEKSTIKAPPALE;
 

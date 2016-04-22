@@ -43,6 +43,7 @@ public class SisaltoViiteDto {
     private LokalisoituTekstiDto perusteteksti;
     private TutkinnonosaDto tosa;
     private SuorituspolkuDto suorituspolku;
+    private String kommentti;
 
     @JsonProperty("_tekstiKappale")
     private Reference tekstiKappaleRef;

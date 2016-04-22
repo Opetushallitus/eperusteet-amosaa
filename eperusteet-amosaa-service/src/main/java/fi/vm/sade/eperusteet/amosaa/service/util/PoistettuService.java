@@ -30,5 +30,5 @@ import org.springframework.security.access.prepost.PreAuthorize;
 @PreAuthorize("isAuthenticated()")
 public interface PoistettuService {
     PoistettuDto lisaaPoistettu(Koulutustoimija koulutustoimija, Opetussuunnitelma ops, SisaltoViite osa);
-    List<PoistettuDto> poistetut(Long koulutustoimija);
+    List<PoistettuDto> poistetut(Long koulutustoimija, Long opsId);
 }

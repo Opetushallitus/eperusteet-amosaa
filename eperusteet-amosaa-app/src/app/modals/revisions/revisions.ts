@@ -10,6 +10,8 @@ namespace ModalRevisions {
         },
         templateUrl: "modals/revisions/revisions.jade",
         controller: ($uibModalInstance, $scope, $state, revisions) => {
+            _.each(revisions, (rev, idx: number) => rev.$$number = _.size(revisions) - idx);
+
             $scope.update = (search) => {
                 $scope.frevisions = _.filter(revisions, (rev: any) => _.matchStrings($scope.search, rev.kommentti));
                 $scope.pagination = Pagination.paginate($scope.frevisions, 8);

@@ -16,7 +16,7 @@
 
 package fi.vm.sade.eperusteet.amosaa.dto;
 
-import fi.vm.sade.eperusteet.amosaa.domain.PoistettuTyyppi;
+import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import java.util.Date;
 import lombok.Getter;
@@ -34,7 +34,7 @@ public class PoistettuDto extends RevisionDto {
     private Reference koulutustoimija;
     private Reference opetussuunnitelma;
     private Long poistettu;
-    private PoistettuTyyppi tyyppi;
+    private SisaltoTyyppi tyyppi;
     private Date pvm;
     private String muokkaajaOid;
 }
