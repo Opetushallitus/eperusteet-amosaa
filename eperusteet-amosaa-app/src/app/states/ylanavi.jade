@@ -1,10 +1,12 @@
-div.ylanavi(sticky, className="ylanavi-sticky")
+div.ylanavi(sticky className="ylanavi-sticky")
   div.row
     div.col-xs-8
       ol.breadcrumb
         li
           a(href="" ui-sref="root" ui-sref-opts="{ reload: true }")
-            span.glyphicon.glyphicon-home
+            // span.glyphicon.glyphicon-home
+            // span.glyphicon.glyphicon-home
+            img.murukuva(src="images/md/ikoni-eperusteet.png")
         li(ng-repeat="muru in muruPath")
           a(href="" ui-sref="{{ muru.state }}" ui-sref-opts="{ reload: true }")
             span(kaanna="muru.name")
