@@ -1,8 +1,12 @@
-div.sp-laatikko(ng-hide="ngModel.$$piilotettu")
+div.sp-laatikko(ng-if="!ngModel.$$poistettu" ng-hide="ngModel.$$piilotettu")
   div.sp-tutkinnonosa(ng-class="{ 'sp-laatikko-active': !ngModel.$$piilotettu && misc.hasInput }" ng-if="ngModel._tutkinnonOsaViite" ng-init="tosa = misc.tosat[ngModel._tutkinnonOsaViite];")
     div.sp-sisalto.sp-sisalto-tosa
       div.sp-nimi(kaanna="tosa.$$tosa.nimi")
-      span.laajuus(ng-bind="tosa.laajuus")
+      div.sp-toolbar
+        div.sp-edit(ng-show="misc.root.$$ekEditing && !ngModel.pakollinen")
+          a(href="" ng-click="misc.poistaOsa(ngModel)")
+            +gicon("remove")
+        span.laajuus(ng-bind="tosa.laajuus")
 
   div.sp-ryhma(ng-if="ngModel.rooli && ngModel.rooli !== 'määrittelemätön'")
     div.sp-sisalto(class="{{ 'sp-sisalto-' + (ngModel.osaamisala ? 'osaamisala' : 'ryhma') }}")
@@ -13,7 +17,10 @@ div.sp-laatikko(ng-hide="ngModel.$$piilotettu")
       div.sp-nimi
         span(kaanna="ngModel.nimi")
         span.sp-osaamisala(ng-if="ngModel.osaamisala" ng-bind="ngModel.osaamisala.osaamisalakoodiArvo")
-      div.sp-toolbar
+      div.sp-toolbar(ng-show="misc.root.$$ekEditing")
+        div.sp-edit(ng-show="depth > 1")
+          a(href="" ng-click="misc.poistaOsa(ngModel)")
+            +gicon("remove")
         div.sp-edit
           a(href="" ng-click="misc.editNode(ngModel)")
             +gicon("pencil")

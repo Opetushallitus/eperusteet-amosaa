@@ -124,9 +124,7 @@ angular.module("app")
             controller: ($scope, osa) => {}
         },
         suorituspolku: {
-            controller: ($scope, osa, peruste: REl) => {
-                osa.suorituspolku = osa.suorituspolku || {};
-
+            controller: ($rootScope, $scope, osa, peruste: REl) => {
                 const tosat = _.indexBy(Perusteet.getTutkinnonOsat(peruste), "id");
                 const tosaViitteet = _(_.cloneDeep(Perusteet.getTosaViitteet(Perusteet.getSuoritustapa(peruste))))
                     .each(viite => viite.$$tosa = tosat[viite._tutkinnonOsa])
@@ -135,9 +133,13 @@ angular.module("app")
 
                 $scope.perusteRakenne = _.cloneDeep(Perusteet.getRakenne(Perusteet.getSuoritustapa(peruste)));
                 $scope.misc = {
+                    root: $rootScope,
                     editNode: (node) => SuoritustapaRyhmat.editoi(osa, node, tosaViitteet),
                     tosat: tosaViitteet,
-                    hasInput: false
+                    hasInput: false,
+                    poistaOsa: (node) => {
+                        node.$$poistettu = true;
+                    }
                 };
 
                 $scope.suodata = (input) => {
