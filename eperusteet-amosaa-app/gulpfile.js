@@ -88,6 +88,7 @@ gulp
     return gulp.src(['./src/localisation/**']).pipe(gulp.dest(config.build + '/localisation'));
 })
 .task('images', function() {
+    gulp.src(['./src/app/favicon.ico']).pipe(gulp.dest(config.build));
     return gulp.src(['./src/images/**']).pipe(gulp.dest(config.build + '/images'));
 })
 .task('static-fonts', ['ckeditor', 'locales', 'images'], function() {
