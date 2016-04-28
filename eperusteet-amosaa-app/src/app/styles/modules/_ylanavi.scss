@@ -1,23 +1,30 @@
 .ylanavi {
+    ol {
+        padding: 3px 0 0 0;
+    }
+
     width: 100%;
 
     .murukuva {
         height: 32px;
     }
 
+    .ylanavi-oikea {
+        padding-top: 4px;
+    }
+
     .ohje {
-        margin: 5px 5px 5px 5px;
         position: relative;
-        top: 3px;
-        right: -5px;
+        top: 8px;
     }
 
     .kielivalitsin {
+        margin: 5px 5px 5px 5px;
         position: relative;
-        top: 4px;
+        top: 9px;
         a {
             cursor: pointer;
-            margin: 5px;
+            padding: 5px;
         }
     }
 }
