@@ -18,6 +18,6 @@ div.sp-laatikko(ng-hide="ngModel.$$piilotettu")
           a(href="" ng-click="misc.editNode(ngModel)")
             +gicon("pencil")
 
-    div.sp-ryhma-lapset(ng-if="ngModel.$$show || misc.$$kaikkiAuki" ng-repeat="osa in ngModel.osat")
+    div.sp-ryhma-lapset(ng-if="ngModel.$$show || misc.$$kaikkiAuki || (!ngModel.$$piilotettu && misc.hasInput)" ng-repeat="osa in ngModel.osat")
       dynamic(template="states/koulutustoimija/opetussuunnitelmat/sisalto/osa/polunrakenne.jade" misc="misc" ng-model="osa" depth="depth + 1")
 

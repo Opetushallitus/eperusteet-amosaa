@@ -53,25 +53,10 @@ angular.module("app")
                     _.merge(uniikit[osa.id], osa.plain());
                 });
 
-                const traverseItems = (item) => {
-                    let childsVisible = false;
-                    _.each(item.lapset, (item) => {
-                        let itemVisible = traverseItems(item);
-                        if (itemVisible) {
-                            childsVisible = true;
-                        }
-                    });
-
-                    const
-                        isMatchingName = KaannaService.hae(item.$$obj.tekstiKappale.nimi || {}, $scope.search);
-
-                    item.$$hidden = !isMatchingName && !childsVisible;
-                    return item.$$hidden;
-                };
-
                 $scope.suodata = (search) => {
-                    _.each($scope.sivunavi.lapset, (item) => {
-                        traverseItems(item);
+                    Algoritmit.traverse($scope.sivunavi, "lapset", (item) => {
+                        item.$$hidden = !Algoritmit.match(search, item.$$obj.tekstiKappale.nimi);
+                        !item.$$hidden && Algoritmit.traverseUp(item, parentItem => parentItem.$$hidden = false);
                     });
                 };
 
@@ -93,7 +78,7 @@ angular.module("app")
                                 .then(res => {
                                     res.$$depth = 0;
                                     otsikot.push(res);
-                                    _.find(otsikot, (otsikko: any) => otsikko.id == parentNode.id).lapset.push(res.id);
+                                    _.find(otsikot, (otsikko: any) => otsikko.id == sisaltoRoot.id).lapset.push(res.id);
                                     updateSivunavi();
                                     $timeout(() =>
                                         $state.go("root.koulutustoimija.opetussuunnitelmat.sisalto.osa", { osaId: res.id }));
