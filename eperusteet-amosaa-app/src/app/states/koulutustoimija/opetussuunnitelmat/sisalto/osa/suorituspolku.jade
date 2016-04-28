@@ -4,11 +4,11 @@ div
   div.haku(style="margin-bottom: 10px;")
     div.form-inline
       div.form-group.has-feedback.has-feedback-left
-        input.form-control(ng-change="suodata(search)" type="text" ng-model="search" placeholder="{{ 'hae' | kaanna }}")
+        input.form-control.input-sm(ng-change="suodata(search)" type="text" ng-model="search" placeholder="{{ 'hae' | kaanna }}")
         i.form-control-feedback.glyphicon.glyphicon-search(style="color: gray;")
 
   div.pull-right(style="position: relative; top: -36px")
-    +toggler("$$kaikkiAuki", "'auki'", "'kiinni'")
+    +toggler("misc.$$kaikkiAuki", "'auki'", "'kiinni'")
 
   div.suorituspolku
     div.sp-ryhma-lapset(ng-repeat="osa in perusteRakenne.osat")

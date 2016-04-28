@@ -1,5 +1,5 @@
-div.sp-laatikko
-  div.sp-tutkinnonosa(ng-if="ngModel._tutkinnonOsaViite" ng-init="tosa = misc.tosat[ngModel._tutkinnonOsaViite];")
+div.sp-laatikko(ng-hide="ngModel.$$piilotettu")
+  div.sp-tutkinnonosa(ng-class="{ 'sp-laatikko-active': !ngModel.$$piilotettu && misc.hasInput }" ng-if="ngModel._tutkinnonOsaViite" ng-init="tosa = misc.tosat[ngModel._tutkinnonOsaViite];")
     div.sp-sisalto.sp-sisalto-tosa
       div.sp-nimi(kaanna="tosa.$$tosa.nimi")
       span.laajuus(ng-bind="tosa.laajuus")
@@ -8,8 +8,8 @@ div.sp-laatikko
     div.sp-sisalto(class="{{ 'sp-sisalto-' + (ngModel.osaamisala ? 'osaamisala' : 'ryhma') }}")
       div.sp-toggler(ng-class="{ 'sp-toggler-osaamisala': ngModel.osaamisala, 'sp-toggler-ryhma': !ngModel.osaamisala }" ng-click="ngModel.$$show = !ngModel.$$show")
         div.chevron
-          span.glyphicon.glyphicon-chevron-down(ng-show="ngModel.$$show")
-          span.glyphicon.glyphicon-chevron-right(ng-hide="ngModel.$$show")
+          span.glyphicon.glyphicon-chevron-down(ng-show="ngModel.$$show || misc.$$kaikkiAuki")
+          span.glyphicon.glyphicon-chevron-right(ng-hide="ngModel.$$show || misc.$$kaikkiAuki")
       div.sp-nimi
         span(kaanna="ngModel.nimi")
         span.sp-osaamisala(ng-if="ngModel.osaamisala" ng-bind="ngModel.osaamisala.osaamisalakoodiArvo")
@@ -18,6 +18,6 @@ div.sp-laatikko
           a(href="" ng-click="misc.editNode(ngModel)")
             +gicon("pencil")
 
-    div.sp-ryhma-lapset(ng-if="ngModel.$$show" ng-repeat="osa in ngModel.osat")
+    div.sp-ryhma-lapset(ng-if="ngModel.$$show || misc.$$kaikkiAuki" ng-repeat="osa in ngModel.osat")
       dynamic(template="states/koulutustoimija/opetussuunnitelmat/sisalto/osa/polunrakenne.jade" misc="misc" ng-model="osa" depth="depth + 1")
 

@@ -19,9 +19,7 @@ module DynamicImpl {
                 const renderer = () => el.replaceWith($compile($templateCache.get(scope.template))(scope));
                 if (scope.ngModel) {
                     // Give angular a break with big trees
-                    ++renderAmount % 40 === 0
-                        ? $timeout(renderer)
-                        : renderer();
+                    $timeout(renderer);
                 }
             }
         }

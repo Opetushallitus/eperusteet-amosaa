@@ -136,7 +136,23 @@ angular.module("app")
                 $scope.perusteRakenne = _.cloneDeep(Perusteet.getRakenne(Perusteet.getSuoritustapa(peruste)));
                 $scope.misc = {
                     editNode: (node) => SuoritustapaRyhmat.editoi(osa, node, tosaViitteet),
-                    tosat: tosaViitteet
+                    tosat: tosaViitteet,
+                    hasInput: false
+                };
+
+                $scope.suodata = (input) => {
+                    $scope.misc.hasInput = !_.isEmpty(input);
+                    Algoritmit.traverse($scope.perusteRakenne, "osat", (node) => {
+                        node.$$piilotettu = !Algoritmit.match(input, node._tutkinnonOsaViite
+                            ? tosaViitteet[node._tutkinnonOsaViite].$$tosa.nimi
+                            : node.nimi);
+
+                        if (!node.$$piilotettu) {
+                            Algoritmit.traverseUp(node, (pnode) => {
+                                pnode.$$piilotettu = false
+                            });
+                        }
+                    });
                 };
             }
         },

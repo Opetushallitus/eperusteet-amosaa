@@ -66,6 +66,7 @@
     "src/app/data/misc.ts",
     "src/app/data/kayttaja.ts",
     "src/app/data/kasitteet.ts",
+    "src/app/data/constants.ts",
     "src/app/states/state.ts",
     "src/app/states/sandbox/state.ts",
     "src/app/states/routelist/state.ts",
