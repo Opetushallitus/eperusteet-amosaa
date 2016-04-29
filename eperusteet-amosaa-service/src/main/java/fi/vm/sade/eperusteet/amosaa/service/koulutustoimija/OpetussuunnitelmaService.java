@@ -35,6 +35,9 @@ public interface OpetussuunnitelmaService extends RevisionService {
     @PreAuthorize("isAuthenticated()")
     List<OpetussuunnitelmaBaseDto> getOpetussuunnitelmatByTyyppi(OpsTyyppi tyyppi);
 
+    @PreAuthorize("isAuthenticated()")
+    List<OpetussuunnitelmaBaseDto> getPohjat();
+
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
     List<OpetussuunnitelmaBaseDto> getOpetussuunnitelmat(@P("ktId") Long ktId);
 

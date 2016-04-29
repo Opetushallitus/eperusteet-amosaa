@@ -1,0 +1,26 @@
+div.modal-header
+  h2(kaanna="'muokkaa-ryhmaa'")
+
+div.modal-body
+  div.sp-ryhmat
+    div.haku
+      div.form-inline
+        div.form-group.has-feedback.has-feedback-left
+          input.form-control.input-sm(ng-change="suodata(search)" type="text" ng-model="search" placeholder="{{ 'rajaa-sisaltoa' | kaanna }}")
+          i.form-control-feedback.glyphicon.glyphicon-search(style="color: gray;")
+    div.sp-ryhma(ng-repeat="module in node.osat")
+      span.sisalto-handle
+        +icon("arrows-v")
+      span(ng-if="module._tutkinnonOsaViite" ng-init="tosa = tosat[module._tutkinnonOsaViite];")
+        span(kaanna="tosa.$$tosa.nimi")
+      span(ng-if="!module._tutkinnonOsaViite")
+        span(kaanna="module.nimi")
+      div.sp-tools
+        a(href="" ng-click="removeModule(module)")
+          +icon("remove")
+
+div.modal-footer
+  button.btn.btn-default(ng-click="peruuta()")
+    span(kaanna="'peruuta'")
+  button.btn.btn-primary(ng-click="ok(pohja)")
+    span(kaanna="'tallenna'")

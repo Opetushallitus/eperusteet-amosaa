@@ -18,11 +18,11 @@ package fi.vm.sade.eperusteet.amosaa.resource.util;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
+import io.swagger.annotations.Api;
 import java.util.List;
 import java.util.Set;
-
-import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -47,6 +47,13 @@ public class KayttajaController {
     @RequestMapping(value = "/koulutustoimijat", method = RequestMethod.GET)
     public List<KoulutustoimijaBaseDto> getKoulutustoimijat() {
         return kayttajat.koulutustoimijat();
+    }
+
+    @RequestMapping(value = "/koulutustoimijat", method = RequestMethod.POST)
+    public ResponseEntity updateKoulutustoimijat() {
+        return kayttajat.updateKoulutustoimijat()
+                ? ResponseEntity.ok().build()
+                : ResponseEntity.badRequest().build();
     }
 
     @RequestMapping(value = "/organisaatiot", method = RequestMethod.GET)

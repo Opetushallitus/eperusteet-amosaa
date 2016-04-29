@@ -18,11 +18,17 @@ package fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa;
 
 import fi.vm.sade.eperusteet.amosaa.domain.AbstractAuditedEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.SuorituspolkuRivi;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -44,4 +50,7 @@ public class Suorituspolku extends AbstractAuditedEntity implements Serializable
     @Setter
     private Long id;
 
+    @Getter
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "suorituspolku")
+    private Set<SuorituspolkuRivi> suorituspolkurivit = new HashSet<>();
 }

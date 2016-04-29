@@ -14,13 +14,16 @@
 }
 
 .suorituspolku {
+  .sp-laatikko-active {
+    box-shadow: 0px 0px 10px #ffffe0;
+  }
+
   .sp-laatikko {
     .sp-sisalto-tosa {
       .laajuus {
-        float: right;
         position: relative;
-        top: -23px;
-        margin-right: 10px;
+        top: 6px;
+        right: 6px;
       }
     }
 
@@ -48,6 +51,7 @@
         height: 29px;
         float: right;
         top: -29px;
+        padding-top: 1px;
         position: relative;
 
         .sp-edit {

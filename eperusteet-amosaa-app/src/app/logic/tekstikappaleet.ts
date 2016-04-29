@@ -1,6 +1,12 @@
 namespace Tekstikappaleet {
+    export const suorituspolut = (tekstikappaleviitteet: Array<any>) =>
+        _.find(tekstikappaleviitteet, (tkv) => tkv.tyyppi === "suorituspolut");
+
+    export const tutkinnonosat = (tekstikappaleviitteet: Array<any>) =>
+        _.find(tekstikappaleviitteet, (tkv) => tkv.tyyppi === "tutkinnonosat");
+
     export const root = (tekstikappaleviitteet: Array<any>) =>
-        _.find(tekstikappaleviitteet, (tkv) => !tkv.vanhempi);
+        _.find(tekstikappaleviitteet, (tkv) => !tkv._vanhempi);
 
     export const uniikit = (tekstikappaleviitteet: Array<any>) =>
         _.indexBy(tekstikappaleviitteet, "id");

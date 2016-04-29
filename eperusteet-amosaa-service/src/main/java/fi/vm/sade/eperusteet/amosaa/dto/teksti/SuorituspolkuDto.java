@@ -17,6 +17,9 @@
 package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import fi.vm.sade.eperusteet.amosaa.dto.ops.SuorituspolkuRiviDto;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,4 +32,5 @@ import lombok.Setter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SuorituspolkuDto {
     private Long id;
+    private Set<SuorituspolkuRiviDto> rivit = new HashSet<>();
 }

@@ -154,21 +154,29 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
 
     @Override
     @Transactional(readOnly = false)
+    public boolean updateKoulutustoimijat() {
+        koulutustoimijaService.initKoulutustoimijat(getUserOrganizations());
+        return true;
+    }
+
+    @Override
+    @Transactional(readOnly = false)
     public List<KoulutustoimijaBaseDto> koulutustoimijat() {
         Kayttaja kayttaja = getKayttaja();
-        List<KoulutustoimijaBaseDto> kts = getUserOrganizations().stream()
-                .map((orgOid) -> koulutustoimijaService.getKoulutustoimija(orgOid))
+
+        return koulutustoimijaService.getKoulutustoimijat(getUserOrganizations()).stream()
+                .filter(org -> org != null)
+                .map(ktDto -> {
+                    Koulutustoimija kt = koulutustoimijaRepository.findOne(ktDto.getId());
+                    if (ktkayttajaRepository.findOneByKoulutustoimijaAndKayttaja(kt, kayttaja) == null) {
+                        KoulutustoimijaKayttaja ktk = new KoulutustoimijaKayttaja();
+                        ktk.setKayttaja(kayttaja);
+                        ktk.setKoulutustoimija(kt);
+                        ktkayttajaRepository.save(ktk);
+                    }
+                    return ktDto;
+                })
                 .collect(Collectors.toList());
-        for (KoulutustoimijaBaseDto ktDto : kts) {
-            Koulutustoimija kt = koulutustoimijaRepository.findOne(ktDto.getId());
-            if (ktkayttajaRepository.findOneByKoulutustoimijaAndKayttaja(kt, kayttaja) == null) {
-                KoulutustoimijaKayttaja ktk = new KoulutustoimijaKayttaja();
-                ktk.setKayttaja(kayttaja);
-                ktk.setKoulutustoimija(kt);
-                ktkayttajaRepository.save(ktk);
-            }
-        }
-        return kts;
     }
 
     @Override

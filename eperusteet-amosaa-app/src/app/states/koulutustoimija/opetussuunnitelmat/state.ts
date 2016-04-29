@@ -7,6 +7,7 @@ angular.module("app")
         otsikot: (ops) => ops.all("otsikot").getList(),
         sisaltoRoot: (otsikot) => Tekstikappaleet.root(otsikot),
         tekstit: (ops, sisaltoRoot) => ops.one("tekstit", sisaltoRoot.id),
+        peruste: ($q, Api, ops) => (ops.tyyppi === "ops" ? Api.all("perusteet").get(ops.peruste.id) : $q.when({}))
     },
     onEnter: (ops) => Murupolku.register("root.koulutustoimija.opetussuunnitelmat", ops.nimi),
     views: {

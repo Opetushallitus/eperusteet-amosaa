@@ -1,5 +1,6 @@
 li(ng-show="!item.$$hidden" ng-repeat="item in ngModel")
-  a(style="padding-left: {{ (item.$$depth - 1) * 20 + 10 }}px"
+  a.pakollinen(ng-class="{ pakollinen: item.$$obj.pakollinen, liikkumaton: item.$$obj.liikkumaton }"
+    style="padding-left: {{ (item.$$depth - 1) * 20 + 10 }}px"
     href=""
     ui-sref-active="active"
     ui-sref="root.koulutustoimija.opetussuunnitelmat.sisalto.osa({ osaId: item.id })")

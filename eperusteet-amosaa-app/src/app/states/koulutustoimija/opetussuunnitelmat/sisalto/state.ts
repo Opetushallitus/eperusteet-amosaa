@@ -28,7 +28,8 @@ angular.module("app")
                             resolve();
                         }),
                         save: (kommentti) => $q((resolve, reject) => {
-                            tekstit.one("rakenne").customPUT($scope.rakenne)
+                            tekstit.one("rakenne")
+                                .customPUT($scope.rakenne)
                                 .then(() => {
                                     resolve();
                                     NotifikaatioService.onnistui("tallennus-onnistui");
@@ -46,39 +47,34 @@ angular.module("app")
                     $scope.sivunavi = Tekstikappaleet.teeRakenne(Tekstikappaleet.uniikit(otsikot), sisaltoRoot.id);
                 });
 
-                // $scope.$on("sivunavi:forcedUpdate", () => {
-                //     console.log("Forcing update");
-                // });
-
-                const traverseItems = (item) => {
-                    let childsVisible = false;
-                    _.each(item.lapset, (item) => {
-                        let itemVisible = traverseItems(item);
-                        if (itemVisible) {
-                            childsVisible = true;
-                        }
-                    });
-
-                    const
-                        isMatchingName = KaannaService.hae(item.$$obj.tekstiKappale.nimi || {}, $scope.search);
-
-                    item.$$hidden = !isMatchingName && !childsVisible;
-                    return item.$$hidden;
-                };
+                // TODO: find cleaner solution (Low priority)
+                $scope.$on("sivunavi:forcedUpdate", (event, osa) => {
+                    const uniikit = Tekstikappaleet.uniikit(otsikot);
+                    _.merge(uniikit[osa.id], osa.plain());
+                });
 
                 $scope.suodata = (search) => {
-                    _.each($scope.sivunavi.lapset, (item) => {
-                        traverseItems(item);
+                    Algoritmit.traverse($scope.sivunavi, "lapset", (item) => {
+                        item.$$hidden = !Algoritmit.match(search, item.$$obj.tekstiKappale.nimi);
+                        !item.$$hidden && Algoritmit.traverseUp(item, parentItem => parentItem.$$hidden = false);
                     });
                 };
 
                 $scope.add = () => {
                     ModalAdd.sisaltoAdder(Opetussuunnitelmat.sallitutSisaltoTyypit(ops))
                         .then(uusi => {
+                            let parentNode = tekstit.clone();
+                            if (uusi.tyyppi === "tutkinnonosa") {
+                                parentNode.id = Tekstikappaleet.tutkinnonosat(otsikot).id;
+                            }
+                            else if (uusi.tyyppi === "suorituspolku") {
+                                parentNode.id = Tekstikappaleet.suorituspolut(otsikot).id;
+                            }
+
                             if (!uusi) {
                                 return;
                             }
-                            tekstit.post("", uusi)
+                            parentNode.post("", uusi)
                                 .then(res => {
                                     res.$$depth = 0;
                                     otsikot.push(res);

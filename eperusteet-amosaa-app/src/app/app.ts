@@ -111,13 +111,15 @@ angular.module("app", [
 
 .run(($rootScope, $log, $urlMatcherFactory, $state) => {
     $rootScope.error = null;
-    $rootScope.$on("$stateChangeError", (event, toState, toParams, fromState, fromParams, error) => {
+    const onError = (event, toState, toParams, fromState, fromParams, error) => {
         if (!$rootScope.error) {
             $rootScope.error = { event, toState, toParams, fromState, fromParams, error };
             $log.error(error);
             $state.go("root.virhe");
         }
-    });
+    }
+    $rootScope.$on("$stateChangeError", onError);
+    $rootScope.$on("$stateNotFound", onError);
 })
 .run(($rootScope, $timeout, $log, $urlMatcherFactory, $state) => {
     $rootScope.$on("$stateChangeStart", (event, state, params) => {

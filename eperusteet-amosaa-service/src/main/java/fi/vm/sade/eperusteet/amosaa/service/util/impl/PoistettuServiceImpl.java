@@ -17,15 +17,14 @@
 package fi.vm.sade.eperusteet.amosaa.service.util.impl;
 
 import fi.vm.sade.eperusteet.amosaa.domain.Poistettu;
-import fi.vm.sade.eperusteet.amosaa.domain.PoistettuTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
-import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.dto.PoistettuDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.PoistettuRepository;
+import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.util.PoistettuService;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
@@ -63,14 +62,18 @@ public class PoistettuServiceImpl implements PoistettuService {
         poistettu.setPoistettu(osa.getId());
         poistettu.setPvm(Calendar.getInstance().getTime());
         poistettu.setNimi(osa.getTekstiKappale().getNimi());
-        poistettu.setTyyppi(PoistettuTyyppi.TEKSTIKAPPALEVIITE);
+        poistettu.setTyyppi(osa.getTyyppi());
         return mapper.map(repository.save(poistettu), PoistettuDto.class);
     }
 
     @Override
-    public List<PoistettuDto> poistetut(Long koulutustoimijaId) {
+    public List<PoistettuDto> poistetut(Long koulutustoimijaId, Long opsId) {
         Koulutustoimija koulutustoimija = koulutustoimijaRepository.findOne(koulutustoimijaId);
-        Opetussuunnitelma ops = opsRepository.findOneYhteinen(koulutustoimija, OpsTyyppi.YHTEINEN);
+        Opetussuunnitelma ops = opsRepository.findOne(opsId);
+        if (ops.getKoulutustoimija() != koulutustoimija) {
+            throw new BusinessRuleViolationException("ops-pitaa-kuulua-koulutustoimijaan");
+        }
+
         List<Poistettu> poistetut = repository.findAllByOpetussuunnitelma(ops);
         return mapper.mapAsList(poistetut, PoistettuDto.class);
     }

@@ -16,6 +16,7 @@
 
 package fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija;
 
+import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
@@ -36,4 +37,6 @@ public interface OpetussuunnitelmaRepository extends JpaWithVersioningRepository
     List<Opetussuunnitelma> findAllByKoulutustoimija(Koulutustoimija koulutustoimija);
 
     List<Opetussuunnitelma> findAllByTyyppi(OpsTyyppi tyyppi);
+
+    List<Opetussuunnitelma> findAllByTyyppiAndTila(OpsTyyppi tyyppi, Tila tila);
 }

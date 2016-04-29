@@ -18,6 +18,8 @@ package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija;
 
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
+import java.util.List;
+import java.util.Set;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -29,7 +31,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 @PreAuthorize("isAuthenticated()")
 public interface KoulutustoimijaService {
 
-    KoulutustoimijaBaseDto getKoulutustoimija(String ktOid);
+    List<KoulutustoimijaBaseDto> getKoulutustoimijat(Set<String> ktOid);
+
+    List<KoulutustoimijaBaseDto> initKoulutustoimijat(Set<String> kOid);
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
     KoulutustoimijaDto getKoulutustoimija(@P("ktId") Long ktId);

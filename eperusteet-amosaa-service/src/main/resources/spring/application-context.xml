@@ -97,17 +97,17 @@
         </property>
     </bean>
 
-   <bean id="flyway-clean" class="org.flywaydb.core.Flyway" init-method="clean">
+<!--   <bean id="flyway-clean" class="org.flywaydb.core.Flyway" init-method="clean">
         <property name="dataSource" ref="dataSource"/>
     </bean>
 
     <bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate" depends-on="flyway-clean">
         <property name="dataSource" ref="dataSource"/>
-    </bean>
-    
-<!--    <bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate">
-        <property name="dataSource" ref="dataSource"/>
     </bean>-->
+    
+    <bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
 
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
         <property name="entityManagerFactory" ref="entityManagerFactory"/>

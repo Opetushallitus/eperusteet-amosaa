@@ -63,7 +63,6 @@ table.boxtable {
                     & > div {
                         // State
                         div:first-child {
-                            background-color: #fcae27;
                             width: $boxtable-row-height;
                             height: $boxtable-row-height;
                             float: left;
@@ -110,7 +109,7 @@ table.boxtable {
                         & > div > span:hover, & > div > span:active {
                             text-decoration: none;
                         }
-                        
+
                         & > div {
                             text-align: center;
                             color: white;

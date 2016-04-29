@@ -74,6 +74,10 @@ public class SisaltoViite implements ReferenceableEntity, Serializable {
 
     @Getter
     @Setter
+    private Long versio;
+
+    @Getter
+    @Setter
     @Enumerated(value = EnumType.STRING)
     private SisaltoTyyppi tyyppi = SisaltoTyyppi.TEKSTIKAPPALE;
 
@@ -106,12 +110,12 @@ public class SisaltoViite implements ReferenceableEntity, Serializable {
     @Setter
     private Opetussuunnitelma owner;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Getter
     @Setter
     private Tutkinnonosa tosa;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Getter
     @Setter
     private Suorituspolku suorituspolku;

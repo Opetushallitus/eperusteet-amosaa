@@ -16,7 +16,6 @@
 
 package fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija;
 
-import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import io.swagger.annotations.Api;
@@ -42,7 +41,7 @@ public class OphController {
     @RequestMapping(value = "/pohjat", method = RequestMethod.GET)
     @ResponseBody
     public List<OpetussuunnitelmaBaseDto> getPohjat() {
-        return service.getOpetussuunnitelmatByTyyppi(OpsTyyppi.POHJA);
+        return service.getPohjat();
     }
 
 }

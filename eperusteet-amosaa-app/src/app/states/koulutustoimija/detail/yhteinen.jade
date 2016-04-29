@@ -1,24 +1,32 @@
 div.otsikkotaso.ops-osa
   h3(kaanna="'koulutustoimija-yhteinen-osat'")
 
-  div(ng-if="!yhteinen")
+  div(ng-show="yhteiset.length > 0")
+    div.row
+      div.col-xs-10
+      div.col-xs-2
+        div.pull-right
+          button.btn.btn-default(style="position: relative; top: -20px;" kaanna="'lisaa-uusi'" ng-click="addYhteinen()")
+
+  div(ng-if="yhteiset.length === 0")
     div.alert.alert-info
       div(kaanna="'koulutustoimijan-yhteista-osaa-ei-luotu'")
       button.btn.btn-primary.pull-right(style="position: relative; top: -26px" kaanna="'lisaa-uusi'" ng-click="addYhteinen()")
 
-  table.table.boxtable(ng-if="yhteinen")
-    tbody
-      tr
-        td
-          div
-            div(name="state")
-        td
-          div
-            a(href="" ui-sref="root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot({ opsId: yhteinen.id })")
-              span(kaanna="yhteinen.nimi")
-        td
-          div
-            a(href="" ui-sref="root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot({ opsId: yhteinen.id })")
-              div(name="go")
-                span.glyphicon.glyphicon-chevron-right
+  div(ng-if="yhteiset.length > 0")
+    table.table.boxtable(style="margin-bottom: 0px;" ng-repeat="yhteinen in yhteiset")
+      tbody
+        tr
+          td
+            div
+              div(class="{{ 'tilavari-' + yhteinen.tila }}")
+          td
+            div
+              a(href="" ui-sref="root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot({ opsId: yhteinen.id })")
+                span(kaanna="yhteinen.nimi")
+          td
+            div
+              a(href="" ui-sref="root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot({ opsId: yhteinen.id })")
+                div(name="go")
+                  span.glyphicon.glyphicon-chevron-right
 

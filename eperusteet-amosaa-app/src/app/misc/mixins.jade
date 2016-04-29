@@ -52,25 +52,17 @@ mixin historia(versio, uusinMuokkaaja, uusinMuokkaus, uusinRevisio, actionEdit, 
       block
       +editButton(actionEdit)
 
-    .pull-right
-      p
-        span
-          b(kaanna="'versio'")
-        a(href="" ng-click=actionRevisions)
-          span(ng-bind=uusinRevisio)
+    .pull-right(ng-hide="$$ekEditing" style="margin-top: 7px")
+      a(href="" ng-click=actionRevisions kaanna="'versiohistoria'")
+        span(ng-bind=uusinRevisio)
 
   div(ng-show="versio")
     br
     .alert.alert-info(role="alert")
-      div(kaanna="'tarkastelet-vanhempaa-versiota'")
+      div(style="margin-bottom: 10px" kaanna="'tarkastelet-vanhempaa-versiota'")
       div
-        a(href="" ng-click=actionPalauta)
-          b(kaanna="'ota-versio-kayttoon'")
-        span=" "
-        span(kaanna="'tai'")
-        span=" "
-        a(href="" ng-click=restoreNew)
-          b(kaanna="'palaa-uusimpaan'")
+        button.btn.btn-danger(ng-click=actionPalauta kaanna="'ota-versio-kayttoon'")
+        button.btn.btn-default(style="margin-left: 20px;" ng-click=restoreNew kaanna="'palaa-uusimpaan'")
 
 
 mixin ekdate(model, label)
