@@ -19,8 +19,13 @@ package fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.domain.AbstractAuditedEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import javax.persistence.*;
 
+import fi.vm.sade.eperusteet.amosaa.domain.ammattitaitovaatimukset.AmmattitaitovaatimuksenKohdealue;
+import fi.vm.sade.eperusteet.amosaa.domain.arviointi.Arviointi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import lombok.Getter;
 import lombok.Setter;
@@ -51,27 +56,33 @@ public class OmaTutkinnonosa extends AbstractAuditedEntity implements Serializab
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @Getter
     @Setter
-    private LokalisoituTeksti ammattitaitovaatimukset;
-
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
-    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
-    @Getter
-    @Setter
     private LokalisoituTeksti ammattitaidonOsoittamistavat;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
-    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    @JoinTable(name = "ammattitaitovaatimuksenkohdealue_tutkinnonosa",
+            joinColumns = @JoinColumn(name = "tutkinnonosa_id"),
+            inverseJoinColumns = @JoinColumn(name = "ammattitaitovaatimuksenkohdealue_id"))
+    @OrderColumn(name = "jarjestys")
     @Getter
     @Setter
-    private LokalisoituTeksti kuvaus;
+    private List<AmmattitaitovaatimuksenKohdealue> ammattitaitovaatimuksetLista = new ArrayList<>();
 
-    @Column(name = "koodi_uri")
-    @Getter
-    @Setter
-    private String koodiUri;
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    private Arviointi arviointi;
 
-    @Column(name = "koodi_arvo")
-    @Getter
-    @Setter
-    private String koodiArvo;
+    public Arviointi getArviointi() {
+        return arviointi;
+    }
+
+    public void setArviointi(Arviointi arviointi) {
+        if (Objects.equals(this.arviointi, arviointi)) {
+            return;
+        }
+        if (arviointi == null || this.arviointi == null) {
+            this.arviointi = arviointi;
+        } else {
+            this.arviointi.mergeState(arviointi);
+            this.muokattu();
+        }
+    }
 }

@@ -97,7 +97,6 @@
 
             <!-- Table of contents pages -->
             <fo:page-sequence master-reference="blank">
-
                 <fo:flow flow-name="xsl-region-body">
                     <xsl:call-template name="toc" />
                 </fo:flow>
@@ -105,15 +104,14 @@
 
             <!-- Document content pages -->
             <fo:page-sequence master-reference="standard" initial-page-number="1">
+
                 <fo:static-content flow-name="rb-right">
                     <fo:block font-size="10pt" text-align="start">
-                        <xsl:apply-templates select="/html/head/ylatunniste" />
                     </fo:block>
                 </fo:static-content>
                 <fo:static-content flow-name="ra-right">
                     <fo:block text-align="end" font-size="10pt" color="#6C6D70">
                         <fo:page-number />
-                        <xsl:apply-templates select="/html/head/alatunniste" />
                     </fo:block>
                 </fo:static-content>
                 <fo:static-content flow-name="rb-left">
@@ -410,7 +408,6 @@
     <xsl:template match="h4">
         <fo:block font-size="12pt" line-height="1.25em" font-weight="bold"
                   keep-with-next="always" space-after="10pt" color="#007EC5">
-
             <xsl:attribute name="id">
                 <xsl:choose>
                     <xsl:when test="@id">
@@ -421,32 +418,7 @@
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:attribute>
-
-            <xsl:choose>
-                <xsl:when test="@number">
-                    <fo:table table-layout="fixed" width="100%">
-                        <fo:table-column column-width="20mm" />
-                        <fo:table-column column-width="proportional-column-width(1)" />
-                        <fo:table-body>
-                            <fo:table-row>
-                                <fo:table-cell>
-                                    <fo:block>
-                                        <xsl:value-of select="@number" />
-                                    </fo:block>
-                                </fo:table-cell>
-                                <fo:table-cell>
-                                    <fo:block>
-                                        <xsl:apply-templates select="*|text()" />
-                                    </fo:block>
-                                </fo:table-cell>
-                            </fo:table-row>
-                        </fo:table-body>
-                    </fo:table>
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:apply-templates select="*|text()" />
-                </xsl:otherwise>
-            </xsl:choose>
+            <xsl:apply-templates select="*|text()" />
         </fo:block>
     </xsl:template>
 
@@ -494,18 +466,9 @@
             </xsl:when>
             <xsl:when test="@href">
                 <fo:basic-link color="blue">
-                    <xsl:choose>
-                        <xsl:when test="starts-with(@href, '#')">
-                            <xsl:attribute name="internal-destination">
-                                <xsl:value-of select="substring(@href, 2)" />
-                            </xsl:attribute>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:attribute name="external-destination">
-                                <xsl:value-of select="@href" />
-                            </xsl:attribute>
-                        </xsl:otherwise>
-                    </xsl:choose>
+                    <xsl:attribute name="external-destination">
+                        <xsl:value-of select="@href" />
+                    </xsl:attribute>
                     <xsl:apply-templates select="*|text()" />
                 </fo:basic-link>
             </xsl:when>
@@ -537,14 +500,33 @@
 
     <xsl:template match="img">
         <fo:block space-after="12pt" text-align="center">
-            <fo:external-graphic src="{@src}" content-width="scale-to-fit" content-height="100%"
-                                 width="100%" scaling="uniform">
-            </fo:external-graphic>
+            <!--<fo:external-graphic src="{@src}" content-width="scale-to-fit" content-height="100%"
+                                 width="100%" scaling="uniform" />-->
+            <fo:table table-layout="fixed" width="100%">
+                <fo:table-column column-width="proportional-column-width(1)" />
+                <fo:table-body>
+                    <fo:table-row keep-with-next="always">
+                        <fo:table-cell>
+                            <fo:block>
+                                <fo:external-graphic src="{@src}" content-width="scale-to-fit" content-height="100%"
+                                                     width="100%" scaling="uniform" />
+                            </fo:block>
+                        </fo:table-cell>
+                    </fo:table-row>
+                    <fo:table-row>
+                        <fo:table-cell>
+                            <fo:block>
+                                <xsl:value-of select="@alt" />
+                            </fo:block>
+                        </fo:table-cell>
+                    </fo:table-row>
+                </fo:table-body>
+            </fo:table>
         </fo:block>
     </xsl:template>
 
     <xsl:template match="ol">
-        <xsl:if test="node()/li">
+        <xsl:if test="li">
             <fo:list-block provisional-distance-between-starts="1cm"
                            provisional-label-separation="0.5cm">
                 <xsl:attribute name="space-after">
@@ -562,9 +544,9 @@
                         <xsl:choose>
                             <xsl:when test="count(ancestor::ol) or boolean(count(ancestor::ul))">
                                 <xsl:value-of select="1 +
-                                        (count(ancestor::ol) +
-                                         count(ancestor::ul)) *
-                                        1.25" />
+                                    (count(ancestor::ol) +
+                                     count(ancestor::ul)) *
+                                    1.25" />
                             </xsl:when>
                             <xsl:otherwise>
                                 <xsl:text>1</xsl:text>
@@ -621,7 +603,7 @@
     </xsl:template>
 
     <xsl:template match="p">
-        <fo:block>
+        <fo:block space-after="0.75em">
             <xsl:apply-templates select="*|text()" />
         </fo:block>
     </xsl:template>
@@ -629,7 +611,7 @@
 
     <xsl:template match="div">
         <fo:block font-size="10pt" line-height="1.25em"
-                  space-after="12pt" text-align="justify">
+                  space-after="20pt" text-align="justify">
             <xsl:apply-templates select="*|text()" />
         </fo:block>
     </xsl:template>
@@ -686,7 +668,8 @@
 
     <xsl:template match="table">
         <xsl:if test="thead|tbody">
-            <fo:table table-layout="fixed" inline-progression-dimension="100%" space-after="12pt" font-size="10pt">
+            <fo:table table-layout="fixed" inline-progression-dimension="100%"
+                      space-after="12pt" font-size="10pt" page-break-inside="avoid">
                 <xsl:if test="caption">
                     <fo:table-header>
                         <fo:table-cell>
@@ -697,7 +680,13 @@
                     </fo:table-header>
                 </xsl:if>
                 <fo:table-body>
-                        <xsl:apply-templates select="thead|tbody" />
+                    <!-- todo: EP-830 -->
+                    <fo:table-row>
+                        <fo:table-cell>
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                    </fo:table-row>
+                    <xsl:apply-templates select="thead|tbody" />
                 </fo:table-body>
             </fo:table>
         </xsl:if>
@@ -833,7 +822,7 @@
     </xsl:template>
 
     <xsl:template match="ul">
-        <xsl:if test="node()/li">
+        <xsl:if test="li">
             <fo:list-block provisional-distance-between-starts="0.5cm"
                            provisional-label-separation="0.25cm">
                 <xsl:attribute name="space-after">
@@ -954,7 +943,8 @@
     </xsl:template>
 
     <xsl:template match="cite">
-        <fo:block color="#444444" font-style="italic" font-size="10pt" space-after="12pt">
+        <fo:block color="#444444" font-style="italic" font-size="10pt"
+                  space-after="20pt" text-align="justify" line-height="1.25em">
             <xsl:apply-templates select="*|text()" />
         </fo:block>
     </xsl:template>
@@ -965,13 +955,12 @@
     <xsl:template name="cover">
         <fo:block font-weight="bold" font-size="28pt" text-align="center">
             <xsl:value-of select="/html/head/title" />
-            <xsl:apply-templates select="/html/head/kansi" />
         </fo:block>
     </xsl:template>
 
     <xsl:template name="toc">
-        <fo:block break-before='page' space-after="12pt" id="TableOfContents" color="#007EC5" font-weight="bold"
-                  line-height="21pt" font-size="16pt" text-align="start">
+        <fo:block break-before="page" space-after="20pt" id="TableOfContents" color="#007EC5" font-weight="bold"
+                  line-height="20pt" font-size="18pt" text-align="start">
             <xsl:if test="//html/@lang = 'fi'">
                 <xsl:text>SISÄLTÖ</xsl:text>
             </xsl:if>
@@ -985,9 +974,8 @@
         /html/body//h2 |
         /html/body//h3 |
         /html/body//h4">
-            <fo:block text-align-last="justify" line-height="15pt"
-                      font-size="12pt" space-after="3pt" text-align="start"
-                      text-indent="-1cm">
+            <fo:block text-align-last="justify" font-size="12pt"
+                      space-after="0.25em" text-align="start" text-indent="-1cm">
 
                 <xsl:attribute name="start-indent">
                     <xsl:choose>
@@ -1001,7 +989,8 @@
                             <xsl:text>2cm</xsl:text>
                         </xsl:when>
                         <xsl:when test="name() = 'h4'">
-                            <xsl:text>2.5cm</xsl:text>
+                            <!-- No number -->
+                            <xsl:text>3cm</xsl:text>
                         </xsl:when>
                     </xsl:choose>
                 </xsl:attribute>
@@ -1009,6 +998,9 @@
                 <xsl:if test="name() = 'h1'">
                     <xsl:attribute name="color">
                         <xsl:text>#007EC5</xsl:text>
+                    </xsl:attribute>
+                    <xsl:attribute name="space-before">
+                        <xsl:text>0.5em</xsl:text>
                     </xsl:attribute>
                 </xsl:if>
 
@@ -1029,8 +1021,10 @@
                     </xsl:attribute>
 
                     <xsl:if test="@number">
-                        <xsl:value-of select="@number" />
-                        <xsl:text> </xsl:text>
+                        <xsl:if test="name() != 'h4'">
+                            <xsl:value-of select="@number" />
+                            <xsl:text> </xsl:text>
+                        </xsl:if>
                     </xsl:if>
                     <xsl:apply-templates select="*|text()" />
                 </fo:basic-link>

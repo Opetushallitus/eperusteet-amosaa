@@ -14,33 +14,32 @@ mixin tosaToteutus()
       +contentToggler("$$showArvioinnista", "'osaamisen-arvioinnista'")
         +teksti("osa.tosa.arvioinnista.teksti")
 
-
 mixin tosaSisalto()
   div(ng-hide="$$showToteutus")
     div(ng-if="$$ekEditing")
       +contentToggler("$$showTavoitteet", "'tavoitteet'")
-        div(style="margin-bottom: 16px" ckeditor slocalized ng-model="osa.tosa.omatutkinnonosa.kuvaus" layout="normal")
+        div(style="margin-bottom: 16px" ckeditor slocalized ng-model="osa.tosa.omatutkinnonosa.tavoitteet" layout="normal")
 
-      +contentToggler("$$showTavoitteet", "'ammattitaitovaatimukset'")
+      +contentToggler("$$showAmmattitaitovaatimukset", "'ammattitaitovaatimukset'")
         div(style="margin-bottom: 16px" ckeditor slocalized ng-model="osa.tosa.omatutkinnonosa.ammattitaitovaatimukset" layout="normal")
 
-      +contentToggler("$$showTavoitteet", "'ammattitaidonOsoittamistavat'")
+      +contentToggler("$$showAmmattitaidonOsoittamistavat", "'ammattitaidon-osoittamistavat'")
         div(style="margin-bottom: 16px" ckeditor slocalized ng-model="osa.tosa.omatutkinnonosa.ammattitaidonOsoittamistavat" layout="normal")
 
-      +contentToggler("$$showTavoitteet", "'kuvaus'")
+      +contentToggler("$$showKuvaus", "'kuvaus'")
         div(style="margin-bottom: 16px" ckeditor slocalized ng-model="osa.tosa.omatutkinnonosa.kuvaus" layout="normal")
 
     div(ng-if="!$$ekEditing")
       +contentToggler("$$showTavoitteet", "'tavoitteet'")
-         +teksti("osa.tosa.omatutkinnonosa.tavoitteet")
+        +teksti("osa.tosa.omatutkinnonosa.tavoitteet")
 
-      +contentToggler("$$showTavoitteet", "'ammattitaitovaatimukset'")
+      +contentToggler("$$showAmmattitaitovaatimukset", "'ammattitaitovaatimukset'")
         +teksti("osa.tosa.omatutkinnonosa.ammattitaitovaatimukset")
 
-      +contentToggler("$$showTavoitteet", "'ammattitaidon-osoittamistavat'")
+      +contentToggler("$$showAmmattitaidonOsoittamistavat", "'ammattitaidon-osoittamistavat'")
         +teksti("osa.tosa.omatutkinnonosa.ammattitaidonOsoittamistavat")
 
-      +contentToggler("$$showTavoitteet", "'kuvaus'")
+      +contentToggler("$$showKuvaus", "'kuvaus'")
         +teksti("osa.tosa.omatutkinnonosa.kuvaus")
 
 

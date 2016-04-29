@@ -355,8 +355,6 @@ CREATE TABLE sisaltoviite_aud (
     pakollinen BOOLEAN,
     liikkumaton BOOLEAN,
     tyyppi CHARACTER VARYING(255),
-    ohjeteksti_id BIGINT REFERENCES lokalisoitu_teksti(id),
-    perusteteksti_id BIGINT REFERENCES lokalisoitu_teksti(id),
     ohjeteksti_id BIGINT,
     perusteteksti_id BIGINT,
     owner_id BIGINT,
