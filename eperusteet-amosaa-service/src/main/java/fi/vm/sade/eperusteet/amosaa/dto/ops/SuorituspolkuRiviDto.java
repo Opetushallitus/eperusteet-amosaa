@@ -16,7 +16,6 @@
 
 package fi.vm.sade.eperusteet.amosaa.dto.ops;
 
-import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,7 +28,6 @@ import lombok.Setter;
 @Setter
 public class SuorituspolkuRiviDto {
     private Long id;
-    private Reference suorituspolku;
     private UUID rakennemoduuli;
     private Long jrno;
 }

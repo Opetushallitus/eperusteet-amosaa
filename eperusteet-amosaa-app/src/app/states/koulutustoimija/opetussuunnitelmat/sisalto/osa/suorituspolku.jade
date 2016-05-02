@@ -11,5 +11,6 @@ div
     +toggler("misc.$$kaikkiAuki", "'auki'", "'kiinni'")
 
   div.suorituspolku
+    pre(ng-bind="osa | json")
     div.sp-ryhma-lapset(ng-repeat="osa in perusteRakenne.osat")
       dynamic(template="states/koulutustoimija/opetussuunnitelmat/sisalto/osa/polunrakenne.jade" misc="misc" ng-model="osa" depth="depth + 1")

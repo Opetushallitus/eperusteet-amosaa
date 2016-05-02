@@ -138,9 +138,21 @@ angular.module("app")
                     tosat: tosaViitteet,
                     hasInput: false,
                     poistaOsa: (node) => {
+                        console.log("poistetaan", node);
                         node.$$poistettu = true;
+                        const rivi = _.find($scope.osa.suorituspolku.rivit, (rivi: any) => rivi.rakennemoduuli === node.tunniste);
+                        console.log(rivi);
+                        if (!rivi) {
+                            $scope.osa.suorituspolku.rivit.push({
+                                rakennemoduuli: node.tunniste
+                            });
+                            console.log($scope.osa.suorituspolku.rivit);
+                        }
                     }
                 };
+
+                Algoritmit.traverse($scope.perusteRakenne, "osat", (node) => node.pakollinen = Suorituspolku.pakollinen(node));
+                $scope.osa = osa;
 
                 $scope.suodata = (input) => {
                     $scope.misc.hasInput = !_.isEmpty(input);
