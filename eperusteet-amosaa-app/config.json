@@ -11,6 +11,7 @@
     "./node_modules/ckeditor/ckeditor.js",
     "./node_modules/ckeditor/plugins/about/dialogs/about.js",
     "./node_modules/ckeditor/plugins/clipboard/dialogs/paste.js",
+    "./node_modules/ckeditor/plugins/pastefromword/filter/default.js",
     "./node_modules/ckeditor/plugins/link/dialogs/link.js",
     "./node_modules/ckeditor/plugins/table/dialogs/table.js",
     "./node_modules/ckeditor/plugins/quicktable-1.0.6/plugin.js",
