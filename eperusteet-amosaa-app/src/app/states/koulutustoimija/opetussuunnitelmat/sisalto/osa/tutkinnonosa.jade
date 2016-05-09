@@ -17,24 +17,52 @@ mixin tosaToteutus()
 mixin ammattitaitovaatimukset
   p todo
 
+mixin osaamistasonKriteeri
+  span {{ osaamistasonKriteeri | json }}
+  span tekstiä
 
 mixin arviointiKohde
   .arviointi-kohde(ng-class="$$ekEditing ? 'muokkaus' : ''")
-    h4(ng-if="!$$ekEditing")
-      span(ng-bind="")
-    span.sortable-item-handle.pull-right
-      +gicon("sort")
-    p leipomisalan lisäteksti...
-      .table-responsive
-        table.table.table-striped
+
+    div(ng-hide="arviointiKohde._arviointiasteikko")
+      +arviointiAsteikko
+
+    div(ng-show="arviointiKohde._arviointiasteikko")
+      // Jos arviointi tehty
+      h4(ng-if="!$$ekEditing")
+        span(ng-bind="arviointiKohde.otsikko")
+
+      div.painikkeet(ng-if="$$ekEditing")
+        span.sortable-item-handle.pull-right
+          +gicon("sort")
+        span.pull-right.linkki(ng-click="poistaArvioinninKohde(arvioinninKohdealue, arviointiKohde)")
+          +icon("trash-o")
+      .clearfix
+
+      p(ng-if="arviointiKohde.otsikko" kaanna="arviointiKohde.otsikko")
+
+      .table-responsive(ng-if="arviointiAsteikot.length > 0")
+        table.table.table-striped.table-condensed
           tbody
-            tr
-              td asda
+            tr(ng-repeat="taso in arviointiAsteikot[arviointiKohde._arviointiasteikko - 1].osaamistasot")
+              td(kaanna="taso.otsikko")
               td
                 ul
-                  li asdasdasdasdasdasd
-                  li tesdf
+                  li(ng-repeat="osaamistasonKriteeri in arviointiKohde.osaamistasonKriteerit")
+                    +osaamistasonKriteeri
+                  div.painikkeet(ng-if="$$ekEditing")
+                    span.linkki.pull-right(ng-click="lisaaOsaamistasonKriteeri(arviointiKohde)")
+                      +icon("plus")
 
+mixin arviointiAsteikko
+  .arviointi-asteikko
+    //pre {{ arviointiAsteikot | json}}
+    div(ng-repeat="arviointiAsteikko in arviointiAsteikot")
+      .radio
+        label
+          input(type="radio" ng-model="arviointiKohde._arviointiasteikko" ng-value="arviointiAsteikko.id")
+          span(ng-repeat="osaamistaso in arviointiAsteikko.osaamistasot")
+            span {{ osaamistaso.otsikko | kaanna }}{{{true: '', false: ' / '}[$last]}}
 
 mixin arviointi
   .arviointi
@@ -90,8 +118,9 @@ mixin tosaSisalto()
         +ammattitaitovaatimukset
 
       +contentToggler("$$showArviointi", "'arviointi'")
-        div(ng-repeat="arvioinninKohdealue in osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet")
-          +arviointi("arvioinninKohdealue")
+        .arviointi-kohdealueet
+          div(ng-repeat="arvioinninKohdealue in osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet")
+            +arviointi("arvioinninKohdealue")
 
       +contentToggler("$$showAmmattitaidonOsoittamistavat", "'ammattitaidon-osoittamistavat'")
         +teksti("osa.tosa.omatutkinnonosa.ammattitaidonOsoittamistavat")

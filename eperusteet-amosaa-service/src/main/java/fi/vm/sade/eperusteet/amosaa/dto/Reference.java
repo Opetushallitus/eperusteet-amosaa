@@ -36,6 +36,11 @@ public class Reference {
         this.id = id;
     }
 
+    @JsonCreator
+    public Reference(Long id) {
+        this.id = Long.toString(id);
+    }
+
     @JsonValue
     public String getId() {
         return id;

@@ -16,6 +16,7 @@
 
 package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 
+import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import java.util.List;
 import lombok.Getter;
@@ -28,6 +29,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class OsaamistasonKriteeriDto {
-    private EntityReference osaamistaso;
+    private Reference osaamistaso;
     private List<LokalisoituTekstiDto> kriteerit;
 }

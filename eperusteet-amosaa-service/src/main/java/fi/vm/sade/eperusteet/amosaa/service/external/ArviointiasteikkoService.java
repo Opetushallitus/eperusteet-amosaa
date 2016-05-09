@@ -13,27 +13,21 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * European Union Public Licence for more details.
  */
+package fi.vm.sade.eperusteet.amosaa.service.external;
 
-package fi.vm.sade.eperusteet.amosaa.dto.peruste;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.ArviointiasteikkoDto;
+import org.springframework.security.access.prepost.PreAuthorize;
 
-import fi.vm.sade.eperusteet.amosaa.dto.Reference;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import java.util.List;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
- *
- * @author harrik
+ * @author isaul
  */
-@Getter
-@Setter
-public class OsaamistavoiteLaajaDto extends OsaamistavoiteDto {
-    private LokalisoituTekstiDto tavoitteet;
-    private LokalisoituTekstiDto tunnustaminen;
-    private ArviointiDto arviointi;
-    private List<AmmattitaitovaatimusKohdealueetDto> ammattitaitovaatimuksetLista;
-    private String koodiUri;
-    private String koodiArvo;
-    private Reference esitieto;
+
+public interface ArviointiasteikkoService {
+    @PreAuthorize("permitAll()")
+    List<ArviointiasteikkoDto> getAll();
+
+    @PreAuthorize("permitAll()")
+    ArviointiasteikkoDto get(Long id);
 }

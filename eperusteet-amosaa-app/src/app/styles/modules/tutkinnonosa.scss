@@ -52,12 +52,28 @@ $arviointi-padding: 5px;
     }
 
     .arviointi-kohdealueet {
-        min-height: 1em;
+        min-height: 2em;
 
         .arviointi-kohteet {
-            min-height: 1em;
+            min-height: 2em;
             .arviointi-kohde {
                 padding: $arviointi-padding;
+
+                .painikkeet {
+                    & > span {
+                        margin-left: 10px;
+                    }
+                    .linkki {
+                        cursor: pointer;
+                    }
+                }
+                table {
+                    tr {
+                        td:first-child {
+                            width: 33.3%;
+                        }
+                    }
+                }
             }
 
             .sortable-item-placeholder {
@@ -79,6 +95,6 @@ $arviointi-padding: 5px;
 
     .ui-sortable-helper {
         background-color: white;
-        opacity: 0.6;
+        opacity: 0.4;
     }
 }

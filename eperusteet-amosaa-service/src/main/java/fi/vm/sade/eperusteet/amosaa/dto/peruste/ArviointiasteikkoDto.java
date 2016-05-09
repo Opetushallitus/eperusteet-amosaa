@@ -26,7 +26,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class ArviointiAsteikkoDto {
+public class ArviointiasteikkoDto {
     private Long id;
     private List<OsaamistasoDto> osaamistasot;
 }

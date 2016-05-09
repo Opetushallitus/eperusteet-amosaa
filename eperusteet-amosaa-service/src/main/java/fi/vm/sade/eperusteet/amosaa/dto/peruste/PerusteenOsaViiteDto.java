@@ -19,9 +19,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
+
+import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import lombok.Getter;
 import lombok.Setter;
-import org.w3c.dom.EntityReference;
 
 /**
  *
@@ -34,7 +35,7 @@ public class PerusteenOsaViiteDto<R extends PerusteenOsaDto> {
 
     private Long id;
     @JsonProperty("_perusteenOsa")
-    private EntityReference perusteenOsaRef;
+    private Reference perusteenOsaRef;
     private R perusteenOsa;
 
     public PerusteenOsaViiteDto() {
@@ -48,7 +49,7 @@ public class PerusteenOsaViiteDto<R extends PerusteenOsaDto> {
     @Getter
     @Setter
     public static class Matala extends PerusteenOsaViiteDto<PerusteenOsaDto.Laaja> {
-        private List<EntityReference> lapset;
+        private List<Reference> lapset;
 
         public Matala() {
         }

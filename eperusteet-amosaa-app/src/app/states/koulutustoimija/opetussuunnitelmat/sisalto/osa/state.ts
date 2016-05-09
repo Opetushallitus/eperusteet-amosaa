@@ -27,6 +27,7 @@ angular.module("app")
         versioId: $stateParams => $stateParams.versio,
         versio: (versioId, historia) => versioId && historia.get(versioId),
         kommentit: (osa) => osa.all("kommentit").getList(),
+        arviointiAsteikot: (Eperusteet) => Eperusteet.all("arviointiasteikot").getList()
     },
     onEnter: (osa) =>
         Murupolku.register("root.koulutustoimija.opetussuunnitelmat.sisalto.osa", osa.tekstiKappale.nimi),
@@ -115,10 +116,10 @@ angular.module("app")
             controller: ($scope, osa) => {}
         },
         tutkinnonosa: {
-            controller: ($scope) => {
+            controller: ($scope, arviointiAsteikot) => {
                 $scope.sortableOptionsArvioinninKohdealueet = {
                     axis: "y",
-                    connectWith: ".sisalto-list",
+                    connectWith: ".arviointi-kohdealueet",
                     handle: ".sortable-item-handle",
                     cursor: "move",
                     delay: 100,
@@ -143,19 +144,30 @@ angular.module("app")
                     tolerance: "pointer",
                     placeholder: "sortable-item-placeholder"
                 };*/
+
+                $scope.arviointiAsteikot = arviointiAsteikot.plain();
                 
                 $scope.lisaaArvioinninKohdealue = () => {
                     $scope.osa.tosa.omatutkinnonosa.arviointi = $scope.osa.tosa.omatutkinnonosa.arviointi || {};
                     $scope.osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet = $scope.osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet || [];
                     $scope.osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet.push({});
                 };
-                $scope.poistaArvioinninKohdealue = (arviointi) => {
-                    $scope.osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet
-                        = _.without($scope.osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet, arviointi);
-                };
                 $scope.lisaaArviointiKohde = (parent) => {
                     parent.arvioinninKohteet = parent.arvioinninKohteet || [];
                     parent.arvioinninKohteet.push({});
+                };
+                $scope.lisaaOsaamistasonKriteeri = (parent) => {
+                    parent.osaamistasonKriteerit = parent.osaamistasonKriteerit || [];
+                    parent.osaamistasonKriteerit.push({});
+                };
+                
+                $scope.poistaArvioinninKohdealue = (kohdealue) => {
+                    $scope.osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet
+                        = _.without($scope.osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet, kohdealue);
+                };
+                $scope.poistaArvioinninKohde = (kohdealue, kohde) => {
+                    kohdealue.arvioinninKohteet
+                        = _.without(kohdealue.arvioinninKohteet, kohde);
                 };
             }
         },

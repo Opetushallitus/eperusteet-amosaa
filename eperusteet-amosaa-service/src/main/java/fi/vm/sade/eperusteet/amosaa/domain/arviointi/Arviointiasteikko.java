@@ -40,7 +40,7 @@ public class Arviointiasteikko implements Serializable, ReferenceableEntity {
     @Id
     private Long id;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @OrderColumn
     @Immutable
     private List<Osaamistaso> osaamistasot;

@@ -16,7 +16,6 @@
 package fi.vm.sade.eperusteet.amosaa.domain;
 
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.EntityReference;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Immutable;
@@ -38,7 +37,7 @@ public class Osaamistaso implements Serializable, ReferenceableEntity {
     @Id
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private LokalisoituTeksti otsikko;
 
     public Long getId() {

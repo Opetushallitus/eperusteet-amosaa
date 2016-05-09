@@ -10,4 +10,4 @@ namespace Perusteet {
     export const getRakenne = (suoritustapa) => suoritustapa.rakenne;
 
     export const getTosaViitteet = (suoritustapa) => suoritustapa.tutkinnonOsaViitteet;
-};
+}

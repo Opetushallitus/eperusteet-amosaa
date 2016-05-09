@@ -32,7 +32,6 @@ namespace EditointikontrollitService {
 
     const handleError = (reject) => ((err) => {
         NotifikaatioService.varoitus(err.status + "! Voi rähmä :(");
-        console.error(err);
         return reject(err);
     });
 
