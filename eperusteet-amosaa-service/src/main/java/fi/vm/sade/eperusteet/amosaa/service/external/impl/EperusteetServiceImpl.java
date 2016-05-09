@@ -45,7 +45,6 @@ import org.springframework.web.client.RestTemplate;
  */
 @Service
 @Profile(value = "default")
-@SuppressWarnings("TransactionalAnnotations")
 @Transactional
 public class EperusteetServiceImpl implements EperusteetService {
     private static final Logger logger = LoggerFactory.getLogger(EperusteetServiceImpl.class);
@@ -71,8 +70,7 @@ public class EperusteetServiceImpl implements EperusteetService {
         ObjectMapper mapper = new ObjectMapper();
         try {
             JsonNode node = mapper.readTree(cperuste.getPeruste());
-            PerusteKaikkiDto peruste = mapper.treeToValue(node, PerusteKaikkiDto.class);
-            return peruste;
+            return mapper.treeToValue(node, PerusteKaikkiDto.class);
         } catch (IOException ex) {
             throw new BusinessRuleViolationException("perusteen-parsinta-epaonnistui");
         }
@@ -84,8 +82,7 @@ public class EperusteetServiceImpl implements EperusteetService {
             JsonNode node = client.getForObject(eperusteetServiceUrl + "/api/perusteet/" + String.valueOf(id) + "/kaikki", JsonNode.class);
             ObjectMapper mapper = new ObjectMapper();
             Object perusteObj = mapper.treeToValue(node, Object.class);
-            String json = mapper.writeValueAsString(perusteObj);
-            return json;
+            return mapper.writeValueAsString(perusteObj);
         } catch (IOException ex) {
             throw new BusinessRuleViolationException("perustetta-ei-loytynyt");
         }
@@ -96,10 +93,7 @@ public class EperusteetServiceImpl implements EperusteetService {
         try {
             JsonNode node = client.getForObject(eperusteetServiceUrl + "/api/perusteet/diaari?diaarinumero=" + diaarinumero, JsonNode.class);
             ObjectMapper mapper = new ObjectMapper();
-            PerusteDto peruste = mapper.treeToValue(node, PerusteDto.class);
-            return peruste;
-//            String json = mapper.writeValueAsString(perusteObj);
-//            return json;
+            return mapper.treeToValue(node, PerusteDto.class);
         } catch (IOException ex) {
             throw new BusinessRuleViolationException("perustetta-ei-loytynyt");
         }
@@ -126,7 +120,6 @@ public class EperusteetServiceImpl implements EperusteetService {
         if (jalkeen != null) {
             params = "?alkaen=" + String.valueOf(jalkeen);
         }
-        JsonNode tiedotteet = client.getForObject(eperusteetServiceUrl + "/api/tiedotteet" + params, JsonNode.class);
-        return tiedotteet;
+        return client.getForObject(eperusteetServiceUrl + "/api/tiedotteet" + params, JsonNode.class);
     }
 }

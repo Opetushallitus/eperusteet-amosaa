@@ -17,8 +17,12 @@
 package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import fi.vm.sade.eperusteet.amosaa.domain.ammattitaitovaatimukset.AmmattitaitovaatimuksenKohdealue;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.ArviointiDto;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 /**
  *
@@ -30,9 +34,7 @@ import lombok.Setter;
 public class OmaTutkinnonosaDto {
     private Long id;
     private LokalisoituTekstiDto tavoitteet;
-    private LokalisoituTekstiDto ammattitaitovaatimukset;
+    private List<AmmattitaitovaatimuksenKohdealue> ammattitaitovaatimuksetLista;
+    private ArviointiDto arviointi;
     private LokalisoituTekstiDto ammattitaidonOsoittamistavat;
-    private LokalisoituTekstiDto kuvaus;
-    private String koodiUri;
-    private String koodiArvo;
 }

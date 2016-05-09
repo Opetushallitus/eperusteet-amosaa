@@ -52,12 +52,6 @@ public class OmaTutkinnonosa extends AbstractAuditedEntity implements Serializab
     @Setter
     private LokalisoituTeksti tavoitteet;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
-    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
-    @Getter
-    @Setter
-    private LokalisoituTeksti ammattitaidonOsoittamistavat;
-
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @JoinTable(name = "ammattitaitovaatimuksenkohdealue_tutkinnonosa",
             joinColumns = @JoinColumn(name = "tutkinnonosa_id"),
@@ -68,11 +62,14 @@ public class OmaTutkinnonosa extends AbstractAuditedEntity implements Serializab
     private List<AmmattitaitovaatimuksenKohdealue> ammattitaitovaatimuksetLista = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @Getter
     private Arviointi arviointi;
 
-    public Arviointi getArviointi() {
-        return arviointi;
-    }
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    @Getter
+    @Setter
+    private LokalisoituTeksti ammattitaidonOsoittamistavat;
 
     public void setArviointi(Arviointi arviointi) {
         if (Objects.equals(this.arviointi, arviointi)) {

@@ -153,19 +153,17 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
     }
 
     @Override
-    @Transactional(readOnly = false)
     public boolean updateKoulutustoimijat() {
         koulutustoimijaService.initKoulutustoimijat(getUserOrganizations());
         return true;
     }
 
     @Override
-    @Transactional(readOnly = false)
     public List<KoulutustoimijaBaseDto> koulutustoimijat() {
         Kayttaja kayttaja = getKayttaja();
 
         return koulutustoimijaService.getKoulutustoimijat(getUserOrganizations()).stream()
-                .filter(org -> org != null)
+                .filter(ktDto -> ktDto != null && ktDto.getId() != null)
                 .map(ktDto -> {
                     Koulutustoimija kt = koulutustoimijaRepository.findOne(ktDto.getId());
                     if (ktkayttajaRepository.findOneByKoulutustoimijaAndKayttaja(kt, kayttaja) == null) {
