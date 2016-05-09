@@ -29,6 +29,8 @@ import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,6 +42,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
+    private static final Logger LOG = LoggerFactory.getLogger(KoulutustoimijaServiceImpl.class);
 
     @Autowired
     private OrganisaatioService organisaatioService;
@@ -57,7 +60,12 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
             return koulutustoimija;
         }
 
+        LOG.info("Luodaan uusi organisaatiota vastaava koulutustoimija ensimmäistä kertaa", kOid);
         JsonNode organisaatio = organisaatioService.getOrganisaatio(kOid);
+        if (organisaatio == null) {
+            return null;
+        }
+        
         LokalisoituTeksti nimi = LokalisoituTeksti.of(Kieli.FI, organisaatio.get("nimi").get("fi").asText());
         koulutustoimija = new Koulutustoimija();
         koulutustoimija.setNimi(nimi);
@@ -80,6 +88,7 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     public List<KoulutustoimijaBaseDto> getKoulutustoimijat(Set<String> kOid) {
         return kOid.stream()
                 .map(ktId -> {
+                    LOG.info("Käyttäjän koulutustoimija", ktId);
                     Koulutustoimija kt = repository.findOneByOrganisaatio(ktId);
                     return mapper.map(kt, KoulutustoimijaBaseDto.class);
                 })

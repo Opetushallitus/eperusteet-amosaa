@@ -8,7 +8,7 @@ div.sp-laatikko(ng-if="!ngModel.$$poistettu" ng-hide="ngModel.$$piilotettu")
             +gicon("remove")
         span.laajuus(ng-bind="tosa.laajuus")
 
-  div.sp-ryhma(ng-if="ngModel.rooli && ngModel.rooli !== 'määrittelemätön'")
+  div.sp-ryhma(ng-if="ngModel.rooli && ngModel.rooli !== 'määrittelemätön' && !ngModel.vieras")
     div.sp-sisalto(class="{{ 'sp-sisalto-' + (ngModel.osaamisala ? 'osaamisala' : 'ryhma') }}")
       div.sp-toggler(ng-class="{ 'sp-toggler-osaamisala': ngModel.osaamisala, 'sp-toggler-ryhma': !ngModel.osaamisala }" ng-click="ngModel.$$show = !ngModel.$$show")
         div.chevron
@@ -18,7 +18,7 @@ div.sp-laatikko(ng-if="!ngModel.$$poistettu" ng-hide="ngModel.$$piilotettu")
         span(kaanna="ngModel.nimi")
         span.sp-osaamisala(ng-if="ngModel.osaamisala" ng-bind="ngModel.osaamisala.osaamisalakoodiArvo")
       div.sp-toolbar(ng-show="misc.root.$$ekEditing")
-        div.sp-edit(ng-show="depth > 1")
+        div.sp-edit(ng-show="depth > 1 && misc.root.$$ekEditing && ngModel.osaamisala")
           a(href="" ng-click="misc.poistaOsa(ngModel)")
             +gicon("remove")
         div.sp-edit

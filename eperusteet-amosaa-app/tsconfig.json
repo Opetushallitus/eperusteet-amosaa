@@ -40,6 +40,7 @@
     "src/app/logic/termisto.ts",
     "src/app/logic/algoritmit.ts",
     "src/app/logic/koulutustoimijat.ts",
+    "src/app/logic/suorituspolku.ts",
     "src/app/misc/filters.ts",
     "src/app/modals/add/add.ts",
     "src/app/modals/tilat/tilanvaihto.ts",
