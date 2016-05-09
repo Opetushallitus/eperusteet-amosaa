@@ -39,23 +39,46 @@ $arviointi-padding: 5px;
             }
         }
         .arviointi-sisalto {
-            padding: $arviointi-padding;
             h4 {
                 font-weight: bold;
             }
             a {
+                padding: $arviointi-padding;
                 &, span, i {
                     text-decoration: none;
                 }
             }
-            .arviointi-kohteet {
-                .sisalto-handle {
+        }
+    }
 
-                }
-                .arviointi-kohde {
+    .arviointi-kohdealueet {
+        min-height: 1em;
 
-                }
+        .arviointi-kohteet {
+            min-height: 1em;
+            .arviointi-kohde {
+                padding: $arviointi-padding;
+            }
+
+            .sortable-item-placeholder {
+                margin-bottom: 20px;
             }
         }
+    }
+
+    .sortable-item-handle {
+        cursor: move;
+    }
+
+    .sortable-item-placeholder {
+        background-color: #f3fafd;
+        height: 60px;
+        border: 2px dashed gray;
+        margin-bottom: 10px;
+    }
+
+    .ui-sortable-helper {
+        background-color: white;
+        opacity: 0.6;
     }
 }

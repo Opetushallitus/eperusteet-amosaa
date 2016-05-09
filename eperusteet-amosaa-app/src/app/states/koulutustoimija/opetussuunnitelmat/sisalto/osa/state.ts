@@ -117,13 +117,32 @@ angular.module("app")
         tutkinnonosa: {
             controller: ($scope) => {
                 $scope.sortableOptionsArvioinninKohdealueet = {
+                    axis: "y",
                     connectWith: ".sisalto-list",
-                    handle: ".sisalto-handle",
+                    handle: ".sortable-item-handle",
                     cursor: "move",
                     delay: 100,
                     tolerance: "pointer",
-                    placeholder: "sisalto-item-placeholder"
+                    placeholder: "sortable-item-placeholder"
                 };
+                $scope.sortableOptionsArvioinninKohteet = {
+                    axis: "y",
+                    connectWith: ".arviointi-kohteet",
+                    handle: ".sortable-item-handle",
+                    cursor: "move",
+                    delay: 100,
+                    tolerance: "pointer",
+                    placeholder: "sortable-item-placeholder"
+                };
+                /*$scope.sortableOptionsOsaamistasonKriteerit = {
+                    axis: "y",
+                    connectWith: ".sisalto-list",
+                    handle: ".sortable-item-handle",
+                    cursor: "move",
+                    delay: 100,
+                    tolerance: "pointer",
+                    placeholder: "sortable-item-placeholder"
+                };*/
                 
                 $scope.lisaaArvioinninKohdealue = () => {
                     $scope.osa.tosa.omatutkinnonosa.arviointi = $scope.osa.tosa.omatutkinnonosa.arviointi || {};

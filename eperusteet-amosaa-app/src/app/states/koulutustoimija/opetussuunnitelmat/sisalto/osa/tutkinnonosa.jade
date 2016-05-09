@@ -22,8 +22,8 @@ mixin arviointiKohde
   .arviointi-kohde(ng-class="$$ekEditing ? 'muokkaus' : ''")
     h4(ng-if="!$$ekEditing")
       span(ng-bind="")
-    span.sisalto-handle.pull-right
-      +icon("plus")
+    span.sortable-item-handle.pull-right
+      +gicon("sort")
     p leipomisalan lisäteksti...
       .table-responsive
         table.table.table-striped
@@ -50,9 +50,11 @@ mixin arviointi
 
         .input-group-addon(ng-click="poistaArvioinninKohdealue(arvioinninKohdealue)" ng-if="$$ekEditing")
           +icon("trash-o")
+        .input-group-addon.sortable-item-handle
+          +gicon("sort")
 
     .arviointi-sisalto
-      .arviointi-kohteet(ui-sortable="sortableOptionsArvioinninKohdealueet" ng-model="arvioinninKohdealue.arvioinninKohteet")
+      .arviointi-kohteet(ui-sortable="sortableOptionsArvioinninKohteet" ng-model="arvioinninKohdealue.arvioinninKohteet")
         div(ng-repeat="arviointiKohde in arvioinninKohdealue.arvioinninKohteet")
           +arviointiKohde
       a(href="" ng-if="$$ekEditing" ng-click="lisaaArviointiKohde(arvioinninKohdealue)")
@@ -71,8 +73,10 @@ mixin tosaSisalto()
         +ammattitaitovaatimukset
 
       +contentToggler("$$showArviointi", "'arviointi'")
-        div(ng-repeat="arvioinninKohdealue in osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet")
-          +arviointi
+        .arviointi-kohdealueet(ui-sortable="sortableOptionsArvioinninKohdealueet"
+                               ng-model="osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet")
+          div(ng-repeat="arvioinninKohdealue in osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet")
+            +arviointi
         button.btn.btn-default(type='button' ng-click="lisaaArvioinninKohdealue()" kaanna="'lisaa-kohdealue'")
 
       +contentToggler("$$showAmmattitaidonOsoittamistavat", "'ammattitaidon-osoittamistavat'")
