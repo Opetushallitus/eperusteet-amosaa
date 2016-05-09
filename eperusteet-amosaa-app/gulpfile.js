@@ -19,8 +19,8 @@ var
     // tslint_config = require('./tslint.json'),
     watch         = require('gulp-watch');
 
-var tests = _.filter(ts_app_config.files, function(file) { return _.startsWith(file, 'test'); });
-var sources = _.reject(ts_app_config.files, function(file) { return _.startsWith(file, 'test'); });
+var tests = _.filter(ts_app_config.files, function (file) { return _.startsWith(file, 'test'); });
+var sources = _.reject(ts_app_config.files, function (file) { return _.startsWith(file, 'test'); });
 
 // TODO:
 // Add preprocessing options
@@ -41,13 +41,13 @@ function createProxy(from, to) {
 var testReporter = function (output, file) {
     console.log("Found " + output.length + " errors in " + file.path);
 
-    _.forEach(output, function(error) {
+    _.forEach(output, function (error) {
         console.log("    " + error.failure + " [" + error.endPosition.line + ", " + error.endPosition.character + "]");
     });
 };
 
 gulp
-.task('templatepacker', function() {
+.task('templatepacker', function () {
     return gulp.src([
             config.app + 'misc/mixins.jade',
             config.app + 'components/**/*.jade',
@@ -57,7 +57,7 @@ gulp
             config.app + 'states/*.jade',
             config.app + 'states/koulutustoimija/**/*.jade',
             config.app + 'states/virhe/**/*.jade'])
-        .pipe(mkStream(function(file, cb) {
+        .pipe(mkStream(function (file, cb) {
             var fpath = file.path.slice((file.cwd + config.app).length + 1);
 
             if (/^win/.test(process.platform)) {
@@ -73,32 +73,32 @@ gulp
         .pipe(concat('templates.jade'))
         .pipe(gulp.dest(config.app));
 })
-.task('templates', ['templatepacker'], function() {
+.task('templates', ['templatepacker'], function () {
     return gulp.src([config.app + 'index.jade'])
         .pipe(jade())
         .pipe(concat('index.html'))
         .pipe(gulp.dest(config.build))
         .pipe(connect.reload());
 })
-.task('ckeditor', function() {
+.task('ckeditor', function () {
     gulp.src(['./node_modules/ckeditor/**']).pipe(gulp.dest(config.build + '/ckeditor'));
     return gulp.src(['./src/ckeditor-plugins/**']).pipe(gulp.dest(config.build + '/ckeditor/plugins'));
 })
-.task('locales', function() {
+.task('locales', function () {
     return gulp.src(['./src/localisation/**']).pipe(gulp.dest(config.build + '/localisation'));
 })
-.task('images', function() {
+.task('images', function () {
     gulp.src(['./src/app/favicon.ico']).pipe(gulp.dest(config.build));
     return gulp.src(['./src/images/**']).pipe(gulp.dest(config.build + '/images'));
 })
-.task('static-fonts', ['ckeditor', 'locales', 'images'], function() {
+.task('static-fonts', ['ckeditor', 'locales', 'images'], function () {
     return gulp.src([
         './node_modules/bootstrap-sass/assets/fonts/**',
         './node_modules/font-awesome/fonts/**'
     ])
     .pipe(gulp.dest(config.build + '/fonts'));
 })
-.task('sass', function() {
+.task('sass', function () {
     return merge(
         gulp.src(config.styles),
             gulp.src([config.app + 'styles/styles.scss'])
@@ -111,15 +111,15 @@ gulp
         .pipe(gulp.dest(config.build))
         .pipe(connect.reload());
 })
-.task('dependencies', function() {
+.task('dependencies', function () {
     return gulp.src(config.dependencies)
         .pipe(concat('dependencies.js'))
         .pipe(gulp.dest(config.build));
 })
 // gulp-tsc uses file.path instead of file.contents
-// .task('preprocess', function() {
+// .task('preprocess', function () {
 //     return gulp.src(ts_app_config.files)
-//         .pipe(mkStream(function(file, cb) {
+//         .pipe(mkStream(function (file, cb) {
 //             var stateMatch = "app/states";
 //             var state = file.path.indexOf(stateMatch);
 //             if (state !== -1 && _.endsWith(file.path, 'state.ts')) {
@@ -131,7 +131,7 @@ gulp
 //         }))
 //         .pipe(gulp.dest('tmp/'));
 // })
-.task('compile', function() {
+.task('compile', function () {
     return gulp.src(sources)
         // .pipe(tslint({ configuration: tslint_config }))
         // .pipe(tslint.report(testReporter, {
@@ -139,7 +139,7 @@ gulp
         //     summarizeFailureOutput: true
         // }))
         .pipe(typescript())
-        .on('error', function(error) {
+        .on('error', function (error) {
             console.log(error.toString());
             this.emit('end');
         })
@@ -147,13 +147,10 @@ gulp
         .pipe(gulp.dest(config.build))
         .pipe(connect.reload());
 })
-.task('connect', function() {
+.task('connect', function () {
     return connect.server({
         root: config.build,
         port: 9030,
-        // livereload: {
-        //     port: 35769
-        // },
         middleware: function (connect, opt) {
             return [
                 createProxy('https://testi.virkailija.opintopolku.fi/eperusteet-service', '/eperusteet-service'),
@@ -163,10 +160,10 @@ gulp
     });
 })
 .task('build', ['dependencies', 'templates', 'sass', 'compile', 'static-fonts'])
-.task('dist', ['build'], function() {
+.task('dist', ['build'], function () {
     return gulp.src([config.build + '**/*']).pipe(gulp.dest(config.dist));
 })
-.task('watch', ['connect', 'build'], function() {
+.task('watch', ['connect', 'build'], function () {
     gulp.watch(config.app + '**/*.ts', ['compile']);
     gulp.watch(config.app + '**/*.jade', ['templates']);
     gulp.watch(config.app + '**/*.scss', ['sass']);

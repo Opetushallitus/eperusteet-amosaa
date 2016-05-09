@@ -1,3 +1,61 @@
-.tutkinnonosa {
+$arviointi-vari: #199dd0;
+$arviointi-padding: 5px;
 
+.tutkinnonosa {
+    .arviointi {
+        border: 1px solid $arviointi-vari;
+        margin-bottom: 10px;
+
+        .arviointi-otsikko {
+            background: $arviointi-vari;
+            color: white;
+            padding: $arviointi-padding;
+            height: 50px;
+
+            h3 {
+                margin-top: 10px;
+                margin-bottom: 10px;
+                a {
+                    color: #135870;
+                    margin-right: 10px;
+                    &:hover {
+                        color: white;
+                    }
+
+                    i {
+                        text-decoration: none;
+                    }
+                }
+            }
+            .input-group {
+                margin-top: 3px;
+
+                .input-group-addon {
+                    cursor: pointer;
+                    &:hover {
+                        background-color: #dddddd;
+                    }
+                }
+            }
+        }
+        .arviointi-sisalto {
+            padding: $arviointi-padding;
+            h4 {
+                font-weight: bold;
+            }
+            a {
+                &, span, i {
+                    text-decoration: none;
+                }
+            }
+            .arviointi-kohteet {
+                .sisalto-handle {
+
+                }
+                .arviointi-kohde {
+
+                }
+            }
+        }
+    }
 }

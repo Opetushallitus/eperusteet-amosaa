@@ -14,6 +14,53 @@ mixin tosaToteutus()
       +contentToggler("$$showArvioinnista", "'osaamisen-arvioinnista'")
         +teksti("osa.tosa.arvioinnista.teksti")
 
+mixin ammattitaitovaatimukset
+  p todo
+
+
+mixin arviointiKohde
+  .arviointi-kohde(ng-class="$$ekEditing ? 'muokkaus' : ''")
+    h4(ng-if="!$$ekEditing")
+      span(ng-bind="")
+    span.sisalto-handle.pull-right
+      +icon("plus")
+    p leipomisalan lisäteksti...
+      .table-responsive
+        table.table.table-striped
+          tbody
+            tr
+              td asda
+              td
+                ul
+                  li asdasdasdasdasdasd
+                  li tesdf
+
+
+mixin arviointi
+  .arviointi
+    .arviointi-otsikko
+      h3(ng-if="!$$ekEditing")
+        span(ng-bind="arvioinninKohdealue.otsikko || 'otsikko-puuttuu' | kaanna")
+
+      .input-group(ng-if="$$ekEditing")
+        input.form-control(type="text"
+                           slocalized
+                           ng-model="arvioinninKohdealue.otsikko"
+                           ng-value="arvioinninKohdealue.otsikko || 'otsikko-puuttuu' | kaanna")
+
+        .input-group-addon(ng-click="poistaArvioinninKohdealue(arvioinninKohdealue)" ng-if="$$ekEditing")
+          +icon("trash-o")
+
+    .arviointi-sisalto
+      .arviointi-kohteet(ui-sortable="sortableOptionsArvioinninKohdealueet" ng-model="arvioinninKohdealue.arvioinninKohteet")
+        div(ng-repeat="arviointiKohde in arvioinninKohdealue.arvioinninKohteet")
+          +arviointiKohde
+      a(href="" ng-if="$$ekEditing" ng-click="lisaaArviointiKohde(arvioinninKohdealue)")
+        +icon("plus")
+        span=" "
+        span(kaanna="'lisaa-arviointi-kohde'")
+
+
 mixin tosaSisalto()
   div(ng-hide="$$showToteutus")
     div(ng-if="$$ekEditing")
@@ -21,29 +68,33 @@ mixin tosaSisalto()
         div(style="margin-bottom: 16px" ckeditor slocalized ng-model="osa.tosa.omatutkinnonosa.tavoitteet" layout="normal")
 
       +contentToggler("$$showAmmattitaitovaatimukset", "'ammattitaitovaatimukset'")
-        div(style="margin-bottom: 16px" ckeditor slocalized ng-model="osa.tosa.omatutkinnonosa.ammattitaitovaatimukset" layout="normal")
+        +ammattitaitovaatimukset
+
+      +contentToggler("$$showArviointi", "'arviointi'")
+        div(ng-repeat="arvioinninKohdealue in osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet")
+          +arviointi
+        button.btn.btn-default(type='button' ng-click="lisaaArvioinninKohdealue()" kaanna="'lisaa-kohdealue'")
 
       +contentToggler("$$showAmmattitaidonOsoittamistavat", "'ammattitaidon-osoittamistavat'")
         div(style="margin-bottom: 16px" ckeditor slocalized ng-model="osa.tosa.omatutkinnonosa.ammattitaidonOsoittamistavat" layout="normal")
-
-      +contentToggler("$$showKuvaus", "'kuvaus'")
-        div(style="margin-bottom: 16px" ckeditor slocalized ng-model="osa.tosa.omatutkinnonosa.kuvaus" layout="normal")
 
     div(ng-if="!$$ekEditing")
       +contentToggler("$$showTavoitteet", "'tavoitteet'")
         +teksti("osa.tosa.omatutkinnonosa.tavoitteet")
 
       +contentToggler("$$showAmmattitaitovaatimukset", "'ammattitaitovaatimukset'")
-        +teksti("osa.tosa.omatutkinnonosa.ammattitaitovaatimukset")
+        +ammattitaitovaatimukset
+
+      +contentToggler("$$showArviointi", "'arviointi'")
+        div(ng-repeat="arvioinninKohdealue in osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet")
+          +arviointi("arvioinninKohdealue")
 
       +contentToggler("$$showAmmattitaidonOsoittamistavat", "'ammattitaidon-osoittamistavat'")
         +teksti("osa.tosa.omatutkinnonosa.ammattitaidonOsoittamistavat")
 
-      +contentToggler("$$showKuvaus", "'kuvaus'")
-        +teksti("osa.tosa.omatutkinnonosa.kuvaus")
 
 
-div.tutkinnonosa
+.tutkinnonosa
   div(ng-hide="$$ekEditing" style="margin-bottom: 20px;")
     +toggler("$$showToteutus", "'toteutus'", "'sisalto'")
 

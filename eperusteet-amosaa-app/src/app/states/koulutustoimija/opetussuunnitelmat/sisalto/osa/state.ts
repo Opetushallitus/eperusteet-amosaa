@@ -14,7 +14,7 @@ namespace SuoritustapaRyhmat {
                 $scope.peruuta = $uibModalInstance.dismiss;
             }
         }).result;
-};
+}
 
 angular.module("app")
 .run(SuoritustapaRyhmat.init)
@@ -115,9 +115,29 @@ angular.module("app")
             controller: ($scope, osa) => {}
         },
         tutkinnonosa: {
-            controller: ($scope, osa) => {
-                osa.tosa.arvioinnista = osa.tosa.arvioinnista || {};
-                osa.tosa.tavatjaymparisto = osa.tosa.tavatjaymparisto || {};
+            controller: ($scope) => {
+                $scope.sortableOptionsArvioinninKohdealueet = {
+                    connectWith: ".sisalto-list",
+                    handle: ".sisalto-handle",
+                    cursor: "move",
+                    delay: 100,
+                    tolerance: "pointer",
+                    placeholder: "sisalto-item-placeholder"
+                };
+                
+                $scope.lisaaArvioinninKohdealue = () => {
+                    $scope.osa.tosa.omatutkinnonosa.arviointi = $scope.osa.tosa.omatutkinnonosa.arviointi || {};
+                    $scope.osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet = $scope.osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet || [];
+                    $scope.osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet.push({});
+                };
+                $scope.poistaArvioinninKohdealue = (arviointi) => {
+                    $scope.osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet
+                        = _.without($scope.osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet, arviointi);
+                };
+                $scope.lisaaArviointiKohde = (parent) => {
+                    parent.arvioinninKohteet = parent.arvioinninKohteet || [];
+                    parent.arvioinninKohteet.push({});
+                };
             }
         },
         tutkinnonosaryhma: {
@@ -126,7 +146,7 @@ angular.module("app")
         suorituspolku: {
             controller: ($rootScope, $scope, osa, peruste: REl) => {
                 const tosat = _.indexBy(Perusteet.getTutkinnonOsat(peruste), "id");
-                const tosaViitteet = _(_.cloneDeep(Perusteet.getTosaViitteet(Perusteet.getSuoritustapa(peruste))))
+                const tosaViitteet: any = _(_.cloneDeep(Perusteet.getTosaViitteet(Perusteet.getSuoritustapa(peruste))))
                     .each(viite => viite.$$tosa = tosat[viite._tutkinnonOsa])
                     .indexBy("id")
                     .value();
