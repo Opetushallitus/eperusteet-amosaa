@@ -15,6 +15,7 @@
  */
 package fi.vm.sade.eperusteet.amosaa.service.external.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.amosaa.domain.arviointi.Arviointiasteikko;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.ArviointiasteikkoDto;
 import fi.vm.sade.eperusteet.amosaa.repository.ops.ArviointiasteikkoRepository;

@@ -13,7 +13,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * European Union Public Licence for more details.
  */
-
 package fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa;
 
 import fi.vm.sade.eperusteet.amosaa.domain.AbstractAuditedEntity;
@@ -53,8 +52,8 @@ public class OmaTutkinnonosa extends AbstractAuditedEntity implements Serializab
     private LokalisoituTeksti tavoitteet;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
-    @JoinTable(name = "ammattitaitovaatimuksenkohdealue_tutkinnonosa",
-            joinColumns = @JoinColumn(name = "tutkinnonosa_id"),
+    @JoinTable(name = "ammattitaitovaatimuksenkohdealue_omatutkinnonosa",
+            joinColumns = @JoinColumn(name = "omatutkinnonosa_id"),
             inverseJoinColumns = @JoinColumn(name = "ammattitaitovaatimuksenkohdealue_id"))
     @OrderColumn(name = "jarjestys")
     @Getter

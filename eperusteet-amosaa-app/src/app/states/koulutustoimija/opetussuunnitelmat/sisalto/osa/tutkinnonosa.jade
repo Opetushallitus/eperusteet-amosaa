@@ -14,8 +14,8 @@ mixin tosaToteutus()
       +contentToggler("$$showArvioinnista", "'osaamisen-arvioinnista'")
         +teksti("osa.tosa.arvioinnista.teksti")
 
-mixin ammattitaitovaatimukset
-  p todo
+mixin ammattitaitovaatimus
+  pre {{ ammattitaitovaatimus | json }}
 
 mixin kriteeri
   .osaamistason-kriteeri
@@ -122,7 +122,9 @@ mixin tosaSisalto()
         div(style="margin-bottom: 16px" ckeditor slocalized ng-model="osa.tosa.omatutkinnonosa.tavoitteet" layout="normal")
 
       +contentToggler("$$showAmmattitaitovaatimukset", "'ammattitaitovaatimukset'")
-        +ammattitaitovaatimukset
+        div(ng-repeat="ammattitaitovaatimus in osa.tosa.omatutkinnonosa.ammattitaitovaatimuksetLista")
+          +ammattitaitovaatimus
+        button.btn.btn-default(type='button' ng-click="lisaaAmmattitaitovaatimus()" kaanna="'lisaa-ammattitaitovaatimus'")
 
       +contentToggler("$$showArviointi", "'arviointi'")
         .arviointi-kohdealueet(ui-sortable="sortableOptionsArvioinninKohdealueet"
@@ -139,12 +141,14 @@ mixin tosaSisalto()
         +teksti("osa.tosa.omatutkinnonosa.tavoitteet")
 
       +contentToggler("$$showAmmattitaitovaatimukset", "'ammattitaitovaatimukset'")
-        +ammattitaitovaatimukset
+        div(ng-repeat="ammattitaitovaatimus in osa.tosa.omatutkinnonosa.ammattitaitovaatimuksetLista")
+          +ammattitaitovaatimus
 
-      +contentToggler("$$showArviointi", "'arviointi'")
-        .arviointi-kohdealueet
-          div(ng-repeat="arvioinninKohdealue in osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet")
-            +arviointi("arvioinninKohdealue")
+      div(ng-if="osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet.length > 0")
+        +contentToggler("$$showArviointi", "'arviointi'")
+          .arviointi-kohdealueet
+            div(ng-repeat="arvioinninKohdealue in osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet")
+              +arviointi("arvioinninKohdealue")
 
       +contentToggler("$$showAmmattitaidonOsoittamistavat", "'ammattitaidon-osoittamistavat'")
         +teksti("osa.tosa.omatutkinnonosa.ammattitaidonOsoittamistavat")
@@ -158,5 +162,4 @@ mixin tosaSisalto()
   +tosaToteutus
   +tosaSisalto
 
-  //pre {{ arviointiAsteikot | json }}
-  pre {{ osa.tosa.omatutkinnonosa.arviointi | json }}
+  pre {{ osa.tosa.omatutkinnonosa.ammattitaitovaatimuksetLista | json }}

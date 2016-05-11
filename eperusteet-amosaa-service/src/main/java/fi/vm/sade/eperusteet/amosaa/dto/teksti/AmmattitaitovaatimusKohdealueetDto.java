@@ -13,27 +13,20 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * European Union Public Licence for more details.
  */
-package fi.vm.sade.eperusteet.amosaa.dto.peruste;
+package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 
-import fi.vm.sade.eperusteet.amosaa.dto.Reference;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.AmmattitaitovaatimusKohdealueetDto;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 /**
- *
- * @author harrik
+ * Created by autio on 19.10.2015.
  */
 @Getter
 @Setter
-public class OsaamistavoiteLaajaDto extends OsaamistavoiteDto {
-    private LokalisoituTekstiDto tavoitteet;
-    private LokalisoituTekstiDto tunnustaminen;
-    private ArviointiDto arviointi;
-    private List<AmmattitaitovaatimusKohdealueetDto> ammattitaitovaatimuksetLista;
-    private String koodiUri;
-    private String koodiArvo;
-    private Reference esitieto;
+public class AmmattitaitovaatimusKohdealueetDto {
+    private Long id;
+    private LokalisoituTekstiDto otsikko;
+    private List<AmmattitaitovaatimusKohdeDto> vaatimuksenKohteet;
 }

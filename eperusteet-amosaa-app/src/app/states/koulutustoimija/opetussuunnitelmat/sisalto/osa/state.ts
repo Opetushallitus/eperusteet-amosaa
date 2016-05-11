@@ -158,8 +158,10 @@ angular.module("app")
 
                 
                 $scope.lisaaArvioinninKohdealue = () => {
+                    $scope.osa.tosa.omatutkinnonosa = $scope.osa.tosa.omatutkinnonosa || {};
                     $scope.osa.tosa.omatutkinnonosa.arviointi = $scope.osa.tosa.omatutkinnonosa.arviointi || {};
-                    $scope.osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet = $scope.osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet || [];
+                    $scope.osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet
+                        = $scope.osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet || [];
                     $scope.osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet.push({});
                 };
 
@@ -188,7 +190,16 @@ angular.module("app")
 
                 $scope.lisaaKriteeri = (osaamistasonKriteeri) => {
                     osaamistasonKriteeri.kriteerit = osaamistasonKriteeri.kriteerit || [];
-                    osaamistasonKriteeri.kriteerit.push({});
+                    osaamistasonKriteeri.kriteerit.push({
+                        vaatimuksenKohteet: []
+                    });
+                };
+
+                $scope.lisaaAmmattitaitovaatimus = () => {
+                    $scope.osa.tosa.omatutkinnonosa = $scope.osa.tosa.omatutkinnonosa || {};
+                    $scope.osa.tosa.omatutkinnonosa.ammattitaitovaatimuksetLista
+                        = $scope.osa.tosa.omatutkinnonosa.ammattitaitovaatimuksetLista || [];
+                    $scope.osa.tosa.omatutkinnonosa.ammattitaitovaatimuksetLista.push({});
                 };
                 
                 $scope.poistaArvioinninKohdealue = (kohdealue) => {

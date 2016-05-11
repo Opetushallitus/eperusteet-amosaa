@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2013 The Finnish Board of Education - Opetushallitus
+ *
+ * This program is free software: Licensed under the EUPL, Version 1.1 or - as
+ * soon as they will be approved by the European Commission - subsequent versions
+ * of the EUPL (the "Licence");
+ *
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at: http://ec.europa.eu/idabc/eupl
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * European Union Public Licence for more details.
+ */
 package fi.vm.sade.eperusteet.amosaa.domain.ammattitaitovaatimukset;
 
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
@@ -17,7 +32,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Created by autio on 20.10.2015.
+ * @author autio
  */
 @Entity
 @Table(name = "ammattitaitovaatimuksenkohdealue")
@@ -45,8 +60,8 @@ public class AmmattitaitovaatimuksenKohdealue implements Serializable {
     @Getter
     @NotAudited
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "ammattitaitovaatimuksenkohdealue_tutkinnonosa",
-            inverseJoinColumns = @JoinColumn(name = "tutkinnonosa_id"),
+    @JoinTable(name = "ammattitaitovaatimuksenkohdealue_omatutkinnonosa",
+            inverseJoinColumns = @JoinColumn(name = "omatutkinnonosa_id"),
             joinColumns = @JoinColumn(name = "ammattitaitovaatimuksenkohdealue_id"))
     private Set<Tutkinnonosa> tutkinnonOsat = new HashSet<>();
 
@@ -61,14 +76,12 @@ public class AmmattitaitovaatimuksenKohdealue implements Serializable {
 
         AmmattitaitovaatimuksenKohdealue that = (AmmattitaitovaatimuksenKohdealue) o;
 
-        if (id != null ? !id.equals(that.id) : that.id != null) {
-            return false;
-        }
+        return id != null ? id.equals(that.id) : that.id == null;
 
-        return true;
     }
 
-    public void connectAmmattitaitovaatimuksetToKohdealue(AmmattitaitovaatimuksenKohdealue ammattitaitovaatimuksenKohdealue) {
+    public void connectAmmattitaitovaatimuksetToKohdealue(
+            AmmattitaitovaatimuksenKohdealue ammattitaitovaatimuksenKohdealue) {
         for (AmmattitaitovaatimuksenKohde ammattitaitovaatimuksenKohde : this.getVaatimuksenKohteet()) {
             ammattitaitovaatimuksenKohde.setAmmattitaitovaatimuksenkohdealue(ammattitaitovaatimuksenKohdealue);
             for (Ammattitaitovaatimus ammattitaitovaatimus : ammattitaitovaatimuksenKohde.getVaatimukset()) {

@@ -228,16 +228,16 @@ CREATE TABLE ammattitaitovaatimuksenkohdealue_osaamistavoite_aud (
     PRIMARY KEY (ammattitaitovaatimuksenkohdealue_id, jarjestys, rev)
 );
 
-CREATE TABLE ammattitaitovaatimuksenkohdealue_tutkinnonosa (
+CREATE TABLE ammattitaitovaatimuksenkohdealue_omatutkinnonosa (
     ammattitaitovaatimuksenkohdealue_id BIGINT NOT NULL REFERENCES ammattitaitovaatimuksenkohdealue (id),
-    tutkinnonosa_id BIGINT NOT NULL REFERENCES tutkinnonosa (id),
+    omatutkinnonosa_id BIGINT NOT NULL REFERENCES omatutkinnonosa (id),
     jarjestys INTEGER NOT NULL,
     PRIMARY KEY (ammattitaitovaatimuksenkohdealue_id, jarjestys)
 );
 
-CREATE TABLE ammattitaitovaatimuksenkohdealue_tutkinnonosa_aud (
+CREATE TABLE ammattitaitovaatimuksenkohdealue_omatutkinnonosa_aud (
     ammattitaitovaatimuksenkohdealue_id BIGINT NOT NULL,
-    tutkinnonosa_id BIGINT,
+    omatutkinnonosa_id BIGINT,
     jarjestys INTEGER NOT NULL,
     rev INTEGER NOT NULL REFERENCES revinfo (rev),
     revtype SMALLINT,
