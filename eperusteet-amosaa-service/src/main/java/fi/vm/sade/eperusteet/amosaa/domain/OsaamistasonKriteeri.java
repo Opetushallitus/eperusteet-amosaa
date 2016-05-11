@@ -16,6 +16,8 @@
 package fi.vm.sade.eperusteet.amosaa.domain;
 
 import fi.vm.sade.eperusteet.amosaa.domain.arviointi.ArvioinninKohde;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Tekstiosa;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 import lombok.Getter;
@@ -58,7 +60,7 @@ public class OsaamistasonKriteeri implements Serializable {
                inverseJoinColumns = @JoinColumn(name = "tekstipalanen_id"))
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @BatchSize(size = 25)
-    private List<Tekstiosa> kriteerit = new ArrayList<>();
+    private List<LokalisoituTeksti> kriteerit = new ArrayList<>();
 
     @Getter
     @NotAudited
@@ -76,16 +78,16 @@ public class OsaamistasonKriteeri implements Serializable {
         this.kriteerit.addAll(other.kriteerit);
     }
 
-    public List<Tekstiosa> getKriteerit() {
+    public List<LokalisoituTeksti> getKriteerit() {
         return new ArrayList<>(kriteerit);
     }
 
-    public void setKriteerit(List<Tekstiosa> kriteerit) {
+    public void setKriteerit(List<LokalisoituTeksti> kriteerit) {
         this.kriteerit.clear();
         if (kriteerit != null) {
-            for (Tekstiosa t : kriteerit) {
-                if (t != null) {
-                    this.kriteerit.add(t);
+            for (LokalisoituTeksti k : kriteerit) {
+                if (k != null) {
+                    this.kriteerit.add(k);
                 }
             }
         }

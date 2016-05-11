@@ -89,21 +89,21 @@ angular.module("app")
                 };
 
                 const clickHandler = (event) => {
-                    var ohjeEl = angular.element(event.target).closest('.popover, .popover-element');
+                    var ohjeEl = angular.element(event.target).closest(".popover, .popover-element");
                     if (ohjeEl.length === 0) {
-                        $rootScope.$broadcast('ohje:closeAll');
+                        $rootScope.$broadcast("ohje:closeAll");
                     }
                 };
 
                 const installClickHandler = () => {
-                    $document.off('click', clickHandler);
+                    $document.off("click", clickHandler);
                     $timeout(() => {
-                        $document.on('click', clickHandler);
+                        $document.on("click", clickHandler);
                     });
                 };
 
-                $scope.$on('$destroy', function () {
-                    $document.off('click', clickHandler);
+                $scope.$on("$destroy", function () {
+                    $document.off("click", clickHandler);
                 });
 
                 installClickHandler();
@@ -124,7 +124,10 @@ angular.module("app")
                     cursor: "move",
                     delay: 100,
                     tolerance: "pointer",
-                    placeholder: "sortable-item-placeholder"
+                    placeholder: "sortable-item-placeholder",
+                    start: (e, ui) => {
+                        ui.placeholder.height(ui.item.height());
+                    }
                 };
                 $scope.sortableOptionsArvioinninKohteet = {
                     axis: "y",
@@ -133,42 +136,74 @@ angular.module("app")
                     cursor: "move",
                     delay: 100,
                     tolerance: "pointer",
-                    placeholder: "sortable-item-placeholder"
+                    placeholder: "sortable-item-placeholder",
+                    start: (e, ui) => {
+                        ui.placeholder.height(ui.item.height());
+                    }
                 };
-                /*$scope.sortableOptionsOsaamistasonKriteerit = {
+                $scope.sortableOptionsOsaamistasonKriteerit = {
                     axis: "y",
-                    connectWith: ".sisalto-list",
+                    connectWith: ".osaamistason-kriteerit",
                     handle: ".sortable-item-handle",
                     cursor: "move",
                     delay: 100,
                     tolerance: "pointer",
-                    placeholder: "sortable-item-placeholder"
-                };*/
+                    placeholder: "sortable-item-placeholder",
+                    start: (e, ui) => {
+                        ui.placeholder.height(ui.item.height());
+                    }
+                };
 
                 $scope.arviointiAsteikot = arviointiAsteikot.plain();
+
                 
                 $scope.lisaaArvioinninKohdealue = () => {
                     $scope.osa.tosa.omatutkinnonosa.arviointi = $scope.osa.tosa.omatutkinnonosa.arviointi || {};
                     $scope.osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet = $scope.osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet || [];
                     $scope.osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet.push({});
                 };
-                $scope.lisaaArviointiKohde = (parent) => {
-                    parent.arvioinninKohteet = parent.arvioinninKohteet || [];
-                    parent.arvioinninKohteet.push({});
+
+                $scope.lisaaArviointiKohde = (arvioinninKohdealue) => {
+                    arvioinninKohdealue.arvioinninKohteet = arvioinninKohdealue.arvioinninKohteet || [];
+                    arvioinninKohdealue.$$uusiArvioinninKohdealue = {};
+                    arvioinninKohdealue.$$uusiAuki = true;
                 };
-                $scope.lisaaOsaamistasonKriteeri = (parent) => {
-                    parent.osaamistasonKriteerit = parent.osaamistasonKriteerit || [];
-                    parent.osaamistasonKriteerit.push({});
+
+                $scope.lisaaArviointiasteikko = (arvioinninKohdealue) => {
+                    arvioinninKohdealue.$$uusiArvioinninKohdealue.osaamistasonKriteerit = [];
+                    const asteikkoId = arvioinninKohdealue.$$uusiArvioinninKohdealue._arviointiasteikko;
+                    const osaamistasot = $scope.arviointiAsteikot[asteikkoId - 1].osaamistasot;
+                    _(osaamistasot)
+                        .each((osaamistaso) => {
+                            arvioinninKohdealue.$$uusiArvioinninKohdealue.osaamistasonKriteerit.push({
+                                _osaamistaso: osaamistaso.id,
+                                kriteerit: []
+                            });
+                        })
+                        .value();
+                    arvioinninKohdealue.arvioinninKohteet.push(arvioinninKohdealue.$$uusiArvioinninKohdealue);
+                    arvioinninKohdealue.$$uusiArvioinninKohdealue = {};
+                    arvioinninKohdealue.$$uusiAuki = false;
+                };
+
+                $scope.lisaaKriteeri = (osaamistasonKriteeri) => {
+                    osaamistasonKriteeri.kriteerit = osaamistasonKriteeri.kriteerit || [];
+                    osaamistasonKriteeri.kriteerit.push({});
                 };
                 
                 $scope.poistaArvioinninKohdealue = (kohdealue) => {
                     $scope.osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet
                         = _.without($scope.osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet, kohdealue);
                 };
+
                 $scope.poistaArvioinninKohde = (kohdealue, kohde) => {
                     kohdealue.arvioinninKohteet
                         = _.without(kohdealue.arvioinninKohteet, kohde);
                 };
+                $scope.poistaKriteeri = (osaamistasonKriteeri, kriteeri) => {
+                    osaamistasonKriteeri.kriteerit
+                        = _.without(osaamistasonKriteeri.kriteerit, kriteeri);
+                }
             }
         },
         tutkinnonosaryhma: {
@@ -295,9 +330,9 @@ angular.module("app")
 
                 $scope.poistaKommentti = (kommentti) => {
                     Varmistusdialogi.dialogi({
-                        otsikko: 'vahvista-poisto',
-                        teksti: 'poistetaanko-kommentti',
-                        primaryBtn: 'poista',
+                        otsikko: "vahvista-poisto",
+                        teksti: "poistetaanko-kommentti",
+                        primaryBtn: "poista",
                         successCb: () => {
                             kommentti.remove()
                                 .then(() => {

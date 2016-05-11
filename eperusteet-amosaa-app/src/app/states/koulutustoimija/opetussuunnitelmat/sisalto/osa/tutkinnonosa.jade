@@ -17,66 +17,85 @@ mixin tosaToteutus()
 mixin ammattitaitovaatimukset
   p todo
 
-mixin osaamistasonKriteeri
-  span {{ osaamistasonKriteeri | json }}
-  span tekstiä
+mixin kriteeri
+  .osaamistason-kriteeri
+    div(ng-if="$$ekEditing")
+      textarea.form-control(ng-model="kriteeri" slocalized placeholder="{{'kriteerin-teksti' | kaanna}}")
+      div.painikkeet
+        span.sortable-item-handle.pull-right
+          +gicon("sort")
+        span.pull-right.linkki(ng-click="poistaKriteeri(osaamistasonKriteeri, kriteeri)")
+          +icon("trash-o")
 
 mixin arviointiKohde
   .arviointi-kohde(ng-class="$$ekEditing ? 'muokkaus' : ''")
-
-    div(ng-hide="arviointiKohde._arviointiasteikko")
-      +arviointiAsteikko
-
     div(ng-show="arviointiKohde._arviointiasteikko")
-      // Jos arviointi tehty
+
+      .arviointi-kohde-otsikko(ng-if="$$ekEditing")
+        .form-group
+          .input-group(ng-if="$$ekEditing")
+            input.form-control(type="text" ng-model="arviointiKohde.otsikko" slocalized placeholder="{{'arvioinnin-kohteen-otsikko' | kaanna}}")
+            .input-group-addon.linkki(ng-click="poistaArvioinninKohde(arvioinninKohdealue, arviointiKohde)")
+              +icon("trash-o")
+            .input-group-addon.sortable-item-handle
+              +gicon("sort")
+
+        .form-group
+          input.form-control(type="text" ng-model="arviointiKohde.selite" slocalized placeholder="{{'arvioinnin-kohteen-selite' | kaanna}}")
+
       h4(ng-if="!$$ekEditing")
-        span(ng-bind="arviointiKohde.otsikko")
+        span(ng-if="arviointiKohde.otsikko" kaanna="arviointiKohde.otsikko")
 
-      div.painikkeet(ng-if="$$ekEditing")
-        span.sortable-item-handle.pull-right
-          +gicon("sort")
-        span.pull-right.linkki(ng-click="poistaArvioinninKohde(arvioinninKohdealue, arviointiKohde)")
-          +icon("trash-o")
-      .clearfix
+      p(ng-if="!$$ekEditing")
+        span(ng-if="arviointiKohde.selite" kaanna="arviointiKohde.selite")
 
-      p(ng-if="arviointiKohde.otsikko" kaanna="arviointiKohde.otsikko")
 
-      .table-responsive(ng-if="arviointiAsteikot.length > 0")
+      .table-responsive(ng-if="arviointiKohde._arviointiasteikko > 0")
         table.table.table-striped.table-condensed
           tbody
-            tr(ng-repeat="taso in arviointiAsteikot[arviointiKohde._arviointiasteikko - 1].osaamistasot")
-              td(kaanna="taso.otsikko")
+            tr(ng-repeat="(index, osaamistasonKriteeri) in arviointiKohde.osaamistasonKriteerit")
+              td(kaanna="arviointiAsteikot[arviointiKohde._arviointiasteikko - 1].osaamistasot[index].otsikko")
               td
-                ul
-                  li(ng-repeat="osaamistasonKriteeri in arviointiKohde.osaamistasonKriteerit")
-                    +osaamistasonKriteeri
-                  div.painikkeet(ng-if="$$ekEditing")
-                    span.linkki.pull-right(ng-click="lisaaOsaamistasonKriteeri(arviointiKohde)")
+                ul(ng-if="!$$ekEditing")
+                  li(kaanna="kriteeri" ng-repeat="kriteeri in osaamistasonKriteeri.kriteerit")
+
+                div(ng-if="$$ekEditing")
+                  .osaamistason-kriteerit(ui-sortable="sortableOptionsOsaamistasonKriteerit"
+                                          ng-model="osaamistasonKriteeri.kriteerit")
+                    div(ng-repeat="kriteeri in osaamistasonKriteeri.kriteerit")
+                      +kriteeri
+                  div.clearfix
+                  div.painikkeet
+                    span.linkki.pull-right(ng-click="lisaaKriteeri(osaamistasonKriteeri)")
                       +icon("plus")
 
 mixin arviointiAsteikko
   .arviointi-asteikko
-    //pre {{ arviointiAsteikot | json}}
     div(ng-repeat="arviointiAsteikko in arviointiAsteikot")
       .radio
         label
-          input(type="radio" ng-model="arviointiKohde._arviointiasteikko" ng-value="arviointiAsteikko.id")
+          input(type="radio" ng-model="arvioinninKohdealue.$$uusiArvioinninKohdealue._arviointiasteikko" ng-value="arviointiAsteikko.id")
           span(ng-repeat="osaamistaso in arviointiAsteikko.osaamistasot")
             span {{ osaamistaso.otsikko | kaanna }}{{{true: '', false: ' / '}[$last]}}
+    div.painikkeet
+      button.btn.btn-danger(type='button'
+                             ng-click="arvioinninKohdealue.$$uusiAuki = !arvioinninKohdealue.$$uusiAuki"
+                             ng-show="arvioinninKohdealue.$$uusiAuki" kaanna="'peruuta'")
+      button.btn.btn-default(type='button' ng-click="lisaaArviointiasteikko(arvioinninKohdealue)" kaanna="'lisaa'")
 
 mixin arviointi
   .arviointi
     .arviointi-otsikko
       h3(ng-if="!$$ekEditing")
-        span(ng-bind="arvioinninKohdealue.otsikko || 'otsikko-puuttuu' | kaanna")
+        span(ng-if="arvioinninKohdealue.otsikko" kaanna="arvioinninKohdealue.otsikko")
 
       .input-group(ng-if="$$ekEditing")
         input.form-control(type="text"
                            slocalized
                            ng-model="arvioinninKohdealue.otsikko"
-                           ng-value="arvioinninKohdealue.otsikko || 'otsikko-puuttuu' | kaanna")
+                           placeholder="{{ 'otsikko-puuttuu' | kaanna }}")
 
-        .input-group-addon(ng-click="poistaArvioinninKohdealue(arvioinninKohdealue)" ng-if="$$ekEditing")
+        .input-group-addon.linkki(ng-click="poistaArvioinninKohdealue(arvioinninKohdealue)" ng-if="$$ekEditing")
           +icon("trash-o")
         .input-group-addon.sortable-item-handle
           +gicon("sort")
@@ -85,7 +104,12 @@ mixin arviointi
       .arviointi-kohteet(ui-sortable="sortableOptionsArvioinninKohteet" ng-model="arvioinninKohdealue.arvioinninKohteet")
         div(ng-repeat="arviointiKohde in arvioinninKohdealue.arvioinninKohteet")
           +arviointiKohde
-      a(href="" ng-if="$$ekEditing" ng-click="lisaaArviointiKohde(arvioinninKohdealue)")
+
+
+      div.uusi-arviointi-kohde(ng-show="arvioinninKohdealue.$$uusiAuki" ng-if="$$ekEditing")
+        +arviointiAsteikko
+
+      a(href="" ng-if="$$ekEditing" ng-click="lisaaArviointiKohde(arvioinninKohdealue)" ng-hide="arvioinninKohdealue.$$uusiAuki")
         +icon("plus")
         span=" "
         span(kaanna="'lisaa-arviointi-kohde'")
@@ -134,4 +158,5 @@ mixin tosaSisalto()
   +tosaToteutus
   +tosaSisalto
 
-  pre {{ osa.tosa | json }}
+  //pre {{ arviointiAsteikot | json }}
+  pre {{ osa.tosa.omatutkinnonosa.arviointi | json }}
