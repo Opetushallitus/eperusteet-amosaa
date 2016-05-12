@@ -50,7 +50,7 @@ angular.module("app")
             }
         },
         tiedotteet: {
-            controller: ($scope, tiedotteet) => {
+            controller: ($scope, tiedotteet, kayttajanTieto) => {
                 $scope.edit = EditointikontrollitService.createListRestangular($scope, "tiedotteet", tiedotteet);
                 $scope.remove = (tiedote) => {
                     if (!tiedote) {
@@ -64,6 +64,10 @@ angular.module("app")
                             EditointikontrollitService.cancel();
                         });
                 };
+
+                _.each(tiedotteet, (tiedote) =>
+                    kayttajanTieto(tiedote.luoja)
+                        .then(res => tiedote.$$nimi = Kayttajatiedot.parsiEsitysnimi(res)));
 
                 $scope.kuittaa = (tiedote) => {
                     tiedote.one("kuittaa").customPOST();

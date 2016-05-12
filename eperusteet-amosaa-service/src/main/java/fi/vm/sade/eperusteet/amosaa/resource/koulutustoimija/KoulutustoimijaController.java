@@ -59,10 +59,10 @@ public class KoulutustoimijaController {
         return new ResponseEntity<>(kayttajaTietoService.getKayttajat(ktId), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{ktId}/kayttajat/{kayttajaId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{ktId}/kayttaja/{kayttajaOid}", method = RequestMethod.GET)
     public ResponseEntity<KayttajanTietoDto> getKayttajat(
             @PathVariable final Long ktId,
-            @PathVariable final Long kayttajaId) {
-        return ResponseEntity.ok(kayttajaTietoService.getKayttaja(ktId, kayttajaId));
+            @PathVariable final String kayttajaOid) {
+        return ResponseEntity.ok(kayttajaTietoService.getKayttaja(ktId, kayttajaOid));
     }
 }

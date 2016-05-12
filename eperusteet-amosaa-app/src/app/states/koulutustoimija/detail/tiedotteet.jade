@@ -2,7 +2,7 @@ mixin author-time-signature
   table.tiedote-author-date(ng-if="!$$ekEditing || $$ekEditingIndex != $index")
     tr
       td(ng-bind="(tiedote.luotu || tiedote.muokattu) | aikaleima")
-      td(ng-bind="tiedote.luoja")
+      td(ng-bind="tiedote.$$nimi")
 
 mixin lisaa-uusi-tiedote-btn
   button.btn.btn-primary.pull-right.tiedote-editing-btn(ng-hide="$$ekEditing"

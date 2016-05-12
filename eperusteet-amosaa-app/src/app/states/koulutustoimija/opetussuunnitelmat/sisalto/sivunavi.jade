@@ -1,5 +1,5 @@
 div.sivunavi.subtle-transition
-  div.haku(sticky top-spacing="40")
+  div.haku(sticky top-spacing="44")
     div.form-inline
       div.form-group.has-feedback.has-feedback-left
         input.form-control(ng-change="suodata(search)" type="text" ng-model="search" placeholder="{{ 'hae' | kaanna }}")
@@ -9,10 +9,9 @@ div.sivunavi.subtle-transition
         button.btn.btn-default.square(ng-disabled="$$ekEditing" href="" ng-click="startSorting()" oikeustarkastelu="muokkaus")
           +icon("arrows-v")
 
-  div.valikko(sticky top-spacing="80")
+  div.valikko(sticky top-spacing="88")
     ul
       li
         a(ng-class="{ pakollinen: item.$$obj.pakollinen, liikkumaton: item.$$obj.liikkumaton }"
           href="" ui-sref-active="active" ui-sref=".tiedot" kaanna="'tiedot'")
       dynamic(template="states/koulutustoimija/opetussuunnitelmat/sisalto/sivunaviitem.jade" ng-model="sivunavi.lapset" misc="misc")
-    // div(style="height: 100px")
