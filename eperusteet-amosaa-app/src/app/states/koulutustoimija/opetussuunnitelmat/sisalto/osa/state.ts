@@ -38,6 +38,7 @@ angular.module("app")
             controller: ($state, $stateParams, $location, $scope, $rootScope, $document, $timeout,
                          osa, nimiLataaja, Varmistusdialogi, historia, versioId, versio, pTosa) => {
                 $scope.pTosa = pTosa;
+                $scope.$$showSisalto = true;
                 nimiLataaja(osa.tekstiKappale.muokkaaja)
                     .then(_.cset(osa, "$$nimi"));
 
@@ -128,6 +129,11 @@ angular.module("app")
                     delay: 100,
                     tolerance: "pointer",
                     placeholder: "toteutus-placeholder"
+                };
+
+                // FIXME: Hack to cope with old peruste tutkinnon osa string references
+                $scope.pa = {
+                    arviointiasteikko: x => x._arviointiasteikko || x._arviointiAsteikko
                 };
 
                 $scope.lisaaUusiToteutus = () => {
