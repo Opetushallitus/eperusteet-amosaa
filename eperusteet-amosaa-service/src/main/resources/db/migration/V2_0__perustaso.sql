@@ -40,12 +40,12 @@ CREATE TABLE liite (
     tyyppi character varying(255) NOT NULL
 );
 
-CREATE TABLE lokalisoitu_teksti (
+CREATE TABLE lokalisoituteksti (
     id BIGINT NOT NULL PRIMARY KEY
 );
 
-CREATE TABLE lokalisoitu_teksti_teksti (
-    lokalisoitu_teksti_id BIGINT NOT NULL REFERENCES lokalisoitu_teksti(id),
+CREATE TABLE lokalisoituteksti_teksti (
+    lokalisoituteksti_id BIGINT NOT NULL REFERENCES lokalisoituteksti(id),
     kieli character varying(255),
     teksti text
 );
@@ -57,7 +57,7 @@ CREATE TABLE ohje (
     muokattu timestamp without time zone,
     muokkaaja character varying(255),
     kohde uuid,
-    teksti_id BIGINT REFERENCES lokalisoitu_teksti(id),
+    teksti_id BIGINT REFERENCES lokalisoituteksti(id),
     tyyppi character varying(255) NOT NULL
 );
 
@@ -83,8 +83,8 @@ CREATE TABLE tekstikappale (
     muokattu timestamp without time zone,
     muokkaaja character varying(255),
     tila character varying(255) NOT NULL,
-    nimi_id BIGINT REFERENCES lokalisoitu_teksti(id),
-    teksti_id BIGINT REFERENCES lokalisoitu_teksti(id),
+    nimi_id BIGINT REFERENCES lokalisoituteksti(id),
+    teksti_id BIGINT REFERENCES lokalisoituteksti(id),
     tunniste uuid,
     pakollinen BOOLEAN,
     valmis BOOLEAN
@@ -110,8 +110,8 @@ CREATE TABLE tekstikappale_aud (
 
 CREATE TABLE tekstiosa (
     id BIGINT NOT NULL PRIMARY KEY,
-    otsikko_id BIGINT REFERENCES lokalisoitu_teksti(id),
-    teksti_id BIGINT REFERENCES lokalisoitu_teksti(id)
+    otsikko_id BIGINT REFERENCES lokalisoituteksti(id),
+    teksti_id BIGINT REFERENCES lokalisoituteksti(id)
 );
 
 CREATE TABLE tekstiosa_aud (
@@ -127,7 +127,7 @@ CREATE TABLE tekstiosa_aud (
 CREATE TABLE peruste_cache (
     id BIGINT NOT NULL PRIMARY KEY,
     diaarinumero CHARACTER VARYING(255) NOT NULL,
-    nimi_id BIGINT NOT NULL REFERENCES lokalisoitu_teksti(id),
+    nimi_id BIGINT NOT NULL REFERENCES lokalisoituteksti(id),
     luotu TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     peruste TEXT NOT NULL
 );
@@ -135,8 +135,8 @@ CREATE TABLE peruste_cache (
 CREATE TABLE koulutustoimija (
     id BIGINT NOT NULL PRIMARY KEY,
     organisaatio VARCHAR(255) UNIQUE NOT NULL CHECK (organisaatio <> ''),
-    nimi_id BIGINT NOT NULL REFERENCES lokalisoitu_teksti(id),
-    kuvaus_id BIGINT REFERENCES lokalisoitu_teksti(id),
+    nimi_id BIGINT NOT NULL REFERENCES lokalisoituteksti(id),
+    kuvaus_id BIGINT REFERENCES lokalisoituteksti(id),
     luoja CHARACTER VARYING(255),
     luotu TIMESTAMP WITHOUT TIME ZONE,
     muokattu TIMESTAMP WITHOUT TIME ZONE,
@@ -159,8 +159,8 @@ CREATE TABLE koulutustoimija_aud (
 
 CREATE TABLE opetussuunnitelma (
     id BIGINT NOT NULL PRIMARY KEY,
-    nimi_id BIGINT NOT NULL REFERENCES lokalisoitu_teksti(id),
-    kuvaus_id BIGINT REFERENCES lokalisoitu_teksti(id),
+    nimi_id BIGINT NOT NULL REFERENCES lokalisoituteksti(id),
+    kuvaus_id BIGINT REFERENCES lokalisoituteksti(id),
     koulutustoimija_id BIGINT NOT NULL REFERENCES koulutustoimija(id),
     esikatseltavissa BOOLEAN,
     paatospaivamaara TIMESTAMP WITHOUT TIME ZONE,
@@ -190,7 +190,7 @@ CREATE TABLE opetussuunnitelma_aud (
     esikatseltavissa BOOLEAN,
     paatospaivamaara TIMESTAMP WITHOUT TIME ZONE,
     pohja_id BIGINT REFERENCES opetussuunnitelma(id),
-    peruste_diaarinumero CHARACTER VARYING(255),
+    perustediaarinumero CHARACTER VARYING(255),
     peruste_id BIGINT REFERENCES peruste_cache(id),
     paatosnumero CHARACTER VARYING(255),
     hyvaksyja CHARACTER VARYING(255),
@@ -326,7 +326,7 @@ CREATE TABLE tutkinnonosa_vapaa_teksti (
 CREATE TABLE sisaltoviite (
     id BIGINT NOT NULL PRIMARY KEY,
     owner_id BIGINT NOT NULL REFERENCES opetussuunnitelma(id),
-    teksti_kappale_id BIGINT REFERENCES tekstikappale(id),
+    tekstikappale_id BIGINT REFERENCES tekstikappale(id),
     vanhempi_id BIGINT REFERENCES sisaltoviite(id),
     versio BIGINT DEFAULT 0,
     lapset_order INTEGER,
@@ -336,8 +336,8 @@ CREATE TABLE sisaltoviite (
 
     tyyppi CHARACTER VARYING(255) NOT NULL,
     -- Ohje:
-    ohjeteksti_id BIGINT REFERENCES lokalisoitu_teksti(id),
-    perusteteksti_id BIGINT REFERENCES lokalisoitu_teksti(id),
+    ohjeteksti_id BIGINT REFERENCES lokalisoituteksti(id),
+    perusteteksti_id BIGINT REFERENCES lokalisoituteksti(id),
     -- Suorituspolku:
     suorituspolku_id BIGINT REFERENCES suorituspolku(id),
     -- Tutkinnon osa:
@@ -349,7 +349,7 @@ CREATE TABLE sisaltoviite_aud (
     rev INTEGER NOT NULL,
     revtype SMALLINT,
     revend INTEGER,
-    teksti_kappale_id BIGINT,
+    tekstikappale_id BIGINT,
     vanhempi_id BIGINT,
     versio BIGINT,
     pakollinen BOOLEAN,
@@ -396,8 +396,8 @@ CREATE TABLE opetussuunnitelma_liite_aud (
 CREATE TABLE termi (
     id BIGINT NOT NULL PRIMARY KEY,
     koulutustoimija_id BIGINT NOT NULL REFERENCES koulutustoimija(id),
-    termi_id BIGINT REFERENCES lokalisoitu_teksti(id),
-    selitys_id BIGINT REFERENCES lokalisoitu_teksti(id),
+    termi_id BIGINT REFERENCES lokalisoituteksti(id),
+    selitys_id BIGINT REFERENCES lokalisoituteksti(id),
     avain TEXT NOT NULL UNIQUE,
     alaviite BOOLEAN
 );
@@ -417,7 +417,7 @@ CREATE TABLE termi_aud (
 
 CREATE TABLE poistetut (
     id BIGINT NOT NULL PRIMARY KEY,
-    nimi_id BIGINT NOT NULL REFERENCES lokalisoitu_teksti(id),
+    nimi_id BIGINT NOT NULL REFERENCES lokalisoituteksti(id),
     opetussuunnitelma_id BIGINT REFERENCES opetussuunnitelma(id),
     koulutustoimija_id BIGINT REFERENCES koulutustoimija(id),
     poistettu_id BIGINT NOT NULL,
