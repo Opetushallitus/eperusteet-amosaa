@@ -13,20 +13,23 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * European Union Public Licence for more details.
  */
-
 package fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa;
 
 import fi.vm.sade.eperusteet.amosaa.domain.AbstractAuditedEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import java.io.Serializable;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import javax.persistence.*;
+
+import fi.vm.sade.eperusteet.amosaa.domain.ammattitaitovaatimukset.AmmattitaitovaatimuksenKohdealue;
+import fi.vm.sade.eperusteet.amosaa.domain.arviointi.Arviointi;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
+import org.hibernate.envers.RelationTargetAuditMode;
 
 /**
  *
@@ -41,4 +44,41 @@ public class OmaTutkinnonosa extends AbstractAuditedEntity implements Serializab
     @Getter
     @Setter
     private Long id;
+
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    @Getter
+    @Setter
+    private LokalisoituTeksti tavoitteet;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    @JoinTable(name = "ammattitaitovaatimuksenkohdealue_omatutkinnonosa",
+            joinColumns = @JoinColumn(name = "omatutkinnonosa_id"),
+            inverseJoinColumns = @JoinColumn(name = "ammattitaitovaatimuksenkohdealue_id"))
+    @OrderColumn(name = "jarjestys")
+    @Getter
+    @Setter
+    private List<AmmattitaitovaatimuksenKohdealue> ammattitaitovaatimuksetLista = new ArrayList<>();
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @Getter
+    private Arviointi arviointi;
+
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    @Getter
+    @Setter
+    private LokalisoituTeksti ammattitaidonOsoittamistavat;
+
+    public void setArviointi(Arviointi arviointi) {
+        if (Objects.equals(this.arviointi, arviointi)) {
+            return;
+        }
+        if (arviointi == null || this.arviointi == null) {
+            this.arviointi = arviointi;
+        } else {
+            this.arviointi.mergeState(arviointi);
+            this.muokattu();
+        }
+    }
 }

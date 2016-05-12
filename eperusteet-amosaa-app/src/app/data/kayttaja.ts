@@ -26,7 +26,7 @@ module Kayttaja {
 
     export const oikeusVaihtoehdot = () =>
         (["luku", "muokkaus", "lisays", "poisto", "hallinta"]);
-};
+}
 
 
 angular.module("app")

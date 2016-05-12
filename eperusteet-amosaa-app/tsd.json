@@ -17,8 +17,8 @@
     "restangular/restangular.d.ts": {
       "commit": "78ba6e41543e5ababbd1dda19797601be3c1f304"
     },
-    "lodash/lodash.d.ts": {
-      "commit": "78ba6e41543e5ababbd1dda19797601be3c1f304"
+    "lodash/lodash-3.10.d.ts": {
+      "commit": "e12c8e3bcdd77fb05d498ec61525be6ad112dfd6"
     },
     "moment/moment.d.ts": {
       "commit": "93bae1bb4c887c1375a4c1f0c3bb849ff06b8ac6"

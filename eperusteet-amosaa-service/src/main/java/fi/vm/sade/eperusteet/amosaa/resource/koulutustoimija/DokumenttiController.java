@@ -67,7 +67,6 @@ public class DokumenttiController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    @CacheControl(age = CacheControl.ONE_YEAR, nonpublic = false)
     @Transactional(readOnly = true)
     public ResponseEntity<byte[]> get(
             @PathVariable Long ktId,

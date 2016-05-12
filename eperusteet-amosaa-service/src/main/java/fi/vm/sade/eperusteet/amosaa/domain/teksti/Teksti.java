@@ -15,7 +15,6 @@
  */
 package fi.vm.sade.eperusteet.amosaa.domain.teksti;
 
-import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Column;

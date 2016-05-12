@@ -14,7 +14,7 @@ namespace SuoritustapaRyhmat {
                 $scope.peruuta = $uibModalInstance.dismiss;
             }
         }).result;
-};
+}
 
 angular.module("app")
 .run(SuoritustapaRyhmat.init)
@@ -28,7 +28,8 @@ angular.module("app")
         versio: (versioId, historia) => versioId && historia.get(versioId),
         kommentit: (osa) => osa.all("kommentit").getList(),
         pTosa: (peruste, osa) => (osa.tyyppi === "tutkinnonosa" && osa.tosa.tyyppi === "perusteesta"
-            && _.find(peruste.tutkinnonOsat, { id: osa.tosa.perusteentutkinnonosa }))
+            && _.find(peruste.tutkinnonOsat, { id: osa.tosa.perusteentutkinnonosa })),
+        arviointiAsteikot: (Api) => Api.all("arviointiasteikot").getList()
     },
     onEnter: (osa) =>
         Murupolku.register("root.koulutustoimija.opetussuunnitelmat.sisalto.osa", osa.tekstiKappale.nimi),
@@ -91,21 +92,21 @@ angular.module("app")
                 };
 
                 const clickHandler = (event) => {
-                    var ohjeEl = angular.element(event.target).closest('.popover, .popover-element');
+                    var ohjeEl = angular.element(event.target).closest(".popover, .popover-element");
                     if (ohjeEl.length === 0) {
-                        $rootScope.$broadcast('ohje:closeAll');
+                        $rootScope.$broadcast("ohje:closeAll");
                     }
                 };
 
                 const installClickHandler = () => {
-                    $document.off('click', clickHandler);
+                    $document.off("click", clickHandler);
                     $timeout(() => {
-                        $document.on('click', clickHandler);
+                        $document.on("click", clickHandler);
                     });
                 };
 
-                $scope.$on('$destroy', function () {
-                    $document.off('click', clickHandler);
+                $scope.$on("$destroy", function () {
+                    $document.off("click", clickHandler);
                 });
 
                 installClickHandler();
@@ -118,7 +119,7 @@ angular.module("app")
             controller: ($scope) => {}
         },
         tutkinnonosa: {
-            controller: ($scope, peruste) => {
+            controller: ($scope, peruste, arviointiAsteikot) => {
                 $scope.osaamisalat = _.indexBy(peruste.osaamisalat, "uri");
                 $scope.peruste = peruste;
                 $scope.sortableOptions = {
@@ -143,6 +144,87 @@ angular.module("app")
 
                 $scope.addOppimaara = (toteutus) => KoodistoModal.oppiaine(peruste.osaamisalat)
                     .then(res => console.log(res));
+
+                $scope.sortableOptionsArvioinninKohdealueet = Sorting.getSortableOptions(".arviointi-kohdealueet");
+                $scope.sortableOptionsArvioinninKohteet = Sorting.getSortableOptions(".arviointi-kohteet");
+                $scope.sortableOptionsOsaamistasonKriteerit = Sorting.getSortableOptions(".osaamistason-kriteerit");
+                $scope.sortableOptionsAmmattitaitovaatimukset = Sorting.getSortableOptions(".ammattitaitovaatimukset");
+                $scope.sortableOptionsVaatimuksenKohteet = Sorting.getSortableOptions(".vaatimuksen-kohteet");
+                $scope.sortableOptionsVaatimukset = Sorting.getSortableOptions(".vaatimukset");
+
+                $scope.arviointiAsteikot = arviointiAsteikot.plain();
+
+                $scope.lisaaArvioinninKohdealue = () => {
+                    $scope.osa.tosa.omatutkinnonosa = $scope.osa.tosa.omatutkinnonosa || {};
+                    $scope.osa.tosa.omatutkinnonosa.arviointi = $scope.osa.tosa.omatutkinnonosa.arviointi || {};
+                    $scope.osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet
+                        = $scope.osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet || [];
+                    $scope.osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet.push({});
+                };
+                $scope.lisaaArviointiKohde = (arvioinninKohdealue) => {
+                    arvioinninKohdealue.arvioinninKohteet = arvioinninKohdealue.arvioinninKohteet || [];
+                    arvioinninKohdealue.$$uusiArvioinninKohdealue = {};
+                    arvioinninKohdealue.$$uusiAuki = true;
+                };
+                $scope.lisaaArviointiasteikko = (arvioinninKohdealue) => {
+                    arvioinninKohdealue.$$uusiArvioinninKohdealue.osaamistasonKriteerit = [];
+                    const asteikkoId = arvioinninKohdealue.$$uusiArvioinninKohdealue._arviointiasteikko;
+                    const osaamistasot = $scope.arviointiAsteikot[asteikkoId - 1].osaamistasot;
+                    _(osaamistasot)
+                        .each((osaamistaso) => {
+                            arvioinninKohdealue.$$uusiArvioinninKohdealue.osaamistasonKriteerit.push({
+                                _osaamistaso: osaamistaso.id,
+                                kriteerit: []
+                            });
+                        })
+                        .value();
+                    arvioinninKohdealue.arvioinninKohteet.push(arvioinninKohdealue.$$uusiArvioinninKohdealue);
+                    arvioinninKohdealue.$$uusiArvioinninKohdealue = {};
+                    arvioinninKohdealue.$$uusiAuki = false;
+                };
+                $scope.lisaaKriteeri = (osaamistasonKriteeri) => {
+                    osaamistasonKriteeri.kriteerit = osaamistasonKriteeri.kriteerit || [];
+                    osaamistasonKriteeri.kriteerit.push({});
+                };
+                $scope.poistaArvioinninKohdealue = (kohdealue) => {
+                    $scope.osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet
+                        = _.without($scope.osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet, kohdealue);
+                };
+                $scope.poistaArvioinninKohde = (kohdealue, kohde) => {
+                    kohdealue.arvioinninKohteet
+                        = _.without(kohdealue.arvioinninKohteet, kohde);
+                };
+                $scope.poistaKriteeri = (osaamistasonKriteeri, kriteeri) => {
+                    osaamistasonKriteeri.kriteerit
+                        = _.without(osaamistasonKriteeri.kriteerit, kriteeri);
+                };
+
+                $scope.lisaaAmmattitaitovaatimus = () => {
+                    $scope.osa.tosa.omatutkinnonosa = $scope.osa.tosa.omatutkinnonosa || {};
+                    $scope.osa.tosa.omatutkinnonosa.ammattitaitovaatimuksetLista
+                        = $scope.osa.tosa.omatutkinnonosa.ammattitaitovaatimuksetLista || [];
+                    $scope.osa.tosa.omatutkinnonosa.ammattitaitovaatimuksetLista.push({});
+                };
+                $scope.lisaaVaatimuksenKohde = (ammattitaitovaatimus) => {
+                    ammattitaitovaatimus.vaatimuksenKohteet = ammattitaitovaatimus.vaatimuksenKohteet || [];
+                    ammattitaitovaatimus.vaatimuksenKohteet.push({
+                    });
+                };
+                $scope.lisaaVaatimus = (vaatimuksenKohde) => {
+                    vaatimuksenKohde.vaatimukset = vaatimuksenKohde.vaatimukset || [];
+                    vaatimuksenKohde.vaatimukset.push({});
+                };
+                $scope.poistaVaatimuksenKohde = (ammattitaitovaatimus, vaatimuksenKohde) => {
+                    ammattitaitovaatimus.vaatimuksenKohteet
+                        = _.without(ammattitaitovaatimus.vaatimuksenKohteet, vaatimuksenKohde);
+                };
+                $scope.poistaAmmattitaitovaatimus = (ammattitaitovaatimus) => {
+                    $scope.osa.tosa.omatutkinnonosa.ammattitaitovaatimuksetLista
+                        = _.without($scope.osa.tosa.omatutkinnonosa.ammattitaitovaatimuksetLista, ammattitaitovaatimus);
+                };
+                $scope.poistaVaatimus = (vaatimuksenKohde, vaatimus) => {
+                    vaatimuksenKohde.vaatimukset = _.without(vaatimuksenKohde.vaatimukset, vaatimus);
+                }
             }
         },
         tutkinnonosaryhma: {
@@ -151,7 +233,7 @@ angular.module("app")
         suorituspolku: {
             controller: ($rootScope, $scope, osa, peruste: REl) => {
                 const tosat = _.indexBy(Perusteet.getTutkinnonOsat(peruste), "id");
-                const tosaViitteet = _(_.cloneDeep(Perusteet.getTosaViitteet(Perusteet.getSuoritustapa(peruste))))
+                const tosaViitteet: any = _(_.cloneDeep(Perusteet.getTosaViitteet(Perusteet.getSuoritustapa(peruste))))
                     .each(viite => viite.$$tosa = tosat[viite._tutkinnonOsa])
                     .indexBy("id")
                     .value();
@@ -266,9 +348,9 @@ angular.module("app")
 
                 $scope.poistaKommentti = (kommentti) => {
                     Varmistusdialogi.dialogi({
-                        otsikko: 'vahvista-poisto',
-                        teksti: 'poistetaanko-kommentti',
-                        primaryBtn: 'poista',
+                        otsikko: "vahvista-poisto",
+                        teksti: "poistetaanko-kommentti",
+                        primaryBtn: "poista",
                         successCb: () => {
                             kommentti.remove()
                                 .then(() => {

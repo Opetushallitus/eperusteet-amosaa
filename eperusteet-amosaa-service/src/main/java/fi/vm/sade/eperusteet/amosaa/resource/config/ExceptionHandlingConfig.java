@@ -89,7 +89,6 @@ public class ExceptionHandlingConfig extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = {
         NestedRuntimeException.class,
         NestedCheckedException.class,
-        IOException.class,
         ServletException.class,
         ValidationException.class})
     public ResponseEntity<Object> handleAllExceptions(Exception e, WebRequest request) throws Exception {

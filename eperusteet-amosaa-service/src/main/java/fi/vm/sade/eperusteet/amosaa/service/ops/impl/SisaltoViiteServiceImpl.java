@@ -183,6 +183,24 @@ public class SisaltoViiteServiceImpl implements SisaltoViiteService {
         }
 
         Tutkinnonosa mappedOsa = mapper.map(uusi.getTosa(), Tutkinnonosa.class);
+        if (mappedOsa.getTyyppi().equals(TutkinnonosaTyyppi.OMA)
+                && mappedOsa.getOmatutkinnonosa() != null
+                && mappedOsa.getOmatutkinnonosa().getAmmattitaitovaatimuksetLista() != null) {
+
+            mappedOsa.getOmatutkinnonosa().getAmmattitaitovaatimuksetLista().stream()
+                    .filter(ammattitaitovaatimuksenKohdealue -> ammattitaitovaatimuksenKohdealue.getVaatimuksenKohteet() != null)
+                    .forEach(ammattitaitovaatimuksenKohdealue -> ammattitaitovaatimuksenKohdealue.getVaatimuksenKohteet().stream()
+                            .forEach(ammattitaitovaatimuksenKohde -> {
+
+                                ammattitaitovaatimuksenKohde.setAmmattitaitovaatimuksenkohdealue(ammattitaitovaatimuksenKohdealue);
+
+                                if (ammattitaitovaatimuksenKohde.getVaatimukset() != null) {
+                                    ammattitaitovaatimuksenKohde.getVaatimukset().stream()
+                                            .forEach(ammattitaitovaatimus -> ammattitaitovaatimus.setAmmattitaitovaatimuksenkohde(ammattitaitovaatimuksenKohde));
+                                }
+                            }));
+        }
+
         for (TutkinnonosaToteutus toteutus : mappedOsa.getToteutukset()) {
             toteutus.setTutkinnonosa(mappedOsa);
         }
@@ -221,8 +239,7 @@ public class SisaltoViiteServiceImpl implements SisaltoViiteService {
 
         if (ops.getTyyppi() != OpsTyyppi.POHJA) {
             uusi.setLiikkumaton(viite.isLiikkumaton());
-        }
-        else {
+        } else {
             viite.setPakollinen(uusi.isPakollinen());
             viite.setLiikkumaton(uusi.isLiikkumaton());
             viite.setOhjeteksti(LokalisoituTeksti.of(uusi.getOhjeteksti()));

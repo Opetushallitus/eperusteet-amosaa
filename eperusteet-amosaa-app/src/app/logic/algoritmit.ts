@@ -1,14 +1,7 @@
 namespace Algoritmit {
     export const match = (input, to) => {
         let vertailu = KaannaService.kaanna(to);
-        const result =  _.isEmpty(input) || vertailu.toLowerCase().indexOf(input.toLowerCase()) !== -1;
-        // if (result) {
-        //     console.log(result, input, vertailu);
-        // }
-        if (!to) {
-            console.log(to)
-        }
-        return result;
+        return _.isEmpty(input) || vertailu.toLowerCase().indexOf(input.toLowerCase()) !== -1;
     };
 
     export const traverseUp = (obj, cb, parentKey = "$$traverseParent") => {

@@ -17,7 +17,9 @@
 package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
+
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,6 +34,6 @@ import lombok.Setter;
 public class ArvioinninKohdeDto {
     private LokalisoituTekstiDto otsikko;
     private LokalisoituTekstiDto selite;
-    private Long arviointiAsteikko;
+    private Reference arviointiasteikko;
     private Set<OsaamistasonKriteeriDto> osaamistasonKriteerit;
 }

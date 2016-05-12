@@ -13,10 +13,11 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * European Union Public Licence for more details.
  */
-
 package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import fi.vm.sade.eperusteet.amosaa.dto.Reference;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.AmmattitaitovaatimusKohdealueetDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import java.util.List;
 import lombok.Getter;
@@ -36,5 +37,5 @@ public class OsaamistavoiteLaajaDto extends OsaamistavoiteDto {
     private List<AmmattitaitovaatimusKohdealueetDto> ammattitaitovaatimuksetLista;
     private String koodiUri;
     private String koodiArvo;
-    private Long esitieto;
+    private Reference esitieto;
 }
