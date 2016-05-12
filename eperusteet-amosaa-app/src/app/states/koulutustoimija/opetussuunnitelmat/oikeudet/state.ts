@@ -16,13 +16,14 @@ angular.module("app")
 
                 $scope.oikeus = (kayttaja) => $scope.oikeudet[kayttaja.id] ? $scope.oikeudet[kayttaja.id].oikeus : 'luku';
 
-                _.each($scope.kayttajat, (kayttaja) => kayttajanTieto(kayttaja.id)
+                _.each($scope.kayttajat, (kayttaja) => kayttajanTieto(kayttaja.oid)
                     .then(res => {
                         kayttaja.$$nimi = Kayttajatiedot.parsiEsitysnimi(res);
                         $scope.oikeudet[kayttaja.id] = $scope.oikeudet[kayttaja.id] || {
                             oikeus: "luku"
                         };
-                    }));
+                    })
+                    .catch(() => kayttaja.$$nimi = kayttaja.oid));
 
                 $scope.valitse = (oikeus: string, kayttaja) => {
                     const vaihtoehto = _.clone($scope.oikeudet[kayttaja.id]);
