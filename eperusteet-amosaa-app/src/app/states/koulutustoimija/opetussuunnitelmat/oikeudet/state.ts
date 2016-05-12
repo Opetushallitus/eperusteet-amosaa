@@ -19,10 +19,8 @@ angular.module("app")
 
                 _.each($scope.kayttajat, (kayttaja) => nimiLataaja(kayttaja.oid)
                     .then(res => {
-                        kayttaja.$$nimi = Kayttajatiedot.parsiEsitysnimi(res);
-                        $scope.oikeudet[kayttaja.id] = $scope.oikeudet[kayttaja.id] || {
-                            oikeus: "luku"
-                        };
+                        kayttaja.$$nimi = res;
+                        $scope.oikeudet[kayttaja.id] = $scope.oikeudet[kayttaja.id] || { oikeus: "luku" };
                     })
                     .catch(() => kayttaja.$$nimi = kayttaja.oid));
 

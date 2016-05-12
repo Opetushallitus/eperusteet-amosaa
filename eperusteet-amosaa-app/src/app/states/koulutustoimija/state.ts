@@ -10,7 +10,7 @@ angular.module("app")
             $q((resolve) =>
                 koulutustoimija.one("kayttajat", kayttajaOid).get()
                     .then(res => resolve(Kayttajatiedot.parsiEsitysnimi(res)))
-                    .catch(() => resolve(KaannaService.kaanna("muokkaajaa-ei-loytynyt")))),
+                    .catch(() => resolve(KaannaService.kaanna("muokkaajaa-ei-loytynyt") + " (" + kayttajaOid + ")"))),
         opetussuunnitelmat: (koulutustoimija) => koulutustoimija.all("opetussuunnitelmat").getList(),
         yhteiset: (opetussuunnitelmat) => _.filter(opetussuunnitelmat, { tyyppi: "yhteinen" }),
         kayttajanTieto: (koulutustoimija) => (kayttajaId) => koulutustoimija.one("kayttajat", kayttajaId).get(),
