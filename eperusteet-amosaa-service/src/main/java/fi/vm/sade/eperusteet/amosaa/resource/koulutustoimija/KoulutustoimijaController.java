@@ -59,7 +59,7 @@ public class KoulutustoimijaController {
         return new ResponseEntity<>(kayttajaTietoService.getKayttajat(ktId), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{ktId}/kayttaja/{kayttajaOid}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{ktId}/kayttajat/{kayttajaOid}", method = RequestMethod.GET)
     public ResponseEntity<KayttajanTietoDto> getKayttajat(
             @PathVariable final Long ktId,
             @PathVariable final String kayttajaOid) {
