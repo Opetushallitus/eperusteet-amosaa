@@ -10,7 +10,7 @@ angular.module("app")
                 opsId: res.id
             }, {
                 reload: true // Reloads koulutustoimijainfo and user permissions
-            }))
+            })),
     },
     views: {
         "": {
@@ -21,6 +21,9 @@ angular.module("app")
                 $scope.checkOph = Koulutustoimijat.isOpetushallitus;
                 $scope.tiedotteet = tiedotteet;
                 $scope.toggleTiedotteet = () => $scope.$$showTiedotteet = !$scope.$$showTiedotteet;
+                $scope.suodataOpetussuunnitelmat = (opsit, search) =>
+                    _.each(opsit, (ops) => {
+                        ops.$$hidden = !_.isEmpty(search) && !Algoritmit.match(search, ops.nimi) });
             }
         },
         pohjat: {
