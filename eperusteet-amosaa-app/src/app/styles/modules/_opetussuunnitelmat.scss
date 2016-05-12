@@ -183,7 +183,7 @@ $ops-top-vertical-margin: 10px;
 
         .nakyma {
             .vasen {
-                padding: 8px 0 4px 14px;
+                padding: 6px 0 4px 14px;
                 width: 290px;
                 position: absolute;
                 bottom: 0;
@@ -203,7 +203,7 @@ $ops-top-vertical-margin: 10px;
             }
 
             .ylapalkki {
-                height: $input-height-base + $ops-top-vertical-margin;
+                height: $input-height-base + $ops-top-vertical-margin - 3px;
                 border-bottom: 1px solid #DEDEDF;
 
                 p {
