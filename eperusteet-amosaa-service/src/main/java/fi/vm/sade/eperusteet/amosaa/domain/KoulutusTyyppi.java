@@ -22,8 +22,11 @@ import com.fasterxml.jackson.annotation.JsonCreator;
  * @author nkala
  */
 public enum KoulutusTyyppi {
+    PERUSTUTKINTO("koulutustyyppi_1"),
     AMMATTITUTKINTO("koulutustyyppi_11"),
-    ERIKOISAMMATTITUTKINTO("koulutustyyppi_12");
+    ERIKOISAMMATTITUTKINTO("koulutustyyppi_12"),
+    TELMA("koulutustyyppi_5"),
+    VALMA("koulutustyyppi_18");
 
     private final String tyyppi;
 

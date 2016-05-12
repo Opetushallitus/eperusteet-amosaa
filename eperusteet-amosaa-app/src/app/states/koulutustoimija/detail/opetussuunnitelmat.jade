@@ -10,10 +10,13 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
     div.row
       div.col-xs-5
         div.form-group.has-feedback.has-feedback-left
-          input.form-control(type="text")
+          input.form-control(ng-change="suodataOpetussuunnitelmat(opetussuunnitelmat, opsSearch)"
+            type="text"
+            ng-model="opsSearch"
+            placeholder="{{ 'hae' | kaanna }}")
           i.form-control-feedback.glyphicon.glyphicon-search(style="color: gray;")
       div.checkbox-text.col-xs-5
-        div.checkbox
+        // div.checkbox
           label
             input(type="checkbox")
             span(kaanna="'tarkennettu-haku'")
@@ -30,19 +33,19 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
               span(kaanna="'tutkinnon-nimi'")
               span=" "
               span.glyphicon.glyphicon-sort-by-attributes
-          th
+          // th
             a(href="#")
               span(kaanna="'osaamisala'")
               span=" "
               span.glyphicon.glyphicon-sort-by-attributes
-          th
+          // th
             a(href="#")
               span(kaanna="'tutkinnon-tyyppi'")
               span=" "
               span.glyphicon.glyphicon-sort-by-attributes
           th
       tbody
-        tr(ng-repeat="ops in opetussuunnitelmat")
+        tr(ng-hide="ops.$$hidden" ng-repeat="ops in opetussuunnitelmat")
           td
             div
               div(class="{{ 'tilavari-' + ops.tila }}")
@@ -53,10 +56,10 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
             div
               a(href="" ui-sref="root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot({ opsId: ops.id })")
                 span.ellipsis(kaanna="ops.nimi")
-          td
+          // td
             div
               span.ellipsis(ng-show="ops.osaamisalat.length > 0", kaanna="ops.osaamisalat[0].nimi")
-          td
+          // td
             div
           td
             div

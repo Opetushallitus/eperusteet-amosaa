@@ -10,7 +10,7 @@ angular.module("app")
                 opsId: res.id
             }, {
                 reload: true // Reloads koulutustoimijainfo and user permissions
-            }))
+            })),
     },
     views: {
         "": {
@@ -21,6 +21,9 @@ angular.module("app")
                 $scope.checkOph = Koulutustoimijat.isOpetushallitus;
                 $scope.tiedotteet = tiedotteet;
                 $scope.toggleTiedotteet = () => $scope.$$showTiedotteet = !$scope.$$showTiedotteet;
+                $scope.suodataOpetussuunnitelmat = (opsit, search) =>
+                    _.each(opsit, (ops) => {
+                        ops.$$hidden = !_.isEmpty(search) && !Algoritmit.match(search, ops.nimi) });
             }
         },
         pohjat: {
@@ -50,7 +53,7 @@ angular.module("app")
             }
         },
         tiedotteet: {
-            controller: ($scope, tiedotteet) => {
+            controller: ($scope, tiedotteet, kayttajanTieto) => {
                 $scope.edit = EditointikontrollitService.createListRestangular($scope, "tiedotteet", tiedotteet);
                 $scope.remove = (tiedote) => {
                     if (!tiedote) {
@@ -64,6 +67,10 @@ angular.module("app")
                             EditointikontrollitService.cancel();
                         });
                 };
+
+                _.each(tiedotteet, (tiedote) =>
+                    kayttajanTieto(tiedote.luoja)
+                        .then(res => tiedote.$$nimi = Kayttajatiedot.parsiEsitysnimi(res)));
 
                 $scope.kuittaa = (tiedote) => {
                     tiedote.one("kuittaa").customPOST();

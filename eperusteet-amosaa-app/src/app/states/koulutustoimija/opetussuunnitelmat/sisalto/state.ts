@@ -54,6 +54,10 @@ angular.module("app")
                 });
 
                 $scope.suodata = (search) => {
+                    if (!!$scope.misc.isSearching !== !_.isEmpty(search)) {
+                        $scope.misc.isSearching = !_.isEmpty(search);
+                    }
+
                     Algoritmit.traverse($scope.sivunavi, "lapset", (item) => {
                         item.$$hidden = !Algoritmit.match(search, item.$$obj.tekstiKappale.nimi);
                         !item.$$hidden && Algoritmit.traverseUp(item, parentItem => parentItem.$$hidden = false);
@@ -85,6 +89,14 @@ angular.module("app")
                                 });
                         });
                 };
+
+                $scope.misc = {
+                    toggleItem: (event, item) => {
+                        event.stopPropagation();
+                        item.$$closed = !item.$$closed;
+                    }
+                };
+
             }
         },
     }

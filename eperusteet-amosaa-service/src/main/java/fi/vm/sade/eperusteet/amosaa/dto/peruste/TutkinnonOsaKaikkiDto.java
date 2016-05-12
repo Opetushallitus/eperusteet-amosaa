@@ -30,7 +30,6 @@ import lombok.Setter;
 @Setter
 public class TutkinnonOsaKaikkiDto extends PerusteenOsaDto {
     private final String osanTyyppi = "tutkinnonosa";
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private LokalisoituTekstiDto tavoitteet;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private ArviointiDto arviointi;

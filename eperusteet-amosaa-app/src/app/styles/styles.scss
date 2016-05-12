@@ -52,11 +52,11 @@ $fa-font-path: "fonts";
 }
 
 #raamit-footer {
-    margin-top: 240px !important;
+    display: none !important;
 }
 
 *::-webkit-scrollbar {
-    width: 11px;
+    width: 6px;
 }
 
 *::-webkit-scrollbar-track {
@@ -69,4 +69,9 @@ $fa-font-path: "fonts";
     &:hover {
         background-color: #ddd;
     }
+}
+
+.pointable {
+    cursor: pointer;
+    user-select: none;
 }

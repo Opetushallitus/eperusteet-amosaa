@@ -16,9 +16,9 @@
 
 package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.List;
-import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,10 +28,9 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PerusteKaikkiDto extends PerusteBaseDto {
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    Set<SuoritustapaLaajaDto> suoritustavat;
-
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+//    Set<SuoritustapaLaajaDto> suoritustavat;
     List<TutkinnonOsaKaikkiDto> tutkinnonOsat;
 }

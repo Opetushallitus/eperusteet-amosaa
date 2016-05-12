@@ -1,7 +1,60 @@
 $box-table-bgcolor: #199dd0;
 $box-table-padding: 5px;
+$tosa-color: #E9F5FF;
 
 .tutkinnonosa {
+  .toteutukset {
+    .toolbar {
+      position: relative;
+      float: right;
+      top: -41px;
+    }
+
+    .toteutus-esitys {
+      margin-top: 10px;
+      border: 1px solid $tosa-color;
+
+      .otsikko { font-size: 16px;
+        background: $tosa-color;
+        padding: 6px;
+        cursor: pointer;
+
+        .turbochevron {
+          margin-right: 5px;
+        }
+      }
+
+      .sisalto {
+        margin-top: 10px;
+        padding: 0 10px 0 10px;
+      }
+    }
+
+    .toteutus {
+      padding: 5px;
+      margin-top: 10px;
+      background: $tosa-color;
+
+      .content-toggler-header {
+        margin-top: 10px;
+      }
+
+      .toolbar-bottom {
+        margin-top: 14px;
+      }
+
+      .osaamisalatieto {
+        margin: 8px 0 5px 0;
+      }
+    }
+  }
+
+  .toteutus-placeholder {
+    margin-top: 10px;
+    height: 44px;
+    background: $tosa-color;
+  }
+
     .arviointi-kohdealueet {
 
         .arviointi-kohteet {

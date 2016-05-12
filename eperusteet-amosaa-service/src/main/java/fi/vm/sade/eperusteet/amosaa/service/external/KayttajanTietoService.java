@@ -66,6 +66,9 @@ public interface KayttajanTietoService {
     Set<String> getUserOrganizations();
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
+    KayttajanTietoDto getKayttaja(@P("ktId") Long ktId, String oid);
+
+    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
     KayttajanTietoDto getKayttaja(@P("ktId") Long ktId, Long oid);
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")

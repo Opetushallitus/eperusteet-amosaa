@@ -14,23 +14,25 @@
  * European Union Public Licence for more details.
  */
 
-package fi.vm.sade.eperusteet.amosaa.dto.peruste;
+package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
-
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
 
 /**
  *
- * @author jhyoty
+ * @author nkala
  */
 @Getter
 @Setter
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class OsaamistasonKriteeriDto {
-    private Reference osaamistaso;
-    private List<LokalisoituTekstiDto> kriteerit;
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class TutkinnonosaToteutusDto {
+    private Long id;
+    private LokalisoituTekstiDto otsikko;
+    private TekstiosaDto tavatjaymparisto;
+    private TekstiosaDto arvioinnista;
+    private String osaamisalaKoodi;
+    private String oppiaineKoodi;
+    private String kurssiKoodi;
 }

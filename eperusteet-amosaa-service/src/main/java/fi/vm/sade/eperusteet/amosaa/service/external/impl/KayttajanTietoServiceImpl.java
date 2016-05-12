@@ -192,13 +192,21 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
     }
 
     @Override
+    public KayttajanTietoDto getKayttaja(Long koulutustoimijaId, String oid) {
+        Kayttaja kayttaja = kayttajaRepository.findOneByOid(oid);
+        if (kayttaja != null) {
+            return client.hae(oid);
+        }
+        return null;
+    }
+    
+    @Override
     public KayttajanTietoDto getKayttaja(Long koulutustoimijaId, Long id) {
         // FIXME
 //        List<KayttajaoikeusTyyppi> oikeudet = kayttajaoikeusRepository.findKoulutustoimijaOikeus(koulutustoimijaId, kayttajaRepository.findOneByOid(oid).getId());
 //        if (oikeudet.isEmpty()) {
 //            throw new BusinessRuleViolationException("kayttajan-pitaa-kuulua-koulutustoimijaan");
 //        }
-        
         return hae(id);
     }
 

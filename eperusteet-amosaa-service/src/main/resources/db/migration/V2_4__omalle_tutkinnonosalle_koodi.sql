@@ -1,0 +1,2 @@
+ALTER TABLE tutkinnonosa ADD COLUMN koodi VARCHAR(255);
+ALTER TABLE tutkinnonosa_aud ADD COLUMN koodi VARCHAR(255);

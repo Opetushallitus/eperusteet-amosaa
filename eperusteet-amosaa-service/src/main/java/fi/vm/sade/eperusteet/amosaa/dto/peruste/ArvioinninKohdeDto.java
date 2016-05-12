@@ -16,7 +16,7 @@
 
 package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 
@@ -30,7 +30,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ArvioinninKohdeDto {
     private LokalisoituTekstiDto otsikko;
     private LokalisoituTekstiDto selite;
