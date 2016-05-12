@@ -63,23 +63,27 @@ mixin tosaToteutus()
 
 
 mixin omaTosaSisalto()
-  +contentToggler("$$showAmmattitaitovaatimukset", "'ammattitaitovaatimukset'")
-    .ammattitaitovaatimukset(ui-sortable="sortableOptionsAmmattitaitovaatimukset"
-                             ng-model="osa.tosa.omatutkinnonosa.ammattitaitovaatimuksetLista")
-      div(ng-repeat="ammattitaitovaatimus in osa.tosa.omatutkinnonosa.ammattitaitovaatimuksetLista")
-        +ammattitaitovaatimus
-    button.btn.btn-default(type='button' ng-click="lisaaAmmattitaitovaatimus()" kaanna="'lisaa-ammattitaitovaatimus'")
+  div(ng-if="$$ekEditing")
+    +contentToggler("$$showTavoitteet", "'tavoitteet'")
+      div(style="margin-bottom: 16px" ckeditor slocalized ng-model="osa.tosa.omatutkinnonosa.tavoitteet" layout="normal")
 
-  +contentToggler("$$showArviointi", "'arviointi'")
-    .arviointi-kohdealueet(ui-sortable="sortableOptionsArvioinninKohdealueet"
-                           ng-model="osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet")
-      div(ng-repeat="arvioinninKohdealue in osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet")
-        +arviointi
-    button.btn.btn-default(type='button' ng-click="lisaaArvioinninKohdealue()" kaanna="'lisaa-kohdealue'")
+    +contentToggler("$$showAmmattitaitovaatimukset", "'ammattitaitovaatimukset'")
+      .ammattitaitovaatimukset(ui-sortable="sortableOptionsAmmattitaitovaatimukset"
+                               ng-model="osa.tosa.omatutkinnonosa.ammattitaitovaatimuksetLista")
+        div(ng-repeat="ammattitaitovaatimus in osa.tosa.omatutkinnonosa.ammattitaitovaatimuksetLista")
+          +ammattitaitovaatimus
+      button.btn.btn-default(type='button' ng-click="lisaaAmmattitaitovaatimus()" kaanna="'lisaa-ammattitaitovaatimus'")
 
-  +contentToggler("$$showAmmattitaidonOsoittamistavat", "'ammattitaidon-osoittamistavat'")
-    div(style="margin-bottom: 16px"
-        ckeditor slocalized ng-model="osa.tosa.omatutkinnonosa.ammattitaidonOsoittamistavat" layout="normal")
+    +contentToggler("$$showArviointi", "'arviointi'")
+      .arviointi-kohdealueet(ui-sortable="sortableOptionsArvioinninKohdealueet"
+                             ng-model="osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet")
+        div(ng-repeat="arvioinninKohdealue in osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet")
+          +arviointi
+      button.btn.btn-default(type='button' ng-click="lisaaArvioinninKohdealue()" kaanna="'lisaa-kohdealue'")
+
+    +contentToggler("$$showAmmattitaidonOsoittamistavat", "'ammattitaidon-osoittamistavat'")
+      div(style="margin-bottom: 16px"
+          ckeditor slocalized ng-model="osa.tosa.omatutkinnonosa.ammattitaidonOsoittamistavat" layout="normal")
 
   div(ng-if="!$$ekEditing")
     +contentToggler("$$showTavoitteet", "'tavoitteet'")

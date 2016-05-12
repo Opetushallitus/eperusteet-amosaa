@@ -2,7 +2,7 @@
 
 CREATE TABLE arviointi (
   id BIGINT PRIMARY KEY NOT NULL,
-  lisatiedot_id BIGINT REFERENCES lokalisoitu_teksti (id)
+  lisatiedot_id BIGINT REFERENCES lokalisoituteksti (id)
 );
 
 CREATE TABLE arviointi_aud (
@@ -16,25 +16,25 @@ CREATE TABLE arviointi_aud (
 
 CREATE TABLE arvioinninkohdealue (
   id BIGINT PRIMARY KEY NOT NULL,
-  otsikko_id BIGINT REFERENCES lokalisoitu_teksti (id)
+  otsikko_id BIGINT REFERENCES lokalisoituteksti (id)
 );
 
 CREATE TABLE arviointi_arvioinninkohdealue (
   arviointi_id BIGINT NOT NULL REFERENCES arviointi (id),
   arvioinninkohdealue_id BIGINT NOT NULL REFERENCES arvioinninkohdealue (id),
-  arvioinnin_kohdealueet_order INTEGER NOT NULL,
-  PRIMARY KEY (arviointi_id, arvioinnin_kohdealueet_order),
+  arvioinninKohdealueet_order INTEGER NOT NULL,
+  PRIMARY KEY (arviointi_id, arvioinninKohdealueet_order),
   UNIQUE (arvioinninkohdealue_id)
 );
 
 CREATE TABLE arviointi_arvioinninkohdealue_aud (
   arviointi_id BIGINT NOT NULL,
   arvioinninkohdealue_id BIGINT NOT NULL,
-  arvioinnin_kohdealueet_order INTEGER NOT NULL,
+  arvioinninKohdealueet_order INTEGER NOT NULL,
   rev INTEGER NOT NULL REFERENCES revinfo (rev),
   revtype SMALLINT,
   revend INTEGER REFERENCES revinfo (rev),
-  PRIMARY KEY (arviointi_id, arvioinninkohdealue_id, arvioinnin_kohdealueet_order, rev)
+  PRIMARY KEY (arviointi_id, arvioinninkohdealue_id, arvioinninKohdealueet_order, rev)
 );
 
 CREATE TABLE arviointiasteikko (
@@ -43,7 +43,7 @@ CREATE TABLE arviointiasteikko (
 
 CREATE TABLE osaamistaso (
   id BIGINT PRIMARY KEY NOT NULL,
-  otsikko_id BIGINT REFERENCES lokalisoitu_teksti (id)
+  otsikko_id BIGINT REFERENCES lokalisoituteksti (id)
 );
 
 CREATE TABLE arviointiasteikko_osaamistaso (
@@ -70,7 +70,7 @@ CREATE TABLE osaamistasonkriteeri_aud (
 
 CREATE TABLE osaamistasonkriteeri_tekstipalanen (
   osaamistasonkriteeri_id BIGINT NOT NULL REFERENCES osaamistasonkriteeri (id),
-  tekstipalanen_id BIGINT NOT NULL REFERENCES lokalisoitu_teksti (id),
+  tekstipalanen_id BIGINT NOT NULL REFERENCES lokalisoituteksti (id),
   kriteerit_order INTEGER NOT NULL,
   PRIMARY KEY (osaamistasonkriteeri_id, kriteerit_order)
 );
@@ -88,15 +88,15 @@ CREATE TABLE osaamistasonkriteeri_tekstipalanen_aud (
 CREATE TABLE arvioinninkohde (
   id BIGINT PRIMARY KEY NOT NULL,
   arviointiasteikko_id BIGINT REFERENCES arviointiasteikko (id),
-  otsikko_id BIGINT REFERENCES lokalisoitu_teksti (id),
-  selite_id BIGINT REFERENCES lokalisoitu_teksti (id)
+  otsikko_id BIGINT REFERENCES lokalisoituteksti (id),
+  selite_id BIGINT REFERENCES lokalisoituteksti (id)
 );
 
 CREATE TABLE arvioinninkohde_aud (
   id BIGINT NOT NULL,
   arviointiasteikko_id BIGINT,
   otsikko_id BIGINT,
-  selite_id BIGINT REFERENCES lokalisoitu_teksti (id),
+  selite_id BIGINT REFERENCES lokalisoituteksti (id),
   rev INTEGER NOT NULL REFERENCES revinfo (rev),
   revtype SMALLINT,
   revend INTEGER REFERENCES revinfo (rev),
@@ -105,36 +105,36 @@ CREATE TABLE arvioinninkohde_aud (
 
 CREATE TABLE arvioinninkohde_osaamistasonkriteeri (
   arvioinninkohde_id BIGINT NOT NULL REFERENCES arvioinninkohde (id),
-  osaamistason_kriteerit_id BIGINT NOT NULL REFERENCES osaamistasonkriteeri (id),
-  PRIMARY KEY (arvioinninkohde_id, osaamistason_kriteerit_id),
-  UNIQUE (osaamistason_kriteerit_id)
+  osaamistasonKriteerit_id BIGINT NOT NULL REFERENCES osaamistasonkriteeri (id),
+  PRIMARY KEY (arvioinninkohde_id, osaamistasonKriteerit_id),
+  UNIQUE (osaamistasonKriteerit_id)
 );
 
 CREATE TABLE arvioinninkohde_osaamistasonkriteeri_aud (
   arvioinninkohde_id BIGINT NOT NULL,
-  osaamistason_kriteerit_id BIGINT NOT NULL,
+  osaamistasonKriteerit_id BIGINT NOT NULL,
   rev INTEGER NOT NULL REFERENCES revinfo (rev),
   revtype SMALLINT,
   revend INTEGER REFERENCES revinfo (rev),
-  PRIMARY KEY (rev, arvioinninkohde_id, osaamistason_kriteerit_id)
+  PRIMARY KEY (rev, arvioinninkohde_id, osaamistasonKriteerit_id)
 );
 
 CREATE TABLE arvioinninkohdealue_arvioinninkohde (
   arvioinninkohdealue_id BIGINT NOT NULL REFERENCES arvioinninkohdealue (id),
   arvioinninkohde_id BIGINT NOT NULL REFERENCES arvioinninkohde (id),
-  arvioinnin_kohteet_order INTEGER NOT NULL,
-  PRIMARY KEY (arvioinninkohdealue_id, arvioinnin_kohteet_order),
+  arvioinninKohteet_order INTEGER NOT NULL,
+  PRIMARY KEY (arvioinninkohdealue_id, arvioinninKohteet_order),
   UNIQUE (arvioinninkohde_id)
 );
 
 CREATE TABLE arvioinninkohdealue_arvioinninkohde_aud (
   arvioinninkohdealue_id BIGINT NOT NULL,
   arvioinninkohde_id BIGINT NOT NULL,
-  arvioinnin_kohteet_order INTEGER NOT NULL,
+  arvioinninKohteet_order INTEGER NOT NULL,
   rev INTEGER NOT NULL REFERENCES revinfo (rev),
   revtype SMALLINT,
   revend INTEGER REFERENCES revinfo (rev),
-  PRIMARY KEY (arvioinninkohdealue_id, arvioinninkohde_id, arvioinnin_kohteet_order, rev)
+  PRIMARY KEY (arvioinninkohdealue_id, arvioinninkohde_id, arvioinninKohteet_order, rev)
 );
 
 CREATE TABLE arvioinninkohdealue_aud (
@@ -150,7 +150,7 @@ CREATE TABLE arvioinninkohdealue_aud (
 
 CREATE TABLE ammattitaitovaatimuksenkohdealue (
     id BIGINT PRIMARY KEY NOT NULL,
-    otsikko_id BIGINT REFERENCES lokalisoitu_teksti (id)
+    otsikko_id BIGINT REFERENCES lokalisoituteksti (id)
 );
 
 CREATE TABLE ammattitaitovaatimuksenkohdealue_aud (
@@ -165,8 +165,8 @@ CREATE TABLE ammattitaitovaatimuksenkohdealue_aud (
 CREATE TABLE ammattitaitovaatimuksenkohde (
     id BIGINT PRIMARY KEY NOT NULL,
     ammattitaitovaatimuksenkohdealue_id BIGINT NOT NULL REFERENCES ammattitaitovaatimuksenkohdealue (id),
-    otsikko_id BIGINT REFERENCES lokalisoitu_teksti (id),
-    selite_id BIGINT REFERENCES lokalisoitu_teksti (id)
+    otsikko_id BIGINT REFERENCES lokalisoituteksti (id),
+    selite_id BIGINT REFERENCES lokalisoituteksti (id)
 );
 
 CREATE TABLE ammattitaitovaatimuksenkohde_aud (
@@ -185,9 +185,9 @@ CREATE TABLE osaamistavoite (
     laajuus NUMERIC(10,2),
     pakollinen BOOLEAN NOT NULL,
     arviointi_id BIGINT REFERENCES arviointi (id),
-    nimi_id BIGINT REFERENCES lokalisoitu_teksti (id),
-    tavoitteet_id BIGINT REFERENCES lokalisoitu_teksti (id),
-    tunnustaminen_id BIGINT REFERENCES lokalisoitu_teksti (id),
+    nimi_id BIGINT REFERENCES lokalisoituteksti (id),
+    tavoitteet_id BIGINT REFERENCES lokalisoituteksti (id),
+    tunnustaminen_id BIGINT REFERENCES lokalisoituteksti (id),
     esitieto_id BIGINT REFERENCES osaamistavoite (id),
     kieli CHARACTER VARYING(255),
     koodi_uri CHARACTER VARYING(255),
@@ -248,7 +248,7 @@ CREATE TABLE ammattitaitovaatimuksenkohdealue_omatutkinnonosa_aud (
 CREATE TABLE ammattitaitovaatimus (
     id BIGINT PRIMARY KEY NOT NULL,
     ammattitaitovaatimuksenkohde_id BIGINT NOT NULL REFERENCES ammattitaitovaatimuksenkohde (id),
-    selite_id BIGINT REFERENCES lokalisoitu_teksti (id),
+    selite_id BIGINT REFERENCES lokalisoituteksti (id),
     koodi CHARACTER VARYING(20),
     jarjestys INTEGER
 );
@@ -269,11 +269,11 @@ CREATE TABLE ammattitaitovaatimus_aud (
 
 CREATE TABLE tutkinnonosa_osaalue (
   id BIGINT PRIMARY KEY NOT NULL,
-  nimi_id BIGINT REFERENCES lokalisoitu_teksti (id),
+  nimi_id BIGINT REFERENCES lokalisoituteksti (id),
   kieli CHARACTER VARYING(255),
   koodi_uri CHARACTER VARYING(255),
   koodi_arvo CHARACTER VARYING(255),
-  kuvaus_id BIGINT REFERENCES lokalisoitu_teksti (id),
+  kuvaus_id BIGINT REFERENCES lokalisoituteksti (id),
   valmatelmasisalto_id BIGINT
 );
 
@@ -283,7 +283,7 @@ CREATE TABLE tutkinnonosa_osaalue_aud (
   kieli CHARACTER VARYING(255),
   koodi_uri CHARACTER VARYING(255),
   koodi_arvo CHARACTER VARYING(255),
-  kuvaus_id BIGINT REFERENCES lokalisoitu_teksti (id),
+  kuvaus_id BIGINT REFERENCES lokalisoituteksti (id),
   valmatelmasisalto_id BIGINT,
   rev INTEGER NOT NULL REFERENCES revinfo (rev),
   revtype SMALLINT,
@@ -328,17 +328,17 @@ CREATE TABLE tutkinnonosa_tutkinnonosa_osaalue_aud (
 -- Oma tutkinnonosa
 
 ALTER TABLE omatutkinnonosa ADD COLUMN tavoitteet_id BIGINT;
-ALTER TABLE omatutkinnonosa ADD COLUMN ammattitaidon_osoittamistavat_id BIGINT;
+ALTER TABLE omatutkinnonosa ADD COLUMN ammattitaidonOsoittamistavat_id BIGINT;
 ALTER TABLE omatutkinnonosa ADD COLUMN arviointi_id BIGINT;
 
 
-ALTER TABLE omatutkinnonosa ADD CONSTRAINT tavoitteet_id_fkey FOREIGN KEY (tavoitteet_id) REFERENCES lokalisoitu_teksti (id);
-ALTER TABLE omatutkinnonosa ADD CONSTRAINT ammattitaidon_osoittamistavat_id_fkey FOREIGN KEY (ammattitaidon_osoittamistavat_id) REFERENCES lokalisoitu_teksti (id);
+ALTER TABLE omatutkinnonosa ADD CONSTRAINT tavoitteet_id_fkey FOREIGN KEY (tavoitteet_id) REFERENCES lokalisoituteksti (id);
+ALTER TABLE omatutkinnonosa ADD CONSTRAINT ammattitaidonOsoittamistavat_id_fkey FOREIGN KEY (ammattitaidonOsoittamistavat_id) REFERENCES lokalisoituteksti (id);
 ALTER TABLE omatutkinnonosa ADD CONSTRAINT arviointi_id FOREIGN KEY (arviointi_id) REFERENCES arviointi (id);
 
 ALTER TABLE omatutkinnonosa_aud ADD COLUMN tavoitteet_id BIGINT;
-ALTER TABLE omatutkinnonosa_aud ADD COLUMN ammattitaidon_osoittamistavat_id BIGINT;
+ALTER TABLE omatutkinnonosa_aud ADD COLUMN ammattitaidonOsoittamistavat_id BIGINT;
 ALTER TABLE omatutkinnonosa_aud ADD COLUMN arviointi_id BIGINT;
 
-ALTER TABLE omatutkinnonosa_aud ADD CONSTRAINT tavoitteet_id_fkey FOREIGN KEY (tavoitteet_id) REFERENCES lokalisoitu_teksti (id);
-ALTER TABLE omatutkinnonosa_aud ADD CONSTRAINT ammattitaidon_osoittamistavat_id_fkey FOREIGN KEY (ammattitaidon_osoittamistavat_id) REFERENCES lokalisoitu_teksti (id);
+ALTER TABLE omatutkinnonosa_aud ADD CONSTRAINT tavoitteet_id_fkey FOREIGN KEY (tavoitteet_id) REFERENCES lokalisoituteksti (id);
+ALTER TABLE omatutkinnonosa_aud ADD CONSTRAINT ammattitaidonOsoittamistavat_id_fkey FOREIGN KEY (ammattitaidonOsoittamistavat_id) REFERENCES lokalisoituteksti (id);

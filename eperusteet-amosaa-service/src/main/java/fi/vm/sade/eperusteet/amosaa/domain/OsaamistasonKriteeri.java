@@ -64,7 +64,7 @@ public class OsaamistasonKriteeri implements Serializable {
     @NotAudited
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "arvioinninkohde_osaamistasonkriteeri",
-        joinColumns = @JoinColumn(name = "osaamistason_kriteerit_id", updatable = false, nullable = false),
+        joinColumns = @JoinColumn(name = "osaamistasonKriteerit_id", updatable = false, nullable = false),
         inverseJoinColumns = @JoinColumn(name = "arvioinninkohde_id", nullable = false, updatable = false))
     private Set<ArvioinninKohde> arvioinninKohteet = new HashSet<>();
 

@@ -17,6 +17,7 @@
 package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,7 +31,7 @@ import lombok.Setter;
 public class RakenneOsaDto extends AbstractRakenneOsaDto {
     private boolean pakollinen;
     private String erikoisuus;
-    private EntityReference tutkinnonOsaViite;
+    private Reference tutkinnonOsaViite;
 
     @Override
     protected void foreach(final Visitor visitor, final int depth) {
