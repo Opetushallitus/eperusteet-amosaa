@@ -262,7 +262,6 @@ angular.module("app")
                 };
 
                 Algoritmit.traverse($scope.perusteRakenne, "osat", (node) => node.pakollinen = Suorituspolku.pakollinen(node));
-                $scope.osa = osa;
 
                 $scope.suodata = (input) => {
                     $scope.misc.hasInput = !_.isEmpty(input);

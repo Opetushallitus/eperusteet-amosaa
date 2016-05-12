@@ -122,7 +122,7 @@ mixin arviointiAsteikko()
   .arviointi-asteikko
     .radio(ng-repeat="arviointiAsteikko in arviointiAsteikot")
       label
-        input(type="radio" ng-model="pa.arvinointiasteikko(arvioinninKohdealue.$$uusiArvioinninKohdealue)" ng-value="arviointiAsteikko.id")
+        input(type="radio" ng-model="arvioinninKohdealue.$$uusiArvioinninKohdealue._arviointiasteikko" ng-value="arviointiAsteikko.id")
         span(ng-repeat="osaamistaso in arviointiAsteikko.osaamistasot")
           span {{ osaamistaso.otsikko | kaanna }}{{{true: '', false: ' / '}[$last]}}
 

@@ -20,7 +20,6 @@ import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
-import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.SuorituspolkuRivi;
 import fi.vm.sade.eperusteet.amosaa.domain.revision.Revision;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
@@ -30,9 +29,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Tutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaToteutus;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.RevisionDto;
-import fi.vm.sade.eperusteet.amosaa.dto.ops.SuorituspolkuRiviDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.SuorituspolkuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.TekstiKappaleDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
@@ -208,23 +205,6 @@ public class SisaltoViiteServiceImpl implements SisaltoViiteService {
         viite.setTosa(mappedOsa);
     }
 
-    @Transactional(readOnly = false)
-    private void updateSuorituspolku(SisaltoViite viite, SisaltoViiteDto uusi) {
-        if (uusi.getSuorituspolku() == null) {
-            uusi.setSuorituspolku(new SuorituspolkuDto());
-        }
-
-        if (viite.getSuorituspolku() == null) {
-            viite.setSuorituspolku(new Suorituspolku());
-        }
-
-        Set<SuorituspolkuRiviDto> rivit = uusi.getSuorituspolku().getRivit();
-        Suorituspolku sp = viite.getSuorituspolku();
-        Set<SuorituspolkuRivi> sprivit = sp.getSuorituspolkurivit();
-        rivit.clear();
-        sprivit.addAll(mapper.mapAsList(rivit, SuorituspolkuRivi.class));
-    }
-
     @Override
     @Transactional(readOnly = false)
     public SisaltoViiteDto updateSisaltoViite(Long ktId, Long opsId, Long viiteId, SisaltoViiteDto uusi) {
@@ -256,7 +236,6 @@ public class SisaltoViiteServiceImpl implements SisaltoViiteService {
                 updateTutkinnonOsa(viite, uusi);
                 break;
             case SUORITUSPOLKU:
-                updateSuorituspolku(viite, uusi);
                 break;
             default:
                 break;
