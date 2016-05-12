@@ -260,7 +260,7 @@ CREATE TABLE ammattitaitovaatimus_aud (
     koodi CHARACTER VARYING(20),
     jarjestys INTEGER,
     rev INTEGER NOT NULL REFERENCES revinfo (rev),
-    revtype SMALLINT REFERENCES revinfo (rev),
+    revtype SMALLINT,
     revend INTEGER,
     PRIMARY KEY (id, rev)
 );

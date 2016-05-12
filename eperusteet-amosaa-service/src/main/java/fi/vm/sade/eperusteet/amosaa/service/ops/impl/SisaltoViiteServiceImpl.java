@@ -173,6 +173,23 @@ public class SisaltoViiteServiceImpl implements SisaltoViiteService {
             throw new BusinessRuleViolationException("tutkinnonosan-viitetta-ei-voi-vaihtaa");
         }
         Tutkinnonosa mappedOsa = mapper.map(uusi.getTosa(), Tutkinnonosa.class);
+        if (mappedOsa.getTyyppi().equals(TutkinnonosaTyyppi.OMA)
+                && mappedOsa.getOmatutkinnonosa() != null
+                && mappedOsa.getOmatutkinnonosa().getAmmattitaitovaatimuksetLista() != null) {
+
+            mappedOsa.getOmatutkinnonosa().getAmmattitaitovaatimuksetLista().stream()
+                    .filter(ammattitaitovaatimuksenKohdealue -> ammattitaitovaatimuksenKohdealue.getVaatimuksenKohteet() != null)
+                    .forEach(ammattitaitovaatimuksenKohdealue -> ammattitaitovaatimuksenKohdealue.getVaatimuksenKohteet().stream()
+                            .forEach(ammattitaitovaatimuksenKohde -> {
+
+                                ammattitaitovaatimuksenKohde.setAmmattitaitovaatimuksenkohdealue(ammattitaitovaatimuksenKohdealue);
+
+                                if (ammattitaitovaatimuksenKohde.getVaatimukset() != null) {
+                                    ammattitaitovaatimuksenKohde.getVaatimukset().stream()
+                                            .forEach(ammattitaitovaatimus -> ammattitaitovaatimus.setAmmattitaitovaatimuksenkohde(ammattitaitovaatimuksenKohde));
+                                }
+                            }));
+        }
         viite.setTosa(mappedOsa);
     }
 

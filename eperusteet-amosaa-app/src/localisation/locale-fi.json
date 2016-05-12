@@ -6,6 +6,7 @@
   "ammattitaidon-osoittamistavat":"Ammattitaidon osoittamistavat",
   "ammattitaitovaatimukset":"Ammattitaitovaatimukset",
   "ammattitaitovaatimukset-tekstina":"Ammattitaitovaatimukset tekstinä",
+  "ammattitaitovaatimuksen-koodi":"Ammattitaitovaatimuksen koodi",
   "arviointi":"Arviointi",
   "arvioinnin-kohteen-otsikko": "Arvioinnin kohteen otsikko",
   "arvioinnin-kohteen-selite": "Arvioinnin kohteen selite",
@@ -180,5 +181,8 @@
   "kommentti-ei-saa-ylittaa": "Kommentti ei saa olla yli {{ maara }} merkkiä pitkä.",
   "lahetetty": "Lähetetty",
   "viesti-poistettu": "Viesti poistettu",
+  "vaatimuksen-selite": "Vaatimuksen selite",
+  "vaatimuksen-kohteen-selite": "Vaatimuksen kohteen selite",
+  "vaatimuksen-kohteen-otsikko": "Vaatimuksen kohteen otsikko",
   "versiohistoria": "Versiohistoria"
 }

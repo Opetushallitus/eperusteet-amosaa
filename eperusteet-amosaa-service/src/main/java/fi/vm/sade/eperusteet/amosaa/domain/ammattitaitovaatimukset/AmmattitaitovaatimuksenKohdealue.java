@@ -16,6 +16,7 @@
 package fi.vm.sade.eperusteet.amosaa.domain.ammattitaitovaatimukset;
 
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaTutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Tutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 import lombok.Getter;
@@ -63,7 +64,7 @@ public class AmmattitaitovaatimuksenKohdealue implements Serializable {
     @JoinTable(name = "ammattitaitovaatimuksenkohdealue_omatutkinnonosa",
             inverseJoinColumns = @JoinColumn(name = "omatutkinnonosa_id"),
             joinColumns = @JoinColumn(name = "ammattitaitovaatimuksenkohdealue_id"))
-    private Set<Tutkinnonosa> tutkinnonOsat = new HashSet<>();
+    private Set<OmaTutkinnonosa> tutkinnonOsat = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {

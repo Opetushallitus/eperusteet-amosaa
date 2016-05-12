@@ -1,15 +1,71 @@
-$arviointi-vari: #199dd0;
-$arviointi-padding: 5px;
+$box-table-bgcolor: #199dd0;
+$box-table-padding: 5px;
 
 .tutkinnonosa {
-    .arviointi {
-        border: 1px solid $arviointi-vari;
+    .arviointi-kohdealueet {
+
+        .arviointi-kohteet {
+            min-height: 2em;
+
+            .arviointi-kohde {
+                padding: $box-table-padding;
+
+                .osaamistason-kriteerit {
+                    min-height: 2em;
+                }
+
+                .painikkeet {
+                    & > span {
+                        margin-left: 10px;
+                    }
+                }
+                table {
+                    tr {
+                        td:first-child {
+                            width: 33.3%;
+                        }
+                    }
+                }
+            }
+
+        }
+
+        .uusi-arviointi-kohde {
+            padding: $box-table-padding;
+            .arviointi-asteikko {
+                .painikkeet {
+                    & > button {
+                        margin-right: 10px;
+                    }
+                }
+            }
+        }
+    }
+
+    .ammattitaitovaatimukset {
+        .vaatimuksen-kohteet {
+            min-height: 2em;
+            .vaatimuksen-kohde {
+                padding: $box-table-padding;
+
+                .painikkeet {
+                    & > span {
+                        margin-left: 10px;
+                    }
+                }
+            }
+        }
+    }
+
+    // General styles
+    .box-panel {
+        border: 1px solid $box-table-bgcolor;
         margin-bottom: 10px;
 
-        .arviointi-otsikko {
-            background: $arviointi-vari;
+        .box-panel-title {
+            background: $box-table-bgcolor;
             color: white;
-            padding: $arviointi-padding;
+            padding: $box-table-padding;
             height: 50px;
 
             h3 {
@@ -28,26 +84,20 @@ $arviointi-padding: 5px;
                 }
             }
         }
-        .arviointi-sisalto {
+
+        .box-panel-content {
             h4 {
                 font-weight: bold;
             }
-            a {
-                padding: $arviointi-padding;
-                &, span, i {
-                    text-decoration: none;
-                }
+            button {
+                margin: $box-table-padding;
             }
-
-            .uusi-arviointi-kohde {
-                padding: $arviointi-padding;
-                .arviointi-asteikko {
-                    .painikkeet {
-                        & > button {
-                            margin-right: 10px;
-                        }
-                    }
-                }
+            textarea {
+                overflow-y: scroll;
+                resize: vertical;
+                height: auto;
+                word-wrap: break-word;
+                margin-bottom: 5px;
             }
         }
 
@@ -62,45 +112,7 @@ $arviointi-padding: 5px;
         }
     }
 
-    .arviointi-kohdealueet {
-        .arviointi-kohteet {
-            min-height: 2em;
-            .arviointi-kohde {
-                padding: $arviointi-padding;
-
-                .osaamistason-kriteerit {
-                    min-height: 2em;
-                    .osaamistason-kriteeri {
-                        textarea {
-                            overflow-y: scroll;
-                            resize: vertical;
-                            height: auto;
-                            word-wrap: break-word;
-                            margin-bottom: 5px;
-                        }
-                    }
-                }
-
-                .painikkeet {
-                    & > span {
-                        margin-left: 10px;
-                    }
-                }
-                table {
-                    tr {
-                        td:first-child {
-                            width: 33.3%;
-                        }
-                    }
-                }
-            }
-
-            .sortable-item-placeholder {
-                margin-bottom: 20px;
-            }
-        }
-    }
-
+    // Helper styles
     .linkki {
         cursor: pointer;
     }

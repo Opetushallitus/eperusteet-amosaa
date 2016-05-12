@@ -17,8 +17,6 @@ package fi.vm.sade.eperusteet.amosaa.domain;
 
 import fi.vm.sade.eperusteet.amosaa.domain.arviointi.ArvioinninKohde;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
-import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
-import fi.vm.sade.eperusteet.amosaa.domain.teksti.Tekstiosa;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 import lombok.Getter;
 import lombok.Setter;

@@ -16,8 +16,10 @@
 
 package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
+
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,6 +30,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class OsaamistasonKriteeriDto {
     private Reference osaamistaso;
     private List<LokalisoituTekstiDto> kriteerit;

@@ -27,7 +27,7 @@ angular.module("app")
         versioId: $stateParams => $stateParams.versio,
         versio: (versioId, historia) => versioId && historia.get(versioId),
         kommentit: (osa) => osa.all("kommentit").getList(),
-        arviointiAsteikot: (Eperusteet) => Eperusteet.all("arviointiasteikot").getList()
+        arviointiAsteikot: (Api) => Api.all("arviointiasteikot").getList()
     },
     onEnter: (osa) =>
         Murupolku.register("root.koulutustoimija.opetussuunnitelmat.sisalto.osa", osa.tekstiKappale.nimi),
@@ -117,46 +117,15 @@ angular.module("app")
         },
         tutkinnonosa: {
             controller: ($scope, arviointiAsteikot) => {
-                $scope.sortableOptionsArvioinninKohdealueet = {
-                    axis: "y",
-                    connectWith: ".arviointi-kohdealueet",
-                    handle: ".sortable-item-handle",
-                    cursor: "move",
-                    delay: 100,
-                    tolerance: "pointer",
-                    placeholder: "sortable-item-placeholder",
-                    start: (e, ui) => {
-                        ui.placeholder.height(ui.item.height());
-                    }
-                };
-                $scope.sortableOptionsArvioinninKohteet = {
-                    axis: "y",
-                    connectWith: ".arviointi-kohteet",
-                    handle: ".sortable-item-handle",
-                    cursor: "move",
-                    delay: 100,
-                    tolerance: "pointer",
-                    placeholder: "sortable-item-placeholder",
-                    start: (e, ui) => {
-                        ui.placeholder.height(ui.item.height());
-                    }
-                };
-                $scope.sortableOptionsOsaamistasonKriteerit = {
-                    axis: "y",
-                    connectWith: ".osaamistason-kriteerit",
-                    handle: ".sortable-item-handle",
-                    cursor: "move",
-                    delay: 100,
-                    tolerance: "pointer",
-                    placeholder: "sortable-item-placeholder",
-                    start: (e, ui) => {
-                        ui.placeholder.height(ui.item.height());
-                    }
-                };
+                $scope.sortableOptionsArvioinninKohdealueet = Sorting.getSortableOptions(".arviointi-kohdealueet");
+                $scope.sortableOptionsArvioinninKohteet = Sorting.getSortableOptions(".arviointi-kohteet");
+                $scope.sortableOptionsOsaamistasonKriteerit = Sorting.getSortableOptions(".osaamistason-kriteerit");
+                $scope.sortableOptionsAmmattitaitovaatimukset = Sorting.getSortableOptions(".ammattitaitovaatimukset");
+                $scope.sortableOptionsVaatimuksenKohteet = Sorting.getSortableOptions(".vaatimuksen-kohteet");
+                $scope.sortableOptionsVaatimukset = Sorting.getSortableOptions(".vaatimukset");
 
                 $scope.arviointiAsteikot = arviointiAsteikot.plain();
 
-                
                 $scope.lisaaArvioinninKohdealue = () => {
                     $scope.osa.tosa.omatutkinnonosa = $scope.osa.tosa.omatutkinnonosa || {};
                     $scope.osa.tosa.omatutkinnonosa.arviointi = $scope.osa.tosa.omatutkinnonosa.arviointi || {};
@@ -164,13 +133,11 @@ angular.module("app")
                         = $scope.osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet || [];
                     $scope.osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet.push({});
                 };
-
                 $scope.lisaaArviointiKohde = (arvioinninKohdealue) => {
                     arvioinninKohdealue.arvioinninKohteet = arvioinninKohdealue.arvioinninKohteet || [];
                     arvioinninKohdealue.$$uusiArvioinninKohdealue = {};
                     arvioinninKohdealue.$$uusiAuki = true;
                 };
-
                 $scope.lisaaArviointiasteikko = (arvioinninKohdealue) => {
                     arvioinninKohdealue.$$uusiArvioinninKohdealue.osaamistasonKriteerit = [];
                     const asteikkoId = arvioinninKohdealue.$$uusiArvioinninKohdealue._arviointiasteikko;
@@ -187,12 +154,21 @@ angular.module("app")
                     arvioinninKohdealue.$$uusiArvioinninKohdealue = {};
                     arvioinninKohdealue.$$uusiAuki = false;
                 };
-
                 $scope.lisaaKriteeri = (osaamistasonKriteeri) => {
                     osaamistasonKriteeri.kriteerit = osaamistasonKriteeri.kriteerit || [];
-                    osaamistasonKriteeri.kriteerit.push({
-                        vaatimuksenKohteet: []
-                    });
+                    osaamistasonKriteeri.kriteerit.push({});
+                };
+                $scope.poistaArvioinninKohdealue = (kohdealue) => {
+                    $scope.osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet
+                        = _.without($scope.osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet, kohdealue);
+                };
+                $scope.poistaArvioinninKohde = (kohdealue, kohde) => {
+                    kohdealue.arvioinninKohteet
+                        = _.without(kohdealue.arvioinninKohteet, kohde);
+                };
+                $scope.poistaKriteeri = (osaamistasonKriteeri, kriteeri) => {
+                    osaamistasonKriteeri.kriteerit
+                        = _.without(osaamistasonKriteeri.kriteerit, kriteeri);
                 };
 
                 $scope.lisaaAmmattitaitovaatimus = () => {
@@ -201,19 +177,25 @@ angular.module("app")
                         = $scope.osa.tosa.omatutkinnonosa.ammattitaitovaatimuksetLista || [];
                     $scope.osa.tosa.omatutkinnonosa.ammattitaitovaatimuksetLista.push({});
                 };
-                
-                $scope.poistaArvioinninKohdealue = (kohdealue) => {
-                    $scope.osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet
-                        = _.without($scope.osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet, kohdealue);
+                $scope.lisaaVaatimuksenKohde = (ammattitaitovaatimus) => {
+                    ammattitaitovaatimus.vaatimuksenKohteet = ammattitaitovaatimus.vaatimuksenKohteet || [];
+                    ammattitaitovaatimus.vaatimuksenKohteet.push({
+                    });
                 };
-
-                $scope.poistaArvioinninKohde = (kohdealue, kohde) => {
-                    kohdealue.arvioinninKohteet
-                        = _.without(kohdealue.arvioinninKohteet, kohde);
+                $scope.lisaaVaatimus = (vaatimuksenKohde) => {
+                    vaatimuksenKohde.vaatimukset = vaatimuksenKohde.vaatimukset || [];
+                    vaatimuksenKohde.vaatimukset.push({});
                 };
-                $scope.poistaKriteeri = (osaamistasonKriteeri, kriteeri) => {
-                    osaamistasonKriteeri.kriteerit
-                        = _.without(osaamistasonKriteeri.kriteerit, kriteeri);
+                $scope.poistaVaatimuksenKohde = (ammattitaitovaatimus, vaatimuksenKohde) => {
+                    ammattitaitovaatimus.vaatimuksenKohteet
+                        = _.without(ammattitaitovaatimus.vaatimuksenKohteet, vaatimuksenKohde);
+                };
+                $scope.poistaAmmattitaitovaatimus = (ammattitaitovaatimus) => {
+                    $scope.osa.tosa.omatutkinnonosa.ammattitaitovaatimuksetLista
+                        = _.without($scope.osa.tosa.omatutkinnonosa.ammattitaitovaatimuksetLista, ammattitaitovaatimus);
+                };
+                $scope.poistaVaatimus = (vaatimuksenKohde, vaatimus) => {
+                    vaatimuksenKohde.vaatimukset = _.without(vaatimuksenKohde.vaatimukset, vaatimus);
                 }
             }
         },
