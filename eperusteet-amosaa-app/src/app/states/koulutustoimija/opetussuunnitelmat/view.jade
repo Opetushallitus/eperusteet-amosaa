@@ -7,9 +7,6 @@ div.ops-nakyma
             i.fa.fa-pencil
         div.pull-left
           h2(ng-bind="ops.nimi | kaanna")
-          h2
-            span
-              i.fa.fa-magic
           div.peruste-nimi(ng-if="ops.tyyppi === 'ops'")
             p(kaanna="ops.peruste.nimi")
           div.peruste-nimi(ng-if="ops.tyyppi === 'pohja'")

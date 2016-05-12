@@ -1,9 +1,7 @@
-div.poistetut.subtle-transition
+div.oikeudet.subtle-transition
+  h2(ng-bind="'oikeudet' | kaanna")
   div.row
-    div.col-xs-6
-      h2(ng-bind="'oikeudet' | kaanna")
-        ohje(teksti="this is a test" otsikko="test title" suunta="top")
-    div.col-xs-6
+    div.col-xs-8
       div.input-group.input-group-sm
         input.form-control(
           type="text"
@@ -13,10 +11,15 @@ div.poistetut.subtle-transition
         span.input-group-btn
           button.btn.btn-default(ng-click="search = ''")
             +icon("times")
+    div.col-xs-4
+      div.checkbox.pull-right
+        label
+          input(type="checkbox" ng-model="vainOikeudelliset")
+          span(kaanna="'vain-joilla-oikeuksia'")
 
   div.row
     div.col-xs-12
-      table.table.table-striped
+      table.table
         thead
           tr
             th
@@ -27,13 +30,18 @@ div.poistetut.subtle-transition
               a(href="")
                 span(kaanna="'oikeus'")
         tbody
-          tr(ng-show="suodata(kayttaja)" ng-repeat="kayttaja in kayttajat")
+          tr(class="{{ (isSelf && 'success') || 'tyyppi-' + oikeus(kayttaja) }}"
+            ng-show="suodata(kayttaja) && (!vainOikeudelliset || isSelf || oikeus(kayttaja) !== 'luku')"
+            ng-repeat="kayttaja in kayttajat"
+            ng-init="isSelf = (me.oidHenkilo === kayttaja.oid)")
             td
               span(ng-show="kayttaja.$$nimi" ng-bind="kayttaja.$$nimi")
               span(ng-hide="kayttaja.$$nimi") ...
+              span.special(ng-if="isSelf")
+                +icon("user")
             td
               span(ng-bind="'oikeus-' + oikeus(kayttaja) | kaanna")
-              span.dropdown(oikeustarkastelu="hallinta")
+              span.dropdown(ng-if="!isSelf" oikeustarkastelu="hallinta")
                 a.dropdown-toggle(href="" data-toggle="dropdown")
                   i.fa.fa-chevron-down.fa-fw
                 ul.dropdown-menu.dropdown-menu-right

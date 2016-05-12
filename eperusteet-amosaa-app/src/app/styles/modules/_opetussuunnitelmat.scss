@@ -42,7 +42,7 @@ $ops-top-vertical-margin: 10px;
 
         h2 {
             display: inline;
-            margin: 0 0 0 20px;
+            margin: 0 0 0 10px;
             a {
                 margin-right: 10px;
                 i {
@@ -58,7 +58,7 @@ $ops-top-vertical-margin: 10px;
         .peruste-nimi {
             position: relative;
             top: 8px;
-            margin: 0 0 0 20px;
+            margin: 0 0 0 10px;
 
             p {
                 color: #999;
@@ -411,6 +411,34 @@ $ops-top-vertical-margin: 10px;
         }
     }
 
+    .oikeudet {
+        margin-top: $ops-top-vertical-margin;
+        h2:first-child {
+            margin-top: 0;
+            span {
+                margin-top: -8px;
+            }
+        }
+
+        .tyyppi-luku { background: #ddd; }
+        .tyyppi-hallinta { background: #FCF8E3; }
+
+        .special {
+            margin-left: 8px;
+        }
+
+        table {
+            a, a > span {
+                text-decoration: none;
+
+            }
+            td:nth-child(1) { width: 40%; }
+            td:nth-child(2) { width: 20%; }
+            td:nth-child(3) { width: 25%; }
+            td:nth-child(4) { width: 15%; }
+        }
+    }
+
     .poistetut {
         margin-top: $ops-top-vertical-margin;
         h2:first-child {
@@ -425,18 +453,10 @@ $ops-top-vertical-margin: 10px;
                 text-decoration: none;
 
             }
-            td:nth-child(1) {
-                width: 40%;
-            }
-            td:nth-child(2) {
-                width: 20%;
-            }
-            td:nth-child(3) {
-                width: 25%;
-            }
-            td:nth-child(4) {
-                width: 15%;
-            }
+            td:nth-child(1) { width: 40%; }
+            td:nth-child(2) { width: 20%; }
+            td:nth-child(3) { width: 25%; }
+            td:nth-child(4) { width: 15%; }
         }
     }
     .dokumentti {
