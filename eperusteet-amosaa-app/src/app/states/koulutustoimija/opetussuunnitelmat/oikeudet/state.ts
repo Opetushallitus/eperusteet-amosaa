@@ -8,15 +8,16 @@ angular.module("app")
     },
     views: {
         "": {
-            controller: ($scope, ops, oikeudet, kayttaja, ktKayttajat, kayttajanTieto) => {
+            controller: ($scope, ops, oikeudet, kayttaja, ktKayttajat, nimiLataaja) => {
                 $scope.vaihtoehdot = Kayttaja.oikeusVaihtoehdot();
                 $scope.suodata = (item) => _.matchStrings($scope.search, item.$$nimi);
                 $scope.kayttajat = ktKayttajat;
                 $scope.oikeudet = _.indexBy(oikeudet, "_kayttaja");
+                $scope.oikeus = (kayttaja) => $scope.oikeudet[kayttaja.id]
+                    ? $scope.oikeudet[kayttaja.id].oikeus
+                    : 'luku';
 
-                $scope.oikeus = (kayttaja) => $scope.oikeudet[kayttaja.id] ? $scope.oikeudet[kayttaja.id].oikeus : 'luku';
-
-                _.each($scope.kayttajat, (kayttaja) => kayttajanTieto(kayttaja.oid)
+                _.each($scope.kayttajat, (kayttaja) => nimiLataaja(kayttaja.oid)
                     .then(res => {
                         kayttaja.$$nimi = Kayttajatiedot.parsiEsitysnimi(res);
                         $scope.oikeudet[kayttaja.id] = $scope.oikeudet[kayttaja.id] || {

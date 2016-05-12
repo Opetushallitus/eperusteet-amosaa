@@ -37,6 +37,8 @@ angular.module("app")
             controller: ($state, $stateParams, $location, $scope, $rootScope, $document, $timeout,
                          osa, nimiLataaja, Varmistusdialogi, historia, versioId, versio, pTosa) => {
                 $scope.pTosa = pTosa;
+                nimiLataaja(osa.tekstiKappale.muokkaaja)
+                    .then(_.cset(osa, "$$nimi"));
 
                 // Version handling
                 $scope.versio = versio;
@@ -57,7 +59,6 @@ angular.module("app")
                     };
                 }
 
-
                 // Item handling
                 osa.lapset = undefined;
                 $scope.edit = EditointikontrollitService.createRestangular($scope, "osa", osa, {
@@ -70,8 +71,6 @@ angular.module("app")
                     })
                 });
 
-                nimiLataaja(osa.tekstiKappale.muokkaaja)
-                    .then(nimi => $scope.osa.tekstiKappale.$$nimi = nimi);
                 $scope.remove = () => {
                     Varmistusdialogi.dialogi({
                         otsikko: "haluatko-varmasti-poistaa-sisallon",

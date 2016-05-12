@@ -6,6 +6,7 @@ declare module _ {
         matchStrings(search: string, target: string): boolean;
         fromPairs(x: Array<any>): any;
         append<T>(x: Array<T>, el: T): Array<T>;
+        cset<O, P, V>(o: O, p: P): (v: V) => void;
         fromPairs(): any;
     }
 
@@ -26,6 +27,7 @@ _.mixin({
         f.apply(undefined, args);
         return f;
     },
+    cset: (obj, path) => (value) => _.set(obj, path, value),
     fromPairs: (pairs) => {
         let obj: any = {};
         _.each(pairs, (pair) => {
