@@ -18,12 +18,13 @@ mixin valinnat()
       "listRevisions()",
       "restoreRevision()",
       "restoreNew()")
-      button.btn.btn-primary.muokkaa(ng-show="$$ekEditing && !osa.pakollinen" ng-click="remove()" kaanna="'poista'")
+      button.btn.btn-danger.muokkaa(ng-show="$$ekEditing && !osa.pakollinen" ng-click="remove()")
+        +itext("remove", 'poista')
 
   div
     div(ng-if="$$ekEditing")
       h1(kaanna="'nimi'" style="margin-bottom: 16px; margin-top: 16px" )
-      input.form-control(style="margin-bottom: 16px; margin-top: 16px" slocalized ng-model="osa.tekstiKappale.nimi" type="text" required="true")
+      input.form-control(style="margin-bottom: 16px; margin-top: 16px" slocalized ng-model="osa.tekstiKappale.nimi" type="text" required="true" ng-disabled="pTosa")
       +valinnat
       div(ng-if="ops.tyyppi === 'pohja'")
         +contentToggler("$$showOhje", "'tekstikappale-ohjeteksti'")

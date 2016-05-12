@@ -27,13 +27,17 @@ angular.module("app")
         versioId: $stateParams => $stateParams.versio,
         versio: (versioId, historia) => versioId && historia.get(versioId),
         kommentit: (osa) => osa.all("kommentit").getList(),
+        pTosa: (peruste, osa) => (osa.tyyppi === "tutkinnonosa" && osa.tosa.tyyppi === "perusteesta"
+            && _.find(peruste.tutkinnonOsat, { id: osa.tosa.perusteentutkinnonosa }))
     },
     onEnter: (osa) =>
         Murupolku.register("root.koulutustoimija.opetussuunnitelmat.sisalto.osa", osa.tekstiKappale.nimi),
     views: {
         "": {
             controller: ($state, $stateParams, $location, $scope, $rootScope, $document, $timeout,
-                         osa, nimiLataaja, Varmistusdialogi, historia, versioId, versio) => {
+                         osa, nimiLataaja, Varmistusdialogi, historia, versioId, versio, pTosa) => {
+                $scope.pTosa = pTosa;
+
                 // Version handling
                 $scope.versio = versio;
                 [$scope.uusin, $scope.historia] = Revisions.parseAll(historia);
@@ -109,15 +113,37 @@ angular.module("app")
             }
         },
         tekstikappale: {
-            controller: ($scope, osa) => {}
+            controller: ($scope) => {}
         },
         tutkinnonosat: {
-            controller: ($scope, osa) => {}
+            controller: ($scope) => {}
         },
         tutkinnonosa: {
-            controller: ($scope, osa) => {
-                osa.tosa.arvioinnista = osa.tosa.arvioinnista || {};
-                osa.tosa.tavatjaymparisto = osa.tosa.tavatjaymparisto || {};
+            controller: ($scope, peruste) => {
+                $scope.osaamisalat = _.indexBy(peruste.osaamisalat, "uri");
+                $scope.peruste = peruste;
+                $scope.sortableOptions = {
+                    handle: ".toteutus-handle",
+                    cursor: "move",
+                    delay: 100,
+                    tolerance: "pointer",
+                    placeholder: "toteutus-placeholder"
+                };
+
+                $scope.lisaaUusiToteutus = () => {
+                    $scope.osa.tosa.toteutukset.push({
+                        arvioinnista: {},
+                        tavatjaymparisto: {}
+                    });
+                };
+
+                $scope.removeToteutus = (toteutus) => _.remove($scope.osa.tosa.toteutukset, toteutus);
+
+                $scope.addOsaamisala = (toteutus) => KoodistoModal.osaamisala(peruste.osaamisalat)
+                    .then(res => toteutus.osaamisalaKoodi = !_.isEmpty(res) && _.first(res).uri);
+
+                $scope.addOppimaara = (toteutus) => KoodistoModal.oppiaine(peruste.osaamisalat)
+                    .then(res => console.log(res));
             }
         },
         tutkinnonosaryhma: {
@@ -138,15 +164,12 @@ angular.module("app")
                     tosat: tosaViitteet,
                     hasInput: false,
                     poistaOsa: (node) => {
-                        console.log("poistetaan", node);
                         node.$$poistettu = true;
                         const rivi = _.find($scope.osa.suorituspolku.rivit, (rivi: any) => rivi.rakennemoduuli === node.tunniste);
-                        console.log(rivi);
                         if (!rivi) {
                             $scope.osa.suorituspolku.rivit.push({
                                 rakennemoduuli: node.tunniste
                             });
-                            console.log($scope.osa.suorituspolku.rivit);
                         }
                     }
                 };

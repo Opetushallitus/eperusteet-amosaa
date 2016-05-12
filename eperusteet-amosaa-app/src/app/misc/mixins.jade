@@ -6,15 +6,24 @@ mixin icon(type)
   i(class="fa fa-" + type)
 
 
+mixin itext(type, text)
+  span
+    i(class="fa fa-" + type)
+    span(style="margin-left: 8px" kaanna=text)
+
+
 mixin removeButtonSmall(actionEdit)
-  button.btn.btn-warning.btn-sm.btn-small-margin-left(ng-disabled="$$ekEditing || versio || creatingNewKasite" ng-click=actionEdit)&attributes(attributes)
+  button.btn.btn-warning.btn-sm.btn-small-margin-left(
+      ng-disabled="$$ekEditing || versio || creatingNewKasite"
+      ng-click=actionEdit)&attributes(attributes)
     +icon("trash")
 
 
 mixin editButtonSmall(actionEdit)
-  button.btn.btn-primary.btn-sm.muokkaa(ng-disabled="$$ekEditing || versio || creatingNewKasite" ng-click=actionEdit)&attributes(attributes)
+  button.btn.btn-primary.btn-sm.muokkaa(
+      ng-disabled="$$ekEditing || versio || creatingNewKasite"
+      ng-click=actionEdit)&attributes(attributes)
     +icon("pencil")
-
 
 mixin editButton(actionEdit)
   button.btn.btn-primary.muokkaa(ng-hide="$$ekEditing || versio" ng-click=actionEdit)&attributes(attributes)
@@ -102,6 +111,13 @@ mixin checkbox(name, model)
       span(kaanna=name)
 
 
+mixin formfieldDense(label)
+  div.row(style="margin-bottom: 8px")
+    .col-xs-2: span(kaanna=label)
+    .col-xs-10
+      block
+
+
 mixin formfield(label)
   div.row(style="margin-bottom: 20px")
     .col-xs-2: span(kaanna=label)
@@ -114,18 +130,27 @@ mixin kasitePropDiv(model, index)
     p(kaanna=model)
 
 
+mixin plainTeksti(kentta)
+  span(termisto-viitteet=kentta ng-bind-html=kentta + "| kaanna | unsafe")
+
+
 mixin teksti(kentta)
   p(style="margin-bottom: 16px" termisto-viitteet=kentta ng-bind-html=kentta + "| kaanna | unsafe")
+
+
+mixin turboChevron(toggleField)
+  span.turbochevron
+    span(ng-if=toggleField)
+      +gicon("chevron-right")
+    span(ng-if="!" + toggleField)
+      +gicon("chevron-down")
 
 
 mixin contentToggler(toggleField, name)
   div.content-toggler
     div.content-toggler-header(ng-click=toggleField + " = !" + toggleField)
       span.ct-otsikko
-        span(ng-if=toggleField)
-          +gicon("chevron-right")
-        span(ng-if="!" + toggleField)
-          +gicon("chevron-down")
+        +turboChevron(toggleField)
         label(kaanna=name)
     div(ng-if="!" + toggleField)
       block
@@ -133,5 +158,5 @@ mixin contentToggler(toggleField, name)
 
 mixin toggler(field, yes, no)
   span.toggler(ng-click=field + " = !" + field)
-    span.bubble(ng-class="{ 'active': " + field + " }" kaanna=yes)
-    span.bubble(ng-class="{ 'active': !" + field + " }" kaanna=no)
+    span.bubble(ng-class="{ 'active': " + field + " }" kaanna=no)
+    span.bubble(ng-class="{ 'active': !" + field + " }" kaanna=yes)

@@ -1,10 +1,13 @@
 li(ng-show="!item.$$hidden" ng-repeat="item in ngModel")
-  a.pakollinen(ng-class="{ pakollinen: item.$$obj.pakollinen, liikkumaton: item.$$obj.liikkumaton }"
-    style="padding-left: {{ (item.$$depth - 1) * 20 + 10 }}px"
-    href=""
-    ui-sref-active="active"
-    ui-sref="root.koulutustoimija.opetussuunnitelmat.sisalto.osa({ osaId: item.id })")
-    span(ng-bind="(item.$$obj.tekstiKappale.nimi || 'nimeton-tekstikappale') | kaanna")
-    span.pull-right.glyphicon.glyphicon-check(ng-show="item.$$obj.valmis" style="color: #00af00;")
-  dynamic(template="states/koulutustoimija/opetussuunnitelmat/sisalto/sivunaviitem.jade" ng-model="item.lapset" misc="misc")
-
+  span
+    a.pakollinen(ng-class="{ pakollinen: item.$$obj.pakollinen, liikkumaton: item.$$obj.liikkumaton }"
+      style="padding-left: {{ (item.$$depth - 1) * 20 + 10 }}px"
+      href=""
+      ui-sref-active="active"
+      ui-sref="root.koulutustoimija.opetussuunnitelmat.sisalto.osa({ osaId: item.id })")
+      span(ng-show="item.lapset.length > 0 && !misc.isSearching" ng-click="misc.toggleItem($event, item)")
+        +turboChevron("item.$$closed")
+      span(ng-bind="(item.$$obj.tekstiKappale.nimi || 'nimeton-tekstikappale') | kaanna")
+      span.pull-right.glyphicon.glyphicon-check(ng-show="item.$$obj.valmis" style="color: #00af00;")
+  div(ng-hide="item.$$closed && !misc.isSearching")
+    dynamic(template="states/koulutustoimija/opetussuunnitelmat/sisalto/sivunaviitem.jade" ng-model="item.lapset" misc="misc")

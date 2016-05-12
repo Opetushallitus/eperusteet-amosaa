@@ -16,11 +16,11 @@
 
 package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
-import org.w3c.dom.EntityReference;
 
 /**
  *
@@ -28,6 +28,7 @@ import org.w3c.dom.EntityReference;
  */
 @Getter
 @Setter
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class OsaamistavoiteLaajaDto extends OsaamistavoiteDto {
     private LokalisoituTekstiDto tavoitteet;
     private LokalisoituTekstiDto tunnustaminen;
@@ -35,5 +36,5 @@ public class OsaamistavoiteLaajaDto extends OsaamistavoiteDto {
     private List<AmmattitaitovaatimusKohdealueetDto> ammattitaitovaatimuksetLista;
     private String koodiUri;
     private String koodiArvo;
-    private EntityReference esitieto;
+    private Long esitieto;
 }

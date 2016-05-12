@@ -30,11 +30,14 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Tutkinnonosa;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.PoistettuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonOsaKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaoikeusRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
@@ -178,8 +181,21 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                         cperuste.setPeruste(eperusteetService.getPerusteData(peruste.getId()));
                         cperuste = cachedPerusteRepository.save(cperuste);
                     }
+
                     ops.setPeruste(cperuste);
                     alustaOpetussuunnitelma(ops, rootTkv);
+
+                    List<TutkinnonOsaKaikkiDto> tutkinnonOsat = eperusteetService.getPerusteSisalto(cperuste).getTutkinnonOsat();
+                    SisaltoViite tosat = rootTkv.getLapset().get(0);
+                    for (TutkinnonOsaKaikkiDto tosa : tutkinnonOsat) {
+                        SisaltoViite uusi = SisaltoViite.createTutkinnonOsa(tosat);
+                        uusi.getTekstiKappale().setNimi(LokalisoituTeksti.of(tosa.getNimi()));
+                        Tutkinnonosa uusiTosa = uusi.getTosa();
+                        uusiTosa.setTyyppi(TutkinnonosaTyyppi.PERUSTEESTA);
+                        uusiTosa.setPerusteentutkinnonosa(tosa.getId());
+                        uusiTosa.setKoodi(tosa.getKoodiUri());
+                        tkvRepository.save(uusi);
+                    }
                     break;
                 case YHTEINEN:
                     Opetussuunnitelma pohja = repository.findOne(opsDto.getPohja().getIdLong());
@@ -300,5 +316,4 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         }
         return mapper.map(ops, OpetussuunnitelmaBaseDto.class);
     }
-
 }

@@ -36,6 +36,9 @@ angular.module("app", [
             if (res.status === 403) {
                 NotifikaatioService.varoitus("ei-oikeutta-suorittaa");
             }
+            else if (res.status === 400) {
+                NotifikaatioService.varoitus(KaannaService.kaanna(res.data.syy));
+            }
             else if (res.status >= 500) {
                 NotifikaatioService.varoitus("palvelin-virhetilanne");
             }

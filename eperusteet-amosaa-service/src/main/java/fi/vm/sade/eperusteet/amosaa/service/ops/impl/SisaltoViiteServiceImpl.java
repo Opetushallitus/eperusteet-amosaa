@@ -27,6 +27,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Suorituspolku;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Tutkinnonosa;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaToteutus;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.RevisionDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.SuorituspolkuRiviDto;
@@ -172,7 +173,20 @@ public class SisaltoViiteServiceImpl implements SisaltoViiteService {
         if (!Objects.equals(uusi.getTosa().getId(), viite.getTosa().getId())) {
             throw new BusinessRuleViolationException("tutkinnonosan-viitetta-ei-voi-vaihtaa");
         }
+
+        Tutkinnonosa tosa = viite.getTosa();
+        if (tosa.getTyyppi() == TutkinnonosaTyyppi.PERUSTEESTA) {
+            LokalisoituTeksti nimi = viite.getTekstiKappale().getNimi();
+            if (!nimi.getTeksti().equals(uusi.getTekstiKappale().getNimi().getTekstit())) {
+                throw new BusinessRuleViolationException("perusteen-tutkinnon-osan-nimea-ei-voi-muuttaa");
+            }
+        }
+
         Tutkinnonosa mappedOsa = mapper.map(uusi.getTosa(), Tutkinnonosa.class);
+        for (TutkinnonosaToteutus toteutus : mappedOsa.getToteutukset()) {
+            toteutus.setTutkinnonosa(mappedOsa);
+        }
+
         viite.setTosa(mappedOsa);
     }
 
@@ -236,7 +250,8 @@ public class SisaltoViiteServiceImpl implements SisaltoViiteService {
         viite.setValmis(uusi.isValmis());
         viite.setVersio((viite.getVersio() != null ? viite.getVersio() : 0) + 1);
         viite = repository.save(viite);
-        return mapper.map(viite, SisaltoViiteDto.class);
+        SisaltoViiteDto result = mapper.map(viite, SisaltoViiteDto.class);
+        return result;
     }
 
     @Override

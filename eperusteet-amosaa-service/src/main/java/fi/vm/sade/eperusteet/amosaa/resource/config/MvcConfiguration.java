@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.AbstractRakenneOsaDto;
 import fi.vm.sade.eperusteet.amosaa.resource.util.CacheHeaderInterceptor;
 import fi.vm.sade.eperusteet.amosaa.resource.util.LoggingInterceptor;
 import java.util.List;
@@ -87,6 +88,8 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter {
         MappingModule module = new MappingModule();
         converter.getObjectMapper().registerModule(module);
         converter.getObjectMapper().setPropertyNamingStrategy(new ReferenceNamingStrategy());
+        module.addDeserializer(AbstractRakenneOsaDto.class, new AbstractRakenneOsaDeserializer());
+        converter.getObjectMapper().registerModule(module);
         return converter;
     }
 

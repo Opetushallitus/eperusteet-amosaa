@@ -7,6 +7,18 @@ $ops-haku-padding: 5px;
 $ops-valikko-min-height: 600px;
 $ops-top-vertical-margin: 10px;
 
+.is-sticky {
+    .haku {
+        top: 40px !important;
+    }
+}
+
+.is-sticky {
+    .valikko {
+        top: 80px !important;
+    }
+}
+
 .ops-nakyma {
     .ylatunniste {
         background-color: #f3fafd; // FIXME
@@ -88,8 +100,17 @@ $ops-top-vertical-margin: 10px;
 
     .sisalto {
         .sivunavi {
+            background: #F9FDFF;
+
+            .turbochevron {
+                padding: 10px 10px 0 10px;
+                margin: 0;
+                position: relative;
+                left: -9px;
+            }
+
             .haku {
-                margin-bottom: $ops-top-vertical-margin;
+                padding-bottom: $ops-top-vertical-margin;
 
                 .form-inline {
                     .form-group {
@@ -120,11 +141,19 @@ $ops-top-vertical-margin: 10px;
             }
 
             .valikko {
+                background: #F9FDFF;
+                overflow-y: scroll;
+                // width: 275px;
+                // top: 0;
+                // bottom: 0;
+                max-height: 600px;
+                // position: fixed;
+
                 ul {
                     list-style-type: none;
                     margin: 0;
                     padding: 0;
-                    border: 1px solid #DEDEDF;
+                    // border: 1px solid #DEDEDF;
                     min-height: $ops-valikko-min-height;
                     li {
                         padding: 0;

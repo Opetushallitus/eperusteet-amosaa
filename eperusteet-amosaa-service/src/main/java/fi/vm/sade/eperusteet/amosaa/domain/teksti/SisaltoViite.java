@@ -86,7 +86,7 @@ public class SisaltoViite implements ReferenceableEntity, Serializable {
     @Setter
     private SisaltoViite vanhempi;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST})
     @Getter
     @Setter
     private TekstiKappale tekstiKappale;
@@ -160,5 +160,24 @@ public class SisaltoViite implements ReferenceableEntity, Serializable {
             }
             validoi(validointi, lapsi, julkaisukielet);
         }
+    }
+
+    static private SisaltoViite createCommon(SisaltoViite parent) {
+        SisaltoViite result = new SisaltoViite();
+        TekstiKappale tk = new TekstiKappale();
+        result.setTekstiKappale(tk);
+        result.setVanhempi(parent);
+        result.setOwner(parent.getOwner());
+        parent.getLapset().add(result);
+        return result;
+    }
+
+    static public SisaltoViite createTutkinnonOsa(SisaltoViite parent) {
+        SisaltoViite result = createCommon(parent);
+        result.setLiikkumaton(true);
+        result.setTyyppi(SisaltoTyyppi.TUTKINNONOSA);
+        Tutkinnonosa tosa = new Tutkinnonosa();
+        result.setTosa(tosa);
+        return result;
     }
 }

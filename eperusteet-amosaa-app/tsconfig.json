@@ -46,6 +46,7 @@
     "src/app/modals/tilat/tilanvaihto.ts",
     "src/app/modals/confirm/confirm.ts",
     "src/app/modals/revisions/revisions.ts",
+    "src/app/modals/koodisto/koodisto.ts",
     "src/app/states/state.ts",
     "src/app/states/sandbox/state.ts",
     "src/app/states/routelist/state.ts",

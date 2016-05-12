@@ -1,0 +1,22 @@
+div.modal-header
+  h2(kaanna="'valitse-koodi'")
+
+div.modal-body.modal-koodisto
+  table.table.table-striped
+    thead
+      tr
+        th
+        th(kaanna="'koodi'")
+        th(kaanna="'nimi'")
+    tbody
+      tr(ng-repeat="koodi in koodit")
+        td(style="padding: 4px 0 0 10px;")
+          input(type="checkbox" ng-model="koodi.$$valittu")
+        td(kaanna="koodi.arvo")
+        td(kaanna="koodi.nimi")
+
+div.modal-footer
+  button.btn.btn-default(ng-click="peruuta()")
+    span(kaanna="'peruuta'")
+  button.btn.btn-primary(ng-click="ok()")
+    span(kaanna="'valitse'")

@@ -18,32 +18,33 @@ package fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa;
 
 import fi.vm.sade.eperusteet.amosaa.domain.AbstractAuditedEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
-import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.SuorituspolkuRivi;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.Tekstiosa;
+import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
+import org.hibernate.envers.RelationTargetAuditMode;
 
 /**
  *
  * @author nkala
- *
- * Suorituspolku on erikoistettu versio muodostumissäännöstöstä.
  */
 @Entity
 @Audited
-@Table(name = "suorituspolku")
-public class Suorituspolku extends AbstractAuditedEntity implements Serializable, ReferenceableEntity {
+@Table(name = "tutkinnonosa_toteutus")
+public class TutkinnonosaToteutus extends AbstractAuditedEntity implements Serializable, ReferenceableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Getter
@@ -51,6 +52,41 @@ public class Suorituspolku extends AbstractAuditedEntity implements Serializable
     private Long id;
 
     @Getter
-    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "suorituspolku")
-    private Set<SuorituspolkuRivi> suorituspolkurivit = new HashSet<>();
+    @Setter
+    @OrderColumn
+    private Integer jnro;
+
+    @Getter
+    @Setter
+    private String osaamisalaKoodi;
+
+    @Getter
+    @Setter
+    private String oppiaineKoodi;
+
+    @Getter
+    @Setter
+    private String kurssiKoodi;
+
+    @Getter
+    @Setter
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Tutkinnonosa tutkinnonosa;
+
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.LAZY)
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    @Getter
+    @Setter
+    @ValidHtml(whitelist = ValidHtml.WhitelistType.NONE)
+    private LokalisoituTeksti otsikko;
+    
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @Getter
+    @Setter
+    private Tekstiosa tavatjaymparisto;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @Getter
+    @Setter
+    private Tekstiosa arvioinnista;
 }

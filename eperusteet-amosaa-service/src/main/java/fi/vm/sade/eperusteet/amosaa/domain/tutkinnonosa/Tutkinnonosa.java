@@ -18,9 +18,11 @@ package fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa;
 
 import fi.vm.sade.eperusteet.amosaa.domain.AbstractAuditedEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
-import fi.vm.sade.eperusteet.amosaa.domain.teksti.Tekstiosa;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -28,7 +30,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -55,7 +59,13 @@ public class Tutkinnonosa extends AbstractAuditedEntity implements Serializable,
 
     @Getter
     @Setter
-    private Long perusteentutkinnonosa;
+    @Column(updatable = false)
+    private Long perusteentutkinnonosa; // FIXME Käytä mahdollisesti tunnistetta
+
+    @Getter
+    @Setter
+    @Column(updatable = false)
+    private String koodi;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Getter
@@ -67,13 +77,9 @@ public class Tutkinnonosa extends AbstractAuditedEntity implements Serializable,
     @Setter
     private VierasTutkinnonosa vierastutkinnonosa;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Getter
     @Setter
-    private Tekstiosa tavatjaymparisto;
-
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @Getter
-    @Setter
-    private Tekstiosa arvioinnista;
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "tutkinnonosa")
+    @OrderColumn(name = "jnro")
+    private List<TutkinnonosaToteutus> toteutukset = new ArrayList<>();
 }

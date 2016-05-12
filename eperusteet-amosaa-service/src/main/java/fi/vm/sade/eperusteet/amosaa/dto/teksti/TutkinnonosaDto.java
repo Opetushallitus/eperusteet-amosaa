@@ -18,6 +18,8 @@ package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -34,6 +36,6 @@ public class TutkinnonosaDto {
     private Long perusteentutkinnonosa;
     private OmaTutkinnonosaDto omatutkinnonosa;
     private VierasTutkinnonosaDto vierastutkinnonosa;
-    private TekstiosaDto tavatjaymparisto;
-    private TekstiosaDto arvioinnista;
+    private String koodi;
+    private List<TutkinnonosaToteutusDto> toteutukset = new ArrayList<>();
 }
