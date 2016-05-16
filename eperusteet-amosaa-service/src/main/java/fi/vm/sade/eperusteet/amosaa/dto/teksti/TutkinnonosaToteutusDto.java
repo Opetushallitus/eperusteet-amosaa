@@ -17,6 +17,7 @@
 package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,7 +33,5 @@ public class TutkinnonosaToteutusDto {
     private LokalisoituTekstiDto otsikko;
     private TekstiosaDto tavatjaymparisto;
     private TekstiosaDto arvioinnista;
-    private String osaamisalaKoodi;
-    private String oppiaineKoodi;
-    private String kurssiKoodi;
+    private Set<String> koodit;
 }

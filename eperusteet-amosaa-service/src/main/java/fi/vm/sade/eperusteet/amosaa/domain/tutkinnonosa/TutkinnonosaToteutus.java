@@ -22,7 +22,9 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Tekstiosa;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 import java.io.Serializable;
+import java.util.Set;
 import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -58,15 +60,8 @@ public class TutkinnonosaToteutus extends AbstractAuditedEntity implements Seria
 
     @Getter
     @Setter
-    private String osaamisalaKoodi;
-
-    @Getter
-    @Setter
-    private String oppiaineKoodi;
-
-    @Getter
-    @Setter
-    private String kurssiKoodi;
+    @ElementCollection
+    private Set<String> koodit;
 
     @Getter
     @Setter

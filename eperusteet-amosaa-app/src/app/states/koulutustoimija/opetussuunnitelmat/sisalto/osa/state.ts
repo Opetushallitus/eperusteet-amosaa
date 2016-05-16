@@ -38,7 +38,7 @@ angular.module("app")
             controller: ($state, $stateParams, $location, $scope, $rootScope, $document, $timeout,
                          osa, nimiLataaja, Varmistusdialogi, historia, versioId, versio, pTosa) => {
                 $scope.pTosa = pTosa;
-                $scope.$$showSisalto = true;
+                $scope.$$showToteutus = true;
                 nimiLataaja(osa.tekstiKappale.muokkaaja)
                     .then(_.cset(osa, "$$nimi"));
 
@@ -121,7 +121,18 @@ angular.module("app")
         },
         tutkinnonosa: {
             controller: ($scope, peruste, arviointiAsteikot) => {
-                $scope.osaamisalat = _.indexBy(peruste.osaamisalat, "uri");
+                const koodit = _([])
+                    .concat($scope.pTosa ? _.map($scope.pTosa.osaAlueet, (oa: any) => ({
+                        nimi: oa.nimi,
+                        arvo: oa.koodiArvo,
+                        uri: oa.koodiUri
+                    })) : [])
+                    .concat(peruste.osaamisalat)
+                    .indexBy("uri")
+                    .value();
+
+                $scope.koodit = koodit;
+
                 $scope.peruste = peruste;
                 $scope.sortableOptions = {
                     handle: ".toteutus-handle",
@@ -145,11 +156,8 @@ angular.module("app")
 
                 $scope.removeToteutus = (toteutus) => _.remove($scope.osa.tosa.toteutukset, toteutus);
 
-                $scope.addOsaamisala = (toteutus) => KoodistoModal.osaamisala(peruste.osaamisalat)
-                    .then(res => toteutus.osaamisalaKoodi = !_.isEmpty(res) && _.first(res).uri);
-
-                $scope.addOppimaara = (toteutus) => KoodistoModal.oppiaine(peruste.osaamisalat)
-                    .then(res => console.log(res));
+                $scope.addKoodi = (toteutus) => KoodistoModal.koodi(koodit, toteutus.koodit)
+                    .then(res => toteutus.koodit = res);
 
                 $scope.sortableOptionsArvioinninKohdealueet = Sorting.getSortableOptions(".arviointi-kohdealueet");
                 $scope.sortableOptionsArvioinninKohteet = Sorting.getSortableOptions(".arviointi-kohteet");
@@ -189,7 +197,7 @@ angular.module("app")
                     arvioinninKohdealue.$$uusiAuki = false;
                 };
                 $scope.lisaaKriteeri = (osaamistasonKriteeri) => {
-                    osaamistasonKriteeri.kriteerit = osaamistasonKriteeri.kriteerit || [];
+                    osaamistasonKriteeri.kriteerit = osaamistasonKriteeri.kriteerit || [];
                     osaamistasonKriteeri.kriteerit.push({});
                 };
                 $scope.poistaArvioinninKohdealue = (kohdealue) => {

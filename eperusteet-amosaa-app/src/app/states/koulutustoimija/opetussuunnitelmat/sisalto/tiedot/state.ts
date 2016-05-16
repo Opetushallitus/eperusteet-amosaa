@@ -12,7 +12,7 @@ angular.module("app")
 
 
 namespace TiedotImpl {
-    export const controller = ($q, $scope, $state, koulutustoimija, ops, historia, versioId, versio, nimiLataaja) => {
+    export const controller = ($q, $scope, $state, koulutustoimija, ops, historia, versioId, versio, nimiLataaja, peruste) => {
         $scope.versio = versio;
         $scope.koulutustoimija = koulutustoimija;
         [$scope.uusin, $scope.historia] = Revisions.parseAll(historia);

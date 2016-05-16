@@ -1,6 +1,6 @@
 $box-table-bgcolor: #199dd0;
 $box-table-padding: 5px;
-$tosa-color: #E9F5FF;
+$tosa-color: #199DD0;
 
 .tutkinnonosa {
   .tutke2osa {
@@ -42,6 +42,7 @@ $tosa-color: #E9F5FF;
       .otsikko { font-size: 16px;
         background: $tosa-color;
         padding: 6px;
+        color: white;
         cursor: pointer;
 
         .turbochevron {
@@ -56,9 +57,17 @@ $tosa-color: #E9F5FF;
     }
 
     .toteutus {
-      padding: 5px;
       margin-top: 10px;
-      background: $tosa-color;
+      border: 1px solid $tosa-color;
+
+      .toteutus-header {
+        padding: 5px;
+        background: $tosa-color;
+      }
+
+      .toteutus-content {
+        padding: 5px;
+      }
 
       .content-toggler-header {
         margin-top: 10px;

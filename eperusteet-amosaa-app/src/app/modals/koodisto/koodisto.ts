@@ -4,22 +4,16 @@ namespace KoodistoModal {
         i = inject($injector, ["$rootScope", "$uibModal", "$q"]);
     };
 
-    export const oppiaine = (peruste) => i.$uibModal.open({
+    export const koodi = (koodisto, valitut = []) => i.$uibModal.open({
             resolve: { },
-            templateUrl: "modals/koodisto/oppiaine.jade",
+            templateUrl: "modals/koodisto/koodisto.jade",
             controller: ($scope, $state, $uibModalInstance) => {
-                console.log(peruste);
-                $scope.ok = $uibModalInstance.close;
-                $scope.peruuta = $uibModalInstance.dismiss;
-            }
-        }).result;
-
-    export const osaamisala = (koodit) => i.$uibModal.open({
-            resolve: { },
-            templateUrl: "modals/koodisto/osaamisala.jade",
-            controller: ($scope, $state, $uibModalInstance) => {
-                $scope.koodit = _.cloneDeep(koodit);
-                $scope.ok = () => $uibModalInstance.close(_.filter($scope.koodit, (koodi: any) => koodi.$$valittu));
+                $scope.koodisto = _.groupBy(koodisto, (koodi) => _.first(koodi.uri.split("_")));
+                $scope.valitut = _.zipObject(valitut, _.map(valitut, _.constant(true)));
+                $scope.ok = () => $uibModalInstance.close(_($scope.valitut)
+                    .keys()
+                    .filter(valittu => $scope.valitut[valittu])
+                    .value());
                 $scope.peruuta = $uibModalInstance.dismiss;
             }
         }).result;

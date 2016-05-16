@@ -170,7 +170,7 @@ mixin arviointi()
 
 
 mixin tosaToteutus()
-  div.toteutukset(ng-hide="$$showSisalto")
+  div.toteutukset
     div(ng-if="$$ekEditing")
       div
         h1(kaanna="'toteutukset'")
@@ -186,13 +186,14 @@ mixin tosaToteutus()
 
         div(ui-sortable="sortableOptions" ng-model="osa.tosa.toteutukset")
           div.toteutus(ng-repeat="toteutus in osa.tosa.toteutukset")
-            div.input-group
-              span.input-group-addon.pointable(ng-click="toteutus.$$nayta = !toteutus.$$nayta")
-                +turboChevron("!toteutus.$$nayta")
-              input.form-control(slocalized ng-model="toteutus.otsikko")
-              span.input-group-addon.pointable.toteutus-handle
-                +gicon("sort")
-            div(ng-if="toteutus.$$nayta")
+            div.toteutus-header
+              div.input-group
+                span.input-group-addon.pointable(ng-click="toteutus.$$nayta = !toteutus.$$nayta")
+                  +turboChevron("!toteutus.$$nayta")
+                input.form-control(slocalized ng-model="toteutus.otsikko")
+                span.input-group-addon.pointable.toteutus-handle
+                  +gicon("sort")
+            div.toteutus-content(ng-if="toteutus.$$nayta")
               div.osaamisalatieto(ng-show="toteutus.osaamisalaKoodi")
                 span(kaanna="'osaamisalat-joihin-vaikutusta'")
                 span(style="margin-right: 6px")
@@ -200,21 +201,26 @@ mixin tosaToteutus()
                 span(ng-bind="osaamisalat[toteutus.osaamisalaKoodi].nimi | kaanna")
                 b(style="margin-left: 6px" ng-bind="osaamisalat[toteutus.osaamisalaKoodi].arvo")
 
+              div
+                +contentToggler("$$showKoodit", "'liitetyt-koodit'")
+                  table.table.table-striped(ng-if="toteutus.koodit.length > 0")
+                    thead
+                      tr
+                        th(kaanna="'koodi'")
+                        th(kaanna="'nimi'")
+                    tbody
+                      tr(ng-repeat="koodi in toteutus.koodit")
+                        td(ng-bind="koodit[koodi].arvo")
+                        td(kaanna="koodit[koodi].nimi")
+                  button.btn.btn-primary(ng-disabled="koodit.length === 0" ng-click="addKoodi(toteutus)" kaanna="'muokkaa-koodeja'")
+
               +contentToggler("$$showTavatjaymparisto", "'tavat-ja-ymparisto'")
                 div(ckeditor slocalized ng-model="toteutus.tavatjaymparisto.teksti" layout="normal")
               +contentToggler("$$showArvioinnista", "'osaamisen-arvioinnista'")
                 div(ckeditor slocalized ng-model="toteutus.arvioinnista.teksti" layout="normal")
               div.toolbar-bottom
-                button.btn.btn-primary(ng-show="peruste.osaamisalat.length > 0" style="margin-right: 6px" ng-click="addOsaamisala(toteutus)")
-                  +itext("plus", 'lisaa-osaamisala-koodi')
-                // button.btn.btn-primary(ng-click="addOppimaara(toteutus)" style="margin-right: 6px")
-                  +itext("plus", 'lisaa-oppimaara-koodi')
-                button.btn.btn-primary(ng-click="addOsaalue(toteutus)")
-                  +itext("plus", 'lisaa-osaalue-koodi')
-
-                .pull-right
-                  button.btn.btn-danger(ng-click="removeToteutus(toteutus)")
-                    +itext("remove", 'poista')
+                button.btn.btn-danger(ng-click="removeToteutus(toteutus)")
+                  +itext("remove", 'poista')
 
     div(ng-if="!$$ekEditing")
       div(ng-hide="osa.tosa.toteutukset.length > 0")
@@ -227,6 +233,17 @@ mixin tosaToteutus()
             +turboChevron("!toteutus.$$nayta")
             +plainTeksti("toteutus.otsikko")
           .sisalto(ng-if="toteutus.$$nayta")
+            div(ng-show="toteutus.koodit.length > 0")
+              +contentToggler("$$showKoodit", "'liitetyt-koodit'")
+                table.table.table-striped
+                  thead
+                    tr
+                      th(kaanna="'koodi'")
+                      th(kaanna="'nimi'")
+                  tbody
+                    tr(ng-repeat="koodi in toteutus.koodit")
+                      td(ng-bind="koodit[koodi].arvo")
+                      td(kaanna="koodit[koodi].nimi")
             +contentToggler("$$showTavatjaymparisto", "'tavat-ja-ymparisto'")
               +teksti("toteutus.tavatjaymparisto.teksti")
             +contentToggler("$$showArvioinnista", "'osaamisen-arvioinnista'")
@@ -297,12 +314,10 @@ mixin perusteenTosaSisalto()
     span(ng-bind="pTosa.luotu | aikaleima")
   +formfieldDense("'viimeksi-muokattu'")
     span(ng-bind="pTosa.muokattu | aikaleima")
-
   +teksti("pTosa.kuvaus")
 
   div(ng-if="pTosa.tyyppi === 'tutke2'")
     +tutke2osa
-
   div(ng-if="pTosa.tyyppi !== 'tutke2'")
     +contentToggler("pTosa.$$showAmVaatimukset", "'ammattitaitovaatimukset'")
       +teksti("pTosa.ammattitaitovaatimukset")
@@ -321,16 +336,17 @@ mixin perusteenTosaSisalto()
 
 
 mixin tosaSisalto()
-  div(ng-show="$$showSisalto")
-    div(ng-if="pTosa")
-      +perusteenTosaSisalto
-    div(ng-if="!pTosa")
-      +omaTosaSisalto
+  div(ng-if="pTosa")
+    +perusteenTosaSisalto
+  div(ng-if="!pTosa")
+    +omaTosaSisalto
 
 .tutkinnonosa
   div(ng-hide="$$ekEditing" style="margin-bottom: 20px;")
-    +toggler("$$showSisalto", "'toteutus'", "'sisalto'")
+    +toggler("$$showToteutus", "'sisalto'", "'toteutus'")
 
   hr(ng-show="$$ekEditing")
-  +tosaToteutus
-  +tosaSisalto
+  div(ng-if="$$showToteutus")
+    +tosaToteutus
+  div(ng-if="!$$showToteutus")
+    +tosaSisalto
