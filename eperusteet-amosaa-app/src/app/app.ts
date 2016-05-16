@@ -141,7 +141,11 @@ angular.module("app", [
     });
 })
 
-.run(($rootScope) => {
+.run(($rootScope, $anchorScroll, $location) => {
+    $rootScope.gotoAnchor = (loc) => {
+        $location.hash(loc);
+        $anchorScroll();
+    };
     // $.get("templates.html", function(data) {
     //     $("#includedTemplates").replaceWith(data);
     // });

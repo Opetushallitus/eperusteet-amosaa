@@ -10,6 +10,7 @@ mixin vaatimus()
       span.pull-right.linkki(ng-click="poistaVaatimus(vaatimuksenKohde, vaatimus)")
         +icon("trash-o")
 
+
 mixin vaatimuksenKohde()
   .vaatimuksen-kohde
     .form-group(ng-if="$$ekEditing")
@@ -44,6 +45,7 @@ mixin vaatimuksenKohde()
         +icon("plus")
       .clearfix
 
+
 mixin ammattitaitovaatimus()
   .box-panel
     .box-panel-title
@@ -72,6 +74,7 @@ mixin ammattitaitovaatimus()
         span=" "
         span(kaanna="'lisaa-arviointi-kohde'")
 
+
 mixin kriteeri()
   div(ng-if="$$ekEditing")
     textarea.form-control(ng-model="kriteeri" slocalized placeholder="{{'kriteerin-teksti' | kaanna}}")
@@ -80,6 +83,7 @@ mixin kriteeri()
         +gicon("sort")
       span.pull-right.linkki(ng-click="poistaKriteeri(osaamistasonKriteeri, kriteeri)")
         +icon("trash-o")
+
 
 mixin arviointiKohde()
   .arviointi-kohde(ng-if="pa.arviointiasteikko(arviointiKohde) > 0")
@@ -118,6 +122,7 @@ mixin arviointiKohde()
                   span.linkki.pull-right(ng-click="lisaaKriteeri(osaamistasonKriteeri)")
                     +icon("plus")
 
+
 mixin arviointiAsteikko()
   .arviointi-asteikko
     .radio(ng-hide="arviointiAsteikko.id == 3" ng-repeat="arviointiAsteikko in arviointiAsteikot")
@@ -132,10 +137,11 @@ mixin arviointiAsteikko()
                              ng-show="arvioinninKohdealue.$$uusiAuki" kaanna="'peruuta'")
       button.btn.btn-default(type='button' ng-click="lisaaArviointiasteikko(arvioinninKohdealue)" kaanna="'lisaa'")
 
+
 mixin arviointi()
   .box-panel
     .box-panel-title
-      h3(ng-if="!$$ekEditing")
+      h3(ng-if="!$$ekEditing && arvioinninKohdealue.otsikko.fi !== 'automaattinen'")
         span(ng-if="arvioinninKohdealue.otsikko" kaanna="arvioinninKohdealue.otsikko")
 
       .input-group(ng-if="$$ekEditing")
@@ -257,9 +263,31 @@ mixin omaTosaSisalto()
     +contentToggler("$$showArviointi", "'arviointi'")
       .arviointi-kohdealueet
         div(ng-repeat="arvioinninKohdealue in osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet")
-          +arviointi("arvioinninKohdealue")
+          +arviointi
     +contentToggler("$$showAmmattitaidonOsoittamistavat", "'ammattitaidon-osoittamistavat'")
       +teksti("osa.tosa.omatutkinnonosa.ammattitaidonOsoittamistavat")
+
+
+
+mixin tutke2osa()
+  .tutke2osa
+    .valitsin
+      span(kaanna="'osa-alueet'")
+      span(style="margin-right: 5px") :
+      span.valitsin-osaalue(ng-repeat="osaAlue in pTosa.osaAlueet")
+        span.pipe(ng-hide="$first") |
+        a(href="" kaanna="osaAlue.nimi" ng-click="gotoAnchor('osa-alue-' + osaAlue.id)")
+    .osa-alue(ng-repeat="osaAlue in pTosa.osaAlueet")
+      h1.osa-alue-nimi(id="{{ 'osa-alue-' + osaAlue.id }}")
+        span(kaanna="osaAlue.nimi")
+        span.koodi ({{ osaAlue.koodiArvo }})
+      .osaamistavoite(ng-repeat="osaamistavoite in osaAlue.osaamistavoitteet")
+        h2.osaamistavoite-nimi(kaanna="osaamistavoite.nimi")
+        +contentToggler("$$showOsaamistavoitteet", "'osaamistavoitteet'")
+          +teksti("osaamistavoite.tavoitteet")
+        div(ng-repeat="arvioinninKohdealue in osaamistavoite.arviointi.arvioinninKohdealueet")
+          +arviointi
+        +teksti("osaamistavoite.tunnustaminen")
 
 
 mixin perusteenTosaSisalto()
@@ -269,20 +297,28 @@ mixin perusteenTosaSisalto()
     span(ng-bind="pTosa.luotu | aikaleima")
   +formfieldDense("'viimeksi-muokattu'")
     span(ng-bind="pTosa.muokattu | aikaleima")
-  +contentToggler("pTosa.$$showAmVaatimukset", "'ammattitaitovaatimukset'")
-    +teksti("pTosa.ammattitaitovaatimukset")
-  // +contentToggler("$$showTavoitteet", "'tavoitteet'")
-    +teksti("pTosa.tavoitteet")
-  // +contentToggler("$$showAmmattitaitovaatimukset", "'ammattitaitovaatimukset'")
-    .ammattitaitovaatimukset
-      div(ng-repeat="ammattitaitovaatimus in pTosa.ammattitaitovaatimuksetLista")
-        +ammattitaitovaatimus
-  +contentToggler("$$showArviointi", "'arviointi'")
-    .arviointi-kohdealueet
-      div(ng-repeat="arvioinninKohdealue in pTosa.arviointi.arvioinninKohdealueet")
-        +arviointi("arvioinninKohdealue")
-  +contentToggler("pTosa.$$showAmOsoittamiset", "'ammattitaidon-osoittamistavat'")
-    +teksti("pTosa.ammattitaidonOsoittamistavat")
+
+  +teksti("pTosa.kuvaus")
+
+  div(ng-if="pTosa.tyyppi === 'tutke2'")
+    +tutke2osa
+
+  div(ng-if="pTosa.tyyppi !== 'tutke2'")
+    +contentToggler("pTosa.$$showAmVaatimukset", "'ammattitaitovaatimukset'")
+      +teksti("pTosa.ammattitaitovaatimukset")
+    // +contentToggler("$$showTavoitteet", "'tavoitteet'")
+      +teksti("pTosa.tavoitteet")
+    // +contentToggler("$$showAmmattitaitovaatimukset", "'ammattitaitovaatimukset'")
+      .ammattitaitovaatimukset
+        div(ng-repeat="ammattitaitovaatimus in pTosa.ammattitaitovaatimuksetLista")
+          +ammattitaitovaatimus
+    +contentToggler("$$showArviointi", "'arviointi'")
+      .arviointi-kohdealueet
+        div(ng-repeat="arvioinninKohdealue in pTosa.arviointi.arvioinninKohdealueet")
+          +arviointi
+    +contentToggler("pTosa.$$showAmOsoittamiset", "'ammattitaidon-osoittamistavat'")
+      +teksti("pTosa.ammattitaidonOsoittamistavat")
+
 
 mixin tosaSisalto()
   div(ng-show="$$showSisalto")

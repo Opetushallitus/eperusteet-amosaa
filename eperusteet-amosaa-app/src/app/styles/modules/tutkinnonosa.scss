@@ -3,6 +3,31 @@ $box-table-padding: 5px;
 $tosa-color: #E9F5FF;
 
 .tutkinnonosa {
+  .tutke2osa {
+    .valitsin {
+      .valitsin-osaalue {
+        .pipe {
+          padding: 0 5px 0 5px;
+        }
+      }
+    }
+    .osa-alue {
+      margin-top: 16px;
+
+      .osa-alue-nimi {
+        .koodi {
+          margin-left: 6px;
+        }
+      }
+
+      .osaamistavoite {
+        border-bottom: 1px solid #ddd;
+        .osaamistavoite-nimi {
+        }
+      }
+    }
+  }
+
   .toteutukset {
     .toolbar {
       position: relative;
@@ -139,6 +164,7 @@ $tosa-color: #E9F5FF;
         }
 
         .box-panel-content {
+            padding: 4px;
             h4 {
                 font-weight: bold;
             }
