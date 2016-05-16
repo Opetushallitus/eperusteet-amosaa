@@ -1,4 +1,4 @@
-module DynamicImpl {
+namespace DynamicImpl {
     export const controller = ($scope) => {
     };
 

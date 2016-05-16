@@ -27,6 +27,7 @@
     "src/app/components/dynamic/dynamic.ts",
     "src/app/components/reresolver/reresolver.ts",
     "src/app/components/termisto/termisto.ts",
+    "src/app/components/charts/charts.ts",
     "src/app/app.ts",
     "src/app/logic/kayttajatiedot.ts",
     "src/app/logic/sorting.ts",

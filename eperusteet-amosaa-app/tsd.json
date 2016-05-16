@@ -17,9 +17,6 @@
     "restangular/restangular.d.ts": {
       "commit": "78ba6e41543e5ababbd1dda19797601be3c1f304"
     },
-    "lodash/lodash-3.10.d.ts": {
-      "commit": "e12c8e3bcdd77fb05d498ec61525be6ad112dfd6"
-    },
     "moment/moment.d.ts": {
       "commit": "93bae1bb4c887c1375a4c1f0c3bb849ff06b8ac6"
     },
@@ -34,6 +31,9 @@
     },
     "d3/d3.d.ts": {
       "commit": "8960370289f10cf75b72cb3e06a15150c1b323e2"
+    },
+    "lodash/lodash.d.ts": {
+      "commit": "1ec3d510e0c4d7c50e708ca7cb0765c7e06fa2ed"
     }
   }
 }

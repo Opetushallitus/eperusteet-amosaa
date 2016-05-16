@@ -4,6 +4,7 @@ angular.module("app")
     url: "",
     resolve: {
         tiedotteet: (koulutustoimija) => koulutustoimija.all("tiedotteet").getList(),
+        tilastot: (Api) => Api.one("tilastot"),
         opsSaver: ($state, opetussuunnitelmat) => (uusiOps) => uusiOps && opetussuunnitelmat
             .post(uusiOps)
             .then((res) => $state.go("root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot", {
@@ -24,6 +25,34 @@ angular.module("app")
                 $scope.suodataOpetussuunnitelmat = (opsit, search) =>
                     _.each(opsit, (ops) => {
                         ops.$$hidden = !_.isEmpty(search) && !Algoritmit.match(search, ops.nimi) });
+            }
+        },
+        tilastot: {
+            controller: ($scope, tilastot) => {
+                tilastot.get()
+                    .then((res) => {
+                        $scope.tilastot = {
+                            type: "bar",
+                            data: {
+                                labels: _.map(["tilastot-kayttajia", "tilastot-koulutustoimijoita", "tilastot-opetussuunnitelmia"], KaannaService.kaanna),
+                                datasets: [{
+                                    label: "Määrä",
+                                    data: [res.kayttajia, res.koulutuksenjarjestajia, res.opetussuunnitelmia]
+                                }]
+                            },
+                            options: {
+                                responsive: false,
+                                maintainAspectRatio: true,
+                                scales: {
+                                    yAxes: [{
+                                        ticks: {
+                                            beginAtZero:true
+                                        }
+                                    }]
+                                }
+                            }
+                        };
+                    });
             }
         },
         pohjat: {
