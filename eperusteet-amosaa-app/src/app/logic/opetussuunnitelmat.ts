@@ -12,6 +12,9 @@ module Opetussuunnitelmat {
         if (ops.tyyppi === "ops" || ops.tyyppi === "kooste") {
             return ["tekstikappale", "tutkinnonosa", "tutkinnonosaryhma", "suorituspolku"];
         }
+        else if (ops.tyyppi === "yleinen") {
+            return ["tekstikappale", "tutkinnonosa", "tutkinnonosaryhma"];
+        }
         else {
             return ["tekstikappale"];
         }

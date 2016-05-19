@@ -120,6 +120,31 @@ public class EperusteetServiceImpl implements EperusteetService {
     }
 
     @Override
+    public PerusteDto getYleinenPohja() {
+        try {
+            JsonNode node = client.getForObject(eperusteetServiceUrl + "/api/perusteet/amosaapohja", JsonNode.class);
+            ObjectMapper mapper = new ObjectMapper();
+            PerusteDto peruste = mapper.treeToValue(node, PerusteDto.class);
+            return peruste;
+        } catch (IOException ex) {
+            throw new BusinessRuleViolationException("pohjaa-ei-loytynyt");
+        }
+    }
+
+    @Override
+    public String getYleinenPohjaSisalto() {
+        try {
+            JsonNode node = client.getForObject(eperusteetServiceUrl + "/api/perusteet/amosaapohja", JsonNode.class);
+            ObjectMapper mapper = new ObjectMapper();
+            Object perusteObj = mapper.treeToValue(node, Object.class);
+            String json = mapper.writeValueAsString(perusteObj);
+            return json;
+        } catch (IOException ex) {
+            throw new BusinessRuleViolationException("perustetta-ei-loytynyt");
+        }
+    }
+
+    @Override
     public List<PerusteInfoDto> findPerusteet() {
         return new ArrayList<>();
     }

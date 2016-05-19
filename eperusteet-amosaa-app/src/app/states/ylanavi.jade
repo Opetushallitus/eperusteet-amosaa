@@ -11,15 +11,14 @@ div.ylanavi(sticky className="ylanavi-sticky")
     div.col-xs-4
       div.pull-right
         span.dropdown.kielivalitsin
-          span(kaanna="'sisalto-kieli'")
-          span=": "
-          span
-            a.action-link.dropdown-toggle(data-toggle="dropdown" kaanna="currentLang")
-              span.caret
-            ul.dropdown-menu.dropdown-menu-right
-              li(ng-repeat="kieli in langs")
-                a(href="" kaanna="kieli" ng-click="selectLang(kieli)")
-
+          +gicon("flag")
+          a.dropdown-toggle(data-toggle="dropdown")
+            span(ng-bind="currentLang | kaanna")
+            span.caret
+          ul.dropdown-menu.dropdown-menu-right
+            li(ng-repeat="kieli in langs")
+              a(href="" kaanna="kieli" ng-click="selectLang(kieli)")
+      div.pull-right
         span.ohje.popover-element.fa-stack.fa-lg(
           style="color: #199dd0;"
           ng-show="helpUrl"

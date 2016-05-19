@@ -13,36 +13,23 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * European Union Public Licence for more details.
  */
+
 package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 
-import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
-import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
-import java.io.Serializable;
-import java.util.Date;
-import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 
 /**
  *
- * @author jhyoty
+ * @author nkala
  */
 @Getter
 @Setter
-public abstract class PerusteBaseDto implements Serializable {
-    private Long id;
+public class KoulutusDto {
     private LokalisoituTekstiDto nimi;
-    private KoulutusTyyppi koulutustyyppi;
-    private Set<Kieli> kielet;
-    private LokalisoituTekstiDto kuvaus;
-    private String diaarinumero;
-    private Date voimassaoloAlkaa;
-    private Date siirtymaPaattyy;
-    private Date voimassaoloLoppuu;
-    private Date muokattu;
-    private String tila;
-    private String tyyppi;
-    private Set<String> korvattavatDiaarinumerot;
-    private Set<KoulutusDto> koulutukset;
+    private String koulutuskoodiArvo;
+    private String koulutuskoodiUri;
+    private String koulutusalakoodi;
+    private String opintoalakoodi;
 }

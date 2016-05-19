@@ -35,6 +35,8 @@ import org.springframework.stereotype.Service;
 public interface EperusteetService {
     PerusteDto getPeruste(Long id);
     PerusteDto getPeruste(String diaariNumero);
+    PerusteDto getYleinenPohja();
+    String getYleinenPohjaSisalto();
     String getPerusteData(Long id);
     List<PerusteInfoDto> findPerusteet();
     List<PerusteInfoDto> findPerusteet(Set<KoulutusTyyppi> tyypit);

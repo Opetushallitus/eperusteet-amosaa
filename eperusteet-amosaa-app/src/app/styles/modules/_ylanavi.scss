@@ -1,4 +1,6 @@
 .ylanavi {
+    user-select: none;
+
     ol {
         padding: 3px 0 0 0;
     }
@@ -15,13 +17,24 @@
 
     .ohje {
         position: relative;
-        top: 8px;
+        margin-right: 6px;
+        top: 4px;
     }
 
     .kielivalitsin {
+        text-transform: uppercase;
         margin: 5px 5px 5px 5px;
         position: relative;
-        top: 9px;
+        top: 8px;
+        padding: 6px;
+        background: #199DD0;
+        color: white;
+        border-radius: 5px;
+
+        .dropdown-toggle {
+            color: white;
+        }
+
         a {
             cursor: pointer;
             padding: 5px;
