@@ -5,7 +5,6 @@ import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiTila;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.amosaa.repository.dokumentti.DokumenttiRepository;
-import fi.vm.sade.eperusteet.amosaa.resource.util.CacheControl;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiService;
 import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
 import io.swagger.annotations.Api;
@@ -27,7 +26,6 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/dokumentti")
 @Api(value = "dokumentit")
-@Transactional
 public class DokumenttiController {
     
     @Autowired
@@ -67,11 +65,9 @@ public class DokumenttiController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    @Transactional(readOnly = true)
-    public ResponseEntity<byte[]> get(
-            @PathVariable Long ktId,
-            @PathVariable Long opsId,
-            @RequestParam(value = "kieli", defaultValue = "fi") String kieli) {
+    public ResponseEntity<byte[]> get(@PathVariable Long ktId,
+                                      @PathVariable Long opsId,
+                                      @RequestParam(defaultValue = "fi") String kieli) {
         byte[] pdfdata = service.get(opsId, Kieli.of(kieli));
 
         if (pdfdata == null || pdfdata.length == 0) {
@@ -123,7 +119,6 @@ public class DokumenttiController {
         }
     }
 
-    @Transactional(readOnly = true)
     @RequestMapping(value = "/kuva", method=RequestMethod.GET)
     public ResponseEntity<Object> addImage(@PathVariable Long ktId,
                                             @PathVariable Long opsId,
@@ -168,7 +163,6 @@ public class DokumenttiController {
         return new ResponseEntity<>(image, headers, HttpStatus.OK);
     }
 
-    @Transactional
     @RequestMapping(value = "/kuva", method=RequestMethod.DELETE)
     public ResponseEntity<Object> deleteImage(@PathVariable Long ktId,
                                            @PathVariable Long opsId,

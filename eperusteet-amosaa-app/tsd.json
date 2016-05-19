@@ -32,8 +32,8 @@
     "d3/d3.d.ts": {
       "commit": "8960370289f10cf75b72cb3e06a15150c1b323e2"
     },
-    "lodash/lodash.d.ts": {
-      "commit": "1ec3d510e0c4d7c50e708ca7cb0765c7e06fa2ed"
+    "lodash/lodash-3.10.d.ts": {
+      "commit": "e12c8e3bcdd77fb05d498ec61525be6ad112dfd6"
     }
   }
 }

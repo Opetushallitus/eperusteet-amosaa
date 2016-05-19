@@ -8,9 +8,9 @@ html(lang="fi" ng-app="app")
     link(rel="stylesheet" href="styles.css")
 
     include ./templates.jade
-
+    script.
+      var CKEDITOR_BASEPATH = window.location.origin + window.location.pathname + "/ckeditor/";
     script(src="dependencies.js")
-
     script(src="app.js")
 
     title="ePerusteet-amosaa"

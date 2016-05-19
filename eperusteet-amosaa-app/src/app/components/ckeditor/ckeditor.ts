@@ -14,12 +14,9 @@
  * European Union Public Licence for more details.
  */
 
-
 angular.module("app")
 .run(() => {
     CKEDITOR.disableAutoInline = true;
-    const basePath = CKEDITOR.basePath;
-    CKEDITOR.basePath = _.first(basePath.split("#")) + "ckeditor/";
 })
 .constant("editorLayouts", {
     minimal: [

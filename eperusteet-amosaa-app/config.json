@@ -9,18 +9,6 @@
     "./node_modules/lodash/index.js",
     "./node_modules/jquery/dist/jquery.js",
     "./node_modules/jquery-ui-build/jquery-ui-1.8.16.custom.min.js",
-    "./node_modules/ckeditor/ckeditor.js",
-    "./node_modules/ckeditor/plugins/about/dialogs/about.js",
-    "./node_modules/ckeditor/plugins/clipboard/dialogs/paste.js",
-    "./node_modules/ckeditor/plugins/link/dialogs/link.js",
-    "./node_modules/ckeditor/plugins/table/dialogs/table.js",
-    "./node_modules/ckeditor/plugins/quicktable-1.0.6/plugin.js",
-    "./node_modules/ckeditor/plugins/quicktable-1.0.6/lang/fi.js",
-    "./node_modules/ckeditor/plugins/tableresize/plugin.js",
-    "./node_modules/ckeditor/plugins/tabletools/dialogs/tableCell.js",
-    "./node_modules/ckeditor/plugins/specialchar/dialogs/specialchar.js",
-    "./node_modules/ckeditor/plugins/specialchar/dialogs/lang/fi.js",
-    "./node_modules/ckeditor/plugins/specialchar/dialogs/lang/sv.js",
     "./node_modules/bootstrap-sass/assets/javascripts/bootstrap.js",
     "./node_modules/angular/angular.js",
     "./node_modules/restangular/dist/restangular.js",
@@ -41,6 +29,7 @@
     "./node_modules/angular-file-upload/dist/angular-file-upload.js",
     "./node_modules/chart.js/dist/Chart.bundle.min.js",
     "./node_modules/moment/moment.js",
-    "./node_modules/jquery-sticky/jquery.sticky.js"
+    "./node_modules/jquery-sticky/jquery.sticky.js",
+    "./node_modules/ckeditor/ckeditor.js"
   ]
 }

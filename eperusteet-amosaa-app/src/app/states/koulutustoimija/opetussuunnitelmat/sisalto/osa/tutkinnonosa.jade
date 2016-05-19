@@ -32,6 +32,7 @@ mixin vaatimuksenKohde()
       .col-xs-11.col-xs-push-1
         .vaatimukset(ui-sortable="sortableOptionsVaatimukset" ng-model="vaatimuksenKohde.vaatimukset")
           div(ng-repeat="vaatimus in vaatimuksenKohde.vaatimukset")
+
             +vaatimus
     div(ng-if="!$$ekEditing")
       ul
