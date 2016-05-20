@@ -44,7 +44,7 @@ public class EperusteetServiceMock implements EperusteetService {
     }
 
     @Override
-    public JsonNode getRakenne(Long id) {
+    public JsonNode getSuoritustavat(Long id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

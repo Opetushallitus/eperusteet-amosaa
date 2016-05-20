@@ -42,6 +42,6 @@ public interface EperusteetService {
     <T> T getPerusteSisalto(Long cperusteId, Class<T> type);
     <T> T getPerusteSisalto(CachedPeruste cperuste, Class<T> type);
     JsonNode getTutkinnonOsat(Long id);
-    JsonNode getRakenne(Long id);
+    JsonNode getSuoritustavat(Long id);
     JsonNode getTutkinnonOsa(Long id, Long tosaId);
 }

@@ -45,6 +45,12 @@ public class PerusteController {
         return service.getPerusteSisalto(id, PerusteDto.class);
     }
 
+    @RequestMapping(value = "/{id}/kaikki", method = RequestMethod.GET)
+    @ResponseBody
+    public JsonNode getPerusteAll(@PathVariable Long id) {
+        return service.getPerusteSisalto(id, JsonNode.class);
+    }
+
     @RequestMapping(value = "/{id}/tutkinnonosat", method = RequestMethod.GET)
     @ResponseBody
     public JsonNode getPerusteTutkinnonOsat(@PathVariable Long id) {
@@ -59,11 +65,11 @@ public class PerusteController {
         return service.getTutkinnonOsa(id, tosaId);
     }
 
-//    @RequestMapping(value = "/{id}/rakenne", method = RequestMethod.GET)
-//    @ResponseBody
-//    public JsonNode getPerusteRakenne(@PathVariable Long id) {
-//        return service.getRakenne(id);
-//    }
+    @RequestMapping(value = "/{id}/suoritustavat", method = RequestMethod.GET)
+    @ResponseBody
+    public JsonNode getPerusteRakenne(@PathVariable Long id) {
+        return service.getSuoritustavat(id);
+    }
 
 //    @RequestMapping(value = "/{perusteId}/tutkintonimikekoodit", method = GET)
 //    @ResponseBody

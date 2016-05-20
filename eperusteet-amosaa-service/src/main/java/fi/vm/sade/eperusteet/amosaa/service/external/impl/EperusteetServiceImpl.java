@@ -80,8 +80,14 @@ public class EperusteetServiceImpl implements EperusteetService {
     }
 
     @Override
-    public JsonNode getRakenne(Long id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public JsonNode getSuoritustavat(Long id) {
+        CachedPeruste cperuste = cachedPerusteRepository.findOne(id);
+        try {
+            JsonNode node = mapper.readTree(cperuste.getPeruste());
+            return node.get("suoritustavat");
+        } catch (IOException ex) {
+            throw new BusinessRuleViolationException("perusteen-parsinta-epaonnistui");
+        }
     }
 
     @Override

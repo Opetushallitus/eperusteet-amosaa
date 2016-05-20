@@ -27,9 +27,13 @@ angular.module("app")
         versioId: $stateParams => $stateParams.versio,
         versio: (versioId, historia) => versioId && historia.get(versioId),
         kommentit: (osa) => osa.all("kommentit").getList(),
-        pTosa: (Api, osa, ops) => (osa.tyyppi === "tutkinnonosa" // Create ops/<id>/peruste api
+        pTosat: (Api, osa, ops) => (osa.tyyppi === "suorituspolku"
+            && Api.all("perusteet/" + ops.peruste.id + "/tutkinnonosat").getList()),
+        pTosa: (Api, osa, ops) => (osa.tyyppi === "tutkinnonosa"
             && osa.tosa.tyyppi === "perusteesta"
             && Api.one("perusteet/" + ops.peruste.id + "/tutkinnonosat/" + osa.tosa.perusteentutkinnonosa).get()),
+        pSuoritustavat: (Api, osa, ops) => (osa.tyyppi === "suorituspolku"
+            && Api.one("perusteet/" + ops.peruste.id + "/suoritustavat").get()),
         arviointiAsteikot: (Api) => Api.all("arviointiasteikot").getList()
     },
     onEnter: (osa) =>
@@ -246,14 +250,15 @@ angular.module("app")
             controller: ($scope, osa) => {}
         },
         suorituspolku: {
-            controller: ($rootScope, $scope, osa, peruste: REl) => {
-                const tosat = _.indexBy(Perusteet.getTutkinnonOsat(peruste), "id");
-                const tosaViitteet: any = _(_.cloneDeep(Perusteet.getTosaViitteet(Perusteet.getSuoritustapa(peruste))))
+            controller: ($rootScope, $scope, osa, peruste: REl, pSuoritustavat, pTosat) => {
+                const suoritustapa = Perusteet.getSuoritustapa(pSuoritustavat)
+                const tosat = _.indexBy(pTosat, "id");
+                const tosaViitteet: any = _(_.cloneDeep(Perusteet.getTosaViitteet(suoritustapa)))
                     .each(viite => viite.$$tosa = tosat[viite._tutkinnonOsa])
                     .indexBy("id")
                     .value();
 
-                $scope.perusteRakenne = _.cloneDeep(Perusteet.getRakenne(Perusteet.getSuoritustapa(peruste)));
+                $scope.perusteRakenne = _.cloneDeep(Perusteet.getRakenne(suoritustapa));
                 $scope.misc = {
                     root: $rootScope,
                     editNode: (node) => SuoritustapaRyhmat.editoi(osa, node, tosaViitteet),
