@@ -37,6 +37,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonOsaKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaoikeusRepository;
@@ -165,7 +166,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         ops.setPeruste(cperuste);
         alustaOpetussuunnitelma(ops, rootTkv);
 
-        List<TutkinnonOsaKaikkiDto> tutkinnonOsat = eperusteetService.getPerusteSisalto(cperuste).getTutkinnonOsat();
+        List<TutkinnonOsaKaikkiDto> tutkinnonOsat = eperusteetService.getPerusteSisalto(cperuste, PerusteKaikkiDto.class).getTutkinnonOsat();
         SisaltoViite tosat = rootTkv.getLapset().get(0);
         for (TutkinnonOsaKaikkiDto tosa : tutkinnonOsat) {
             SisaltoViite uusi = SisaltoViite.createTutkinnonOsa(tosat);
@@ -201,7 +202,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         else {
             switch (opsDto.getTyyppi()) {
                 case OPS:
-                    PerusteDto peruste = eperusteetService.getPeruste(opsDto.getPerusteDiaarinumero());
+                    PerusteDto peruste = eperusteetService.getPeruste(opsDto.getPerusteDiaarinumero(), PerusteDto.class);
                     setOpsCommon(ops, peruste, rootTkv);
                     break;
                 case YLEINEN:

@@ -17,7 +17,8 @@
 package fi.vm.sade.eperusteet.amosaa.resource.peruste;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import fi.vm.sade.eperusteet.amosaa.service.peruste.PerusteCacheService;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
+import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,12 +37,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class PerusteController {
 
     @Autowired
-    private PerusteCacheService service;
+    private EperusteetService service;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public JsonNode getPeruste(@PathVariable Long id) {
-        return service.get(id);
+    public PerusteDto getPeruste(@PathVariable Long id) {
+        return service.getPerusteSisalto(id, PerusteDto.class);
     }
 
     @RequestMapping(value = "/{id}/tutkinnonosat", method = RequestMethod.GET)
@@ -50,11 +51,19 @@ public class PerusteController {
         return service.getTutkinnonOsat(id);
     }
 
-    @RequestMapping(value = "/{id}/rakenne", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}/tutkinnonosat/{tosaId}", method = RequestMethod.GET)
     @ResponseBody
-    public JsonNode getPerusteRakenne(@PathVariable Long id) {
-        return service.getRakenne(id);
+    public JsonNode getPerusteTutkinnonOsa(
+            @PathVariable Long id,
+            @PathVariable Long tosaId) {
+        return service.getTutkinnonOsa(id, tosaId);
     }
+
+//    @RequestMapping(value = "/{id}/rakenne", method = RequestMethod.GET)
+//    @ResponseBody
+//    public JsonNode getPerusteRakenne(@PathVariable Long id) {
+//        return service.getRakenne(id);
+//    }
 
 //    @RequestMapping(value = "/{perusteId}/tutkintonimikekoodit", method = GET)
 //    @ResponseBody

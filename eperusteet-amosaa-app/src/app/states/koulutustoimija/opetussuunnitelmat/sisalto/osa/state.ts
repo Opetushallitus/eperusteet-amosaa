@@ -27,8 +27,9 @@ angular.module("app")
         versioId: $stateParams => $stateParams.versio,
         versio: (versioId, historia) => versioId && historia.get(versioId),
         kommentit: (osa) => osa.all("kommentit").getList(),
-        pTosa: (peruste, osa) => (osa.tyyppi === "tutkinnonosa" && osa.tosa.tyyppi === "perusteesta"
-            && _.find(peruste.tutkinnonOsat, { id: osa.tosa.perusteentutkinnonosa })),
+        pTosa: (Api, osa, ops) => (osa.tyyppi === "tutkinnonosa" // Create ops/<id>/peruste api
+            && osa.tosa.tyyppi === "perusteesta"
+            && Api.one("perusteet/" + ops.peruste.id + "/tutkinnonosat/" + osa.tosa.perusteentutkinnonosa).get()),
         arviointiAsteikot: (Api) => Api.all("arviointiasteikot").getList()
     },
     onEnter: (osa) =>
