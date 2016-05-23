@@ -9,7 +9,7 @@ div.sivunavi.subtle-transition
         button.btn.btn-default.square(ng-disabled="$$ekEditing" href="" ng-click="startSorting()" oikeustarkastelu="muokkaus")
           +icon("arrows-v")
 
-  div.valikko(sticky top-spacing="88")
+  div.valikko(id="ops-sivunavi" sticky top-spacing="88")
     ul
       li
         a(ng-class="{ pakollinen: item.$$obj.pakollinen, liikkumaton: item.$$obj.liikkumaton }"

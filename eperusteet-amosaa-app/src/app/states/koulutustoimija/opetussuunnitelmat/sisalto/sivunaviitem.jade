@@ -1,4 +1,4 @@
-li(ng-show="!item.$$hidden" ng-repeat="item in ngModel")
+li(ng-show="!item.$$hidden" ng-repeat="item in ngModel" id="{{ 'sisalto-item-' + item.id }}")
   span
     a.pakollinen(ng-class="{ pakollinen: item.$$obj.pakollinen, liikkumaton: item.$$obj.liikkumaton }"
       style="padding-left: {{ (item.$$depth - 1) * 20 + 10 }}px"
