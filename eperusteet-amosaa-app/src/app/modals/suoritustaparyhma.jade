@@ -1,14 +1,34 @@
 div.modal-header
-  h2(kaanna="'muokkaa-ryhmaa'")
+  h2(kaanna="'palauta-osia'")
+
 
 div.modal-body
+  table.table
+    thead
+      tr
+        th(ng-bind="'osan-nimi' | kaanna")
+        th(width="16%" ng-bind="'toiminto' | kaanna")
+    tbody
+      tr(ng-repeat="module in node.osat" ng-show="spRivit[module.tunniste]")
+        td
+          span(ng-if="module._tutkinnonOsaViite" ng-init="tosa = tosat[module._tutkinnonOsaViite];")
+            span(kaanna="tosa.$$tosa.nimi")
+          span(ng-if="!module._tutkinnonOsaViite")
+            span(kaanna="module.nimi")
+        td
+          button.btn.btn-sm.btn-warning(ng-click="restoreModule(module)")
+            span(ng-bind="'palauta' | kaanna")
+
+
+// FIXME: Vanha toteutus mitä saatetaan tarvita
+// div.modal-body
   div.sp-ryhmat
     div.haku
       div.form-inline
         div.form-group.has-feedback.has-feedback-left
           input.form-control.input-sm(ng-change="suodata(search)" type="text" ng-model="search" placeholder="{{ 'rajaa-sisaltoa' | kaanna }}")
           i.form-control-feedback.glyphicon.glyphicon-search(style="color: gray;")
-    div.sp-ryhma(ng-repeat="module in node.osat")
+    div.sp-ryhma(ng-repeat="module in node.osat" ng-show="spRivit[module.tunniste]")
       span.sisalto-handle
         +icon("arrows-v")
       span(ng-if="module._tutkinnonOsaViite" ng-init="tosa = tosat[module._tutkinnonOsaViite];")
@@ -17,7 +37,7 @@ div.modal-body
         span(kaanna="module.nimi")
       div.sp-tools
         a(href="" ng-click="removeModule(module)")
-          +icon("remove")
+          span(ng-bind="'palauta' | kaanna")
 
 div.modal-footer
   button.btn.btn-default(ng-click="peruuta()")

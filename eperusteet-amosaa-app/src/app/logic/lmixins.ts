@@ -6,6 +6,7 @@ declare module _ {
         matchStrings(search: string, target: string): boolean;
         fromPairs(x: Array<any>): any;
         append<T>(x: Array<T>, el: T): Array<T>;
+        indexBy<T, G>(x: Array<T>, k: string): Array<G>;
         cset<O, P, V>(o: O, p: P): (v: V) => void;
         fromPairs(): any;
     }

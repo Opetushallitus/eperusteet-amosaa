@@ -4,13 +4,18 @@ namespace SuoritustapaRyhmat {
         i = inject($injector, ["$rootScope", "$uibModal", "$q"]);
     };
 
-    export const editoi = (osa, node, tutkinnonosat) => i.$uibModal.open({
+    export const editoi = (spRivit, node, tutkinnonosat) => i.$uibModal.open({
             resolve: { },
             templateUrl: "modals/suoritustaparyhma.jade",
             controller: ($scope, $state, $uibModalInstance) => {
+                $scope.restoreModule = (m) => {
+                    $scope.spRivit[m.tunniste] = undefined;
+                };
+
+                $scope.spRivit = spRivit;
                 $scope.tosat = tutkinnonosat;
                 $scope.node = node;
-                $scope.ok = $uibModalInstance.close;
+                $scope.ok = () => $uibModalInstance.close($scope.spRivit);
                 $scope.peruuta = $uibModalInstance.dismiss;
             }
         }).result;
@@ -148,7 +153,6 @@ angular.module("app")
                     .value();
 
                 $scope.koodit = koodit;
-
                 $scope.peruste = peruste;
                 $scope.sortableOptions = {
                     handle: ".toteutus-handle",
@@ -269,12 +273,33 @@ angular.module("app")
                     .indexBy("id")
                     .value();
 
+                $scope.collapsed_dirty = false;
                 $scope.perusteRakenne = _.cloneDeep(Perusteet.getRakenne(suoritustapa));
                 $scope.misc = {
                     root: $rootScope,
-                    editNode: (node) => SuoritustapaRyhmat.editoi(osa, node, tosaViitteet),
+                    editNode: (node) => {
+                        const spRivit = {};
+                        Algoritmit.traverse($scope.perusteRakenne, "osat", (node) => {
+                            if (node.$$poistettu) {
+                                spRivit[node.tunniste] = node;
+                            }
+                        });
+                        SuoritustapaRyhmat.editoi(spRivit, node, tosaViitteet)
+                            .then(res => {
+                                $scope.osa.suorituspolku.rivit.length = 0;
+                                _(res)
+                                    .values()
+                                    .compact()
+                                    .each(v => $scope.osa.suorituspolku.rivit.push(v));
+                            });
+                    },
                     tosat: tosaViitteet,
                     hasInput: false,
+                    osa: osa,
+                    toggle: model => {
+                        model.$$collapsed = !model.$$collapsed;
+                        $scope.collapsed_dirty = true;
+                    },
                     poistaOsa: (node) => {
                         node.$$poistettu = true;
                         const rivi = _.find($scope.osa.suorituspolku.rivit, (rivi: any) => rivi.rakennemoduuli === node.tunniste);
@@ -286,21 +311,38 @@ angular.module("app")
                     }
                 };
 
-                Algoritmit.traverse($scope.perusteRakenne, "osat", (node) => node.pakollinen = Suorituspolku.pakollinen(node));
+                { // Initialize
+                    const spRivit = _.indexBy(osa.suorituspolku.rivit, "rakennemoduuli");
+                    Algoritmit.traverse($scope.perusteRakenne, "osat", (node, depth) => {
+                        node.$$collapsed = depth > 0;
+                        node.pakollinen = Suorituspolku.pakollinen(node);
+                        node.$$poistettu = !!spRivit[node.tunniste];
+                    });
+                }
+
+                $scope.toggleAll = () => {
+                    Algoritmit.traverse($scope.perusteRakenne, "osat", (node, depth) => {
+                        node.$$collapsed = $scope.collapsed_dirty ? depth > 0 : false;
+                    });
+                    $scope.collapsed_dirty = !$scope.collapsed_dirty;
+                };
 
                 $scope.suodata = (input) => {
                     $scope.misc.hasInput = !_.isEmpty(input);
-                    Algoritmit.traverse($scope.perusteRakenne, "osat", (node) => {
-                        node.$$piilotettu = !Algoritmit.match(input, node._tutkinnonOsaViite
-                            ? tosaViitteet[node._tutkinnonOsaViite].$$tosa.nimi
-                            : node.nimi);
+                    if ($scope.misc.hasInput) {
+                        Algoritmit.traverse($scope.perusteRakenne, "osat", (node) => {
+                            node.$$haettu = Algoritmit.match(input, node._tutkinnonOsaViite
+                                ? tosaViitteet[node._tutkinnonOsaViite].$$tosa.nimi
+                                : node.nimi);
 
-                        if (!node.$$piilotettu) {
-                            Algoritmit.traverseUp(node, (pnode) => {
-                                pnode.$$piilotettu = false
-                            });
-                        }
-                    });
+                            if (node.$$haettu) {
+                                Algoritmit.traverseUp(node, (pnode) => pnode.$$haettu = true);
+                            }
+                        });
+                    }
+                    else {
+                        Algoritmit.traverse($scope.perusteRakenne, "osat", (node) => node.$$haettu = false);
+                    }
                 };
             }
         },

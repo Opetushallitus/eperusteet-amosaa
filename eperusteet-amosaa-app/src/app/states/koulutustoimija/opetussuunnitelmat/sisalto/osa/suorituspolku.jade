@@ -7,8 +7,8 @@ div
         input.form-control.input-sm(ng-change="suodata(search)" type="text" ng-model="search" placeholder="{{ 'hae' | kaanna }}")
         i.form-control-feedback.glyphicon.glyphicon-search(style="color: gray;")
 
-  div.pull-right(style="position: relative; top: -36px")
-    +toggler("misc.$$kaikkiAuki", "'auki'", "'kiinni'")
+  div.pull-right(style="position: relative; top: -44px")
+    button.btn.btn-sm.btn-default(ng-click="toggleAll()" ng-bind="(collapsed_dirty ? 'sulje-kaikki' : 'avaa-kaikki') | kaanna")
 
   div.suorituspolku
     div.sp-ryhma-lapset(ng-repeat="osa in perusteRakenne.osat")
