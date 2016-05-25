@@ -103,16 +103,16 @@ angular.module("app", [
     });
 })
 
-.config(["cfpLoadingBarProvider", cfpLoadingBarProvider => {
-    cfpLoadingBarProvider.includeSpinner = false;
-    cfpLoadingBarProvider.latencyThreshold = 0;
+.config(["cfpLoadingBarProvider", (cfpLoadingBarProvider) => {
+    cfpLoadingBarProvider.includeSpinner = true;
+    cfpLoadingBarProvider.latencyThreshold = 100;
 }])
 
 .config(["usSpinnerConfigProvider", usSpinnerConfigProvider => {
     usSpinnerConfigProvider.setDefaults({color: "#29d", radius: 30, width: 8, length: 16});
 }])
 
-.run(($rootScope, $log, $urlMatcherFactory, $state) => {
+.run(($rootScope, $log, $urlMatcherFactory, $state, cfpLoadingBar) => {
     $rootScope.error = null;
     const onError = (event, toState, toParams, fromState, fromParams, error) => {
         if (!$rootScope.error) {
@@ -123,6 +123,10 @@ angular.module("app", [
     }
     $rootScope.$on("$stateChangeError", onError);
     $rootScope.$on("$stateNotFound", onError);
+    $rootScope.$on("$stateChangeStart", cfpLoadingBar.start);
+    $rootScope.$on("$stateChangeSuccess", cfpLoadingBar.complete);
+    $rootScope.$on("$stateChangeError", cfpLoadingBar.complete);
+    $rootScope.$on("$stateNotFound", cfpLoadingBar.complete);
 })
 .run(($rootScope, $timeout, $log, $urlMatcherFactory, $state) => {
     $rootScope.$on("$stateChangeStart", (event, state, params) => {

@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2013 The Finnish Board of Education - Opetushallitus
- * 
+ *
  * This program is free software: Licensed under the EUPL, Version 1.1 or - as
  * soon as they will be approved by the European Commission - subsequent versions
  * of the EUPL (the "Licence");
- * 
+ *
  * You may not use this work except in compliance with the Licence.
  * You may obtain a copy of the Licence at: http://ec.europa.eu/idabc/eupl
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
@@ -19,8 +19,10 @@ package fi.vm.sade.eperusteet.amosaa.service.peruste.impl;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
 import fi.vm.sade.eperusteet.amosaa.repository.peruste.CachedPerusteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
+import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.peruste.PerusteCacheService;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 public class PerusteCacheServiceImpl implements PerusteCacheService {
+
+    @Autowired
+    private DtoMapper mapper;
 
     @Autowired
     CachedPerusteRepository repository;
@@ -53,8 +58,15 @@ public class PerusteCacheServiceImpl implements PerusteCacheService {
     }
 
     @Override
-    public JsonNode get(Long id) {
-        return parsePeruste(id);
+    public PerusteDto get(Long id) {
+        JsonNode perusteJson = parsePeruste(id);
+        PerusteDto peruste = mapper.map(perusteJson, PerusteDto.class);
+        return peruste;
+    }
+
+    @Override
+    public JsonNode getTutkinnonOsa(Long id, Long tosaId) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override

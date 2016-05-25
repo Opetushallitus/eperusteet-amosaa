@@ -1,9 +1,9 @@
 namespace Perusteet {
     // Choose ops over others
-    export const getSuoritustapa = (peruste) =>
-        _.size(peruste.suoritustavat) === 1
-            ? _.first(peruste.suoritustavat)
-            : _.find(peruste.suoritustavat, { suoritustapakoodi: "ops" });
+    export const getSuoritustapa = (suoritustavat) =>
+        _.size(suoritustavat) === 1
+            ? _.first(suoritustavat)
+            : _.find(suoritustavat, { suoritustapakoodi: "ops" });
 
     export const getTutkinnonOsat = (peruste) => peruste.tutkinnonOsat;
 

@@ -20,6 +20,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
@@ -44,4 +45,7 @@ public abstract class PerusteBaseDto implements Serializable {
     private String tila;
     private String tyyppi;
     private Set<String> korvattavatDiaarinumerot;
+    private Set<KoulutusDto> koulutukset;
+    private Set<KoodiDto> osaamisalat;
+    List<TutkintonimikeKoodiDto> tutkintonimikkeet;
 }

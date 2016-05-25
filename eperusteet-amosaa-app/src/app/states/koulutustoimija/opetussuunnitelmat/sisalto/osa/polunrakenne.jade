@@ -1,5 +1,5 @@
-div.sp-laatikko(ng-if="!ngModel.$$poistettu" ng-hide="ngModel.$$piilotettu")
-  div.sp-tutkinnonosa(ng-class="{ 'sp-laatikko-active': !ngModel.$$piilotettu && misc.hasInput }" ng-if="ngModel._tutkinnonOsaViite" ng-init="tosa = misc.tosat[ngModel._tutkinnonOsaViite];")
+div.sp-laatikko(ng-hide="misc.hasInput && !ngModel.$$haettu")
+  div.sp-tutkinnonosa(ng-class="{ 'sp-laatikko-active': ngModel.$$haettu }" ng-if="ngModel._tutkinnonOsaViite" ng-init="tosa = misc.tosat[ngModel._tutkinnonOsaViite];")
     div.sp-sisalto.sp-sisalto-tosa
       div.sp-nimi(kaanna="tosa.$$tosa.nimi")
       div.sp-toolbar
@@ -10,21 +10,21 @@ div.sp-laatikko(ng-if="!ngModel.$$poistettu" ng-hide="ngModel.$$piilotettu")
 
   div.sp-ryhma(ng-if="ngModel.rooli && ngModel.rooli !== 'määrittelemätön' && !ngModel.vieras")
     div.sp-sisalto(class="{{ 'sp-sisalto-' + (ngModel.osaamisala ? 'osaamisala' : 'ryhma') }}")
-      div.sp-toggler(ng-class="{ 'sp-toggler-osaamisala': ngModel.osaamisala, 'sp-toggler-ryhma': !ngModel.osaamisala }" ng-click="ngModel.$$show = !ngModel.$$show")
+      div.sp-toggler(ng-class="{ 'sp-toggler-osaamisala': ngModel.osaamisala, 'sp-toggler-ryhma': !ngModel.osaamisala }" ng-click="misc.toggle(ngModel)")
         div.chevron
-          span.glyphicon.glyphicon-chevron-down(ng-show="ngModel.$$show || misc.$$kaikkiAuki")
-          span.glyphicon.glyphicon-chevron-right(ng-hide="ngModel.$$show || misc.$$kaikkiAuki")
+          span.glyphicon.glyphicon-chevron-down(ng-hide="ngModel.$$collapsed")
+          span.glyphicon.glyphicon-chevron-right(ng-show="ngModel.$$collapsed")
       div.sp-nimi
         span(kaanna="ngModel.nimi")
         span.sp-osaamisala(ng-if="ngModel.osaamisala" ng-bind="ngModel.osaamisala.osaamisalakoodiArvo")
       div.sp-toolbar(ng-show="misc.root.$$ekEditing")
-        div.sp-edit(ng-show="depth > 1 && misc.root.$$ekEditing && ngModel.osaamisala")
+        div.sp-edit(ng-show="misc.root.$$ekEditing && ngModel.osaamisala")
           a(href="" ng-click="misc.poistaOsa(ngModel)")
             +gicon("remove")
         div.sp-edit
           a(href="" ng-click="misc.editNode(ngModel)")
             +gicon("pencil")
 
-    div.sp-ryhma-lapset(ng-if="ngModel.$$show || misc.$$kaikkiAuki || (!ngModel.$$piilotettu && misc.hasInput)" ng-repeat="osa in ngModel.osat")
+    div.sp-ryhma-lapset(ng-show="!ngModel.$$collapsed || (misc.hasInput && ngModel.$$haettu)" ng-repeat="osa in ngModel.osat")
       dynamic(template="states/koulutustoimija/opetussuunnitelmat/sisalto/osa/polunrakenne.jade" misc="misc" ng-model="osa" depth="depth + 1")
 

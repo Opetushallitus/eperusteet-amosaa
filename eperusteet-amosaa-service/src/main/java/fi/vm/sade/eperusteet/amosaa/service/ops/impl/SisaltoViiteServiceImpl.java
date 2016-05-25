@@ -20,6 +20,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.SuorituspolkuRivi;
 import fi.vm.sade.eperusteet.amosaa.domain.revision.Revision;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
@@ -165,6 +166,18 @@ public class SisaltoViiteServiceImpl implements SisaltoViiteService {
         throw new NotImplementedException("Ei toteutettu vielä.");
     }
 
+    private void updateSuorituspolku(SisaltoViite viite, SisaltoViiteDto uusi) {
+        if (!uusi.getSuorituspolku().getId().equals(viite.getSuorituspolku().getId())) {
+            throw new BusinessRuleViolationException("suorituspolkua-ei-voi-vaihtaa");
+        }
+
+        Suorituspolku sp = mapper.map(uusi.getSuorituspolku(), Suorituspolku.class);
+        for (SuorituspolkuRivi rivi : sp.getRivit()) {
+            rivi.setSuorituspolku(sp);
+        }
+        viite.setSuorituspolku(sp);
+    }
+
     @Transactional(readOnly = false)
     private void updateTutkinnonOsa(SisaltoViite viite, SisaltoViiteDto uusi) {
         if (!Objects.equals(uusi.getTosa().getId(), viite.getTosa().getId())) {
@@ -236,6 +249,7 @@ public class SisaltoViiteServiceImpl implements SisaltoViiteService {
                 updateTutkinnonOsa(viite, uusi);
                 break;
             case SUORITUSPOLKU:
+                updateSuorituspolku(viite, uusi);
                 break;
             default:
                 break;

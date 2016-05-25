@@ -20,7 +20,6 @@ import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteInfoDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import java.util.Collections;
@@ -40,7 +39,43 @@ public class EperusteetServiceMock implements EperusteetService {
     public static final String DIAARINUMERO = "mock-diaarinumero";
 
     @Override
-    public PerusteKaikkiDto getPerusteSisalto(CachedPeruste cperuste) {
+    public JsonNode getTutkinnonOsat(Long id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public JsonNode getSuoritustavat(Long id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public JsonNode getTutkinnonOsa(Long id, Long tosaId) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public <T> T getPeruste(String diaariNumero, Class<T> type) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public <T> T getPerusteSisalto(CachedPeruste cperuste, Class<T> type) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public <T> T getPerusteSisalto(Long cperusteId, Class<T> type) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+
+    @Override
+    public PerusteDto getYleinenPohja() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String getYleinenPohjaSisalto() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -48,18 +83,8 @@ public class EperusteetServiceMock implements EperusteetService {
     private DtoMapper mapper;
 
     @Override
-    public PerusteDto getPeruste(Long id) {
-        throw new UnsupportedOperationException("Toteuta");
-    }
-
-    @Override
     public String getPerusteData(Long id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public PerusteDto getPeruste(String diaariNumero) {
-        throw new UnsupportedOperationException("Toteuta");
     }
 
     @Override

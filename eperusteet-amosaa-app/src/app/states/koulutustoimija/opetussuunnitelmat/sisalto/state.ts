@@ -84,8 +84,15 @@ angular.module("app")
                                     otsikot.push(res);
                                     _.find(otsikot, (otsikko: any) => otsikko.id == sisaltoRoot.id).lapset.push(res.id);
                                     updateSivunavi();
-                                    $timeout(() =>
-                                        $state.go("root.koulutustoimija.opetussuunnitelmat.sisalto.osa", { osaId: res.id }));
+                                    $timeout(() => {
+                                        $state.go("root.koulutustoimija.opetussuunnitelmat.sisalto.osa", { osaId: res.id })
+                                            .then(() => {
+                                                const el = document.getElementById("sisalto-item-" + osa.id);
+                                                if (el) {
+                                                    el.scrollIntoView();
+                                                }
+                                            });
+                                    });
                                 });
                         });
                 };

@@ -4,7 +4,13 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
   div(ng-hide="opetussuunnitelmat.length > 0")
     div.alert.alert-info
       div(kaanna="'koulutustoimijalla-ei-ole-opetussuunnitelmia'")
-      button.btn.btn-primary.pull-right(style="position: relative; top: -26px" kaanna="'lisaa-uusi'" ng-click="addOpetussuunnitelma()")
+      div.pull-right(style="position: relative; top: -26px")
+        button.btn.btn-primary(style="margin-right: 16px" ng-click="addOpetussuunnitelma()")
+          +gicon("plus")
+          span(kaanna="'lisaa-opetussuunnitelma'")
+        button.btn.btn-primary.pull-right(ng-click="addYleinen()")
+          +gicon("plus")
+          span(kaanna="'lisaa-yleinen'")
 
   div(ng-show="opetussuunnitelmat.length > 0")
     div.row
@@ -15,14 +21,19 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
             ng-model="opsSearch"
             placeholder="{{ 'hae' | kaanna }}")
           i.form-control-feedback.glyphicon.glyphicon-search(style="color: gray;")
-      div.checkbox-text.col-xs-5
+      div.checkbox-text.col-xs-2
         // div.checkbox
           label
             input(type="checkbox")
             span(kaanna="'tarkennettu-haku'")
-      div.col-xs-2
+      div.col-xs-5
         div.pull-right
-          button.btn.btn-default(kaanna="'lisaa-uusi'" ng-click="addOpetussuunnitelma()")
+          button.btn.btn-default.pull-right(ng-click="addYleinen()")
+            +gicon("plus")
+            span(kaanna="'lisaa-yleinen'")
+          button.btn.btn-default.pull-right(style="margin-right: 16px" ng-click="addOpetussuunnitelma()")
+            +gicon("plus")
+            span(kaanna="'lisaa-opetussuunnitelma'")
 
     table.table.boxtable
       thead

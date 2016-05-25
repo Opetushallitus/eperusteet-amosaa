@@ -13,9 +13,10 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * European Union Public Licence for more details.
  */
+
 package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,7 +26,10 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class PerusteDto extends PerusteBaseDto {
-    private PerusteVersionDto globalVersion;
+public class KoulutusDto {
+    private LokalisoituTekstiDto nimi;
+    private String koulutuskoodiArvo;
+    private String koulutuskoodiUri;
+    private String koulutusalakoodi;
+    private String opintoalakoodi;
 }

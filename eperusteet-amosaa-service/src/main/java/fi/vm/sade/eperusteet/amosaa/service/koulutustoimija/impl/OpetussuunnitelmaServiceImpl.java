@@ -37,6 +37,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonOsaKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaoikeusRepository;
@@ -130,7 +131,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         }
 
         // Lisätään suorituspoluille oma sisältöviite
-        {
+        if (ops.getTyyppi() == OpsTyyppi.OPS) {
             SisaltoViite suorituspolut = new SisaltoViite();
             TekstiKappale tk = new TekstiKappale();
             tk.setNimi(LokalisoituTeksti.of(Kieli.FI, "Suorituspolut"));
@@ -142,6 +143,40 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
             suorituspolut.setLiikkumaton(true);
             suorituspolut.setVanhempi(rootTkv);
             rootTkv.getLapset().add(tkvRepository.save(suorituspolut));
+        }
+    }
+
+    private void setOpsCommon(Opetussuunnitelma ops, PerusteDto peruste, SisaltoViite rootTkv) {
+        if (peruste == null) {
+            throw new BusinessRuleViolationException("perustetta-ei-loytynyt");
+        }
+
+        CachedPeruste cperuste = cachedPerusteRepository.findOneByDiaarinumeroAndLuotu(peruste.getDiaarinumero(), peruste.getGlobalVersion().getAikaleima());
+        if (cperuste == null) {
+            cperuste = new CachedPeruste();
+            cperuste.setNimi(LokalisoituTeksti.of(peruste.getNimi().getTekstit()));
+            cperuste.setDiaarinumero(peruste.getDiaarinumero());
+            cperuste.setLuotu(peruste.getGlobalVersion().getAikaleima());
+            cperuste.setPeruste(ops.getTyyppi() == OpsTyyppi.YLEINEN
+                    ? eperusteetService.getYleinenPohjaSisalto()
+                    : eperusteetService.getPerusteData(peruste.getId()));
+            cperuste = cachedPerusteRepository.save(cperuste);
+        }
+
+        ops.setPeruste(cperuste);
+        alustaOpetussuunnitelma(ops, rootTkv);
+
+        List<TutkinnonOsaKaikkiDto> tutkinnonOsat = eperusteetService.getPerusteSisalto(cperuste, PerusteKaikkiDto.class).getTutkinnonOsat();
+        SisaltoViite tosat = rootTkv.getLapset().get(0);
+        for (TutkinnonOsaKaikkiDto tosa : tutkinnonOsat) {
+            SisaltoViite uusi = SisaltoViite.createTutkinnonOsa(tosat);
+            uusi.setPakollinen(true);
+            uusi.getTekstiKappale().setNimi(LokalisoituTeksti.of(tosa.getNimi()));
+            Tutkinnonosa uusiTosa = uusi.getTosa();
+            uusiTosa.setTyyppi(TutkinnonosaTyyppi.PERUSTEESTA);
+            uusiTosa.setPerusteentutkinnonosa(tosa.getId());
+            uusiTosa.setKoodi(tosa.getKoodiUri());
+            tkvRepository.save(uusi);
         }
     }
 
@@ -167,35 +202,12 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         else {
             switch (opsDto.getTyyppi()) {
                 case OPS:
-                    PerusteDto peruste = eperusteetService.getPeruste(opsDto.getPerusteDiaarinumero());
-                    if (peruste == null) {
-                        throw new BusinessRuleViolationException("perustetta-ei-loytynyt");
-                    }
-
-                    CachedPeruste cperuste = cachedPerusteRepository.findOneByDiaarinumeroAndLuotu(peruste.getDiaarinumero(), peruste.getGlobalVersion().getAikaleima());
-                    if (cperuste == null) {
-                        cperuste = new CachedPeruste();
-                        cperuste.setNimi(LokalisoituTeksti.of(peruste.getNimi().getTekstit()));
-                        cperuste.setDiaarinumero(peruste.getDiaarinumero());
-                        cperuste.setLuotu(peruste.getGlobalVersion().getAikaleima());
-                        cperuste.setPeruste(eperusteetService.getPerusteData(peruste.getId()));
-                        cperuste = cachedPerusteRepository.save(cperuste);
-                    }
-
-                    ops.setPeruste(cperuste);
-                    alustaOpetussuunnitelma(ops, rootTkv);
-
-                    List<TutkinnonOsaKaikkiDto> tutkinnonOsat = eperusteetService.getPerusteSisalto(cperuste).getTutkinnonOsat();
-                    SisaltoViite tosat = rootTkv.getLapset().get(0);
-                    for (TutkinnonOsaKaikkiDto tosa : tutkinnonOsat) {
-                        SisaltoViite uusi = SisaltoViite.createTutkinnonOsa(tosat);
-                        uusi.getTekstiKappale().setNimi(LokalisoituTeksti.of(tosa.getNimi()));
-                        Tutkinnonosa uusiTosa = uusi.getTosa();
-                        uusiTosa.setTyyppi(TutkinnonosaTyyppi.PERUSTEESTA);
-                        uusiTosa.setPerusteentutkinnonosa(tosa.getId());
-                        uusiTosa.setKoodi(tosa.getKoodiUri());
-                        tkvRepository.save(uusi);
-                    }
+                    PerusteDto peruste = eperusteetService.getPeruste(opsDto.getPerusteDiaarinumero(), PerusteDto.class);
+                    setOpsCommon(ops, peruste, rootTkv);
+                    break;
+                case YLEINEN:
+                    PerusteDto yleinen = eperusteetService.getYleinenPohja();
+                    setOpsCommon(ops, yleinen, rootTkv);
                     break;
                 case YHTEINEN:
                     Opetussuunnitelma pohja = repository.findOne(opsDto.getPohja().getIdLong());
@@ -209,8 +221,6 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                     SisaltoViite pohjatkv = tkvRepository.findOneRoot(pohja);
                     tkvRepository.save(tkvService.kopioiHierarkia(pohjatkv, ops));
                     ops.setPohja(pohja);
-                    break;
-                case YLEINEN:
                     break;
                 case POHJA:
                     throw new BusinessRuleViolationException("ainoastaan-oph-voi-tehda-pohjia");
@@ -251,7 +261,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         Kayttaja kayttaja = kayttajaRepository.findOne(kayttajaId);
 
         // FIXME lisää oikeustarkistelu muokkaajalle
-        
+
         Kayttajaoikeus oikeus = kayttajaoikeusRepository.findOneByKayttajaAndOpetussuunnitelma(kayttaja, ops);
 
         if (oikeusDto.getOikeus() == KayttajaoikeusTyyppi.LUKU) {

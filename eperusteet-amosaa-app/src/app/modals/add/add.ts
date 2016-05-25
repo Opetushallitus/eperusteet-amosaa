@@ -32,6 +32,16 @@ namespace ModalAdd {
             }
         }).result;
 
+    export const yleinen = () => i.$uibModal.open({
+            resolve: { },
+            templateUrl: "modals/add/yleinen.jade",
+            controller: ($scope, $state, $uibModalInstance) => {
+                $scope.ok = $uibModalInstance.close;
+                $scope.peruuta = $uibModalInstance.dismiss;
+                $scope.ops = { tyyppi: "yleinen" };
+            }
+        }).result;
+
     export const pohja = () => i.$uibModal.open({
             resolve: { },
             templateUrl: "modals/add/pohja.jade",
@@ -46,7 +56,7 @@ namespace ModalAdd {
 
     export const opetussuunnitelma = () => i.$uibModal.open({
             resolve: {
-                perusteet: Eperusteet => Eperusteet.one("perusteet").get()
+                perusteet: Eperusteet => Eperusteet.one("perusteet").get() // FIXME paginointihärveli
             },
             templateUrl: "modals/add/opetussuunnitelma.jade",
             controller: ($scope, $state, $uibModalInstance, perusteet) => {

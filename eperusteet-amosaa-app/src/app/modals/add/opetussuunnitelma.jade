@@ -4,7 +4,8 @@ div.modal-header
 div.modal-body
   div.content-spacing.tutkintohaku
     .form-group.has-feedback.has-feedback-left
-      input.form-control(type="text"
+      input.form-control(
+        type="text"
         placeholder="{{ 'hae-peruste' | kaanna }}"
         ng-model="input"
         ng-change="update(input)")

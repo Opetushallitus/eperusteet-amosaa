@@ -2,7 +2,7 @@ namespace DynamicImpl {
     export const controller = ($scope) => {
     };
 
-    export const directive = ($compile, $templateCache, $timeout) => {
+    export const directive = ($compile, $templateCache, $timeout, $animate) => {
         let renderAmount = 0;
 
         return {
@@ -16,10 +16,16 @@ namespace DynamicImpl {
             },
             controller: controller,
             link: (scope, el) => {
+                $animate.enabled(false, el);
                 const renderer = () => el.replaceWith($compile($templateCache.get(scope.template))(scope));
                 if (scope.ngModel) {
                     // Give angular a break with big trees
-                    $timeout(renderer);
+                    if (++renderAmount % 40 === 0) {
+                        $timeout(renderer);
+                    }
+                    else {
+                        renderer();
+                    }
                 }
             }
         }

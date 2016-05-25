@@ -66,9 +66,13 @@ angular.module("app")
         opetussuunnitelmat: {
             controller: ($scope, koulutustoimija, opetussuunnitelmat, opsSaver) => {
                 $scope.opetussuunnitelmat = _.reject(opetussuunnitelmat, (ops: any) => ops.tyyppi === "yhteinen");
-                $scope.addOpetussuunnitelma = () => ModalAdd.opetussuunnitelma()
+
+                const add = (tyyppi) => ModalAdd[tyyppi]()
                     .then(opsSaver)
                     .then((res) => $scope.opetussuunnitelmat.push(res));
+
+                $scope.addOpetussuunnitelma = () => add("opetussuunnitelma");
+                $scope.addYleinen = () => add("yleinen");
             }
         },
         yhteinen: {
