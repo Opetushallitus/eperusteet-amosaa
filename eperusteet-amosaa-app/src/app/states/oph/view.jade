@@ -3,10 +3,10 @@ div.koulutustoimija
     div.col-xs-6
       h2.otsikko
         span(kaanna="'opetushallitus'")
-        span.dropdown
-          a.dropdown-toggle(href="", data-toggle="dropdown")
+        span.dropdown(uib-dropdown)
+          a.dropdown-toggle(href="", uib-dropdown-toggle)
             i.fa.fa-chevron-down.fa-fw
-          ul.dropdown-menu.dropdown-menu-right
+          ul.dropdown-menu.dropdown-menu-right(uib-dropdown-menu)
             li(ui-sref-active="active")
               a(href="", kaanna="oph-nakyma", ui-sref="root.oph")
             li(ui-sref-active="active")

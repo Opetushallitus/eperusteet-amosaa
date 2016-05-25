@@ -11,10 +11,10 @@ mixin ktNimi()
   div.koulutustoimija.subtle-transition
     h2.otsikko
       span(kaanna="koulutustoimija.nimi")
-      span.dropdown
-        a.dropdown-toggle(href="" data-toggle="dropdown")
+      span.dropdown(uib-dropdown)
+        a.dropdown-toggle(href="" uib-dropdown-toggle)
           i.fa.fa-chevron-down.fa-fw
-        ul.dropdown-menu.dropdown-menu-right
+        ul.dropdown-menu.dropdown-menu-right(uib-dropdown-menu)
           li(ng-repeat="kt in koulutustoimijat")
             a(href="" ui-sref="root.koulutustoimija.detail({ ktId: kt.id })" kaanna="kt.nimi")
     +tiedotteet()

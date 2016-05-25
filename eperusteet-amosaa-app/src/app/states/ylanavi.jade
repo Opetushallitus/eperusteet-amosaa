@@ -10,12 +10,12 @@ div.ylanavi(sticky className="ylanavi-sticky")
             span(kaanna="muru.name")
     div.col-xs-4
       div.pull-right
-        span.dropdown.kielivalitsin
+        span.dropdown.kielivalitsin(uib-dropdown)
           +gicon("flag")
-          a.dropdown-toggle(data-toggle="dropdown")
+          a.dropdown-toggle(uib-dropdown-toggle)
             span(ng-bind="currentLang | kaanna")
             span.caret
-          ul.dropdown-menu.dropdown-menu-right
+          ul.dropdown-menu.dropdown-menu-right(uib-dropdown-menu)
             li(ng-repeat="kieli in langs")
               a(href="" kaanna="kieli" ng-click="selectLang(kieli)")
       div.pull-right

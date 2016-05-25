@@ -41,9 +41,9 @@ div.oikeudet.subtle-transition
                 +icon("user")
             td
               span(ng-bind="'oikeus-' + oikeus(kayttaja) | kaanna")
-              span.dropdown(ng-if="!isSelf" oikeustarkastelu="hallinta")
-                a.dropdown-toggle(href="" data-toggle="dropdown")
+              span.dropdown(ng-if="!isSelf" oikeustarkastelu="hallinta" uib-dropdown)
+                a.dropdown-toggle(href="" uib-dropdown-toggle)
                   i.fa.fa-chevron-down.fa-fw
-                ul.dropdown-menu.dropdown-menu-right
+                ul.dropdown-menu.dropdown-menu-right(uib-dropdown-menu)
                   li(ng-repeat="ovaihtoehto in vaihtoehdot")
                     a(href="" ng-bind="'oikeus-' + ovaihtoehto | kaanna" ng-click="valitse(ovaihtoehto, kayttaja)")
