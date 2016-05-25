@@ -17,11 +17,8 @@ namespace Suorituspolku {
                     .compact()
                     .reduce((acc: number, min: number) => (min || 0) + acc);
 
-                const laajuus = node.muodostumisSaanto.laajuus;
+                const laajuus = _.property("muodostumisSaanto.laajuus")(node);
                 node.$$valid = !laajuus || !laajuus.minimi || node.$$laskettuLaajuus >= laajuus.minimi;
-                if (!node.$$valid) {
-                    console.log(node)
-                }
             }
         });
         return result;
