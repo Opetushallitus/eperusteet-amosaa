@@ -1,30 +1,68 @@
-div.sp-laatikko(ng-hide="misc.hasInput && !ngModel.$$haettu")
-  div.sp-tutkinnonosa(ng-class="{ 'sp-laatikko-active': ngModel.$$haettu }" ng-if="ngModel._tutkinnonOsaViite" ng-init="tosa = misc.tosat[ngModel._tutkinnonOsaViite];")
+mixin polkuTutkinnonosa()
+  div.sp-tutkinnonosa(ng-class="{ 'sp-laatikko-active': ngModel.$$haettu }" ng-show="ngModel._tutkinnonOsaViite" ng-init="tosa = misc.tosat[ngModel._tutkinnonOsaViite];")
     div.sp-sisalto.sp-sisalto-tosa
-      div.sp-nimi(kaanna="tosa.$$tosa.nimi")
+      div.sp-nimi
+        span(kaanna="tosa.$$tosa.nimi")
       div.sp-toolbar
+        span.laajuus
+          span(ng-bind="tosa.laajuus")
+          span(style="margin-left: 2px" ng-bind="misc.suoritustapa.laajuusYksikko | kaanna")
         div.sp-edit(ng-show="misc.root.$$ekEditing && !ngModel.pakollinen")
           a(href="" ng-click="misc.poistaOsa(ngModel)")
             +gicon("remove")
-        span.laajuus(ng-bind="tosa.laajuus")
 
-  div.sp-ryhma(ng-if="ngModel.rooli && ngModel.rooli !== 'määrittelemätön' && !ngModel.vieras")
-    div.sp-sisalto(class="{{ 'sp-sisalto-' + (ngModel.osaamisala ? 'osaamisala' : 'ryhma') }}")
-      div.sp-toggler(ng-class="{ 'sp-toggler-osaamisala': ngModel.osaamisala, 'sp-toggler-ryhma': !ngModel.osaamisala }" ng-click="misc.toggle(ngModel)")
-        div.chevron
-          span.glyphicon.glyphicon-chevron-down(ng-hide="ngModel.$$collapsed")
-          span.glyphicon.glyphicon-chevron-right(ng-show="ngModel.$$collapsed")
+
+mixin muodostuminen()
+  div.sp-muodostuminen(ng-show="ngModel.muodostumisSaanto"
+    ng-class="{ 'muodostuminen-valid': ngModel.$$valid, 'muodostuminen-invalid': !ngModel.$$valid && ngModel.rooli !== 'määrittelemätön' }"
+    ng-init="laajuus = ngModel.muodostumisSaanto.laajuus; koko = ngModel.muodostumisSaanto.koko; laajuusSama = laajuus.minimi === laajuus.maksimi")
+    span(ng-show="ngModel.$$laskettuLaajuus && !ngModel.$$valid")
+      span(ng-bind="ngModel.$$laskettuLaajuus")
+      span(style="margin: 0 2px 0 2px") /
+    span(ng-show="laajuus.minimi || laajuus.maksimi" ng-bind="laajuus.minimi || 0")
+    span(ng-show="!laajuusSama") {{ ' - ' }}
+    span(ng-show="laajuus.maksimi && !laajuusSama" ng-bind="laajuus.maksimi")
+    span(style="margin-left: 2px" ng-show="laajuus.minimi || laajuus.maksimi" ng-bind="misc.suoritustapa.laajuusYksikko | kaanna")
+
+
+mixin polkuRyhmaToolbar()
+  div.sp-toolbar
+    +muodostuminen
+    span(ng-show="misc.root.$$ekEditing")
+      div.sp-edit(ng-show="misc.root.$$ekEditing && ngModel.osaamisala")
+        a(href="" ng-click="misc.poistaOsa(ngModel)")
+          +gicon("remove")
+      div.sp-edit
+        a(href="" ng-click="misc.editNode(ngModel)")
+          +gicon("pencil")
+
+
+mixin polkuRyhmaChevron()
+  div.sp-toggler(ng-class="{ 'sp-toggler-osaamisala': ngModel.osaamisala, 'sp-toggler-ryhma': !ngModel.osaamisala }" ng-click="misc.toggle(ngModel)")
+    div.chevron
+      span.glyphicon.glyphicon-chevron-down(ng-hide="ngModel.$$collapsed")
+      span.glyphicon.glyphicon-chevron-right(ng-show="ngModel.$$collapsed")
+
+
+
+mixin polkuRyhma()
+  div.sp-ryhma(ng-show="ngModel.rooli && !(ngModel.rooli !== 'määrittelemätön' && !ngModel.vieras)")
+    div.sp-sisalto.sp-sisalto-unspecified
       div.sp-nimi
         span(kaanna="ngModel.nimi")
-        span.sp-osaamisala(ng-if="ngModel.osaamisala" ng-bind="ngModel.osaamisala.osaamisalakoodiArvo")
-      div.sp-toolbar(ng-show="misc.root.$$ekEditing")
-        div.sp-edit(ng-show="misc.root.$$ekEditing && ngModel.osaamisala")
-          a(href="" ng-click="misc.poistaOsa(ngModel)")
-            +gicon("remove")
-        div.sp-edit
-          a(href="" ng-click="misc.editNode(ngModel)")
-            +gicon("pencil")
+      div.sp-toolbar
+        +muodostuminen
 
+  div.sp-ryhma(ng-show="ngModel.rooli && ngModel.rooli !== 'määrittelemätön' && !ngModel.vieras")
+    div.sp-sisalto(class="{{ 'sp-sisalto-' + (ngModel.osaamisala ? 'osaamisala' : 'ryhma') }}")
+      +polkuRyhmaChevron
+      div.sp-nimi
+        span(kaanna="ngModel.nimi")
+        span.sp-osaamisala(ng-show="ngModel.osaamisala" ng-bind="ngModel.osaamisala.osaamisalakoodiArvo")
+      +polkuRyhmaToolbar
     div.sp-ryhma-lapset(ng-show="!ngModel.$$collapsed || (misc.hasInput && ngModel.$$haettu)" ng-repeat="osa in ngModel.osat")
       dynamic(template="states/koulutustoimija/opetussuunnitelmat/sisalto/osa/polunrakenne.jade" misc="misc" ng-model="osa" depth="depth + 1")
 
+div.sp-laatikko(ng-hide="(misc.hasInput && !ngModel.$$haettu) || ngModel.$$poistettu")
+  +polkuTutkinnonosa
+  +polkuRyhma

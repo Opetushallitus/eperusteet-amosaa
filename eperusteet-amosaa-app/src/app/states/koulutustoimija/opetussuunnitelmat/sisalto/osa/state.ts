@@ -273,29 +273,31 @@ angular.module("app")
                     .indexBy("id")
                     .value();
 
+                const update = () => {
+                    const spRivit = _.indexBy($scope.osa.suorituspolku.rivit, "rakennemoduuli");
+                    Algoritmit.traverse($scope.perusteRakenne, "osat", (node, depth) => {
+                        node.pakollinen = Suorituspolku.pakollinen(node);
+                        node.$$poistettu = !!spRivit[node.tunniste];
+                    });
+                    Suorituspolku.calculateRealAmount($scope.perusteRakenne, $scope.misc.tosat, spRivit);
+                };
+
                 $scope.collapsed_dirty = false;
                 $scope.perusteRakenne = _.cloneDeep(Perusteet.getRakenne(suoritustapa));
                 $scope.misc = {
                     root: $rootScope,
+                    suoritustapa: suoritustapa,
                     editNode: (node) => {
-                        const spRivit = {};
-                        Algoritmit.traverse($scope.perusteRakenne, "osat", (node) => {
-                            if (node.$$poistettu) {
-                                spRivit[node.tunniste] = node;
-                            }
-                        });
+                        const spRivit = _.indexBy($scope.osa.suorituspolku.rivit, "rakennemoduuli");
                         SuoritustapaRyhmat.editoi(spRivit, node, tosaViitteet)
                             .then(res => {
-                                $scope.osa.suorituspolku.rivit.length = 0;
-                                _(res)
-                                    .values()
-                                    .compact()
-                                    .each(v => $scope.osa.suorituspolku.rivit.push(v));
+                                $scope.osa.suorituspolku.rivit = _.compact(_.values(res));
+                                update();
                             });
                     },
                     tosat: tosaViitteet,
                     hasInput: false,
-                    osa: osa,
+                    osa: $scope.osa,
                     toggle: model => {
                         model.$$collapsed = !model.$$collapsed;
                         $scope.collapsed_dirty = true;
@@ -308,15 +310,15 @@ angular.module("app")
                                 rakennemoduuli: node.tunniste
                             });
                         }
+                        update();
                     }
                 };
 
                 { // Initialize
-                    const spRivit = _.indexBy(osa.suorituspolku.rivit, "rakennemoduuli");
+                    update();
                     Algoritmit.traverse($scope.perusteRakenne, "osat", (node, depth) => {
                         node.$$collapsed = depth > 0;
                         node.pakollinen = Suorituspolku.pakollinen(node);
-                        node.$$poistettu = !!spRivit[node.tunniste];
                     });
                 }
 

@@ -25,6 +25,7 @@ mixin editButtonSmall(actionEdit)
       ng-click=actionEdit)&attributes(attributes)
     +icon("pencil")
 
+
 mixin editButton(actionEdit)
   button.btn.btn-primary.muokkaa(ng-hide="$$ekEditing || versio" ng-click=actionEdit)&attributes(attributes)
     +icon("pencil")

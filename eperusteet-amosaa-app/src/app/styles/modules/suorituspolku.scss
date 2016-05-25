@@ -19,11 +19,18 @@
   }
 
   .sp-laatikko {
+    .sp-sisalto-unspecified {
+      background-color: #fff4fe;
+    }
+
     .sp-sisalto-tosa {
       .laajuus {
+        float: right;
         position: relative;
         top: 6px;
         right: 6px;
+        min-width: 61px;
+        text-align: center;
       }
     }
 
@@ -48,15 +55,15 @@
       height: 30px;
 
       .sp-toolbar {
-        height: 29px;
         float: right;
+        height: 29px;
         top: -29px;
         padding-top: 1px;
         position: relative;
 
         .sp-edit {
           float: right;
-          padding: 6px 10px 6px 10px;
+          padding: 6px 10px 4px 10px;
           color: #AAABAB;
           border-left: 1px solid #ddd;
         }
@@ -65,9 +72,24 @@
           float: right;
           height: 29px;
           padding: 5px 8px 5px 8px;
-          background-color: #AAABAB;
-          color: white;
+          color: black;
+          font-weight: normal;
+          min-width: 61px;
+          text-align: center;
+          border-left: 1px solid #ddd;
         }
+
+        .muodostuminen-invalid {
+          background-color: #ed8e00;
+          color: #ffffff;
+          font-weight: bold;
+        }
+
+        .muodostuminen-valid {
+          background-color: #0A8241;
+          color: #ffffff;
+        }
+
       }
 
       .sp-nimi {
