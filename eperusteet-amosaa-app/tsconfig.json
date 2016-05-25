@@ -14,6 +14,7 @@
     "src/app/components/lokalisointi/kaanna.ts",
     "src/app/components/lokalisointi/kieli.ts",
     "src/app/components/ckeditor/ckeditor.ts",
+    "src/app/components/ckeditor/kuvat.ts",
     "src/app/components/ohje/ohje.ts",
     "src/app/components/misc/localized.ts",
     "src/app/components/toggler/toggler.ts",

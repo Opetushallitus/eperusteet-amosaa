@@ -20,7 +20,7 @@ angular.module("app")
             restrict: 'EA',
             scope: { teksti: '=' },
             transclude: true,
-            template: '<div termisto-viitteet="teksti" ng-bind-html="teksti | kaanna | unsafe"></div>'
+            template: '<div termisto-viitteet="teksti" ng-bind-html="teksti | kaanna | kuvalinkit | unsafe"></div>'
         };
     })
     .directive('termistoViitteet', function ($stateParams, $document, $timeout) {

@@ -44,94 +44,91 @@ angular.module("app")
         {name: "tools", items: ["About"]}
     ]
 })
+.controller('TermiPluginController', function ($scope, $stateParams, $timeout) {
+    $scope.filtered = [];
+    $scope.termit = [];
+    $scope.model = {
+        chosen: null,
+        newTermi: {avain: null, termi: null, selitys: null}
+    };
+    var callback = angular.noop;
+    var setDeferred = null;
 
-    .controller('TermiPluginController', function ($scope, $stateParams, $timeout) {
-        $scope.filtered = [];
-        $scope.termit = [];
-        $scope.model = {
-            chosen: null,
-            newTermi: {avain: null, termi: null, selitys: null}
-        };
-        var callback = angular.noop;
-        var setDeferred = null;
-
-        function setChosenValue (value) {
-            var found = _.find($scope.termit, function (termi: Kasite) {
-                return termi.avain === value;
-            });
-            $scope.model.chosen = found || null;
-        }
-
-        function doSort(items) {
-            return _.sortBy(items, (item: Kasite) => {
-                return KaannaService.kaanna(item.termi).toLowerCase();
-            });
-        }
-
-        $scope.init = function () {
-            TermistoData.getAll().then((res) => {
-                $scope.termit = res;
-                $scope.filtered = doSort(res);
-                if (setDeferred) {
-                    setChosenValue(_.cloneDeep(setDeferred));
-                    setDeferred = null;
-                }
-            });
-        };
-
-        $scope.filterTermit = function (value) {
-            $scope.filtered = _.filter(doSort($scope.termit), function (item) {
-                return Algoritmit.match(value, item.termi);
-            });
-        };
-
-        // data from angular model to plugin
-        $scope.registerListener = function (cb) {
-            callback = cb;
-        };
-
-        $scope.$watch('model.chosen', function (value) {
-            callback(value);
+    function setChosenValue (value) {
+        var found = _.find($scope.termit, function (termi: Kasite) {
+            return termi.avain === value;
         });
+        $scope.model.chosen = found || null;
+    }
 
-        // data from plugin to angular model
-        $scope.setValue = function (value) {
-            $scope.$apply(function () {
-                if (_.isEmpty($scope.termit)) {
-                    setDeferred = value;
-                } else {
-                    setChosenValue(value);
-                }
-            });
-        };
+    function doSort(items) {
+        return _.sortBy(items, (item: Kasite) => {
+            return KaannaService.kaanna(item.termi).toLowerCase();
+        });
+    }
 
-        $scope.addNew = () => {
-            $scope.adding = !$scope.adding;
-            if ($scope.adding) {
-                $scope.model.newTermi = {avain: null, termi: null, selitys: null}
+    $scope.init = function () {
+        TermistoData.getAll().then((res) => {
+            $scope.termit = res;
+            $scope.filtered = doSort(res);
+            if (setDeferred) {
+                setChosenValue(_.cloneDeep(setDeferred));
+                setDeferred = null;
             }
-        };
+        });
+    };
 
-        $scope.closeMessage = () => $scope.message = null;
+    $scope.filterTermit = function (value) {
+        $scope.filtered = _.filter(doSort($scope.termit), function (item) {
+            return Algoritmit.match(value, item.termi);
+        });
+    };
 
-        $scope.saveNew = () => {
-            TermistoData.add($scope.model.newTermi).then(() => {
-                $scope.message = 'termi-plugin-tallennettu';
-                NotifikaatioService.onnistui("tallennus-onnistui");
-                $timeout(() => {
-                    $scope.closeMessage();
-                }, 8000);
-                $scope.adding = false;
-                setDeferred = _.clone($scope.model.newTermi.avain);
-                $scope.init();
-            });
-        };
+    // data from angular model to plugin
+    $scope.registerListener = function (cb) {
+        callback = cb;
+    };
 
-        $scope.cancelNew = () => $scope.adding = false;
-    })
+    $scope.$watch('model.chosen', function (value) {
+        callback(value);
+    });
 
+    // data from plugin to angular model
+    $scope.setValue = function (value) {
+        $scope.$apply(function () {
+            if (_.isEmpty($scope.termit)) {
+                setDeferred = value;
+            } else {
+                setChosenValue(value);
+            }
+        });
+    };
 
-.directive("ckeditor", ($q, $filter, $rootScope, editorLayouts, $timeout) => {
+    $scope.addNew = () => {
+        $scope.adding = !$scope.adding;
+        if ($scope.adding) {
+            $scope.model.newTermi = {avain: null, termi: null, selitys: null}
+        }
+    };
+
+    $scope.closeMessage = () => $scope.message = null;
+
+    $scope.saveNew = () => {
+        TermistoData.add($scope.model.newTermi).then(() => {
+            $scope.message = 'termi-plugin-tallennettu';
+            NotifikaatioService.onnistui("tallennus-onnistui");
+            $timeout(() => {
+                $scope.closeMessage();
+            }, 8000);
+            $scope.adding = false;
+            setDeferred = _.clone($scope.model.newTermi.avain);
+            $scope.init();
+        });
+    };
+
+    $scope.cancelNew = () => $scope.adding = false;
+})
+.directive("ckeditor", ($q, $filter, $rootScope, editorLayouts, $timeout, Api, $stateParams) => {
     return {
         priority: 10,
         restrict: "A",
@@ -186,7 +183,7 @@ angular.module("app")
                 removePlugins: "resize,elementspath,scayt,wsc,image",
                 extraPlugins: "quicktable,epimage,termi",
                 disallowedContent: "br; tr td{width,height}",
-                extraAllowedContent: "img[!data-uid,src]; abbr[data-viite]",
+                extraAllowedContent: "img[!data-uid,src,width,height,alt]; abbr[data-viite]",
                 disableObjectResizing: true, // doesn"t seem to work with inline editor
                 language: "fi",
                 entities_latin: false,
@@ -311,9 +308,8 @@ angular.module("app")
                     {
                         element: "img",
                         right: (el) => {
-                            // el.attributes.src = EpImageService.getUrl({id: el.attributes["data-uid"]});
-                            delete el.attributes.height;
-                            delete el.attributes.width;
+                            el.attributes.src = Api.one("koulutustoimijat", $stateParams.ktId).getRestangularUrl()
+                                + "/kuvat/" + el.attributes['data-uid'];
                         }
                     }
                 ]]);

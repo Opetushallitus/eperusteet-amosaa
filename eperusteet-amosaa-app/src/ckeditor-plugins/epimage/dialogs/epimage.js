@@ -35,36 +35,73 @@ CKEDITOR.dialog.add('epimageDialog', function( editor ) {
             validate: function() {
               return !this.getValue() ? kaanna('epimage-plugin-virhe-viite-tyhja') : true;
             },
-            html: '<div ng-controller="EpImagePluginController" class="ckeplugin-ui-select">' +
-            '<label class="ckeditor-plugin-label">{{\'epimage-plugin-label-epimage\'|kaanna}}</label>' +
-            '<ui-select ng-model="model.chosen" ng-if="images.length > 0">' +
-            '  <ui-select-match placeholder="{{\'epimage-plugin-select-placeholder\'|kaanna}}">{{$select.selected.nimi|kaanna}}</ui-select-match>' +
-            '  <ui-select-choices repeat="epimage in filtered track by $index" refresh="filterImages($select.search)" refresh-delay="0">' +
-            '  <span ng-bind-html="epimage.nimi|kaanna|highlight:$select.search"></span></ui-select-choices>' +
-            '</ui-select>' +
-            '<p class="empty-epimaget" ng-if="images.length === 0" kaanna="\'ei-kuvia\'"></p>' +
-            '<div class="epimage-plugin-add">' +
-            '  <label class="ckeditor-plugin-label">{{\'epimage-plugin-lisaa-uusi\'|kaanna}}</label>'+
-            '  <div><button class="btn btn-default" ng-model-rejected="model.rejected" ngf-accept="\'.jpg,.jpeg,.png\'" ngf-select ng-model="model.files"><span kaanna="\'epimage-plugin-valitse\'"></span></button>' +
-            '    <button ng-disabled="!model.files || model.files.length !== 1" class="btn btn-primary" ng-click="saveNew()" kaanna="lisaa"></button>' +
-            '    <img ng-show="showPreview" ngf-thumbnail="model.files[0]" class="epimage-thumb">' +
-            '    <div ng-show="showPreview">' +
-            '     <input ng-change="widthChange(model.files[0])" style="max-width: 70px; float: left;" ng-model="model.files[0].width" class="form-control ng-pristine ng-valid ng-isolate-scope ng-touched"/> ' +
-            '     <span style="float: left; margin-top: 10px;">X</span>' +
-            '     <input ng-change="heightChange(model.files[0])" style="max-width: 70px; float: left;" ng-model="model.files[0].height" class="form-control ng-pristine ng-valid ng-isolate-scope ng-touched"/>' +
-            '     <p class="error-message" ng-show="scaleError">{{ scaleError | kaanna }}</p>' +
-            '    </div>' +
-            '    <div ng-show="!showPreview && false">' +
-            '     <input ng-change="widthChange(model.chosen)" style="max-width: 70px; float: left;" ng-model="model.chosen.width" class="form-control ng-pristine ng-valid ng-isolate-scope ng-touched"/> ' +
-            '     <span style="float: left; margin-top: 10px;">X</span>' +
-            '     <input ng-change="heightChange(model.chosen)" style="max-width: 70px; float: left;" ng-model="model.chosen.height" class="form-control ng-pristine ng-valid ng-isolate-scope ng-touched"/>' +
-            '     <button class="btn btn-primary" ng-click="rescaleImg()">update</button>' +
-            '     <p class="error-message" ng-show="scaleError">{{ scaleError | kaanna }}</p>' +
-            '    </div>' +
-            '  </div>' +
-            '  <p class="success-message" ng-show="message">{{message|kaanna}}</p>' +
-            '  <p class="error-message" ng-show="model.rejected.length > 0">{{\'epimage-plugin-hylatty\'|kaanna}}</p>' +
-            '</div></div>',
+            html:
+            '<div ng-controller="EpImagePluginController" class="ckeplugin-ui-select">'+
+            '  <label class="ckeditor-plugin-label">{{ \'epimage-plugin-label-epimage\' | kaanna }}</label>'+
+            '  <ui-select ng-model="model.chosen" ng-if="images.length > 0">'+
+            '    <ui-select-match placeholder="{{ \'epimage-plugin-select-placeholder\' | kaanna }}">'+
+            '      {{ $select.selected.nimi | kaanna }}'+
+            '    </ui-select-match>'+
+            '    <ui-select-choices repeat="epimage in filtered track by $index"'+
+            '                       refresh="filterImages($select.search)" refresh-delay="0">'+
+            '      <span ng-bind-html="epimage.nimi | kaanna | highlight : $select.search"></span>'+
+            '    </ui-select-choices>'+
+            '  </ui-select>'+
+            '  <p class="empty-epimaget" ng-if="images.length === 0" kaanna="\'ei-kuvia\'"></p>'+
+            '  <div class="epimage-plugin-add">'+
+            '      <div ng-if="!model.chosen">'+
+            '      <label class="ckeditor-plugin-label">{{ \'epimage-plugin-lisaa-uusi\' | kaanna }}</label>'+
+            '      <span ng-if="uploader.queue.length == 0"'+
+            '            class="btn btn-default btn-file"'+
+            '            style="position: relative;">'+
+            '        <span kaanna="\'valitse-uusi-kuva\'"></span>'+
+            '        <input type="file" nv-file-select nv-file-drop uploader="uploader">'+
+            '      </span>'+
+            '      <div ng-if="uploader.queue.length > 0">'+
+            '        <button ng-click="uploader.queue[0].remove()"'+
+            '                type="button"'+
+            '                class="btn btn-default"'+
+            '                ng-disabled="uploader.queue[0].isUploading || uploader.queue[0].isSuccess"'+
+            '                kaanna="\'peruuta\'"></button>'+
+            '        <button ng-click="uploader.queue[0].upload()"'+
+            '                ng-disabled="uploader.queue[0].isReady || uploader.queue[0].isUploading || uploader.queue[0].isSuccess"'+
+            '                type="button" class="btn btn-primary">'+
+            '          <span kaanna="\'laheta\'"></span>'+
+            '        </button>'+
+            '        <div ng-show="uploader.isHTML5"'+
+            '             ng-thumb="{ file: uploader.queue[0]._file, height: 100 }"'+
+            '             class="epimage-thumb"></div>'+
+            '        <p ng-show="scaleError" class="error-message">{{ scaleError | kaanna }}</p>'+
+            '        </div>'+
+            '      </div>'+
+            '      <div ng-if="model.chosen">'+
+            '        <label class="ckeditor-plugin-label">{{ \'epimage-plugin-kuvan-asetukset\' | kaanna }}</label>'+
+            '        <button ng-click="model.chosen = null" class="btn btn-default"><span kaanna="peruuta"></span></button>'+
+            '        <img ng-src="{{ model.chosen.src }}" width="{{ model.chosen.width }}" height="{{ model.chosen.height }}"'+
+            '             class="epimage-thumb"></img>'+
+            '        <label class="ckeditor-plugin-label">{{ \'epimage-plugin-koko\' | kaanna }}</label>'+
+            '        <input ng-change="widthChange(model.chosen)"'+
+            '               ng-model="model.chosen.width"'+
+            '               class="form-control"'+
+            '               style="max-width: 70px; float: left;">'+
+            '        <span style="float: left; margin-top: 10px;">X</span>'+
+            '        <input ng-change="heightChange(model.chosen)"'+
+            '               ng-model="model.chosen.height"'+
+            '               class="form-control"'+
+            '               style="max-width: 70px; float: left;">'+
+            '        <div class="clearfix"></div>'+
+            '        <label class="ckeditor-plugin-label">{{ \'epimage-plugin-kuvateksti\' | kaanna }}</label>'+
+            '        <input type="text"' +
+            '               class="form-control"' +
+            '               ng-model="model.chosen.alt">'+
+            '        <p ng-show="scaleError" class="error-message">{{ scaleError | kaanna }}</p>'+
+            '      </div>'+
+            '    <p ng-show="message" class="success-message">{{ message | kaanna }}</p>'+
+            '    <p ng-show="model.rejected.length > 0" class="error-message">'+
+            '      {{ \'epimage-plugin-hylatty\' | kaanna }}'+
+            '    </p>'+
+            '  </div>'+
+            '</div>',
             onLoad: function () {
               var self = this;
               var el = this.getElement().$;
@@ -87,13 +124,18 @@ CKEDITOR.dialog.add('epimageDialog', function( editor ) {
               }
             },
             setup: function (element) {
+              controllerScope.clear();
               var value = element.getAttribute('data-uid');
-              controllerScope.setValue(value);
+              controllerScope.setValue(element);
               this.setValue(value);
             },
             commit: function (element) {
+              var chosen = controllerScope.getChosen();
               element.setAttribute('data-uid', this.getValue());
-              element.setAttribute('src', controllerScope.urlForImage({id: this.getValue()}));
+              element.setAttribute('src', chosen.src);
+              element.setAttribute('width', chosen.width);
+              element.setAttribute('height', chosen.height);
+              element.setAttribute('alt', chosen.alt);
             }
           }
         ]

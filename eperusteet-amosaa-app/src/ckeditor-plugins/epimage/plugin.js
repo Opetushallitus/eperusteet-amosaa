@@ -17,10 +17,10 @@
 'use strict';
 /* global CKEDITOR */
 
-CKEDITOR.plugins.add( 'epimage', {
+CKEDITOR.plugins.add('epimage', {
 	requires: 'dialog',
 	icons: 'epimage',
-	init: function( editor ) {
+	init: function(editor) {
     var kaanna = editor.config.customData.kaanna;
     editor.addCommand('epimageEdit', new CKEDITOR.dialogCommand('epimageDialog'));
 
@@ -61,7 +61,10 @@ CKEDITOR.plugins.add( 'epimage', {
       });
       editor.contextMenu.addListener(function(element) {
         if (element.getAscendant('img', true)) {
-          return {epimageEditItem: CKEDITOR.TRISTATE_OFF, epimageDeleteItem: CKEDITOR.TRISTATE_OFF};
+          return {
+              epimageEditItem: CKEDITOR.TRISTATE_OFF,
+              epimageDeleteItem: CKEDITOR.TRISTATE_OFF
+          };
         }
       });
     }

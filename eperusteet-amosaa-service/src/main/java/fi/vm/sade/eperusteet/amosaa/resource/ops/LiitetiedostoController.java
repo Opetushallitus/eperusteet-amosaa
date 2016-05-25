@@ -40,18 +40,20 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.*;
+import java.util.List;
 
 /**
  *
  * @author jhyoty
  */
 @RestController
-@RequestMapping("/opetussuunnitelmat/{opsId}/kuvat")
+@RequestMapping("/koulutustoimijat/{ktId}/kuvat")
 @Api("liitetiedostot")
 public class LiitetiedostoController {
+    private static final Logger LOG = LoggerFactory.getLogger(LiitetiedostoController.class);
 
     private static final int BUFSIZE = 64 * 1024;
-    final Tika tika = new Tika();
+    final private Tika tika = new Tika();
 
     @Autowired
     private LiiteService liitteet;
@@ -64,31 +66,25 @@ public class LiitetiedostoController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.POST)
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'MUOKKAUS')")
-    public void reScaleImg(
-            @PathVariable
-            @P("opsId") Long opsId,
-            @PathVariable UUID id,
-            @RequestParam("width") Integer width,
-            @RequestParam("height") Integer height,
-            @RequestParam("file") Part file
-            ){
-
-        //TODO implement image rescaling
+    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'MUOKKAUS')")
+    public void reScaleImg(@PathVariable @P("ktId") Long ktId,
+                           @PathVariable UUID id,
+                           @RequestParam Integer width,
+                           @RequestParam Integer height,
+                           @RequestParam Part file){
 
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'MUOKKAUS')")
-    public ResponseEntity<String> upload(
-        @PathVariable
-        @P("opsId") Long opsId,
-        @RequestParam("nimi") String nimi,
-        @RequestParam("file") Part file,
-        @RequestParam("width") Integer width,
-        @RequestParam("height") Integer height,
-        UriComponentsBuilder ucb)
-        throws IOException, HttpMediaTypeNotSupportedException {
+    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'MUOKKAUS')")
+    public ResponseEntity<String> upload(@PathVariable @P("ktId") Long ktId,
+                                         @RequestParam String nimi,
+                                         @RequestParam Part file,
+                                         @RequestParam Integer width,
+                                         @RequestParam Integer height,
+                                         UriComponentsBuilder ucb)
+            throws IOException, HttpMediaTypeNotSupportedException {
+
         final long koko = file.getSize();
         try (PushbackInputStream pis = new PushbackInputStream(file.getInputStream(), BUFSIZE)) {
             byte[] buf = new byte[koko < BUFSIZE ? (int) koko : BUFSIZE];
@@ -102,21 +98,24 @@ public class LiitetiedostoController {
                 throw new HttpMediaTypeNotSupportedException(tyyppi + "ei ole tuettu");
             }
 
-            UUID id = null;
-            if( width != null && height != null){
+            UUID id;
+            if (width != null && height != null) {
                 ByteArrayOutputStream os = scaleImage(file, tyyppi, width, height);
-                id = liitteet.add(opsId, tyyppi, nimi, os.size(), new PushbackInputStream( new ByteArrayInputStream( os.toByteArray() )));
-            }else{
-                id = liitteet.add(opsId, tyyppi, nimi, koko, pis);
+                id = liitteet.add(ktId, tyyppi, nimi, os.size(), new PushbackInputStream(new ByteArrayInputStream(os.toByteArray())));
+            } else{
+                id = liitteet.add(ktId, tyyppi, nimi, koko, pis);
             }
 
             HttpHeaders h = new HttpHeaders();
-            h.setLocation(ucb.path("/opetussuunnitelmat/{opsId}/kuvat/{id}").buildAndExpand(opsId, id.toString()).toUri());
+            h.setLocation(ucb.path("/opetussuunnitelmat/{ktId}/kuvat/{id}").buildAndExpand(ktId, id.toString()).toUri());
             return new ResponseEntity<>(id.toString(), h, HttpStatus.CREATED);
         }
     }
 
-    private ByteArrayOutputStream scaleImage(@RequestParam("file") Part file, String tyyppi, Integer width, Integer height) throws IOException {
+    private ByteArrayOutputStream scaleImage(@RequestParam("file") Part file,
+                                             String tyyppi,
+                                             Integer width,
+                                             Integer height) throws IOException {
         BufferedImage a = ImageIO.read(file.getInputStream());
         BufferedImage preview = new BufferedImage(width, height, a.getType());
         preview.createGraphics().drawImage(a.getScaledInstance(width, height, Image.SCALE_SMOOTH), 0, 0, null);
@@ -141,13 +140,12 @@ public class LiitetiedostoController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @CacheControl(age = CacheControl.ONE_YEAR)
-    public void get(
-        @PathVariable Long opsId,
-        @PathVariable UUID id,
-        @RequestHeader(value = "If-None-Match", required = false) String etag,
-        HttpServletResponse response) throws IOException {
+    public void get(@PathVariable Long ktId,
+                    @PathVariable UUID id,
+                    @RequestHeader(value = "If-None-Match", required = false) String etag,
+                    HttpServletResponse response) throws IOException {
 
-        LiiteDto dto = liitteet.get(opsId, id);
+        LiiteDto dto = liitteet.get(ktId, id);
         if (dto != null) {
             if (etag != null && dto.getId().toString().equals(etag)) {
                 response.setStatus(HttpStatus.NOT_MODIFIED.value());
@@ -155,7 +153,7 @@ public class LiitetiedostoController {
                 response.setHeader("Content-Type", dto.getTyyppi());
                 response.setHeader("ETag", id.toString());
                 try (OutputStream os = response.getOutputStream()) {
-                    liitteet.export(opsId, id, os);
+                    liitteet.export(ktId, id, os);
                     os.flush();
                 }
             }
@@ -164,19 +162,15 @@ public class LiitetiedostoController {
         }
     }
 
-//    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-//    @ResponseStatus(HttpStatus.NO_CONTENT)
-//    public void delete(
-//        @PathVariable Long opsId,
-//        @PathVariable UUID id) {
-//        liitteet.delete(opsId, id);
-//    }
-//
-//    @RequestMapping(method = RequestMethod.GET)
-//    public List<LiiteDto> getAll(@PathVariable Long opsId) {
-//        return liitteet.getAll(opsId);
-//    }
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long ktId,
+                       @PathVariable UUID id) {
+        liitteet.delete(ktId, id);
+    }
 
-    private static final Logger LOG = LoggerFactory.getLogger(LiitetiedostoController.class);
-
+    @RequestMapping(method = RequestMethod.GET)
+    public List<LiiteDto> getAll(@PathVariable Long ktId) {
+        return liitteet.getAll(ktId);
+    }
 }

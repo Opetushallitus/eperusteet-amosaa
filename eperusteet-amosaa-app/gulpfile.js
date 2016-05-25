@@ -168,5 +168,6 @@ gulp
     gulp.watch(config.app + '**/*.jade', ['templates']);
     gulp.watch(config.app + '**/*.scss', ['sass']);
     gulp.watch('./src/localisation/*.json', ['locales']);
+    gulp.watch('./src/ckeditor-plugins/**/*', ['ckeditor']);
 })
 .task('default', ['watch']);

@@ -17,17 +17,15 @@
 package fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.AbstractAuditedEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
+import fi.vm.sade.eperusteet.amosaa.domain.liite.Liite;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 import java.io.Serializable;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.*;
+
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
@@ -65,7 +63,24 @@ public class Koulutustoimija extends AbstractAuditedEntity implements Serializab
     @Setter
     private String organisaatio = "";
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "koulutustoimija_liite", inverseJoinColumns = {
+            @JoinColumn(name="liite_id")
+    }, joinColumns = {
+            @JoinColumn(name="koulutustoimija_id")
+    })
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    private Set<Liite> liitteet = new HashSet<>();
+
     public boolean isOph() {
         return SecurityUtil.OPH_OID.equals(this.organisaatio);
+    }
+
+    public void attachLiite(Liite liite) {
+        liitteet.add(liite);
+    }
+
+    public void removeLiite(Liite liite) {
+        liitteet.remove(liite);
     }
 }

@@ -21,7 +21,7 @@
     "jquery-ui": "1.10.5",
     "jquery-ui-build": "1.8.1-6.1",
     "lazy.js": "0.4.2",
-    "lodash": "3.7.0",
+    "lodash": "3.10.0",
     "merge-stream": "1.0.0",
     "proxy-middleware": "0.15.0"
   },

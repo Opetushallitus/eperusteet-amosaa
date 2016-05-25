@@ -140,11 +140,4 @@ public class Opetussuunnitelma extends AbstractAuditedEntity implements Serializ
     @Getter
     @Setter
     private Opetussuunnitelma pohja;
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
-    @JoinTable(name = "opetussuunnitelma_liite", inverseJoinColumns = {@JoinColumn(name="liite_id")}, joinColumns = {@JoinColumn(name="opetussuunnitelma_id")})
-    @Getter
-    @Setter
-    private Set<Liite> liitteet = new HashSet<>();
 }

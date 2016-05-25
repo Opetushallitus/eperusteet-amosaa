@@ -28,20 +28,18 @@ import org.springframework.security.access.prepost.PreAuthorize;
  * @author jhyoty
  */
 public interface LiiteService {
+    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'MUOKKAUS')")
+    UUID add(@P("ktId") Long ktId, String tyyppi, String nimi, long length, InputStream is);
 
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'MUOKKAUS')")
-    public UUID add(@P("opsId") final Long opsId, String tyyppi, String nimi, long length, InputStream is);
+    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
+    LiiteDto get(@P("ktId") Long ktId, UUID id);
 
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
-    public LiiteDto get(Long opsId, UUID id);
+    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
+    List<LiiteDto> getAll(@P("ktId") Long ktId);
 
-//    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
-//    public List<LiiteDto> getAll(Long opsId);
+    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'MUOKKAUS')")
+    void delete(@P("opsId") Long ktId, UUID id);
 
-//    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'MUOKKAUS')")
-//    public void delete(Long opsId, UUID id);
-
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
-    public void export(@P("opsId") final Long opsId, UUID id, OutputStream os);
-
+    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
+    void export(@P("ktId") Long ktId, UUID id, OutputStream os);
 }

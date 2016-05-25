@@ -34,7 +34,7 @@ module KaannaService {
         else {
             return secondary;
         }
-    }
+    };
 
     export const hae = (obj, query: string = "") =>
         _.any(obj, (v: string = "") => {
@@ -60,7 +60,7 @@ module KaannaService {
             return "";
         }
     };
-};
+}
 
 
 angular.module("app")
@@ -74,7 +74,7 @@ angular.module("app")
             postfix = " *";
         }
         return postfix;
-    }
+    };
 
     const getAttr = (attr, scope) => _.isString(attr)
         && !_.isEmpty(attr)

@@ -30,6 +30,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import lombok.Getter;
 
 /**
@@ -44,15 +46,19 @@ public class Liite implements Serializable {
     @Getter
     @Column(updatable = false)
     private UUID id;
+
     @Getter
     @NotNull
     @Basic(optional = false)
     private String tyyppi;
+
     @Getter
     @Size(max = 1024)
     private String nimi;
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date luotu;
+
     @Getter
     @Basic(fetch = FetchType.LAZY, optional = false)
     @Lob
