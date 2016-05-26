@@ -77,7 +77,6 @@ public class Dokumentti {
     @Basic(fetch = FetchType.LAZY)
     private byte[] alatunniste;
 
-
     @Column(name = "virhekoodi")
     private String virhekoodi;
 }

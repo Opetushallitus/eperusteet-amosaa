@@ -1,4 +1,4 @@
-package fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija;
+package fi.vm.sade.eperusteet.amosaa.resource.ops;
 
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.Dokumentti;
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiTila;
@@ -119,6 +119,7 @@ public class DokumenttiController {
         }
     }
 
+    @Transactional(readOnly = true)
     @RequestMapping(value = "/kuva", method=RequestMethod.GET)
     public ResponseEntity<Object> addImage(@PathVariable Long ktId,
                                             @PathVariable Long opsId,
@@ -163,6 +164,7 @@ public class DokumenttiController {
         return new ResponseEntity<>(image, headers, HttpStatus.OK);
     }
 
+    @Transactional
     @RequestMapping(value = "/kuva", method=RequestMethod.DELETE)
     public ResponseEntity<Object> deleteImage(@PathVariable Long ktId,
                                            @PathVariable Long opsId,

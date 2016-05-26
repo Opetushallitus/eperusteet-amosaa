@@ -51,6 +51,7 @@ import javax.imageio.ImageIO;
  * @author iSaul
  */
 @Service
+@Transactional
 public class DokumenttiServiceImpl implements DokumenttiService {
     private static final Logger LOG = LoggerFactory.getLogger(DokumenttiServiceImpl.class);
 
@@ -67,7 +68,6 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     private DokumenttiBuilderService builder;
 
     @Override
-    @Transactional
     public DokumenttiDto getDto(Long id, Kieli kieli) {
         Dokumentti dokumentti = dokumenttiRepository.findByOpsIdAndKieli(id, kieli);
 
@@ -79,11 +79,11 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     }
 
     @Override
-    @Transactional
     public DokumenttiDto createDtoFor(Long id, Kieli kieli) {
         Dokumentti dokumentti = new Dokumentti();
         dokumentti.setTila(DokumenttiTila.EI_OLE);
         dokumentti.setKieli(kieli);
+
         if (opsRepository.findOne(id) != null) {
             dokumentti.setOpsId(id);
             Dokumentti saved = dokumenttiRepository.save(dokumentti);
@@ -94,7 +94,6 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     }
 
     @Override
-    @Transactional
     public void setStarted(DokumenttiDto dto) {
         // Asetetaan dokumentti luonti tilaan
         dto.setAloitusaika(new Date());
@@ -105,7 +104,6 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     }
 
     @Override
-    @Transactional
     public void generateWithDto(DokumenttiDto dto) throws DokumenttiException {
         Dokumentti dokumentti = mapper.map(dto, Dokumentti.class);
 
@@ -117,6 +115,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
             } else if (dokumentti.getOpsId() != null) {
                 LOG.info("Ops is not implemented yet");
             }
+
             dokumentti.setTila(DokumenttiTila.VALMIS);
             dokumentti.setValmistumisaika(new Date());
             dokumentti.setVirhekoodi("");
@@ -144,7 +143,6 @@ public class DokumenttiServiceImpl implements DokumenttiService {
         return null;
     }
 
-    @Transactional
     public boolean addImage(DokumenttiDto dto, String tyyppi, String kieli, MultipartFile file) throws IOException {
 
         if (!file.isEmpty()) {
