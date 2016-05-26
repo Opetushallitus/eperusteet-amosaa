@@ -33,9 +33,8 @@ $error-vari: #fcc;
   font-weight: bold;
   border: none;
   border-radius: 3px;
-  box-shadow: 2px 2px 6px #999;
   vertical-align: center;
-  box-shadow:0 1px 3px rgba(0, 0, 0, 0.49);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.49);
   background-repeat: no-repeat;
   background-position: 7px 6px;
   -webkit-box-shadow:0 1px 3px rgba(0, 0, 0, 0.49);
@@ -43,6 +42,7 @@ $error-vari: #fcc;
 
 .notification-body {
   padding: 6px;
+  overflow-y: auto;
 }
 
 .notification-picture {
@@ -54,7 +54,8 @@ $error-vari: #fcc;
 }
 
 .notification-message {
-  margin: 6px 0px 0px 37px;
+  margin: 0 0 0 37px;
+  width: 300px - 32px - 18px - 37px;
   float: left;
   font-weight: normal;
 }
