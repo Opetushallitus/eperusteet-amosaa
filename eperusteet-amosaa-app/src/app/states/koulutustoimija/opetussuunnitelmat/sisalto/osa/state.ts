@@ -124,12 +124,13 @@ angular.module("app")
 
                 // FIXME: Find a better way to check when sivunavi has been fully rendered
                 $timeout(() => {
-                    const el = document.getElementById("sisalto-item-" + osa.id);
-                    const elNavi = document.getElementById("ops-sivunavi");
-                    if (el
-                        && (el.offsetTop <= elNavi.scrollTop
-                            || el.offsetTop >= elNavi.scrollTop + elNavi.offsetHeight)) {
-                        el.scrollIntoView();
+                    if (osa) {
+                        const el = document.getElementById("sisalto-item-" + osa.id);
+                        const elNavi = document.getElementById("ops-sivunavi");
+                        if (el && (el.offsetTop <= elNavi.scrollTop
+                                || el.offsetTop >= elNavi.scrollTop + elNavi.offsetHeight)) {
+                            el.scrollIntoView();
+                        }
                     }
                 }, 400);
             }

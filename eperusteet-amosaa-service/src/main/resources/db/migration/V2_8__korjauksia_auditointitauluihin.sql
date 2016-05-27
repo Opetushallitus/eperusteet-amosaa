@@ -1,0 +1,1 @@
+ALTER TABLE tutkinnonosa_aud ALTER COLUMN tyyppi DROP NOT NULL;

@@ -32,7 +32,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
-import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -52,11 +51,6 @@ public class TutkinnonosaToteutus extends AbstractAuditedEntity implements Seria
     @Getter
     @Setter
     private Long id;
-
-    @Getter
-    @Setter
-    @OrderColumn
-    private Integer jnro;
 
     @Getter
     @Setter

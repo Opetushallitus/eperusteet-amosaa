@@ -7,9 +7,16 @@ angular.module("app")
     },
     views: {
         "": {
-            controller: ($scope, poistetut) => {
+            controller: ($scope, $state, $timeout, poistetut) => {
                 $scope.vaihdaJarjestys = Taulukot.bindSivutus($scope, "poistoAika", poistetut);
                 $scope.suodata = (item) => KaannaService.hae(item.nimi, $scope.search);
+                $scope.palauta = (item) => {
+                    item.post("palauta")
+                        .then(res => {
+                            _.remove(poistetut, item);
+                            $timeout(() => $state.reload("root.koulutustoimija.opetussuunnitelmat"));
+                        });
+                };
             }
         }
     }

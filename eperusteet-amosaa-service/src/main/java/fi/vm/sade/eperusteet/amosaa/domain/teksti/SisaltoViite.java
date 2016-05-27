@@ -105,7 +105,7 @@ public class SisaltoViite implements ReferenceableEntity, Serializable {
     @Setter
     private LokalisoituTeksti perusteteksti;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @Getter
     @Setter
     private Opetussuunnitelma owner;
@@ -140,6 +140,23 @@ public class SisaltoViite implements ReferenceableEntity, Serializable {
             root = root.getVanhempi();
         }
         return root;
+    }
+
+    public static SisaltoViite copy(SisaltoViite kopioitava) {
+        if (kopioitava != null) {
+            kopioitava.setId(null);
+            kopioitava.setVanhempi(null);
+
+            kopioitava.setTosa(Tutkinnonosa.copy(kopioitava.getTosa()));
+            kopioitava.setSuorituspolku(Suorituspolku.copy(kopioitava.getSuorituspolku()));
+
+            List<SisaltoViite> lapset = kopioitava.getLapset();
+            kopioitava.setLapset(new ArrayList<>());
+            for (SisaltoViite lapsi : lapset) {
+                kopioitava.getLapset().add(copy(lapsi));
+            }
+        }
+        return kopioitava;
     }
 
     static public void validoi(Validointi validointi, SisaltoViite viite, Set<Kieli> julkaisukielet) {

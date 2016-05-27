@@ -170,7 +170,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         SisaltoViite tosat = rootTkv.getLapset().get(0);
         for (TutkinnonOsaKaikkiDto tosa : tutkinnonOsat) {
             SisaltoViite uusi = SisaltoViite.createTutkinnonOsa(tosat);
-            uusi.setPakollinen(true);
+            uusi.setPakollinen(false);
             uusi.getTekstiKappale().setNimi(LokalisoituTeksti.of(tosa.getNimi()));
             Tutkinnonosa uusiTosa = uusi.getTosa();
             uusiTosa.setTyyppi(TutkinnonosaTyyppi.PERUSTEESTA);

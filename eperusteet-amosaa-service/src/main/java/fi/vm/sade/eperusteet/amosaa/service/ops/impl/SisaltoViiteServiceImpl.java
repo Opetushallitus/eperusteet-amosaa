@@ -15,6 +15,7 @@
  */
 package fi.vm.sade.eperusteet.amosaa.service.ops.impl;
 
+import fi.vm.sade.eperusteet.amosaa.domain.Poistettu;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
@@ -34,6 +35,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.TekstiKappaleDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
+import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.PoistettuRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.TekstiKappaleRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.tutkinnonosa.TutkinnonosaRepository;
@@ -51,7 +53,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.apache.commons.lang.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
@@ -86,7 +87,10 @@ public class SisaltoViiteServiceImpl implements SisaltoViiteService {
     private TutkinnonosaRepository tutkinnonosaRepository;
 
     @Autowired
-    private TekstiKappaleService tekstiKappaleService;
+    private TekstiKappaleService tekstiKappaleService;;
+
+    @Autowired
+    PoistettuRepository poistetutRepository;
 
     @Autowired
     private LockManager lockMgr;
@@ -162,8 +166,28 @@ public class SisaltoViiteServiceImpl implements SisaltoViiteService {
 
     @Override
     @Transactional(readOnly = false)
-    public void restoreSisaltoViite(Long ktId, Long opsId, Long poistettuId) {
-        throw new NotImplementedException("Ei toteutettu vielä.");
+    public SisaltoViiteDto restoreSisaltoViite(Long ktId, Long opsId, Long poistettuId) {
+        Koulutustoimija kt = koulutustoimijaRepository.findOne(ktId);
+        Opetussuunnitelma ops = opsRepository.findOne(opsId);
+        Poistettu poistettu = poistetutRepository.findByKoulutustoimijaAndOpetussuunnitelmaAndId(kt, ops, poistettuId);
+        if (poistettu == null) {
+            throw new BusinessRuleViolationException("palautettavaa-ei-olemassa");
+        }
+
+        SisaltoViite parentViite = repository.findOneRoot(ops);
+        SisaltoViiteDto pelastettu = getData(opsId, poistettu.getPoistettu(), poistettu.getRev());
+        SisaltoViite uusiViite = mapper.map(pelastettu, SisaltoViite.class);
+        uusiViite = SisaltoViite.copy(uusiViite);
+        uusiViite.setOwner(ops);
+        uusiViite.setVanhempi(parentViite);
+        parentViite.getLapset().add(0, uusiViite);
+        uusiViite.setTekstiKappale(null);
+        mapTutkinnonParts(uusiViite.getTosa());
+        uusiViite = repository.save(uusiViite);
+        pelastettu.getTekstiKappale().setId(null);
+        tekstiKappaleService.add(uusiViite, pelastettu.getTekstiKappale());
+        poistetutRepository.delete(poistettu);
+        return mapper.map(uusiViite, SisaltoViiteDto.class);
     }
 
     private void updateSuorituspolku(SisaltoViite viite, SisaltoViiteDto uusi) {
@@ -176,6 +200,35 @@ public class SisaltoViiteServiceImpl implements SisaltoViiteService {
             rivi.setSuorituspolku(sp);
         }
         viite.setSuorituspolku(sp);
+    }
+
+    @Transactional(readOnly = false)
+    private void mapTutkinnonParts(Tutkinnonosa tosa) {
+        if (tosa == null) {
+            return;
+        }
+
+        if (tosa.getTyyppi().equals(TutkinnonosaTyyppi.OMA)
+                && tosa.getOmatutkinnonosa() != null
+                && tosa.getOmatutkinnonosa().getAmmattitaitovaatimuksetLista() != null) {
+
+            tosa.getOmatutkinnonosa().getAmmattitaitovaatimuksetLista().stream()
+                .filter(ammattitaitovaatimuksenKohdealue -> ammattitaitovaatimuksenKohdealue.getVaatimuksenKohteet() != null)
+                .forEach(ammattitaitovaatimuksenKohdealue -> ammattitaitovaatimuksenKohdealue.getVaatimuksenKohteet().stream()
+                    .forEach(ammattitaitovaatimuksenKohde -> {
+
+                        ammattitaitovaatimuksenKohde.setAmmattitaitovaatimuksenkohdealue(ammattitaitovaatimuksenKohdealue);
+
+                        if (ammattitaitovaatimuksenKohde.getVaatimukset() != null) {
+                            ammattitaitovaatimuksenKohde.getVaatimukset().stream()
+                                .forEach(ammattitaitovaatimus -> ammattitaitovaatimus.setAmmattitaitovaatimuksenkohde(ammattitaitovaatimuksenKohde));
+                        }
+                    }));
+        }
+
+        for (TutkinnonosaToteutus toteutus : tosa.getToteutukset()) {
+            toteutus.setTutkinnonosa(tosa);
+        }
     }
 
     @Transactional(readOnly = false)
@@ -192,30 +245,9 @@ public class SisaltoViiteServiceImpl implements SisaltoViiteService {
             }
         }
 
-        Tutkinnonosa mappedOsa = mapper.map(uusi.getTosa(), Tutkinnonosa.class);
-        if (mappedOsa.getTyyppi().equals(TutkinnonosaTyyppi.OMA)
-                && mappedOsa.getOmatutkinnonosa() != null
-                && mappedOsa.getOmatutkinnonosa().getAmmattitaitovaatimuksetLista() != null) {
-
-            mappedOsa.getOmatutkinnonosa().getAmmattitaitovaatimuksetLista().stream()
-                    .filter(ammattitaitovaatimuksenKohdealue -> ammattitaitovaatimuksenKohdealue.getVaatimuksenKohteet() != null)
-                    .forEach(ammattitaitovaatimuksenKohdealue -> ammattitaitovaatimuksenKohdealue.getVaatimuksenKohteet().stream()
-                            .forEach(ammattitaitovaatimuksenKohde -> {
-
-                                ammattitaitovaatimuksenKohde.setAmmattitaitovaatimuksenkohdealue(ammattitaitovaatimuksenKohdealue);
-
-                                if (ammattitaitovaatimuksenKohde.getVaatimukset() != null) {
-                                    ammattitaitovaatimuksenKohde.getVaatimukset().stream()
-                                            .forEach(ammattitaitovaatimus -> ammattitaitovaatimus.setAmmattitaitovaatimuksenkohde(ammattitaitovaatimuksenKohde));
-                                }
-                            }));
-        }
-
-        for (TutkinnonosaToteutus toteutus : mappedOsa.getToteutukset()) {
-            toteutus.setTutkinnonosa(mappedOsa);
-        }
-
-        viite.setTosa(mappedOsa);
+        Tutkinnonosa mappedTosa = mapper.map(uusi.getTosa(), Tutkinnonosa.class);
+        mapTutkinnonParts(mappedTosa);
+        viite.setTosa(mappedTosa);
     }
 
     @Override
@@ -251,6 +283,9 @@ public class SisaltoViiteServiceImpl implements SisaltoViiteService {
             case SUORITUSPOLKU:
                 updateSuorituspolku(viite, uusi);
                 break;
+            case SUORITUSPOLUT:
+            case TUTKINNONOSAT:
+                viite.setPakollinen(true);
             default:
                 break;
         }
@@ -465,7 +500,8 @@ public class SisaltoViiteServiceImpl implements SisaltoViiteService {
     @Override
     public SisaltoViiteDto getData(Long opsId, Long viiteId, Integer revId) {
         SisaltoViite viite = repository.findRevision(viiteId, revId);
-        return mapper.map(viite, SisaltoViiteDto.class);
+        SisaltoViiteDto svDto = mapper.map(viite, SisaltoViiteDto.class);
+        return svDto;
     }
 
     @Override

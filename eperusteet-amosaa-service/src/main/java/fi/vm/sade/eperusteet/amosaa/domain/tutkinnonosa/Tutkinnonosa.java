@@ -79,7 +79,21 @@ public class Tutkinnonosa extends AbstractAuditedEntity implements Serializable,
 
     @Getter
     @Setter
-    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "tutkinnonosa")
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @OrderColumn(name = "jnro")
     private List<TutkinnonosaToteutus> toteutukset = new ArrayList<>();
+
+    public static Tutkinnonosa copy(Tutkinnonosa tosa) {
+        if (tosa != null) {
+            tosa.setId(null);
+            tosa.setOmatutkinnonosa(OmaTutkinnonosa.copy(tosa.getOmatutkinnonosa()));
+
+            if (tosa.getToteutukset() != null) {
+                for (TutkinnonosaToteutus toteutus : tosa.getToteutukset()) {
+                    toteutus.setId(null);
+                }
+            }
+        }
+        return tosa;
+    }
 }
