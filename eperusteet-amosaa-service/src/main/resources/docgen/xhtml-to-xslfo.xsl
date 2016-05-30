@@ -817,6 +817,11 @@
 
     <xsl:template match="tr">
         <fo:table-row>
+            <xsl:if test="@bgcolor">
+                <xsl:attribute name="background-color">
+                    <xsl:value-of select="@bgcolor" />
+                </xsl:attribute>
+            </xsl:if>
             <xsl:apply-templates select="th|td" />
         </fo:table-row>
     </xsl:template>

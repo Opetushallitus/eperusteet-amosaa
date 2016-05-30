@@ -19,7 +19,7 @@ angular.module("app")
                         + "&" + new Date().getTime()
                 };
 
-                paivitaKuva("kansi");
+                paivitaKuva("kansikuva");
                 paivitaKuva("ylatunniste");
                 paivitaKuva("alatunniste");
 
@@ -45,7 +45,7 @@ angular.module("app")
                     });
                 };
 
-                $scope.kansiUploader = createUploader("kansi");
+                $scope.kansikuvaUploader = createUploader("kansikuva");
                 $scope.ylatunnisteUploader = createUploader("ylatunniste");
                 $scope.alatunnisteUploader = createUploader("alatunniste");
 

@@ -40,10 +40,6 @@ div.dokumentti
             b(kaanna="'luotu'")
             span=" "
             span(ng-bind="dokumenttiDto.valmistumisaika | aikaleima")
-          span
-            b(kaanna="'luoja'")
-            span=" "
-            span(kaanna="dokumenttiDto.luoja")
 
         a(ng-href="{{ linkki }}" target="_blank" ng-show="dokumenttiDto.tila === 'valmis'")
           button.btn.btn-default {{ "lataa" | kaanna }} {{ "pdf" | kaanna }}
@@ -59,10 +55,15 @@ div.dokumentti
           div.col-xs-8
             div.progress
               div.progress-bar.progress-bar-striped.active(
-              style="width: {{ edistymiset[dokumenttiDto.edistyminen] / edistymisetCount * 100 }}%;")
+                  style="width: {{ edistymiset[dokumenttiDto.edistyminen] / edistymisetCount * 100 }}%;"
+                  ng-if="dokumenttiDto.edistyminen !== 'tuntematon'")
                 span {{ edistymiset[dokumenttiDto.edistyminen] }} / {{ edistymisetCount }}
                 span=" "
-                span {{ dokumenttiDto.edistyminen }}
+                span {{ dokumenttiDto.edistyminen | kaanna }}
+              div.progress-bar.progress-bar-striped.active(
+                  style="width: 100%;"
+                  ng-if="dokumenttiDto.edistyminen === 'tuntematon'")
+                span(kaanna="'luodaan'")
 
   div.row
     div.col-xs-12
@@ -70,11 +71,11 @@ div.dokumentti
 
       form.form-horizontal
         div.form-group
-          label.col-xs-2(for="kansi")
+          label.col-xs-2(for="kansikuva")
             span(kaanna="'kansilehti'")
             span=":"
           div.col-xs-10
-            +kuva("kansi")
+            +kuva("kansikuva")
         div.form-group
           label.col-xs-2(for="header")
             span(kaanna="'ylatunniste'")

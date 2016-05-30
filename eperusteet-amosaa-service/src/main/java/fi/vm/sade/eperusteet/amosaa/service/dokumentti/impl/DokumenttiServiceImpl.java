@@ -175,7 +175,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
             Dokumentti dokumentti = dokumenttiRepository.findByOpsIdAndKieli(dto.getOpsId(), Kieli.of(kieli));
 
             switch (tyyppi) {
-                case "kansi":
+                case "kansikuva":
                     dokumentti.setKansikuva(image);
                     break;
                 case "ylatunniste":

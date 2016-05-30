@@ -16,22 +16,39 @@
 
 package fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import fi.vm.sade.eperusteet.amosaa.domain.OsaamistasonKriteeri;
+import fi.vm.sade.eperusteet.amosaa.domain.ammattitaitovaatimukset.AmmattitaitovaatimuksenKohde;
+import fi.vm.sade.eperusteet.amosaa.domain.ammattitaitovaatimukset.AmmattitaitovaatimuksenKohdealue;
+import fi.vm.sade.eperusteet.amosaa.domain.ammattitaitovaatimukset.Ammattitaitovaatimus;
+import fi.vm.sade.eperusteet.amosaa.domain.arviointi.ArvioinninKohde;
+import fi.vm.sade.eperusteet.amosaa.domain.arviointi.ArvioinninKohdealue;
+import fi.vm.sade.eperusteet.amosaa.domain.arviointi.Arviointi;
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.Dokumentti;
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiEdistyminen;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
-import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
-import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaTutkinnonosa;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Suorituspolku;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Tutkinnonosa;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaToteutus;
+import fi.vm.sade.eperusteet.amosaa.dto.ops.TermiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.repository.dokumentti.DokumenttiRepository;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiBuilderService;
+import fi.vm.sade.eperusteet.amosaa.service.dokumentti.LocalizedMessagesService;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.PdfService;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.CharapterNumberGenerator;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiBase;
+import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiRivi;
+import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiTaulukko;
+import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
+import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.ops.LiiteService;
+import fi.vm.sade.eperusteet.amosaa.service.ops.TermistoService;
 import org.apache.xml.security.utils.Base64;
-import org.jsoup.Jsoup;
-import org.jsoup.helper.W3CDom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +77,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.List;
+
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
+
+import static fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils.*;
 
 /**
  *
@@ -84,6 +105,18 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
 
     @Autowired
     private PdfService pdfService;
+
+    @Autowired
+    private DtoMapper mapper;
+
+    @Autowired
+    private TermistoService termistoService;
+
+    @Autowired
+    private EperusteetService eperusteetService;
+
+    @Autowired
+    private LocalizedMessagesService messages;
 
     @Override
     public byte[] generatePdf(Opetussuunnitelma ops, Dokumentti dokumentti, Kieli kieli)
@@ -119,25 +152,29 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
         docBase.setGenerator(new CharapterNumberGenerator());
         docBase.setKieli(kieli);
         docBase.setDokumentti(dokumentti);
+        docBase.setMapper(mapper);
+        if (ops.getPeruste() != null) {
+            docBase.setPeruste(ops.getPeruste());
+        }
 
         // Kansilehti & Infosivu
         addMetaPages(docBase);
 
         docBase.getDokumentti().setEdistyminen(DokumenttiEdistyminen.TEKSTIKAPPALEET);
-        saveEdistyminen(docBase);
+        dokumenttiRepository.save(docBase.getDokumentti());
 
         // Sisältöelementit
-        addOsuudet(docBase);
+        addTekstit(docBase);
 
         docBase.getDokumentti().setEdistyminen(DokumenttiEdistyminen.VIITTEET);
-        saveEdistyminen(docBase);
+        dokumenttiRepository.save(docBase.getDokumentti());
 
 
         // Alaviitteet
         buildFootnotes(docBase);
 
         docBase.getDokumentti().setEdistyminen(DokumenttiEdistyminen.KUVAT);
-        saveEdistyminen(docBase);
+        dokumenttiRepository.save(docBase.getDokumentti());
 
         // Kuvat
         buildImages(docBase);
@@ -146,23 +183,19 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
         buildAlatunniste(docBase);
 
         docBase.getDokumentti().setEdistyminen(DokumenttiEdistyminen.TYYLIT);
-        saveEdistyminen(docBase);
+        dokumenttiRepository.save(docBase.getDokumentti());
 
         // PDF luonti XHTML dokumentista
         return pdfService.xhtml2pdf(doc);
     }
 
-    private void saveEdistyminen(DokumenttiBase docBase) {
-        dokumenttiRepository.saveAndFlush(docBase.getDokumentti());
-    }
-
     private void addMetaPages(DokumenttiBase docBase) {
         Element title = docBase.getDocument().createElement("title");
-        String nimi = getTextString(docBase.getOpetussuunnitelma().getNimi(), docBase.getKieli());
+        String nimi = getTextString(docBase, docBase.getOpetussuunnitelma().getNimi());
         title.appendChild(docBase.getDocument().createTextNode(nimi));
         docBase.getHeadElement().appendChild(title);
 
-        String kuvaus = getTextString(docBase.getOpetussuunnitelma().getKuvaus(), docBase.getKieli());
+        String kuvaus = getTextString(docBase, docBase.getOpetussuunnitelma().getKuvaus());
         if (kuvaus != null && kuvaus.length() != 0) {
             Element description = docBase.getDocument().createElement("meta");
             description.setAttribute("name", "description");
@@ -263,55 +296,268 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
         docBase.getHeadElement().appendChild(koulutEl);
     }
 
-    private void addOsuudet(DokumenttiBase docBase)
+    private void addTekstit(DokumenttiBase docBase)
             throws IOException, SAXException, ParserConfigurationException {
 
         SisaltoViite tekstit = tkvRepository.findOneRoot(docBase.getOpetussuunnitelma());
         if (tekstit != null) {
-            addTekstiKappale(docBase, tekstit, false);
+            addSisaltoviite(docBase, tekstit);
         }
     }
 
-    private void addTekstiKappale(DokumenttiBase docBase, SisaltoViite viite, boolean paataso)
+    private void addSisaltoviite(DokumenttiBase docBase, SisaltoViite viite)
             throws ParserConfigurationException, IOException, SAXException {
 
         for (SisaltoViite lapsi : viite.getLapset()) {
-            if (lapsi.getTekstiKappale() != null && lapsi.getTekstiKappale().getNimi() != null) {
 
-                // Ei näytetä osien Pääkappaleiden otsikoita
-                // Opetuksen järjestäminen ja Opetuksen toteuttamisen lähtökohdat
-                if (paataso) {
-                    addTekstiKappale(docBase, lapsi, false);
-                } else {
+            if (lapsi != null) {
+                if (lapsi.getTekstiKappale() != null) {
+                    TekstiKappale kappale = lapsi.getTekstiKappale();
 
-                    addHeader(docBase, getTextString(lapsi.getTekstiKappale().getNimi(), docBase.getKieli()));
-
-                    // Opsin teksti luvulle
-                    if (lapsi.getTekstiKappale().getTeksti() != null) {
-                        String teskti = "<div>" + getTextString(lapsi.getTekstiKappale().getTeksti(), docBase.getKieli()) + "</div>";
-
-                        Document tempDoc = new W3CDom().fromJsoup(Jsoup.parseBodyFragment(teskti));
-                        Node node = tempDoc.getDocumentElement().getChildNodes().item(1).getFirstChild();
-
-                        docBase.getBodyElement().appendChild(docBase.getDocument().importNode(node, true));
-
+                    if (kappale.getNimi() == null) {
+                        return;
                     }
 
-                    docBase.getGenerator().increaseDepth();
-
-                    // Rekursiivisesti
-                    addTekstiKappale(docBase, lapsi, false);
-
-                    docBase.getGenerator().decreaseDepth();
-                    docBase.getGenerator().increaseNumber();
-
+                    addHeader(docBase, getTextString(docBase, kappale.getNimi()));
+                    if (kappale.getTeksti() != null) {
+                        addLokalisoituteksti(docBase, kappale.getTeksti(), "div");
+                    }
                 }
+
+                switch (lapsi.getTyyppi()) {
+                    case SUORITUSPOLKU:
+                        addSuorituspolku(docBase, lapsi);
+                        break;
+                    case TUTKINNONOSA:
+                        addTutkinnonosa(docBase, lapsi);
+                        break;
+                    default:
+                        break;
+                }
+
+                docBase.getGenerator().increaseDepth();
+
+                // Rekursiivisesti
+                addSisaltoviite(docBase, lapsi);
+
+                docBase.getGenerator().decreaseDepth();
+
+                docBase.getGenerator().increaseNumber();
             }
         }
     }
 
+    private void addSuorituspolku(DokumenttiBase docBase, SisaltoViite viite) {
+        Suorituspolku suorituspolku = viite.getSuorituspolku();
+    }
+
+    private void addTutkinnonosa(DokumenttiBase docBase, SisaltoViite lapsi) {
+        Tutkinnonosa tutkinnonOsa = lapsi.getTosa();
+
+        switch (tutkinnonOsa.getTyyppi()) {
+            case OMA:
+                addOmaTutkinnonOsa(docBase, tutkinnonOsa.getOmatutkinnonosa());
+                break;
+            case PERUSTEESTA:
+                // koodi, nimi, laajuus
+                addPerusteenTutkinnonOsa(docBase, tutkinnonOsa.getPerusteentutkinnonosa());
+                break;
+            default:
+                break;
+        }
+        // Osaamisen osoittaminen
+
+
+
+        // Toteutukset
+
+        addTeksti(docBase, messages.translate("docgen.toteutukset", docBase.getKieli()), "h5");
+
+        DokumenttiTaulukko taulukko = new DokumenttiTaulukko();
+
+        taulukko.addOtsikkoSarake("");
+        taulukko.addOtsikkoSarake(messages.translate("docgen.osaamisen-arvioinnista", docBase.getKieli()));
+        taulukko.addOtsikkoSarake(messages.translate("docgen.tavat-ja-ymparisto", docBase.getKieli()));
+
+        for (TutkinnonosaToteutus toteutus : tutkinnonOsa.getToteutukset()) {
+
+            DokumenttiRivi rivi = new DokumenttiRivi();
+            StringJoiner koodit = new StringJoiner(", ");
+            toteutus.getKoodit().stream().forEach(koodit::add);
+
+            rivi.addSarake(koodit.toString());
+            rivi.addSarake(getTextString(docBase, toteutus.getArvioinnista().getTeksti()));
+            rivi.addSarake(getTextString(docBase, toteutus.getTavatjaymparisto().getTeksti()));
+
+            taulukko.addRivi(rivi);
+        }
+
+        taulukko.addToDokumentti(docBase);
+    }
+
+    private void addOmaTutkinnonOsa(DokumenttiBase docBase, OmaTutkinnonosa omaTutkinnonosa) {
+
+        // Tavoitteet
+        if (omaTutkinnonosa.getTavoitteet() != null) {
+            addTeksti(docBase, messages.translate("docgen.tavoitteet", docBase.getKieli()), "h5");
+            addLokalisoituteksti(docBase, omaTutkinnonosa.getTavoitteet(), "div");
+        }
+
+
+        // Ammattitaitovaatimukset
+        if (omaTutkinnonosa.getAmmattitaitovaatimuksetLista().size() > 0) {
+            addTeksti(docBase, messages.translate("docgen.ammattitaitovaatimukset", docBase.getKieli()), "h5");
+            omaTutkinnonosa.getAmmattitaitovaatimuksetLista().stream()
+                    .forEach(ammattitaitovaatimuksenKohdealue -> addAmmattitaitovaatimuksenKohdealue(docBase, ammattitaitovaatimuksenKohdealue));
+        }
+
+
+
+        // Arviointi
+        if (omaTutkinnonosa.getArviointi() != null) {
+            addTeksti(docBase, messages.translate("docgen.arviointi", docBase.getKieli()), "h5");
+            Arviointi arviointi = omaTutkinnonosa.getArviointi();
+            arviointi.getArvioinninKohdealueet().stream()
+                    .forEach(arvioinninKohdealue -> addArvioinninKohdealue(docBase, arvioinninKohdealue));
+        }
+
+        // Ammattitaidon osoittamistavat
+        if (omaTutkinnonosa.getAmmattitaidonOsoittamistavat() != null) {
+            addTeksti(docBase, messages.translate("docgen.ammattitaidon-osoittamistavat", docBase.getKieli()), "h5");
+            addLokalisoituteksti(docBase, omaTutkinnonosa.getAmmattitaidonOsoittamistavat(), "div");
+        }
+    }
+
+    private void addAmmattitaitovaatimuksenKohdealue(DokumenttiBase docBase,
+                                                     AmmattitaitovaatimuksenKohdealue ammattitaitovaatimuksenKohdealue) {
+        DokumenttiTaulukko taulukko = new DokumenttiTaulukko();
+
+        taulukko.addOtsikkoSarake(getTextString(docBase, ammattitaitovaatimuksenKohdealue.getOtsikko()));
+        addVaatimuksenKohteet(docBase, ammattitaitovaatimuksenKohdealue.getVaatimuksenKohteet(), taulukko);
+
+        taulukko.addToDokumentti(docBase);
+    }
+
+    private void addVaatimuksenKohteet(DokumenttiBase docBase,
+                                       List<AmmattitaitovaatimuksenKohde> vaatimuksenKohteet,
+                                       DokumenttiTaulukko taulukko) {
+        StringBuilder vaatimuksenKohteetBuilder = new StringBuilder();
+        vaatimuksenKohteet.stream()
+                .forEach(ammattitaitovaatimuksenKohde -> {
+                    if (ammattitaitovaatimuksenKohde.getOtsikko() != null) {
+                        vaatimuksenKohteetBuilder.append("<h6>");
+                        vaatimuksenKohteetBuilder.append(getTextString(docBase, ammattitaitovaatimuksenKohde.getOtsikko()));
+                        vaatimuksenKohteetBuilder.append("</h6>");
+                    }
+
+                    if (ammattitaitovaatimuksenKohde.getSelite() != null) {
+                        vaatimuksenKohteetBuilder.append("<p>");
+                        vaatimuksenKohteetBuilder.append(ammattitaitovaatimuksenKohde.getSelite());
+                        vaatimuksenKohteetBuilder.append("</p>");
+                    }
+
+                    addVaatimukset(docBase, ammattitaitovaatimuksenKohde.getVaatimukset(), vaatimuksenKohteetBuilder);
+                });
+
+        DokumenttiRivi rivi = new DokumenttiRivi();
+        rivi.addSarake(vaatimuksenKohteetBuilder.toString());
+        taulukko.addRivi(rivi);
+    }
+
+    private void addVaatimukset(DokumenttiBase docBase,
+                                List<Ammattitaitovaatimus> ammattitaitovaatimukset,
+                                StringBuilder vaatimuksenKohteetBuilder) {
+        vaatimuksenKohteetBuilder.append("<ul>");
+        ammattitaitovaatimukset.stream()
+                .forEach(vaatimus -> {
+                    vaatimuksenKohteetBuilder.append("<li>");
+                    vaatimuksenKohteetBuilder.append(getTextString(docBase, vaatimus.getSelite()));
+                    if (vaatimus.getAmmattitaitovaatimusKoodi() != null) {
+                        vaatimuksenKohteetBuilder.append(" (");
+                        vaatimuksenKohteetBuilder.append(vaatimus.getAmmattitaitovaatimusKoodi());
+                        vaatimuksenKohteetBuilder.append(")");
+                    }
+                    vaatimuksenKohteetBuilder.append("</li>");
+                });
+        vaatimuksenKohteetBuilder.append("</ul>");
+    }
+
+    private void addArvioinninKohdealue(DokumenttiBase docBase, ArvioinninKohdealue arvioinninKohdealue) {
+        DokumenttiTaulukko arviointiTaulukko = new DokumenttiTaulukko();
+
+        arviointiTaulukko.addOtsikkoSarake(getTextString(docBase, arvioinninKohdealue.getOtsikko()));
+        addArvioinninKohteet(docBase, arvioinninKohdealue.getArvioinninKohteet(), arviointiTaulukko);
+
+        arviointiTaulukko.addToDokumentti(docBase);
+    }
+
+    private void addArvioinninKohteet(DokumenttiBase docBase, List<ArvioinninKohde> arvioinninKohteet, DokumenttiTaulukko arviointiTaulukko) {
+        StringBuilder arvioinninKohteetBuilder = new StringBuilder();
+
+        arvioinninKohteet.stream()
+                .forEach(arvioinninKohde -> {
+                    if (arvioinninKohde.getOtsikko() != null) {
+                        arvioinninKohteetBuilder.append("<h6>");
+                        arvioinninKohteetBuilder.append(getTextString(docBase, arvioinninKohde.getOtsikko()));
+                        arvioinninKohteetBuilder.append("</h6>");
+                    }
+
+                    if (arvioinninKohde.getSelite() != null) {
+                        arvioinninKohteetBuilder.append("<p>");
+                        arvioinninKohteetBuilder.append(arvioinninKohde.getSelite());
+                        arvioinninKohteetBuilder.append("</p>");
+                    }
+
+                    // Add kohteen taulukko
+                    addOsaamistasonKriteerit(docBase, arvioinninKohde.getOsaamistasonKriteerit(), arvioinninKohteetBuilder);
+                });
+
+
+        DokumenttiRivi rivi = new DokumenttiRivi();
+        rivi.addSarake(arvioinninKohteetBuilder.toString());
+        arviointiTaulukko.addRivi(rivi);
+    }
+
+    private void addOsaamistasonKriteerit(DokumenttiBase docBase,
+                                          Set<OsaamistasonKriteeri> osaamistasonKriteerit,
+                                          StringBuilder arvioinninKohteetBuilder) {
+        DokumenttiTaulukko taulukko = new DokumenttiTaulukko();
+
+        osaamistasonKriteerit.stream()
+                .filter(k -> k.getOsaamistaso() != null)
+                .sorted((k1, k2) -> k1.getOsaamistaso().getId().compareTo(
+                        k2.getOsaamistaso().getId()))
+                .forEach(osaamistasonKriteeri -> {
+                    DokumenttiRivi rivi = new DokumenttiRivi();
+
+                    rivi.addSarake(getTextString(docBase, osaamistasonKriteeri.getOsaamistaso().getOtsikko()));
+
+                    StringBuilder kriteeritBuilder = new StringBuilder();
+                    kriteeritBuilder.append("<ul>");
+                    osaamistasonKriteeri.getKriteerit().stream()
+                            .forEach(kriteeri -> {
+                                kriteeritBuilder.append("<li>");
+                                kriteeritBuilder.append(getTextString(docBase, kriteeri));
+                                kriteeritBuilder.append("</li>");
+                            });
+                    kriteeritBuilder.append("</ul>");
+                    rivi.addSarake(kriteeritBuilder.toString());
+
+                    taulukko.addRivi(rivi);
+                });
+
+        arvioinninKohteetBuilder.append(taulukko.toString());
+    }
+
+    private void addPerusteenTutkinnonOsa(DokumenttiBase docBase, Long perusteenTutkinnonosaId) {
+        JsonNode perusteTutkinnonOsa = eperusteetService.getTutkinnonOsa(
+                docBase.getPeruste().getId(), perusteenTutkinnonosaId);
+
+        //addTeksti(docBase, perusteTutkinnonOsa.toString(), "cite");
+    }
+
     private void buildFootnotes(DokumenttiBase docBase) {
-        /*XPathFactory xPathfactory = XPathFactory.newInstance();
+        XPathFactory xPathfactory = XPathFactory.newInstance();
         XPath xpath = xPathfactory.newXPath();
         try {
             XPathExpression expression = xpath.compile("//abbr");
@@ -325,17 +571,19 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
                     String avain = node.getAttributes().getNamedItem("data-viite").getNodeValue();
 
                     if (docBase.getOpetussuunnitelma() != null && docBase.getOpetussuunnitelma().getId() != null) {
-                        TermiDto termiDto = termistoService.getTermi(docBase.getOps().getId(), avain);
+                        TermiDto termiDto = termistoService.getTermiByAvain(
+                                docBase.getOpetussuunnitelma().getKoulutustoimija().getId(), avain);
 
                         // todo: perusteen viite
-                        if (termiDto == null) {}
-                        if (termiDto != null && termiDto.isAlaviite() && termiDto.getSelitys() != null) {
+                        /*if (termiDto == null) {
+
+                        }*/
+
+                        if (termiDto != null && termiDto.getAlaviite() && termiDto.getSelitys() != null) {
                             element.setAttribute("number", String.valueOf(noteNumber));
 
                             LokalisoituTekstiDto tekstiDto = termiDto.getSelitys();
-                            String selitys = getTextString(
-                                    mapper.map(tekstiDto, LokalisoituTeksti.class), docBase.getKieli())
-                                    .replaceAll("<[^>]+>", ""); // Tällä hetkellä tuetaan vain tekstiä
+                            String selitys = getTextString(docBase, tekstiDto).replaceAll("<[^>]+>", "");
                             element.setAttribute("text", selitys);
                             noteNumber++;
                         }
@@ -344,7 +592,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
             }
         } catch (XPathExpressionException e) {
             LOG.error(e.getLocalizedMessage());
-        }*/
+        }
     }
 
     private void buildImages(DokumenttiBase docBase) {
@@ -454,27 +702,5 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
 
         kansi.appendChild(kuva);
         head.appendChild(kansi);
-    }
-
-    private void addHeader(DokumenttiBase docBase, String text) {
-        if (text != null) {
-            Element header = docBase.getDocument().createElement("h" + docBase.getGenerator().getDepth());
-            header.setAttribute("number", docBase.getGenerator().generateNumber());
-            header.appendChild(docBase.getDocument().createTextNode(unescapeHtml5(text)));
-            docBase.getBodyElement().appendChild(header);
-        }
-    }
-
-    private static String getTextString(LokalisoituTeksti lokalisoituTeksti, Kieli kieli) {
-        if (lokalisoituTeksti == null || lokalisoituTeksti.getTeksti() == null
-                || lokalisoituTeksti.getTeksti().get(kieli) == null) {
-            return "";
-        } else {
-            return unescapeHtml5(lokalisoituTeksti.getTeksti().get(kieli));
-        }
-    }
-
-    private static String unescapeHtml5(String string) {
-        return Jsoup.clean(string, ValidHtml.WhitelistType.NORMAL.getWhitelist());
     }
 }

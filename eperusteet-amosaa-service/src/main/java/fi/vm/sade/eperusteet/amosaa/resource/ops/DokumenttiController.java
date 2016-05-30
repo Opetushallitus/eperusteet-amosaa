@@ -121,9 +121,9 @@ public class DokumenttiController {
 
     @Transactional(readOnly = true)
     @RequestMapping(value = "/kuva", method=RequestMethod.GET)
-    public ResponseEntity<Object> addImage(@PathVariable Long ktId,
+    public ResponseEntity<Object> getImage(@PathVariable Long ktId,
                                             @PathVariable Long opsId,
-                                            @RequestParam(required = true) String tyyppi,
+                                            @RequestParam String tyyppi,
                                             @RequestParam(defaultValue = "fi") String kieli) {
         // Tehdään DokumenttiDto jos ei löydy jo valmiina
         DokumenttiDto dokumenttiDto = service.getDto(opsId, Kieli.of(kieli));
@@ -140,7 +140,7 @@ public class DokumenttiController {
         byte[] image;
 
         switch (tyyppi) {
-            case "kansi":
+            case "kansikuva":
                 image = dokumentti.getKansikuva();
                 break;
             case "ylatunniste":
@@ -185,7 +185,7 @@ public class DokumenttiController {
         }
 
         switch (tyyppi) {
-            case "kansi":
+            case "kansikuva":
                 dokumentti.setKansikuva(null);
                 break;
             case "ylatunniste":
