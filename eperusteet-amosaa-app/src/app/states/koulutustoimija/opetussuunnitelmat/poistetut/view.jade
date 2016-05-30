@@ -52,7 +52,7 @@ div.poistetut.subtle-transition
             td(ng-bind="poistettu.muokkaajaOid")
             td(ng-bind="poistettu.pvm | aikaleima")
             td
-              button.btn.btn-sm.btn-warning(ng-click="palauta(poistettu)")
+              button.btn.btn-sm.btn-warning(ng-click="palauta(poistettu)" oikeustarkastelu="muokkaus")
                 span(kaanna="'palauta'")
                 
 

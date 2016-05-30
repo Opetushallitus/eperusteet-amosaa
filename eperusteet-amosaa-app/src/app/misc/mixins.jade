@@ -22,12 +22,13 @@ mixin removeButtonSmall(actionEdit)
 mixin editButtonSmall(actionEdit)
   button.btn.btn-primary.btn-sm.muokkaa(
       ng-disabled="$$ekEditing || versio || creatingNewKasite"
-      ng-click=actionEdit)&attributes(attributes)
+      ng-click=actionEdit
+      oikeustarkastelu="muokkaus")&attributes(attributes)
     +icon("pencil")
 
 
 mixin editButton(actionEdit)
-  button.btn.btn-primary.muokkaa(ng-hide="$$ekEditing || versio" ng-click=actionEdit)&attributes(attributes)
+  button.btn.btn-primary.muokkaa(ng-hide="$$ekEditing || versio" ng-click=actionEdit oikeustarkastelu="muokkaus")&attributes(attributes)
     +icon("pencil")
 
 

@@ -5,10 +5,10 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
     div.alert.alert-info
       div(kaanna="'koulutustoimijalla-ei-ole-opetussuunnitelmia'")
       div.pull-right(style="position: relative; top: -26px")
-        button.btn.btn-primary(style="margin-right: 16px" ng-click="addOpetussuunnitelma()")
+        button.btn.btn-primary(style="margin-right: 16px" ng-click="addOpetussuunnitelma()" oikeustarkastelu="muokkaus")
           +gicon("plus")
           span(kaanna="'lisaa-opetussuunnitelma'")
-        button.btn.btn-primary.pull-right(ng-click="addYleinen()")
+        button.btn.btn-primary.pull-right(ng-click="addYleinen()" oikeustarkastelu="muokkaus")
           +gicon("plus")
           span(kaanna="'lisaa-yleinen'")
 
@@ -28,10 +28,10 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
             span(kaanna="'tarkennettu-haku'")
       div.col-xs-5
         div.pull-right
-          button.btn.btn-default.pull-right(ng-click="addYleinen()")
+          button.btn.btn-default.pull-right(ng-click="addYleinen()" oikeustarkastelu="muokkaus")
             +gicon("plus")
             span(kaanna="'lisaa-yleinen'")
-          button.btn.btn-default.pull-right(style="margin-right: 16px" ng-click="addOpetussuunnitelma()")
+          button.btn.btn-default.pull-right(style="margin-right: 16px" ng-click="addOpetussuunnitelma()" oikeustarkastelu="muokkaus")
             +gicon("plus")
             span(kaanna="'lisaa-opetussuunnitelma'")
 
