@@ -102,11 +102,13 @@ $ops-top-vertical-margin: 10px;
         .sivunavi {
             background: #F9FDFF;
 
-            .turbochevron {
-                padding: 10px 10px 0 10px;
-                margin: 0;
+            .multi-item {
                 position: relative;
-                left: -9px;
+
+                .turbochevron {
+                    position: absolute;
+                    left: -20px;
+                }
             }
 
             .haku {
@@ -164,7 +166,7 @@ $ops-top-vertical-margin: 10px;
                             display: block;
                             width: 100%;
                             height: 100%;
-                            padding: 10px;
+                            padding: 10px 10px 10px 30px;
 
                             .pakollinen {
                                 font-weight: bold;
@@ -261,21 +263,6 @@ $ops-top-vertical-margin: 10px;
                     padding: 5px 5px 2px 5px;
                     margin-bottom: 5px;
                 }
-                /*h2, h3, h4, h5, h6 {
-                    padding-left: 30px;
-                    margin-top: 10px;
-                    position: relative;
-                    a {
-                        position: absolute;
-                        text-decoration: none;
-                        left: 0;
-                        i {
-                            text-decoration: none;
-                            color: #a1cbdc;
-                        }
-                    }
-
-                }*/
                 .tkv-valinnat {
                     margin-top: -10px;
                     .tkv-valinta {
