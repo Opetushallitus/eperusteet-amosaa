@@ -37,4 +37,5 @@ public class TutkinnonosaDto {
     private VierasTutkinnonosaDto vierastutkinnonosa;
     private String koodi;
     private List<TutkinnonosaToteutusDto> toteutukset;
+    private LokalisoituTekstiDto osaamisenOsoittaminen;
 }
