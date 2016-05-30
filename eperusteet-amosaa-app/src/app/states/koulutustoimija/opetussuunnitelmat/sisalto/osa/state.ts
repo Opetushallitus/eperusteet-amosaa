@@ -266,7 +266,7 @@ angular.module("app")
         },
         suorituspolku: {
             controller: ($rootScope, $scope, osa, peruste: REl, pSuoritustavat, pTosat) => {
-                const suoritustapa = Perusteet.getSuoritustapa(pSuoritustavat)
+                const suoritustapa = Perusteet.getSuoritustapa(pSuoritustavat);
                 const tosat = _.indexBy(pTosat, "id");
                 const tosaViitteet: any = _(_.cloneDeep(Perusteet.getTosaViitteet(suoritustapa)))
                     .each(viite => viite.$$tosa = tosat[viite._tutkinnonOsa])

@@ -52,11 +52,11 @@ public class DokumenttiController {
                 || DateUtils.addMinutes(dokumenttiDto.getAloitusaika(), maxTimeInMinutes).before(new Date())
                 || dokumenttiDto.getTila() != DokumenttiTila.LUODAAN) {
             // Vaihdetaan dokumentin tila luonniksi
-            service.setStarted(dokumenttiDto);
+            service.setStarted(opsId, dokumenttiDto);
 
             // Generoidaan dokumentin datasisältö
             // Asynkroninen metodi
-            service.generateWithDto(dokumenttiDto);
+            service.generateWithDto(opsId, dokumenttiDto);
         } else {
             status = HttpStatus.FORBIDDEN;
         }
@@ -104,15 +104,15 @@ public class DokumenttiController {
     @RequestMapping(value = "/kuva", method=RequestMethod.POST)
     public ResponseEntity<Object> addImage(@PathVariable Long ktId,
                                             @PathVariable Long opsId,
-                                            @RequestParam(required = true) String tyyppi,
+                                            @RequestParam String tyyppi,
                                             @RequestParam(defaultValue = "fi") String kieli,
-                                            @RequestPart(required = true) MultipartFile file) throws IOException {
+                                            @RequestPart MultipartFile file) throws IOException {
         DokumenttiDto dokumenttiDto = service.getDto(opsId, Kieli.of(kieli));
         if (dokumenttiDto == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        if (service.addImage(dokumenttiDto, tyyppi, kieli, file)) {
+        if (service.addImage(opsId, dokumenttiDto, tyyppi, kieli, file)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

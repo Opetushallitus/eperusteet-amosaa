@@ -35,6 +35,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Suorituspolku;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Tutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaToteutus;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.TermiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.*;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.repository.dokumentti.DokumenttiRepository;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiBuilderService;
@@ -153,9 +154,9 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
         docBase.setKieli(kieli);
         docBase.setDokumentti(dokumentti);
         docBase.setMapper(mapper);
-        if (ops.getPeruste() != null) {
-            docBase.setPeruste(ops.getPeruste());
-        }
+
+        PerusteKaikkiDto perusteKaikkiDto = eperusteetService.getPerusteSisalto(ops.getPeruste(), PerusteKaikkiDto.class);
+        docBase.setPeruste(perusteKaikkiDto);
 
         // Kansilehti & Infosivu
         addMetaPages(docBase);
@@ -321,6 +322,8 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
                     addHeader(docBase, getTextString(docBase, kappale.getNimi()));
                     if (kappale.getTeksti() != null) {
                         addLokalisoituteksti(docBase, kappale.getTeksti(), "div");
+                    } else {
+                        addTeksti(docBase, "", "p");
                     }
                 }
 
@@ -349,6 +352,59 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
 
     private void addSuorituspolku(DokumenttiBase docBase, SisaltoViite viite) {
         Suorituspolku suorituspolku = viite.getSuorituspolku();
+
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("<ul>");
+        docBase.getPeruste().getSuoritustavat().stream()
+                .filter(suoritustapaLaajaDto -> suoritustapaLaajaDto.getSuoritustapakoodi().toString().equals("ops"))
+                .findAny()
+                .ifPresent(suoritustapaLaajaDto -> suoritustapaLaajaDto.getRakenne().getOsat().stream()
+                        .forEach(abstractRakenneOsaDto -> {
+                            RakenneModuuliDto rakenneModuuliDto = (RakenneModuuliDto) abstractRakenneOsaDto;
+                            addSuorituspolkuOsa(docBase, rakenneModuuliDto, builder, suoritustapaLaajaDto);
+                        }));
+        builder.append("</ul>");
+
+        addTeksti(docBase, builder.toString(), "div");
+    }
+
+    private void addSuorituspolkuOsa(DokumenttiBase docBase,
+                                     RakenneModuuliDto osa,
+                                     StringBuilder builder,
+                                     SuoritustapaLaajaDto suoritustapaLaajaDto) {
+        builder.append("<li>");
+        builder.append(getTextString(docBase, osa.getNimi()));
+
+        builder.append("<ul>");
+        osa.getOsat().stream()
+                .forEach(lapsi -> {
+                    if (lapsi instanceof RakenneModuuliDto) {
+                        RakenneModuuliDto lapsiDto = (RakenneModuuliDto) lapsi;
+                        addSuorituspolkuOsa(docBase, lapsiDto, builder, suoritustapaLaajaDto);
+
+                    } else if (lapsi instanceof RakenneOsaDto) {
+                        // todo: refaktoroi järkevämmäksi
+                        RakenneOsaDto lapsiDto = (RakenneOsaDto) lapsi;
+                        suoritustapaLaajaDto.getTutkinnonOsat().stream()
+                                .filter(dto -> dto.getId().equals(lapsiDto.getTutkinnonOsaViite()))
+                                .findAny()
+                                .ifPresent(dto -> docBase.getPeruste().getTutkinnonOsat().stream()
+                                        .filter(tutkinnonOsaDto -> tutkinnonOsaDto.getId().equals(dto.getTutkinnonOsa()))
+                                        .findAny()
+                                        .ifPresent(tutkinnonOsaKaikkiDto -> addSuorituspolunTutkinnonOsa(docBase, tutkinnonOsaKaikkiDto, builder)));
+                    }
+                });
+        builder.append("</ul>");
+        builder.append("</li>");
+    }
+
+    private void addSuorituspolunTutkinnonOsa(DokumenttiBase docBase,
+                                              TutkinnonOsaKaikkiDto tutkinnonOsaKaikkiDto,
+                                              StringBuilder builder) {
+        builder.append("<li>");
+        builder.append(getTextString(docBase, tutkinnonOsaKaikkiDto.getNimi()));
+        builder.append("</li>");
     }
 
     private void addTutkinnonosa(DokumenttiBase docBase, SisaltoViite lapsi) {
@@ -410,8 +466,6 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
             omaTutkinnonosa.getAmmattitaitovaatimuksetLista().stream()
                     .forEach(ammattitaitovaatimuksenKohdealue -> addAmmattitaitovaatimuksenKohdealue(docBase, ammattitaitovaatimuksenKohdealue));
         }
-
-
 
         // Arviointi
         if (omaTutkinnonosa.getArviointi() != null) {
@@ -550,10 +604,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
     }
 
     private void addPerusteenTutkinnonOsa(DokumenttiBase docBase, Long perusteenTutkinnonosaId) {
-        JsonNode perusteTutkinnonOsa = eperusteetService.getTutkinnonOsa(
-                docBase.getPeruste().getId(), perusteenTutkinnonosaId);
 
-        //addTeksti(docBase, perusteTutkinnonOsa.toString(), "cite");
     }
 
     private void buildFootnotes(DokumenttiBase docBase) {
@@ -610,7 +661,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
 
                 // Ladataan kuvan data muistiin
                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                liiteService.export(docBase.getOpetussuunnitelma().getId(), uuid, byteArrayOutputStream);
+                liiteService.export(docBase.getOpetussuunnitelma().getKoulutustoimija().getId(), uuid, byteArrayOutputStream);
 
                 // Tehdään muistissa olevasta datasta kuva
                 InputStream in = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());

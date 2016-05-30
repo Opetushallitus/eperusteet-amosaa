@@ -51,7 +51,6 @@ import javax.imageio.ImageIO;
  * @author iSaul
  */
 @Service
-@Transactional
 public class DokumenttiServiceImpl implements DokumenttiService {
     private static final Logger LOG = LoggerFactory.getLogger(DokumenttiServiceImpl.class);
 
@@ -65,9 +64,10 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     private OpetussuunnitelmaRepository opsRepository;
 
     @Autowired
-    private DokumenttiBuilderService builder;
+    private DokumenttiBuilderService builderService;
 
     @Override
+    @Transactional(readOnly = true)
     public DokumenttiDto getDto(Long id, Kieli kieli) {
         Dokumentti dokumentti = dokumenttiRepository.findByOpsIdAndKieli(id, kieli);
 
@@ -79,6 +79,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     }
 
     @Override
+    @Transactional
     public DokumenttiDto createDtoFor(Long id, Kieli kieli) {
         Dokumentti dokumentti = new Dokumentti();
         dokumentti.setTila(DokumenttiTila.EI_OLE);
@@ -94,7 +95,8 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     }
 
     @Override
-    public void setStarted(DokumenttiDto dto) {
+    @Transactional
+    public void setStarted(Long opsId, DokumenttiDto dto) {
         // Asetetaan dokumentti luonti tilaan
         dto.setAloitusaika(new Date());
         dto.setLuoja(SecurityUtil.getAuthenticatedPrincipal().getName());
@@ -104,14 +106,15 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     }
 
     @Override
-    public void generateWithDto(DokumenttiDto dto) throws DokumenttiException {
+    @Transactional
+    public void generateWithDto(Long opsId, DokumenttiDto dto) throws DokumenttiException {
         Dokumentti dokumentti = mapper.map(dto, Dokumentti.class);
 
         try {
             // Luodaan pdf
             if (dokumentti.getOpsId()!= null) {
                 Opetussuunnitelma ops = opsRepository.findOne(dokumentti.getOpsId());
-                dokumentti.setData(builder.generatePdf(ops, dokumentti, dokumentti.getKieli()));
+                dokumentti.setData(builderService.generatePdf(ops, dokumentti, dokumentti.getKieli()));
             } else if (dokumentti.getOpsId() != null) {
                 LOG.info("Ops is not implemented yet");
             }
@@ -143,7 +146,9 @@ public class DokumenttiServiceImpl implements DokumenttiService {
         return null;
     }
 
-    public boolean addImage(DokumenttiDto dto, String tyyppi, String kieli, MultipartFile file) throws IOException {
+    @Override
+    @Transactional
+    public boolean addImage(Long opsId, DokumenttiDto dto, String tyyppi, String kieli, MultipartFile file) throws IOException {
 
         if (!file.isEmpty()) {
 

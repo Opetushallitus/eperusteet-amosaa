@@ -7,9 +7,11 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
       div.pull-right(style="position: relative; top: -26px")
         button.btn.btn-primary(style="margin-right: 16px" ng-click="addOpetussuunnitelma()")
           +gicon("plus")
+          span=" "
           span(kaanna="'lisaa-opetussuunnitelma'")
         button.btn.btn-primary.pull-right(ng-click="addYleinen()")
           +gicon("plus")
+          span=" "
           span(kaanna="'lisaa-yleinen'")
 
   div(ng-show="opetussuunnitelmat.length > 0")

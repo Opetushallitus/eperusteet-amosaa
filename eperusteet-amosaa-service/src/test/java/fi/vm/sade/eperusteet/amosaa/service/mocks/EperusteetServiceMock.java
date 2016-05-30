@@ -54,6 +54,11 @@ public class EperusteetServiceMock implements EperusteetService {
     }
 
     @Override
+    public JsonNode getSuoritustapa(Long id, String tyyppi) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
     public <T> T getPeruste(String diaariNumero, Class<T> type) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }

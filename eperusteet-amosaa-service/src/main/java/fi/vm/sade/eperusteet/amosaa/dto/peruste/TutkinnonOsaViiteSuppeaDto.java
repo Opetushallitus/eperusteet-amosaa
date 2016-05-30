@@ -19,7 +19,7 @@ package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.math.BigDecimal;
 
-import fi.vm.sade.eperusteet.amosaa.dto.Reference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,5 +31,6 @@ public class TutkinnonOsaViiteSuppeaDto {
     private BigDecimal laajuus;
     private BigDecimal laajuusMaksimi; // TODO: Ainoastaan valmatelmalla
     private Integer jarjestys;
-    private Reference tutkinnonOsa;
+    @JsonProperty("_tutkinnonOsa")
+    private Long tutkinnonOsa;
 }

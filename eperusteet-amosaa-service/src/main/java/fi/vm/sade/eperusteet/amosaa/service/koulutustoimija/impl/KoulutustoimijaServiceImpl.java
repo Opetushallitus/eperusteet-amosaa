@@ -77,7 +77,7 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     @Override
     public List<KoulutustoimijaBaseDto> initKoulutustoimijat(Set<String> kOid) {
         return kOid.stream()
-                .map(ktOid -> initialize(ktOid))
+                .map(this::initialize)
                 .filter(kt -> kt != null)
                 .map(kt -> mapper.map(kt, KoulutustoimijaBaseDto.class))
                 .collect(Collectors.toList());

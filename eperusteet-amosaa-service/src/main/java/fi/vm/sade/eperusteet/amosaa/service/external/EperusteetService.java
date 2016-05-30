@@ -44,4 +44,5 @@ public interface EperusteetService {
     JsonNode getTutkinnonOsat(Long id);
     JsonNode getSuoritustavat(Long id);
     JsonNode getTutkinnonOsa(Long id, Long tosaId);
+    JsonNode getSuoritustapa(Long id, String tyyppi);
 }

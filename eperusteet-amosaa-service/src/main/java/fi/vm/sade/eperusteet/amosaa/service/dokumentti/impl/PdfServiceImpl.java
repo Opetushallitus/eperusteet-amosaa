@@ -55,7 +55,6 @@ public class PdfServiceImpl implements PdfService {
         return convertOps2PDF(document, template.getFile());
     }
 
-
     private byte[] convertOps2PDF(Document doc, File xslt)
             throws IOException, TransformerException, SAXException {
         // Alustetaan Streamit

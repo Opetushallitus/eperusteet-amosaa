@@ -100,10 +100,28 @@ public class EperusteetServiceImpl implements EperusteetService {
                     return tosa;
                 }
             }
-            return null;
         } catch (IOException ex) {
             throw new BusinessRuleViolationException("perusteen-parsinta-epaonnistui");
         }
+
+        return null;
+    }
+
+    @Override
+    public JsonNode getSuoritustapa(Long id, String tyyppi) {
+        CachedPeruste cperuste = cachedPerusteRepository.findOne(id);
+        try {
+            JsonNode node = mapper.readTree(cperuste.getPeruste());
+            for (JsonNode suoritustapa : node.get("suoritustavat")) {
+                if (suoritustapa.get("suoritustapakoodi").asText().equals(tyyppi)) {
+                    return suoritustapa;
+                }
+            }
+        } catch (IOException ex) {
+            throw new BusinessRuleViolationException("perusteen-parsinta-epaonnistui");
+        }
+
+        return null;
     }
 
     @Override

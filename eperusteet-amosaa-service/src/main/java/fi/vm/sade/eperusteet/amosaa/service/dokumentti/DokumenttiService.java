@@ -31,23 +31,23 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public interface DokumenttiService {
 
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
     DokumenttiDto getDto(@P("opsId") Long opsId, Kieli kieli);
 
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
     DokumenttiDto createDtoFor(@P("opsId") Long opsId, Kieli kieli);
 
-    @PreAuthorize("isAuthenticated()")
-    void setStarted(DokumenttiDto dto);
+    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
+    void setStarted(@P("opsId") Long opsId, DokumenttiDto dto);
 
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
     @Async(value = "docTaskExecutor")
-    void generateWithDto(DokumenttiDto dto) throws DokumenttiException;
+    void generateWithDto(@P("opsId") Long opsId, DokumenttiDto dto) throws DokumenttiException;
 
-    @PreAuthorize("isAuthenticated()")
-    boolean addImage(DokumenttiDto dto, String tyyppi, String kieli, MultipartFile image) throws IOException;
+    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
+    boolean addImage(@P("opsId") Long opsId, DokumenttiDto dto, String tyyppi, String kieli, MultipartFile image) throws IOException;
 
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
     byte[] get(@P("opsId") Long opsId, Kieli kieli);
 
 }
