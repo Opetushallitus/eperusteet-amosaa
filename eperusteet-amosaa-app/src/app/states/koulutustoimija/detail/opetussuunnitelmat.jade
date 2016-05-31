@@ -1,4 +1,53 @@
+mixin opsTable(repetition)
+  table.table.boxtable
+    thead
+      tr
+        th
+        th
+          a(href="#")
+            span(kaanna="'tutkinnon-nimi'")
+            span=" "
+            span.glyphicon.glyphicon-sort-by-attributes
+        // th
+          a(href="#")
+            span(kaanna="'osaamisala'")
+            span=" "
+            span.glyphicon.glyphicon-sort-by-attributes
+        // th
+          a(href="#")
+            span(kaanna="'tutkinnon-tyyppi'")
+            span=" "
+            span.glyphicon.glyphicon-sort-by-attributes
+        th
+    tbody
+      tr(ng-hide="ops.$$hidden" ng-repeat=repetition)
+        td
+          div
+            div(class="{{ 'tilavari-' + ops.tila }}")
+            div
+              a(href="" ng-click="toggleSuosikki(ops)")
+                span.glyphicon.glyphicon-star(ng-class="{ 'suosikki-ops': !!suosikit[ops.id] }")
+        td
+          div
+            a(href="" ui-sref="root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot({ opsId: ops.id })")
+              span.ellipsis(kaanna="ops.nimi")
+        // td
+          div
+            span.ellipsis(ng-show="ops.osaamisalat.length > 0", kaanna="ops.osaamisalat[0].nimi")
+        // td
+          div
+        td
+          div
+            a(href="" ui-sref="root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot({ opsId: ops.id })")
+              div
+                span.glyphicon.glyphicon-chevron-right
+
+
 div.otsikkotaso.kaikki-opetussuunnitelmat
+  div(ng-hide="isEmpty(suosikit)")
+    h3(kaanna="'suosikki-opetussuunnitelmat'")
+    +opsTable("(opsId, ops) in suosikit")
+
   h3(kaanna="'kaikki-opetussuunnitelmat'")
 
   div(ng-hide="opetussuunnitelmat.length > 0")
@@ -35,45 +84,4 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
             +gicon("plus")
             span(kaanna="'lisaa-opetussuunnitelma'")
 
-    table.table.boxtable
-      thead
-        tr
-          th
-          th
-            a(href="#")
-              span(kaanna="'tutkinnon-nimi'")
-              span=" "
-              span.glyphicon.glyphicon-sort-by-attributes
-          // th
-            a(href="#")
-              span(kaanna="'osaamisala'")
-              span=" "
-              span.glyphicon.glyphicon-sort-by-attributes
-          // th
-            a(href="#")
-              span(kaanna="'tutkinnon-tyyppi'")
-              span=" "
-              span.glyphicon.glyphicon-sort-by-attributes
-          th
-      tbody
-        tr(ng-hide="ops.$$hidden" ng-repeat="ops in opetussuunnitelmat")
-          td
-            div
-              div(class="{{ 'tilavari-' + ops.tila }}")
-              div
-                a(href="")
-                  span.glyphicon.glyphicon-star
-          td
-            div
-              a(href="" ui-sref="root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot({ opsId: ops.id })")
-                span.ellipsis(kaanna="ops.nimi")
-          // td
-            div
-              span.ellipsis(ng-show="ops.osaamisalat.length > 0", kaanna="ops.osaamisalat[0].nimi")
-          // td
-            div
-          td
-            div
-              a(href="" ui-sref="root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot({ opsId: ops.id })")
-                div
-                  span.glyphicon.glyphicon-chevron-right
+    +opsTable("ops in opetussuunnitelmat")

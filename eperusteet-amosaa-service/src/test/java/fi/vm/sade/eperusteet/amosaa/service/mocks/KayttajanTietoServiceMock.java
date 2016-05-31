@@ -34,6 +34,16 @@ import org.springframework.stereotype.Service;
 public class KayttajanTietoServiceMock implements KayttajanTietoService {
 
     @Override
+    public void removeSuosikki(Long opsId) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void addSuosikki(Long opsId) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
     public KayttajanTietoDto getKayttaja(Long ktId, String oid) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -62,7 +72,7 @@ public class KayttajanTietoServiceMock implements KayttajanTietoService {
     public List<KayttajaDto> getKayttajat(Long ktId) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
 
     @Override
     public Kayttaja getKayttaja() {
