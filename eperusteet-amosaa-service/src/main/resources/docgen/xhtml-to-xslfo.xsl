@@ -16,7 +16,6 @@
                         <fo:simple-page-master master-name="cover"
                                                page-width="210mm" page-height="297mm">
                             <fo:region-body margin="30mm" margin-top="80mm" />
-                            <!--<fo:region-body background-image="cover.svg" />-->
                         </fo:simple-page-master>
 
                         <!-- Just a blank A4 -->
@@ -107,20 +106,24 @@
 
                 <fo:static-content flow-name="rb-right">
                     <fo:block font-size="10pt" text-align="start">
+                        <xsl:apply-templates select="/html/head/ylatunniste" />
                     </fo:block>
                 </fo:static-content>
                 <fo:static-content flow-name="ra-right">
                     <fo:block text-align="end" font-size="10pt" color="#6C6D70">
                         <fo:page-number />
+                        <xsl:apply-templates select="/html/head/alatunniste" />
                     </fo:block>
                 </fo:static-content>
                 <fo:static-content flow-name="rb-left">
                     <fo:block font-size="10pt" text-align="end">
+                        <xsl:apply-templates select="/html/head/ylatunniste" />
                     </fo:block>
                 </fo:static-content>
                 <fo:static-content flow-name="ra-left">
                     <fo:block font-size="10pt" color="#6C6D70">
                         <fo:page-number />
+                        <xsl:apply-templates select="/html/head/alatunniste" />
                     </fo:block>
                 </fo:static-content>
                 <fo:static-content flow-name="rs-left">
@@ -667,7 +670,7 @@
     </xsl:template>
 
     <xsl:template match="table">
-        <xsl:if test="thead|tbody">
+        <xsl:if test="thead/tr/th|thead/tr/td|tbody/tr/th|tbody/tr/td">
             <fo:table table-layout="fixed" inline-progression-dimension="100%"
                       space-after="12pt" font-size="10pt" page-break-inside="avoid">
                 <xsl:if test="caption">
@@ -680,12 +683,6 @@
                     </fo:table-header>
                 </xsl:if>
                 <fo:table-body>
-                    <!-- todo: EP-830 -->
-                    <fo:table-row>
-                        <fo:table-cell>
-                            <fo:block></fo:block>
-                        </fo:table-cell>
-                    </fo:table-row>
                     <xsl:apply-templates select="thead|tbody" />
                 </fo:table-body>
             </fo:table>
@@ -960,6 +957,7 @@
     <xsl:template name="cover">
         <fo:block font-weight="bold" font-size="28pt" text-align="center">
             <xsl:value-of select="/html/head/title" />
+            <xsl:apply-templates select="/html/head/kansikuva" />
         </fo:block>
     </xsl:template>
 

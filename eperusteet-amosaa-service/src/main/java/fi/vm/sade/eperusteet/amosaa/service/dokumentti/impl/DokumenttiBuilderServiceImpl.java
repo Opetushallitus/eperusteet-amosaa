@@ -179,7 +179,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
 
         // Kuvat
         buildImages(docBase);
-        buildKansi(docBase);
+        buildKansilehti(docBase);
         buildYlatunniste(docBase);
         buildAlatunniste(docBase);
 
@@ -362,9 +362,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
                 .ifPresent(suoritustapaLaajaDto -> suoritustapaLaajaDto.getRakenne().getOsat().stream()
                         .filter(dto -> dto instanceof RakenneModuuliDto)
                         .map(dto -> (RakenneModuuliDto) dto)
-                        .forEach(rakenneModuuliDto -> {
-                            addSuorituspolkuOsa(docBase, rakenneModuuliDto, builder, suoritustapaLaajaDto);
-                        }));
+                        .forEach(rakenneModuuliDto -> addSuorituspolkuOsa(docBase, rakenneModuuliDto, builder, suoritustapaLaajaDto)));
         builder.append("</ul>");
 
         addTeksti(docBase, builder.toString(), "div");
@@ -705,9 +703,9 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
         }
     }
 
-    private void buildKansi(DokumenttiBase docBase) {
+    private void buildKansilehti(DokumenttiBase docBase) {
         Element head = docBase.getHeadElement();
-        Element kansi = docBase.getDocument().createElement("kansi");
+        Element kansikuva = docBase.getDocument().createElement("kansikuva");
         Element kuva = docBase.getDocument().createElement("img");
 
         byte[] image = docBase.getDokumentti().getKansikuva();
@@ -718,13 +716,13 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
         String base64 = Base64.encode(image);
         kuva.setAttribute("src", "data:image/jpg;base64," + base64);
 
-        kansi.appendChild(kuva);
-        head.appendChild(kansi);
+        kansikuva.appendChild(kuva);
+        head.appendChild(kansikuva);
     }
 
     private void buildYlatunniste(DokumenttiBase docBase) {
         Element head = docBase.getHeadElement();
-        Element kansi = docBase.getDocument().createElement("ylatunniste");
+        Element ylatunniste = docBase.getDocument().createElement("ylatunniste");
         Element kuva = docBase.getDocument().createElement("img");
 
         byte[] image = docBase.getDokumentti().getYlatunniste();
@@ -735,13 +733,13 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
         String base64 = Base64.encode(image);
         kuva.setAttribute("src", "data:image/jpg;base64," + base64);
 
-        kansi.appendChild(kuva);
-        head.appendChild(kansi);
+        ylatunniste.appendChild(kuva);
+        head.appendChild(ylatunniste);
     }
 
     private void buildAlatunniste(DokumenttiBase docBase) {
         Element head = docBase.getHeadElement();
-        Element kansi = docBase.getDocument().createElement("alatunniste");
+        Element alatunniste = docBase.getDocument().createElement("alatunniste");
         Element kuva = docBase.getDocument().createElement("img");
 
         byte[] image = docBase.getDokumentti().getAlatunniste();
@@ -752,7 +750,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
         String base64 = Base64.encode(image);
         kuva.setAttribute("src", "data:image/jpg;base64," + base64);
 
-        kansi.appendChild(kuva);
-        head.appendChild(kansi);
+        alatunniste.appendChild(kuva);
+        head.appendChild(alatunniste);
     }
 }
