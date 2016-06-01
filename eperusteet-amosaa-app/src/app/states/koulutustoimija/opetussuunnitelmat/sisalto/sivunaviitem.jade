@@ -8,6 +8,9 @@ li(ng-show="!item.$$hidden" ng-repeat="item in ngModel" id="{{ 'sisalto-item-' +
       span.multi-item(ng-show="item.lapset.length > 0 && !misc.isSearching" ng-click="misc.toggleItem($event, item)")
         +turboChevron("item.$$closed")
       span(ng-bind="(item.$$obj.tekstiKappale.nimi || 'nimeton-tekstikappale') | kaanna")
-      span.pull-right.glyphicon.glyphicon-check(ng-show="item.$$obj.valmis" style="color: #00af00;")
+      span.pull-right
+        span.glyphicon.glyphicon-check(ng-show="item.$$obj.valmis" style="color: #00af00;")
+        span(ng-show="item.$$obj.tyyppi === 'tutkinnonosa' && item.$$obj.tosa.tyyppi === 'oma'")
+          +icon("map-marker")
   div(ng-hide="item.$$closed && !misc.isSearching")
     dynamic(template="states/koulutustoimija/opetussuunnitelmat/sisalto/sivunaviitem.jade" ng-model="item.lapset" misc="misc")

@@ -33,6 +33,7 @@ public class SisaltoViiteKevytDto {
     @JsonProperty("_tekstiKappale")
     private Reference tekstiKappaleRef;
     private TekstiKappaleKevytDto tekstiKappale;
+    private TutkinnonOsaKevytDto tosa;
     private SisaltoTyyppi tyyppi;
     private boolean pakollinen;
     private boolean valmis;
