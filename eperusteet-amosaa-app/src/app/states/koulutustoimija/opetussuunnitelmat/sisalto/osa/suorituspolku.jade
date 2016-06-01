@@ -6,7 +6,12 @@ div
         i.form-control-feedback.glyphicon.glyphicon-search(style="color: gray;")
 
   div.pull-right(style="position: relative; top: -44px")
-    button.btn.btn-sm.btn-default(ng-click="toggleAll()" ng-bind="(collapsed_dirty ? 'sulje-kaikki' : 'avaa-kaikki') | kaanna")
+    button.btn.btn-sm.btn-default(
+      ng-click="togglePoistetut()"
+      ng-bind="(misc.collapsed_removed ? 'piilota-poistetut' : 'nayta-poistetut') | kaanna")
+    button.btn.btn-sm.btn-default(style="margin-left: 6px;"
+      ng-click="toggleAll()"
+      ng-bind="(collapsed_dirty ? 'sulje-kaikki' : 'avaa-kaikki') | kaanna")
 
   div.suorituspolku
     div.sp-ryhma-lapset(ng-repeat="osa in perusteRakenne.osat")

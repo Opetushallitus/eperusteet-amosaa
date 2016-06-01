@@ -17,9 +17,13 @@
 package fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija;
 
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Suorituspolku;
 import java.io.Serializable;
+import java.util.Set;
 import java.util.UUID;
+import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -31,6 +35,7 @@ import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
+import org.hibernate.envers.RelationTargetAuditMode;
 
 /**
  *
@@ -58,5 +63,20 @@ public class SuorituspolkuRivi implements Serializable, ReferenceableEntity {
 
     @Getter
     @Setter
+    private Boolean piilotettu = false;
+
+    @Getter
+    @Setter
     private Long jrno;
+
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    @Getter
+    @Setter
+    private LokalisoituTeksti kuvaus;
+
+    @Getter
+    @Setter
+    @ElementCollection
+    private Set<String> koodit;
 }

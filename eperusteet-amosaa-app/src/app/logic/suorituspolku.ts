@@ -3,7 +3,7 @@ namespace Suorituspolku {
 
     export const calculateRealAmount = (tree, tosat, poistetut) => {
         const result = {};
-        const shouldCount = (node) => !poistetut[node.tunniste];
+        const shouldCount = (node) => !poistetut[node.tunniste] || !poistetut[node.tunniste].piilotettu;
         const isRyhma = (node) => !node._tutkinnonOsaViite;
         const getLaajuus = (node) => isRyhma(node)
             ? (node.rooli !== "määrittelemätön"

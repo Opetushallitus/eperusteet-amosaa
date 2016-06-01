@@ -14,11 +14,18 @@
 }
 
 .suorituspolku {
+  clear: both;
+
   .sp-laatikko-active {
     box-shadow: 0px 0px 10px #ffffe0;
   }
 
   .sp-laatikko {
+    .sp-sisalto-poistettu {
+      background-color: #fcffc1 !important;
+      text-decoration: line-through;
+    }
+
     .sp-sisalto-unspecified {
       background-color: #fff4fe;
     }
@@ -104,6 +111,10 @@
     }
 
     .sp-tutkinnonosa {
+      .sp-sisalto-poistettu {
+        background-color: #fcffc1 !important;
+        text-decoration: line-through;
+      }
     }
 
     .sp-ryhma {

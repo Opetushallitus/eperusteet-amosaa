@@ -1,23 +1,14 @@
 div.modal-header
-  h2(kaanna="'palauta-osia'")
+  h2(kaanna="'muokkaa-osaa'")
 
 
 div.modal-body
-  table.table
-    thead
-      tr
-        th(ng-bind="'osan-nimi' | kaanna")
-        th(width="16%" ng-bind="'toiminto' | kaanna")
-    tbody
-      tr(ng-repeat="module in node.osat" ng-show="spRivit[module.tunniste]")
-        td
-          span(ng-if="module._tutkinnonOsaViite" ng-init="tosa = tosat[module._tutkinnonOsaViite];")
-            span(kaanna="tosa.$$tosa.nimi")
-          span(ng-if="!module._tutkinnonOsaViite")
-            span(kaanna="module.nimi")
-        td
-          button.btn.btn-sm.btn-warning(ng-click="restoreModule(module)")
-            span(ng-bind="'palauta' | kaanna")
+  +contentToggler("$$showKuvaus", "'kuvaus'")
+    div(ckeditor slocalized ng-model="editable.kuvaus" layout="normal")
+
+  div(ng-show="node.rooli === 'määrittelemätön'")
+    +contentToggler("$$showTosat", "'tutkinnon-osat'")
+      div not implemented yet
 
 
 // FIXME: Vanha toteutus mitä saatetaan tarvita

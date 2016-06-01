@@ -1,5 +1,12 @@
+mixin poistoToggler()
+  a(href="" ng-click="misc.poistoToggle(ngModel)")
+    span(color="color: #f55;" ng-hide="ngModel.$$poistettu")
+      +icon("remove")
+    span(ng-show="ngModel.$$poistettu")
+      +icon("undo")
+
 mixin polkuTutkinnonosa()
-  div.sp-tutkinnonosa(ng-class="{ 'sp-laatikko-active': ngModel.$$haettu }" ng-show="ngModel._tutkinnonOsaViite" ng-init="tosa = misc.tosat[ngModel._tutkinnonOsaViite];")
+  div.sp-tutkinnonosa(ng-class="{ 'sp-laatikko-active': ngModel.$$haettu, 'sp-sisalto-poistettu': ngModel.$$poistettu }" ng-show="ngModel._tutkinnonOsaViite" ng-init="tosa = misc.tosat[ngModel._tutkinnonOsaViite];")
     div.sp-sisalto.sp-sisalto-tosa
       div.sp-nimi
         span(kaanna="tosa.$$tosa.nimi")
@@ -7,9 +14,12 @@ mixin polkuTutkinnonosa()
         span.laajuus
           span(ng-bind="tosa.laajuus")
           span(style="margin-left: 2px" ng-bind="misc.suoritustapa.laajuusYksikko | kaanna")
-        div.sp-edit(ng-show="misc.root.$$ekEditing && !ngModel.pakollinen")
-          a(href="" ng-click="misc.poistaOsa(ngModel)")
-            +gicon("remove")
+        div.sp-edit(ng-show="misc.root.$$ekEditing")
+          +poistoToggler
+
+        div.sp-edit(ng-if="misc.root.$$ekEditing" ng-hide="ngModel.$$poistettu")
+          a(href="" ng-click="misc.editNode(ngModel)")
+            +gicon("pencil")
 
 
 mixin muodostuminen()
@@ -30,39 +40,31 @@ mixin polkuRyhmaToolbar()
     +muodostuminen
     span(ng-show="misc.root.$$ekEditing")
       div.sp-edit(ng-show="misc.root.$$ekEditing && ngModel.osaamisala")
-        a(href="" ng-click="misc.poistaOsa(ngModel)")
-          +gicon("remove")
-      div.sp-edit
+        +poistoToggler
+      div.sp-edit(ng-hide="ngModel.$$poistettu")
         a(href="" ng-click="misc.editNode(ngModel)")
           +gicon("pencil")
 
 
 mixin polkuRyhmaChevron()
-  div.sp-toggler(ng-class="{ 'sp-toggler-osaamisala': ngModel.osaamisala, 'sp-toggler-ryhma': !ngModel.osaamisala }" ng-click="misc.toggle(ngModel)")
+  div.sp-toggler(ng-show="!isVieras" ng-class="{ 'sp-toggler-osaamisala': ngModel.osaamisala, 'sp-toggler-ryhma': !ngModel.osaamisala }" ng-click="misc.toggle(ngModel)")
     div.chevron
       span.glyphicon.glyphicon-chevron-down(ng-hide="ngModel.$$collapsed")
       span.glyphicon.glyphicon-chevron-right(ng-show="ngModel.$$collapsed")
 
 
-
 mixin polkuRyhma()
-  div.sp-ryhma(ng-show="ngModel.rooli && !(ngModel.rooli !== 'määrittelemätön' && !ngModel.vieras)")
-    div.sp-sisalto.sp-sisalto-unspecified
-      div.sp-nimi
-        span(kaanna="ngModel.nimi")
-      div.sp-toolbar
-        +muodostuminen
-
-  div.sp-ryhma(ng-show="ngModel.rooli && ngModel.rooli !== 'määrittelemätön' && !ngModel.vieras")
-    div.sp-sisalto(class="{{ 'sp-sisalto-' + (ngModel.osaamisala ? 'osaamisala' : 'ryhma') }}")
+  div.sp-ryhma(ng-show="ngModel.rooli" ng-init="isVieras = ngModel.rooli === 'määrittelemätön' || ngModel.vieras; ")
+    div.sp-sisalto(ng-class="{ 'sp-sisalto-unspecified': isVieras, 'sp-sisalto-osaamisala': !isVieras && ngModel.osaamisala, 'sp-sisalto-ryhma': !isVieras && !ngModel.osaamisala, 'sp-sisalto-poistettu': ngModel.$$poistettu }")
       +polkuRyhmaChevron
       div.sp-nimi
         span(kaanna="ngModel.nimi")
         span.sp-osaamisala(ng-show="ngModel.osaamisala" ng-bind="ngModel.osaamisala.osaamisalakoodiArvo")
       +polkuRyhmaToolbar
-    div.sp-ryhma-lapset(ng-show="!ngModel.$$collapsed || (misc.hasInput && ngModel.$$haettu)" ng-repeat="osa in ngModel.osat")
+    div.sp-ryhma-lapset(ng-hide="ngModel.$$poistettu" ng-show="!ngModel.$$collapsed || (misc.hasInput && ngModel.$$haettu)" ng-repeat="osa in ngModel.osat")
       dynamic(template="states/koulutustoimija/opetussuunnitelmat/sisalto/osa/polunrakenne.jade" misc="misc" ng-model="osa" depth="depth + 1")
 
-div.sp-laatikko(ng-hide="(misc.hasInput && !ngModel.$$haettu) || ngModel.$$poistettu")
+
+div.sp-laatikko(ng-hide="(misc.hasInput && !ngModel.$$haettu) || (!misc.collapsed_removed && ngModel.$$poistettu)")
   +polkuTutkinnonosa
   +polkuRyhma

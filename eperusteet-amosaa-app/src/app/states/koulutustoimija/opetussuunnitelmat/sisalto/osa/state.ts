@@ -7,7 +7,7 @@ namespace SuoritustapaRyhmat {
     export const editoi = (spRivit, node, tutkinnonosat) => i.$uibModal.open({
             resolve: { },
             templateUrl: "modals/suoritustaparyhma.jade",
-            controller: ($scope, $state, $uibModalInstance) => {
+            controller: ($scope, $state, $uibModalInstance, $rootScope) => {
                 $scope.restoreModule = (m) => {
                     $scope.spRivit[m.tunniste] = undefined;
                 };
@@ -15,7 +15,15 @@ namespace SuoritustapaRyhmat {
                 $scope.spRivit = spRivit;
                 $scope.tosat = tutkinnonosat;
                 $scope.node = node;
-                $scope.ok = () => $uibModalInstance.close($scope.spRivit);
+                $scope.editable = _.find(spRivit, (rivi: any) => rivi.rakennemoduuli === node.tunniste) || {
+                    rakennemoduuli: node.tunniste
+                };
+
+                $scope.ok = () => {
+                    $rootScope.$broadcast("notifyCKEditor");
+                    $scope.spRivit[$scope.editable.rakennemoduuli] = $scope.editable;
+                    $uibModalInstance.close($scope.spRivit);
+                };
                 $scope.peruuta = $uibModalInstance.dismiss;
             }
         }).result;
@@ -141,7 +149,7 @@ angular.module("app")
             controller: ($scope) => {}
         },
         tutkinnonosa: {
-            controller: ($scope, $state, peruste, arviointiAsteikot) => {
+            controller: ($scope, peruste, arviointiAsteikot) => {
                 const koodit = _([])
                     .concat($scope.pTosa ? _.map($scope.pTosa.osaAlueet, (oa: any) => ({
                         nimi: oa.nimi,
@@ -162,8 +170,6 @@ angular.module("app")
                     tolerance: "pointer",
                     placeholder: "toteutus-placeholder"
                 };
-
-                console.log($state.current);
 
                 // FIXME: Hack to cope with old peruste tutkinnon osa string references
                 $scope.pa = {
@@ -280,7 +286,7 @@ angular.module("app")
                     const spRivit = _.indexBy($scope.osa.suorituspolku.rivit, "rakennemoduuli");
                     Algoritmit.traverse($scope.perusteRakenne, "osat", (node, depth) => {
                         node.pakollinen = Suorituspolku.pakollinen(node);
-                        node.$$poistettu = !!spRivit[node.tunniste];
+                        node.$$poistettu = spRivit[node.tunniste] && spRivit[node.tunniste].piilotettu;
                     });
                     Suorituspolku.calculateRealAmount($scope.perusteRakenne, $scope.misc.tosat, spRivit);
                 };
@@ -288,6 +294,7 @@ angular.module("app")
                 $scope.collapsed_dirty = false;
                 $scope.perusteRakenne = _.cloneDeep(Perusteet.getRakenne(suoritustapa));
                 $scope.misc = {
+                    collapsed_removed: false,
                     root: $rootScope,
                     suoritustapa: suoritustapa,
                     editNode: (node) => {
@@ -305,14 +312,16 @@ angular.module("app")
                         model.$$collapsed = !model.$$collapsed;
                         $scope.collapsed_dirty = true;
                     },
-                    poistaOsa: (node) => {
-                        node.$$poistettu = true;
-                        const rivi = _.find($scope.osa.suorituspolku.rivit, (rivi: any) => rivi.rakennemoduuli === node.tunniste);
+                    poistoToggle: (node) => {
+                        let rivi = _.find($scope.osa.suorituspolku.rivit, (rivi: any) => rivi.rakennemoduuli === node.tunniste);
                         if (!rivi) {
-                            $scope.osa.suorituspolku.rivit.push({
-                                rakennemoduuli: node.tunniste
-                            });
+                            rivi = {
+                                rakennemoduuli: node.tunniste,
+                                piilotettu: false
+                            }
+                            $scope.osa.suorituspolku.rivit.push(rivi);
                         }
+                        rivi.piilotettu = !rivi.piilotettu;
                         update();
                     }
                 };
@@ -324,6 +333,10 @@ angular.module("app")
                         node.pakollinen = Suorituspolku.pakollinen(node);
                     });
                 }
+
+                $scope.togglePoistetut = () => {
+                    $scope.misc.collapsed_removed = !$scope.misc.collapsed_removed;
+                };
 
                 $scope.toggleAll = () => {
                     Algoritmit.traverse($scope.perusteRakenne, "osat", (node, depth) => {
