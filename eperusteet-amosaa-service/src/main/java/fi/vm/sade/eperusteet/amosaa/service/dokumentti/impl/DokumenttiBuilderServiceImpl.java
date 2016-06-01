@@ -360,8 +360,9 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
                 .filter(suoritustapaLaajaDto -> suoritustapaLaajaDto.getSuoritustapakoodi().toString().equals("ops"))
                 .findAny()
                 .ifPresent(suoritustapaLaajaDto -> suoritustapaLaajaDto.getRakenne().getOsat().stream()
-                        .forEach(abstractRakenneOsaDto -> {
-                            RakenneModuuliDto rakenneModuuliDto = (RakenneModuuliDto) abstractRakenneOsaDto;
+                        .filter(dto -> dto instanceof RakenneModuuliDto)
+                        .map(dto -> (RakenneModuuliDto) dto)
+                        .forEach(rakenneModuuliDto -> {
                             addSuorituspolkuOsa(docBase, rakenneModuuliDto, builder, suoritustapaLaajaDto);
                         }));
         builder.append("</ul>");
@@ -384,7 +385,6 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
                         addSuorituspolkuOsa(docBase, lapsiDto, builder, suoritustapaLaajaDto);
 
                     } else if (lapsi instanceof RakenneOsaDto) {
-                        // todo: refaktoroi järkevämmäksi
                         RakenneOsaDto lapsiDto = (RakenneOsaDto) lapsi;
                         suoritustapaLaajaDto.getTutkinnonOsat().stream()
                                 .filter(dto -> dto.getId().equals(lapsiDto.getTutkinnonOsaViite()))
@@ -426,29 +426,30 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
 
 
         // Toteutukset
+        if (tutkinnonOsa.getToteutukset().size() > 0) {
+            addTeksti(docBase, messages.translate("docgen.toteutukset", docBase.getKieli()), "h5");
 
-        addTeksti(docBase, messages.translate("docgen.toteutukset", docBase.getKieli()), "h5");
+            DokumenttiTaulukko taulukko = new DokumenttiTaulukko();
 
-        DokumenttiTaulukko taulukko = new DokumenttiTaulukko();
+            taulukko.addOtsikkoSarake("");
+            taulukko.addOtsikkoSarake(messages.translate("docgen.osaamisen-arvioinnista", docBase.getKieli()));
+            taulukko.addOtsikkoSarake(messages.translate("docgen.tavat-ja-ymparisto", docBase.getKieli()));
 
-        taulukko.addOtsikkoSarake("");
-        taulukko.addOtsikkoSarake(messages.translate("docgen.osaamisen-arvioinnista", docBase.getKieli()));
-        taulukko.addOtsikkoSarake(messages.translate("docgen.tavat-ja-ymparisto", docBase.getKieli()));
+            for (TutkinnonosaToteutus toteutus : tutkinnonOsa.getToteutukset()) {
 
-        for (TutkinnonosaToteutus toteutus : tutkinnonOsa.getToteutukset()) {
+                DokumenttiRivi rivi = new DokumenttiRivi();
+                StringJoiner koodit = new StringJoiner(", ");
+                toteutus.getKoodit().stream().forEach(koodit::add);
 
-            DokumenttiRivi rivi = new DokumenttiRivi();
-            StringJoiner koodit = new StringJoiner(", ");
-            toteutus.getKoodit().stream().forEach(koodit::add);
+                rivi.addSarake(koodit.toString());
+                rivi.addSarake(getTextString(docBase, toteutus.getArvioinnista().getTeksti()));
+                rivi.addSarake(getTextString(docBase, toteutus.getTavatjaymparisto().getTeksti()));
 
-            rivi.addSarake(koodit.toString());
-            rivi.addSarake(getTextString(docBase, toteutus.getArvioinnista().getTeksti()));
-            rivi.addSarake(getTextString(docBase, toteutus.getTavatjaymparisto().getTeksti()));
+                taulukko.addRivi(rivi);
+            }
 
-            taulukko.addRivi(rivi);
+            taulukko.addToDokumentti(docBase);
         }
-
-        taulukko.addToDokumentti(docBase);
     }
 
     private void addOmaTutkinnonOsa(DokumenttiBase docBase, OmaTutkinnonosa omaTutkinnonosa) {
