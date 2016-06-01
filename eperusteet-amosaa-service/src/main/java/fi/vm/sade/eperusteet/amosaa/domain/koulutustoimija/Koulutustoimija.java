@@ -25,7 +25,6 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
-
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
@@ -58,6 +57,11 @@ public class Koulutustoimija extends AbstractAuditedEntity implements Serializab
     @Setter
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     private LokalisoituTeksti kuvaus;
+
+    @Getter
+    @Setter
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Set<Koulutustoimija> ystavat;
 
     @Getter
     @Setter
