@@ -81,9 +81,11 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
         div.pull-right
           button.btn.btn-default.pull-right(ng-click="addYleinen()" oikeustarkastelu="muokkaus")
             +gicon("plus")
+            span=" "
             span(kaanna="'lisaa-yleinen'")
           button.btn.btn-default.pull-right(style="margin-right: 16px" ng-click="addOpetussuunnitelma()" oikeustarkastelu="muokkaus")
             +gicon("plus")
+            span=" "
             span(kaanna="'lisaa-opetussuunnitelma'")
 
     +opsTable("ops in opetussuunnitelmat")
