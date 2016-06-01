@@ -58,10 +58,10 @@ public class Koulutustoimija extends AbstractAuditedEntity implements Serializab
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     private LokalisoituTeksti kuvaus;
 
-    @Getter
-    @Setter
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Set<Koulutustoimija> ystavat;
+//    @Getter
+//    @Setter
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    private Set<Koulutustoimija> ystavat;
 
     @Getter
     @Setter
