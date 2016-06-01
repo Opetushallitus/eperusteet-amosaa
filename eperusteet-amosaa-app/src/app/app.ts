@@ -104,6 +104,7 @@ angular.module("app", [
 })
 
 .config(["cfpLoadingBarProvider", (cfpLoadingBarProvider) => {
+    cfpLoadingBarProvider.parentSelector = "#loading-bar";
     cfpLoadingBarProvider.includeSpinner = true;
     cfpLoadingBarProvider.latencyThreshold = 100;
 }])
