@@ -37,7 +37,7 @@ public interface SisaltoViiteService {
     <T> List<T> getSisaltoViitteet(@P("ktId") Long ktId, @P("opsId") Long opsId, Class<T> t);
 
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'POISTO')")
-    void restoreSisaltoViite(@P("ktId") Long ktId, @P("opsId") Long opsId, Long poistettuId);
+    SisaltoViiteDto restoreSisaltoViite(@P("ktId") Long ktId, @P("opsId") Long opsId, Long poistettuId);
 
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'MUOKKAUS')")
     SisaltoViiteDto.Matala addSisaltoViite(@P("ktId") Long ktId, @P("opsId") Long opsId, Long viiteId,

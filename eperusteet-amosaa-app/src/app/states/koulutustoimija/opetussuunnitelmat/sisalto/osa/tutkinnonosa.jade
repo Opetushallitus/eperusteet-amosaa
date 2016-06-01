@@ -174,7 +174,12 @@ mixin tosaToteutus()
   div.toteutukset
     div(ng-if="$$ekEditing")
       div
-        h1(kaanna="'toteutukset'")
+        h1(kaanna="'toteutus'")
+
+        h2(kaanna="'osaamisen-osoittaminen'")
+        div(style="margin-bottom: 16px" ckeditor slocalized ng-model="osa.tosa.osaamisenOsoittaminen" layout="normal")
+
+        h2(kaanna="'toteutukset'")
 
         div.toolbar
           button.btn.btn-primary(kaanna="'lisaa-uusi'" ng-click="lisaaUusiToteutus()")
@@ -224,6 +229,9 @@ mixin tosaToteutus()
                   +itext("remove", 'poista')
 
     div(ng-if="!$$ekEditing")
+      +contentToggler("$$showOsaamisenOsoittaminen", "'osaamisen-osoittaminen'")
+        +teksti("osa.tosa.osaamisenOsoittaminen")
+
       div(ng-hide="osa.tosa.toteutukset.length > 0")
         div.alert.alert-info
           span(kaanna="'tutkinnon-osalle-ei-maaritelty-paikallisia-toteutuksia'")

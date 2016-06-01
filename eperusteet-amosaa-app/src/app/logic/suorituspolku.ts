@@ -3,10 +3,12 @@ namespace Suorituspolku {
 
     export const calculateRealAmount = (tree, tosat, poistetut) => {
         const result = {};
-        const shouldCount = (node) => !poistetut[node.tunniste] && node.rooli !== "määrittelemätön";
+        const shouldCount = (node) => !poistetut[node.tunniste];
         const isRyhma = (node) => !node._tutkinnonOsaViite;
         const getLaajuus = (node) => isRyhma(node)
-            ? _.property("muodostumisSaanto.laajuus.minimi")(node) || 0
+            ? (node.rooli !== "määrittelemätön"
+              ? _.property("muodostumisSaanto.laajuus.minimi")(node) || 0
+              : _.property("muodostumisSaanto.laajuus.maksimi")(node) || 0)
             : tosat[node._tutkinnonOsaViite].laajuus || 0;
 
         Algoritmit.traverse(tree, "osat", (node) => {
@@ -17,7 +19,7 @@ namespace Suorituspolku {
                     .compact()
                     .reduce((acc: number, min: number) => (min || 0) + acc);
 
-                const laajuus = _.property("muodostumisSaanto.laajuus")(node);
+                const laajuus: any = _.property("muodostumisSaanto.laajuus")(node);
                 node.$$valid = !laajuus || !laajuus.minimi || node.$$laskettuLaajuus >= laajuus.minimi;
             }
         });

@@ -87,7 +87,7 @@ angular.module("app")
                                     $timeout(() => {
                                         $state.go("root.koulutustoimija.opetussuunnitelmat.sisalto.osa", { osaId: res.id })
                                             .then(() => {
-                                                const el = document.getElementById("sisalto-item-" + osa.id);
+                                                const el = document.getElementById("sisalto-item-" + res.id);
                                                 if (el) {
                                                     el.scrollIntoView();
                                                 }

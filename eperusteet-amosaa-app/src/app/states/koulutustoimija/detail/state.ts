@@ -64,8 +64,13 @@ angular.module("app")
             }
         },
         opetussuunnitelmat: {
-            controller: ($scope, koulutustoimija, opetussuunnitelmat, opsSaver) => {
+            controller: ($scope, koulutustoimija, kayttajanTiedot, opetussuunnitelmat, opsSaver, kayttaja) => {
+                const suosikkiApi = kayttaja.all("suosikki");
+                const opetussuunnitelmaMap = _.indexBy(opetussuunnitelmat, "id");
+
+                $scope.suosikit = _.indexBy(_.map(kayttajanTiedot.suosikit, (suosikki: string) => opetussuunnitelmaMap[suosikki]), "id");
                 $scope.opetussuunnitelmat = _.reject(opetussuunnitelmat, (ops: any) => ops.tyyppi === "yhteinen");
+                $scope.opsitById = _.indexBy(opetussuunnitelmat, "id");
 
                 const add = (tyyppi) => ModalAdd[tyyppi]()
                     .then(opsSaver)
@@ -73,6 +78,17 @@ angular.module("app")
 
                 $scope.addOpetussuunnitelma = () => add("opetussuunnitelma");
                 $scope.addYleinen = () => add("yleinen");
+                $scope.isEmpty = _.isEmpty;
+                $scope.toggleSuosikki = (ops) => {
+                    if ($scope.suosikit[ops.id]) {
+                        suosikkiApi.customDELETE(ops.id);
+                        delete $scope.suosikit[ops.id];
+                    }
+                    else {
+                        suosikkiApi.customPOST(null, ops.id);
+                        $scope.suosikit[ops.id] = ops;
+                    }
+                };
             }
         },
         yhteinen: {
@@ -80,9 +96,7 @@ angular.module("app")
                 $scope.yhteiset = yhteiset;
                 $scope.addYhteinen = () => ModalAdd.yhteinen()
                     .then(opsSaver)
-                    .then((res) => {
-                        $scope.yhteiset.push(res);
-                    });
+                    .then((res) => $scope.yhteiset.push(res));
             }
         },
         tiedotteet: {

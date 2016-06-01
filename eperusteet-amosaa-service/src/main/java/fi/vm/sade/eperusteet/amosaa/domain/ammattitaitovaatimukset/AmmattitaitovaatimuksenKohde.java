@@ -17,15 +17,14 @@ package fi.vm.sade.eperusteet.amosaa.domain.ammattitaitovaatimukset;
 
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
-
-import javax.persistence.*;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author isaul
@@ -33,7 +32,7 @@ import java.util.List;
 @Entity
 @Table(name = "ammattitaitovaatimuksenkohde")
 @Audited
-public class AmmattitaitovaatimuksenKohde implements Serializable{
+public class AmmattitaitovaatimuksenKohde implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -60,9 +59,9 @@ public class AmmattitaitovaatimuksenKohde implements Serializable{
     @Setter
     private AmmattitaitovaatimuksenKohdealue ammattitaitovaatimuksenkohdealue;
 
-    @OneToMany(mappedBy = "ammattitaitovaatimuksenkohde", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @Getter
     @Setter
-    @OrderColumn (name="jarjestys")
+    @OrderColumn(name="jarjestys")
     private List<Ammattitaitovaatimus> vaatimukset = new ArrayList<>();
 }

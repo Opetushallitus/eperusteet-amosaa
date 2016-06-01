@@ -73,4 +73,13 @@ public interface KayttajanTietoService {
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
     List<KayttajaDto> getKayttajat(@P("ktId") Long ktId);
+
+    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
+    void removeSuosikki(@P("opsId") Long opsId);
+
+    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
+    void addSuosikki(@P("opsId") Long opsId);
+
+    @PreAuthorize("isAuthenticated()")
+    KayttajaDto haeKayttajanTiedot();
 }

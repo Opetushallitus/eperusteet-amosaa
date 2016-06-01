@@ -4,9 +4,9 @@ div.sivunavi.subtle-transition
       div.form-group.has-feedback.has-feedback-left
         input.form-control(ng-change="suodata(search)" type="text" ng-model="search" placeholder="{{ 'hae' | kaanna }}")
         i.form-control-feedback.glyphicon.glyphicon-search(style="color: gray;")
-        button.btn.btn-default.square(ng-disabled="$$ekEditing" href="" ng-click="add()" oikeustarkastelu)
+        button.btn.btn-default.square(ng-hide="$$ekEditing" href="" ng-click="add()" oikeustarkastelu="muokkaus")
           +icon("plus")
-        button.btn.btn-default.square(ng-disabled="$$ekEditing" href="" ng-click="startSorting()" oikeustarkastelu="muokkaus")
+        button.btn.btn-default.square(ng-hide="$$ekEditing" href="" ng-click="startSorting()" oikeustarkastelu="muokkaus")
           +icon("arrows-v")
 
   div.valikko(id="ops-sivunavi" sticky top-spacing="88")

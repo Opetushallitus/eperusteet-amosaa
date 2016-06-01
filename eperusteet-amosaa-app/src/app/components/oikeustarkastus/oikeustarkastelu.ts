@@ -6,7 +6,7 @@ namespace Oikeudet {
         const mapClass = (luokka, nimi) => _.each(orgoikeudet[luokka], kt => ktOikeudet[kt] = nimi);
         mapClass("READ",        "luku");
         mapClass("READ_UPDATE", "muokkaus");
-        mapClass("CRUD",        "poisto");
+        mapClass("CRUD",        "lisays");
         mapClass("ADMIN",       "hallinta");
     });
 
@@ -50,6 +50,7 @@ namespace OikeustarkasteluImpl {
                 if (!opsOikeus && !ktOikeus) {
                     if (element.is("button") || element.hasClass("btn")) {
                         element.attr("disabled", true);
+                        element.attr("title", KaannaService.kaanna("toiminto-vaatii-oikeuden") + ": " + KaannaService.kaanna("oikeus-" + vaadittu));
                     }
                     else {
                         element.hide();

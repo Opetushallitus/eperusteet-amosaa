@@ -15,6 +15,7 @@
  */
 package fi.vm.sade.eperusteet.amosaa.resource.util;
 
+import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,6 +44,23 @@ public class KayttajaController {
     @RequestMapping(method = RequestMethod.GET)
     public KayttajanTietoDto get() {
         return kayttajat.haeKirjautaunutKayttaja();
+    }
+
+    @RequestMapping(value = "/tiedot", method = RequestMethod.GET)
+    public KayttajaDto getKayttaja() {
+        return kayttajat.haeKayttajanTiedot();
+    }
+
+    @RequestMapping(value = "/suosikki/{opsId}", method = RequestMethod.POST)
+    public ResponseEntity addSuosikki(@PathVariable final Long opsId) {
+        kayttajat.addSuosikki(opsId);
+        return ResponseEntity.ok().build();
+    }
+
+    @RequestMapping(value = "/suosikki/{opsId}", method = RequestMethod.DELETE)
+    public ResponseEntity removeSuosikki(@PathVariable final Long opsId) {
+        kayttajat.removeSuosikki(opsId);
+        return ResponseEntity.ok().build();
     }
 
     @RequestMapping(value = "/koulutustoimijat", method = RequestMethod.GET)

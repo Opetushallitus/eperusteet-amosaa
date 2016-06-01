@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.Kayttaja;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.KoulutustoimijaKayttaja;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
@@ -27,6 +28,8 @@ import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaoikeusRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KoulutustoimijaKayttajaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
+import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
+import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import static fi.vm.sade.eperusteet.amosaa.service.external.impl.KayttajanTietoParser.parsiKayttaja;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
@@ -74,7 +77,38 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
     private KoulutustoimijaKayttajaRepository ktkayttajaRepository;
 
     @Autowired
+    private OpetussuunnitelmaRepository opsRepository;
+
+    @Autowired
     private DtoMapper mapper;
+
+    @Override
+    public KayttajaDto haeKayttajanTiedot() {
+        Kayttaja kayttaja = getKayttaja();
+        return mapper.map(kayttaja, KayttajaDto.class);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void removeSuosikki(Long opsId) {
+        Kayttaja kayttaja = getKayttaja();
+        Opetussuunnitelma ops = opsRepository.findOne(opsId);
+        if (ops == null) {
+            throw new BusinessRuleViolationException("opetussuunnitelmaa-ei-olemassa");
+        }
+        kayttaja.getSuosikit().remove(ops);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void addSuosikki(Long opsId) {
+        Kayttaja kayttaja = getKayttaja();
+        Opetussuunnitelma ops = opsRepository.findOne(opsId);
+        if (ops == null) {
+            throw new BusinessRuleViolationException("opetussuunnitelmaa-ei-olemassa");
+        }
+        kayttaja.getSuosikit().add(ops);
+    }
 
     @Override
     public KayttajanTietoDto hae(String oid) {
@@ -199,7 +233,7 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
         }
         return null;
     }
-    
+
     @Override
     public KayttajanTietoDto getKayttaja(Long koulutustoimijaId, Long id) {
         // FIXME

@@ -21,6 +21,12 @@ div.poistetut.subtle-transition
                   span.glyphicon.glyphicon-sort-by-alphabet-alt(ng-show="jarjestysKaanteinen")
                   span.glyphicon.glyphicon-sort-by-alphabet(ng-show="!jarjestysKaanteinen")
             th
+              a(href="", ng-click="vaihdaJarjestys('tyyppi')")
+                span(kaanna="'tyyppi'")
+                span(ng-show="jarjestys==='tyyppi'")=" "
+                  span.glyphicon.glyphicon-sort-by-alphabet-alt(ng-show="jarjestysKaanteinen")
+                  span.glyphicon.glyphicon-sort-by-alphabet(ng-show="!jarjestysKaanteinen")
+            th
               a(href="", ng-click="vaihdaJarjestys('poistaja')")
                 span(kaanna="'poistaja'")
                 span(ng-show="jarjestys==='poistaja'")=" "
@@ -42,11 +48,13 @@ div.poistetut.subtle-transition
             "| orderBy:jarjestys:jarjestysKaanteinen")
 
             td(kaanna="poistettu.nimi")
+            td(ng-bind="'poistotyyppi-' + poistettu.tyyppi | kaanna")
             td(ng-bind="poistettu.muokkaajaOid")
             td(ng-bind="poistettu.pvm | aikaleima")
             td
-              a.label.label-warning(kaanna="'palauta'"
-                ng-click="palauta(poistettu)")
+              button.btn.btn-sm.btn-warning(ng-click="palauta(poistettu)" oikeustarkastelu="muokkaus")
+                span(kaanna="'palauta'")
+                
 
 
   nav.text-center

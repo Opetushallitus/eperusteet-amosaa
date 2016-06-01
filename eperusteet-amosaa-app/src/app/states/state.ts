@@ -14,6 +14,7 @@ angular.module("app")
         kkAlustus: Api => Api.one("kayttaja/koulutustoimijat").customPOST({}),
         kayttajanKoulutustoimijat: (kkAlustus, Api) => Api.all("kayttaja/koulutustoimijat").getList(),
         kayttaja: (kkAlustus, Api) => Api.one("kayttaja").get(),
+        kayttajanTiedot: (kayttaja) => kayttaja.one("tiedot").get(),
         oikeudet: (kkAlustus, Api) => Api.all("kayttaja/oikeudet").getList(),
         orgoikeudet: (kkAlustus, Api) => Api.one("kayttaja/organisaatiooikeudet").get(),
     },

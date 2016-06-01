@@ -22,8 +22,10 @@ import fi.vm.sade.eperusteet.amosaa.dto.PoistettuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
+import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.util.PoistettuService;
 import io.swagger.annotations.Api;
 import java.util.List;
@@ -49,6 +51,9 @@ public class OpetussuunnitelmaController {
 
     @Autowired
     private PoistettuService poistetutService;
+
+    @Autowired
+    private SisaltoViiteService sisaltoviiteService;
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
@@ -87,6 +92,15 @@ public class OpetussuunnitelmaController {
             @PathVariable final Long ktId,
             @PathVariable final Long opsId) {
         return poistetutService.poistetut(ktId, opsId);
+    }
+
+    @RequestMapping(value = "/{opsId}/poistetut/{poistettuId}/palauta", method = RequestMethod.POST)
+    @ResponseBody
+    public SisaltoViiteDto getPoistetut(
+            @PathVariable final Long ktId,
+            @PathVariable final Long opsId,
+            @PathVariable final Long poistettuId) {
+        return sisaltoviiteService.restoreSisaltoViite(ktId, opsId, poistettuId);
     }
 
     @RequestMapping(value = "/{opsId}/oikeudet", method = RequestMethod.GET)

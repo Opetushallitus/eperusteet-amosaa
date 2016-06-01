@@ -6,12 +6,12 @@ div.otsikkotaso.ops-osa
       div.col-xs-10
       div.col-xs-2
         div.pull-right
-          button.btn.btn-default(style="position: relative; top: -20px;" kaanna="'lisaa-uusi'" ng-click="addYhteinen()")
+          button.btn.btn-default(style="position: relative; top: -20px;" kaanna="'lisaa-uusi'" ng-click="addYhteinen()" oikeustarkastelu="lisays")
 
   div(ng-if="yhteiset.length === 0")
     div.alert.alert-info
       div(kaanna="'koulutustoimijan-yhteista-osaa-ei-luotu'")
-      button.btn.btn-primary.pull-right(style="position: relative; top: -26px" kaanna="'lisaa-uusi'" ng-click="addYhteinen()")
+      button.btn.btn-primary.pull-right(style="position: relative; top: -26px" kaanna="'lisaa-uusi'" ng-click="addYhteinen()" oikeustarkastelu="lisays")
 
   div(ng-if="yhteiset.length > 0")
     table.table.boxtable(style="margin-bottom: 0px;" ng-repeat="yhteinen in yhteiset")
