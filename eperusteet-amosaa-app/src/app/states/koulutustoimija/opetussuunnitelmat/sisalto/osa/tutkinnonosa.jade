@@ -1,3 +1,9 @@
+mixin paikallinenKoodi()
+  div(ng-show="$$ekEditing")
+    h3(kaanna="'koodi'")
+    input.form-control(type="number" min="1000" max="9999" ng-maxlength="4" ng-model="osa.tosa.omatutkinnonosa.koodi")
+
+
 mixin vaatimus()
     textarea.form-control(ng-model="vaatimus.selite" slocalized placeholder="{{' vaatimuksen-selite' | kaanna }}")
     input.form-control(type="text"
@@ -261,6 +267,7 @@ mixin tosaToteutus()
 
 mixin omaTosaSisalto()
   div(ng-if="$$ekEditing")
+    +paikallinenKoodi
     +contentToggler("$$showTavoitteet", "'tavoitteet'")
       div(style="margin-bottom: 16px" ckeditor slocalized ng-model="osa.tosa.omatutkinnonosa.tavoitteet" layout="normal")
     +contentToggler("$$showAmmattitaitovaatimukset", "'ammattitaitovaatimukset'")
@@ -280,6 +287,7 @@ mixin omaTosaSisalto()
           ckeditor slocalized ng-model="osa.tosa.omatutkinnonosa.ammattitaidonOsoittamistavat" layout="normal")
 
   div(ng-if="!$$ekEditing")
+    +paikallinenKoodi
     +contentToggler("$$showTavoitteet", "'tavoitteet'")
       +teksti("osa.tosa.omatutkinnonosa.tavoitteet")
     +contentToggler("$$showAmmattitaitovaatimukset", "'ammattitaitovaatimukset'")
@@ -345,7 +353,7 @@ mixin perusteenTosaSisalto()
 
 
 mixin tosaSisalto()
-  div(ng-if="pTosa")
+  div(ng-if="pTosa && !$$ekEditing")
     +perusteenTosaSisalto
   div(ng-if="!pTosa")
     +omaTosaSisalto
@@ -354,7 +362,6 @@ mixin tosaSisalto()
   div(ng-hide="$$ekEditing" style="margin-bottom: 20px;")
     +toggler("$$showToteutus", "'sisalto'", "'toteutus'")
 
-  hr(ng-show="$$ekEditing")
   div(ng-if="$$showToteutus")
     +tosaToteutus
   div(ng-if="!$$showToteutus")

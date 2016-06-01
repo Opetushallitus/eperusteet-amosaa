@@ -446,6 +446,7 @@ public class SisaltoViiteServiceImpl implements SisaltoViiteService {
         // TODO: Tutkinnon osien ryhmät
         // TODO: Suorituspolut vain yksi
         // TODO: Suorituspolkujen toteutukset suorituspolut-otsikon alla
+        // TODO: Suorituspolun ryhmän lapsen määritys olemassa koulutuksenjärjestäjällä
         List<SisaltoViite> lapset = vanha.getLapset();
     }
 

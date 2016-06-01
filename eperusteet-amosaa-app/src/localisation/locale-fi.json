@@ -55,6 +55,8 @@
   "guidance-koulutustoimija-yhteinen":"Koulutuksen järjestäjän <b>yhteinen osa</b> näkyy listassa omassa kokonaisuutena.",
   "guidance-tiedot-otsikko":"Opetussuunnitelman tiedot",
   "guidance-tiedot-sisalto":"Tässä näkymässä voit hallita opetussuunnitelman perustietoja.",
+  "guidance-osa-otsikko":"Sisältö",
+  "guidance-osa-sisalto":"Sisältöjä voi olla neljää eri tyyppia: <b>Tekstikappale</b>, <b>Tutkinnon osa</b>, <b>Tutkinnon osien ryhmä</b> ja <b>Suorituspolku</b>.<br><br> Kaikille näille osille yhteistä on mahdollisuus hallita versioita ja muokata niiden sisältöä.",
   "suosikki-opetussuunnitelmat":"Suosikit",
   "hae":"Hae",
   "hae-peruste":"Hae peruste",

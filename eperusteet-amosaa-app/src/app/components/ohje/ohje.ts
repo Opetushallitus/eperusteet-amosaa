@@ -40,7 +40,7 @@ module OhjeService {
         .value();
 }
 
-module OhjeImpl {
+namespace OhjeImpl {
     export const controller = ($scope) => {
         $scope.isOpen = false;
     };

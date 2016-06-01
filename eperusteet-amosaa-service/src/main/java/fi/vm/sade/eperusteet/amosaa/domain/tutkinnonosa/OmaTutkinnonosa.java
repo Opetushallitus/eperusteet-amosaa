@@ -29,6 +29,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
+import org.hibernate.validator.constraints.Range;
 
 /**
  *
@@ -49,6 +50,11 @@ public class OmaTutkinnonosa extends AbstractAuditedEntity implements Serializab
     @Getter
     @Setter
     private LokalisoituTeksti tavoitteet;
+
+    @Getter
+    @Setter
+    @Range(min = 1000, max = 5999)
+    private Long koodi;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @JoinTable(name = "ammattitaitovaatimuksenkohdealue_omatutkinnonosa",

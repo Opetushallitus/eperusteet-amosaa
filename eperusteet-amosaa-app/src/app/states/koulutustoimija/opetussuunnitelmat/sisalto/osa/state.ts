@@ -48,7 +48,6 @@ angular.module("app")
             controller: ($state, $stateParams, $location, $scope, $rootScope, $document, $timeout,
                          osa, nimiLataaja, Varmistusdialogi, historia, versioId, versio, pTosa) => {
                 $scope.pTosa = pTosa;
-                $scope.$$showToteutus = true;
                 nimiLataaja(osa.tekstiKappale.muokkaaja)
                     .then(_.cset(osa, "$$nimi"));
 
@@ -142,7 +141,7 @@ angular.module("app")
             controller: ($scope) => {}
         },
         tutkinnonosa: {
-            controller: ($scope, peruste, arviointiAsteikot) => {
+            controller: ($scope, $state, peruste, arviointiAsteikot) => {
                 const koodit = _([])
                     .concat($scope.pTosa ? _.map($scope.pTosa.osaAlueet, (oa: any) => ({
                         nimi: oa.nimi,
@@ -153,6 +152,7 @@ angular.module("app")
                     .indexBy("uri")
                     .value();
 
+                $scope.$$showToteutus = true;
                 $scope.koodit = koodit;
                 $scope.peruste = peruste;
                 $scope.sortableOptions = {
@@ -162,6 +162,8 @@ angular.module("app")
                     tolerance: "pointer",
                     placeholder: "toteutus-placeholder"
                 };
+
+                console.log($state.current);
 
                 // FIXME: Hack to cope with old peruste tutkinnon osa string references
                 $scope.pa = {
