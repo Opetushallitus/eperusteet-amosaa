@@ -1,6 +1,6 @@
 mixin poistoToggler()
-  a(href="" ng-click="misc.poistoToggle(ngModel)")
-    span(color="color: #f55;" ng-hide="ngModel.$$poistettu")
+  a.sp-button(href="" ng-click="misc.poistoToggle(ngModel)")
+    span(ng-hide="ngModel.$$poistettu")
       +icon("remove")
     span(ng-show="ngModel.$$poistettu")
       +icon("undo")
@@ -18,7 +18,7 @@ mixin polkuTutkinnonosa()
           +poistoToggler
 
         div.sp-edit(ng-if="misc.root.$$ekEditing" ng-hide="ngModel.$$poistettu")
-          a(href="" ng-click="misc.editNode(ngModel)")
+          a.sp-button(href="" ng-click="misc.editNode(ngModel)")
             +gicon("pencil")
 
 

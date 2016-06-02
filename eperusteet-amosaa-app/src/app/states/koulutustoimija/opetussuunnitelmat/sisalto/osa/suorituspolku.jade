@@ -1,11 +1,11 @@
 div
-  div.haku(style="margin-bottom: 10px;")
+  div.pull-left.haku
     div.form-inline
       div.form-group.has-feedback.has-feedback-left
         input.form-control.input-sm(ng-change="suodata(search)" type="text" ng-model="search" placeholder="{{ 'hae' | kaanna }}")
         i.form-control-feedback.glyphicon.glyphicon-search(style="color: gray;")
 
-  div.pull-right(style="position: relative; top: -44px")
+  div.pull-right
     button.btn.btn-sm.btn-default(
       ng-click="togglePoistetut()"
       ng-bind="(misc.collapsed_removed ? 'piilota-poistetut' : 'nayta-poistetut') | kaanna")
@@ -13,6 +13,6 @@ div
       ng-click="toggleAll()"
       ng-bind="(collapsed_dirty ? 'sulje-kaikki' : 'avaa-kaikki') | kaanna")
 
-  div.suorituspolku
-    div.sp-ryhma-lapset(ng-repeat="osa in perusteRakenne.osat")
-      dynamic(template="states/koulutustoimija/opetussuunnitelmat/sisalto/osa/polunrakenne.jade" misc="misc" ng-model="osa" depth="depth + 1")
+div.suorituspolku
+  div.sp-ryhma-lapset(ng-repeat="osa in perusteRakenne.osat")
+    dynamic(template="states/koulutustoimija/opetussuunnitelmat/sisalto/osa/polunrakenne.jade" misc="misc" ng-model="osa" depth="depth + 1")
