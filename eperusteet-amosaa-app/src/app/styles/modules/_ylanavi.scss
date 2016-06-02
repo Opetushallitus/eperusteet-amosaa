@@ -22,7 +22,6 @@
     }
 
     .kielivalitsin {
-        text-transform: uppercase;
         margin: 5px 5px 5px 5px;
         position: relative;
         top: 8px;
@@ -35,9 +34,14 @@
             color: white;
         }
 
+        cursor: pointer;
         a {
             cursor: pointer;
             padding: 5px;
+            text-decoration: none;
+            span {
+                text-decoration: none;
+            }
         }
     }
 }

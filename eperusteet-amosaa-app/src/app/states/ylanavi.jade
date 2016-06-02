@@ -11,9 +11,11 @@ div.ylanavi(sticky className="ylanavi-sticky")
     div.col-xs-4
       div.pull-right
         span.dropdown.kielivalitsin(uib-dropdown)
-          +gicon("flag")
           a.dropdown-toggle(uib-dropdown-toggle)
+            +gicon("flag")
+            span=" "
             span(ng-bind="currentLang | kaanna")
+            span=" "
             span.caret
           ul.dropdown-menu.dropdown-menu-right(uib-dropdown-menu)
             li(ng-repeat="kieli in langs")
