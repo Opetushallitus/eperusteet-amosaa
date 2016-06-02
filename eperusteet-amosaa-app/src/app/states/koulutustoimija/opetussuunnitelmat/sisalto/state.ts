@@ -68,6 +68,11 @@ angular.module("app")
                     ModalAdd.sisaltoAdder(Opetussuunnitelmat.sallitutSisaltoTyypit(ops))
                         .then(uusi => {
                             let parentNode = tekstit.clone();
+
+                            if (!uusi || !uusi.hasOwnProperty("tyyppi")) {
+                                return;
+                            }
+
                             if (uusi.tyyppi === "tutkinnonosa") {
                                 parentNode.id = Tekstikappaleet.tutkinnonosat(otsikot).id;
                             }
@@ -75,9 +80,6 @@ angular.module("app")
                                 parentNode.id = Tekstikappaleet.suorituspolut(otsikot).id;
                             }
 
-                            if (!uusi) {
-                                return;
-                            }
                             parentNode.post("", uusi)
                                 .then(res => {
                                     res.$$depth = 0;

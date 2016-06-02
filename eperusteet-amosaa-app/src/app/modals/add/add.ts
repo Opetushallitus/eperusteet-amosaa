@@ -101,7 +101,7 @@ namespace ModalAdd {
                 $scope.ok = $uibModalInstance.close;
             }
         }).result;
-};
+}
 
 angular.module("app")
 .run(ModalAdd.init);

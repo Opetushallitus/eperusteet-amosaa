@@ -107,6 +107,10 @@ $ops-top-vertical-margin: 10px;
                 .turbochevron {
                     position: absolute;
                     left: -20px;
+                    text-decoration: none;
+                    span {
+                        text-decoration: none;
+                    }
                 }
             }
 
