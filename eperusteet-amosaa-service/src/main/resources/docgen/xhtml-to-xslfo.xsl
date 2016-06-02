@@ -606,7 +606,7 @@
     </xsl:template>
 
     <xsl:template match="p">
-        <fo:block space-after="0.75em">
+        <fo:block space-after="0.75em" font-size="10pt">
             <xsl:apply-templates select="*|text()" />
         </fo:block>
     </xsl:template>

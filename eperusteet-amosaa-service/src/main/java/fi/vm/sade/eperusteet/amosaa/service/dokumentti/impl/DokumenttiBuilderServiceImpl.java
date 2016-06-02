@@ -16,7 +16,6 @@
 
 package fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import fi.vm.sade.eperusteet.amosaa.domain.OsaamistasonKriteeri;
 import fi.vm.sade.eperusteet.amosaa.domain.ammattitaitovaatimukset.AmmattitaitovaatimuksenKohde;
 import fi.vm.sade.eperusteet.amosaa.domain.ammattitaitovaatimukset.AmmattitaitovaatimuksenKohdealue;
@@ -27,6 +26,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.arviointi.Arviointi;
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.Dokumentti;
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiEdistyminen;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.SuorituspolkuRivi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
@@ -352,9 +352,14 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
 
     private void addSuorituspolku(DokumenttiBase docBase, SisaltoViite viite) {
         Suorituspolku suorituspolku = viite.getSuorituspolku();
-
+        Map<UUID, SuorituspolkuRivi> suorituspolkuMap = new HashMap<>();
         StringBuilder builder = new StringBuilder();
 
+        if (suorituspolku != null) {
+            suorituspolku.getRivit().stream().forEach(rivi -> suorituspolkuMap.put(rivi.getRakennemoduuli(), rivi));
+        }
+
+        builder.append("<ul>");
         docBase.getPeruste().getSuoritustavat().stream()
                 .filter(suoritustapaLaajaDto -> suoritustapaLaajaDto.getSuoritustapakoodi().toString().equals("ops"))
                 .findAny()
@@ -362,11 +367,8 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
                 .ifPresent(suoritustapaLaajaDto -> suoritustapaLaajaDto.getRakenne().getOsat().stream()
                         .filter(dto -> dto instanceof RakenneModuuliDto)
                         .map(dto -> (RakenneModuuliDto) dto)
-                        .forEach(rakenneModuuliDto -> {
-                            builder.append("<ul>");
-                            addSuorituspolkuOsa(docBase, rakenneModuuliDto, builder, suoritustapaLaajaDto);
-                            builder.append("</ul>");
-                        }));
+                        .forEach(rakenneModuuliDto -> addSuorituspolkuOsa(docBase, rakenneModuuliDto, builder, suoritustapaLaajaDto, suorituspolkuMap)));
+        builder.append("</ul>");
 
         addTeksti(docBase, builder.toString(), "div");
     }
@@ -374,18 +376,33 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
     private void addSuorituspolkuOsa(DokumenttiBase docBase,
                                      RakenneModuuliDto rakenneModuuliDto,
                                      StringBuilder builder,
-                                     SuoritustapaLaajaDto suoritustapaLaajaDto) {
+                                     SuoritustapaLaajaDto suoritustapaLaajaDto,
+                                     Map<UUID, SuorituspolkuRivi> suorituspolkuMap) {
         builder.append("<li>");
 
         builder.append(getTextString(docBase, rakenneModuuliDto.getNimi()));
+        if (rakenneModuuliDto.getOsaamisala() != null
+                && rakenneModuuliDto.getOsaamisala().getOsaamisalakoodiArvo() != null) {
+            builder.append(" ");
+            builder.append(rakenneModuuliDto.getOsaamisala().getOsaamisalakoodiArvo());
+            builder.append(" ");
+        }
         addMuodostumisSaanto(docBase, rakenneModuuliDto.getMuodostumisSaanto(), builder);
 
         builder.append("<ul>");
         rakenneModuuliDto.getOsat().stream()
                 .forEach(lapsi -> {
+                    // Piilotettuja ei generoida PDF:ään
+                    if (suorituspolkuMap.containsKey(lapsi.getTunniste())) {
+                        SuorituspolkuRivi rivi = suorituspolkuMap.get(lapsi.getTunniste());
+                        if (rivi.getPiilotettu() != null && rivi.getPiilotettu()) {
+                            return;
+                        }
+                    }
+
                     if (lapsi instanceof RakenneModuuliDto) {
                         RakenneModuuliDto lapsiDto = (RakenneModuuliDto) lapsi;
-                        addSuorituspolkuOsa(docBase, lapsiDto, builder, suoritustapaLaajaDto);
+                        addSuorituspolkuOsa(docBase, lapsiDto, builder, suoritustapaLaajaDto, suorituspolkuMap);
                     } else if (lapsi instanceof RakenneOsaDto) {
                         RakenneOsaDto lapsiDto = (RakenneOsaDto) lapsi;
                         if (lapsiDto.getTutkinnonOsaViite() != null) {
@@ -395,7 +412,8 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
                                     .ifPresent(dto -> docBase.getPeruste().getTutkinnonOsat().stream()
                                             .filter(tutkinnonOsaDto -> tutkinnonOsaDto.getId().equals(dto.getTutkinnonOsa()))
                                             .findAny()
-                                            .ifPresent(tutkinnonOsaKaikkiDto -> addSuorituspolunTutkinnonOsa(docBase, tutkinnonOsaKaikkiDto, dto, builder)));
+                                            .ifPresent(tutkinnonOsaKaikkiDto -> addSuorituspolunTutkinnonOsa(
+                                                    docBase, tutkinnonOsaKaikkiDto, dto, builder)));
                         }
                     }
                 });
@@ -463,15 +481,13 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
                 addOmaTutkinnonOsa(docBase, tutkinnonOsa.getOmatutkinnonosa());
                 break;
             case PERUSTEESTA:
-                // koodi, nimi, laajuus
                 addPerusteenTutkinnonOsa(docBase, tutkinnonOsa.getPerusteentutkinnonosa());
                 break;
             default:
                 break;
         }
         // Osaamisen osoittaminen
-
-
+        addLokalisoituteksti(docBase, tutkinnonOsa.getOsaamisenOsoittaminen(), "div");
 
         // Toteutukset
         if (tutkinnonOsa.getToteutukset().size() > 0) {
@@ -501,6 +517,12 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
     }
 
     private void addOmaTutkinnonOsa(DokumenttiBase docBase, OmaTutkinnonosa omaTutkinnonosa) {
+
+        // Koodi
+        if (omaTutkinnonosa.getKoodi() != null) {
+            addTeksti(docBase, messages.translate("docgen.koodi", docBase.getKieli()), "h5");
+            addTeksti(docBase, String.valueOf(omaTutkinnonosa.getKoodi()), "div");
+        }
 
         // Tavoitteet
         if (omaTutkinnonosa.getTavoitteet() != null) {
@@ -653,6 +675,15 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
     }
 
     private void addPerusteenTutkinnonOsa(DokumenttiBase docBase, Long perusteenTutkinnonosaId) {
+        // Todo: koodi, nimi, laajuus
+
+        docBase.getPeruste().getTutkinnonOsat().stream()
+                .filter(dto -> dto.getId().equals(perusteenTutkinnonosaId))
+                .findAny()
+                .ifPresent(dto -> {
+                    addTeksti(docBase, dto.getKoodiArvo(), "p");
+                    addTeksti(docBase, dto.getKoodiUri(), "p");
+                });
 
     }
 
