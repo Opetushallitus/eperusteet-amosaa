@@ -45,7 +45,7 @@ public interface DokumenttiService {
     void generateWithDto(@P("opsId") Long opsId, DokumenttiDto dto) throws DokumenttiException;
 
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
-    boolean addImage(@P("opsId") Long opsId, DokumenttiDto dto, String tyyppi, String kieli, MultipartFile image) throws IOException;
+    DokumenttiDto addImage(@P("opsId") Long opsId, DokumenttiDto dto, String tyyppi, String kieli, MultipartFile image) throws IOException;
 
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
     byte[] get(@P("opsId") Long opsId, Kieli kieli);

@@ -112,8 +112,9 @@ public class DokumenttiController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        if (service.addImage(opsId, dokumenttiDto, tyyppi, kieli, file)) {
-            return new ResponseEntity<>(HttpStatus.OK);
+        DokumenttiDto dto = service.addImage(opsId, dokumenttiDto, tyyppi, kieli, file);
+        if (dto != null) {
+            return ResponseEntity.ok(dto);
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

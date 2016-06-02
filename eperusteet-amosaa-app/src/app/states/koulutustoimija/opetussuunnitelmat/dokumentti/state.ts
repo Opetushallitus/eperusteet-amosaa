@@ -30,7 +30,8 @@ angular.module("app")
                         queueLimit: '1',
                         removeAfterUpload: true
                     });
-                    uploader.onSuccessItem = () => {
+                    uploader.onSuccessItem = (item, res) => {
+                        $scope.dokumenttiDto = res;
                         paivitaKuva(tyyppi);
                     };
                     return uploader;
@@ -41,6 +42,7 @@ angular.module("app")
                         method: 'DELETE',
                         url: dokumenttiUrl + "/kuva?tyyppi=" + tyyppi + "&kieli=" + KieliService.getSisaltokieli()
                     }).then(() => {
+                        $scope.dokumenttiDto[tyyppi] = null;
                         paivitaKuva(tyyppi);
                     });
                 };

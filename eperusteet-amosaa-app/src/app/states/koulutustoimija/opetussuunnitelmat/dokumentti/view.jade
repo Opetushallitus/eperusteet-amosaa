@@ -6,13 +6,13 @@ mixin gtext(type, name)
 mixin kuva(tyyppi)
   div
     div(ng-hide=tyyppi + "Uploader.queue.length !== 0")
-      p
+      p(ng-hide="!dokumenttiDto." + tyyppi)
         img(ng-src="{{ kuva." + tyyppi + " }}" class="img-responsive")
-      span.btn.btn-danger(ng-click="poistaKuva('" + tyyppi + "')")
+      span.btn.btn-danger(ng-click="poistaKuva('" + tyyppi + "')" ng-hide="!dokumenttiDto." + tyyppi)
         +gtext("trash", "poista")
-      span=" "
+      span(ng-hide="!dokumenttiDto." + tyyppi)=" "
       span.btn.btn-default.btn-file
-        span(kaanna="'valitse-uusi-kuva'")
+        span(kaanna="'lisaa-kuva'")
         input(type="file" nv-file-select="" nv-file-drop="" uploader=tyyppi + "Uploader")
     span(ng-repeat="item in " + tyyppi + "Uploader.queue")
       div(ng-thumb="{ file: item._file, height: 100 }")

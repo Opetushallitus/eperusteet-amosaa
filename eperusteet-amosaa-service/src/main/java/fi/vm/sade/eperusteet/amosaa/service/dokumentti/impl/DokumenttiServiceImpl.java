@@ -148,7 +148,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 
     @Override
     @Transactional
-    public boolean addImage(Long opsId, DokumenttiDto dto, String tyyppi, String kieli, MultipartFile file) throws IOException {
+    public DokumenttiDto addImage(Long opsId, DokumenttiDto dto, String tyyppi, String kieli, MultipartFile file) throws IOException {
 
         if (!file.isEmpty()) {
 
@@ -190,13 +190,12 @@ public class DokumenttiServiceImpl implements DokumenttiService {
                     dokumentti.setAlatunniste(image);
                     break;
                 default:
-                    return false;
+                    return null;
             }
 
-            dokumenttiRepository.save(dokumentti);
-            return true;
+            return mapper.map(dokumenttiRepository.save(dokumentti), DokumenttiDto.class);
         }
 
-        return false;
+        return null;
     }
 }
