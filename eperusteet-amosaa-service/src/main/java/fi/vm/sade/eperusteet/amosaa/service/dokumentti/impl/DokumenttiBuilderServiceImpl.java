@@ -355,53 +355,103 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
 
         StringBuilder builder = new StringBuilder();
 
-        builder.append("<ul>");
         docBase.getPeruste().getSuoritustavat().stream()
                 .filter(suoritustapaLaajaDto -> suoritustapaLaajaDto.getSuoritustapakoodi().toString().equals("ops"))
                 .findAny()
+                .filter(suoritustapaLaajaDto -> suoritustapaLaajaDto.getRakenne() != null)
                 .ifPresent(suoritustapaLaajaDto -> suoritustapaLaajaDto.getRakenne().getOsat().stream()
                         .filter(dto -> dto instanceof RakenneModuuliDto)
                         .map(dto -> (RakenneModuuliDto) dto)
-                        .forEach(rakenneModuuliDto -> addSuorituspolkuOsa(docBase, rakenneModuuliDto, builder, suoritustapaLaajaDto)));
-        builder.append("</ul>");
+                        .forEach(rakenneModuuliDto -> {
+                            builder.append("<ul>");
+                            addSuorituspolkuOsa(docBase, rakenneModuuliDto, builder, suoritustapaLaajaDto);
+                            builder.append("</ul>");
+                        }));
 
         addTeksti(docBase, builder.toString(), "div");
     }
 
     private void addSuorituspolkuOsa(DokumenttiBase docBase,
-                                     RakenneModuuliDto osa,
+                                     RakenneModuuliDto rakenneModuuliDto,
                                      StringBuilder builder,
                                      SuoritustapaLaajaDto suoritustapaLaajaDto) {
         builder.append("<li>");
-        builder.append(getTextString(docBase, osa.getNimi()));
+
+        builder.append(getTextString(docBase, rakenneModuuliDto.getNimi()));
+        addMuodostumisSaanto(docBase, rakenneModuuliDto.getMuodostumisSaanto(), builder);
 
         builder.append("<ul>");
-        osa.getOsat().stream()
+        rakenneModuuliDto.getOsat().stream()
                 .forEach(lapsi -> {
                     if (lapsi instanceof RakenneModuuliDto) {
                         RakenneModuuliDto lapsiDto = (RakenneModuuliDto) lapsi;
                         addSuorituspolkuOsa(docBase, lapsiDto, builder, suoritustapaLaajaDto);
-
                     } else if (lapsi instanceof RakenneOsaDto) {
                         RakenneOsaDto lapsiDto = (RakenneOsaDto) lapsi;
-                        suoritustapaLaajaDto.getTutkinnonOsat().stream()
-                                .filter(dto -> dto.getId().equals(lapsiDto.getTutkinnonOsaViite()))
-                                .findAny()
-                                .ifPresent(dto -> docBase.getPeruste().getTutkinnonOsat().stream()
-                                        .filter(tutkinnonOsaDto -> tutkinnonOsaDto.getId().equals(dto.getTutkinnonOsa()))
-                                        .findAny()
-                                        .ifPresent(tutkinnonOsaKaikkiDto -> addSuorituspolunTutkinnonOsa(docBase, tutkinnonOsaKaikkiDto, builder)));
+                        if (lapsiDto.getTutkinnonOsaViite() != null) {
+                            suoritustapaLaajaDto.getTutkinnonOsat().stream()
+                                    .filter(dto -> dto.getId().equals(lapsiDto.getTutkinnonOsaViite()))
+                                    .findAny()
+                                    .ifPresent(dto -> docBase.getPeruste().getTutkinnonOsat().stream()
+                                            .filter(tutkinnonOsaDto -> tutkinnonOsaDto.getId().equals(dto.getTutkinnonOsa()))
+                                            .findAny()
+                                            .ifPresent(tutkinnonOsaKaikkiDto -> addSuorituspolunTutkinnonOsa(docBase, tutkinnonOsaKaikkiDto, dto, builder)));
+                        }
                     }
                 });
         builder.append("</ul>");
+
         builder.append("</li>");
+    }
+
+    private void addMuodostumisSaanto(DokumenttiBase docBase,
+                                      MuodostumisSaantoDto muodostumisSaantoDto,
+                                      StringBuilder builder) {
+        if (muodostumisSaantoDto != null && muodostumisSaantoDto.getLaajuus() != null) {
+            builder.append(" (");
+            if (muodostumisSaantoDto.getLaajuus().getMinimi() != null
+                    && muodostumisSaantoDto.getLaajuus().getMaksimi() != null
+                    && muodostumisSaantoDto.getLaajuus().getMinimi()
+                    .equals(muodostumisSaantoDto.getLaajuus().getMaksimi())) {
+                builder.append(muodostumisSaantoDto.getLaajuus().getMinimi());
+            } else if (muodostumisSaantoDto.getLaajuus().getMinimi() != null
+                    && muodostumisSaantoDto.getLaajuus().getMaksimi() != null) {
+                builder.append(muodostumisSaantoDto.getLaajuus().getMinimi());
+                builder.append("-");
+                builder.append(muodostumisSaantoDto.getLaajuus().getMaksimi());
+            } else if (muodostumisSaantoDto.getLaajuus().getMinimi() != null) {
+                builder.append(muodostumisSaantoDto.getLaajuus().getMinimi());
+            } else if (muodostumisSaantoDto.getLaajuus().getMaksimi() != null) {
+                builder.append(muodostumisSaantoDto.getLaajuus().getMaksimi());
+            }
+
+            if (muodostumisSaantoDto.getLaajuus().getYksikko() != null) {
+                builder.append(" ");
+                builder.append(muodostumisSaantoDto.getLaajuus().getYksikko());
+            } else {
+                // Todo: lokalisoitu yksikkö
+                builder.append(" osp");
+            }
+            builder.append(")");
+        }
     }
 
     private void addSuorituspolunTutkinnonOsa(DokumenttiBase docBase,
                                               TutkinnonOsaKaikkiDto tutkinnonOsaKaikkiDto,
+                                              TutkinnonOsaViiteSuppeaDto tutkinnonOsaViiteSuppeaDto,
                                               StringBuilder builder) {
         builder.append("<li>");
         builder.append(getTextString(docBase, tutkinnonOsaKaikkiDto.getNimi()));
+        if (tutkinnonOsaViiteSuppeaDto.getLaajuus() != null) {
+            builder.append(" (");
+            if (tutkinnonOsaViiteSuppeaDto.getLaajuus().stripTrailingZeros().scale() <= 0) {
+                builder.append(String.valueOf(tutkinnonOsaViiteSuppeaDto.getLaajuus().intValue()));
+            } else {
+                builder.append(tutkinnonOsaViiteSuppeaDto.getLaajuus().toString());
+            }
+            builder.append(" osp");
+            builder.append(")");
+        }
         builder.append("</li>");
     }
 

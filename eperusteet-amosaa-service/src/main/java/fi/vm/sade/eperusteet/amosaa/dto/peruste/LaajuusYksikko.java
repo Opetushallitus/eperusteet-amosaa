@@ -22,5 +22,5 @@ package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 public enum LaajuusYksikko {
     OPINTOVIIKKO,
     OSAAMISPISTE,
-    KURSSI;
+    KURSSI
 }
