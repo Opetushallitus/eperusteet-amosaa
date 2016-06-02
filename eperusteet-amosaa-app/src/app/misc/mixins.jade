@@ -27,18 +27,18 @@ mixin editButtonSmall(actionEdit)
     +icon("pencil")
 
 
-mixin editButton(actionEdit)
-  button.btn.btn-primary.muokkaa(ng-hide="$$ekEditing || versio" ng-click=actionEdit oikeustarkastelu="muokkaus")&attributes(attributes)
+mixin editButton(actionEdit, className)
+  button.btn.btn-primary.muokkaa(class=className ng-hide="$$ekEditing || versio" ng-click=actionEdit oikeustarkastelu="muokkaus")&attributes(attributes)
     +icon("pencil")
 
 
-mixin addButtonSmall(actionEdit)
-  button.btn.btn-primary.btn-sm.muokkaa.btn-small-margin-left(ng-disabled="$$ekEditing" ng-click=actionEdit)&attributes(attributes)
+mixin addButtonSmall(actionEdit, className)
+  button.btn.btn-primary.btn-sm.muokkaa.btn-small-margin-left(class=className ng-disabled="$$ekEditing" ng-click=actionEdit)&attributes(attributes)
     +icon("plus-circle")
 
 
-mixin saveButtonSmall(actionEdit)
-  button.btn.btn-primary.btn-sm.muokkaa(ng-click=actionEdit)&attributes(attributes)
+mixin saveButtonSmall(actionEdit, className)
+  button.btn.btn-primary.btn-sm.muokkaa(class=className ng-click=actionEdit)&attributes(attributes)
     +icon("save")
 
 
