@@ -18,7 +18,7 @@ div.ylanavi(sticky className="ylanavi-sticky")
             span=" "
             span.caret
           ul.dropdown-menu.dropdown-menu-right(uib-dropdown-menu)
-            li(ng-repeat="kieli in langs")
+            li(ng-repeat="kieli in langs" ng-class="{'active': currentLang === kieli}")
               a(href="" kaanna="kieli" ng-click="selectLang(kieli)")
       div.pull-right
         span.ohje.popover-element.fa-stack.fa-lg(

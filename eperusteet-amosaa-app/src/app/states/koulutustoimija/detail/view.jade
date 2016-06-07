@@ -15,7 +15,7 @@ mixin ktNimi()
         a.dropdown-toggle(href="" uib-dropdown-toggle)
           i.fa.fa-chevron-down.fa-fw
         ul.dropdown-menu.dropdown-menu-right(uib-dropdown-menu)
-          li(ng-repeat="kt in koulutustoimijat")
+          li(ng-repeat="kt in koulutustoimijat" ng-class="{'active': koulutustoimija.id === kt.id}")
             a(href="" ui-sref="root.koulutustoimija.detail({ ktId: kt.id })" kaanna="kt.nimi")
     +tiedotteet()
     block

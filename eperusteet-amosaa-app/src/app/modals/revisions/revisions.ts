@@ -30,7 +30,7 @@ namespace ModalRevisions {
         }
     }).result;
 
-};
+}
 
 angular.module("app")
 .run(ModalRevisions.init);

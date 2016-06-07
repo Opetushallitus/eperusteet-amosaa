@@ -8,7 +8,7 @@ namespace KoodistoModal {
             resolve: { },
             templateUrl: "modals/koodisto/koodisto.jade",
             controller: ($scope, $state, $uibModalInstance) => {
-                $scope.koodisto = _.groupBy(koodisto, (koodi) => _.first(koodi.uri.split("_")));
+                $scope.koodisto = _.groupBy(koodisto, (koodi: any) => _.first(koodi.uri.split("_")));
                 $scope.valitut = _.zipObject(valitut, _.map(valitut, _.constant(true)));
                 $scope.ok = () => $uibModalInstance.close(_($scope.valitut)
                     .keys()

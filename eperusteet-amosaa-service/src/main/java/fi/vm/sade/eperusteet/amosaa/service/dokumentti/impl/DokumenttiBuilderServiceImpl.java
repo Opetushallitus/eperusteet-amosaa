@@ -682,7 +682,6 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
                 .findAny()
                 .ifPresent(dto -> {
                     addTeksti(docBase, dto.getKoodiArvo(), "p");
-                    addTeksti(docBase, dto.getKoodiUri(), "p");
                 });
 
     }

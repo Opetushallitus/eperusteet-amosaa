@@ -283,7 +283,7 @@ angular.module("app")
                     .value();
 
                 const update = () => {
-                    const spRivit = _.indexBy($scope.osa.suorituspolku.rivit, "rakennemoduuli");
+                    const spRivit: any = _.indexBy($scope.osa.suorituspolku.rivit, "rakennemoduuli");
                     Algoritmit.traverse($scope.perusteRakenne, "osat", (node, depth) => {
                         node.pakollinen = Suorituspolku.pakollinen(node);
                         node.$$poistettu = spRivit[node.tunniste] && spRivit[node.tunniste].piilotettu;
@@ -318,7 +318,7 @@ angular.module("app")
                             rivi = {
                                 rakennemoduuli: node.tunniste,
                                 piilotettu: false
-                            }
+                            };
                             $scope.osa.suorituspolku.rivit.push(rivi);
                         }
                         rivi.piilotettu = !rivi.piilotettu;
