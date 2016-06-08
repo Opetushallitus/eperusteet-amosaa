@@ -402,6 +402,8 @@ angular.module("app")
                     $scope.collapsed_dirty = !$scope.collapsed_dirty;
                 };
 
+                $scope.toggleAll();
+
                 $scope.suodata = (input) => {
                     $scope.misc.hasInput = !_.isEmpty(input);
                     if ($scope.misc.hasInput) {
