@@ -284,12 +284,6 @@
         memoryStoreEvictionPolicy="LRU"
     />
 
-    <cache name="koodistot"
-           maxElementsInMemory="10000"
-           eternal="false"
-           timeToLiveSeconds="600"
-           overflowToDisk="false" />
-
     <cache name="organisaatiot"
            maxElementsInMemory="10000"
            eternal="false"
@@ -313,6 +307,18 @@
            eternal="false"
            timeToLiveSeconds="3600"
            overflowToDisk="false" />
+
+    <cache name="koodistokoodit"
+         maxElementsInMemory="10000"
+         eternal="false"
+         timeToLiveSeconds="600"
+         overflowToDisk="false" />
+    
+    <cache name="koodistot"
+         maxElementsInMemory="100"
+         eternal="false"
+         timeToLiveSeconds="600"
+         overflowToDisk="false" />
 
     <cache name="lokalisoinnit"
            maxElementsInMemory="10000"

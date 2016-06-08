@@ -210,7 +210,8 @@ mixin tosaToteutus()
                 span(kaanna="'osaamisalat-joihin-vaikutusta'")
                 span(style="margin-right: 6px")
                   |:
-                span(ng-bind="osaamisalat[toteutus.osaamisalaKoodi].nimi | kaanna")
+                span(ng-
+                bind="osaamisalat[toteutus.osaamisalaKoodi].nimi | kaanna")
                 b(style="margin-left: 6px" ng-bind="osaamisalat[toteutus.osaamisalaKoodi].arvo")
 
               div
@@ -222,8 +223,8 @@ mixin tosaToteutus()
                         th(kaanna="'nimi'")
                     tbody
                       tr(ng-repeat="koodi in toteutus.koodit")
-                        td(ng-bind="koodit[koodi].arvo")
-                        td(kaanna="koodit[koodi].nimi")
+                        td(ng-if="koodistoTiedot[koodi]" ng-bind="koodistoTiedot[koodi].arvo")
+                        td(ng-if="koodistoTiedot[koodi]" ng-bind="koodistoTiedot[koodi].nimi | kaanna")
                   button.btn.btn-primary(ng-disabled="koodit.length === 0" ng-click="addKoodi(toteutus)" kaanna="'muokkaa-koodeja'")
 
               +contentToggler("$$showTavatjaymparisto", "'tavat-ja-ymparisto'")
@@ -257,8 +258,8 @@ mixin tosaToteutus()
                       th(kaanna="'nimi'")
                   tbody
                     tr(ng-repeat="koodi in toteutus.koodit")
-                      td(ng-bind="koodit[koodi].arvo")
-                      td(kaanna="koodit[koodi].nimi")
+                      td(ng-if="koodistoTiedot[koodi]" ng-bind="koodistoTiedot[koodi].arvo")
+                      td(ng-if="koodistoTiedot[koodi]" ng-bind="koodistoTiedot[koodi].nimi | kaanna")
             +contentToggler("$$showTavatjaymparisto", "'tavat-ja-ymparisto'")
               +teksti("toteutus.tavatjaymparisto.teksti")
             +contentToggler("$$showArvioinnista", "'osaamisen-arvioinnista'")

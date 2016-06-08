@@ -149,16 +149,46 @@ angular.module("app")
             controller: ($scope) => {}
         },
         tutkinnonosa: {
-            controller: ($scope, peruste, arviointiAsteikot) => {
+            controller: ($q, $scope, peruste, arviointiAsteikot, koodisto) => {
+                const osaAlueKoodit = $scope.pTosa ? _.map($scope.pTosa.osaAlueet, (oa: any) => ({
+                    nimi: oa.nimi,
+                    arvo: oa.koodiArvo,
+                    uri: oa.koodiUri
+                })) : [];
+
+                const osaamisalaKoodit = peruste.osaamisalat;
+
                 const koodit = _([])
-                    .concat($scope.pTosa ? _.map($scope.pTosa.osaAlueet, (oa: any) => ({
-                        nimi: oa.nimi,
-                        arvo: oa.koodiArvo,
-                        uri: oa.koodiUri
-                    })) : [])
-                    .concat(peruste.osaamisalat)
+                    .concat(osaAlueKoodit)
+                    .concat(osaamisalaKoodit)
                     .indexBy("uri")
                     .value();
+
+                const haeKoodiTiedot = (koodiUrit) =>
+                    $q.all(_.map(koodiUrit, uri => koodisto.one("uri/" + uri).get()))
+                        .then(Koodisto.parseRawKoodisto);
+
+
+                $scope.koodistoTiedot = {};
+                const paivitaKoodistoTiedot = () => {
+                    const toteutuksienKoodit = _($scope.osa.tosa.toteutukset)
+                        .map("koodit")
+                        .flatten()
+                        .uniq()
+                        .reject((koodi: string) => !!$scope.koodistoTiedot[koodi])
+                        .value();
+
+                    haeKoodiTiedot(toteutuksienKoodit)
+                        .then(koodit => {
+                            _.each(koodit, koodi => {
+                                $scope.koodistoTiedot[koodi.uri] = koodi;
+                            })
+                        });
+                };
+                paivitaKoodistoTiedot();
+
+                const getTutkintonimikekoodit = () =>
+                    haeKoodiTiedot(_.map(peruste.tutkintonimikkeet, "tutkintonimikeUri"));
 
                 $scope.$$showToteutus = true;
                 $scope.koodit = koodit;
@@ -185,8 +215,35 @@ angular.module("app")
 
                 $scope.removeToteutus = (toteutus) => _.remove($scope.osa.tosa.toteutukset, toteutus);
 
-                $scope.addKoodi = (toteutus) => KoodistoModal.koodi(koodit, toteutus.koodit)
-                    .then(res => toteutus.koodit = res);
+                const addKoodi = (valitut, toteutus) => KoodistoModal.koodi(valitut, toteutus.koodit)
+                    .then(res => {
+                        toteutus.koodit = res;
+                        paivitaKoodistoTiedot();
+                    });
+
+                $scope.addKoodi = (toteutus) => {
+                    getTutkintonimikekoodit()
+                        .then(nimikkeet => {
+                            if ($scope.pTosa.tyyppi === "tutke2") {
+                                koodisto.all("oppiaineetyleissivistava2").getList()
+                                    .then(yleissivistavat => {
+                                        addKoodi(_([])
+                                                .concat(nimikkeet)
+                                                .concat(Koodisto.parseRawKoodisto(yleissivistavat))
+                                                .concat(osaAlueKoodit)
+                                                .indexBy("uri")
+                                                .value(), toteutus);
+                                    });
+                            }
+                            else {
+                                addKoodi(_([])
+                                         .concat(nimikkeet)
+                                         .concat(osaamisalaKoodit)
+                                         .indexBy("uri")
+                                         .value(), toteutus);
+                            }
+                        });
+                };
 
                 $scope.sortableOptionsArvioinninKohdealueet = Sorting.getSortableOptions(".arviointi-kohdealueet");
                 $scope.sortableOptionsArvioinninKohteet = Sorting.getSortableOptions(".arviointi-kohteet");

@@ -2,20 +2,25 @@ div.modal-header
   h2(kaanna="'valitse-koodi'")
 
 div.modal-body.modal-koodisto
-  div(ng-if="koodit.length > 0" ng-repeat="(name, koodit) in koodisto")
+  div.form-group.has-feedback.has-feedback-left
+    input.form-control(ng-change="suodata(search)" type="text" ng-model="search" placeholder="{{ 'etsi-koodistoista' | kaanna }}")
+    i.form-control-feedback.glyphicon.glyphicon-search(style="color: gray;")
+
+  div(ng-show="koodit.length > 0" ng-repeat="(name, koodit) in koodisto")
     +contentToggler("koodit.$$show", "'koodisto-' + name")
-      table.table.table-striped
-        thead
-          tr
-            th
-            th(kaanna="'koodi'")
-            th(kaanna="'nimi'")
-        tbody
-          tr(ng-repeat="koodi in koodit")
-            td(style="padding: 4px 0 0 10px;")
-              input(type="checkbox" ng-model="valitut[koodi.uri]")
-            td(kaanna="koodi.arvo" ng-click="valitut[koodi.uri] = !valitut[koodi.uri]" style="cursor: pointer")
-            td(kaanna="koodi.nimi" ng-click="valitut[koodi.uri] = !valitut[koodi.uri]" style="cursor: pointer")
+      div.koodiosio
+        table.table.table-striped
+          thead
+            tr
+              th(width="5%")
+              th(width="10%" kaanna="'koodi'")
+              th(kaanna="'nimi'")
+          tbody
+            tr(ng-repeat="koodi in koodit" ng-hide="search.length > 0 && piilotetut[koodi.uri]")
+              td(style="padding: 4px 0 0 10px;")
+                input(type="checkbox" ng-model="valitut[koodi.uri]")
+              td(kaanna="koodi.arvo" ng-click="valitut[koodi.uri] = !valitut[koodi.uri]" style="cursor: pointer")
+              td(kaanna="koodi.nimi" ng-click="valitut[koodi.uri] = !valitut[koodi.uri]" style="cursor: pointer")
 
 div.modal-footer
   button.btn.btn-default(ng-click="peruuta()")

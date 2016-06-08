@@ -17,6 +17,7 @@ angular.module("app")
         kayttajanTiedot: (kayttaja) => kayttaja.one("tiedot").get(),
         oikeudet: (kkAlustus, Api) => Api.all("kayttaja/oikeudet").getList(),
         orgoikeudet: (kkAlustus, Api) => Api.one("kayttaja/organisaatiooikeudet").get(),
+        koodisto: (Api) => Api.one("koodisto")
     },
     views: {
         "": {
