@@ -15,9 +15,10 @@ html(lang="fi" ng-app="app")
 
     title="ePerusteet AMOSAA"
   body
-    div(id="loading-bar-container")
-      div.container
-        div(ui-view="notifikaatiot")
-        div.ui-view
-        div.editointi-wrapper
-          editointikontrollit
+    div(id="loading-bar-container" sticky)
+      div
+    div.container
+      div(ui-view="notifikaatiot")
+      div.ui-view
+      div.editointi-wrapper
+        editointikontrollit
