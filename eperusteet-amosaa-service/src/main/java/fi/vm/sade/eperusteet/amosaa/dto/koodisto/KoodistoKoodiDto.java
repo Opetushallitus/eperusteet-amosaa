@@ -31,5 +31,4 @@ public class KoodistoKoodiDto {
     private String koodiArvo;
     private String voimassaLoppuPvm;
     private KoodistoMetadataDto[] metadata;
-    private String voimassaLoppuPvm;
 }
