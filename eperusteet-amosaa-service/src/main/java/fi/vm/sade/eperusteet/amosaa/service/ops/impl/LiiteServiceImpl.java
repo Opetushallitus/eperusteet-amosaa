@@ -24,16 +24,17 @@ import fi.vm.sade.eperusteet.amosaa.service.exception.NotExistsException;
 import fi.vm.sade.eperusteet.amosaa.service.exception.ServiceException;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.ops.LiiteService;
+import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
-import org.apache.commons.io.IOUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -73,7 +74,7 @@ public class LiiteServiceImpl implements LiiteService {
     }
 
     @Override
-    public UUID add(Long ktId, String tyyppi, String nimi, long length, InputStream is) {
+    public UUID add(Long ktId, Long opsId, String tyyppi, String nimi, long length, InputStream is) {
         Liite liite = liiteRepository.add(tyyppi, nimi, length, is);
         Koulutustoimija kt = koulutustoimijaRepository.findOne(ktId);
         kt.attachLiite(liite);

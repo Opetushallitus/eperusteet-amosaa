@@ -27,8 +27,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.method.P;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -47,7 +45,7 @@ import java.util.List;
  * @author jhyoty
  */
 @RestController
-@RequestMapping("/koulutustoimijat/{ktId}/kuvat")
+@RequestMapping("/koulutustoimijat")
 @Api("liitetiedostot")
 public class LiitetiedostoController {
     private static final Logger LOG = LoggerFactory.getLogger(LiitetiedostoController.class);
@@ -65,19 +63,9 @@ public class LiitetiedostoController {
         SUPPORTED_TYPES = Collections.unmodifiableSet(tmp);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
-    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'MUOKKAUS')")
-    public void reScaleImg(@PathVariable @P("ktId") Long ktId,
-                           @PathVariable UUID id,
-                           @RequestParam Integer width,
-                           @RequestParam Integer height,
-                           @RequestParam Part file){
-
-    }
-
-    @RequestMapping(method = RequestMethod.POST)
-    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'MUOKKAUS')")
-    public ResponseEntity<String> upload(@PathVariable @P("ktId") Long ktId,
+    @RequestMapping(value = "/{ktId}/opetussuunnitelmat/{opsId}/kuvat", method = RequestMethod.POST)
+    public ResponseEntity<String> upload(@PathVariable Long ktId,
+                                         @PathVariable Long opsId,
                                          @RequestParam String nimi,
                                          @RequestParam Part file,
                                          @RequestParam Integer width,
@@ -101,9 +89,9 @@ public class LiitetiedostoController {
             UUID id;
             if (width != null && height != null) {
                 ByteArrayOutputStream os = scaleImage(file, tyyppi, width, height);
-                id = liitteet.add(ktId, tyyppi, nimi, os.size(), new PushbackInputStream(new ByteArrayInputStream(os.toByteArray())));
+                id = liitteet.add(ktId, opsId, tyyppi, nimi, os.size(), new PushbackInputStream(new ByteArrayInputStream(os.toByteArray())));
             } else{
-                id = liitteet.add(ktId, tyyppi, nimi, koko, pis);
+                id = liitteet.add(ktId, opsId, tyyppi, nimi, koko, pis);
             }
 
             HttpHeaders h = new HttpHeaders();
@@ -138,7 +126,7 @@ public class LiitetiedostoController {
         return preview;
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{ktId}/kuvat/{id}", method = RequestMethod.GET)
     @CacheControl(age = CacheControl.ONE_YEAR)
     public void get(@PathVariable Long ktId,
                     @PathVariable UUID id,
@@ -162,14 +150,14 @@ public class LiitetiedostoController {
         }
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{ktId}/kuvat/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long ktId,
                        @PathVariable UUID id) {
         liitteet.delete(ktId, id);
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "/{ktId}/kuvat", method = RequestMethod.GET)
     public List<LiiteDto> getAll(@PathVariable Long ktId) {
         return liitteet.getAll(ktId);
     }

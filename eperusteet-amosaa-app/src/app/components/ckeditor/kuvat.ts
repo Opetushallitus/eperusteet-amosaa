@@ -31,7 +31,7 @@ angular.module("app")
 
     // Uploader kuvan lisäämistä varten
     $scope.uploader = new FileUploader({
-        url: $scope.liitteet.getRestangularUrl() + "/kuvat",
+        url: $scope.liitteet.getRestangularUrl() + "/opetussuunnitelmat/" + $stateParams.opsId + "/kuvat",
         queueLimit: '1'
     });
 
@@ -211,8 +211,10 @@ angular.module("app")
         tmp.find("img[data-uid]").each(function () {
             let el = angular.element(this);
             el.wrap("<figure></figure>");
-            el.parent().append("<figcaption>" + el.attr("alt") + "</figcaption>");
-            el.parent().wrap("<div style=\"text-align: center;\"></div>");
+            if(el.attr("alt") !== "undefined") {
+                el.parent().append("<figcaption>" + el.attr("alt") + "</figcaption>");
+                el.parent().wrap("<div style=\"text-align: center;\"></div>");
+            }
 
             let url = Api.one("koulutustoimijat", $stateParams.ktId).getRestangularUrl() + "/kuvat/" + el.attr("data-uid");
             if (el.attr("src") !== url) {

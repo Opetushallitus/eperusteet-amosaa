@@ -54,7 +54,7 @@ CKEDITOR.dialog.add('epimageDialog', function( editor ) {
             '      <span ng-if="uploader.queue.length == 0"'+
             '            class="btn btn-default btn-file"'+
             '            style="position: relative;">'+
-            '        <span kaanna="\'valitse-uusi-kuva\'"></span>'+
+            '        <span kaanna="\'valitse\'"></span>'+
             '        <input type="file" nv-file-select nv-file-drop uploader="uploader">'+
             '      </span>'+
             '      <div ng-if="uploader.queue.length > 0">'+
