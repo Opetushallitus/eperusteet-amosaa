@@ -11,6 +11,7 @@ div.modal-body
         type="text"
         placeholder="{{ 'hae-peruste' | kaanna }}"
         ng-model="input"
+        ng-model-options="{ debounce: 200 }"
         ng-change="update(input)")
       i.form-control-feedback.glyphicon.glyphicon-search(style="color: gray;")
 

@@ -78,7 +78,10 @@ namespace ModalAdd {
 
     export const opetussuunnitelma = () => i.$uibModal.open({
             resolve: {
-                perusteet: Eperusteet => Eperusteet.one("perusteet").get() // FIXME paginointihärveli
+                perusteet: Eperusteet => Eperusteet.one("perusteet").get({
+                    sivukoko: 9999,
+                    koulutustyyppi: "koulutustyyppi_1"
+                }) // FIXME paginointihärveli
             },
             templateUrl: "modals/add/opetussuunnitelma.jade",
             controller: ($scope, $state, $stateParams, $uibModalInstance, perusteet) => {
