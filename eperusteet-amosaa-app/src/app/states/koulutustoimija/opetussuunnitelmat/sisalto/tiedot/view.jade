@@ -9,13 +9,10 @@
     "restoreNew()")
   .tekstit
     .container-fluid
-      h1(kaanna="'tiedot'")
+      h1(ng-bind="'tiedot' | kaanna")
       .kohdat
         +formfield("'nimi'")
           +ekinput("ops.nimi")
-      h3(ng-bind="'tiedot' | kaanna")
-      +formfield("'nimi'")
-        +ekinput("ops.nimi")
 
         +formfield("'tiivistelma'")
           +ekeditor("ops.kuvaus", "simplified")
