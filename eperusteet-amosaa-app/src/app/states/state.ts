@@ -25,8 +25,7 @@ angular.module("app")
                 Oikeudet.init(oikeudet, orgoikeudet);
                 if (_.isEmpty(kayttajanKoulutustoimijat)) {
                     $state.go("root.virhe", { tyyppi: "ei-koulutustoimijoita" });
-                }
-                else if ($state.current.name === "root") {
+                } else if ($state.current.name === "root") {
                     // TODO: Valitse preferattu koulutustoimija
                     $state.go("root.koulutustoimija.detail", {
                         ktId: kayttajanKoulutustoimijat[0].id

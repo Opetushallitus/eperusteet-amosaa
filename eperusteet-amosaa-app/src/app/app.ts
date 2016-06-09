@@ -104,13 +104,13 @@ angular.module("app", [
 })
 
 .config(["cfpLoadingBarProvider", (cfpLoadingBarProvider) => {
-    cfpLoadingBarProvider.parentSelector = "#loading-bar";
+    cfpLoadingBarProvider.parentSelector = "#loading-bar-container";
     cfpLoadingBarProvider.includeSpinner = true;
     cfpLoadingBarProvider.latencyThreshold = 100;
 }])
 
 .config(["usSpinnerConfigProvider", usSpinnerConfigProvider => {
-    usSpinnerConfigProvider.setDefaults({color: "#29d", radius: 30, width: 8, length: 16});
+    usSpinnerConfigProvider.setDefaults({ color: "#29d", radius: 30, width: 8, length: 16 });
 }])
 
 .run(($rootScope, $log, $urlMatcherFactory, $state, cfpLoadingBar) => {
@@ -121,7 +121,7 @@ angular.module("app", [
             $log.error(error);
             $state.go("root.virhe");
         }
-    }
+    };
     $rootScope.$on("$stateChangeError", onError);
     $rootScope.$on("$stateNotFound", onError);
     $rootScope.$on("$stateChangeStart", cfpLoadingBar.start);

@@ -76,3 +76,15 @@ $fa-font-path: "fonts";
     cursor: pointer;
     user-select: none;
 }
+
+#loading-bar-container {
+    position: relative;
+}
+
+#loading-bar > .bar {
+    position: absolute;
+}
+
+#loading-bar-spinner {
+    position: absolute;
+}
