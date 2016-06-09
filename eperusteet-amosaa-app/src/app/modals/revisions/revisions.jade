@@ -6,11 +6,10 @@ mixin searchbox(model, label, placeholder, onChange)
 
 
 div.modal-header
-  h2.pull-left(kaanna="'versio-historia'")
+  h2.pull-left(ng-bind="'versio-historia' | kaanna")
   .pull-right
     +kielivalitsin
   .clearfix
-  h2(ng-bind="'versio-historia' | kaanna")
 
 div.modal-body
   .history-search
