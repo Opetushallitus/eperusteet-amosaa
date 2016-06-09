@@ -7,7 +7,7 @@ namespace KoodistoModal {
     export const koodi = (koodisto, valitut = []) => i.$uibModal.open({
             resolve: { },
             templateUrl: "modals/koodisto/koodisto.jade",
-            controller: ($scope, $state, $uibModalInstance) => {
+            controller: ($scope, $state, $stateParams, $uibModalInstance) => {
                 $scope.koodisto = _(koodisto)
                     .groupBy((koodi: any) => _.first(koodi.uri.split("_")))
                     .mapValues((arr: Array<any>) => _.sortBy(arr, "uri"))
@@ -33,9 +33,17 @@ namespace KoodistoModal {
                     .filter(valittu => $scope.valitut[valittu])
                     .value());
                 $scope.peruuta = $uibModalInstance.dismiss;
+
+                // Kielivalitsin
+                $scope.langs = KieliService.getSisaltokielet();
+                $scope.currentLang = $stateParams.lang;
+                $scope.selectLang = (lang) => {
+                    $scope.currentLang = lang;
+                    KieliService.setSisaltokieli(lang);
+                };
             }
         }).result;
-};
+}
 
 
 angular.module("app")

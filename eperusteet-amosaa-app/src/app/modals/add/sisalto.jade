@@ -1,9 +1,12 @@
 div.modal-header
-  h2(ng-show="obj.tyyppi === 'tutkinnonosa'" kaanna="'otsikko-tutkinnonosa'")
-  h2(ng-show="obj.tyyppi === 'tutkinnonosaryhma'" kaanna="'otsikko-tutkinnonosaryhma'")
-  h2(ng-show="obj.tyyppi === 'suorituspolku'" kaanna="'otsikko-suorituspolku'")
-  h2(ng-show="obj.tyyppi === 'tekstikappale'" kaanna="'otsikko-tekstikappale'")
-  h2(ng-show="!obj.tyyppi" kaanna="'lisaa-sisaltoa'")
+  h2.pull-left(ng-show="obj.tyyppi === 'tutkinnonosa'" kaanna="'otsikko-tutkinnonosa'")
+  h2.pull-left(ng-show="obj.tyyppi === 'tutkinnonosaryhma'" kaanna="'otsikko-tutkinnonosaryhma'")
+  h2.pull-left(ng-show="obj.tyyppi === 'suorituspolku'" kaanna="'otsikko-suorituspolku'")
+  h2.pull-left(ng-show="obj.tyyppi === 'tekstikappale'" kaanna="'otsikko-tekstikappale'")
+  h2.pull-left(ng-show="!obj.tyyppi" kaanna="'lisaa-sisaltoa'")
+  .pull-right
+    +kielivalitsin
+  .clearfix
 
 div.modal-body.modal-sisalto
   div.sisalto-valinta(ng-hide="obj.tyyppi")

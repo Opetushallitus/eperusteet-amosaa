@@ -13,7 +13,7 @@ namespace ModalAdd {
                 pohjat: Api => Api.all("opetussuunnitelmat").all("pohjat").getList()
             },
             templateUrl: "modals/add/yhteinen.jade",
-            controller: ($scope, $state, $uibModalInstance, pohjat) => {
+            controller: ($scope, $state, $stateParams, $uibModalInstance, pohjat) => {
                 $scope.pohjat = pohjat;
                 $scope.ok = $uibModalInstance.close;
                 $scope.peruuta = $uibModalInstance.dismiss;
@@ -29,27 +29,49 @@ namespace ModalAdd {
                 if (_.size($scope.pohjat) === 1) {
                     $scope.valitsePohja(_.first($scope.pohjat));
                 }
+
+                // Kielivalitsin
+                $scope.langs = KieliService.getSisaltokielet();
+                $scope.currentLang = $stateParams.lang;
+                $scope.selectLang = (lang) => {
+                    $scope.currentLang = lang;
+                    KieliService.setSisaltokieli(lang);
+                };
             }
         }).result;
 
     export const yleinen = () => i.$uibModal.open({
             resolve: { },
             templateUrl: "modals/add/yleinen.jade",
-            controller: ($scope, $state, $uibModalInstance) => {
+            controller: ($scope, $state, $stateParams, $uibModalInstance) => {
                 $scope.ok = $uibModalInstance.close;
                 $scope.peruuta = $uibModalInstance.dismiss;
                 $scope.ops = { tyyppi: "yleinen" };
+                // Kielivalitsin
+                $scope.langs = KieliService.getSisaltokielet();
+                $scope.currentLang = $stateParams.lang;
+                $scope.selectLang = (lang) => {
+                    $scope.currentLang = lang;
+                    KieliService.setSisaltokieli(lang);
+                };
             }
         }).result;
 
     export const pohja = () => i.$uibModal.open({
             resolve: { },
             templateUrl: "modals/add/pohja.jade",
-            controller: ($scope, $state, $uibModalInstance) => {
+            controller: ($scope, $state, $stateParams, $uibModalInstance) => {
                 $scope.ok = $uibModalInstance.close;
                 $scope.peruuta = $uibModalInstance.dismiss;
                 $scope.pohja = {
                     tyyppi: "pohja"
+                };
+                // Kielivalitsin
+                $scope.langs = KieliService.getSisaltokielet();
+                $scope.currentLang = $stateParams.lang;
+                $scope.selectLang = (lang) => {
+                    $scope.currentLang = lang;
+                    KieliService.setSisaltokieli(lang);
                 };
             }
         }).result;
@@ -59,7 +81,7 @@ namespace ModalAdd {
                 perusteet: Eperusteet => Eperusteet.one("perusteet").get() // FIXME paginointihärveli
             },
             templateUrl: "modals/add/opetussuunnitelma.jade",
-            controller: ($scope, $state, $uibModalInstance, perusteet) => {
+            controller: ($scope, $state, $stateParams, $uibModalInstance, perusteet) => {
                 $scope.perusteet = filterPerusteet(perusteet.data);
                 $scope.peruste = undefined;
                 $scope.ops = {
@@ -79,14 +101,21 @@ namespace ModalAdd {
                     $scope.input = "";
                     $scope.peruste = peruste;
                     $scope.ops.perusteDiaarinumero = peruste.diaarinumero;
-                }
+                };
+                // Kielivalitsin
+                $scope.langs = KieliService.getSisaltokielet();
+                $scope.currentLang = $stateParams.lang;
+                $scope.selectLang = (lang) => {
+                    $scope.currentLang = lang;
+                    KieliService.setSisaltokieli(lang);
+                };
             }
         }).result;
 
     export const sisaltoAdder = (sallitut = ["tekstikappale"]) => i.$uibModal.open({
             resolve: { },
             templateUrl: "modals/add/sisalto.jade",
-            controller: ($uibModalInstance, $scope, $state) => {
+            controller: ($uibModalInstance, $scope, $stateParams) => {
                 $scope.sallitut = sallitut;
                 $scope.valittu = undefined;
 
@@ -99,6 +128,14 @@ namespace ModalAdd {
                     };
                 };
                 $scope.ok = $uibModalInstance.close;
+
+                // Kielivalitsin
+                $scope.langs = KieliService.getSisaltokielet();
+                $scope.currentLang = $stateParams.lang;
+                $scope.selectLang = (lang) => {
+                    $scope.currentLang = lang;
+                    KieliService.setSisaltokieli(lang);
+                };
             }
         }).result;
 }

@@ -162,3 +162,15 @@ mixin toggler(field, yes, no)
   span.toggler(ng-click=field + " = !" + field)
     span.bubble(ng-class="{ 'active': " + field + " }" kaanna=no)
     span.bubble(ng-class="{ 'active': !" + field + " }" kaanna=yes)
+
+mixin kielivalitsin
+  span.dropdown.kielivalitsin(uib-dropdown)
+    a.dropdown-toggle(uib-dropdown-toggle)
+      +gicon("flag")
+      span=" "
+      span(ng-bind="currentLang | kaanna")
+      span=" "
+      span.caret
+    ul.dropdown-menu.dropdown-menu-right(uib-dropdown-menu)
+      li(ng-repeat="kieli in langs" ng-class="{'active': currentLang === kieli}")
+        a(href="" kaanna="kieli" ng-click="selectLang(kieli)")

@@ -10,16 +10,7 @@ div.ylanavi(sticky className="ylanavi-sticky")
             span(kaanna="muru.name")
     div.col-xs-4
       div.pull-right
-        span.dropdown.kielivalitsin(uib-dropdown)
-          a.dropdown-toggle(uib-dropdown-toggle)
-            +gicon("flag")
-            span=" "
-            span(ng-bind="currentLang | kaanna")
-            span=" "
-            span.caret
-          ul.dropdown-menu.dropdown-menu-right(uib-dropdown-menu)
-            li(ng-repeat="kieli in langs" ng-class="{'active': currentLang === kieli}")
-              a(href="" kaanna="kieli" ng-click="selectLang(kieli)")
+        +kielivalitsin
       div.pull-right
         span.ohje.popover-element.fa-stack.fa-lg(
           style="color: #199dd0;"

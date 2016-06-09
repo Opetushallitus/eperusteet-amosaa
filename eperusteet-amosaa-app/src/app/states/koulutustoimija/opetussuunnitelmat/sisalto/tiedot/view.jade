@@ -9,22 +9,23 @@
     "restoreNew()")
   .tekstit
     .container-fluid
-      h3(kaanna="'tiedot'")
-      +formfield("'nimi'")
-        +ekinput("ops.nimi")
+      h1(kaanna="'tiedot'")
+      .kohdat
+        +formfield("'nimi'")
+          +ekinput("ops.nimi")
 
-      +formfield("'tiivistelma'")
-        +ekeditor("ops.kuvaus", "simplified")
+        +formfield("'tiivistelma'")
+          +ekeditor("ops.kuvaus", "simplified")
 
-      span(ng-show="ops.tyyppi !== 'pohja'")
-        +formfield("'paatosnumero'")
-          +ekstring("ops.paatosnumero")
+        span(ng-show="ops.tyyppi !== 'pohja'")
+          +formfield("'paatosnumero'")
+            +ekstring("ops.paatosnumero")
 
-        +formfield("'hyvaksyja'")
-          +ekstring("ops.hyvaksyja")
+          +formfield("'hyvaksyja'")
+            +ekstring("ops.hyvaksyja")
 
-        +formfield("'paatospvm'")
-          +ekdate("ops.paatospaivamaara", "'paatospvm'")
+          +formfield("'paatospvm'")
+            +ekdate("ops.paatospaivamaara", "'paatospvm'")
 
-        +formfield("'voimaantulopvm'")
-          +ekdate("ops.voimaantulo", "'voimaantulopvm'")
+          +formfield("'voimaantulopvm'")
+            +ekdate("ops.voimaantulo", "'voimaantulopvm'")

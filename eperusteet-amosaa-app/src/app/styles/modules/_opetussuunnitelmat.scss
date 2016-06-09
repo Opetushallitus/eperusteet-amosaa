@@ -246,10 +246,16 @@ $ops-top-vertical-margin: 10px;
             }
 
             .tiedot {
+                h1 {
+                    margin-bottom: 16px;
+                    margin-top: 16px;
+                }
                 .tekstit {
                     margin: 0 -1 * ($grid-gutter-width / 2);
-                    span {
-                        color: gray;
+                    .kohdat {
+                        span {
+                            color: gray;
+                        }
                     }
                 }
             }

@@ -6,7 +6,10 @@ mixin searchbox(model, label, placeholder, onChange)
 
 
 div.modal-header
-  h2(kaanna="'versio-historia'")
+  h2.pull-left(kaanna="'versio-historia'")
+  .pull-right
+    +kielivalitsin
+  .clearfix
 
 div.modal-body
   .history-search
@@ -15,8 +18,7 @@ div.modal-body
   .history-list
     .history-item(ng-repeat="revision in revisions")
       .hi-topic(ng-click="toggle(revision)")
-        span.hi-id
-          a(href="" ng-click="ok(revision.id)" ng-bind="revision.$$number")
+        a.hi-id(href="" ng-click="ok(revision.id)" ng-bind="revision.$$number")
         span.hi-muokkaaja(ng-bind="revision.muokkaaja")
         span.hi-aikaleima(ng-bind="revision.date | aikaleima")
       .hi-kommentti(ng-show="revision.kommentti")

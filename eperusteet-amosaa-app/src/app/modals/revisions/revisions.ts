@@ -9,7 +9,7 @@ namespace ModalRevisions {
             revisions: () => revisions
         },
         templateUrl: "modals/revisions/revisions.jade",
-        controller: ($uibModalInstance, $scope, $state, revisions) => {
+        controller: ($uibModalInstance, $scope, $state, $stateParams, revisions) => {
             _.each(revisions, (rev, idx: number) => rev.$$number = _.size(revisions) - idx);
 
             $scope.update = (search) => {
@@ -27,6 +27,14 @@ namespace ModalRevisions {
             $scope.ok = $uibModalInstance.close;
 
             $scope.update();
+
+            // Kielivalitsin
+            $scope.langs = KieliService.getSisaltokielet();
+            $scope.currentLang = $stateParams.lang;
+            $scope.selectLang = (lang) => {
+                $scope.currentLang = lang;
+                KieliService.setSisaltokieli(lang);
+            };
         }
     }).result;
 

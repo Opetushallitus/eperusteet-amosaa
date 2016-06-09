@@ -31,7 +31,7 @@ angular.module("app")
                         ktId: kayttajanKoulutustoimijat[0].id
                     });
                 }
-            },
+            }
         },
         notifikaatiot: {
             templateUrl: "components/notifikaatiot/notifikaatiot.jade",
@@ -39,13 +39,6 @@ angular.module("app")
         },
         ylanavi: {
             controller: ($rootScope, $scope, $state, $stateParams) => {
-                $scope.langs = KieliService.getSisaltokielet();
-                $scope.currentLang = $stateParams.lang;
-                $scope.selectLang = (lang) => {
-                    $scope.currentLang = lang;
-                    KieliService.setSisaltokieli(lang);
-                };
-
                 $scope.$on("help:updated", (event, helpUrl) => $scope.helpUrl = helpUrl);
                 $scope.$on("$stateChangeStart", (event, helpUrl) => $scope.helpUrl = undefined);
                 $scope.$on("$stateChangeSuccess", (event, toState, toParams, fromState, fromParams) => {
@@ -63,6 +56,14 @@ angular.module("app")
                         .slice(1);
                 });
                 OhjeService.updateHelp($state.current.name);
+
+                // Kielivalitsin
+                $scope.langs = KieliService.getSisaltokielet();
+                $scope.currentLang = $stateParams.lang;
+                $scope.selectLang = (lang) => {
+                    $scope.currentLang = lang;
+                    KieliService.setSisaltokieli(lang);
+                };
             }
         },
         footer: {
