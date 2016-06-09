@@ -19,23 +19,22 @@ div.kasitteet.subtle-transition
           tr
             th
               a(href="" ng-click="sortBy = 'termi'; sortReverse = !sortReverse")
-                span(kaanna="'termi'")
+                span(ng-bind="'termi' | kaanna")
                 span(ng-show="sortBy ==='termi'")=" "
                   span.glyphicon.glyphicon-sort-by-alphabet-alt(ng-show="sortReverse")
                   span.glyphicon.glyphicon-sort-by-alphabet(ng-show="!sortReverse")
             th
               a(href="")
-                span(kaanna="'selitys'")
+                span(ng-bind="'selitys' | kaanna")
             th
               a(href="" ng-click="sortBy = 'alaviite'; sortReverse = !sortReverse; sortByAlaviite(sortReverse)")
-                span(kaanna="'alaviite'")
+                span(ng-bind="'alaviite' | kaanna")
                 span(ng-show="sortBy ==='alaviite'")=" "
                   span.glyphicon.glyphicon-sort
             th
         tbody
           tr.kasite-placeholder-row(ui-view="uusi_kasite_row" oikeustarkastelu)
-          tr(ng-repeat="kasite in kasitteet " +
-          "| limitTo:alkioitaSivulla:(sivu - 1) * alkioitaSivulla | filter: hakuSana | orderBy:sortType:sortReverse")
+          tr(ng-repeat="kasite in kasitteet | limitTo:alkioitaSivulla:(sivu - 1) * alkioitaSivulla | filter: hakuSana | orderBy:sortType:sortReverse")
             td(width="20%")
               div(ng-if="$$ekEditing && $$ekEditingIndex === $index")
                 input.form-control(slocalized ng-model="kasite.termi" type="text" required=true)
@@ -60,8 +59,9 @@ div.kasitteet.subtle-transition
 
   nav.text-center
     uib-pagination(
-      ng-model="sivu",
-      total-items="kasitteet.length",
-      items-per-page="alkioitaSivulla",
-      force-ellipses="true",
+      ng-model="sivu"
+      total-items="kasitteet.length"
+      items-per-page="alkioitaSivulla"
+      max-size="10"
+      force-ellipses="true"
       direction-links="false")

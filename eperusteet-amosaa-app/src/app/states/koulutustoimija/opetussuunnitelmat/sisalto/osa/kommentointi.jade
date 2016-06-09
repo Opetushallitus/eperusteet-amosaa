@@ -4,8 +4,8 @@ mixin kirjoita-kommentti(kommentti, tallenna, peruuta)
   span.kommentti-ylitys(ng-show=kommentti + ".$$sisaltoKlooni.length >= $$kommenttiMaxLength.maara") {{ "kommentti-ei-saa-ylittaa" | kaanna:$$kommenttiMaxLength }}
 
   div.pull-right
-    button.btn.btn-default(kaanna="'peruuta'" ng-click=peruuta)
-    button.btn.btn-primary(kaanna="'tallenna'" ng-click=tallenna)
+    button.btn.btn-default(ng-bind="'peruuta' | kaanna" ng-click=peruuta)
+    button.btn.btn-primary(ng-bind="'tallenna' | kaanna" ng-click=tallenna)
 
 mixin kommentti(kommentti, ...tyyppi)
   div(class="kommentti " + tyyppi)
@@ -27,12 +27,12 @@ mixin kommentti(kommentti, ...tyyppi)
         span(ng-bind=kommentti + ".nimi")
 
       p.kommentti-muokattu
-        strong(kaanna="'lahetetty'")
+        strong(ng-bind="'lahetetty' | kaanna")
         span=" "
         span(ng-bind=kommentti + ".luotu | aikaleima")
         span(ng-show=kommentti + ".muokattu !== " + kommentti + ".luotu")
           span=" ("
-          strong(kaanna="'muokattu'")
+          strong(ng-bind="'muokattu' | kaanna")
           span=" "
           span(ng-bind=kommentti + ".muokattu | aikaleima")
           span=")"
@@ -46,7 +46,7 @@ mixin kommentti(kommentti, ...tyyppi)
       p.kommentti-footer
         a(href=""
           ng-click=kommentti + ".$$isVastaus = !" + kommentti + ".$$isVastaus"
-          kaanna="'vastaa'"
+          ng-bind="'vastaa' | kaanna"
           ng-hide="'" + kommentti + "' === 'lapsi'"
           ng-class="$$ekEditing ? 'inactive' : ''")
 
@@ -59,17 +59,17 @@ mixin kommentti(kommentti, ...tyyppi)
 mixin kommentti-poistettu(kommentti, ...tyyppi)
   div(class="kommentti-poistettu " + tyyppi)
     p
-      strong(kaanna="'viesti-poistettu'")
+      strong(ng-bind="'viesti-poistettu' | kaanna")
       span=" "
       span(ng-bind=kommentti + ".muokattu | aikaleima")
 
 div.kommentointi
-  h1(kaanna="keskustelu")
+  h1(ng-bind="keskustelu | kaanna")
 
   a(href="" ng-click="uusi.$$isVastaus = !uusi.$$isVastaus" ng-hide="uusi.$$isVastaus" ng-class="$$ekEditing ? 'inactive' : ''")
     +icon("plus")
     span=" "
-    span(kaanna="'lisaa-kommentti'")
+    span(ng-bind="'lisaa-kommentti' | kaanna")
   div.kommentti-uusi(ng-if="uusi.$$isVastaus")
     +kirjoita-kommentti("uusi", "lisaaKommentti(uusi)", "uusi.$$isVastaus = false")
   div.clearfix

@@ -51,6 +51,7 @@
     "d3": "3.5.14",
     "font-awesome": "4.5.0",
     "jquery-sticky": "1.0.3",
-    "restangular": "1.5.1"
+    "restangular": "1.5.1",
+    "spin.js": "^2.3.2"
   }
 }

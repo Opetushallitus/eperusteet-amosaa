@@ -1,6 +1,6 @@
 mixin eiKoulutustoimijoita()
-  h3(kaanna="'virhe-ei-koulutustoimijoita-otsikko'")
-  p(kaanna="'virhe-ei-koulutustoimijoita'")
+  h3(ng-bind="'virhe-ei-koulutustoimijoita-otsikko' | kaanna")
+  p(ng-bind="'virhe-ei-koulutustoimijoita' | kaanna")
   div(style="text-align: center")
     div(class="fa fa-frown-o sad-face")
 

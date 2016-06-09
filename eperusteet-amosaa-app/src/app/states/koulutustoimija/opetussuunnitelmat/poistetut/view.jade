@@ -16,44 +16,44 @@ div.poistetut.subtle-transition
           tr
             th
               a(href="", ng-click="vaihdaJarjestys('nimi')")
-                span(kaanna="'poistettu-otsikko'")
+                span(ng-bind="'poistettu-otsikko' | kaanna")
                 span(ng-show="jarjestys==='nimi'")=" "
                   span.glyphicon.glyphicon-sort-by-alphabet-alt(ng-show="jarjestysKaanteinen")
                   span.glyphicon.glyphicon-sort-by-alphabet(ng-show="!jarjestysKaanteinen")
             th
               a(href="", ng-click="vaihdaJarjestys('tyyppi')")
-                span(kaanna="'tyyppi'")
+                span(ng-bind="'tyyppi' | kaanna")
                 span(ng-show="jarjestys==='tyyppi'")=" "
                   span.glyphicon.glyphicon-sort-by-alphabet-alt(ng-show="jarjestysKaanteinen")
                   span.glyphicon.glyphicon-sort-by-alphabet(ng-show="!jarjestysKaanteinen")
             th
               a(href="", ng-click="vaihdaJarjestys('poistaja')")
-                span(kaanna="'poistaja'")
+                span(ng-bind="'poistaja' | kaanna")
                 span(ng-show="jarjestys==='poistaja'")=" "
                   span.glyphicon.glyphicon-sort-by-alphabet-alt(ng-show="jarjestysKaanteinen")
                   span.glyphicon.glyphicon-sort-by-alphabet(ng-show="!jarjestysKaanteinen")
             th
               a(href="", ng-click="vaihdaJarjestys('poistoAika')")
-                span(kaanna="'poistopaivamaara'")
+                span(ng-bind="'poistopaivamaara' | kaanna")
                 span(ng-show="jarjestys==='poistoAika'")=" "
                   span.glyphicon.glyphicon-sort-by-attributes-alt(ng-show="jarjestysKaanteinen")
                   span.glyphicon.glyphicon-sort-by-attributes(ng-show="!jarjestysKaanteinen")
             th
               a(href="")
-                span(kaanna="'toiminnot'")
+                span(ng-bind="'toiminnot' | kaanna")
         tbody
           tr(ng-show="suodata(poistettu)" ng-repeat="poistettu in suodatetut = (poistetut " +
             "| filter:nimi) " +
             "| limitTo:alkioitaSivulla:(sivu - 1) * alkioitaSivulla " +
             "| orderBy:jarjestys:jarjestysKaanteinen")
 
-            td(kaanna="poistettu.nimi")
+            td(ng-bind="poistettu.nimi | kaanna")
             td(ng-bind="'poistotyyppi-' + poistettu.tyyppi | kaanna")
             td(ng-bind="poistettu.muokkaajaOid")
             td(ng-bind="poistettu.pvm | aikaleima")
             td
               button.btn.btn-sm.btn-warning(ng-click="palauta(poistettu)" oikeustarkastelu="muokkaus")
-                span(kaanna="'palauta'")
+                span(ng-bind="'palauta' | kaanna")
                 
 
 

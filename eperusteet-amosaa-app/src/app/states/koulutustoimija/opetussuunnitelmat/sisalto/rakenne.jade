@@ -4,5 +4,6 @@ div
       div.sisalto-item
         div.sisalto-handle
           +icon("arrows-v")
-        div.sisalto-nimi(kaanna="child.$$obj.tekstiKappale.nimi")
+        div.sisalto-nimi(ng-bind="child.$$obj.tekstiKappale.nimi | kaanna")
       dynamic(template="states/koulutustoimija/opetussuunnitelmat/sisalto/rakenne.jade" ng-model="child" misc="misc" depth="depth + 1")
+

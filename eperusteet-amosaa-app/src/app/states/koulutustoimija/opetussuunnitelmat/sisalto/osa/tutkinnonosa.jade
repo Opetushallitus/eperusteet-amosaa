@@ -1,6 +1,6 @@
 mixin paikallinenKoodi()
   div(ng-show="$$ekEditing")
-    h3(kaanna="'koodi'")
+    h3(ng-bind="'koodi' | kaanna")
     input.form-control(type="number" min="1000" max="9999" ng-maxlength="4" ng-model="osa.tosa.omatutkinnonosa.koodi")
 
 
@@ -30,9 +30,9 @@ mixin vaatimuksenKohde()
       input.form-control(type="text" ng-model="vaatimuksenKohde.selite" slocalized placeholder="{{ 'vaatimuksen-kohteen-selite' | kaanna }}")
 
     h4(ng-if="!$$ekEditing")
-      span(ng-if="vaatimuksenKohde.otsikko" kaanna="vaatimuksenKohde.otsikko")
+      span(ng-if="vaatimuksenKohde.otsikko" ng-bind="vaatimuksenKohde.otsikko | kaanna")
     p(ng-if="!$$ekEditing")
-      span(ng-if="vaatimuksenKohde.selite" kaanna="vaatimuksenKohde.selite")
+      span(ng-if="vaatimuksenKohde.selite" ng-bind="vaatimuksenKohde.selite | kaanna")
 
     .row(ng-if="$$ekEditing")
       .col-xs-11.col-xs-push-1
@@ -43,7 +43,7 @@ mixin vaatimuksenKohde()
     div(ng-if="!$$ekEditing")
       ul
         li(ng-repeat="vaatimus in vaatimuksenKohde.vaatimukset")
-          span(kaanna="vaatimus.selite")
+          span(ng-bind="vaatimus.selite | kaanna")
           span=" ({{ vaatimus.ammattitaitovaatimusKoodi }})"
 
     .painikkeet(ng-if="$$ekEditing")
@@ -57,7 +57,7 @@ mixin ammattitaitovaatimus()
   .box-panel
     .box-panel-title
       h3(ng-if="!$$ekEditing")
-        span(ng-if="ammattitaitovaatimus.otsikko" kaanna="ammattitaitovaatimus.otsikko")
+        span(ng-if="ammattitaitovaatimus.otsikko" ng-bind="ammattitaitovaatimus.otsikko | kaanna")
 
       .input-group(ng-if="$$ekEditing")
         input.form-control(type="text"
@@ -79,7 +79,7 @@ mixin ammattitaitovaatimus()
       button.btn.btn-primary(ng-if="$$ekEditing" ng-click="lisaaVaatimuksenKohde(ammattitaitovaatimus)")
         +icon("plus")
         span=" "
-        span(kaanna="'lisaa-arviointi-kohde'")
+        span(ng-bind="'lisaa-arviointi-kohde' | kaanna")
 
 
 mixin kriteeri()
@@ -105,19 +105,19 @@ mixin arviointiKohde()
       input.form-control(type="text" ng-model="arviointiKohde.selite" slocalized placeholder="{{ 'arvioinnin-kohteen-selite' | kaanna }}")
 
     h4(ng-if="!$$ekEditing")
-      span(ng-if="arviointiKohde.otsikko" kaanna="arviointiKohde.otsikko")
+      span(ng-if="arviointiKohde.otsikko" ng-bind="arviointiKohde.otsikko | kaanna")
     p(ng-if="!$$ekEditing")
-      span(ng-if="arviointiKohde.selite" kaanna="arviointiKohde.selite")
+      span(ng-if="arviointiKohde.selite" ng-bind="arviointiKohde.selite | kaanna")
 
 
     .table-responsive
       table.table.table-striped.table-condensed
         tbody
           tr(ng-repeat="(index, osaamistasonKriteeri) in arviointiKohde.osaamistasonKriteerit")
-            td(kaanna="arviointiAsteikot[pa.arviointiasteikko(arviointiKohde) - 1].osaamistasot[index].otsikko")
+            td(ng-bind="arviointiAsteikot[pa.arviointiasteikko(arviointiKohde) - 1].osaamistasot[index].otsikko | kaanna")
             td
               ul(ng-if="!$$ekEditing")
-                li(kaanna="kriteeri" ng-repeat="kriteeri in osaamistasonKriteeri.kriteerit")
+                li(ng-bind="kriteeri | kaanna" ng-repeat="kriteeri in osaamistasonKriteeri.kriteerit")
 
               div(ng-if="$$ekEditing")
                 .osaamistason-kriteerit(ui-sortable="sortableOptionsOsaamistasonKriteerit"
@@ -141,15 +141,15 @@ mixin arviointiAsteikko()
     .painikkeet
       button.btn.btn-danger(type='button'
                              ng-click="arvioinninKohdealue.$$uusiAuki = !arvioinninKohdealue.$$uusiAuki"
-                             ng-show="arvioinninKohdealue.$$uusiAuki" kaanna="'peruuta'")
-      button.btn.btn-default(type='button' ng-click="lisaaArviointiasteikko(arvioinninKohdealue)" kaanna="'lisaa'")
+                             ng-show="arvioinninKohdealue.$$uusiAuki" ng-bind="'peruuta' | kaanna")
+      button.btn.btn-default(type='button' ng-click="lisaaArviointiasteikko(arvioinninKohdealue)" ng-bind="'lisaa' | kaanna")
 
 
 mixin arviointi()
   .box-panel
     .box-panel-title
       h3(ng-if="!$$ekEditing && arvioinninKohdealue.otsikko.fi !== 'automaattinen'")
-        span(ng-if="arvioinninKohdealue.otsikko" kaanna="arvioinninKohdealue.otsikko")
+        span(ng-if="arvioinninKohdealue.otsikko" ng-bind="arvioinninKohdealue.otsikko | kaanna")
 
       .input-group(ng-if="$$ekEditing")
         input.form-control(type="text"
@@ -173,26 +173,26 @@ mixin arviointi()
       button.btn.btn-primary(ng-if="$$ekEditing" ng-click="lisaaArviointiKohde(arvioinninKohdealue)" ng-hide="arvioinninKohdealue.$$uusiAuki")
         +icon("plus")
         span=" "
-        span(kaanna="'lisaa-arviointi-kohde'")
+        span(ng-bind="'lisaa-arviointi-kohde' | kaanna")
 
 
 mixin tosaToteutus()
   div.toteutukset
     div(ng-if="$$ekEditing")
       div
-        h1(kaanna="'toteutus'")
+        h1(ng-bind="'toteutus' | kaanna")
 
-        h2(kaanna="'osaamisen-osoittaminen'")
+        h2(ng-bind="'osaamisen-osoittaminen' | kaanna")
         div(style="margin-bottom: 16px" ckeditor slocalized ng-model="osa.tosa.osaamisenOsoittaminen" layout="normal")
 
-        h2(kaanna="'toteutukset'")
+        h2(ng-bind="'toteutukset' | kaanna")
 
         div.toolbar
-          button.btn.btn-primary(kaanna="'lisaa-uusi'" ng-click="lisaaUusiToteutus()")
+          button.btn.btn-primary(ng-bind="'lisaa-uusi' | kaanna" ng-click="lisaaUusiToteutus()")
 
         div(ng-hide="osa.tosa.toteutukset.length > 0")
           div.alert.alert-info
-            span(kaanna="'tutkinnon-osalle-ei-maaritelty-paikallisia-toteutuksia'")
+            span(ng-bind="'tutkinnon-osalle-ei-maaritelty-paikallisia-toteutuksia' | kaanna")
 
         .clearfix
 
@@ -207,7 +207,7 @@ mixin tosaToteutus()
                   +gicon("sort")
             div.toteutus-content(ng-if="toteutus.$$nayta")
               div.osaamisalatieto(ng-show="toteutus.osaamisalaKoodi")
-                span(kaanna="'osaamisalat-joihin-vaikutusta'")
+                span(ng-bind="'osaamisalat-joihin-vaikutusta' | kaanna")
                 span(style="margin-right: 6px")
                   |:
                 span(ng-
@@ -219,13 +219,13 @@ mixin tosaToteutus()
                   table.table.table-striped(ng-if="toteutus.koodit.length > 0")
                     thead
                       tr
-                        th(kaanna="'koodi'")
-                        th(kaanna="'nimi'")
+                        th(ng-bind="'koodi' | kaanna")
+                        th(ng-bind="'nimi' | kaanna")
                     tbody
                       tr(ng-repeat="koodi in toteutus.koodit")
                         td(ng-if="koodistoTiedot[koodi]" ng-bind="koodistoTiedot[koodi].arvo")
                         td(ng-if="koodistoTiedot[koodi]" ng-bind="koodistoTiedot[koodi].nimi | kaanna")
-                  button.btn.btn-primary(ng-disabled="koodit.length === 0" ng-click="addKoodi(toteutus)" kaanna="'muokkaa-koodeja'")
+                  button.btn.btn-primary(ng-disabled="koodit.length === 0" ng-click="addKoodi(toteutus)" ng-bind="'muokkaa-koodeja' | kaanna")
 
               +contentToggler("$$showTavatjaymparisto", "'tavat-ja-ymparisto'")
                 div(ckeditor slocalized ng-model="toteutus.tavatjaymparisto.teksti" layout="normal")
@@ -241,7 +241,7 @@ mixin tosaToteutus()
 
       div(ng-hide="osa.tosa.toteutukset.length > 0")
         div.alert.alert-info
-          span(kaanna="'tutkinnon-osalle-ei-maaritelty-paikallisia-toteutuksia'")
+          span(ng-bind="'tutkinnon-osalle-ei-maaritelty-paikallisia-toteutuksia' | kaanna")
 
       div.toteutus-esitys(ng-repeat="toteutus in osa.tosa.toteutukset")
         div
@@ -254,8 +254,8 @@ mixin tosaToteutus()
                 table.table.table-striped
                   thead
                     tr
-                      th(kaanna="'koodi'")
-                      th(kaanna="'nimi'")
+                      th(ng-bind="'koodi' | kaanna")
+                      th(ng-bind="'nimi' | kaanna")
                   tbody
                     tr(ng-repeat="koodi in toteutus.koodit")
                       td(ng-if="koodistoTiedot[koodi]" ng-bind="koodistoTiedot[koodi].arvo")
@@ -276,13 +276,13 @@ mixin omaTosaSisalto()
                                ng-model="osa.tosa.omatutkinnonosa.ammattitaitovaatimuksetLista")
         div(ng-repeat="ammattitaitovaatimus in osa.tosa.omatutkinnonosa.ammattitaitovaatimuksetLista")
           +ammattitaitovaatimus
-      button.btn.btn-default(type='button' ng-click="lisaaAmmattitaitovaatimus()" kaanna="'lisaa-ammattitaitovaatimus'")
+      button.btn.btn-default(type='button' ng-click="lisaaAmmattitaitovaatimus()" ng-bind="'lisaa-ammattitaitovaatimus' | kaanna")
     +contentToggler("$$showArviointi", "'arviointi'")
       .arviointi-kohdealueet(ui-sortable="sortableOptionsArvioinninKohdealueet"
                              ng-model="osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet")
         div(ng-repeat="arvioinninKohdealue in osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet")
           +arviointi
-      button.btn.btn-default(type='button' ng-click="lisaaArvioinninKohdealue()" kaanna="'lisaa-kohdealue'")
+      button.btn.btn-default(type='button' ng-click="lisaaArvioinninKohdealue()" ng-bind="'lisaa-kohdealue' | kaanna")
     +contentToggler("$$showAmmattitaidonOsoittamistavat", "'ammattitaidon-osoittamistavat'")
       div(style="margin-bottom: 16px"
           ckeditor slocalized ng-model="osa.tosa.omatutkinnonosa.ammattitaidonOsoittamistavat" layout="normal")
@@ -307,17 +307,17 @@ mixin omaTosaSisalto()
 mixin tutke2osa()
   .tutke2osa
     .valitsin
-      span(kaanna="'osa-alueet'")
+      span(ng-bind="'osa-alueet' | kaanna")
       span(style="margin-right: 5px") :
       span.valitsin-osaalue(ng-repeat="osaAlue in pTosa.osaAlueet")
         span.pipe(ng-hide="$first") |
-        a(href="" kaanna="osaAlue.nimi" ng-click="gotoAnchor('osa-alue-' + osaAlue.id)")
+        a(href="" ng-bind="osaAlue.nimi | kaanna" ng-click="gotoAnchor('osa-alue-' + osaAlue.id)")
     .osa-alue(ng-repeat="osaAlue in pTosa.osaAlueet")
       h1.osa-alue-nimi(id="{{ 'osa-alue-' + osaAlue.id }}")
-        span(kaanna="osaAlue.nimi")
+        span(ng-bind="osaAlue.nimi | kaanna")
         span.koodi ({{ osaAlue.koodiArvo }})
       .osaamistavoite(ng-repeat="osaamistavoite in osaAlue.osaamistavoitteet")
-        h2.osaamistavoite-nimi(kaanna="osaamistavoite.nimi")
+        h2.osaamistavoite-nimi(ng-bind="osaamistavoite.nimi | kaanna")
         +contentToggler("$$showOsaamistavoitteet", "'osaamistavoitteet'")
           +teksti("osaamistavoite.tavoitteet")
         div(ng-repeat="arvioinninKohdealue in osaamistavoite.arviointi.arvioinninKohdealueet")

@@ -4,13 +4,18 @@ namespace SuoritustapaRyhmat {
         i = inject($injector, ["$rootScope", "$uibModal", "$q"]);
     };
 
-    export const editoi = (spRivit, node, tutkinnonosat) => i.$uibModal.open({
-            resolve: { },
+    export const editoi = (spRivit, node, tutkinnonosat, koodisto) => i.$uibModal.open({
+            resolve: {
+            },
             templateUrl: "modals/suoritustaparyhma.jade",
+            size: "lg",
             controller: ($scope, $state, $uibModalInstance, $rootScope) => {
                 $scope.restoreModule = (m) => {
                     $scope.spRivit[m.tunniste] = undefined;
                 };
+
+                $scope.alkioitaSivulla = 10;
+                $scope.sivu = 1;
 
                 $scope.spRivit = spRivit;
                 $scope.tosat = tutkinnonosat;
@@ -19,11 +24,36 @@ namespace SuoritustapaRyhmat {
                     rakennemoduuli: node.tunniste
                 };
 
+                const valitutKoodit = _.indexBy($scope.editable.koodit || [], _.identity);
+
+                koodisto.all("tutkinnonosat").getList()
+                    .then(res => $scope.koodit = _(Koodisto.parseRawKoodisto(res))
+                          .each((koodi: any) => {
+                              koodi.$$valittu = !!valitutKoodit[koodi.uri],
+                              koodi.$$piilotettu = false
+                          })
+                          .sortBy(koodi => KaannaService.kaanna(koodi.nimi))
+                          .value());
+
+                $scope.search = "";
+                $scope.piilotetut = {};
+                $scope.suodata = (search) => {
+                    _.each($scope.koodit, (koodi) => {
+                        koodi.$$piilotettu = !Algoritmit.match(search, koodi.nimi)
+                            && !Algoritmit.match(search, koodi.arvo);
+                    });
+                };
+
                 $scope.ok = () => {
                     $rootScope.$broadcast("notifyCKEditor");
+                    $scope.editable.koodit = _($scope.koodit)
+                        .filter("$$valittu")
+                        .map("uri")
+                        .value();
                     $scope.spRivit[$scope.editable.rakennemoduuli] = $scope.editable;
                     $uibModalInstance.close($scope.spRivit);
                 };
+
                 $scope.peruuta = $uibModalInstance.dismiss;
             }
         }).result;
@@ -331,7 +361,7 @@ angular.module("app")
             controller: ($scope, osa) => {}
         },
         suorituspolku: {
-            controller: ($rootScope, $scope, osa, peruste: REl, pSuoritustavat, pTosat) => {
+            controller: ($q, $rootScope, $scope, osa, peruste: REl, pSuoritustavat, pTosat, koodisto) => {
                 const suoritustapa = Perusteet.getSuoritustapa(pSuoritustavat);
                 const tosat = _.indexBy(pTosat, "id");
                 const tosaViitteet: any = _(_.cloneDeep(Perusteet.getTosaViitteet(suoritustapa)))
@@ -346,6 +376,17 @@ angular.module("app")
                         node.$$poistettu = spRivit[node.tunniste] && spRivit[node.tunniste].piilotettu;
                     });
                     Suorituspolku.calculateRealAmount($scope.perusteRakenne, $scope.misc.tosat, spRivit);
+                    $scope.misc.spRivit = spRivit;
+
+                    $q.all(_($scope.osa.suorituspolku.rivit)
+                        .map("koodit")
+                        .flatten()
+                        .uniq()
+                        .filter((koodi: string) => !$scope.misc.koodinimet[koodi])
+                        .map(koodi => koodisto.one("uri/" + koodi).get())
+                        .value())
+                        .then(Koodisto.parseRawKoodisto)
+                        .then(koodit => _.each(koodit, (koodi) => { $scope.misc.koodinimet[koodi.uri] = koodi; }));
                 };
 
                 $scope.collapsed_dirty = false;
@@ -354,9 +395,10 @@ angular.module("app")
                     collapsed_removed: false,
                     root: $rootScope,
                     suoritustapa: suoritustapa,
+                    koodinimet: {},
                     editNode: (node) => {
                         const spRivit = _.indexBy($scope.osa.suorituspolku.rivit, "rakennemoduuli");
-                        SuoritustapaRyhmat.editoi(spRivit, node, tosaViitteet)
+                        SuoritustapaRyhmat.editoi(spRivit, node, tosaViitteet, koodisto)
                             .then(res => {
                                 $scope.osa.suorituspolku.rivit = _.compact(_.values(res));
                                 update();

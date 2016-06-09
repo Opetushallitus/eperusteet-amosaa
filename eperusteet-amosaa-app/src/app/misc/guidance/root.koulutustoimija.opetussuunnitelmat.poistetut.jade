@@ -1,3 +1,4 @@
 div
-  h3(kaanna="'guidance-poistetut-otsikko'")
-  p(kaanna="'guidance-poistetut-sisalto'")
+  h3(ng-bind="'guidance-poistetut-otsikko' | kaanna")
+  p(ng-bind="'guidance-poistetut-sisalto' | kaanna")
+

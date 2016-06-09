@@ -3,25 +3,27 @@ div.modal-header
   .pull-right
     +kielivalitsin
   .clearfix
+  h2(ng-bind="'lisaa-yhteinen' | kaanna")
 
 div.modal-body.modal-sisalto
   div(ng-hide="pohjat.length > 0")
     div.alert.alert-warning
-      div(kaanna="'yhteisien-osien-pohjia-ei-viela-luotu'")
+      div(ng-bind="'yhteisien-osien-pohjia-ei-viela-luotu' | kaanna")
 
   .content-spacing(ng-show="pohjat.length > 1")
-    h3(kaanna="'valitse-pohja'")
+    h3(ng-bind="'valitse-pohja' | kaanna")
     div.select-list
       div.select-item(ng-repeat="pohja in pohjat" ng-click="valitsePohja(pohja)")
         input.form-control(type="radio" ng-checked="valittuPohja === pohja")
-        div.select-label(kaanna="pohja.nimi")
+        div.select-label(ng-bind="pohja.nimi | kaanna")
 
   .content-spacing(ng-show="valittuPohja")
-    h3(kaanna="'anna-nimi'")
+    h3(ng-bind="'anna-nimi' | kaanna")
     input.form-control(slocalized ng-model="yhteinen.nimi" type="text" required="true")
 
 div.modal-footer
   button.btn.btn-default(ng-click="peruuta()")
-    span(kaanna="'peruuta'")
+    span(ng-bind="'peruuta' | kaanna")
   button.btn.btn-primary(ng-click="ok(yhteinen)")
-    span(kaanna="'lisaa'")
+    span(ng-bind="'lisaa' | kaanna")
+

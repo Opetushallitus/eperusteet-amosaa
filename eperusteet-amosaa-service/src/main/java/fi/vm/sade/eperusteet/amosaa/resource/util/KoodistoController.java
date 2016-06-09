@@ -56,6 +56,13 @@ public class KoodistoController {
         return new ResponseEntity<>(service.get(koodisto, koodi), HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/{koodisto}/haku/{query}", method = GET)
+    public ResponseEntity<List<KoodistoKoodiDto>> query(
+        @PathVariable final String koodisto,
+        @PathVariable final String query) {
+        return new ResponseEntity<>(service.queryByKoodi(koodisto, query), HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/uri/{koodiUri}", method = GET)
     public ResponseEntity<KoodistoKoodiDto> byUri(
         @PathVariable final String koodiUri) {

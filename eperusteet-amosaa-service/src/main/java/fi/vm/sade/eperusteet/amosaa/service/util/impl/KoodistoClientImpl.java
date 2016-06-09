@@ -23,6 +23,7 @@ import fi.vm.sade.eperusteet.amosaa.service.util.KoodistoClient;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
@@ -71,6 +72,15 @@ public class KoodistoClientImpl implements KoodistoClient {
         return splitted.length > 1
                 ? get(splitted[0], uri)
                 : null;
+    }
+
+    @Override
+    @Cacheable("koodistohaku")
+    public List<KoodistoKoodiDto> queryByKoodi(String koodisto, String query) {
+        return getAll(koodisto).stream()
+                .filter(k -> k.getKoodiArvo().contains(query) || Arrays.asList(k.getMetadata()).stream()
+                    .anyMatch(meta -> meta.getNimi().contains(query)))
+                .collect(Collectors.toList());
     }
 
     @Override

@@ -3,6 +3,7 @@ div.modal-header
   .pull-right
     +kielivalitsin
   .clearfix
+  h2(ng-bind="'valitse-koodi' | kaanna")
 
 div.modal-body.modal-koodisto
   div.form-group.has-feedback.has-feedback-left
@@ -16,17 +17,18 @@ div.modal-body.modal-koodisto
           thead
             tr
               th(width="5%")
-              th(width="10%" kaanna="'koodi'")
-              th(kaanna="'nimi'")
+              th(width="10%" ng-bind="'koodi' | kaanna")
+              th(ng-bind="'nimi' | kaanna")
           tbody
             tr(ng-repeat="koodi in koodit" ng-hide="search.length > 0 && piilotetut[koodi.uri]")
               td(style="padding: 4px 0 0 10px;")
                 input(type="checkbox" ng-model="valitut[koodi.uri]")
-              td(kaanna="koodi.arvo" ng-click="valitut[koodi.uri] = !valitut[koodi.uri]" style="cursor: pointer")
-              td(kaanna="koodi.nimi" ng-click="valitut[koodi.uri] = !valitut[koodi.uri]" style="cursor: pointer")
+              td(ng-bind="koodi.arvo | kaanna" ng-click="valitut[koodi.uri] = !valitut[koodi.uri]" style="cursor: pointer")
+              td(ng-bind="koodi.nimi | kaanna" ng-click="valitut[koodi.uri] = !valitut[koodi.uri]" style="cursor: pointer")
 
 div.modal-footer
   button.btn.btn-default(ng-click="peruuta()")
-    span(kaanna="'peruuta'")
+    span(ng-bind="'peruuta' | kaanna")
   button.btn.btn-primary(ng-click="ok()")
-    span(kaanna="'valitse'")
+    span(ng-bind="'valitse' | kaanna")
+

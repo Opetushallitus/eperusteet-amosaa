@@ -22,6 +22,7 @@
     "./node_modules/angular-ui-select/select.min.js",
     "./node_modules/angular-sanitize/angular-sanitize.min.js",
     "./node_modules/angular-loading-bar/build/loading-bar.min.js",
+    "./node_modules/spin.js/spin.min.js",
     "./node_modules/angular-spinner/angular-spinner.min.js",
     "./node_modules/angular-file-upload/dist/angular-file-upload.min.js",
     "./node_modules/bootstrap-sass/assets/javascripts/bootstrap/tooltip.js",

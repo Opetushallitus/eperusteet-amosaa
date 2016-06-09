@@ -1,5 +1,5 @@
 div.modal-header
-  h2(kaanna="'muokkaa-osaa'")
+  h2(ng-bind="'muokkaa-osaa' | kaanna")
 
 
 div.modal-body
@@ -8,8 +8,32 @@ div.modal-body
 
   div(ng-show="node.rooli === 'määrittelemätön'")
     +contentToggler("$$showTosat", "'tutkinnon-osat'")
-      div not implemented yet
-
+      div(ng-if="!koodit")
+        span(ng-bind="'ladataan-koodistoa' | kaanna")
+      div(ng-if="koodit")
+        div.form-group.has-feedback.has-feedback-left
+          input.form-control(ng-change="suodata(search)" type="text" ng-model="search" ng-model-options="{ debounce: 200 }" placeholder="{{ 'etsi-koodistoista' | kaanna }}")
+          i.form-control-feedback.glyphicon.glyphicon-search(style="color: gray;")
+        table.table.table-striped
+          thead
+            tr
+              th(width="5%")
+              th(width="10%" ng-bind="'koodi' | kaanna")
+              th(ng-bind="'nimi' | kaanna")
+          tbody
+            tr(ng-repeat="koodi in koodit | filter:{'$$piilotettu': false} | limitTo:alkioitaSivulla:(sivu - 1) * alkioitaSivulla")
+              td(style="padding: 4px 0 0 10px;")
+                input(type="checkbox" ng-model="koodi.$$valittu")
+              td(ng-bind="koodi.arvo | kaanna" ng-click="koodi.$$valittu = !koodi.$$valittu" style="cursor: pointer")
+              td(ng-bind="koodi.nimi | kaanna" ng-click="koodi.$$valittu = !koodi.$$valittu" style="cursor: pointer")
+        nav.text-center
+          uib-pagination(
+            ng-model="sivu"
+            total-items="koodit.length"
+            max-size="10"
+            items-per-page="alkioitaSivulla"
+            force-ellipses="true"
+            direction-links="false")
 
 // FIXME: Vanha toteutus mitä saatetaan tarvita
 // div.modal-body
@@ -23,15 +47,16 @@ div.modal-body
       span.sisalto-handle
         +icon("arrows-v")
       span(ng-if="module._tutkinnonOsaViite" ng-init="tosa = tosat[module._tutkinnonOsaViite];")
-        span(kaanna="tosa.$$tosa.nimi")
+        span(ng-bind="tosa.$$tosa.nimi | kaanna")
       span(ng-if="!module._tutkinnonOsaViite")
-        span(kaanna="module.nimi")
+        span(ng-bind="module.nimi | kaanna")
       div.sp-tools
         a(href="" ng-click="removeModule(module)")
           span(ng-bind="'palauta' | kaanna")
 
 div.modal-footer
   button.btn.btn-default(ng-click="peruuta()")
-    span(kaanna="'peruuta'")
+    span(ng-bind="'peruuta' | kaanna")
   button.btn.btn-primary(ng-click="ok()")
-    span(kaanna="'tallenna'")
+    span(ng-bind="'tallenna' | kaanna")
+

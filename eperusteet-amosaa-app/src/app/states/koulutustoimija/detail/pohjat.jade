@@ -1,10 +1,10 @@
 div.otsikkotaso.kaikki-opetussuunnitelmat
-  h3(kaanna="'yhteisien-osien-pohjat'")
+  h3(ng-bind="'yhteisien-osien-pohjat' | kaanna")
 
   div(ng-hide="opetussuunnitelmat.length > 0")
     div.alert.alert-info
-      div(kaanna="'yhteisien-osien-pohjia-ei-viela-luotu'")
-      button.btn.btn-primary.pull-right(style="position: relative; top: -26px" kaanna="'lisaa-uusi'" ng-click="addPohja()")
+      div(ng-bind="'yhteisien-osien-pohjia-ei-viela-luotu' | kaanna")
+      button.btn.btn-primary.pull-right(style="position: relative; top: -26px" ng-bind="'lisaa-uusi' | kaanna" ng-click="addPohja()")
 
   div(ng-show="opetussuunnitelmat.length > 0")
     div.row
@@ -19,10 +19,10 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
         // div.checkbox
           label
             input(type="checkbox")
-            span(kaanna="'tarkennettu-haku'")
+            span(ng-bind="'tarkennettu-haku' | kaanna")
       div.col-xs-2
         div.pull-right
-          button.btn.btn-default(kaanna="'lisaa-uusi'" ng-click="addPohja()")
+          button.btn.btn-default(ng-bind="'lisaa-uusi' | kaanna" ng-click="addPohja()")
 
 
     table.table.boxtable
@@ -31,7 +31,7 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
           th
           th
             a(href="#")
-              span(kaanna="'pohjan-nimi'")
+              span(ng-bind="'pohjan-nimi' | kaanna")
               span=" "
               span.glyphicon.glyphicon-sort-by-attributes
           th
@@ -43,7 +43,7 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
           td
             div
               a(href="" ui-sref="root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot({ opsId: ops.id })")
-                span.ellipsis(kaanna="ops.nimi")
+                span.ellipsis(ng-bind="ops.nimi | kaanna")
           td
             div
               a(href="" ui-sref="root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot({ opsId: ops.id })")

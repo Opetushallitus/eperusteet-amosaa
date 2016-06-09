@@ -1,5 +1,5 @@
 div.modal-header
-  h2(kaanna="'lisaa-kayttaja'")
+  h2(ng-bind="'lisaa-kayttaja' | kaanna")
 
 div.modal-body
   div.tutkintohaku
@@ -12,29 +12,29 @@ div.modal-body
 
     div.listaus(ng-show="input.length > 0")
       div.tutkinto(ng-show="perusteet.length > 0" ng-repeat="peruste in perusteet" ng-click="valitsePeruste(peruste)")
-        div.nimi(kaanna="peruste.nimi")
+        div.nimi(ng-bind="peruste.nimi | kaanna")
         div.diaari(ng-bind="peruste.diaarinumero")
       div(ng-show="perusteet.length === 0")
-        span.ei-tuloksia(kaanna="'ei-hakutuloksia'")
+        span.ei-tuloksia(ng-bind="'ei-hakutuloksia' | kaanna")
 
     div.peruste(ng-show="peruste")
       div
-        h4(kaanna="'tutkinto'")
+        h4(ng-bind="'tutkinto' | kaanna")
         span.content.tutkinto-nimi(ng-bind="peruste.nimi | kaanna")
         span=" ("
         span.tutkinto-diaari(ng-bind="peruste.diaarinumero")
         span=")"
       div
-        span.content(kaanna="'voimassa-olo-alkoi'")
+        span.content(ng-bind="'voimassa-olo-alkoi' | kaanna")
         span=": "
         span(ng-bind="peruste.voimassaoloAlkaa | aikaleima:'date'")
       div(ng-if="peruste.voimassaoloLoppuu")
-        span(kaanna="'voimassa-olo-paattyy'")
+        span(ng-bind="'voimassa-olo-paattyy' | kaanna")
         span=": "
         span(ng-bind="peruste.voimassaoloLoppuu | aikaleima:'date'")
 
       div
-        h4(kaanna="'koulutukset'")
+        h4(ng-bind="'koulutukset' | kaanna")
         div.content(ng-repeat="koulutus in peruste.koulutukset")
           span(ng-bind="koulutus.nimi | kaanna")
           span=" ("
@@ -45,14 +45,15 @@ div.modal-body
 
         div(ng-show="$$perusteNaytaLisaa")
           div(ng-if="peruste.osaamisalat.length > 0")
-            h4(kaanna="'osaamisalat'")
+            h4(ng-bind="'osaamisalat' | kaanna")
             p.content(ng-repeat="osaamisala in peruste.osaamisalat"
               ng-bind="osaamisala.nimi | kaanna")
 
-          h4(kaanna="'kuvaus'")
+          h4(ng-bind="'kuvaus' | kaanna")
           p.content(ng-bind="peruste.kuvaus | kaanna")
 
 
 div.modal-footer
-  button.btn.btn-primary(ng-click="ok()", kaanna="'tallenna'")
-  button.btn.btn-default(ng-click="ok()", kaanna="'peruuta'")
+  button.btn.btn-primary(ng-click="ok()", ng-bind="'tallenna' | kaanna")
+  button.btn.btn-default(ng-click="ok()", ng-bind="'peruuta' | kaanna")
+

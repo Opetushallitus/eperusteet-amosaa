@@ -1,3 +1,4 @@
 div
-  h3(kaanna="'guidance-opetussuunnitelmat-otsikko'")
-  p(kaanna="'guidance-opetussuunnitelmat-sisalto'")
+  h3(ng-bind="'guidance-opetussuunnitelmat-otsikko' | kaanna")
+  p(ng-bind="'guidance-opetussuunnitelmat-sisalto' | kaanna")
+

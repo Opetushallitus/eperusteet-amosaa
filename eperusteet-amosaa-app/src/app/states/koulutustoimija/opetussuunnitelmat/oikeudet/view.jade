@@ -15,7 +15,7 @@ div.oikeudet.subtle-transition
       div.checkbox.pull-right
         label
           input(type="checkbox" ng-model="vainOikeudelliset")
-          span(kaanna="'vain-joilla-oikeuksia'")
+          span(ng-bind="'vain-joilla-oikeuksia' | kaanna")
 
   div.row
     div.col-xs-12
@@ -24,11 +24,11 @@ div.oikeudet.subtle-transition
           tr
             th
               a(href="")
-                span(kaanna="'henkilo-nimi'")
+                span(ng-bind="'henkilo-nimi' | kaanna")
                 span(ng-show="jarjestys === 'nimi'")
             th
               a(href="")
-                span(kaanna="'oikeus'")
+                span(ng-bind="'oikeus' | kaanna")
         tbody
           tr(class="{{ (isSelf && 'success') || 'tyyppi-' + oikeus(kayttaja) }}"
             ng-show="suodata(kayttaja) && (!vainOikeudelliset || isSelf || oikeus(kayttaja) !== 'luku')"

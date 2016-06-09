@@ -8,7 +8,7 @@ mixin tilalaatikko(tila, kuvake)
 
 
 div.modal-header
-  h2(kaanna="'vaihda-tilaa'")
+  h2(ng-bind="'vaihda-tilaa' | kaanna")
 
 div.modal-body
   div.tilat
@@ -23,4 +23,5 @@ div.modal-body
 
 div.modal-footer
   button.btn.btn-default(ng-click="peruuta()")
-    span(kaanna="'peruuta'")
+    span(ng-bind="'peruuta' | kaanna")
+

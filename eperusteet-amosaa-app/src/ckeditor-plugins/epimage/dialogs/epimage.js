@@ -76,7 +76,7 @@ CKEDITOR.dialog.add('epimageDialog', function( editor ) {
             '      </div>'+
             '      <div ng-if="model.chosen">'+
             '        <label class="ckeditor-plugin-label">{{ \'epimage-plugin-kuvan-asetukset\' | kaanna }}</label>'+
-            '        <button ng-click="model.chosen = null" class="btn btn-default"><span kaanna="peruuta"></span></button>'+
+            '        <button ng-click="model.chosen = null" class="btn btn-default"><span ng-bind="\'peruuta\' | kaanna"></span></button>'+
             '        <img ng-src="{{ model.chosen.src }}" width="{{ model.chosen.width }}" height="{{ model.chosen.height }}"'+
             '             class="epimage-thumb"></img>'+
             '        <label class="ckeditor-plugin-label">{{ \'epimage-plugin-koko\' | kaanna }}</label>'+

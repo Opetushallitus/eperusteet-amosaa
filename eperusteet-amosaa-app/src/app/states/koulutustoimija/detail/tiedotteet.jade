@@ -6,14 +6,14 @@ mixin author-time-signature
 
 mixin lisaa-uusi-tiedote-btn
   button.btn.btn-primary.pull-right.tiedote-editing-btn(ng-hide="$$ekEditing"
-    ng-if="!creatingNewTiedote" ng-click="setCreationState(true)" kaanna="'lisaa-uusi-tiedote'")
+    ng-if="!creatingNewTiedote" ng-click="setCreationState(true)" ng-bind="'lisaa-uusi-tiedote' | kaanna")
 
 +lisaa-uusi-tiedote-btn
 
 div.row
   div.col-xs-12(ng-if="!creatingNewTiedote")
     div.alert.alert-info(ng-show="tiedotteet.length === 0")
-      span(kaanna="'tiedotteita-ei-ole'")
+      span(ng-bind="'tiedotteita-ei-ole' | kaanna")
 
     div.tiedotteet(ng-repeat="tiedote in tiedotteet")
       div.tiedote.fade-in-out
@@ -44,11 +44,11 @@ div.row
           .tiedote-sisalto.checkbox.abc-checkbox(ng-if="$$ekEditing && $$ekEditingIndex === $index")
             input.styled(type="checkbox" checked="true" ng-model="tiedote.tarkea")
             label
-              strong(kaanna="tarkea")
+              strong(ng-bind="'tarkea' | kaanna")
             span.julkinen-btn-margin-left
               input.styled(type="checkbox" checked="true" ng-model="tiedote.julkinen")
               label
-                strong(kaanna="julkinen")
+                strong(ng-bind="julkinen | kaanna")
 
           .expand(ng-if="!$$ekEditing || $$ekEditingIndex != $index" ng-click="tiedote.$$isOpen = !tiedote.$$isOpen")
             a(href="")

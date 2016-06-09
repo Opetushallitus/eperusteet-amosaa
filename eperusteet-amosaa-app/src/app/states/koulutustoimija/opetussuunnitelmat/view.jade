@@ -8,16 +8,16 @@ div.ops-nakyma
         div.pull-left
           h2(ng-bind="ops.nimi | kaanna")
           div.peruste-nimi(ng-if="ops.tyyppi === 'ops'")
-            p(kaanna="ops.peruste.nimi")
+            p(ng-bind="ops.peruste.nimi | kaanna")
           div.peruste-nimi(ng-if="ops.tyyppi === 'pohja'")
-            p(kaanna="'yhteisien-osien-pohja'")
+            p(ng-bind="'yhteisien-osien-pohja' | kaanna")
 
         div.painikkeet
           div.keskitetty.pull-right
             button.btn.btn-default(disabled)
               span.glyphicon.glyphicon-sunglasses
               span=" "
-              span(kaanna="'esikatselu'")
+              span(ng-bind="'esikatselu' | kaanna")
 
 
   div.row
@@ -25,15 +25,15 @@ div.ops-nakyma
       div.tabit
         ul.nav.nav-tabs
           li(ui-sref-active="active")
-            a(ui-sref=".sisalto" kaanna="'sisalto'")
+            a(ui-sref=".sisalto" ng-bind="'sisalto' | kaanna")
           li(ui-sref-active="active")
-            a(ui-sref=".kasitteet" kaanna="'kasitteet'")
+            a(ui-sref=".kasitteet" ng-bind="'kasitteet' | kaanna")
           li(ui-sref-active="active")
-            a(ui-sref=".poistetut" kaanna="'poistetut'")
+            a(ui-sref=".poistetut" ng-bind="'poistetut' | kaanna")
           li(ui-sref-active="active")
-            a(ui-sref=".oikeudet" kaanna="'oikeudet'" ng-if="ops.tyyppi !== 'pohja'")
+            a(ui-sref=".oikeudet" ng-bind="'oikeudet' | kaanna" ng-if="ops.tyyppi !== 'pohja'")
           li(ui-sref-active="active")
-            a(ui-sref=".dokumentti" kaanna="'dokumentti'" ng-if="ops.tyyppi !== 'pohja'")
+            a(ui-sref=".dokumentti" ng-bind="'dokumentti' | kaanna" ng-if="ops.tyyppi !== 'pohja'")
 
   div.row
     div.col-xs-12

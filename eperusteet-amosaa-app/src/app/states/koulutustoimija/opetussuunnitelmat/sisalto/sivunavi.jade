@@ -17,5 +17,6 @@ div.sivunavi.subtle-transition
     ul
       li
         a(ng-class="{ pakollinen: item.$$obj.pakollinen, liikkumaton: item.$$obj.liikkumaton }"
-          href="" ui-sref-active="active" ui-sref=".tiedot" kaanna="'tiedot'")
+          href="" ui-sref-active="active" ui-sref=".tiedot" ng-bind="'tiedot' | kaanna")
       dynamic(template="states/koulutustoimija/opetussuunnitelmat/sisalto/sivunaviitem.jade" ng-model="sivunavi.lapset" misc="misc")
+

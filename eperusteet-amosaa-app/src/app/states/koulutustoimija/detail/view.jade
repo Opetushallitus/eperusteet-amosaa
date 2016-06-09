@@ -2,7 +2,7 @@ mixin tiedotteet()
   div.tiedotelaatikko(ng-class="{ 'tiedotelaatikko-active': $$showTiedotteet }")
     div.pull-right
       button.btn.btn-primary(href="" ng-click="toggleTiedotteet()")
-        span(kaanna="'tiedotteet'")
+        span(ng-bind="'tiedotteet' | kaanna")
         span.badge(ng-if="tiedotteet.length > 0" style="margin-left: 8px;" ng-bind="tiedotteet.length")
   div.tiedotelistaus(ng-show="$$showTiedotteet" ui-view="tiedotteet")
 
@@ -10,13 +10,13 @@ mixin tiedotteet()
 mixin ktNimi()
   div.koulutustoimija.subtle-transition
     h2.otsikko
-      span(kaanna="koulutustoimija.nimi")
+      span(ng-bind="koulutustoimija.nimi | kaanna")
       span.dropdown(uib-dropdown)
         a.dropdown-toggle(href="" uib-dropdown-toggle)
           i.fa.fa-chevron-down.fa-fw
         ul.dropdown-menu.dropdown-menu-right(uib-dropdown-menu)
           li(ng-repeat="kt in koulutustoimijat" ng-class="{'active': koulutustoimija.id === kt.id}")
-            a(href="" ui-sref="root.koulutustoimija.detail({ ktId: kt.id })" kaanna="kt.nimi")
+            a(href="" ui-sref="root.koulutustoimija.detail({ ktId: kt.id })" ng-bind="kt.nimi | kaanna")
     +tiedotteet()
     block
 

@@ -54,12 +54,12 @@ CKEDITOR.dialog.add('termiDialog', function( editor ) {
             '  <ui-select-choices repeat="termi in filtered track by $index" refresh="filterTermit($select.search)" refresh-delay="0">' +
             '  <span ng-bind-html="termi.termi|kaanna|highlight:$select.search"></span></ui-select-choices>' +
             '</ui-select>' +
-            '<p class="empty-termit" ng-if="termit.length === 0" kaanna="\'ei-termeja\'"></p>' +
+            '<p class="empty-termit" ng-if="termit.length === 0" ng-bind="\'ei-termeja\' | kaanna"></p>' +
             '<div class="termi-plugin-add">' +
             '  <a ng-click="!adding && addNew()">{{\'termi-plugin-lisaa-uusi\'|kaanna}}</a>'+
             '  <div ng-if="adding"><input class="form-control" ng-model="model.newTermi.termi" slocalized>' +
-            '    <button class="btn btn-default" ng-click="cancelNew()" kaanna="peruuta"></button>' +
-            '    <button ng-disabled="!model.newTermi.termi" class="btn btn-primary" ng-click="saveNew()" kaanna="lisaa"></button>' +
+            '    <button class="btn btn-default" ng-click="cancelNew()" ng-bind="'peruuta' | kaanna"></button>' +
+            '    <button ng-disabled="!model.newTermi.termi" class="btn btn-primary" ng-click="saveNew()" ng-bind="'lisaa' | kaanna"></button>' +
             '  </div>' +
             '  <p class="success-message" ng-show="message">{{message|kaanna}}</p>' +
             '</div></div>',

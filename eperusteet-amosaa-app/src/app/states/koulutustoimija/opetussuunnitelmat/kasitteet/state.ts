@@ -23,7 +23,7 @@ angular.module("app")
                 $scope.creatingNewKasite = false;
                 $scope.setCreationState = (val) => $scope.creatingNewKasite = val;
                 $scope.addKasiteToList = (kasite) => $scope.kasitteet.unshift(kasite);
-                $scope.alkioitaSivulla = 20;
+                $scope.alkioitaSivulla = 10;
                 $scope.sivu = 1;
             }
         },

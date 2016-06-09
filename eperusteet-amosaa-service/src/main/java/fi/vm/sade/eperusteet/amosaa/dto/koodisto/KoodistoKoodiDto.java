@@ -29,6 +29,7 @@ import lombok.Setter;
 public class KoodistoKoodiDto {
     private String koodiUri;
     private String koodiArvo;
+    private String voimassaLoppuPvm;
     private KoodistoMetadataDto[] metadata;
     private String voimassaLoppuPvm;
 }

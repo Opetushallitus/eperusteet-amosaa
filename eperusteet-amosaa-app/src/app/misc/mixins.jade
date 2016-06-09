@@ -52,11 +52,11 @@ mixin historia(versio, uusinMuokkaaja, uusinMuokkaus, uusinRevisio, actionEdit, 
     .pull-left
       p
         span
-          b(kaanna="'muokattu'")
+          b(ng-bind="'muokattu' | kaanna")
         span(ng-bind=uusinMuokkaus + " | aikaleima")
       p
         span
-          b(kaanna="'muokkaaja'")
+          b(ng-bind="'muokkaaja' | kaanna")
         span(ng-bind=uusinMuokkaaja)
 
     .pull-right
@@ -64,16 +64,16 @@ mixin historia(versio, uusinMuokkaaja, uusinMuokkaus, uusinRevisio, actionEdit, 
       +editButton(actionEdit)
 
     .pull-right(ng-hide="$$ekEditing" style="margin-top: 7px")
-      a(href="" ng-click=actionRevisions kaanna="'versiohistoria'")
+      a(href="" ng-click=actionRevisions ng-bind="'versiohistoria' | kaanna")
         span(ng-bind=uusinRevisio)
 
   div(ng-show="versio")
     br
     .alert.alert-info(role="alert")
-      div(style="margin-bottom: 10px" kaanna="'tarkastelet-vanhempaa-versiota'")
+      div(style="margin-bottom: 10px" ng-bind="'tarkastelet-vanhempaa-versiota' | kaanna")
       div
-        button.btn.btn-danger(ng-click=actionPalauta kaanna="'ota-versio-kayttoon'")
-        button.btn.btn-default(style="margin-left: 20px;" ng-click=restoreNew kaanna="'palaa-uusimpaan'")
+        button.btn.btn-danger(ng-click=actionPalauta ng-bind="'ota-versio-kayttoon' | kaanna")
+        button.btn.btn-default(style="margin-left: 20px;" ng-click=restoreNew ng-bind="'palaa-uusimpaan' | kaanna")
 
 
 mixin ekdate(model, label)
@@ -137,7 +137,7 @@ mixin plainTeksti(kentta)
 
 
 mixin teksti(kentta)
-  p(style="margin-bottom: 16px" termisto-viitteet=kentta ng-bind-html=kentta + "| kaanna | kuvalinkit | unsafe")
+  p(termisto-viitteet=kentta ng-bind-html=kentta + "| kaanna | kuvalinkit | unsafe")
 
 
 mixin turboChevron(toggleField)

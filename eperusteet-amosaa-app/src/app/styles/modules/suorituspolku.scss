@@ -26,10 +26,6 @@
       text-decoration: line-through;
     }
 
-    .sp-sisalto-unspecified {
-      background-color: #fff4fe;
-    }
-
     .sp-sisalto-tosa {
       .laajuus {
         float: right;
@@ -38,6 +34,13 @@
         right: 6px;
         min-width: 61px;
         text-align: center;
+      }
+    }
+
+    .sp-sisalto-vieras {
+      background-color: #F1F2F3;
+      .sp-toggler {
+        @include sp-toggler(#93278F, #fff)
       }
     }
 
@@ -56,9 +59,50 @@
       }
     }
 
+    .sp-kuvaus-toggler {
+      border-bottom: 1px solid #dBdCdD;
+      background: #F1F2F3;
+      height: 7px;
+      cursor: pointer;
+      text-align: center;
+      vertical-align: middle;
+
+      &:hover {
+        background: #F9FAFB;
+      }
+
+      span {
+        position: relative;
+        top: -9px;
+        user-select: none;
+      }
+    }
+
+    .sp-kuvaus {
+      border-left: 1px solid #dBdCdD;
+      border-right: 1px solid #dBdCdD;
+      margin-bottom: 5px;
+
+      p {
+        margin: 0;
+      }
+
+      .sp-kuvaus-peruste {
+        padding: 4px;
+        background-color: #f9f9f9;
+        font-style: italic;
+        color: #555;
+        margin-bottom: 0px;
+      }
+
+      .sp-kuvaus-oma {
+        padding: 4px;
+        margin-bottom: 0px;
+      }
+    }
+
     .sp-sisalto {
       border: 1px solid #dBdCdD;
-      margin-bottom: 5px;
       height: 30px;
 
       .sp-toolbar {
@@ -111,6 +155,8 @@
     }
 
     .sp-tutkinnonosa {
+      margin-bottom: 5px;
+
       .sp-sisalto-poistettu {
         background-color: #fcffc1 !important;
         text-decoration: line-through;
@@ -123,6 +169,8 @@
     }
 
     .sp-ryhma {
+      margin-bottom: 5px;
+
       .sp-ryhma-lapset {
         margin-left: 30px;
       }

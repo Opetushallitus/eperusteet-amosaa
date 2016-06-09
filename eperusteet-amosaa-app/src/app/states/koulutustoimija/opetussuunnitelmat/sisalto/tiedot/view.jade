@@ -13,6 +13,9 @@
       .kohdat
         +formfield("'nimi'")
           +ekinput("ops.nimi")
+      h3(ng-bind="'tiedot' | kaanna")
+      +formfield("'nimi'")
+        +ekinput("ops.nimi")
 
         +formfield("'tiivistelma'")
           +ekeditor("ops.kuvaus", "simplified")
