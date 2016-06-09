@@ -7,11 +7,6 @@ div.modal-header
   .pull-right
     +kielivalitsin
   .clearfix
-  h2(ng-show="obj.tyyppi === 'tutkinnonosa'" ng-bind="'otsikko-tutkinnonosa' | kaanna")
-  h2(ng-show="obj.tyyppi === 'tutkinnonosaryhma'" ng-bind="'otsikko-tutkinnonosaryhma' | kaanna")
-  h2(ng-show="obj.tyyppi === 'suorituspolku'" ng-bind="'otsikko-suorituspolku' | kaanna")
-  h2(ng-show="obj.tyyppi === 'tekstikappale'" ng-bind="'otsikko-tekstikappale' | kaanna")
-  h2(ng-show="!obj.tyyppi" ng-bind="'lisaa-sisaltoa' | kaanna")
 
 div.modal-body.modal-sisalto
   div.sisalto-valinta(ng-hide="obj.tyyppi")

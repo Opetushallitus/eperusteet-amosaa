@@ -1,9 +1,8 @@
 div.modal-header
-  h2.pull-left(kaanna="'lisaa-pohja'")
+  h2.pull-left(ng-bind="'lisaa-pohja' | kaanna")
   .pull-right
     +kielivalitsin
   .clearfix
-  h2(ng-bind="'lisaa-pohja' | kaanna")
 
 div.modal-body.modal-sisalto
   h3(ng-bind="'anna-nimi' | kaanna")

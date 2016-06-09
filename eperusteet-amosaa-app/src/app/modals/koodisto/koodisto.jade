@@ -1,9 +1,8 @@
 div.modal-header
-  h2.pull-left(kaanna="'valitse-koodi'")
+  h2.pull-left(ng-bind="'valitse-koodi' | kaanna")
   .pull-right
     +kielivalitsin
   .clearfix
-  h2(ng-bind="'valitse-koodi' | kaanna")
 
 div.modal-body.modal-koodisto
   div.form-group.has-feedback.has-feedback-left

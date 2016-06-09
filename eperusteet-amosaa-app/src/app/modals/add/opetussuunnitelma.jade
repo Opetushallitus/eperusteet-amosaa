@@ -1,9 +1,8 @@
 div.modal-header
-  h2.pull-left(kaanna="'lisaa-opetussuunnitelma'")
+  h2.pull-left(ng-bind="'lisaa-opetussuunnitelma' | kaanna")
   .pull-right
     +kielivalitsin
   .clearfix
-  h2(ng-bind="'lisaa-opetussuunnitelma' | kaanna")
 
 div.modal-body
   div.content-spacing.tutkintohaku

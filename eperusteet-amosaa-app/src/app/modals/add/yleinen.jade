@@ -1,9 +1,8 @@
 div.modal-header
-  h2.pull-left(kaanna="'lisaa-yleinen'")
+  h2.pull-left(ng-bind="'lisaa-yleinen' | kaanna")
   .pull-right
     +kielivalitsin
   .clearfix
-  h2(ng-bind="'lisaa-yleinen' | kaanna")
 
 div.modal-body
   .content-spacing
