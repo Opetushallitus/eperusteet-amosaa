@@ -67,7 +67,7 @@ angular.module("app")
                 $scope.add = () => {
                     ModalAdd.sisaltoAdder(Opetussuunnitelmat.sallitutSisaltoTyypit(ops))
                         .then(uusi => {
-                            let parentNode = tekstit.clone();
+                            const parentNode = tekstit.clone();
 
                             if (!uusi || !uusi.hasOwnProperty("tyyppi")) {
                                 return;
@@ -82,9 +82,10 @@ angular.module("app")
 
                             parentNode.post("", uusi)
                                 .then(res => {
-                                    res.$$depth = 0;
+                                    res.$$depth = 1;
                                     otsikot.push(res);
-                                    _.find(otsikot, (otsikko: any) => otsikko.id == sisaltoRoot.id).lapset.push(res.id);
+                                    const parentOtsikko = _.find(otsikot, (otsikko: any) => otsikko.id == res._vanhempi)
+                                    parentOtsikko.lapset.push(res.id);
                                     updateSivunavi();
                                     $timeout(() => {
                                         $state.go("root.koulutustoimija.opetussuunnitelmat.sisalto.osa", { osaId: res.id })

@@ -10,7 +10,7 @@ module Opetussuunnitelmat {
 
     export const sallitutSisaltoTyypit = (ops) => {
         if (ops.tyyppi === "ops" || ops.tyyppi === "kooste") {
-            return ["tekstikappale", "tutkinnonosa", "tutkinnonosaryhma", "suorituspolku"];
+            return ["tekstikappale", "tutkinnonosa", "suorituspolku"]; // "tutkinnonosaryhma" ei tarvita toistaiseksi
         }
         else if (ops.tyyppi === "yleinen") {
             return ["tekstikappale", "tutkinnonosa", "tutkinnonosaryhma"];
