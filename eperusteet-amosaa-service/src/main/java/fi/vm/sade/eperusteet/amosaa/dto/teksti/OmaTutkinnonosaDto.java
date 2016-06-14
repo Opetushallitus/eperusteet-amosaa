@@ -31,7 +31,7 @@ import lombok.Setter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class OmaTutkinnonosaDto {
     private Long id;
-    private Long koodi;
+    private String koodi;
     private LokalisoituTekstiDto tavoitteet;
     private List<AmmattitaitovaatimuksenKohdealueDto> ammattitaitovaatimuksetLista;
     private ArviointiDto arviointi;

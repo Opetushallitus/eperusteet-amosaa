@@ -1,5 +1,7 @@
 interface IEditointikontrollitCallbacks {
     start?: (val?) => Promise<any>,
+    preStart?: () => Promise<any>,
+    preSave?: () => Promise<any>,
     save?: (kommentti?) => Promise<any>,
     cancel?: () => Promise<any>,
     after?: (res?) => void
@@ -16,13 +18,15 @@ namespace EditointikontrollitService {
         _$q = $q;
     };
 
-    let _activeCallbacks: any;
+    let _activeCallbacks: IEditointikontrollitCallbacks;
 
     const defaultCallbacks = () => ({
-        start:  (val) => _$q((resolve, reject) => resolve(val)),
-        save:   (val) => _$q((resolve, reject) => resolve(val)),
+        start: (val) => _$q((resolve, reject) => resolve(val)),
+        preSave: () => _$q((resolve, reject) => resolve()),
+        preStart: () => _$q((resolve, reject) => resolve()),
+        save: (val) => _$q((resolve, reject) => resolve(val)),
         cancel: (res) => _$q((resolve, reject) => resolve(res)),
-        after:  _.noop,
+        after: _.noop,
         done: _.noop
     });
 
@@ -41,7 +45,8 @@ namespace EditointikontrollitService {
             return reject();
         }
         else {
-            return callbacks.start()
+            return callbacks.preStart()
+                .then(callbacks.start)
                 .then(res => {
                     _$rootScope.$$ekEditing = true;
                     _activeCallbacks = callbacks;
@@ -55,18 +60,20 @@ namespace EditointikontrollitService {
         }
     });
 
-    export const save = (kommentti?) => _$q((resolve, reject) => _activeCallbacks
-        .save(kommentti)
-        .then((res) => {
-            _$rootScope.$broadcast("editointikontrollit:saving");
-            _$rootScope.$$ekEditing = false;
-            _$rootScope.$broadcast("editointikontrollit:enable");
-            _$rootScope.$broadcast("editointikontrollit:cancel");
-            _$rootScope.$broadcast("notifyCKEditor");
-            _activeCallbacks.after(res);
-            _activeCallbacks.done();
-        })
-        .catch(handleError(reject)));
+    export const save = (kommentti?) => _$q((resolve, reject) => {
+        return _activeCallbacks.preSave()
+            .then(() => _activeCallbacks.save(kommentti))
+            .then((res) => {
+                _$rootScope.$broadcast("editointikontrollit:saving");
+                _$rootScope.$$ekEditing = false;
+                _$rootScope.$broadcast("editointikontrollit:enable");
+                _$rootScope.$broadcast("editointikontrollit:cancel");
+                _$rootScope.$broadcast("notifyCKEditor");
+                _activeCallbacks.after(res);
+                _activeCallbacks.done();
+            })
+            .catch(handleError(reject));
+    });
 
     export const cancel = () => _$q((resolve, reject) => {
         _$rootScope.$broadcast("editointikontrollit:canceling");
@@ -122,6 +129,7 @@ namespace EditointikontrollitService {
         resolvedObj: restangular.IElement,
         callbacks: IEditointikontrollitCallbacks = {}) => {
         scope[field] = resolvedObj.clone();
+
         return EditointikontrollitService.create(_.merge({
             start: () => _$q((resolve, reject) => scope[field].get()
                 .then(res => {

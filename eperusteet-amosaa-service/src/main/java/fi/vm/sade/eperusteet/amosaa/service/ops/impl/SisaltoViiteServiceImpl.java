@@ -232,20 +232,33 @@ public class SisaltoViiteServiceImpl implements SisaltoViiteService {
     }
 
     @Transactional(readOnly = false)
-    private void updateTutkinnonOsa(SisaltoViite viite, SisaltoViiteDto uusi) {
+    private void updateTutkinnonOsa(Opetussuunnitelma ops, SisaltoViite viite, SisaltoViiteDto uusi) {
         if (!Objects.equals(uusi.getTosa().getId(), viite.getTosa().getId())) {
             throw new BusinessRuleViolationException("tutkinnonosan-viitetta-ei-voi-vaihtaa");
         }
 
         Tutkinnonosa tosa = viite.getTosa();
-        if (tosa.getTyyppi() == TutkinnonosaTyyppi.PERUSTEESTA) {
-            LokalisoituTeksti nimi = viite.getTekstiKappale().getNimi();
-            if (!nimi.getTeksti().equals(uusi.getTekstiKappale().getNimi().getTekstit())) {
-                throw new BusinessRuleViolationException("perusteen-tutkinnon-osan-nimea-ei-voi-muuttaa");
-            }
+
+        switch (tosa.getTyyppi()) {
+            case OMA:
+                break;
+            case PERUSTEESTA:
+                LokalisoituTeksti nimi = viite.getTekstiKappale().getNimi();
+                if (!nimi.getTeksti().equals(uusi.getTekstiKappale().getNimi().getTekstit())) {
+                    throw new BusinessRuleViolationException("perusteen-tutkinnon-osan-nimea-ei-voi-muuttaa");
+                }
+                break;
+            default:
+                break;
         }
 
         Tutkinnonosa mappedTosa = mapper.map(uusi.getTosa(), Tutkinnonosa.class);
+
+        // Tulevaisuudessa mahdollista lisätä eri lähteitä muille tyypeille jos koetaan tarpeelliseksi
+        if (TutkinnonosaTyyppi.OMA.equals(mappedTosa.getTyyppi())) {
+            mappedTosa.getOmatutkinnonosa().setKoodiPrefix(ops.getKoulutustoimija().getOrganisaatio());
+        }
+
         mapTutkinnonParts(mappedTosa);
         viite.setTosa(mappedTosa);
     }
@@ -278,7 +291,7 @@ public class SisaltoViiteServiceImpl implements SisaltoViiteService {
 
         switch (viite.getTyyppi()) {
             case TUTKINNONOSA:
-                updateTutkinnonOsa(viite, uusi);
+                updateTutkinnonOsa(ops, viite, uusi);
                 break;
             case SUORITUSPOLKU:
                 updateSuorituspolku(viite, uusi);

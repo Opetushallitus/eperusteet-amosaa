@@ -30,6 +30,7 @@
     "src/app/components/termisto/termisto.ts",
     "src/app/components/charts/charts.ts",
     "src/app/app.ts",
+    "src/app/logic/osat.ts",
     "src/app/logic/kayttajatiedot.ts",
     "src/app/logic/sorting.ts",
     "src/app/logic/perusteet.ts",

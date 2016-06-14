@@ -25,11 +25,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
-import org.hibernate.validator.constraints.Range;
 
 /**
  *
@@ -53,8 +53,13 @@ public class OmaTutkinnonosa extends AbstractAuditedEntity implements Serializab
 
     @Getter
     @Setter
-    @Range(min = 1000, max = 5999)
-    private Long koodi;
+    @Column(name = "koodi_prefix")
+    private String koodiPrefix;
+
+    @Getter
+    @Setter
+    @Pattern(message="ei-validi-paikallinen-koodi", regexp="^1\\d\\d\\d$")
+    private String koodi;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @JoinTable(name = "ammattitaitovaatimuksenkohdealue_omatutkinnonosa",

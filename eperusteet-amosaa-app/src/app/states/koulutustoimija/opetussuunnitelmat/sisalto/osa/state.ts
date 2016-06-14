@@ -83,8 +83,8 @@ angular.module("app")
         Murupolku.register("root.koulutustoimija.opetussuunnitelmat.sisalto.osa", osa.tekstiKappale.nimi),
     views: {
         "": {
-            controller: ($state, $stateParams, $location, $scope, $rootScope, $document, $timeout,
-                         osa, nimiLataaja, Varmistusdialogi, historia, versioId, versio, pTosa) => {
+            controller: ($q, $state, $stateParams, $location, $scope, $rootScope, $document, $timeout,
+                         koulutustoimija, osa, nimiLataaja, Varmistusdialogi, historia, versioId, versio, pTosa) => {
                 $scope.pTosa = pTosa;
                 nimiLataaja(osa.tekstiKappale.muokkaaja)
                     .then(_.cset(osa, "$$nimi"));
@@ -114,6 +114,9 @@ angular.module("app")
                     after: () => {
                         $rootScope.$broadcast("sivunavi:forcedUpdate", $scope.osa);
                     },
+                    preSave: () => $q((resolve, reject) => Osat.deinit($scope.osa, koulutustoimija)
+                        ? resolve()
+                        : reject()),
                     done: () => historia.get("uusin").then(res => {
                         $scope.uusin = Revisions.parseOne(res);
                         $scope.historia.unshift($scope.uusin);
