@@ -236,8 +236,9 @@ mixin tosaToteutus()
                   +itext("remove", 'poista')
 
     div(ng-if="!$$ekEditing")
-      +contentToggler("$$showOsaamisenOsoittaminen", "'osaamisen-osoittaminen'")
-        +teksti("osa.tosa.osaamisenOsoittaminen")
+      div(ng-if="pTosa && pTosa.tyyppi === 'tutke2'")
+        +contentToggler("$$showOsaamisenOsoittaminen", "'osaamisen-osoittaminen'")
+          +teksti("osa.tosa.osaamisenOsoittaminen")
 
       div(ng-hide="osa.tosa.toteutukset.length > 0")
         div.alert.alert-info
