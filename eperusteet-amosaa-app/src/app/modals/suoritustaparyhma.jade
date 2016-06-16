@@ -1,7 +1,6 @@
 div.modal-header
   h2(ng-bind="'muokkaa-osaa' | kaanna")
 
-
 div.modal-body
   +contentToggler("$$showKuvaus", "'kuvaus'")
     div(ckeditor slocalized ng-model="editable.kuvaus" layout="normal")
@@ -32,8 +31,8 @@ div.modal-body
               td(style="padding: 4px 0 0 10px;")
                 input(type="checkbox" ng-model="koodi.$$valittu")
               td(ng-bind="koodi.arvo | kaanna" ng-click="koodi.$$valittu = !koodi.$$valittu" style="cursor: pointer")
-              td
-                span(ng-bind="koodi.nimi | kaanna" ng-click="koodi.$$valittu = !koodi.$$valittu" style="cursor: pointer")
+              td(ng-click="koodi.$$valittu = !koodi.$$valittu")
+                span(ng-bind="koodi.nimi | kaanna" style="cursor: pointer")
                 span.pull-right(ng-show="koodi.$$paikallinen")
                   +icon("map-marker")
         nav.text-center

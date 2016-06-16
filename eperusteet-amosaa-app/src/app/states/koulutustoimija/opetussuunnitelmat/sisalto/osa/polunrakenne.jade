@@ -23,10 +23,12 @@ mixin polkuTutkinnonosa()
 
 
 mixin tosaKoodiOsa(osa)
-  div.sp-tutkinnonosa.sp-tutkinnonosa-(ng-class="{ 'sp-laatikko-active': ngModel.$$haettu, 'sp-sisalto-poistettu': ngModel.$$poistettu }")
+  div.sp-tutkinnonosa.sp-tutkinnonosa-(ng-class="{ 'sp-laatikko-active': ngModel.$$haettu, 'sp-sisalto-poistettu': ngModel.$$poistettu, 'sp-laatikko-rikki': misc.koodinimet[" + osa + "].rikki }")
     div.sp-sisalto.sp-sisalto-tosa
       div.sp-nimi
-        span(ng-bind="misc.koodinimet[" + osa + "].nimi | kaanna")
+        span(ng-hide="misc.koodinimet[" + osa + "].url" ng-bind="misc.koodinimet[" + osa + "].nimi | kaanna")
+        a(ng-show="misc.koodinimet[" + osa + "].url" href="{{ misc.koodinimet[" + osa + "].url }}" ng-bind="misc.koodinimet[" + osa + "].nimi | kaanna")
+        b.sp-osaamisala(ng-bind="misc.koodinimet[" + osa + "].arvo")
 
 
 mixin muodostuminen()

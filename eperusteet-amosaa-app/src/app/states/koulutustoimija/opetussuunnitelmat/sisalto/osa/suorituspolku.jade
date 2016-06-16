@@ -1,11 +1,20 @@
 div
-  div.pull-left.haku
-    div.form-inline
-      div.form-group.has-feedback.has-feedback-left
+  .suorituspolku-otsikko
+    h2
+      span(ng-bind="perusteRakenne.nimi | kaanna")
+      span.suorituspolku-laajuus(ng-show="perusteRakenne.muodostumisSaanto.laajuus.minimi || perusteRakenne.muodostumisSaanto.laajuus.maksimi")
+        span ,
+        span(style="margin-left: 5px;" ng-bind="perusteRakenne.muodostumisSaanto.laajuus.minimi || perusteRakenne.muodostumisSaanto.laajuus.maksimi")
+        span(style="margin-left: 5px;" ng-bind="misc.suoritustapa.laajuusYksikko | kaanna")
+    p(ng-bind="perusteRakenne.kuvaus | kaanna")
+
+  .pull-left.haku
+    .form-inline
+      .form-group.has-feedback.has-feedback-left
         input.form-control.input-sm(ng-change="suodata(search)" type="text" ng-model="search" placeholder="{{ 'hae' | kaanna }}")
         i.form-control-feedback.glyphicon.glyphicon-search(style="color: gray;")
 
-  div.pull-right
+  .pull-right
     button.btn.btn-sm.btn-default(
       ng-click="togglePoistetut()"
       ng-bind="(misc.collapsed_removed ? 'piilota-poistetut' : 'nayta-poistetut') | kaanna")

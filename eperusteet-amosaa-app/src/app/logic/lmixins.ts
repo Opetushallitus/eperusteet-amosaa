@@ -2,6 +2,7 @@ declare module _ {
     interface OwnMixins {
         callAndGive<F>(x: F, ...args: any[]): F;
         print(x: any): any;
+        spy<T>(x: T): T;
         print(): any;
         matchStrings(search: string, target: string): boolean;
         fromPairs(x: Array<any>): any;
@@ -28,6 +29,10 @@ _.mixin({
         return f;
     },
     cset: (obj, path) => (value) => _.set(obj, path, value),
+    spy: (obj) => {
+        console.log(obj);
+        return obj;
+    },
     fromPairs: (pairs) => {
         let obj: any = {};
         _.each(pairs, (pair) => {

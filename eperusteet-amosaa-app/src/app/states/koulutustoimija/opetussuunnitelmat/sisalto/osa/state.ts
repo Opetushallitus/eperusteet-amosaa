@@ -16,7 +16,6 @@ namespace SuoritustapaRyhmat {
                 $scope.alkioitaSivulla = 10;
                 $scope.sivu = 1;
                 $scope.tosaRajaus = {};
-
                 $scope.spRivit = spRivit;
                 $scope.tosat = tutkinnonosat;
                 $scope.node = node;
@@ -41,12 +40,11 @@ namespace SuoritustapaRyhmat {
                                 nimi: pkoodi.tekstiKappale.nimi,
                                 $$paikallinen: true
                             }))
-                            .concat(_(Koodisto.parseRawKoodisto(julkisetKoodit))
-                                .each((koodi: any) => {
-                                    koodi.$$valittu = !!valitutKoodit[koodi.uri],
-                                    koodi.$$piilotettu = false
-                                })
-                                .value())
+                            .concat(Koodisto.parseRawKoodisto(julkisetKoodit))
+                            .each((koodi: any) => {
+                                koodi.$$valittu = !!valitutKoodit[koodi.uri],
+                                koodi.$$piilotettu = false
+                            })
                             .sortBy(koodi => KaannaService.kaanna(koodi.nimi))
                             .value()
                     });
@@ -221,12 +219,14 @@ angular.module("app")
                             .then(Koodisto.parseRawKoodisto),
 
                     paivitaKoodistoTiedot = () => {
-                        const toteutuksienKoodit = _($scope.osa.tosa.toteutukset)
-                            .map("koodit")
-                            .flatten()
-                            .uniq()
-                            .reject((koodi: string) => !!$scope.koodistoTiedot[koodi])
-                            .value();
+                        const
+                            toteutuksienKoodit = _($scope.osa.tosa.toteutukset)
+                                .map("koodit")
+                                .flatten()
+                                .uniq()
+                                .reject((koodi: string) => !!$scope.koodistoTiedot[koodi])
+                                .value();
+
                         haeKoodiTiedot(toteutuksienKoodit)
                             .then(koodit => {
                                 _.each(koodit, koodi => {
@@ -248,7 +248,7 @@ angular.module("app")
                     if (pkoodi) {
                         const fullKoodi = Koodisto.paikallinenToFull(koulutustoimija, pkoodi);
                         paikallisetKoodit.one(fullKoodi).getList()
-                        .then(res => $scope.tormaavatKoodit = _.reject(res, (koodi: any) => koodi.id === $scope.osa.id));
+                            .then(res => $scope.tormaavatKoodit = _.reject(res, (koodi: any) => koodi.id === $scope.osa.id));
                     }
                 };
 
@@ -394,72 +394,142 @@ angular.module("app")
             controller: ($scope, osa) => {}
         },
         suorituspolku: {
-            controller: ($q, $rootScope, $scope, osa, peruste: REl, pSuoritustavat, pTosat, koodisto, paikallisetTutkinnonosatEP) => {
-                const suoritustapa = Perusteet.getSuoritustapa(pSuoritustavat);
-                const tosat = _.indexBy(pTosat, "id");
-                const tosaViitteet: any = _(_.cloneDeep(Perusteet.getTosaViitteet(suoritustapa)))
-                    .each(viite => viite.$$tosa = tosat[viite._tutkinnonOsa])
-                    .indexBy("id")
-                    .value();
+            controller: ($q, $rootScope, $scope, $state, $stateParams, osa, peruste: REl, pSuoritustavat, pTosat, koodisto, paikallisetTutkinnonosatEP, koulutustoimija) => {
+                const
+                    suoritustapa = Perusteet.getSuoritustapa(pSuoritustavat),
+                    tosat = _.indexBy(pTosat, "id"),
+                    tosaViitteet: any = _(_.cloneDeep(Perusteet.getTosaViitteet(suoritustapa)))
+                        .each(viite => viite.$$tosa = tosat[viite._tutkinnonOsa])
+                        .indexBy("id")
+                        .value(),
+                    paikallisetKoodit = koulutustoimija.all("koodi"),
+                    update = () => {
+                        const spRivit: any = _.indexBy($scope.osa.suorituspolku.rivit, "rakennemoduuli");
+                        Algoritmit.traverse($scope.perusteRakenne, "osat", (node, depth) => {
+                            node.pakollinen = Suorituspolku.pakollinen(node);
+                            node.$$poistettu = spRivit[node.tunniste] && spRivit[node.tunniste].piilotettu;
+                        });
+                        Suorituspolku.calculateRealAmount($scope.perusteRakenne, $scope.misc.tosat, spRivit);
+                        $scope.misc.spRivit = spRivit;
 
-                const update = () => {
-                    const spRivit: any = _.indexBy($scope.osa.suorituspolku.rivit, "rakennemoduuli");
-                    Algoritmit.traverse($scope.perusteRakenne, "osat", (node, depth) => {
-                        node.pakollinen = Suorituspolku.pakollinen(node);
-                        node.$$poistettu = spRivit[node.tunniste] && spRivit[node.tunniste].piilotettu;
-                    });
-                    Suorituspolku.calculateRealAmount($scope.perusteRakenne, $scope.misc.tosat, spRivit);
-                    $scope.misc.spRivit = spRivit;
+                        const
+                            uniikitKoodit = _($scope.osa.suorituspolku.rivit)
+                                .map("koodit")
+                                .flatten()
+                                .filter((koodi: string) => !$scope.misc.koodinimet[koodi])
+                                .uniq()
+                                .value(),
+                            pkoodit = _.filter(uniikitKoodit, (koodi: string) => _.startsWith(koodi, Koodisto.paikallinenPrefix)),
+                            kkoodit = _.reject(uniikitKoodit, (koodi: string) => _.startsWith(koodi, Koodisto.paikallinenPrefix));
 
-                    $q.all(_($scope.osa.suorituspolku.rivit)
-                        .map("koodit")
-                        .flatten()
-                        .uniq()
-                        .reject((koodi: string) => _.startsWith("paikallinen_tutkinnonosa"))
-                        .filter((koodi: string) => !$scope.misc.koodinimet[koodi])
-                        .map(koodi => koodisto.one("uri/" + koodi).get())
-                        .value())
-                        .then(Koodisto.parseRawKoodisto)
-                        .then(koodit => _.each(koodit, (koodi) => {
-                            $scope.misc.koodinimet[koodi.uri] = koodi;
-                        }));
-                };
+                        $q.all(_.map(kkoodit, koodi => koodisto.one("uri/" + koodi).get()))
+                            .then(Koodisto.parseRawKoodisto)
+                            .then(res => {
+                                _.each(res, (koodi) => {
+                                    $scope.misc.koodinimet[koodi.uri] = koodi;
+                                });
+                            });
+                        $q.all(_.map(pkoodit, koodi => paikallisetKoodit.one(koodi).get()))
+                            .then(res => {
+                                _.each(res, (koodi) => {
+                                    $scope.misc.koodinimet[koodi.route] = {
+                                        nimi: "tutkinnon-osaa-ei-olemassa",
+                                        uri: koodi.route,
+                                        arvo: _.last(koodi.route.split("_"))
+                                    }
 
-                $scope.collapsed_dirty = false;
-                $scope.perusteRakenne = _.cloneDeep(Perusteet.getRakenne(suoritustapa));
-                $scope.misc = {
-                    collapsed_removed: false,
-                    root: $rootScope,
-                    suoritustapa: suoritustapa,
-                    koodinimet: {},
-                    editNode: (node) => {
-                        const spRivit = _.indexBy($scope.osa.suorituspolku.rivit, "rakennemoduuli");
-                        SuoritustapaRyhmat.editoi(spRivit, node, tosaViitteet, koodisto, paikallisetTutkinnonosatEP)
+                                    if (_.size(koodi) === 1) {
+                                        $scope.misc.koodinimet[koodi.route].nimi = koodi[0].tekstiKappale.nimi;
+                                        $scope.misc.koodinimet[koodi.route].url = $state.href("root.koulutustoimija.opetussuunnitelmat.sisalto.osa", {
+                                            opsId: koodi[0].owner.id,
+                                            osaId: koodi[0].id
+                                        });
+                                    }
+                                    else if (_.size(koodi) > 1) {
+                                        const opskohtaiset = _.filter(koodi, (arvo: any) => arvo.owner.id == $stateParams.opsId);
+                                        if (_.size(opskohtaiset) === 1) {
+                                            $scope.misc.koodinimet[koodi.route].nimi = opskohtaiset[0].tekstiKappale.nimi;
+                                            $scope.misc.koodinimet[koodi.route].url = $state.href("root.koulutustoimija.opetussuunnitelmat.sisalto.osa", {
+                                                opsId: opskohtaiset[0].owner.id,
+                                                osaId: opskohtaiset[0].id
+                                            });
+                                        }
+                                        else {
+                                            $scope.misc.koodinimet[koodi.route].nimi = "koodilla-liian-monta-toteutusta";
+                                            $scope.misc.koodinimet[koodi.route].nimet = _.map(koodi, "tekstiKappale.nimi");
+                                            $scope.misc.koodinimet[koodi.route].rikki = true;
+                                            $scope.misc.koodinimet[koodi.route].url = $state.href("root.koulutustoimija.opetussuunnitelmat.sisalto.osa", {
+                                                opsId: koodi[0].owner.id,
+                                                osaId: koodi[0].id
+                                            });
+                                        }
+                                    }
+                                    else {
+                                        $scope.misc.koodinimet[koodi.route].rikki = true;
+                                    }
+                                });
+                            });
+                    };
+
+                _.merge($scope, {
+                    collapsed_dirty: false,
+                    perusteRakenne: _.cloneDeep(Perusteet.getRakenne(suoritustapa)),
+                    misc: {
+                        collapsed_removed: false,
+                        root: $rootScope,
+                        suoritustapa: suoritustapa,
+                        koodinimet: {},
+                        editNode: (node) => {
+                            const spRivit = _.indexBy($scope.osa.suorituspolku.rivit, "rakennemoduuli");
+                            SuoritustapaRyhmat.editoi(spRivit, node, tosaViitteet, koodisto, paikallisetTutkinnonosatEP)
                             .then(res => {
                                 $scope.osa.suorituspolku.rivit = _.compact(_.values(res));
                                 update();
                             });
-                    },
-                    tosat: tosaViitteet,
-                    hasInput: false,
-                    osa: $scope.osa,
-                    toggle: model => {
-                        model.$$collapsed = !model.$$collapsed;
-                        $scope.collapsed_dirty = true;
-                    },
-                    poistoToggle: (node) => {
-                        let rivi = _.find($scope.osa.suorituspolku.rivit, (rivi: any) => rivi.rakennemoduuli === node.tunniste);
-                        if (!rivi) {
-                            rivi = {
-                                rakennemoduuli: node.tunniste,
-                                piilotettu: false
-                            };
-                            $scope.osa.suorituspolku.rivit.push(rivi);
+                        },
+                        tosat: tosaViitteet,
+                        hasInput: false,
+                        osa: $scope.osa,
+                        toggle: model => {
+                            model.$$collapsed = !model.$$collapsed;
+                            $scope.collapsed_dirty = true;
+                        },
+                        poistoToggle: (node) => {
+                            let rivi = _.find($scope.osa.suorituspolku.rivit, (rivi: any) => rivi.rakennemoduuli === node.tunniste);
+                            if (!rivi) {
+                                rivi = {
+                                    rakennemoduuli: node.tunniste,
+                                    piilotettu: false
+                                };
+                                $scope.osa.suorituspolku.rivit.push(rivi);
+                            }
+                            rivi.piilotettu = !rivi.piilotettu;
+                            update();
                         }
-                        rivi.piilotettu = !rivi.piilotettu;
-                        update();
+                    },
+                    togglePoistetut: () => $scope.misc.collapsed_removed = !$scope.misc.collapsed_removed,
+                    toggleAll: () => {
+                        Algoritmit.traverse($scope.perusteRakenne, "osat", (node, depth) =>
+                                            node.$$collapsed = $scope.collapsed_dirty ? depth > 0 : false);
+                        $scope.collapsed_dirty = !$scope.collapsed_dirty;
+                    },
+                    suodata: (input) => {
+                        $scope.misc.hasInput = !_.isEmpty(input);
+                        if ($scope.misc.hasInput) {
+                            Algoritmit.traverse($scope.perusteRakenne, "osat", (node) => {
+                                node.$$haettu = Algoritmit.match(input, node._tutkinnonOsaViite
+                                    ? tosaViitteet[node._tutkinnonOsaViite].$$tosa.nimi
+                                    : node.nimi);
+                                if (node.$$haettu) {
+                                    Algoritmit.traverseUp(node, (pnode) => pnode.$$haettu = true);
+                                }
+                            });
+                        }
+                        else {
+                            Algoritmit.traverse($scope.perusteRakenne, "osat", (node) => node.$$haettu = false);
+                        }
                     }
-                };
+                });
 
                 { // Initialize
                     update();
@@ -467,38 +537,8 @@ angular.module("app")
                         node.$$collapsed = depth > 0;
                         node.pakollinen = Suorituspolku.pakollinen(node);
                     });
+                    $scope.toggleAll();
                 }
-
-                $scope.togglePoistetut = () => {
-                    $scope.misc.collapsed_removed = !$scope.misc.collapsed_removed;
-                };
-
-                $scope.toggleAll = () => {
-                    Algoritmit.traverse($scope.perusteRakenne, "osat", (node, depth) => {
-                        node.$$collapsed = $scope.collapsed_dirty ? depth > 0 : false;
-                    });
-                    $scope.collapsed_dirty = !$scope.collapsed_dirty;
-                };
-
-                $scope.toggleAll();
-
-                $scope.suodata = (input) => {
-                    $scope.misc.hasInput = !_.isEmpty(input);
-                    if ($scope.misc.hasInput) {
-                        Algoritmit.traverse($scope.perusteRakenne, "osat", (node) => {
-                            node.$$haettu = Algoritmit.match(input, node._tutkinnonOsaViite
-                                ? tosaViitteet[node._tutkinnonOsaViite].$$tosa.nimi
-                                : node.nimi);
-
-                            if (node.$$haettu) {
-                                Algoritmit.traverseUp(node, (pnode) => pnode.$$haettu = true);
-                            }
-                        });
-                    }
-                    else {
-                        Algoritmit.traverse($scope.perusteRakenne, "osat", (node) => node.$$haettu = false);
-                    }
-                };
             }
         },
         suorituspolut: {
