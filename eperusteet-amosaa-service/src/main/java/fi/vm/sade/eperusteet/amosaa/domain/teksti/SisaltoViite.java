@@ -21,11 +21,9 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Suorituspolku;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Tutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
-import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -157,26 +155,6 @@ public class SisaltoViite implements ReferenceableEntity, Serializable {
             }
         }
         return kopioitava;
-    }
-
-    static public void validoi(Validointi validointi, SisaltoViite viite, Set<Kieli> julkaisukielet) {
-        if (viite == null || viite.getLapset() == null) {
-            return;
-        }
-
-        LokalisoituTeksti teksti = viite.getTekstiKappale() != null ? viite.getTekstiKappale().getNimi() : null;
-
-        for (SisaltoViite lapsi : viite.getLapset()) {
-            if (lapsi.pakollinen) {
-                if (lapsi.getTekstiKappale() != null) {
-                    LokalisoituTeksti.validoi(validointi, julkaisukielet, lapsi.getTekstiKappale().getNimi(), teksti);
-                }
-                else {
-                    validointi.lisaaVirhe(Validointi.luoVirhe("tekstikappaleella-ei-lainkaan-sisaltoa", teksti));
-                }
-            }
-            validoi(validointi, lapsi, julkaisukielet);
-        }
     }
 
     static private SisaltoViite createCommon(SisaltoViite parent) {

@@ -23,6 +23,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.amosaa.service.revision.RevisionService;
+import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 import java.util.List;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -61,5 +62,8 @@ public interface OpetussuunnitelmaService extends RevisionService {
 
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'HALLINTA')")
     OpetussuunnitelmaBaseDto updateTila(@P("ktId") Long ktId, @P("opsId") Long opsId, @P("tila") Tila tila);
+
+    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'MUOKKAUS')")
+    Validointi validoi(Long ktId, Long opsId);
 }
 

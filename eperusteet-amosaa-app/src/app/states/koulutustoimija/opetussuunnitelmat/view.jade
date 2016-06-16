@@ -14,8 +14,13 @@ div.ops-nakyma
 
         div.painikkeet
           div.keskitetty.pull-right
+            button.btn.btn-default(ng-click="validoi()")
+              +gicon("export")
+              span=" "
+              span(ng-bind="'validoi-ops' | kaanna")
+
             button.btn.btn-default(disabled)
-              span.glyphicon.glyphicon-sunglasses
+              +gicon("sunglasses")
               span=" "
               span(ng-bind="'esikatselu' | kaanna")
 

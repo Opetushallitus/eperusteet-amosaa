@@ -1,0 +1,44 @@
+.modal-header
+  h2(ng-bind="'validointi' | kaanna")
+
+.modal-body.validointi
+  .onnistunut(ng-if='eiVirheita')
+    h2(kaanna="'validointi-ei-virheita'")
+    .peukku(icon-role='thumbs-up')
+  .panel.panel-danger(ng-if='virheet.length > 0')
+    .panel-heading
+      h2.panel-title(kaanna="'validointi-virheet'")
+    div
+      table.table
+        tr
+          th(kaanna="'nimi'")
+          th(kaanna="'syy'")
+        tr(ng-repeat='virhe in virheet')
+          td(kaanna='virhe.nimi')
+          td(kaanna='virhe.syy')
+  .panel.panel-warning(ng-if='varoitukset.length > 0')
+    .panel-heading
+      h2.panel-title(kaanna="'validointi-varoitukset'")
+    div
+      table.table
+        tr
+          th(kaanna="'nimi'")
+          th(kaanna="'syy'")
+        tr(ng-repeat='virhe in varoitukset')
+          td(kaanna='virhe.nimi')
+          td(kaanna='virhe.syy')
+  .panel.panel-info(ng-if='huomiot.length > 0')
+    .panel-heading
+      h2.panel-title(kaanna="'validointi-huomautukset'")
+    div
+      table.table
+        tr
+          th(kaanna="'nimi'")
+          th(kaanna="'syy'")
+        tr(ng-repeat='virhe in huomiot')
+          td(kaanna='virhe.nimi')
+          td(kaanna='virhe.syy')
+  .clearfix
+
+.modal-footer
+  button.btn.btn-default(ng-click='ok()', kaanna="'ok'")

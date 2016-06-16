@@ -15,6 +15,7 @@
  */
 package fi.vm.sade.eperusteet.amosaa.domain.teksti;
 
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 import java.io.Serializable;
@@ -162,13 +163,13 @@ public class LokalisoituTeksti implements Serializable {
         return true;
     }
 
-    static public void validoi(Validointi validointi, Set<Kieli> kielet, LokalisoituTeksti teksti, LokalisoituTeksti... parents) {
-        validoi("kielisisaltoa-ei-loytynyt-opsin-kielilla", validointi, kielet, teksti, parents);
+    static public void validoi(Validointi validointi, Opetussuunnitelma ops, LokalisoituTeksti teksti, LokalisoituTeksti... parents) {
+        validoi("kielisisaltoa-ei-loytynyt-opsin-kielilla", validointi, ops, teksti, parents);
     }
 
-    static public void validoi(String syy, Validointi validointi, Set<Kieli> kielet, LokalisoituTeksti teksti, LokalisoituTeksti... parents) {
-        if (teksti == null || !teksti.hasKielet(kielet)) {
-            validointi.lisaaVirhe(Validointi.luoVirhe(syy, parents));
+    static public void validoi(String syy, Validointi validointi, Opetussuunnitelma ops, LokalisoituTeksti teksti, LokalisoituTeksti... parents) {
+        if (teksti == null || !teksti.hasKielet(ops.getJulkaisukielet())) {
+            validointi.virhe(syy, parents);
         }
     }
 

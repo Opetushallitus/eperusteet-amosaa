@@ -27,6 +27,7 @@ import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.util.PoistettuService;
+import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 import io.swagger.annotations.Api;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,6 +126,14 @@ public class OpetussuunnitelmaController {
             @PathVariable final Long ktId,
             @PathVariable final Long opsId) {
         return service.getLatestRevision(ktId, opsId);
+    }
+
+    @RequestMapping(value = "/{opsId}/validoi", method = RequestMethod.GET)
+    @InternalApi
+    Validointi validoi(
+            @PathVariable final Long ktId,
+            @PathVariable final Long opsId) {
+        return service.validoi(ktId, opsId);
     }
 
     @RequestMapping(value = "/{opsId}/versiot", method = RequestMethod.GET)

@@ -51,6 +51,8 @@ import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
+import fi.vm.sade.eperusteet.amosaa.service.ops.ValidointiService;
+import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,6 +93,9 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
     @Autowired
     private SisaltoViiteService tkvService;
+
+    @Autowired
+    private ValidointiService validointiService;
 
     @Autowired
     private CachedPerusteRepository cachedPerusteRepository;
@@ -144,6 +149,17 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
             suorituspolut.setVanhempi(rootTkv);
             rootTkv.getLapset().add(tkvRepository.save(suorituspolut));
         }
+    }
+
+    private Opetussuunnitelma findOps(Long ktId, Long opsId) {
+        Opetussuunnitelma ops = repository.findOne(opsId);
+        Koulutustoimija kt = koulutustoimijaRepository.findOne(ktId);
+
+        // TODO: Tarkista kaveriorganisaatio
+        if (!ops.getKoulutustoimija().getId().equals(kt.getId())) {
+            throw new BusinessRuleViolationException("ops-ei-koulutustoimijan");
+        }
+        return ops;
     }
 
     private void setOpsCommon(Opetussuunnitelma ops, PerusteDto peruste, SisaltoViite rootTkv) {
@@ -318,12 +334,21 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
     @Override
     public OpetussuunnitelmaBaseDto updateTila(Long ktId, Long opsId, Tila tila) {
-        Opetussuunnitelma ops = repository.findOne(opsId);
-        Koulutustoimija kt = koulutustoimijaRepository.findOne(ktId);
+        Opetussuunnitelma ops = findOps(ktId, opsId);
         Tila nykyinen = ops.getTila();
         if (nykyinen.mahdollisetSiirtymat().contains(tila)) {
+            if (tila == Tila.JULKAISTU) {
+                validoi(ktId, opsId).tuomitse();
+            }
             ops.setTila(tila);
         }
         return mapper.map(ops, OpetussuunnitelmaBaseDto.class);
     }
+
+    @Override
+    public Validointi validoi(Long ktId, Long opsId) {
+        Opetussuunnitelma ops = findOps(ktId, opsId);
+        return validointiService.validoi(ops);
+    }
+
 }

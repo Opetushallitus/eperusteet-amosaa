@@ -71,5 +71,8 @@ public interface SisaltoViiteService {
 
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'MUOKKAUS')")
     void revertToVersion(@P("opsId") Long opsId, Long viiteId, Integer versio);
+
+    @PreAuthorize("isAuthenticated()")
+    int getCountByKoodi(Long ktId, String koodi);
 }
 

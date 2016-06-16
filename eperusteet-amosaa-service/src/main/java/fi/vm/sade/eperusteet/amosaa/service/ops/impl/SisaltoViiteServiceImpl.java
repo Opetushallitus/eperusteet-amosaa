@@ -532,25 +532,34 @@ public class SisaltoViiteServiceImpl implements SisaltoViiteService {
     public void revertToVersion(Long opsId, Long viiteId, Integer versio) {
     }
 
-    @Override
-    public <T> List<T> getByKoodi(Long ktId, String koodi, Class<T> tyyppi) {
+    private List<SisaltoViite> getByKoodiRaw(Long ktId, String koodi) {
         if (koodi == null) {
-            return null;
+            return new ArrayList<>();
         }
 
-//            paikallinen_tutkinnonosa_1.2.246.562.10.83037752777_1234;
         String[] osat = koodi.split("_");
         if (osat.length == 4 && koodi.startsWith("paikallinen_tutkinnonosa")) {
             String ktOrg = osat[2];
             String osaKoodi = osat[3];
             Koulutustoimija kt = koulutustoimijaRepository.findOneByOrganisaatio(ktOrg);
-            return mapper.mapAsList(repository.findAllPaikallisetTutkinnonOsatByKoodi(kt, osaKoodi), tyyppi);
+            return repository.findAllPaikallisetTutkinnonOsatByKoodi(kt, osaKoodi);
         }
         else if (koodi.startsWith("tutkinnonosat_")) {
             Koulutustoimija kt = koulutustoimijaRepository.findOne(ktId);
-            return mapper.mapAsList(repository.findAllTutkinnonOsatByKoodi(kt, koodi), tyyppi);
+            return repository.findAllTutkinnonOsatByKoodi(kt, koodi);
         }
+
         return new ArrayList<>();
+    }
+
+    @Override
+    public <T> List<T> getByKoodi(Long ktId, String koodi, Class<T> tyyppi) {
+        return mapper.mapAsList(getByKoodiRaw(ktId, koodi), tyyppi);
+    }
+
+    @Override
+    public int getCountByKoodi(Long ktId, String koodi) {
+        return getByKoodiRaw(ktId, koodi).size();
     }
 
 }
