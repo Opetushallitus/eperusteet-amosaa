@@ -546,6 +546,10 @@ public class SisaltoViiteServiceImpl implements SisaltoViiteService {
             Koulutustoimija kt = koulutustoimijaRepository.findOneByOrganisaatio(ktOrg);
             return mapper.mapAsList(repository.findAllPaikallisetTutkinnonOsatByKoodi(kt, osaKoodi), tyyppi);
         }
+        else if (koodi.startsWith("tutkinnonosat_")) {
+            Koulutustoimija kt = koulutustoimijaRepository.findOne(ktId);
+            return mapper.mapAsList(repository.findAllTutkinnonOsatByKoodi(kt, koodi), tyyppi);
+        }
         return new ArrayList<>();
     }
 

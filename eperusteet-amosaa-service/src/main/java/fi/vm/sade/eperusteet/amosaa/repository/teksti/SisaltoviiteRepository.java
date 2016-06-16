@@ -44,4 +44,7 @@ public interface SisaltoviiteRepository extends JpaWithVersioningRepository<Sisa
 
     @Query(value = "SELECT sv FROM SisaltoViite sv WHERE sv.tosa.tyyppi = 'OMA' AND sv.owner.koulutustoimija = ?1 AND sv.tosa.omatutkinnonosa.koodi = ?2")
     List<SisaltoViite> findAllPaikallisetTutkinnonOsatByKoodi(Koulutustoimija kt, String koodi);
+
+    @Query(value = "SELECT sv FROM SisaltoViite sv WHERE sv.tosa.tyyppi = 'PERUSTEESTA' AND sv.owner.koulutustoimija = ?1 AND sv.tosa.koodi = ?2")
+    List<SisaltoViite> findAllTutkinnonOsatByKoodi(Koulutustoimija kt, String koodi);
 }

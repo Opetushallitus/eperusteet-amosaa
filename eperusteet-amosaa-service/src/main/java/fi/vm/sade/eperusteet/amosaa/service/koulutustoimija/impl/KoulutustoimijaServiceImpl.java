@@ -109,4 +109,5 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
         Koulutustoimija kt = repository.findOne(ktId);
         return mapper.mapAsList(sisaltoviiteRepository.findAllPaikallisetTutkinnonOsat(kt), tyyppi);
     }
+
 }

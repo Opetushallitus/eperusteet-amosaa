@@ -10,7 +10,8 @@ mixin polkuTutkinnonosa()
   div.sp-tutkinnonosa(ng-class="{ 'sp-laatikko-active': ngModel.$$haettu, 'sp-sisalto-poistettu': ngModel.$$poistettu }" ng-show="ngModel._tutkinnonOsaViite" ng-init="tosa = misc.tosat[ngModel._tutkinnonOsaViite];")
     div.sp-sisalto.sp-sisalto-tosa
       div.sp-nimi
-        span(ng-bind="tosa.$$tosa.nimi | kaanna")
+        a(href="" ng-click="misc.siirry(tosa)" ng-bind="tosa.$$tosa.nimi | kaanna")
+        b.sp-osaamisala(ng-bind="tosa.$$tosa.koodiArvo")
       div.sp-toolbar
         span.laajuus
           span(ng-bind="tosa.laajuus")
@@ -26,8 +27,7 @@ mixin tosaKoodiOsa(osa)
   div.sp-tutkinnonosa.sp-tutkinnonosa-(ng-class="{ 'sp-laatikko-active': ngModel.$$haettu, 'sp-sisalto-poistettu': ngModel.$$poistettu, 'sp-laatikko-rikki': misc.koodinimet[" + osa + "].rikki }")
     div.sp-sisalto.sp-sisalto-tosa
       div.sp-nimi
-        span(ng-hide="misc.koodinimet[" + osa + "].url" ng-bind="misc.koodinimet[" + osa + "].nimi | kaanna")
-        a(ng-show="misc.koodinimet[" + osa + "].url" href="{{ misc.koodinimet[" + osa + "].url }}" ng-bind="misc.koodinimet[" + osa + "].nimi | kaanna")
+        a(href="" ng-click="misc.siirry(misc.koodinimet[" + osa + "].uri)" ng-bind="misc.koodinimet[" + osa + "].nimi | kaanna")
         b.sp-osaamisala(ng-bind="misc.koodinimet[" + osa + "].arvo")
 
 

@@ -494,6 +494,26 @@ angular.module("app")
                             model.$$collapsed = !model.$$collapsed;
                             $scope.collapsed_dirty = true;
                         },
+                        siirry: obj => {
+                            paikallisetKoodit.one(obj.$$tosa ? obj.$$tosa.koodiUri : obj).get()
+                                .then(res => {
+                                    if (_.isEmpty(res)) {
+                                        NotifikaatioService.varoitus("tutkinnon-osalle-ei-toteutusta-koulutustoimijalla");
+                                        return;
+                                    }
+
+                                    const goToSisalto = (osa) => $state.go("root.koulutustoimija.opetussuunnitelmat.sisalto.osa", {
+                                        opsId: osa.owner.id,
+                                        osaId: osa.id
+                                    });
+
+                                    // TODO: Toteuta toteutuksen valitsin jos useampi toteutus
+                                    const opskohtaiset = _.filter(res, (arvo: any) => arvo.owner.id == $stateParams.opsId);
+                                    goToSisalto(_.size(opskohtaiset) > 0
+                                        ? opskohtaiset[0]
+                                        : res[0]);
+                                });
+                        },
                         poistoToggle: (node) => {
                             let rivi = _.find($scope.osa.suorituspolku.rivit, (rivi: any) => rivi.rakennemoduuli === node.tunniste);
                             if (!rivi) {
