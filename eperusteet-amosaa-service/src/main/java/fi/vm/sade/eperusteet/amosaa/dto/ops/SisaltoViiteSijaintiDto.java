@@ -14,17 +14,21 @@
  * European Union Public Licence for more details.
  */
 
-package fi.vm.sade.eperusteet.amosaa.repository.tutkinnonosa;
+package fi.vm.sade.eperusteet.amosaa.dto.ops;
 
-import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Tutkinnonosa;
-import fi.vm.sade.eperusteet.amosaa.repository.version.JpaWithVersioningRepository;
-import org.springframework.stereotype.Repository;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.TekstiKappaleNimiDto;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  *
  * @author nkala
  */
-@Repository
-public interface TutkinnonosaRepository extends JpaWithVersioningRepository<Tutkinnonosa, Long> {
-
+@Getter
+@Setter
+public class SisaltoViiteSijaintiDto {
+    private Long id;
+    private TekstiKappaleNimiDto tekstiKappale;
+    private OpetussuunnitelmaBaseDto owner;
 }

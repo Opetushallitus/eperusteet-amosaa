@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -62,16 +63,30 @@ public class KoodistoClientImpl implements KoodistoClient {
     public KoodistoKoodiDto get(String koodisto, String koodi) {
         RestTemplate restTemplate = new RestTemplate();
         String url = koodistoServiceUrl + KOODISTO_API + koodisto + "/koodi/" + koodi;
-        KoodistoKoodiDto re = restTemplate.getForObject(url, KoodistoKoodiDto.class);
-        return re;
+        try {
+            KoodistoKoodiDto re = restTemplate.getForObject(url, KoodistoKoodiDto.class);
+            return re;
+        }
+        catch (RestClientException ex) {
+            return null;
+        }
     }
 
     @Override
     public KoodistoKoodiDto getByUri(String uri) {
         String[] splitted = uri.split("_");
-        return splitted.length > 1
-                ? get(splitted[0], uri)
-                : null;
+        if (splitted.length < 2) {
+            return null;
+        }
+        else if (splitted.length == 2) {
+            return get(splitted[0], uri);
+        }
+        else if (splitted[0].startsWith("paikallinen_tutkinnonosa")) {
+            return null; // FIXME
+        }
+        else {
+            return null;
+        }
     }
 
     @Override

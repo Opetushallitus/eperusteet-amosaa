@@ -1,6 +1,7 @@
 namespace Koodisto {
     export const parseRawKoodisto = (koodit) => _(koodit)
-        .map(koodi => ({
+        .compact()
+        .map((koodi: any) => ({
             arvo: koodi.koodiArvo,
             uri: koodi.koodiUri,
             nimi: _.zipObject(
@@ -8,4 +9,7 @@ namespace Koodisto {
                 _.map(koodi.metadata, "nimi"))
         }))
         .value();
+
+    export const paikallinenToFull = (koulutustoimija, koodiArvo: string) =>
+        "paikallinen_tutkinnonosa_" + koulutustoimija.organisaatio + "_" + koodiArvo;
 };

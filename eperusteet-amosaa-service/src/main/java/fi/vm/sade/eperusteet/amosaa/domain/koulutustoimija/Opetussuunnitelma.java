@@ -19,7 +19,6 @@ package fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.AbstractAuditedEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
-import fi.vm.sade.eperusteet.amosaa.domain.liite.Liite;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
@@ -37,9 +36,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -101,7 +97,7 @@ public class Opetussuunnitelma extends AbstractAuditedEntity implements Serializ
     @Setter
     private LokalisoituTeksti kuvaus;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @Getter
     @Setter
     @NotNull

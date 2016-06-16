@@ -4,18 +4,18 @@ namespace SuoritustapaRyhmat {
         i = inject($injector, ["$rootScope", "$uibModal", "$q"]);
     };
 
-    export const editoi = (spRivit, node, tutkinnonosat, koodisto) => i.$uibModal.open({
-            resolve: {
-            },
+    export const editoi = (spRivit, node, tutkinnonosat, koodisto, paikalliset) => i.$uibModal.open({
+            resolve: { },
             templateUrl: "modals/suoritustaparyhma.jade",
             size: "lg",
-            controller: ($scope, $state, $uibModalInstance, $rootScope) => {
+            controller: ($q, $scope, $state, $uibModalInstance, $rootScope) => {
                 $scope.restoreModule = (m) => {
                     $scope.spRivit[m.tunniste] = undefined;
                 };
 
                 $scope.alkioitaSivulla = 10;
                 $scope.sivu = 1;
+                $scope.tosaRajaus = {};
 
                 $scope.spRivit = spRivit;
                 $scope.tosat = tutkinnonosat;
@@ -25,28 +25,44 @@ namespace SuoritustapaRyhmat {
                 };
 
                 const valitutKoodit = _.indexBy($scope.editable.koodit || [], _.identity);
+                let koodit = [];
 
-                koodisto.all("tutkinnonosat").getList()
-                    .then(res => $scope.koodit = _(Koodisto.parseRawKoodisto(res))
-                          .each((koodi: any) => {
-                              koodi.$$valittu = !!valitutKoodit[koodi.uri],
-                              koodi.$$piilotettu = false
-                          })
-                          .sortBy(koodi => KaannaService.kaanna(koodi.nimi))
-                          .value());
+                $q.all([
+                        paikalliset.getList(),
+                        koodisto.all("tutkinnonosat").getList(),
+                    ])
+                    .then(([paikallisetKoodit, julkisetKoodit]) => {
+                        $scope.koodit = koodit = _(paikallisetKoodit)
+                            .map(pkoodi => ({
+                                arvo: pkoodi.tosa.omatutkinnonosa.koodi,
+                                uri: "paikallinen_tutkinnonosa_"
+                                    + pkoodi.tosa.omatutkinnonosa.koodiPrefix
+                                    + "_" + pkoodi.tosa.omatutkinnonosa.koodi,
+                                nimi: pkoodi.tekstiKappale.nimi,
+                                $$paikallinen: true
+                            }))
+                            .concat(_(Koodisto.parseRawKoodisto(julkisetKoodit))
+                                .each((koodi: any) => {
+                                    koodi.$$valittu = !!valitutKoodit[koodi.uri],
+                                    koodi.$$piilotettu = false
+                                })
+                                .value())
+                            .sortBy(koodi => KaannaService.kaanna(koodi.nimi))
+                            .value()
+                    });
 
                 $scope.search = "";
                 $scope.piilotetut = {};
-                $scope.suodata = (search) => {
-                    _.each($scope.koodit, (koodi) => {
-                        koodi.$$piilotettu = !Algoritmit.match(search, koodi.nimi)
-                            && !Algoritmit.match(search, koodi.arvo);
-                    });
-                };
+                $scope.suodata = (search) =>
+                    $scope.koodit = _.reject(koodit, (koodi) =>
+                        (!Algoritmit.match(search, koodi.nimi)
+                                && !Algoritmit.match(search, koodi.arvo))
+                            || (($scope.tosaRajaus.paikalliset && !koodi.$$paikallinen)
+                                || ($scope.tosaRajaus.valitut && !koodi.$$valittu)));
 
                 $scope.ok = () => {
                     $rootScope.$broadcast("notifyCKEditor");
-                    $scope.editable.koodit = _($scope.koodit)
+                    $scope.editable.koodit = _(koodit)
                         .filter("$$valittu")
                         .map("uri")
                         .value();
@@ -182,57 +198,77 @@ angular.module("app")
             controller: ($scope) => {}
         },
         tutkinnonosa: {
-            controller: ($q, $scope, peruste, arviointiAsteikot, koodisto) => {
-                const osaAlueKoodit = $scope.pTosa ? _.map($scope.pTosa.osaAlueet, (oa: any) => ({
-                    nimi: oa.nimi,
-                    arvo: oa.koodiArvo,
-                    uri: oa.koodiUri
-                })) : [];
+            controller: ($q, $scope, peruste, arviointiAsteikot, koodisto, koulutustoimija) => {
+                const
+                    isPaikallinen = _.property("tosa.tyyppi")($scope.osa) === "oma",
+                    osaamisalaKoodit = peruste.osaamisalat,
+                    paikallisetKoodit = koulutustoimija.all("koodi"),
 
-                const osaamisalaKoodit = peruste.osaamisalat;
+                    osaAlueKoodit = $scope.pTosa ? _.map($scope.pTosa.osaAlueet, (oa: any) => ({
+                        nimi: oa.nimi,
+                        arvo: oa.koodiArvo,
+                        uri: oa.koodiUri
+                    })) : [],
 
-                const koodit = _([])
-                    .concat(osaAlueKoodit)
-                    .concat(osaamisalaKoodit)
-                    .indexBy("uri")
-                    .value();
+                    koodit = _([])
+                        .concat(osaAlueKoodit)
+                        .concat(osaamisalaKoodit)
+                        .indexBy("uri")
+                        .value(),
 
-                const haeKoodiTiedot = (koodiUrit) =>
-                    $q.all(_.map(koodiUrit, uri => koodisto.one("uri/" + uri).get()))
-                        .then(Koodisto.parseRawKoodisto);
+                    haeKoodiTiedot = (koodiUrit) =>
+                        $q.all(_.map(koodiUrit, uri => koodisto.one("uri/" + uri).get()))
+                            .then(Koodisto.parseRawKoodisto),
 
+                    paivitaKoodistoTiedot = () => {
+                        const toteutuksienKoodit = _($scope.osa.tosa.toteutukset)
+                            .map("koodit")
+                            .flatten()
+                            .uniq()
+                            .reject((koodi: string) => !!$scope.koodistoTiedot[koodi])
+                            .value();
+                        haeKoodiTiedot(toteutuksienKoodit)
+                            .then(koodit => {
+                                _.each(koodit, koodi => {
+                                    $scope.koodistoTiedot[koodi.uri] = koodi;
+                                })
+                            });
+                    },
 
-                $scope.koodistoTiedot = {};
-                const paivitaKoodistoTiedot = () => {
-                    const toteutuksienKoodit = _($scope.osa.tosa.toteutukset)
-                        .map("koodit")
-                        .flatten()
-                        .uniq()
-                        .reject((koodi: string) => !!$scope.koodistoTiedot[koodi])
-                        .value();
+                    getTutkintonimikekoodit = () =>
+                        haeKoodiTiedot(_.map(peruste.tutkintonimikkeet, "tutkintonimikeUri")),
 
-                    haeKoodiTiedot(toteutuksienKoodit)
-                        .then(koodit => {
-                            _.each(koodit, koodi => {
-                                $scope.koodistoTiedot[koodi.uri] = koodi;
-                            })
+                    addKoodi = (valitut, toteutus) => KoodistoModal.koodi(valitut, toteutus.koodit)
+                        .then(res => {
+                            toteutus.koodit = res;
+                            paivitaKoodistoTiedot();
                         });
-                };
-                paivitaKoodistoTiedot();
 
-                const getTutkintonimikekoodit = () =>
-                    haeKoodiTiedot(_.map(peruste.tutkintonimikkeet, "tutkintonimikeUri"));
-
-                $scope.$$showToteutus = true;
-                $scope.koodit = koodit;
-                $scope.peruste = peruste;
-                $scope.sortableOptions = {
-                    handle: ".toteutus-handle",
-                    cursor: "move",
-                    delay: 100,
-                    tolerance: "pointer",
-                    placeholder: "toteutus-placeholder"
+                $scope.paikallinenKoodiUpdate = (pkoodi) => {
+                    if (pkoodi) {
+                        const fullKoodi = Koodisto.paikallinenToFull(koulutustoimija, pkoodi);
+                        paikallisetKoodit.one(fullKoodi).getList()
+                        .then(res => $scope.tormaavatKoodit = _.reject(res, (koodi: any) => koodi.id === $scope.osa.id));
+                    }
                 };
+
+                $scope.paikallinenKoodiUpdate(_.property("tosa.omatutkinnonosa.koodi")($scope.osa));
+
+                { // Init block
+                    $scope.koodistoTiedot = {};
+                    $scope.$$showToteutus = true;
+                    $scope.koodit = koodit;
+                    $scope.peruste = peruste;
+                    $scope.sortableOptions = {
+                        handle: ".toteutus-handle",
+                        cursor: "move",
+                        delay: 100,
+                        tolerance: "pointer",
+                        placeholder: "toteutus-placeholder"
+                    };
+
+                    paivitaKoodistoTiedot();
+                }
 
                 // FIXME: Hack to cope with old peruste tutkinnon osa string references
                 $scope.pa = {
@@ -247,12 +283,6 @@ angular.module("app")
                 };
 
                 $scope.removeToteutus = (toteutus) => _.remove($scope.osa.tosa.toteutukset, toteutus);
-
-                const addKoodi = (valitut, toteutus) => KoodistoModal.koodi(valitut, toteutus.koodit)
-                    .then(res => {
-                        toteutus.koodit = res;
-                        paivitaKoodistoTiedot();
-                    });
 
                 $scope.addKoodi = (toteutus) => {
                     getTutkintonimikekoodit()
@@ -364,7 +394,7 @@ angular.module("app")
             controller: ($scope, osa) => {}
         },
         suorituspolku: {
-            controller: ($q, $rootScope, $scope, osa, peruste: REl, pSuoritustavat, pTosat, koodisto) => {
+            controller: ($q, $rootScope, $scope, osa, peruste: REl, pSuoritustavat, pTosat, koodisto, paikallisetTutkinnonosatEP) => {
                 const suoritustapa = Perusteet.getSuoritustapa(pSuoritustavat);
                 const tosat = _.indexBy(pTosat, "id");
                 const tosaViitteet: any = _(_.cloneDeep(Perusteet.getTosaViitteet(suoritustapa)))
@@ -385,11 +415,14 @@ angular.module("app")
                         .map("koodit")
                         .flatten()
                         .uniq()
+                        .reject((koodi: string) => _.startsWith("paikallinen_tutkinnonosa"))
                         .filter((koodi: string) => !$scope.misc.koodinimet[koodi])
                         .map(koodi => koodisto.one("uri/" + koodi).get())
                         .value())
                         .then(Koodisto.parseRawKoodisto)
-                        .then(koodit => _.each(koodit, (koodi) => { $scope.misc.koodinimet[koodi.uri] = koodi; }));
+                        .then(koodit => _.each(koodit, (koodi) => {
+                            $scope.misc.koodinimet[koodi.uri] = koodi;
+                        }));
                 };
 
                 $scope.collapsed_dirty = false;
@@ -401,7 +434,7 @@ angular.module("app")
                     koodinimet: {},
                     editNode: (node) => {
                         const spRivit = _.indexBy($scope.osa.suorituspolku.rivit, "rakennemoduuli");
-                        SuoritustapaRyhmat.editoi(spRivit, node, tosaViitteet, koodisto)
+                        SuoritustapaRyhmat.editoi(spRivit, node, tosaViitteet, koodisto, paikallisetTutkinnonosatEP)
                             .then(res => {
                                 $scope.osa.suorituspolku.rivit = _.compact(_.values(res));
                                 update();

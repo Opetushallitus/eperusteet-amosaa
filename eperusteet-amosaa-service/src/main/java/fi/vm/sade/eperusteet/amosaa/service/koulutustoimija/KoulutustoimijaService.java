@@ -28,13 +28,17 @@ import org.springframework.security.access.prepost.PreAuthorize;
  * @author nkala
  */
 // TODO: Vaihda koulutustoimijakohtaiseen autentikaatioon
-@PreAuthorize("isAuthenticated()")
 public interface KoulutustoimijaService {
 
+    @PreAuthorize("isAuthenticated()")
     List<KoulutustoimijaBaseDto> getKoulutustoimijat(Set<String> ktOid);
 
+    @PreAuthorize("isAuthenticated()")
     List<KoulutustoimijaBaseDto> initKoulutustoimijat(Set<String> kOid);
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
     KoulutustoimijaDto getKoulutustoimija(@P("ktId") Long ktId);
+
+    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
+    <T> List<T> getPaikallisetTutkinnonOsat(Long ktId, Class<T> tyyppi);
 }

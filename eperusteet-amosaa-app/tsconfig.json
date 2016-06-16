@@ -2,7 +2,9 @@
   "compilerOptions": {
     "target": "es5",
     "module": "commonjs",
-    "sourceMap": true
+    "sourceMap": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true
   },
   "files": [
     "typings/tsd.d.ts",

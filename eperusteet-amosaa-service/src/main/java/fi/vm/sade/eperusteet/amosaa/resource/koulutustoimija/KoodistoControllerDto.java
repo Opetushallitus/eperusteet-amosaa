@@ -14,17 +14,18 @@
  * European Union Public Licence for more details.
  */
 
-package fi.vm.sade.eperusteet.amosaa.repository.tutkinnonosa;
+package fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija;
 
-import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Tutkinnonosa;
-import fi.vm.sade.eperusteet.amosaa.repository.version.JpaWithVersioningRepository;
-import org.springframework.stereotype.Repository;
+import io.swagger.annotations.Api;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  *
  * @author nkala
  */
-@Repository
-public interface TutkinnonosaRepository extends JpaWithVersioningRepository<Tutkinnonosa, Long> {
-
+@RestController
+@RequestMapping("/koodit")
+@Api(value = "koodit")
+public class KoodistoControllerDto {
 }

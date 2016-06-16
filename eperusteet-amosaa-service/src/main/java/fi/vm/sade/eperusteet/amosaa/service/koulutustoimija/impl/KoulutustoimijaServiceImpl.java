@@ -23,6 +23,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
+import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
@@ -51,6 +52,9 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     private KoulutustoimijaRepository repository;
 
     @Autowired
+    private SisaltoviiteRepository sisaltoviiteRepository;
+
+    @Autowired
     private DtoMapper mapper;
 
     @Transactional(readOnly = false)
@@ -65,7 +69,7 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
         if (organisaatio == null) {
             return null;
         }
-        
+
         LokalisoituTeksti nimi = LokalisoituTeksti.of(Kieli.FI, organisaatio.get("nimi").get("fi").asText());
         koulutustoimija = new Koulutustoimija();
         koulutustoimija.setNimi(nimi);
@@ -98,5 +102,11 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     @Override
     public KoulutustoimijaDto getKoulutustoimija(Long kId) {
         return mapper.map(repository.findOne(kId), KoulutustoimijaDto.class);
+    }
+
+    @Override
+    public <T> List<T> getPaikallisetTutkinnonOsat(Long ktId, Class<T> tyyppi) {
+        Koulutustoimija kt = repository.findOne(ktId);
+        return mapper.mapAsList(sisaltoviiteRepository.findAllPaikallisetTutkinnonOsat(kt), tyyppi);
     }
 }

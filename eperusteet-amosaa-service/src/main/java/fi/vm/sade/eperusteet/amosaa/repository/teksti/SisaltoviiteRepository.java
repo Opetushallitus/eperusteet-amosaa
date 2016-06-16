@@ -15,6 +15,7 @@
  */
 package fi.vm.sade.eperusteet.amosaa.repository.teksti;
 
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
@@ -37,4 +38,10 @@ public interface SisaltoviiteRepository extends JpaWithVersioningRepository<Sisa
 
     @Query(value = "SELECT tkv from SisaltoViite tkv where tkv.owner = ?1 AND tkv.vanhempi IS NULL")
     SisaltoViite findOneRoot(Opetussuunnitelma owner);
+
+    @Query(value = "SELECT sv FROM SisaltoViite sv WHERE sv.tosa.tyyppi = 'OMA' AND sv.owner.koulutustoimija = ?1")
+    List<SisaltoViite> findAllPaikallisetTutkinnonOsat(Koulutustoimija kt);
+
+    @Query(value = "SELECT sv FROM SisaltoViite sv WHERE sv.tosa.tyyppi = 'OMA' AND sv.owner.koulutustoimija = ?1 AND sv.tosa.omatutkinnonosa.koodi = ?2")
+    List<SisaltoViite> findAllPaikallisetTutkinnonOsatByKoodi(Koulutustoimija kt, String koodi);
 }

@@ -440,8 +440,8 @@ public class SisaltoViiteServiceImpl implements SisaltoViiteService {
 
     private void validoiRakenne(SisaltoViite vanha, SisaltoViiteDto.Puu uusi) {
         // Tarkista ettei rakenteen elementit muutu järjestyksen vaihtuessa
-        ArrayList<Long> vanhatAvaimet = new ArrayList<>();
-        ArrayList<Long> uudetAvaimet = new ArrayList<>();
+        List<Long> vanhatAvaimet = new ArrayList<>();
+        List<Long> uudetAvaimet = new ArrayList<>();
         kaikkiPuunAvaimet(vanha, vanhatAvaimet);
         kaikkiPuunAvaimet(uusi, uudetAvaimet);
         Collections.sort(vanhatAvaimet);
@@ -530,6 +530,23 @@ public class SisaltoViiteServiceImpl implements SisaltoViiteService {
 
     @Override
     public void revertToVersion(Long opsId, Long viiteId, Integer versio) {
+    }
+
+    @Override
+    public <T> List<T> getByKoodi(Long ktId, String koodi, Class<T> tyyppi) {
+        if (koodi == null) {
+            return null;
+        }
+
+//            paikallinen_tutkinnonosa_1.2.246.562.10.83037752777_1234;
+        String[] osat = koodi.split("_");
+        if (osat.length == 4 && koodi.startsWith("paikallinen_tutkinnonosa")) {
+            String ktOrg = osat[2];
+            String osaKoodi = osat[3];
+            Koulutustoimija kt = koulutustoimijaRepository.findOneByOrganisaatio(ktOrg);
+            return mapper.mapAsList(repository.findAllPaikallisetTutkinnonOsatByKoodi(kt, osaKoodi), tyyppi);
+        }
+        return new ArrayList<>();
     }
 
 }

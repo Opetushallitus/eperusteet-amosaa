@@ -16,7 +16,7 @@
 
 package fi.vm.sade.eperusteet.amosaa.repository.tutkinnonosa;
 
-import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Tutkinnonosa;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaTutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.repository.version.JpaWithVersioningRepository;
 import org.springframework.stereotype.Repository;
 
@@ -25,6 +25,5 @@ import org.springframework.stereotype.Repository;
  * @author nkala
  */
 @Repository
-public interface TutkinnonosaRepository extends JpaWithVersioningRepository<Tutkinnonosa, Long> {
-
+public interface OmaTutkinnonosaRepository extends JpaWithVersioningRepository<OmaTutkinnonosa, Long> {
 }

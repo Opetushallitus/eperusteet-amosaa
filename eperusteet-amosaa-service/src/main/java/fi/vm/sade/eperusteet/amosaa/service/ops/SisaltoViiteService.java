@@ -66,6 +66,9 @@ public interface SisaltoViiteService {
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
     SisaltoViiteDto getData(@P("opsId") Long opsId, Long viiteId, Integer revId);
 
+    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
+    <T> List<T> getByKoodi(@P("ktId") Long ktId, String koodi, Class<T> tyyppi);
+
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'MUOKKAUS')")
     void revertToVersion(@P("opsId") Long opsId, Long viiteId, Integer versio);
 }

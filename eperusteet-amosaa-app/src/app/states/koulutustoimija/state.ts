@@ -14,6 +14,7 @@ angular.module("app")
         opetussuunnitelmat: (koulutustoimija) => koulutustoimija.all("opetussuunnitelmat").getList(),
         yhteiset: (opetussuunnitelmat) => _.filter(opetussuunnitelmat, { tyyppi: "yhteinen" }),
         kayttajanTieto: (koulutustoimija) => (kayttajaId) => koulutustoimija.one("kayttajat", kayttajaId).get(),
+        paikallisetTutkinnonosatEP: (koulutustoimija) => koulutustoimija.all("tutkinnonosat"),
     },
     onEnter: (koulutustoimija) => Murupolku.register("root.koulutustoimija", koulutustoimija.nimi),
     controller: (koulutustoimija) => { }
