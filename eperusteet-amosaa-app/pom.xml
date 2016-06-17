@@ -76,7 +76,16 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>gulp build</id>
+                        <id>gulp clean</id>
+                        <goals>
+                            <goal>gulp</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>clean --no-color</arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>gulp dist</id>
                         <goals>
                             <goal>gulp</goal>
                         </goals>

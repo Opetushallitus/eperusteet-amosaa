@@ -4,7 +4,10 @@ var
     config        = require('./config.json'),
     concat        = require('gulp-concat'),
     connect       = require('gulp-connect'),
+    clean         = require('gulp-clean'),
     preprocess    = require('gulp-preprocess'),
+    rev           = require('gulp-rev'),
+    revReplace    = require('gulp-rev-replace'),
     gulp          = require('gulp'),
     jade          = require('gulp-jade'),
     merge         = require('merge-stream'),
@@ -23,10 +26,7 @@ var tests = _.filter(ts_app_config.files, function (file) { return _.startsWith(
 var sources = _.reject(ts_app_config.files, function (file) { return _.startsWith(file, 'test'); });
 
 // TODO:
-// Add preprocessing options
-// Dist
 // Tests
-// Pack templates after compilation
 
 function mkStream(fn) {
     return require('event-stream').map(fn);
@@ -113,7 +113,7 @@ gulp
 })
 .task('dependencies', function () {
     return gulp.src(config.dependencies)
-        .pipe(concat('dependencies.js'))
+        .pipe(concat('amosaa-dependencies.js'))
         .pipe(gulp.dest(config.build));
 })
 // gulp-tsc uses file.path instead of file.contents
@@ -143,7 +143,7 @@ gulp
             console.log(error.toString());
             this.emit('end');
         })
-        .pipe(concat('app.js'))
+        .pipe(concat('amosaa-app.js'))
         .pipe(gulp.dest(config.build))
         .pipe(connect.reload());
 })
@@ -159,9 +159,26 @@ gulp
         }
     });
 })
-.task('build', ['dependencies', 'templates', 'sass', 'compile', 'static-fonts'])
-.task('dist', ['build'], function () {
-    return gulp.src([config.build + '**/*']).pipe(gulp.dest(config.dist));
+.task('build', ['dependencies', 'templates', 'sass', 'compile', 'static-fonts'], function() {
+    return gulp.src(config.build + 'index.html')
+        .pipe(gulp.dest(config.build));
+})
+.task('dist:move', ['build'], function () {
+    return gulp.src([config.build + '**/*'])
+        .pipe(gulp.dest(config.dist));
+})
+.task('revision', ['dist:move'], function(){
+    return gulp.src([config.dist + "/*.js"])
+        .pipe(rev())
+        .pipe(gulp.dest(config.dist))
+        .pipe(rev.manifest())
+        .pipe(gulp.dest(config.dist));
+})
+.task('dist', ['revision'], function(){
+    var manifest = gulp.src(config.dist + "/rev-manifest.json");
+    return gulp.src(config.dist + "/index.html")
+        .pipe(revReplace({manifest: manifest}))
+        .pipe(gulp.dest(config.dist));
 })
 .task('watch', ['connect', 'build'], function () {
     gulp.watch(config.app + '**/*.ts', ['compile']);
@@ -169,5 +186,9 @@ gulp
     gulp.watch(config.app + '**/*.scss', ['sass']);
     gulp.watch('./src/localisation/*.json', ['locales']);
     gulp.watch('./src/ckeditor-plugins/**/*', ['ckeditor']);
+})
+.task('clean', function () {
+    return gulp.src([config.build, config.dist], { read: false })
+        .pipe(clean({ force: true }));
 })
 .task('default', ['watch']);
