@@ -19,6 +19,7 @@ package fi.vm.sade.eperusteet.amosaa.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import fi.vm.sade.eperusteet.amosaa.domain.Lukko;
 import java.time.Instant;
+import java.util.Date;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -42,6 +43,7 @@ public class LukkoDto {
         this.vanhentuu = lukko.getVanhentuu();
         this.oma = lukko.isOma();
         this.revisio = revisio;
+        this.vanhentunut = this.vanhentuu.isBefore(new Date().toInstant());
     }
 
     final String haltijaOid;
@@ -51,6 +53,7 @@ public class LukkoDto {
     final Instant luotu;
     final Instant vanhentuu;
     final Boolean oma;
+    final boolean vanhentunut;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer revisio;

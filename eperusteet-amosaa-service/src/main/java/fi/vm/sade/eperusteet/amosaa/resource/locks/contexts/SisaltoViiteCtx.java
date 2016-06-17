@@ -13,26 +13,35 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * European Union Public Licence for more details.
  */
-package fi.vm.sade.eperusteet.amosaa.service.locking;
 
+package fi.vm.sade.eperusteet.amosaa.resource.locks.contexts;
+
+import fi.vm.sade.eperusteet.amosaa.service.locking.OpsCtx;
 import lombok.Getter;
 import lombok.Setter;
 
 /**
  *
- * @author jhyoty
+ * @author nkala
  */
 @Getter
 @Setter
-public class OpsCtx {
-    private Long ktId;
-    private Long opsId;
+public class SisaltoViiteCtx extends OpsCtx {
+    Long svId;
 
-    public OpsCtx() {
+    public SisaltoViiteCtx() {
     }
 
-    public OpsCtx(Long ktId, Long opsId) {
-        this.ktId = ktId;
-        this.opsId = opsId;
+    public SisaltoViiteCtx(Long svId) {
+        this.svId = svId;
     }
+
+    public void setOsanId(Long svId) {
+        this.svId = svId;
+    }
+
+    public static SisaltoViiteCtx of(Long svId) {
+        return new SisaltoViiteCtx(svId);
+    }
+
 }

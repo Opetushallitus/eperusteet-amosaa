@@ -10,7 +10,8 @@ angular.module("app")
     const mapping = {
         date: "d.M.yyyy",
         default: "d.M.yyyy H:mm:ss",
-        short: "d.M.yyyy H:mm"
+        short: "d.M.yyyy H:mm",
+        time: "H:mm"
     };
 
     return (input, format, defaultKey) => {

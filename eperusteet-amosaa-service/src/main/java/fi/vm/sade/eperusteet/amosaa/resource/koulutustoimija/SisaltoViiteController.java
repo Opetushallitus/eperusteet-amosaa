@@ -46,12 +46,12 @@ public class SisaltoViiteController {
     @Autowired
     private SisaltoViiteService service;
 
-    @RequestMapping(value = "/tekstit/{tkvId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/tekstit/{svId}", method = RequestMethod.GET)
     SisaltoViiteDto.Matala getTekstit(
             @PathVariable final Long ktId,
             @PathVariable final Long opsId,
-            @PathVariable final Long tkvId) {
-        return service.getSisaltoViite(ktId, opsId, tkvId);
+            @PathVariable final Long svId) {
+        return service.getSisaltoViite(ktId, opsId, svId);
     }
 
     @RequestMapping(value = "/otsikot", method = RequestMethod.GET)
@@ -61,68 +61,68 @@ public class SisaltoViiteController {
         return service.getSisaltoViitteet(ktId, opsId, SisaltoViiteKevytDto.class);
     }
 
-    @RequestMapping(value = "/tekstit/{tkvId}", method = RequestMethod.POST)
+    @RequestMapping(value = "/tekstit/{svId}", method = RequestMethod.POST)
     SisaltoViiteDto.Matala addTekstiKappaleLapsi(
             @PathVariable final Long ktId,
             @PathVariable final Long opsId,
-            @PathVariable final Long tkvId,
+            @PathVariable final Long svId,
             @RequestBody(required = false) SisaltoViiteDto.Matala tekstiKappaleViiteDto) {
         tekstiKappaleViiteDto.setLapset(new ArrayList<>());
-        return service.addSisaltoViite(ktId, opsId, tkvId, tekstiKappaleViiteDto);
+        return service.addSisaltoViite(ktId, opsId, svId, tekstiKappaleViiteDto);
     }
 
-    @RequestMapping(value = "/tekstit/{tkvId}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/tekstit/{svId}", method = RequestMethod.PUT)
     void updateTekstiKappaleViite(
             @PathVariable final Long ktId,
             @PathVariable final Long opsId,
-            @PathVariable final Long tkvId,
+            @PathVariable final Long svId,
             @RequestBody final SisaltoViiteDto tekstiKappaleViiteDto) {
-        service.updateSisaltoViite(ktId, opsId, tkvId, tekstiKappaleViiteDto);
+        service.updateSisaltoViite(ktId, opsId, svId, tekstiKappaleViiteDto);
     }
 
-    @RequestMapping(value = "/tekstit/{tkvId}/rakenne", method = RequestMethod.PUT)
+    @RequestMapping(value = "/tekstit/{svId}/rakenne", method = RequestMethod.PUT)
     void updateSisaltoViiteRakenne(
             @PathVariable final Long ktId,
             @PathVariable final Long opsId,
-            @PathVariable final Long tkvId,
+            @PathVariable final Long svId,
             @RequestBody final SisaltoViiteDto.Puu tekstiKappaleViiteDto) {
-        service.reorderSubTree(ktId, opsId, tkvId, tekstiKappaleViiteDto);
+        service.reorderSubTree(ktId, opsId, svId, tekstiKappaleViiteDto);
     }
 
-    @RequestMapping(value = "/tekstit/{tkvId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/tekstit/{svId}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void removeSisaltoViite(
             @PathVariable final Long ktId,
             @PathVariable final Long opsId,
-            @PathVariable final Long tkvId) {
-        service.removeSisaltoViite(ktId, opsId, tkvId);
+            @PathVariable final Long svId) {
+        service.removeSisaltoViite(ktId, opsId, svId);
     }
 
-    @RequestMapping(value = "/tekstit/{tkvId}/versiot/uusin", method = RequestMethod.GET)
+    @RequestMapping(value = "/tekstit/{svId}/versiot/uusin", method = RequestMethod.GET)
     @InternalApi
     RevisionDto getLatestRevision(
             @PathVariable final Long ktId,
             @PathVariable final Long opsId,
-            @PathVariable final Long tkvId) {
-        return service.getLatestRevision(opsId, tkvId);
+            @PathVariable final Long svId) {
+        return service.getLatestRevision(opsId, svId);
     }
 
-    @RequestMapping(value = "/tekstit/{tkvId}/versiot", method = RequestMethod.GET)
+    @RequestMapping(value = "/tekstit/{svId}/versiot", method = RequestMethod.GET)
     @InternalApi
     List<RevisionDto> getRevisions(
             @PathVariable final Long ktId,
             @PathVariable final Long opsId,
-            @PathVariable final Long tkvId) {
-        return service.getRevisions(opsId, tkvId);
+            @PathVariable final Long svId) {
+        return service.getRevisions(opsId, svId);
     }
 
-    @RequestMapping(value = "/tekstit/{tkvId}/versiot/{revId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/tekstit/{svId}/versiot/{revId}", method = RequestMethod.GET)
     @InternalApi
     SisaltoViiteDto getRevisions(
             @PathVariable final Long ktId,
             @PathVariable final Long opsId,
-            @PathVariable final Long tkvId,
+            @PathVariable final Long svId,
             @PathVariable final Integer revId) {
-        return service.getData(opsId, tkvId, revId);
+        return service.getData(opsId, svId, revId);
     }
 }

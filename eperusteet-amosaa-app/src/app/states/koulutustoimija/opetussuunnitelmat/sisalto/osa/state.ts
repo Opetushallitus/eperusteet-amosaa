@@ -81,6 +81,7 @@ angular.module("app")
     resolve: {
         osa: (ops, $stateParams) => ops.one("tekstit", $stateParams.osaId).get(),
         historia: osa => osa.getList("versiot"),
+        lukko: osa => osa.one("lukko"),
         versioId: $stateParams => $stateParams.versio,
         versio: (versioId, historia) => versioId && historia.get(versioId),
         kommentit: (osa) => osa.all("kommentit").getList(),
@@ -97,8 +98,22 @@ angular.module("app")
         Murupolku.register("root.koulutustoimija.opetussuunnitelmat.sisalto.osa", osa.tekstiKappale.nimi),
     views: {
         "": {
-            controller: ($q, $state, $stateParams, $location, $scope, $rootScope, $document, $timeout,
-                         koulutustoimija, osa, nimiLataaja, Varmistusdialogi, historia, versioId, versio, pTosa) => {
+            controller: ($q, $state, $stateParams, $location, $scope, $rootScope, $document, $timeout, $filter, $sce,
+                         koulutustoimija, osa, nimiLataaja, Varmistusdialogi, historia, versioId, versio, pTosa, lukko) => {
+                $scope.tarkistaLukitus = _.callAndGive(() => {
+                    lukko.get()
+                        .then((res) => $scope.osaLock = undefined)
+                        .catch((lock) => {
+                            if (!lock.data.oma || !lukko.data.vanhentunut) {
+                                $scope.osaLock = lock.data;
+                                $scope.osaLockStr = $sce.trustAsHtml(KaannaService.kaanna("lukko-kayttajalla")
+                                    + ": " + (lock.data.haltijaNimi || lock.data.haltijaOid)
+                                    + "<br>" + KaannaService.kaanna("lukitus-ajankohta") + ": " + $filter("aikaleima")(lock.data.luotu, "time")
+                                    + "<br>" + KaannaService.kaanna("lukitus-vapautuu") + ": " + $filter("aikaleima")(lock.data.vanhentuu, "time"));
+                            }
+                        });
+                });
+
                 $scope.pTosa = pTosa;
                 nimiLataaja(osa.tekstiKappale.muokkaaja)
                     .then(_.cset(osa, "$$nimi"));
@@ -125,16 +140,18 @@ angular.module("app")
                 // Item handling
                 osa.lapset = undefined;
                 $scope.edit = EditointikontrollitService.createRestangular($scope, "osa", osa, {
-                    after: () => {
-                        $rootScope.$broadcast("sivunavi:forcedUpdate", $scope.osa);
-                    },
-                    preSave: () => $q((resolve, reject) => Osat.deinit($scope.osa, koulutustoimija)
-                        ? resolve()
-                        : reject()),
-                    done: () => historia.get("uusin").then(res => {
+                    preStart: () => $q((resolve, reject) => lukko.customPOST($stateParams, "")
+                        .then(resolve)
+                        .catch(() => {
+                            $scope.tarkistaLukitus();
+                            reject();
+                        })),
+                    after: (res) => historia.get("uusin").then(res => {
                         $scope.uusin = Revisions.parseOne(res);
                         $scope.historia.unshift($scope.uusin);
-                    })
+                        $rootScope.$broadcast("sivunavi:forcedUpdate", $scope.osa);
+                    }),
+                    done: () => lukko.remove()
                 });
 
                 $scope.remove = () => {

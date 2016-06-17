@@ -84,6 +84,7 @@ namespace EditointikontrollitService {
                 _$rootScope.$broadcast("editointikontrollit:cancel");
                 _$rootScope.$broadcast("notifyCKEditor");
                 resolve();
+                _activeCallbacks.done();
             })
             .catch(reject);
     });

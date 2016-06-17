@@ -39,7 +39,10 @@ import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.PoistettuReposito
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.TekstiKappaleRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.tutkinnonosa.TutkinnonosaRepository;
+import fi.vm.sade.eperusteet.amosaa.resource.locks.contexts.SisaltoViiteCtx;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
+import fi.vm.sade.eperusteet.amosaa.service.exception.LockingException;
+import fi.vm.sade.eperusteet.amosaa.service.locking.AbstractLockService;
 import fi.vm.sade.eperusteet.amosaa.service.locking.LockManager;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
@@ -63,7 +66,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional(readOnly = true)
-public class SisaltoViiteServiceImpl implements SisaltoViiteService {
+public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx> implements SisaltoViiteService {
 
     @Autowired
     private DtoMapper mapper;
@@ -452,7 +455,7 @@ public class SisaltoViiteServiceImpl implements SisaltoViiteService {
         }
 
         if (!Objects.equals(vanha.getId(), uusi.getId())) {
-            throw new BusinessRuleViolationException("puun-juurisolmue-ei-voi-vaihtaa");
+            throw new BusinessRuleViolationException("puun-juurisolmue-ei-voi-va23ihtaa");
         }
 
         // TODO: Tutkinnon osat vain yksi
@@ -561,5 +564,25 @@ public class SisaltoViiteServiceImpl implements SisaltoViiteService {
     public int getCountByKoodi(Long ktId, String koodi) {
         return getByKoodiRaw(ktId, koodi).size();
     }
+
+    @Override
+    protected Long getLockId(SisaltoViiteCtx ctx) {
+        return ctx.getSvId();
+    }
+
+    @Override
+    protected Long validateCtx(SisaltoViiteCtx ctx, boolean readOnly) {
+        SisaltoViite sv = repository.findOneByOwnerIdAndId(ctx.getOpsId(), ctx.getSvId());
+        if (sv != null) {
+            return ctx.getSvId();
+        }
+        throw new LockingException("virheellinen-lukitus");
+    }
+
+    @Override
+    protected int latestRevision(SisaltoViiteCtx ctx) {
+        return repository.getLatestRevisionId(ctx.getSvId());
+    }
+
 
 }

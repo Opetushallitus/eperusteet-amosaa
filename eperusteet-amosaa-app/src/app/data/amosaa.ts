@@ -11,7 +11,6 @@ angular.module("app")
     config.setBaseUrl("/eperusteet-amosaa-service/api");
     config.addResponseInterceptor((data, operation, what, url, response, deferred) => {
         if (response && response.status >= 400) {
-            console.log("Fail");
             if (response.status >= 500) {
                 // fataali(KaannaService.kaanna("jarjestelmavirhe-teksti", {
                 //     virhekoodi: response.status

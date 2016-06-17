@@ -18,6 +18,7 @@ package fi.vm.sade.eperusteet.amosaa.service.ops.impl;
 
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.SuorituspolkuRivi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
@@ -136,16 +137,18 @@ public class ValidointiServiceImpl implements ValidointiService {
         LokalisoituTeksti.validoi(validointi, ops, ops.getNimi());
         LokalisoituTeksti.validoi(validointi, ops, ops.getKuvaus());
 
-        if (ops.getHyvaksyja() == null || ops.getHyvaksyja().isEmpty()) {
-            validointi.virhe("hyvaksyjaa-ei-maaritelty", ops.getNimi());
-        }
+        if (ops.getTyyppi() == OpsTyyppi.OPS || ops.getTyyppi() == OpsTyyppi.YLEINEN) {
+            if (ops.getHyvaksyja() == null || ops.getHyvaksyja().isEmpty()) {
+                validointi.virhe("hyvaksyjaa-ei-maaritelty", ops.getNimi());
+            }
 
-        if (ops.getPaatosnumero()== null || ops.getPaatosnumero().isEmpty()) {
-            validointi.virhe("paatosnumeroa-ei-maaritelty", ops.getNimi());
-        }
+            if (ops.getPaatosnumero()== null || ops.getPaatosnumero().isEmpty()) {
+                validointi.virhe("paatosnumeroa-ei-maaritelty", ops.getNimi());
+            }
 
-        if (ops.getPaatosnumero() == null) {
-            validointi.virhe("paatospaivamaaraa-ei-maaritelty", ops.getNimi());
+            if (ops.getPaatosnumero() == null) {
+                validointi.virhe("paatospaivamaaraa-ei-maaritelty", ops.getNimi());
+            }
         }
     }
 }

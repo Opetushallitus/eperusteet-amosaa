@@ -28,8 +28,17 @@ mixin editButtonSmall(actionEdit)
 
 
 mixin editButton(actionEdit, className)
-  button.btn.btn-primary.muokkaa(class=className ng-hide="$$ekEditing || versio" ng-click=actionEdit oikeustarkastelu="muokkaus")&attributes(attributes)
-    +icon("pencil")
+  span(ng-hide="osaLock")
+    button.btn.btn-primary.muokkaa(class=className ng-hide="$$ekEditing || versio" ng-click=actionEdit oikeustarkastelu="muokkaus")&attributes(attributes)
+      +icon("pencil")
+  span(ng-show="osaLock")
+    button.btn.btn-primary.muokkaa(
+      popover-title="{{ 'osa-lukittu' | kaanna }}"
+      uib-popover-html="osaLockStr"
+      popover-trigger="mouseenter"
+      popover-placement="bottom"
+      ng-click="tarkistaLukitus()")
+      +icon("lock")
 
 
 mixin addButtonSmall(actionEdit, className)

@@ -15,10 +15,10 @@
  */
 package fi.vm.sade.eperusteet.amosaa.domain.teksti;
 
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 import java.io.Serializable;
-import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -51,7 +51,7 @@ public class Tekstiosa implements Serializable {
     @Setter
     @ValidHtml(whitelist = ValidHtml.WhitelistType.NONE)
     private LokalisoituTeksti otsikko;
-    
+
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.LAZY)
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @Getter
@@ -77,17 +77,17 @@ public class Tekstiosa implements Serializable {
         return new Tekstiosa(other);
     }
 
-    public static void validoi(Validointi validointi, Tekstiosa osa, Set<Kieli> kielet, LokalisoituTeksti parent) {
+    public static void validoi(Validointi validointi, Tekstiosa osa, Opetussuunnitelma kielet, LokalisoituTeksti parent) {
         validoiOtsikko(validointi, osa, kielet, parent);
         validoiTeksti(validointi, osa, kielet, parent);
     }
 
 
-    public static void validoiOtsikko(Validointi validointi, Tekstiosa osa, Set<Kieli> kielet, LokalisoituTeksti parent) {
-        LokalisoituTeksti.validoi(validointi, kielet, osa.getOtsikko(), parent);
+    public static void validoiOtsikko(Validointi validointi, Tekstiosa osa, Opetussuunnitelma ops, LokalisoituTeksti parent) {
+        LokalisoituTeksti.validoi(validointi, ops, osa.getOtsikko(), parent);
     }
 
-    public static void validoiTeksti(Validointi validointi, Tekstiosa osa, Set<Kieli> kielet, LokalisoituTeksti parent) {
-        LokalisoituTeksti.validoi(validointi, kielet, osa.getTeksti(), parent);
+    public static void validoiTeksti(Validointi validointi, Tekstiosa osa, Opetussuunnitelma ops, LokalisoituTeksti parent) {
+        LokalisoituTeksti.validoi(validointi, ops, osa.getTeksti(), parent);
     }
 }
