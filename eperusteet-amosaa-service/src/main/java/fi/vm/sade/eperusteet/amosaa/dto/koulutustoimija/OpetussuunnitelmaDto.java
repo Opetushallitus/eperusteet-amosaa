@@ -41,5 +41,6 @@ public class OpetussuunnitelmaDto extends OpetussuunnitelmaBaseDto {
     private Date voimaantulo;
     private String hyvaksyja;
     private String paatosnumero;
+    private String suoritustapa;
     private CachedPerusteBaseDto peruste;
 }

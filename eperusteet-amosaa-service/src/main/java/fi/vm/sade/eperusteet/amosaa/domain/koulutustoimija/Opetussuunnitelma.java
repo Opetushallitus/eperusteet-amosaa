@@ -103,6 +103,11 @@ public class Opetussuunnitelma extends AbstractAuditedEntity implements Serializ
     @NotNull
     private Koulutustoimija koulutustoimija;
 
+    @Getter
+    @Setter
+    @NotNull
+    private String suoritustapa;
+
     @ElementCollection
     @Getter
     @Setter

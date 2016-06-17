@@ -7,84 +7,94 @@ mixin poistoToggler()
 
 
 mixin polkuTutkinnonosa()
-  div.sp-tutkinnonosa(ng-class="{ 'sp-laatikko-active': ngModel.$$haettu, 'sp-sisalto-poistettu': ngModel.$$poistettu }" ng-show="ngModel._tutkinnonOsaViite" ng-init="tosa = misc.tosat[ngModel._tutkinnonOsaViite];")
-    div.sp-sisalto.sp-sisalto-tosa
-      div.sp-nimi
+  .sp-tutkinnonosa(ng-class="{ 'sp-laatikko-active': ngModel.$$haettu, 'sp-sisalto-poistettu': ngModel.$$poistettu }" ng-show="ngModel._tutkinnonOsaViite" ng-init="tosa = misc.tosat[ngModel._tutkinnonOsaViite];")
+    .sp-sisalto.sp-sisalto-tosa
+      .sp-nimi
         a(href="" ng-click="misc.siirry(tosa)" ng-bind="tosa.$$tosa.nimi | kaanna")
         b.sp-osaamisala(ng-bind="tosa.$$tosa.koodiArvo")
-      div.sp-toolbar
+      .sp-toolbar
         span.laajuus
           span(ng-bind="tosa.laajuus")
           span(style="margin-left: 2px" ng-bind="misc.suoritustapa.laajuusYksikko | kaanna")
-        div.sp-edit(ng-show="misc.root.$$ekEditing")
+        .sp-edit(ng-show="misc.root.$$ekEditing")
           +poistoToggler
-        div.sp-edit(ng-if="misc.root.$$ekEditing" ng-hide="ngModel.$$poistettu")
+        .sp-edit(ng-if="misc.root.$$ekEditing" ng-hide="ngModel.$$poistettu")
           a.sp-button(href="" ng-click="misc.editNode(ngModel)")
             +gicon("pencil")
 
 
 mixin tosaKoodiOsa(osa)
-  div.sp-tutkinnonosa.sp-tutkinnonosa-(ng-class="{ 'sp-laatikko-active': ngModel.$$haettu, 'sp-sisalto-poistettu': ngModel.$$poistettu, 'sp-laatikko-rikki': misc.koodinimet[" + osa + "].rikki }")
-    div.sp-sisalto.sp-sisalto-tosa
-      div.sp-nimi
+  .sp-tutkinnonosa.sp-tutkinnonosa-(ng-class="{ 'sp-laatikko-active': ngModel.$$haettu, 'sp-sisalto-poistettu': ngModel.$$poistettu, 'sp-laatikko-rikki': misc.koodinimet[" + osa + "].rikki }")
+    .sp-sisalto.sp-sisalto-tosa
+      .sp-nimi
         a(href="" ng-click="misc.siirry(misc.koodinimet[" + osa + "].uri)" ng-bind="misc.koodinimet[" + osa + "].nimi | kaanna")
         b.sp-osaamisala(ng-bind="misc.koodinimet[" + osa + "].arvo")
 
 
 mixin muodostuminen()
-  div.sp-muodostuminen(ng-show="ngModel.muodostumisSaanto"
-    ng-class="{ 'muodostuminen-valid': ngModel.$$valid, 'muodostuminen-invalid': !ngModel.$$valid && ngModel.rooli !== 'määrittelemätön' }"
-    ng-init="laajuus = ngModel.muodostumisSaanto.laajuus; koko = ngModel.muodostumisSaanto.koko; laajuusSama = laajuus.minimi === laajuus.maksimi")
-    span(ng-show="ngModel.$$laskettuLaajuus && !ngModel.$$valid")
-      span(ng-bind="ngModel.$$laskettuLaajuus")
-      span(style="margin: 0 2px 0 2px") /
-    span(ng-show="laajuus.minimi || laajuus.maksimi" ng-bind="laajuus.minimi || 0")
-    span(ng-show="!laajuusSama") {{ ' - ' }}
-    span(ng-show="laajuus.maksimi && !laajuusSama" ng-bind="laajuus.maksimi")
-    span(style="margin-left: 2px" ng-show="laajuus.minimi || laajuus.maksimi" ng-bind="misc.suoritustapa.laajuusYksikko | kaanna")
+  .sp-muodostuminen(ng-show="ngModel.muodostumisSaanto"
+    ng-class="{ 'muodostuminen-valid': ngModel.$$valid, 'muodostuminen-invalid': !ngModel.$$valid && ngModel.rooli !== 'määrittelemätön' }")
+    span(ng-if="ngModel.muodostumisSaanto.koko"
+      ng-init="koko = ngModel.muodostumisSaanto.koko; koko = ngModel.muodostumisSaanto.koko; kokoSama = koko.minimi === koko.maksimi")
+      span(ng-show="ngModel.$$laskettuLaajuus && !ngModel.$$valid")
+        span(ng-bind="ngModel.$$laskettuLaajuus")
+        span(style="margin: 0 2px 0 2px") /
+      span(ng-show="koko.minimi || koko.maksimi" ng-bind="koko.minimi || 0")
+      span(ng-show="!koko") {{ ' - ' }}
+      span(ng-show="koko.maksimi && !koko" ng-bind="koko.maksimi")
+      span(style="margin-left: 2px" ng-show="koko.minimi || koko.maksimi" ng-bind="'kpl' | kaanna")
+    span(ng-if="ngModel.muodostumisSaanto.laajuus"
+      ng-init="laajuus = ngModel.muodostumisSaanto.laajuus; koko = ngModel.muodostumisSaanto.koko; laajuusSama = laajuus.minimi === laajuus.maksimi")
+      span(ng-show="ngModel.$$laskettuLaajuus && !ngModel.$$valid")
+        span(ng-bind="ngModel.$$laskettuLaajuus")
+        span(style="margin: 0 2px 0 2px") /
+      span(ng-show="laajuus.minimi || laajuus.maksimi" ng-bind="laajuus.minimi || 0")
+      span(ng-show="!laajuusSama") {{ ' - ' }}
+      span(ng-show="laajuus.maksimi && !laajuusSama" ng-bind="laajuus.maksimi")
+      span(style="margin-left: 2px" ng-show="laajuus.minimi || laajuus.maksimi" ng-bind="misc.suoritustapa.laajuusYksikko | kaanna")
 
 
 mixin polkuRyhmaToolbar()
-  div.sp-toolbar
+  .sp-toolbar
     +muodostuminen
     span(ng-show="misc.root.$$ekEditing")
-      div.sp-edit(ng-show="misc.root.$$ekEditing && ngModel.osaamisala")
+      .sp-edit(ng-show="misc.root.$$ekEditing && ngModel.osaamisala")
         +poistoToggler
-      div.sp-edit(ng-hide="ngModel.$$poistettu")
+      .sp-edit(ng-hide="ngModel.$$poistettu")
         a(href="" ng-click="misc.editNode(ngModel)")
           +gicon("pencil")
 
 
 mixin polkuRyhmaChevron()
-  div.sp-toggler(ng-class="{ 'sp-toggler-osaamisala': ngModel.osaamisala, 'sp-toggler-ryhma': !ngModel.osaamisala }" ng-click="misc.toggle(ngModel)")
-    div.chevron
+  .sp-toggler(ng-class="{ 'sp-toggler-osaamisala': ngModel.osaamisala, 'sp-toggler-ryhma': !ngModel.osaamisala }" ng-click="misc.toggle(ngModel)")
+    .chevron
       span.glyphicon.glyphicon-chevron-down(ng-hide="ngModel.$$collapsed")
       span.glyphicon.glyphicon-chevron-right(ng-show="ngModel.$$collapsed")
 
 
 mixin polkuRyhma()
-  div.sp-ryhma(ng-show="ngModel.rooli" ng-init="isVieras = ngModel.rooli === 'määrittelemätön' || ngModel.vieras; ")
-    div.sp-sisalto(ng-class="{ 'sp-sisalto-vieras': isVieras, 'sp-sisalto-osaamisala': !isVieras && ngModel.osaamisala, 'sp-sisalto-ryhma': !isVieras && !ngModel.osaamisala, 'sp-sisalto-poistettu': ngModel.$$poistettu }")
+  .sp-ryhma(ng-show="ngModel.rooli" ng-init="isVieras = ngModel.rooli === 'määrittelemätön' || ngModel.vieras; ")
+    .sp-sisalto(ng-class="{ 'sp-sisalto-vieras': isVieras, 'sp-sisalto-osaamisala': !isVieras && ngModel.osaamisala, 'sp-sisalto-ryhma': !isVieras && !ngModel.osaamisala, 'sp-sisalto-poistettu': ngModel.$$poistettu }")
       +polkuRyhmaChevron
-      div.sp-nimi
+      .sp-nimi
         span(ng-bind="ngModel.nimi | kaanna")
         span.sp-osaamisala(ng-show="ngModel.osaamisala" ng-bind="ngModel.osaamisala.osaamisalakoodiArvo")
       +polkuRyhmaToolbar
-    div.sp-kuvaus
+    .sp-kuvaus
       div(ng-if="ngModel.kuvaus || (misc.spRivit[ngModel.tunniste] && misc.spRivit[ngModel.tunniste].kuvaus)")
         div(ng-show="ngModel.$$naytaKuvaus")
-          div.sp-kuvaus-peruste(ng-if="ngModel.kuvaus")
+          .sp-kuvaus-peruste(ng-if="ngModel.kuvaus")
             +teksti("ngModel.kuvaus")
-          div.sp-kuvaus-oma(ng-if="misc.spRivit[ngModel.tunniste] && misc.spRivit[ngModel.tunniste].kuvaus")
+          .sp-kuvaus-oma(ng-if="misc.spRivit[ngModel.tunniste] && misc.spRivit[ngModel.tunniste].kuvaus")
             +teksti("misc.spRivit[ngModel.tunniste].kuvaus")
-        div.sp-kuvaus-toggler(ng-click="ngModel.$$naytaKuvaus = !ngModel.$$naytaKuvaus")
+        .sp-kuvaus-toggler(ng-click="ngModel.$$naytaKuvaus = !ngModel.$$naytaKuvaus")
           span ...
-    div.sp-ryhma-lapset(ng-hide="ngModel.$$poistettu" ng-show="!ngModel.$$collapsed || (misc.hasInput && ngModel.$$haettu)" ng-repeat="koodi in misc.spRivit[ngModel.tunniste].koodit")
+    .sp-ryhma-lapset(ng-hide="ngModel.$$poistettu" ng-show="!ngModel.$$collapsed || (misc.hasInput && ngModel.$$haettu)" ng-repeat="koodi in misc.spRivit[ngModel.tunniste].koodit")
       +tosaKoodiOsa("koodi")
-    div.sp-ryhma-lapset(ng-hide="ngModel.$$poistettu" ng-show="!ngModel.$$collapsed || (misc.hasInput && ngModel.$$haettu)" ng-repeat="osa in ngModel.osat")
+    .sp-ryhma-lapset(ng-hide="ngModel.$$poistettu" ng-show="!ngModel.$$collapsed || (misc.hasInput && ngModel.$$haettu)" ng-repeat="osa in ngModel.osat")
       dynamic(template="states/koulutustoimija/opetussuunnitelmat/sisalto/osa/polunrakenne.jade" misc="misc" ng-model="osa" depth="depth + 1")
 
 
-div.sp-laatikko(ng-hide="(misc.hasInput && !ngModel.$$haettu) || (!misc.collapsed_removed && ngModel.$$poistettu)")
+.sp-laatikko(ng-hide="(misc.hasInput && !ngModel.$$haettu) || (!misc.collapsed_removed && ngModel.$$poistettu)")
   +polkuTutkinnonosa
   +polkuRyhma

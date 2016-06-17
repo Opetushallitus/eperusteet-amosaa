@@ -248,7 +248,7 @@ angular.module("app")
                             .then(koodit => {
                                 _.each(koodit, koodi => {
                                     $scope.koodistoTiedot[koodi.uri] = koodi;
-                                })
+                                });
                             });
                     },
 
@@ -411,9 +411,10 @@ angular.module("app")
             controller: ($scope, osa) => {}
         },
         suorituspolku: {
-            controller: ($q, $rootScope, $scope, $state, $stateParams, osa, peruste: REl, pSuoritustavat, pTosat, koodisto, paikallisetTutkinnonosatEP, koulutustoimija) => {
+            controller: ($q, $rootScope, $scope, $state, $stateParams, ops, osa,
+                         peruste: REl, pSuoritustavat, pTosat, koodisto, paikallisetTutkinnonosatEP, koulutustoimija) => {
                 const
-                    suoritustapa = Perusteet.getSuoritustapa(pSuoritustavat),
+                    suoritustapa = Perusteet.getSuoritustapa(ops, pSuoritustavat),
                     tosat = _.indexBy(pTosat, "id"),
                     tosaViitteet: any = _(_.cloneDeep(Perusteet.getTosaViitteet(suoritustapa)))
                         .each(viite => viite.$$tosa = tosat[viite._tutkinnonOsa])
@@ -426,7 +427,7 @@ angular.module("app")
                             node.pakollinen = Suorituspolku.pakollinen(node);
                             node.$$poistettu = spRivit[node.tunniste] && spRivit[node.tunniste].piilotettu;
                         });
-                        Suorituspolku.calculateRealAmount($scope.perusteRakenne, $scope.misc.tosat, spRivit);
+                        Suorituspolku.calculateRealAmount(ops, $scope.perusteRakenne, $scope.misc.tosat, spRivit);
                         $scope.misc.spRivit = spRivit;
 
                         const

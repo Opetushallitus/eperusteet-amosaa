@@ -60,9 +60,17 @@ div.modal-body
   .content-spacing(ng-show="peruste")
     h3(ng-bind="'anna-nimi' | kaanna")
     input.form-control(slocalized ng-model="ops.nimi" type="text" required="true")
+    div(ng-show="peruste.suoritustavat.length > 1")
+      h3(style="margin-top: 16px;" ng-bind="'valitse-suoritustapa' | kaanna")
+      .btn-group
+        label.btn.btn-primary(
+          ng-repeat="st in peruste.suoritustavat | orderBy:st.suoritustapakoodi"
+          ng-model="ops.suoritustapa"
+          uib-btn-radio="st.suoritustapakoodi"
+          ng-bind="'suoritustapa-' + st.suoritustapakoodi | kaanna")
 
 
 div.modal-footer
-  button.btn.btn-default(ng-click="peruuta()", ng-bind="'peruuta' | kaanna")
-  button.btn.btn-primary(ng-click="ok(ops)", ng-bind="'tallenna' | kaanna")
+  button.btn.btn-default(ng-click="peruuta()" ng-bind="'peruuta' | kaanna")
+  button.btn.btn-primary(ng-click="ok(ops)" ng-bind="'tallenna' | kaanna" ng-disabled="ops.nimi.length === 0")
 

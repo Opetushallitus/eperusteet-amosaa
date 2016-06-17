@@ -87,9 +87,6 @@ namespace ModalAdd {
             controller: ($scope, $state, $stateParams, $uibModalInstance, perusteet) => {
                 $scope.perusteet = filterPerusteet(perusteet.data);
                 $scope.peruste = undefined;
-                $scope.ops = {
-                    tyyppi: "ops",
-                };
                 $scope.ok = $uibModalInstance.close;
                 $scope.peruuta = $uibModalInstance.dismiss;
 
@@ -103,8 +100,15 @@ namespace ModalAdd {
                 $scope.valitsePeruste = (peruste) => {
                     $scope.input = "";
                     $scope.peruste = peruste;
-                    $scope.ops.perusteDiaarinumero = peruste.diaarinumero;
+                    $scope.stMap = _.indexBy($scope.peruste.suoritustavat, "suoritustapakoodi");
+                    const opsSt = $scope.stMap["ops"];
+                    $scope.ops = {
+                        tyyppi: "ops",
+                        perusteDiaarinumero: peruste.diaarinumero,
+                        suoritustapa: (opsSt ? "ops" : $scope.peruste.suoritustavat[0].suoritustapakoodi)
+                    };
                 };
+
                 // Kielivalitsin
                 $scope.langs = KieliService.getSisaltokielet();
                 $scope.currentLang = $stateParams.lang;
