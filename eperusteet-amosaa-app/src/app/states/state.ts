@@ -38,9 +38,11 @@ angular.module("app")
             controller: "NotifikaatioController"
         },
         ylanavi: {
-            controller: ($rootScope, $scope, $state, $stateParams) => {
-                $scope.$on("help:updated", (event, helpUrl) => $scope.helpUrl = helpUrl);
-                $scope.$on("$stateChangeStart", (event, helpUrl) => $scope.helpUrl = undefined);
+            controller: ($rootScope, $scope, $state, $stateParams, $templateCache) => {
+                $scope.$on("help:updated", (event, helpUrl) => {
+                    $scope.helpUrl = helpUrl;
+                });
+                // $scope.$on("$stateChangeSuccess", (event) => $scope.helpUrl = undefined);
                 $scope.$on("$stateChangeSuccess", (event, toState, toParams, fromState, fromParams) => {
                     const path = toState.name.split(".");
                     $scope.muruPath = _(_.rest(path)

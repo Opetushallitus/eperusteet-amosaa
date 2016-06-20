@@ -12,8 +12,8 @@ module KieliService {
         "fi",
         "sv",
         "se",
-        "ru",
-        "en"
+        // "ru",
+        // "en"
     ];
 
     let

@@ -13,13 +13,14 @@
         +kielivalitsin
       .pull-right
         button.btn.btn-primary.btn-sm(
+          style="margin-left: 5px;"
           ng-click="toggleTiedotteet()"
-          ng-show="{{ 'root.koulutustoimija.detail' | isState }}"
+          ng-show="'root.koulutustoimija.detail' | isState"
           ng-class="{ 'btn-danger': $$hasTiedotteet }")
           +gicon("bell")
       .pull-right
         button.btn.btn-primary.btn-sm(
-          style="margin-right: 5px; color: #ffffff;"
+          style="color: #ffffff;"
           ng-show="helpUrl"
           type="button"
           uib-popover-template="helpUrl"
