@@ -41,6 +41,7 @@ namespace SuoritustapaRyhmat {
                                 $$paikallinen: true
                             }))
                             .concat(Koodisto.parseRawKoodisto(julkisetKoodit))
+                            .reject(koodi => !koodi.arvo || !koodi.uri)
                             .each((koodi: any) => {
                                 koodi.$$valittu = !!valitutKoodit[koodi.uri],
                                 koodi.$$piilotettu = false
@@ -77,7 +78,7 @@ angular.module("app")
 .run(SuoritustapaRyhmat.init)
 .config($stateProvider => $stateProvider
 .state("root.koulutustoimija.opetussuunnitelmat.sisalto.osa", {
-    url: "/osa/:osaId?versio",
+    url: "/osa/:osaId?versio?osio",
     resolve: {
         osa: (ops, $stateParams) => ops.one("tekstit", $stateParams.osaId).get(),
         historia: osa => osa.getList("versiot"),
@@ -94,8 +95,9 @@ angular.module("app")
             && Api.one("perusteet/" + ops.peruste.id + "/suoritustavat").get()),
         arviointiAsteikot: (Api) => Api.all("arviointiasteikot").getList()
     },
-    onEnter: (osa) =>
-        Murupolku.register("root.koulutustoimija.opetussuunnitelmat.sisalto.osa", osa.tekstiKappale.nimi),
+    onEnter: (osa, $state, $stateParams) => {
+        Murupolku.register("root.koulutustoimija.opetussuunnitelmat.sisalto.osa", osa.tekstiKappale.nimi);
+    },
     views: {
         "": {
             controller: ($q, $state, $stateParams, $location, $scope, $rootScope, $document, $timeout, $filter, $sce,
@@ -221,7 +223,7 @@ angular.module("app")
             controller: ($scope) => {}
         },
         tutkinnonosa: {
-            controller: ($q, $scope, peruste, arviointiAsteikot, koodisto, koulutustoimija) => {
+            controller: ($q, $scope, $state, $stateParams, peruste, arviointiAsteikot, koodisto, koulutustoimija) => {
                 const
                     isPaikallinen = _.property("tosa.tyyppi")($scope.osa) === "oma",
                     osaamisalaKoodit = peruste.osaamisalat,
@@ -281,7 +283,13 @@ angular.module("app")
 
                 { // Init block
                     $scope.koodistoTiedot = {};
-                    $scope.$$showToteutus = true;
+                    $scope.toggleToteutus = () => {
+                        $scope.$$showToteutus = !$scope.$$showToteutus;
+                        $stateParams.osio = $scope.$$showToteutus ? "toteutus" : "sisalto";
+                        $state.transitionTo($state.current.name, $stateParams, { notify: false });
+                    };
+
+                    $scope.$$showToteutus = $stateParams.osio !== "sisalto";
                     $scope.koodit = koodit;
                     $scope.peruste = peruste;
                     $scope.sortableOptions = {

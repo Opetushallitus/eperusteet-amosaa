@@ -386,7 +386,9 @@ mixin tosaSisalto()
 
 .tutkinnonosa
   div(ng-hide="$$ekEditing" style="margin-bottom: 20px;")
-    +toggler("$$showToteutus", "'sisalto'", "'toteutus'")
+    span.toggler(ng-click="toggleToteutus()")
+      span.bubble(ng-class="{ 'active': $$showToteutus }" kaanna="'toteutus'")
+      span.bubble(ng-class="{ 'active': !$$showToteutus }" kaanna="'sisalto'")
 
   div(ng-if="$$showToteutus")
     +tosaToteutus
