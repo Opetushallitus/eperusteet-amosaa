@@ -83,6 +83,7 @@ mixin historia(versio, uusinMuokkaaja, uusinMuokkaus, uusinRevisio, actionEdit, 
       div
         button.btn.btn-danger(ng-click=actionPalauta ng-bind="'ota-versio-kayttoon' | kaanna")
         button.btn.btn-default(style="margin-left: 20px;" ng-click=restoreNew ng-bind="'palaa-uusimpaan' | kaanna")
+  .clearfix
 
 
 mixin ekdate(model, label)

@@ -7,6 +7,9 @@ declare module _ {
         matchStrings(search: string, target: string): boolean;
         fromPairs(x: Array<any>): any;
         append<T>(x: Array<T>, el: T): Array<T>;
+        overwrite(to: Object, from: Object): void;
+        overwriteData(to: Object, from: Object): void;
+        setRemove(from: Object, what: Object): void;
         cset<O, P, V>(o: O, p: P): (v: V) => void;
         fromPairs(): any;
     }
@@ -29,6 +32,29 @@ _.mixin({
         return f;
     },
     cset: (obj, path) => (value) => _.set(obj, path, value),
+    setRemove: (from, what) => {
+        _.each(what, (field, k) => {
+            if (from.hasOwnProperty(k)) {
+                delete from[k];
+            }
+        });
+    },
+    overwriteData: (to, from) => {
+        _.each(to, (field, k) => {
+            if (to.hasOwnProperty(k) && !_.isFunction(to[k])) {
+                delete to[k];
+            }
+        });
+        _.merge(to, from);
+    },
+    overwrite: (to, from) => {
+        _.each(to, (field, k) => {
+            if (to.hasOwnProperty(k)) {
+                delete to[k];
+            }
+        });
+        _.merge(to, from);
+    },
     spy: (obj) => {
         console.log(obj);
         return obj;

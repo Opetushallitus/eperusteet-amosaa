@@ -9,17 +9,16 @@ mixin valinnat()
   .clearfix
 
 .tekstikappaleet.subtle-transition
-  .ylapalkki
-    +historia("versio",
-      "uusin.$$nimi",
-      "uusin.date",
-      "uusin.id",
-      "edit()",
-      "listRevisions()",
-      "restoreRevision()",
-      "restoreNew()")
-      button.btn.btn-danger.muokkaa(ng-show="$$ekEditing && !osa.pakollinen" ng-click="remove()" oikeustarkastelu="muokkaus")
-        +itext("remove", 'poista')
+  +historia("versio",
+    "uusin.$$nimi",
+    "uusin.date",
+    "uusin.id",
+    "edit()",
+    "listRevisions()",
+    "restoreRevision()",
+    "restoreNew()")
+    button.btn.btn-danger.muokkaa(ng-show="$$ekEditing && !osa.pakollinen" ng-click="remove()" oikeustarkastelu="muokkaus")
+      +itext("remove", 'poista')
 
   div
     div(ng-if="$$ekEditing")

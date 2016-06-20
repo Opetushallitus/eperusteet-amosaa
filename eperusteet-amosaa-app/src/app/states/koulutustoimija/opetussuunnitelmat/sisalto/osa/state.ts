@@ -77,7 +77,7 @@ angular.module("app")
 .run(SuoritustapaRyhmat.init)
 .config($stateProvider => $stateProvider
 .state("root.koulutustoimija.opetussuunnitelmat.sisalto.osa", {
-    url: "/osa/:osaId",
+    url: "/osa/:osaId?versio",
     resolve: {
         osa: (ops, $stateParams) => ops.one("tekstit", $stateParams.osaId).get(),
         historia: osa => osa.getList("versiot"),
@@ -117,25 +117,6 @@ angular.module("app")
                 $scope.pTosa = pTosa;
                 nimiLataaja(osa.tekstiKappale.muokkaaja)
                     .then(_.cset(osa, "$$nimi"));
-
-                // Version handling
-                $scope.versio = versio;
-                [$scope.uusin, $scope.historia] = Revisions.parseAll(historia);
-                nimiLataaja($scope.uusin.muokkaaja).then(nimi => $scope.uusin.$$nimi = nimi);
-                $scope.listRevisions = () => ModalRevisions.viewRevisions($scope.historia)
-                    .then(res => $state.go($state.current.name, { versio: res }));
-                if (versio) {
-                    $scope.uusin = Revisions.get($scope.historia, versioId);
-                    _.merge($scope.ops, versio.plain());
-                    $scope.restoreRevision = () => {
-                        $scope.ops.put().then(res => {
-                            _.merge(osa, versio.plain());
-                            $scope.osa = osa;
-                            NotifikaatioService.onnistui("versio-palautettu-onnistuneesti");
-                            $scope.restoreNew();
-                        });
-                    };
-                }
 
                 // Item handling
                 osa.lapset = undefined;
@@ -192,6 +173,32 @@ angular.module("app")
                 });
 
                 installClickHandler();
+
+                { // Version handling
+                    $scope.versio = versio;
+                    [$scope.uusin, $scope.historia] = Revisions.parseAll(historia);
+                    nimiLataaja($scope.uusin.muokkaaja)
+                        .then(nimi => {
+                            // $scope.uusin.$$nimi = nimi;
+                        });
+                    $scope.restoreNew = () => $state.go($state.current.name, { versio: undefined });
+                    $scope.listRevisions = () => ModalRevisions.viewRevisions($scope.historia)
+                        .then(res => $state.go($state.current.name, { versio: res }));
+                    if (versio) {
+                        $scope.uusin = Revisions.get($scope.historia, versioId);
+                        _.setRemove($scope.osa, $scope.osa.plain());
+                        _.merge($scope.osa, $scope.versio.plain());
+                        $scope.restoreRevision = () => {
+                            $scope.osa.put()
+                                .then(res => {
+                                    _.overwrite(osa, res);
+                                    $scope.osa = osa;
+                                    NotifikaatioService.onnistui("versio-palautettu-onnistuneesti");
+                                    $scope.restoreNew();
+                                });
+                        };
+                    }
+                }
 
                 // FIXME: Find a better way to check when sivunavi has been fully rendered
                 $timeout(() => {
