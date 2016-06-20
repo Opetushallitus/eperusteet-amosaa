@@ -179,7 +179,8 @@ angular.module("app")
                     [$scope.uusin, $scope.historia] = Revisions.parseAll(historia);
                     nimiLataaja($scope.uusin.muokkaaja)
                         .then(nimi => {
-                            // $scope.uusin.$$nimi = nimi;
+                            $scope.uusin = $scope.uusin || {};
+                            $scope.uusin.$$nimi = nimi;
                         });
                     $scope.restoreNew = () => $state.go($state.current.name, { versio: undefined });
                     $scope.listRevisions = () => ModalRevisions.viewRevisions($scope.historia)

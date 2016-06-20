@@ -205,8 +205,9 @@ mixin tosaToteutus()
       div
         h1(ng-bind="'toteutus' | kaanna")
 
-        h2(ng-bind="'osaamisen-osoittaminen' | kaanna")
-        div(style="margin-bottom: 16px" ckeditor slocalized ng-model="osa.tosa.osaamisenOsoittaminen" layout="normal")
+        div(ng-if="pTosa && pTosa.tyyppi === 'tutke2'")
+          h2(ng-bind="'osaamisen-osoittaminen' | kaanna")
+          div(style="margin-bottom: 16px" ckeditor slocalized ng-model="osa.tosa.osaamisenOsoittaminen" layout="normal")
 
         h2(ng-bind="'toteutukset' | kaanna")
 
