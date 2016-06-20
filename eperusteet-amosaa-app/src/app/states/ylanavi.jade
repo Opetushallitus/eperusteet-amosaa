@@ -1,6 +1,6 @@
-div.ylanavi(sticky className="ylanavi-sticky")
-  div.row
-    div.col-xs-8
+.ylanavi(sticky className="ylanavi-sticky")
+  .row
+    .col-xs-8
       ol.breadcrumb
         li
           a(href="" ui-sref="root" ui-sref-opts="{ reload: true }")
@@ -8,17 +8,23 @@ div.ylanavi(sticky className="ylanavi-sticky")
         li(ng-repeat="muru in muruPath")
           a(href="" ui-sref="{{ muru.state }}" ui-sref-opts="{ reload: true }")
             span(ng-bind="muru.name | kaanna")
-    div.col-xs-4
-      div.pull-right
+    .col-xs-4
+      .pull-right
         +kielivalitsin
-      div.pull-right
-        span.ohje.popover-element.fa-stack.fa-lg(
-          style="color: #199dd0;"
+      .pull-right
+        button.btn.btn-primary.btn-sm(
+          ng-click="toggleTiedotteet()"
+          ng-show="{{ 'root.koulutustoimija.detail' | isState }}"
+          ng-class="{ 'btn-danger': $$hasTiedotteet }")
+          +gicon("bell")
+      .pull-right
+        button.btn.btn-primary.btn-sm(
+          style="margin-right: 5px; color: #ffffff;"
           ng-show="helpUrl"
+          type="button"
           uib-popover-template="helpUrl"
-          popover-trigger="mouseenter"
           popover-animation="true"
           popover-placement="bottom-right"
           popover-title="{{ 'nakyma-ohje' | kaanna }}")
-          i.fa.fa-circle.fa-stack-2x
-          i.fa.fa-info.fa-stack-1x.fa-inverse
+          b(style="padding: 0 3px 0 3px;")
+            +icon("info")

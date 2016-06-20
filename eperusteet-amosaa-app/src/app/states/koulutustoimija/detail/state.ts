@@ -15,13 +15,11 @@ angular.module("app")
     },
     views: {
         "": {
-            controller: ($scope, kayttajanKoulutustoimijat, koulutustoimija, tiedotteet) => {
+            controller: ($scope, kayttajanKoulutustoimijat, koulutustoimija) => {
                 $scope.isOph = Koulutustoimijat.isOpetushallitus(koulutustoimija);
                 $scope.koulutustoimijat = kayttajanKoulutustoimijat;
                 $scope.koulutustoimija = koulutustoimija;
                 $scope.checkOph = Koulutustoimijat.isOpetushallitus;
-                $scope.tiedotteet = tiedotteet;
-                $scope.toggleTiedotteet = () => $scope.$$showTiedotteet = !$scope.$$showTiedotteet;
                 $scope.suodataOpetussuunnitelmat = (opsit, search) =>
                     _.each(opsit, (ops) => {
                         ops.$$hidden = !_.isEmpty(search) && !Algoritmit.match(search, ops.nimi) });
@@ -100,8 +98,9 @@ angular.module("app")
             }
         },
         tiedotteet: {
-            controller: ($scope, tiedotteet, nimiLataaja) => {
+            controller: ($rootScope, $scope, tiedotteet, nimiLataaja) => {
                 $scope.edit = EditointikontrollitService.createListRestangular($scope, "tiedotteet", tiedotteet);
+                $rootScope.$broadcast("has:tiedotteet", !_.isEmpty(tiedotteet));
 
                 _.each($scope.tiedotteet, (tiedote) =>
                     nimiLataaja(tiedote.luoja)
@@ -124,28 +123,34 @@ angular.module("app")
                     tiedote.one("kuittaa").customPOST();
                     _.remove($scope.tiedotteet, tiedote);
                     NotifikaatioService.onnistui("tiedote-kuitattu");
+                    if (_.isEmpty($scope.tiedotteet)) {
+                        $rootScope.$broadcast("has:tiedotteet", false);
+                    }
                 };
 
-                $scope.creatingNewTiedote = false;
-                $scope.setCreationState = (val) => $scope.creatingNewTiedote = val;
+                $scope.$on("toggle:tiedotteet", () => $scope.$$showTiedotteet = !$scope.$$showTiedotteet);
+
+                $scope.$$creatingNewTiedote = false;
+                $scope.setCreationState = (val) => $scope.$$creatingNewTiedote = val;
                 $scope.addTiedoteToList = (tiedote) => $scope.tiedotteet.unshift(tiedote);
-            }
-        },
-        uusi_tiedote_div: {
-            controller: ($rootScope, $scope, tiedotteet) => {
-                $scope.cancel = () => $scope.setCreationState(false);
-                $scope.postTiedote = (newTiedote) => {
-                    $rootScope.$broadcast("notifyCKEditor");
-                    $scope.setCreationState(false);
-                    tiedotteet.post(newTiedote)
-                        .then((res) => {
-                            if (res) {
-                                $scope.addTiedoteToList(res);
-                                $scope.newTiedote = {};
-                            }
-                            NotifikaatioService.onnistui("tallennus-onnistui");
-                        })
-                };
+                $scope.$$showTiedotteet = false;
+
+                { // Tiedote editing
+                    $scope.cancel = () => $scope.setCreationState(false);
+                    $scope.postTiedote = (newTiedote) => {
+                        $rootScope.$broadcast("notifyCKEditor");
+                        $scope.setCreationState(false);
+                        tiedotteet.post(newTiedote)
+                            .then((res) => {
+                                if (res) {
+                                    $scope.addTiedoteToList(res);
+                                    $scope.newTiedote = {};
+                                }
+                                NotifikaatioService.onnistui("tallennus-onnistui");
+                                $rootScope.$broadcast("has:tiedotteet", true);
+                            })
+                    };
+                }
             }
         }
     }

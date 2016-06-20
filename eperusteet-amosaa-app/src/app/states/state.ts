@@ -64,6 +64,14 @@ angular.module("app")
                     $scope.currentLang = lang;
                     KieliService.setSisaltokieli(lang);
                 };
+
+                $scope.toggleTiedotteet = () => {
+                    $rootScope.$broadcast("toggle:tiedotteet");
+                };
+
+                $scope.$on("has:tiedotteet", (e, v) => {
+                    $scope.$$hasTiedotteet = v;
+                });
             }
         },
         footer: {

@@ -4,28 +4,24 @@ mixin author-time-signature
       td(ng-bind="(tiedote.luotu || tiedote.muokattu) | aikaleima")
       td(ng-bind="tiedote.$$nimi")
 
-mixin lisaa-uusi-tiedote-btn
-  button.btn.btn-primary.pull-right.tiedote-editing-btn(ng-hide="$$ekEditing"
-    ng-if="!creatingNewTiedote" ng-click="setCreationState(true)" ng-bind="'lisaa-uusi-tiedote' | kaanna")
-
-+lisaa-uusi-tiedote-btn
-
-div.row
-  div.col-xs-12(ng-if="!creatingNewTiedote")
-    div.alert.alert-info(ng-show="tiedotteet.length === 0")
+// FIXME tyylien nimet??
+div(ng-show="$$showTiedotteet" style="margin-bottom: 30px")
+  h2(ng-bind="'tiedotteet' | kaanna")
+  .tiedotteet-ylataso
+    .alert.alert-info(ng-show="tiedotteet.length === 0")
       span(ng-bind="'tiedotteita-ei-ole' | kaanna")
 
-    div.tiedotteet(ng-repeat="tiedote in tiedotteet")
-      div.tiedote.fade-in-out
-        div.tiedote-laatikko
-          div.pull-left(ng-show="tiedote.tarkea")
+    .tiedotteet(ng-show="!$$creatingNewTiedote" ng-repeat="tiedote in tiedotteet")
+      .tiedote
+        .tiedote-laatikko
+          .pull-left(ng-show="tiedote.tarkea")
             .icon
               +icon("exclamation")
-          div.pull-left(ng-show="!tiedote.tarkea")
+          .pull-left(ng-show="!tiedote.tarkea")
             .icon
               +icon("question")
           .tiedote-actions
-            div.pull-right(ng-if="!$$ekEditing")
+            .pull-right(ng-if="!$$ekEditing")
               a(ng-click="edit($index)" href="")
                 +icon("pencil")
               a(ng-click="kuittaa(tiedote)" href="")
@@ -39,7 +35,7 @@ div.row
             +author-time-signature
 
           .tiedote-sisalto(ng-if="$$ekEditing && $$ekEditingIndex === $index")
-            div.form-control.ckeditor(ckeditor ng-model="tiedote.teksti" layout="normal")
+            .form-control.ckeditor(ckeditor ng-model="tiedote.teksti" layout="normal")
           .tiedote-sisalto(ng-show="tiedote.$$isOpen" ng-if="!$$ekEditing || $$ekEditingIndex != $index" ng-bind-html="tiedote.teksti | unsafe")
           .tiedote-sisalto.checkbox.abc-checkbox(ng-if="$$ekEditing && $$ekEditingIndex === $index")
             input.styled(type="checkbox" checked="true" ng-model="tiedote.tarkea")
@@ -54,4 +50,38 @@ div.row
             a(href="")
               i.glyphicon.glyphicon-option-horizontal
 
-  div.col-xs-12(ui-view="uusi_tiedote_div" ng-if="creatingNewTiedote")
+    div(ng-if="$$creatingNewTiedote")
+      div.add-tiedote-form.fx-fade-normal
+        div.uusi-tiedote
+          div.uusi-tiedote-laatikko.clearfix
+            form.form-horizontal.col-xs-12
+              .col-xs-12
+                legend(ng-bind="'uusi-tiedote' | kaanna")
+              .form-group
+                label.col-xs-1.control-label(for="tiedote-otsikko" ng-bind="'otsikko' | kaanna")
+                .col-xs-10
+                  input.form-control(ng-model="newTiedote.otsikko" type="text" required="true")
+              .form-group
+                label.col-xs-1.control-label(for="tiedote-teksti" ng-bind="'sisalto' | kaanna")
+                .col-xs-10
+                  div(ckeditor ng-model="newTiedote.teksti" layout="normal")
+              .form-group
+                label.col-xs-1.control-label(ng-bind="'tarkea' | kaanna")
+                .col-xs-1.checkbox.abc-checkbox
+                  input.styled(type="checkbox" checked="true" ng-model="newTiedote.tarkea")
+                  label &nbsp;
+                label.col-xs-1.control-label(ng-bind="'julkinen' | kaanna")
+                .col-xs-2.checkbox.abc-checkbox
+                  input.styled(type="checkbox" checked="true" ng-model="newTiedote.julkinen")
+                  label &nbsp;
+                .col-xs-6.controls-padding-right
+                  span.pull-right
+                    span.btn.btn-warning.btn-small-margin-left(ng-click="cancel()" ng-bind="'peruuta' | kaanna")
+                    span=" "
+                    span.btn.btn-primary(ng-click="postTiedote(newTiedote)" ng-bind="'ok' | kaanna")
+
+    button.btn.btn-primary(
+      style="margin-right: 8px"
+      ng-show="!$$creatingNewTiedote && $$showTiedotteet && !$$ekEditing"
+      ng-click="setCreationState(true)"
+      ng-bind="'lisaa-uusi-tiedote' | kaanna")

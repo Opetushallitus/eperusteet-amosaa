@@ -59,107 +59,111 @@ table.tiedote-author-date td {
   }
 }
 
-.tiedotteet {
-  margin-bottom: 10px;
+.tiedotteet-ylataso {
+  padding: 5px;
 
-  .tiedote {
+  .tiedotteet {
+    margin-bottom: 10px;
 
-    &:not(:first-child) {
-      margin-top: $tiedoite-row-gap;
-    }
+    .tiedote {
 
-    .tiedote-laatikko {
-      border: 1px solid lightgray;
-      //height: $tiedoite-height;
-      background-color: #f3fafd;
-      position: relative;
-
-      .tiedote-actions {
-        position: relative;
-        top: 7px;
-        right: 5px;
-        font-size: 20px;
-
-        a {
-          margin: -2px;
-          text-decoration: none;
-          i {
-            text-decoration: none;
-          }
-        }
+      &:not(:first-child) {
+        margin-top: $tiedoite-row-gap;
       }
 
-      .icon {
-        padding: 0 10px;
-        i {
-          font-size: 18px;
-          margin-top: ($tiedoite-height - 20px) / 2;
-          width: 20px;
-          height: 20px;
-        }
-      }
-
-      // Right dismiss button
-      a {
-        vertical-align: middle;
-        //border-left: 1px solid lightgray;
-        height: 100%;
-        padding: 0 10px 0 10px;
-
-        & > span {
-          font-size: 18px;
-          text-decoration: none;
-          line-height: $tiedoite-height - 2 * $tiedoite-border;
-          color: #6E9BAA;
-        }
-      }
-
-      // Content
-      .tiedote-otsikko {
-        padding: $tiedoite-vertical-padding;
-
-        p {
-          margin-bottom: 0;
-          &:last-child {
-            color: gray;
-          }
-        }
-      }
-
-      .tiedote-sisalto {
-        padding: 0 40px;
-        padding-bottom: 10px;
-        &.muokkaaja {
-          padding-top: 10px;
-        }
-        &.abc-checkbox {
-          margin-left: 20px;
-        }
-      }
-
-      .tiedote-otsikko-editointi {
-        padding: 0 40px;
-        padding-bottom: 10px;
-        padding-top: 10px;
-      }
-
-      // Expand text
-      .expand {
+      .tiedote-laatikko {
+        border: 1px solid lightgray;
+        //height: $tiedoite-height;
+        background-color: #f3fafd;
         position: relative;
 
-        & > a {
-          text-decoration: none;
-          position: absolute;
-          top: -18px;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 80px;
-          text-align: center;
+        .tiedote-actions {
+          position: relative;
+          top: 7px;
+          right: 5px;
           font-size: 20px;
 
-          i {
-            color: gray;
+          a {
+            margin: -2px;
             text-decoration: none;
+            i {
+              text-decoration: none;
+            }
+          }
+        }
+
+        .icon {
+          padding: 0 10px;
+          i {
+            font-size: 18px;
+            margin-top: ($tiedoite-height - 20px) / 2;
+            width: 20px;
+            height: 20px;
+          }
+        }
+
+        // Right dismiss button
+        a {
+          vertical-align: middle;
+          //border-left: 1px solid lightgray;
+          height: 100%;
+          padding: 0 10px 0 10px;
+
+          & > span {
+            font-size: 18px;
+            text-decoration: none;
+            line-height: $tiedoite-height - 2 * $tiedoite-border;
+            color: #6E9BAA;
+          }
+        }
+
+        // Content
+        .tiedote-otsikko {
+          padding: $tiedoite-vertical-padding;
+
+          p {
+            margin-bottom: 0;
+            &:last-child {
+              color: gray;
+            }
+          }
+        }
+
+        .tiedote-sisalto {
+          padding: 0 40px;
+          padding-bottom: 10px;
+          &.muokkaaja {
+            padding-top: 10px;
+          }
+          &.abc-checkbox {
+            margin-left: 20px;
+          }
+        }
+
+        .tiedote-otsikko-editointi {
+          padding: 0 40px;
+          padding-bottom: 10px;
+          padding-top: 10px;
+        }
+
+        // Expand text
+        .expand {
+          position: relative;
+
+          & > a {
+            text-decoration: none;
+            position: absolute;
+            top: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            text-align: center;
+            font-size: 20px;
+
+            i {
+              color: gray;
+              text-decoration: none;
+            }
           }
         }
       }
