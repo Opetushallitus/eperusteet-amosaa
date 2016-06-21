@@ -19,6 +19,27 @@ $ops-top-vertical-margin: 10px;
     }
 }
 
+.tabit {
+    margin-top: 10px;
+
+    ul.nav.nav-tabs {
+        li {
+            margin-right: 4px;
+        }
+        li > a {
+            background: #f1f9fc;
+        }
+        li > a:hover {
+            cursor: pointer;
+        }
+
+        li.active > a {
+            background: #fff;
+            font-weight: normal;
+        }
+    }
+}
+
 .ops-nakyma {
     .ylatunniste {
         background-color: #f3fafd; // FIXME
@@ -74,26 +95,6 @@ $ops-top-vertical-margin: 10px;
                 position: relative;
                 top: 50%;
                 transform: translateY(-50%);
-            }
-        }
-    }
-    .tabit {
-        margin-top: 10px;
-
-        .nav.nav-tabs {
-            li {
-                margin-right: 4px;
-            }
-            li > a {
-                background: #f1f9fc;
-            }
-            li > a:hover {
-                cursor: pointer;
-            }
-
-            li.active > a {
-                background: #fff;
-                font-weight: normal;
             }
         }
     }

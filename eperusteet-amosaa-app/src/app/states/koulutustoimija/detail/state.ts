@@ -4,6 +4,7 @@ angular.module("app")
     url: "",
     resolve: {
         tiedotteet: (koulutustoimija) => koulutustoimija.all("tiedotteet").getList(),
+        ohjeistus: (Api) => Api.all("ohjeistus"),
         tilastot: (Api) => Api.one("tilastot"),
         opsSaver: ($state, opetussuunnitelmat) => (uusiOps) => uusiOps && opetussuunnitelmat
             .post(uusiOps)
@@ -96,6 +97,9 @@ angular.module("app")
                     .then(opsSaver)
                     .then((res) => $scope.yhteiset.push(res));
             }
+        },
+        ohjeistus: ($scope, ohjeistus) => {
+            console.log("wat");
         },
         tiedotteet: {
             controller: ($rootScope, $scope, tiedotteet, nimiLataaja) => {

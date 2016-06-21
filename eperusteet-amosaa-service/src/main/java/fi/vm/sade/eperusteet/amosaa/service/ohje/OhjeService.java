@@ -17,27 +17,21 @@ package fi.vm.sade.eperusteet.amosaa.service.ohje;
 
 import fi.vm.sade.eperusteet.amosaa.dto.ohje.OhjeDto;
 import java.util.List;
-import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
-
-import java.util.UUID;
 
 /**
  * @author mikkom
  */
 public interface OhjeService {
-    @PreAuthorize("permitAll()")
-    OhjeDto getOhje(@P("id") Long id);
+    @PreAuthorize("isAuthenticated()")
+    List<OhjeDto> getOhjeet();
 
-    @PreAuthorize("permitAll()")
-    List<OhjeDto> getTekstiKappaleOhjeet(@P("uuid") UUID uuid);
+    @PreAuthorize("hasPermission(null, 'oph', 'HALLINTA')")
+    OhjeDto addOhje(OhjeDto dto);
 
-    @PreAuthorize("permitAll()")
-    OhjeDto addOhje(OhjeDto ohjeDto);
+    @PreAuthorize("hasPermission(null, 'oph', 'HALLINTA')")
+    OhjeDto editOhje(Long id, OhjeDto dto);
 
-    @PreAuthorize("permitAll()")
-    OhjeDto updateOhje(OhjeDto ohjeDto);
-
-    @PreAuthorize("permitAll()")
-    void removeOhje(@P("id") Long id);
+    @PreAuthorize("hasPermission(null, 'oph', 'HALLINTA')")
+    public void removeOhje(Long id);
 }

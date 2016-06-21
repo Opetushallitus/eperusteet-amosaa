@@ -15,14 +15,10 @@
  */
 package fi.vm.sade.eperusteet.amosaa.dto.ohje;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import fi.vm.sade.eperusteet.amosaa.domain.ohje.OhjeTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
-import java.util.UUID;
 
 /**
  *
@@ -32,13 +28,6 @@ import java.util.UUID;
 @Setter
 public class OhjeDto {
     private Long id;
-    private Date luotu;
-    private Date muokattu;
-    private String muokkaaja;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String muokkaajanNimi;
-
-    private LokalisoituTekstiDto teksti;
-    private UUID kohde;
-    private OhjeTyyppi tyyppi;
+    private LokalisoituTekstiDto kysymys;
+    private LokalisoituTekstiDto vastaus;
 }

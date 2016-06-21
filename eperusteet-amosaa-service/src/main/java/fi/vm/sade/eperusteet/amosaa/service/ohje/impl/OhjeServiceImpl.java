@@ -16,27 +16,23 @@
 package fi.vm.sade.eperusteet.amosaa.service.ohje.impl;
 
 import fi.vm.sade.eperusteet.amosaa.domain.ohje.Ohje;
-import fi.vm.sade.eperusteet.amosaa.domain.ohje.OhjeTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.ohje.OhjeDto;
 import fi.vm.sade.eperusteet.amosaa.repository.ohje.OhjeRepository;
+import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.ohje.OhjeService;
 import java.util.List;
-import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static fi.vm.sade.eperusteet.amosaa.service.util.Nulls.assertExists;
 
 /**
- * @author mikkom
+ * @author nkala
  */
 @Service
 @Transactional
 public class OhjeServiceImpl implements OhjeService {
-
     @Autowired
     private DtoMapper mapper;
 
@@ -45,43 +41,30 @@ public class OhjeServiceImpl implements OhjeService {
 
     @Override
     @Transactional(readOnly = true)
-    public OhjeDto getOhje(@P("id") Long id) {
-        Ohje ohje = repository.findOne(id);
-        assertExists(ohje, "Pyydettyä ohjetta ei ole olemassa");
+    public List<OhjeDto> getOhjeet() {
+        return mapper.mapAsList(repository.findAll(), OhjeDto.class);
+    }
+
+    @Override
+    public OhjeDto addOhje(OhjeDto dto) {
+        Ohje ohje = mapper.map(dto, Ohje.class);
+        ohje = repository.save(ohje);
         return mapper.map(ohje, OhjeDto.class);
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<OhjeDto> getTekstiKappaleOhjeet(@P("uuid") UUID uuid) {
-        List<Ohje> ohjeet = repository.findByKohde(uuid);
-        return mapper.mapAsList(ohjeet, OhjeDto.class);
-    }
-
-    @Override
-    public OhjeDto addOhje(OhjeDto ohjeDto) {
-        // NOTE: Poista jossain vaiheessa kun frontti tukee tyyppejä
-        if (ohjeDto.getTyyppi() == null) {
-            ohjeDto.setTyyppi(OhjeTyyppi.PERUSTETEKSTI);
+    public OhjeDto editOhje(Long id, OhjeDto dto) {
+        if (!id.equals(dto.getId())) {
+            throw new BusinessRuleViolationException("id-ei-tasmaa");
         }
-        Ohje ohje = mapper.map(ohjeDto, Ohje.class);
-        ohje = repository.save(ohje);
-        return mapper.map(ohje, OhjeDto.class);
-    }
-
-    @Override
-    public OhjeDto updateOhje(OhjeDto ohjeDto) {
-        Ohje ohje = repository.findOne(ohjeDto.getId());
-        assertExists(ohje, "Päivitettävää ohjetta ei ole olemassa");
-        mapper.map(ohjeDto, ohje);
-        ohje = repository.save(ohje);
-        return mapper.map(ohje, OhjeDto.class);
-    }
-
-    @Override
-    public void removeOhje(@P("id") Long id) {
         Ohje ohje = repository.findOne(id);
-        repository.delete(ohje);
+        ohje = mapper.map(dto, ohje);
+        return mapper.map(ohje, dto);
+    }
+
+    @Override
+    public void removeOhje(Long id) {
+        repository.delete(id);
     }
 
 }

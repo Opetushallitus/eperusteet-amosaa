@@ -21,15 +21,17 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
-import java.util.UUID;
 
 /**
  *
@@ -43,39 +45,30 @@ public class OhjeController {
     @Autowired
     private OhjeService service;
 
-    @RequestMapping(method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseEntity<OhjeDto> addOhje(@RequestBody OhjeDto ohjeDto) {
-        return new ResponseEntity<>(service.addOhje(ohjeDto), HttpStatus.OK);
+    @RequestMapping(method = GET)
+    public ResponseEntity<List<OhjeDto>> getOhjeet() {
+        return ResponseEntity.ok(service.getOhjeet());
     }
 
-    @RequestMapping(value = "/tekstikappale/{uuid}", method = RequestMethod.GET)
-    @ResponseBody
-    public ResponseEntity<List<OhjeDto>> getTekstiKappaleOhje(@PathVariable final UUID uuid) {
-        List<OhjeDto> ohjeDtos = service.getTekstiKappaleOhjeet(uuid);
-        if (ohjeDtos == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(ohjeDtos, HttpStatus.OK);
+    @RequestMapping(method = POST)
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<OhjeDto> addOhje(
+            @RequestBody OhjeDto dto) {
+        dto.setId(null);
+        return ResponseEntity.ok(service.addOhje(dto));
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    @ResponseBody
-    public ResponseEntity<OhjeDto> getOhje(@PathVariable final Long id) {
-        return new ResponseEntity<>(service.getOhje(id), HttpStatus.OK);
+    @RequestMapping(value = "/{id}", method = PUT)
+    public ResponseEntity<OhjeDto> editOhje(
+            @RequestParam Long id,
+            @RequestBody OhjeDto dto) {
+        return ResponseEntity.ok(service.editOhje(id, dto));
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseEntity<OhjeDto> updateOhje(
-            @PathVariable final Long id,
-            @RequestBody OhjeDto ohjeDto) {
-        ohjeDto.setId(id);
-        return new ResponseEntity<>(service.updateOhje(ohjeDto), HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public void deleteOhje(@PathVariable final Long id) {
+    @RequestMapping(value = "/{id}", method = DELETE)
+    public ResponseEntity editOhje(
+            @RequestParam Long id) {
         service.removeOhje(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

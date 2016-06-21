@@ -48,6 +48,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PermissionManager {
 
     public enum TargetType {
+        OPH("oph"),
         KOULUTUSTOIMIJA("koulutustoimija"),
         TARKASTELU("tarkastelu"),
         OPETUSSUUNNITELMA("opetussuunnitelma");
@@ -106,6 +107,15 @@ public class PermissionManager {
 
         if (perm == Permission.HALLINTA && targetId == null && target == TargetType.TARKASTELU &&
                 hasRole(authentication, RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA, RolePermission.CRUD, Organization.OPH)) {
+            return true;
+        }
+
+        if (perm == Permission.HALLINTA
+                && target == TargetType.OPH
+                && hasRole(authentication,
+                        RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA,
+                        RolePermission.ADMIN,
+                        Organization.OPH)) {
             return true;
         }
 

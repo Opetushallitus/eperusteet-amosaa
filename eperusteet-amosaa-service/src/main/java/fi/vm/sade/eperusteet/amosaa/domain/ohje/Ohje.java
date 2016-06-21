@@ -15,18 +15,17 @@
  */
 package fi.vm.sade.eperusteet.amosaa.domain.ohje;
 
-import fi.vm.sade.eperusteet.amosaa.domain.AbstractAuditedReferenceableEntity;
+import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
-import java.util.UUID;
+import java.io.Serializable;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
-import javax.persistence.Index;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
@@ -37,23 +36,24 @@ import org.hibernate.envers.RelationTargetAuditMode;
  * @author jhyoty
  */
 @Entity
-@Table(name = "ohje", indexes = {@Index(columnList = "kohde", unique = false)})
-@Audited
-public class Ohje extends AbstractAuditedReferenceableEntity {
+public class Ohje implements ReferenceableEntity, Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Getter
+    @Setter
+    private Long id;
 
     @ValidHtml
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @Getter
     @Setter
-    private LokalisoituTeksti teksti;
+    private LokalisoituTeksti kysymys;
 
+    @ValidHtml
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @Getter
     @Setter
-    private UUID kohde;
-
-    @Getter
-    @Setter
-    @Enumerated(EnumType.STRING)
-    private OhjeTyyppi tyyppi;
+    private LokalisoituTeksti vastaus;
 }

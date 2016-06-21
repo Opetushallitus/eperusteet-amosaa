@@ -1,0 +1,1 @@
+ALTER TABLE opetussuunnitelma ALTER COLUMN suoritustapa DROP NOT NULL;

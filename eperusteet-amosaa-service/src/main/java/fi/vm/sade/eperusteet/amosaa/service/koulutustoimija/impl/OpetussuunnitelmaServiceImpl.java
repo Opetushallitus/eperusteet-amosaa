@@ -214,6 +214,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
         if (kt.isOph()) {
             opsDto.setTyyppi(OpsTyyppi.POHJA);
+            opsDto.setSuoritustapa("pohja");
         }
         else {
             switch (opsDto.getTyyppi()) {
@@ -224,6 +225,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                 case YLEINEN:
                     PerusteDto yleinen = eperusteetService.getYleinenPohja();
                     setOpsCommon(ops, yleinen, rootTkv);
+                    opsDto.setSuoritustapa("yleinen");
                     break;
                 case YHTEINEN:
                     Opetussuunnitelma pohja = repository.findOne(opsDto.getPohja().getIdLong());
@@ -234,6 +236,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                         throw new BusinessRuleViolationException("vain-julkaistua-pohjaa-voi-kayttaa");
                     }
 
+                    opsDto.setSuoritustapa("yhteinen");
                     SisaltoViite pohjatkv = tkvRepository.findOneRoot(pohja);
                     tkvRepository.save(tkvService.kopioiHierarkia(pohjatkv, ops));
                     ops.setPohja(pohja);
