@@ -98,9 +98,6 @@ angular.module("app")
                     .then((res) => $scope.yhteiset.push(res));
             }
         },
-        ohjeistus: ($scope, ohjeistus) => {
-            console.log("wat");
-        },
         tiedotteet: {
             controller: ($rootScope, $scope, tiedotteet, nimiLataaja) => {
                 $scope.edit = EditointikontrollitService.createListRestangular($scope, "tiedotteet", tiedotteet);
