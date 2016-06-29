@@ -60,6 +60,9 @@ a.btn {
   fieldset[disabled] & {
     pointer-events: none; // Future-proof disabling of clicks on `<a>` elements
   }
+  & > span, & > i {
+    text-decoration: none;
+  }
 }
 
 
