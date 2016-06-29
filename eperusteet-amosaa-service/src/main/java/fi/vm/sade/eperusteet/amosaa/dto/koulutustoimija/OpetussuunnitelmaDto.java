@@ -37,7 +37,6 @@ public class OpetussuunnitelmaDto extends OpetussuunnitelmaBaseDto {
     private KoulutustoimijaBaseDto koulutustoimija;
     private Set<LiiteDto> liitteet;
     private Date paatospaivamaara;
-    private Reference tekstit;
     private Date voimaantulo;
     private String hyvaksyja;
     private String paatosnumero;

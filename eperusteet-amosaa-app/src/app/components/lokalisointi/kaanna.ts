@@ -14,7 +14,7 @@ module KaannaService {
     export const translate = (obj, key, useFallback) => {
         const getTranslation = (input, lang) => {
             return input[lang] || input[lang.toUpperCase()] || input["kieli_" + lang + "#1"];
-        }
+        };
 
         const primary = getTranslation(obj, key);
         if (primary) {

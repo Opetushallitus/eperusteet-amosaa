@@ -251,7 +251,13 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     }
 
     @Override
-    public OpetussuunnitelmaDto getOpetussuunnitelma(Long ktId, Long opsId) {
+    public Long getKoulutustoimijaId(Long opsId) {
+        Opetussuunnitelma ops = repository.findOne(opsId);
+        return ops.getKoulutustoimija().getId();
+    }
+
+    @Override
+    public OpetussuunnitelmaDto getOpetussuunnitelma(Long opsId) {
         Opetussuunnitelma ops = repository.findOne(opsId);
         return mapper.map(ops, OpetussuunnitelmaDto.class);
     }

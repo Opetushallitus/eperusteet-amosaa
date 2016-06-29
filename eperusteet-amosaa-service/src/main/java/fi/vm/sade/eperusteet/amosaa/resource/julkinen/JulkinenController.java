@@ -17,6 +17,7 @@
 package fi.vm.sade.eperusteet.amosaa.resource.julkinen;
 
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
+import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,17 +34,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/julkinen")
 @Api(value = "julkinen")
 public class JulkinenController {
+
     @Autowired
     private SisaltoViiteService svService;
 
+    @Autowired
+    private OpetussuunnitelmaService opsService;
+
     @RequestMapping(value = "/tutkinnonosat/{koodi}", method = RequestMethod.GET)
-    public SisaltoViiteDto getTutkinnonOsa(
-            @PathVariable final String koodi) {
+    public SisaltoViiteDto getTutkinnonOsa(@PathVariable final String koodi) {
         throw new UnsupportedOperationException("ei-toteutettu-viela");
     }
 
-//    @RequestMapping(value = "/tutkinnonosatoteutukset/{koodi}", method = RequestMethod.GET)
-//    public Object getTutkinnonOsaToteutus(@RequestBody(required = false) Object body) {
-//        throw new UnsupportedOperationException("ei-toteutettu-viela");
-//    }
+    @RequestMapping(value = "/opetussuunnitelmat/{opsId}/koulutustoimija", method = RequestMethod.GET)
+    public Long get(@PathVariable final Long opsId) {
+        return opsService.getKoulutustoimijaId(opsId);
+    }
 }

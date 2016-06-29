@@ -43,27 +43,30 @@ public interface OpetussuunnitelmaService extends RevisionService {
     List<OpetussuunnitelmaBaseDto> getOpetussuunnitelmat(@P("ktId") Long ktId);
 
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
-    OpetussuunnitelmaDto getOpetussuunnitelma(@P("ktId") Long ktId, @P("opsId") Long opsId);
+    Long getKoulutustoimijaId(@P("opsId") Long opsId);
 
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
-    List<PoistettuDto> getPoistetut(@P("ktId") Long ktId, @P("opsId") Long opsId);
+    OpetussuunnitelmaDto getOpetussuunnitelma(@P("opsId") Long opsId);
 
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
-    List<KayttajaoikeusDto> getOikeudet(@P("ktId") Long ktId, @P("opsId") Long opsId);
+    List<PoistettuDto> getPoistetut(Long ktId, @P("opsId") Long opsId);
+
+    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
+    List<KayttajaoikeusDto> getOikeudet(Long ktId, @P("opsId") Long opsId);
 
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'HALLINTA')")
-    KayttajaoikeusDto updateOikeus(@P("ktId") Long ktId, @P("opsId") Long opsId, Long oikeusId, KayttajaoikeusDto oikeus);
+    KayttajaoikeusDto updateOikeus(Long ktId, @P("opsId") Long opsId, Long oikeusId, KayttajaoikeusDto oikeus);
 
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'MUOKKAUS')")
-    OpetussuunnitelmaDto update(@P("ktId") Long ktId, @P("opsId") Long opsId, OpetussuunnitelmaDto body);
+    OpetussuunnitelmaDto update(Long ktId, @P("opsId") Long opsId, OpetussuunnitelmaDto body);
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUONTI')")
     OpetussuunnitelmaBaseDto addOpetussuunnitelma(@P("ktId") Long ktId, OpetussuunnitelmaDto opsDto);
 
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'HALLINTA')")
-    OpetussuunnitelmaBaseDto updateTila(@P("ktId") Long ktId, @P("opsId") Long opsId, @P("tila") Tila tila);
+    OpetussuunnitelmaBaseDto updateTila(Long ktId, @P("opsId") Long opsId, @P("tila") Tila tila);
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'MUOKKAUS')")
-    Validointi validoi(Long ktId, Long opsId);
+    Validointi validoi(@P("ktId") Long ktId, Long opsId);
 }
 

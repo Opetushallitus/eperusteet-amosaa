@@ -55,4 +55,4 @@ namespace TermistoData {
 }
 
 angular.module("app")
-    .run(($injector) => $injector.invoke(TermistoData.init))
+    .run(($injector) => $injector.invoke(TermistoData.init));

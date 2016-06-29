@@ -19,4 +19,4 @@ namespace Tekstikappaleet {
         lapset: _.map(tekstikappaleviitteet[id].lapset, (lapsiId: number) =>
                         teeRakenne(tekstikappaleviitteet, lapsiId, depth + 1))
     });
-};
+}

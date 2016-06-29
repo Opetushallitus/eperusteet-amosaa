@@ -15,4 +15,4 @@ namespace Koodisto {
 
     export const paikallinenToFull = (koulutustoimija, koodiArvo: string) =>
         paikallinenPrefix + koulutustoimija.organisaatio + "_" + koodiArvo;
-};
+}
