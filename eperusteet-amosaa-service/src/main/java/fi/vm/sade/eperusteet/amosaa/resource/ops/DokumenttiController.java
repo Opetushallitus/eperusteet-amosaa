@@ -6,11 +6,9 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.amosaa.repository.dokumentti.DokumenttiRepository;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiService;
+import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils;
 import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
 import io.swagger.annotations.Api;
-import java.io.IOException;
-import java.util.Date;
-import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -19,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 /**
  * @author isaul
@@ -49,7 +49,7 @@ public class DokumenttiController {
 
         // Aloitetaan luonti jos luonti ei ole jo päällä tai maksimi luontiaika ylitetty
         if (dokumenttiDto.getAloitusaika() == null
-                || DateUtils.addMinutes(dokumenttiDto.getAloitusaika(), maxTimeInMinutes).before(new Date())
+                || DokumenttiUtils.isTimePass(dokumenttiDto)
                 || dokumenttiDto.getTila() != DokumenttiTila.LUODAAN) {
             // Vaihdetaan dokumentin tila luonniksi
             service.setStarted(opsId, dokumenttiDto);
@@ -58,7 +58,7 @@ public class DokumenttiController {
             // Asynkroninen metodi
             service.generateWithDto(opsId, dokumenttiDto);
         } else {
-            status = HttpStatus.FORBIDDEN;
+            status = HttpStatus.BAD_REQUEST;
         }
 
         return new ResponseEntity<>(dokumenttiDto, status);
@@ -89,7 +89,6 @@ public class DokumenttiController {
 
         // Tehdään DokumenttiDto jos ei löydy jo valmiina
         DokumenttiDto dokumenttiDto = service.getDto(opsId, Kieli.of(kieli));
-
         if (dokumenttiDto == null) {
             dokumenttiDto = service.createDtoFor(opsId, Kieli.of(kieli));
         }

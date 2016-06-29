@@ -26,15 +26,10 @@ import fi.vm.sade.eperusteet.amosaa.repository.dokumentti.DokumenttiRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiBuilderService;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiService;
+import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils;
 import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
-
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.Date;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,6 +39,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.Date;
 
 
 /**
@@ -71,12 +71,21 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     public DokumenttiDto getDto(Long id, Kieli kieli) {
         Dokumentti dokumentti = dokumenttiRepository.findByOpsIdAndKieli(id, kieli);
 
+        // Jos aloitusajasta on kulunut liian kauan, on luonti epäonnistunut
+        if (dokumentti.getTila() != DokumenttiTila.VALMIS) {
+            if (DokumenttiUtils.isTimePass(dokumentti)) {
+                dokumentti.setTila(DokumenttiTila.EPAONNISTUI);
+                dokumentti = dokumenttiRepository.save(dokumentti);
+            }
+        }
+
         if (dokumentti != null) {
             return mapper.map(dokumentti, DokumenttiDto.class);
         } else {
             return createDtoFor(id, kieli);
         }
     }
+
 
     @Override
     @Transactional

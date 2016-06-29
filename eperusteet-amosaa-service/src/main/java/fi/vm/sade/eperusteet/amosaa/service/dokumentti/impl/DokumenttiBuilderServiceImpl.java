@@ -38,6 +38,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.ops.TermiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.*;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.repository.dokumentti.DokumenttiRepository;
+import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiBuilderService;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.LocalizedMessagesService;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.PdfService;
@@ -50,6 +51,7 @@ import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.ops.LiiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.TermistoService;
 import org.apache.xml.security.utils.Base64;
+import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,8 +81,6 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
-
-import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 
 import static fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils.*;
 
@@ -200,7 +200,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
         if (kuvaus != null && kuvaus.length() != 0) {
             Element description = docBase.getDocument().createElement("meta");
             description.setAttribute("name", "description");
-            description.setAttribute("content", kuvaus);
+            description.setAttribute("content", Jsoup.parse(kuvaus).text());
             docBase.getHeadElement().appendChild(description);
         }
 
@@ -318,7 +318,6 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
                     if (kappale.getNimi() == null) {
                         return;
                     }
-
                     addHeader(docBase, getTextString(docBase, kappale.getNimi()));
                     if (kappale.getTeksti() != null) {
                         addLokalisoituteksti(docBase, kappale.getTeksti(), "div");
@@ -383,9 +382,9 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
         builder.append(getTextString(docBase, rakenneModuuliDto.getNimi()));
         if (rakenneModuuliDto.getOsaamisala() != null
                 && rakenneModuuliDto.getOsaamisala().getOsaamisalakoodiArvo() != null) {
-            builder.append(" ");
+            builder.append(" (");
             builder.append(rakenneModuuliDto.getOsaamisala().getOsaamisalakoodiArvo());
-            builder.append(" ");
+            builder.append(")");
         }
         addMuodostumisSaanto(docBase, rakenneModuuliDto.getMuodostumisSaanto(), builder);
 
@@ -426,7 +425,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
                                       MuodostumisSaantoDto muodostumisSaantoDto,
                                       StringBuilder builder) {
         if (muodostumisSaantoDto != null && muodostumisSaantoDto.getLaajuus() != null) {
-            builder.append(" (");
+            builder.append(" ");
             if (muodostumisSaantoDto.getLaajuus().getMinimi() != null
                     && muodostumisSaantoDto.getLaajuus().getMaksimi() != null
                     && muodostumisSaantoDto.getLaajuus().getMinimi()
@@ -450,7 +449,6 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
                 // Todo: lokalisoitu yksikkö
                 builder.append(" osp");
             }
-            builder.append(")");
         }
     }
 
@@ -460,15 +458,21 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
                                               StringBuilder builder) {
         builder.append("<li>");
         builder.append(getTextString(docBase, tutkinnonOsaKaikkiDto.getNimi()));
-        if (tutkinnonOsaViiteSuppeaDto.getLaajuus() != null) {
+
+        if (tutkinnonOsaKaikkiDto.getKoodiArvo() != null) {
             builder.append(" (");
+            builder.append(tutkinnonOsaKaikkiDto.getKoodiArvo());
+            builder.append(")");
+        }
+
+        if (tutkinnonOsaViiteSuppeaDto.getLaajuus() != null) {
+            builder.append(" ");
             if (tutkinnonOsaViiteSuppeaDto.getLaajuus().stripTrailingZeros().scale() <= 0) {
                 builder.append(String.valueOf(tutkinnonOsaViiteSuppeaDto.getLaajuus().intValue()));
             } else {
                 builder.append(tutkinnonOsaViiteSuppeaDto.getLaajuus().toString());
             }
             builder.append(" osp");
-            builder.append(")");
         }
         builder.append("</li>");
     }
@@ -677,12 +681,11 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
     private void addPerusteenTutkinnonOsa(DokumenttiBase docBase, Long perusteenTutkinnonosaId) {
         // Todo: koodi, nimi, laajuus
 
+        addTeksti(docBase, messages.translate("docgen.koodi", docBase.getKieli()), "h5");
         docBase.getPeruste().getTutkinnonOsat().stream()
                 .filter(dto -> dto.getId().equals(perusteenTutkinnonosaId))
                 .findAny()
-                .ifPresent(dto -> {
-                    addTeksti(docBase, dto.getKoodiArvo(), "p");
-                });
+                .ifPresent(dto -> addTeksti(docBase, dto.getKoodiArvo(), "div"));
 
     }
 
