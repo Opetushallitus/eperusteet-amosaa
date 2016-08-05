@@ -11,8 +11,8 @@
     div
       table.table
         tr
-          th(kaanna="'nimi'")
-          th(kaanna="'syy'")
+          th.col-md-6(kaanna="'nimi'")
+          th.col-md-6(kaanna="'syy'")
         tr(ng-repeat='virhe in virheet')
           td(kaanna='virhe.nimi')
           td(kaanna='virhe.syy')
@@ -22,8 +22,8 @@
     div
       table.table
         tr
-          th(kaanna="'nimi'")
-          th(kaanna="'syy'")
+          th.col-md-6(kaanna="'nimi'")
+          th.col-md-6(kaanna="'syy'")
         tr(ng-repeat='virhe in varoitukset')
           td(kaanna='virhe.nimi')
           td(kaanna='virhe.syy')
@@ -33,8 +33,8 @@
     div
       table.table
         tr
-          th(kaanna="'nimi'")
-          th(kaanna="'syy'")
+          th.col-md-6(kaanna="'nimi'")
+          th.col-md-6(kaanna="'syy'")
         tr(ng-repeat='virhe in huomiot')
           td(kaanna='virhe.nimi')
           td(kaanna='virhe.syy')

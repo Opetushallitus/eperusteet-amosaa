@@ -47,19 +47,16 @@ import fi.vm.sade.eperusteet.amosaa.service.locking.LockManager;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.teksti.TekstiKappaleService;
-import static fi.vm.sade.eperusteet.amosaa.service.util.Nulls.assertExists;
 import fi.vm.sade.eperusteet.amosaa.service.util.PoistettuService;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static fi.vm.sade.eperusteet.amosaa.service.util.Nulls.assertExists;
 
 /**
  * @author mikkom
@@ -259,7 +256,9 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
 
         // Tulevaisuudessa mahdollista lisätä eri lähteitä muille tyypeille jos koetaan tarpeelliseksi
         if (TutkinnonosaTyyppi.OMA.equals(mappedTosa.getTyyppi())) {
-            mappedTosa.getOmatutkinnonosa().setKoodiPrefix(ops.getKoulutustoimija().getOrganisaatio());
+            if (mappedTosa.getOmatutkinnonosa() != null) {
+                mappedTosa.getOmatutkinnonosa().setKoodiPrefix(ops.getKoulutustoimija().getOrganisaatio());
+            }
         }
 
         mapTutkinnonParts(mappedTosa);
