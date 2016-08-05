@@ -71,15 +71,16 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     public DokumenttiDto getDto(Long id, Kieli kieli) {
         Dokumentti dokumentti = dokumenttiRepository.findByOpsIdAndKieli(id, kieli);
 
-        // Jos aloitusajasta on kulunut liian kauan, on luonti epäonnistunut
-        if (dokumentti.getTila() != DokumenttiTila.VALMIS) {
-            if (DokumenttiUtils.isTimePass(dokumentti)) {
-                dokumentti.setTila(DokumenttiTila.EPAONNISTUI);
-                dokumentti = dokumenttiRepository.save(dokumentti);
-            }
-        }
-
         if (dokumentti != null) {
+
+            // Jos aloitusajasta on kulunut liian kauan, on luonti epäonnistunut
+            if (dokumentti.getTila() != DokumenttiTila.VALMIS) {
+                if (DokumenttiUtils.isTimePass(dokumentti)) {
+                    dokumentti.setTila(DokumenttiTila.EPAONNISTUI);
+                    dokumentti = dokumenttiRepository.save(dokumentti);
+                }
+            }
+
             return mapper.map(dokumentti, DokumenttiDto.class);
         } else {
             return createDtoFor(id, kieli);
