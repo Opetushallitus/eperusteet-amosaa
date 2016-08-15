@@ -21,6 +21,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.ammattitaitovaatimukset.Ammattitaitov
 import fi.vm.sade.eperusteet.amosaa.domain.arviointi.Arviointi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -55,6 +56,11 @@ public class OmaTutkinnonosa extends AbstractAuditedEntity implements Serializab
     @Setter
     @Column(name = "koodi_prefix")
     private String koodiPrefix;
+
+    @Getter
+    @Setter
+    @Column(precision = 10, scale = 2)
+    private BigDecimal laajuus;
 
     @Getter
     @Setter

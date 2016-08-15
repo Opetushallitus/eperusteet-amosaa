@@ -18,6 +18,7 @@ package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.ArviointiDto;
+import java.math.BigDecimal;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,6 +33,7 @@ import lombok.Setter;
 public class OmaTutkinnonosaDto {
     private Long id;
     private String koodi;
+    private BigDecimal laajuus;
     private LokalisoituTekstiDto tavoitteet;
     private List<AmmattitaitovaatimuksenKohdealueDto> ammattitaitovaatimuksetLista;
     private ArviointiDto arviointi;

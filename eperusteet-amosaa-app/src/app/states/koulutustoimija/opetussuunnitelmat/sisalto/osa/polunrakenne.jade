@@ -58,7 +58,7 @@ mixin polkuRyhmaToolbar()
   .sp-toolbar
     +muodostuminen
     span(ng-show="misc.root.$$ekEditing")
-      .sp-edit(ng-show="misc.root.$$ekEditing && ngModel.osaamisala")
+      .sp-edit(ng-show="misc.root.$$ekEditing && (ngModel.osaamisala || ngModel.rooli === 'määrittelemätön' || ngModel.vieras)")
         +poistoToggler
       .sp-edit(ng-hide="ngModel.$$poistettu")
         a(href="" ng-click="misc.editNode(ngModel)")
