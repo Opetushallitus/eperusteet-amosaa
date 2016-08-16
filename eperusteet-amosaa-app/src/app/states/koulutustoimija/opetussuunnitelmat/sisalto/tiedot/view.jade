@@ -1,3 +1,11 @@
+mixin kielivalinta(kieli)
+  label.checkbox-inline
+    input(type="checkbox" ng-model="$$julkaisukielet[" + kieli + "]"
+      ng-change="kieletVaihtuivat()"
+      ng-true-value=kieli ng-false-value="")
+    span(ng-bind=kieli)
+
+
 .tiedot.subtle-transition
   +historia("versio",
     "uusin.$$nimi",
@@ -13,6 +21,11 @@
       .kohdat
         +formfield("'nimi'")
           +ekinput("ops.nimi")
+
+        +formfield("'julkaisukielet'")
+          +kielivalinta("'fi'")
+          +kielivalinta("'sv'")
+          +kielivalinta("'se'")
 
         +formfield("'tiivistelma'")
           +ekeditor("ops.kuvaus", "simplified")

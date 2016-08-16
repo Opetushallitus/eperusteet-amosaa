@@ -42,5 +42,11 @@ namespace TiedotImpl {
 
         $scope.listRevisions = () => ModalRevisions.viewRevisions($scope.historia)
             .then(res => $state.go($state.current.name, { versio: res }));
+
+        $scope.kieletVaihtuivat = () => {
+            $scope.ops.julkaisukielet = _.values($scope.$$julkaisukielet);
+        };
+
+        $scope.$$julkaisukielet = _.zipObject($scope.ops.julkaisukielet, $scope.ops.julkaisukielet);
     };
 }
