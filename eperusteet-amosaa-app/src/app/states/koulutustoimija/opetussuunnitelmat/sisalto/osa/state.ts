@@ -279,6 +279,10 @@ angular.module("app")
                         });
 
                 $scope.paikallinenKoodiUpdate = (pkoodi) => {
+                    $scope.$$koodiFormaattiVaara = false;
+                    if (!_.isString(pkoodi) || !pkoodi.match(/1\d\d\d/)) {
+                        $scope.$$koodiFormaattiVaara = true;
+                    }
                     if (pkoodi) {
                         const fullKoodi = Koodisto.paikallinenToFull(koulutustoimija, pkoodi);
                         paikallisetKoodit.one(fullKoodi).getList()

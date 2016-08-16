@@ -9,6 +9,8 @@ mixin paikallinenKoodi()
       input.form-control(type="text"
         ng-model="osa.tosa.omatutkinnonosa.koodi"
         disabled)
+    div.koodi-kaytossa.alert.alert-info(ng-show="$$ekEditing && $$koodiFormaattiVaara")
+      div(ng-bind="'paikallinen-koodi-info' | kaanna")
     div.koodi-kaytossa.alert(ng-show="tormaavatKoodit.length > 0")
       div(ng-bind="'paikallinen-koodi-jo-kaytossa' | kaanna")
       table.table

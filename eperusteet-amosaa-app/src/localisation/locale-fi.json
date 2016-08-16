@@ -286,6 +286,7 @@
   "kuvat": "Kuvat",
   "viitteet": "Viitteet",
   "vain-paikalliset": "Paikalliset",
+  "paikallinen-koodi-info": "Paikallisen koodin pitää olla numero (1000 - 9999)",
   "paikallinen-koodi-jo-kaytossa": "Paikallisesti laaditun tutkinnon osan koodi on jo käytössä jossain muussa paikallisessa tutkinnon osassa.",
   "vain-valitut": "Valitut",
   "ops-validointivirheita": "Opetussuunnitelma ei mene validoinnista läpi. Tarkista virheet validoimalla opetussuunnitelma.",
