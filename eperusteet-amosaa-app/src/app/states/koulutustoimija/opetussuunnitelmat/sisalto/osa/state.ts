@@ -32,6 +32,7 @@ namespace SuoritustapaRyhmat {
                     ])
                     .then(([paikallisetKoodit, julkisetKoodit]) => {
                         $scope.koodit = koodit = _(paikallisetKoodit)
+                            .filter((pkoodi: any) => !!pkoodi.tosa.omatutkinnonosa)
                             .map(pkoodi => ({
                                 arvo: pkoodi.tosa.omatutkinnonosa.koodi,
                                 uri: "paikallinen_tutkinnonosa_"
@@ -48,6 +49,9 @@ namespace SuoritustapaRyhmat {
                             })
                             .sortBy(koodi => KaannaService.kaanna(koodi.nimi))
                             .value()
+                    })
+                    .catch((err) => {
+                        NotifikaatioService.varoitus("koodiston-hakeminen-epaonnistui");
                     });
 
                 $scope.search = "";
@@ -106,7 +110,10 @@ angular.module("app")
                     lukko.get()
                         .then((res) => $scope.osaLock = undefined)
                         .catch((lock) => {
-                            if (!lock.data.oma || !lukko.data.vanhentunut) {
+                            if (lock.data.oma || lock.data.vanhentunut) {
+                                $scope.osaLock = undefined;
+                            }
+                            else {
                                 $scope.osaLock = lock.data;
                                 $scope.osaLockStr = $sce.trustAsHtml(KaannaService.kaanna("lukko-kayttajalla")
                                     + ": " + (lock.data.haltijaNimi || lock.data.haltijaOid)
