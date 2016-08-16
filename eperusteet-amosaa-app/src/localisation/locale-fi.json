@@ -81,6 +81,7 @@
   "sulje-kaikki":"Sulje kaikki",
   "OSAAMISPISTE": "osp",
   "OPINTOVIIKKO": "ov",
+  "laajuus": "Laajuus",
   "laajuusyksikko": "Laajuuden yksikkö",
   "ei-yksikkoa": "Ei yksikköä",
   "kpl": "kpl",
@@ -321,6 +322,11 @@
   "viimeksi-muokattu": "Muokattu viimeksi",
   "vaatimuksen-selite": "Vaatimuksen selite",
   "vaatimuksen-kohteen-selite": "Vaatimuksen kohteen selite",
+  "arvo-rajojen-ulkopuolella": "Arvo rajojen ulkopuolella",
+  "arvo-ei-numero": "Arvo ei ole numero",
+  "arvo-ei-kokonaisluku": "Arvo ei ole kokonaisluku",
+  "arvo-ei-desimaaliluku": "Arvo ei ole desimaaliluku",
+  "arvo-askelvirhe": "Askelvirhe",
   "vaatimuksen-kohteen-otsikko": "Vaatimuksen kohteen otsikko",
   "versiohistoria": "Versiohistoria"
 }

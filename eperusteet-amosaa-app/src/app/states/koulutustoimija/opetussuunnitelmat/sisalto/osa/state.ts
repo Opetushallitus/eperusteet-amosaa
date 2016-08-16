@@ -230,7 +230,7 @@ angular.module("app")
             controller: ($scope) => {}
         },
         tutkinnonosa: {
-            controller: ($q, $scope, $state, $stateParams, peruste, arviointiAsteikot, koodisto, koulutustoimija) => {
+            controller: ($q, $scope, $state, $stateParams, ops, peruste, arviointiAsteikot, koodisto, koulutustoimija) => {
                 const
                     isPaikallinen = _.property("tosa.tyyppi")($scope.osa) === "oma",
                     osaamisalaKoodit = peruste.osaamisalat,

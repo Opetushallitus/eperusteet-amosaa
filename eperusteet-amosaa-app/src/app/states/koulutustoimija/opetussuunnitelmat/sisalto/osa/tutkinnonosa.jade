@@ -1,3 +1,11 @@
+mixin paikallinenLaajuus()
+  +contentToggler("pTosa.$$naytaLaajuus", "'laajuus'")
+    div(ng-if="$$ekEditing")
+      numberinput(type="float" model="osa.tosa.omatutkinnonosa.laajuus")
+    div(ng-if="!$$ekEditing")
+      numberinput(type="float" model="osa.tosa.omatutkinnonosa.laajuus" step="0.5")
+
+
 mixin paikallinenKoodi()
   +contentToggler("pTosa.$$naytaPaikallinenKoodi", "'koodi'")
     div(ng-show="$$ekEditing")
@@ -295,6 +303,7 @@ mixin tosaToteutus()
 
 mixin omaTosaSisalto()
   div(ng-if="$$ekEditing")
+    +paikallinenLaajuus
     +paikallinenKoodi
     +contentToggler("$$showTavoitteet", "'tavoitteet'")
       div(style="margin-bottom: 16px" ckeditor slocalized ng-model="osa.tosa.omatutkinnonosa.tavoitteet" layout="normal")
@@ -315,6 +324,7 @@ mixin omaTosaSisalto()
           ckeditor slocalized ng-model="osa.tosa.omatutkinnonosa.ammattitaidonOsoittamistavat" layout="normal")
 
   div(ng-if="!$$ekEditing")
+    +paikallinenLaajuus
     +paikallinenKoodi
     +contentToggler("$$showTavoitteet", "'tavoitteet'")
       +teksti("osa.tosa.omatutkinnonosa.tavoitteet")
