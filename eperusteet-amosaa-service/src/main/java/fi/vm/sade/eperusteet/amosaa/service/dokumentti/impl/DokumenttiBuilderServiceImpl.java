@@ -688,8 +688,8 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
 
         osaamistasonKriteerit.stream()
                 .filter(k -> k.getOsaamistaso() != null)
-                .sorted((k1, k2) -> k1.getOsaamistaso().getId().compareTo(
-                        k2.getOsaamistaso().getId()))
+                .sorted((k1, k2) -> k2.getOsaamistaso().getId().compareTo(
+                        k1.getOsaamistaso().getId()))
                 .forEach(osaamistasonKriteeri -> {
                     DokumenttiRivi rivi = new DokumenttiRivi();
 

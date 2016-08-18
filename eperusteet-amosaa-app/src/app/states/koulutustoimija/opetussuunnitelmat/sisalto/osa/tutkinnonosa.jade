@@ -146,22 +146,21 @@ mixin arviointiKohde()
     .table-responsive
       table.table.table-striped.table-condensed
         tbody
-          tr(ng-repeat="(index, osaamistasonKriteeri) in (arviointiKohde.osaamistasonKriteerit.slice().reverse())")
-            td(ng-bind="arviointiAsteikot[pa.arviointiasteikko(arviointiKohde) - 1].osaamistasot[arviointiKohde.osaamistasonKriteerit.length - 1 - index].otsikko | kaanna")
+          tr(ng-repeat="(index, osaamistaso) in arviointiAsteikot[pa.arviointiasteikko(arviointiKohde) - 1].osaamistasot | orderBy:'-id'")
+            td(ng-bind="osaamistaso.otsikko | kaanna")
             td
               ul(ng-if="!$$ekEditing")
-                li(ng-bind="kriteeri | kaanna" ng-repeat="kriteeri in osaamistasonKriteeri.kriteerit")
+                li(ng-bind="kriteeri | kaanna" ng-repeat="kriteeri in (arviointiKohde.osaamistasonKriteerit | orderBy:'-_osaamistaso')[index].kriteerit")
 
               div(ng-if="$$ekEditing")
                 .osaamistason-kriteerit(ui-sortable="sortableOptionsOsaamistasonKriteerit"
-                                        ng-model="osaamistasonKriteeri.kriteerit")
-                  div(ng-repeat="kriteeri in osaamistasonKriteeri.kriteerit")
+                ng-model="(arviointiKohde.osaamistasonKriteerit | orderBy:'-_osaamistaso')[index].kriteerit")
+                  div(ng-repeat="kriteeri in (arviointiKohde.osaamistasonKriteerit | orderBy:'-_osaamistaso')[index].kriteerit")
                     +kriteeri
                 div.clearfix
                 div.painikkeet
-                  span.linkki.pull-right(ng-click="lisaaKriteeri(osaamistasonKriteeri)")
+                  span.linkki.pull-right(ng-click="lisaaKriteeri((arviointiKohde.osaamistasonKriteerit | orderBy:'-_osaamistaso')[index])")
                     +icon("plus")
-
 
 mixin arviointiAsteikko()
   .arviointi-asteikko
