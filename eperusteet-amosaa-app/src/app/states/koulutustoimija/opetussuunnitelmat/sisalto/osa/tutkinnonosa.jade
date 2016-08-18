@@ -146,8 +146,8 @@ mixin arviointiKohde()
     .table-responsive
       table.table.table-striped.table-condensed
         tbody
-          tr(ng-repeat="(index, osaamistasonKriteeri) in arviointiKohde.osaamistasonKriteerit")
-            td(ng-bind="arviointiAsteikot[pa.arviointiasteikko(arviointiKohde) - 1].osaamistasot[index].otsikko | kaanna")
+          tr(ng-repeat="(index, osaamistasonKriteeri) in (arviointiKohde.osaamistasonKriteerit.slice().reverse())")
+            td(ng-bind="arviointiAsteikot[pa.arviointiasteikko(arviointiKohde) - 1].osaamistasot[arviointiKohde.osaamistasonKriteerit.length - 1 - index].otsikko | kaanna")
             td
               ul(ng-if="!$$ekEditing")
                 li(ng-bind="kriteeri | kaanna" ng-repeat="kriteeri in osaamistasonKriteeri.kriteerit")
@@ -244,8 +244,7 @@ mixin tosaToteutus()
                 span(ng-bind="'osaamisalat-joihin-vaikutusta' | kaanna")
                 span(style="margin-right: 6px")
                   |:
-                span(ng-
-                bind="osaamisalat[toteutus.osaamisalaKoodi].nimi | kaanna")
+                span(ng-bind="osaamisalat[toteutus.osaamisalaKoodi].nimi | kaanna")
                 b(style="margin-left: 6px" ng-bind="osaamisalat[toteutus.osaamisalaKoodi].arvo")
 
               div
