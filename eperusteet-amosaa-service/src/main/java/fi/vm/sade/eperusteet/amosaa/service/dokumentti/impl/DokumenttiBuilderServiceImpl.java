@@ -599,7 +599,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
                                                      AmmattitaitovaatimuksenKohdealue ammattitaitovaatimuksenKohdealue) {
         DokumenttiTaulukko taulukko = new DokumenttiTaulukko();
 
-        taulukko.addOtsikkoSarake(getTextString(docBase, ammattitaitovaatimuksenKohdealue.getOtsikko()));
+        //taulukko.addOtsikkoSarake(getTextString(docBase, ammattitaitovaatimuksenKohdealue.getOtsikko()));
         addVaatimuksenKohteet(docBase, ammattitaitovaatimuksenKohdealue.getVaatimuksenKohteet(), taulukko);
 
         taulukko.addToDokumentti(docBase);

@@ -17,7 +17,7 @@ mixin paikallinenKoodi()
       input.form-control(type="text"
         ng-model="osa.tosa.omatutkinnonosa.koodi"
         disabled)
-    div.koodi-kaytossa.alert.alert-info(ng-show="$$ekEditing && $$koodiFormaattiVaara")
+    div.koodi-kaytossa.alert.alert-info(ng-show="$$ekEditing && $$koodiFormaattiVaara" style="margin-top: 10px")
       div(ng-bind="'paikallinen-koodi-info' | kaanna")
     div.koodi-kaytossa.alert(ng-show="tormaavatKoodit.length > 0")
       div(ng-bind="'paikallinen-koodi-jo-kaytossa' | kaanna")
@@ -59,12 +59,12 @@ mixin vaatimuksenKohde()
           +icon("trash-o")
         .input-group-addon.sortable-item-handle
           +gicon("sort")
-    .form-group(ng-if="$$ekEditing")
+    //.form-group(ng-if="$$ekEditing")
       input.form-control(type="text" ng-model="vaatimuksenKohde.selite" slocalized placeholder="{{ 'vaatimuksen-kohteen-selite' | kaanna }}")
 
     h4(ng-if="!$$ekEditing")
       span(ng-if="vaatimuksenKohde.otsikko" ng-bind="vaatimuksenKohde.otsikko | kaanna")
-    p(ng-if="!$$ekEditing")
+    //p(ng-if="!$$ekEditing")
       span(ng-if="vaatimuksenKohde.selite" ng-bind="vaatimuksenKohde.selite | kaanna")
 
     .row(ng-if="$$ekEditing")
@@ -88,7 +88,7 @@ mixin vaatimuksenKohde()
 
 mixin ammattitaitovaatimus()
   .box-panel
-    .box-panel-title
+    //.box-panel-title
       h3(ng-if="!$$ekEditing")
         span(ng-if="ammattitaitovaatimus.otsikko" ng-bind="ammattitaitovaatimus.otsikko | kaanna")
 
@@ -310,7 +310,14 @@ mixin omaTosaSisalto()
                                ng-model="osa.tosa.omatutkinnonosa.ammattitaitovaatimuksetLista")
         div(ng-repeat="ammattitaitovaatimus in osa.tosa.omatutkinnonosa.ammattitaitovaatimuksetLista")
           +ammattitaitovaatimus
-      button.btn.btn-default(type='button' ng-click="lisaaAmmattitaitovaatimus()" ng-bind="'lisaa-ammattitaitovaatimus' | kaanna")
+      button.btn.btn-default(type='button'
+                             ng-click="lisaaAmmattitaitovaatimus()"
+                             ng-bind="'lisaa-ammattitaitovaatimus' | kaanna"
+                             ng-hide="osa.tosa.omatutkinnonosa.ammattitaitovaatimuksetLista.length > 0")
+      button.btn.btn-default(type='button'
+                             ng-click="poistaAmmattitaitovaatimus(osa.tosa.omatutkinnonosa.ammattitaitovaatimuksetLista[0])"
+                             ng-bind="'poista-ammattitaitovaatimus' | kaanna"
+                             ng-show="osa.tosa.omatutkinnonosa.ammattitaitovaatimuksetLista.length > 0")
     +contentToggler("$$showArviointi", "'arviointi'")
       .arviointi-kohdealueet(ui-sortable="sortableOptionsArvioinninKohdealueet"
                              ng-model="osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet")
