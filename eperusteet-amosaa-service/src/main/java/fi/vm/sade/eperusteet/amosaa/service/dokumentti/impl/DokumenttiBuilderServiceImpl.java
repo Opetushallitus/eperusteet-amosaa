@@ -311,14 +311,11 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
             throws ParserConfigurationException, IOException, SAXException {
 
         for (SisaltoViite lapsi : viite.getLapset()) {
-            if (lapsi == null || lapsi.getTekstiKappale() == null) {
+            if (lapsi == null || lapsi.getTekstiKappale() == null || lapsi.getTekstiKappale().getNimi() == null) {
                 return;
             }
 
             TekstiKappale kappale = lapsi.getTekstiKappale();
-            if (kappale.getNimi() == null) {
-                return;
-            }
             StringBuilder otsikkoBuilder = new StringBuilder();
             otsikkoBuilder.append(getTextString(docBase, kappale.getNimi()));
 
@@ -519,10 +516,14 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
 
         switch (tutkinnonOsa.getTyyppi()) {
             case OMA:
-                addOmaTutkinnonOsa(docBase, tutkinnonOsa.getOmatutkinnonosa());
+                if (tutkinnonOsa.getOmatutkinnonosa() != null) {
+                    addOmaTutkinnonOsa(docBase, tutkinnonOsa.getOmatutkinnonosa());
+                }
                 break;
             case PERUSTEESTA:
-                addPerusteenTutkinnonOsa(docBase, tutkinnonOsa.getPerusteentutkinnonosa());
+                if (tutkinnonOsa.getPerusteentutkinnonosa() != null) {
+                    addPerusteenTutkinnonOsa(docBase, tutkinnonOsa.getPerusteentutkinnonosa());
+                }
                 break;
             default:
                 break;
