@@ -43,10 +43,10 @@ public interface OpetussuunnitelmaService extends RevisionService {
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
     List<OpetussuunnitelmaBaseDto> getOpetussuunnitelmat(@P("ktId") Long ktId);
 
-    @PreAuthorize("permitAll()")
+    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'ESITYS')")
     Long getKoulutustoimijaId(@P("opsId") Long opsId);
 
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
+    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'ESITYS')")
     OpetussuunnitelmaDto getOpetussuunnitelma(@P("opsId") Long opsId);
 
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")

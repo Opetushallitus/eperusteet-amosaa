@@ -105,6 +105,11 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     }
 
     @Override
+    public KoulutustoimijaDto getKoulutustoimijaJulkinen(Long kId) {
+        return mapper.map(repository.findOne(kId), KoulutustoimijaDto.class);
+    }
+
+    @Override
     public <T> List<T> getPaikallisetTutkinnonOsat(Long ktId, Class<T> tyyppi) {
         Koulutustoimija kt = repository.findOne(ktId);
         return mapper.mapAsList(sisaltoviiteRepository.findAllPaikallisetTutkinnonOsat(kt), tyyppi);

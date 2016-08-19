@@ -15,6 +15,8 @@
  */
 package fi.vm.sade.eperusteet.amosaa.service.security;
 
+import fi.vm.sade.eperusteet.amosaa.domain.Tila;
+import fi.vm.sade.eperusteet.amosaa.domain.Tyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.KayttajaoikeusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
@@ -26,18 +28,15 @@ import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.RolePer
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.RolePrefix;
 import fi.vm.sade.eperusteet.amosaa.service.util.Pair;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.io.Serializable;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -67,6 +66,7 @@ public class PermissionManager {
 
     public enum Permission {
 
+        ESITYS("esitys"), // LUKU oikeus esikatselussa ja julkaistussa ilman kirjautumista
         LUKU("luku"),
         MUOKKAUS("muokkaus"),
         KOMMENTOINTI("kommentointi"),
@@ -119,8 +119,21 @@ public class PermissionManager {
             return true;
         }
 
+        // Salli esikatselussa olevien opsien tarkistelu
+        Pair<Tyyppi, Tila> tyyppiJaTila =
+                targetId != null ? opsRepository.findTyyppiAndTila((long) targetId) : null;
+
+        if (perm == Permission.ESITYS && tyyppiJaTila != null) {
+            if (tyyppiJaTila.getSecond() == Tila.JULKAISTU) {
+                return true;
+            } else if (opsRepository.isEsikatseltavissa((long) targetId)) {
+                return true;
+            }
+        }
+
         Set<RolePermission> permissions;
         switch (perm) {
+            case ESITYS:
             case LUKU:
             case KOMMENTOINTI:
                 permissions = EnumSet.allOf(RolePermission.class);
@@ -175,7 +188,7 @@ public class PermissionManager {
         Organization organisaatio = organisaatioOid != null ? new Organization(organisaatioOid) : Organization.ANY;
 
         // Jos käyttäjällä on jokin rooli organisaatiossa niin on lupa lukea
-        if ((perm == Permission.LUKU || perm == Permission.KOMMENTOINTI)
+        if (( perm == Permission.ESITYS || perm == Permission.LUKU || perm == Permission.KOMMENTOINTI)
                 && hasAnyRole(authentication, RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA, permissions, organisaatio)) {
             return true;
         }
@@ -210,8 +223,11 @@ public class PermissionManager {
         RolePermission permission, Organization org) {
         if (Organization.ANY.equals(org)) {
             return authority.equals(prefix.name() + "_" + permission.name());
+        } else if (org.getOrganization().isPresent()) {
+            return authority.equals(prefix.name() + "_" + permission.name() + "_" + org.getOrganization().get());
         }
-        return authority.equals(prefix.name() + "_" + permission.name() + "_" + org.getOrganization().get());
+
+        return false;
     }
 
     @Transactional(readOnly = true)
@@ -221,7 +237,7 @@ public class PermissionManager {
                 .map(r -> new Pair<>(r, SecurityUtil.getOrganizations(Collections.singleton(r)).stream()
                     .map(oid -> koulutustoimijaRepository.findOneByOrganisaatio(oid))
                     .filter(kt -> kt != null)
-                    .map(kt -> kt.getId())
+                    .map(Koulutustoimija::getId)
                     .collect(Collectors.toSet())))
                 .collect(Collectors.toMap(Pair::getFirst, Pair::getSecond));
     }
@@ -239,6 +255,7 @@ public class PermissionManager {
                 permissions.add(Permission.LUKU);
                 permissions.add(Permission.MUOKKAUS);
             case READ:
+                permissions.add(Permission.ESITYS);
                 permissions.add(Permission.LUKU);
                 permissions.add(Permission.KOMMENTOINTI);
                 break;

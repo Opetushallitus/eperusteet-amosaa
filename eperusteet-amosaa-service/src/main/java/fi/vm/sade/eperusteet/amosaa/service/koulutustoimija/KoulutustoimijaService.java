@@ -18,10 +18,11 @@ package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija;
 
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
-import java.util.List;
-import java.util.Set;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -38,6 +39,9 @@ public interface KoulutustoimijaService {
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
     KoulutustoimijaDto getKoulutustoimija(@P("ktId") Long ktId);
+
+    @PreAuthorize("permitAll()")
+    KoulutustoimijaDto getKoulutustoimijaJulkinen(@P("ktId") Long ktId);
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
     <T> List<T> getPaikallisetTutkinnonOsat(Long ktId, Class<T> tyyppi);

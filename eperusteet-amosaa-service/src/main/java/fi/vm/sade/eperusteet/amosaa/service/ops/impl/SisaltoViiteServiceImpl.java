@@ -87,7 +87,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
     private TutkinnonosaRepository tutkinnonosaRepository;
 
     @Autowired
-    private TekstiKappaleService tekstiKappaleService;;
+    private TekstiKappaleService tekstiKappaleService;
 
     @Autowired
     PoistettuRepository poistetutRepository;
@@ -557,6 +557,36 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
     @Override
     public <T> List<T> getByKoodi(Long ktId, String koodi, Class<T> tyyppi) {
         return mapper.mapAsList(getByKoodiRaw(ktId, koodi), tyyppi);
+    }
+
+    @Override
+    public <T> List<T> getByKoodiJulkinen(Long ktId, String koodi, Class<T> tyyppi) {
+        return mapper.mapAsList(getByKoodiRawJulkinen(ktId, koodi), tyyppi);
+    }
+
+    private List<SisaltoViite> getByKoodiRawJulkinen(Long ktId, String koodi) {
+        if (koodi == null) {
+            return new ArrayList<>();
+        }
+
+        String[] osat = koodi.split("_");
+        if (osat.length == 4 && koodi.startsWith("paikallinen_tutkinnonosa")) {
+            String ktOrg = osat[2];
+            String osaKoodi = osat[3];
+            Koulutustoimija kt = koulutustoimijaRepository.findOneByOrganisaatio(ktOrg);
+
+            return repository.findAllPaikallisetTutkinnonOsatByKoodi(kt, osaKoodi).stream()
+                    .filter(k -> opsRepository.isEsikatseltavissa(k.getOwner().getId()))
+                    .collect(Collectors.toList());
+        } else if (koodi.startsWith("tutkinnonosat_")) {
+            Koulutustoimija kt = koulutustoimijaRepository.findOne(ktId);
+
+            return repository.findAllTutkinnonOsatByKoodi(kt, koodi).stream()
+                    .filter(k -> opsRepository.isEsikatseltavissa(k.getOwner().getId()))
+                    .collect(Collectors.toList());
+        }
+
+        return new ArrayList<>();
     }
 
     @Override
