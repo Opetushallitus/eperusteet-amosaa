@@ -19,7 +19,7 @@ div.ops-nakyma
               span=" "
               span(ng-bind="'validoi-ops' | kaanna")
 
-            a.btn.btn-default(ng-href="{{createUrl(ops)}}")
+            a.btn.btn-default(ng-href="{{createUrl(ops)}}" ng-if="ops.esikatseltavissa")
               +gicon("sunglasses")
               span=" "
               span(ng-bind="'esikatselu' | kaanna")

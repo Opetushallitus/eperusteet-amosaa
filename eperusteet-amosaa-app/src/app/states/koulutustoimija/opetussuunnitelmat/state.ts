@@ -12,11 +12,20 @@ angular.module("app")
     onEnter: (ops) => Murupolku.register("root.koulutustoimija.opetussuunnitelmat", ops.nimi),
     views: {
         "": {
-            controller: ($scope, ops) => {
+            controller: ($scope, ops, $location, $stateParams) => {
                 $scope.ops = ops;
                 $scope.validoi = () => ModalValidointi.validoi(ops);
                 $scope.muutaTila = () => TilanvaihtoModal.vaihdaTila(ops)
                         .then(paivitetty => _.merge(ops, paivitetty.plain()));
+
+                const selectEsitkatseluURL = () => {
+                    let currentHost= $location.host() + "";
+                    if (/localhost/.test(currentHost)) return  'http://localhost:9020/#/';
+                    else if (/testi|itest/.test(currentHost)) return 'https://testi-eperusteet.opintopolku.fi/#/';
+                    else return 'https://eperusteet.opintopolku.fi/#/';
+                };
+
+                $scope.createUrl = model => selectEsitkatseluURL() + $stateParams.lang + '/amops/' + model.id;
             }
         }
     }
