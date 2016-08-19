@@ -19,7 +19,7 @@ div.ops-nakyma
               span=" "
               span(ng-bind="'validoi-ops' | kaanna")
 
-            a.btn.btn-default(ng-href="https://eperusteet.opintopolku.fi/#/fi/amops/{{ ops.id }}")
+            a.btn.btn-default(ng-href="{{createUrl(ops)}}")
               +gicon("sunglasses")
               span=" "
               span(ng-bind="'esikatselu' | kaanna")

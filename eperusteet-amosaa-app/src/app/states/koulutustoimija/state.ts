@@ -17,5 +17,15 @@ angular.module("app")
         paikallisetTutkinnonosatEP: (koulutustoimija) => koulutustoimija.all("tutkinnonosat"),
     },
     onEnter: (koulutustoimija) => Murupolku.register("root.koulutustoimija", koulutustoimija.nimi),
-    controller: (koulutustoimija) => { }
+    controller: ($scope, $location, $stateParams) => {
+
+        const selectEsitkatseluURL = () => {
+            let currentHost= $location.host() + "";
+            if (/localhost/.test(currentHost)) return  'http://localhost:9020/#/';
+            else if (/testi|itest/.test(currentHost)) return 'https://testi-eperusteet.opintopolku.fi/#/';
+            else return 'https://eperusteet.opintopolku.fi/#/';
+        };
+
+        $scope.createUrl = model => selectEsitkatseluURL() + $stateParams.lang + '/amops/' + model.id;
+    }
 }));

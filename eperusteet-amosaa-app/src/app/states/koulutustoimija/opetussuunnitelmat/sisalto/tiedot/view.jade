@@ -2,9 +2,12 @@ mixin kielivalinta(kieli)
   label.checkbox-inline
     input(type="checkbox" ng-model="$$julkaisukielet[" + kieli + "]"
       ng-change="kieletVaihtuivat()"
-      ng-true-value=kieli ng-false-value="")
+      ng-true-value=kieli ng-false-value="" ng-disabled="!$$ekEditing")
     span(ng-bind=kieli)
 
+mixin esikatselu()
+  label.checkbox-inline
+    input(type="checkbox" ng-model="ops.esikatseltavissa" ng-disabled="!$$ekEditing")
 
 .tiedot.subtle-transition
   +historia("versio",
@@ -26,6 +29,9 @@ mixin kielivalinta(kieli)
           +kielivalinta("'fi'")
           +kielivalinta("'sv'")
           +kielivalinta("'se'")
+
+        +formfield("'esikatselu'")
+          +esikatselu
 
         +formfield("'tiivistelma'")
           +ekeditor("ops.kuvaus", "simplified")
