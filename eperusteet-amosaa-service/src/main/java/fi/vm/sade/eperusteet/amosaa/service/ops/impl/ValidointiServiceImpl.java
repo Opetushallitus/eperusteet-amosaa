@@ -20,6 +20,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.SuorituspolkuRivi;
+import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
@@ -27,10 +28,24 @@ import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaTutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Suorituspolku;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Tutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.MuodostumisSaantoDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliRooli;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneOsaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.SuoritustapaLaajaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonOsaViiteSuppeaDto;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
+import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.ValidointiService;
+import fi.vm.sade.eperusteet.amosaa.service.peruste.PerusteCacheService;
+import fi.vm.sade.eperusteet.amosaa.service.util.Pair;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
+import java.math.BigDecimal;
+import java.util.Map;
+import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +60,12 @@ public class ValidointiServiceImpl implements ValidointiService {
 
     @Autowired
     private SisaltoViiteService svService;
+
+    @Autowired
+    private PerusteCacheService perusteCacheService;
+
+    @Autowired
+    private DtoMapper mapper;
 
     @Override
     public Validointi validoi(Opetussuunnitelma ops) {
@@ -85,6 +106,101 @@ public class ValidointiServiceImpl implements ValidointiService {
         }
     }
 
+    private class ValidointiHelper {
+        public Validointi validointi;
+        public Opetussuunnitelma ops;
+        public SuoritustapaLaajaDto suoritustapa;
+        public Suorituspolku sp;
+        public Map<UUID, SuorituspolkuRivi> rivit;
+        public Map<Long, TutkinnonOsaViiteSuppeaDto> tov;
+
+        public ValidointiHelper(Validointi validointi, Opetussuunnitelma ops, SuoritustapaLaajaDto suoritustapa, Suorituspolku sp, Map<UUID, SuorituspolkuRivi> rivit, Map<Long, TutkinnonOsaViiteSuppeaDto> tov) {
+            this.validointi = validointi;
+            this.ops = ops;
+            this.suoritustapa = suoritustapa;
+            this.sp = sp;
+            this.rivit = rivit;
+            this.tov = tov;
+        }
+    }
+
+    /// Yksittäisen ryhmän tarkastus
+    private void validoiSpRyhma(ValidointiHelper ctx, RakenneModuuliDto moduuli) {
+
+        Pair<Integer, BigDecimal> sisallonKokoJaLaajuus = moduuli.getOsat().stream()
+                .filter(osa -> {
+                    UUID tunniste = osa.getTunniste();
+                    SuorituspolkuRivi rivi = ctx.rivit.get(tunniste);
+                    return rivi == null || rivi.getPiilotettu() == null || !rivi.getPiilotettu();
+                })
+                .map(osa -> {
+                    if (osa instanceof RakenneModuuliDto) {
+                        MuodostumisSaantoDto ms = ((RakenneModuuliDto)osa).getMuodostumisSaanto();
+                        if (ms != null) {
+                            int kokoMin = (ms.getKoko() != null && ms.getKoko().getMinimi() != null) ? ms.getKoko().getMinimi() : 0;
+                            int kokoMax = (ms.getKoko() != null && ms.getKoko().getMaksimi() != null) ? ms.getKoko().getMaksimi() : 0;
+                            int koko = kokoMax > kokoMin ? kokoMax : kokoMin;
+                            int laajuusMin = (ms.getLaajuus() != null && ms.getLaajuus().getMinimi() != null) ? ms.getLaajuus().getMinimi() : 0;
+                            int laajuusMax = (ms.getLaajuus() != null && ms.getLaajuus().getMaksimi() != null) ? ms.getLaajuus().getMaksimi() : 0;
+                            int laajuus = laajuusMax > laajuusMin ? laajuusMax : laajuusMin;
+                            return Pair.of(koko, new BigDecimal(laajuus));
+                        }
+                    }
+                    else if (osa instanceof RakenneOsaDto) {
+                        Long tovId = ((RakenneOsaDto)osa).getTutkinnonOsaViite();
+                        if (tovId != null) {
+                            TutkinnonOsaViiteSuppeaDto tov = ctx.tov.get(tovId);
+                            if (tov != null) {
+                                return Pair.of(1, tov.getLaajuus());
+                            }
+                        }
+                    }
+                    return Pair.of(0, new BigDecimal(0));
+                })
+                .reduce(Pair.of(0, new BigDecimal(0)), (acc, ms) -> {
+                    return Pair.of(
+                            acc.getFirst() + ms.getFirst(),
+                            acc.getSecond().add(ms.getSecond()));
+                });
+
+        if (moduuli.getMuodostumisSaanto() != null) {
+            try {
+                Integer minimi = moduuli.getMuodostumisSaanto().getKoko().getMinimi();
+                if (sisallonKokoJaLaajuus.getFirst() < minimi) {
+                    ctx.validointi.virhe("virheellinen-rakenteen-osa", moduuli.getNimi());
+                }
+            }
+            catch (NullPointerException ex) {}
+            try {
+                BigDecimal minimi = new BigDecimal(moduuli.getMuodostumisSaanto().getLaajuus().getMinimi());
+                if (sisallonKokoJaLaajuus.getSecond().compareTo(minimi) == -1) {
+                    ctx.validointi.virhe("virheellinen-rakenteen-osa", moduuli.getNimi());
+                }
+            }
+            catch (NullPointerException ex) {}
+        }
+    }
+
+    /// Suorituspolun validointi perusteen rakennepuuta vasten
+    private void validoiSpRakenne(ValidointiHelper ctx, RakenneModuuliDto moduuli) {
+        SuorituspolkuRivi rivi = ctx.rivit.get(moduuli.getTunniste());
+        // Jos ryhmä on piilotettu, sitä ei huomioida
+        if (rivi != null && (rivi.getPiilotettu() != null && rivi.getPiilotettu())) {
+            return;
+        }
+
+        validoiSpRyhma(ctx, moduuli);
+
+        moduuli.getOsat().stream()
+                .filter(osa -> osa instanceof RakenneModuuliDto)
+                .map(osa -> (RakenneModuuliDto)osa)
+                .filter(osa -> osa.getRooli() == RakenneModuuliRooli.NORMAALI || osa.getRooli() == RakenneModuuliRooli.OSAAMISALA)
+                .forEach(osa -> {
+                    validoiSpRakenne(ctx, osa);
+                });
+    }
+
+    /// Suorituspolun validointi
     private void validoiSuorituspolku(Validointi validointi, SisaltoViite viite, Opetussuunnitelma ops) {
         Suorituspolku sp = viite.getSuorituspolku();
         LokalisoituTeksti nimi = viite.getTekstiKappale() != null ? viite.getTekstiKappale().getNimi() : null;
@@ -100,10 +216,18 @@ public class ValidointiServiceImpl implements ValidointiService {
                 }
             }
 
-            // TODO: Validoi perustetta vasten
+            CachedPeruste perusteInfo = ops.getPeruste();
+            SuoritustapaLaajaDto suoritustapa = perusteCacheService.getSuoritustapa(ops, perusteInfo.getId());
+            Map<UUID, SuorituspolkuRivi> rivit = sp.getRivit().stream()
+                    .collect(Collectors.toMap(SuorituspolkuRivi::getRakennemoduuli, Function.identity()));
+            Map<Long, TutkinnonOsaViiteSuppeaDto> tov = suoritustapa.getTutkinnonOsat().stream()
+                    .collect(Collectors.toMap(TutkinnonOsaViiteSuppeaDto::getId, Function.identity()));
+            ValidointiHelper ctx = new ValidointiHelper(validointi, ops, suoritustapa, sp, rivit, tov);
+            validoiSpRakenne(ctx, suoritustapa.getRakenne());
         }
     }
 
+    /// Validoidaan sisältöviite
     private void validoi(Validointi validointi, SisaltoViite viite, Opetussuunnitelma ops) {
         if (viite == null || viite.getLapset() == null) {
             return;

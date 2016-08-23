@@ -18,8 +18,6 @@ namespace Suorituspolku {
               : _.property("muodostumisSaanto.laajuus.maksimi")(node) || 0)
             : tosat[node._tutkinnonOsaViite].laajuus || 0;
 
-        const getNodeMaara =
-
         Algoritmit.traverse(tree, "osat", (node) => {
             if (node.rooli && node.rooli !== "määrittelemätön") {
                 node.$$laskettuLaajuus = _(node.osat)

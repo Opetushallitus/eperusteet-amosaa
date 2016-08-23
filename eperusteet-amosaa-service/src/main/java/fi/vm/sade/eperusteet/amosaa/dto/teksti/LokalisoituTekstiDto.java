@@ -20,12 +20,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonValue;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
-import lombok.Getter;
-
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import lombok.Getter;
 
 /**
  *
@@ -78,6 +77,14 @@ public class LokalisoituTekstiDto {
     @JsonIgnore
     public String get(Kieli kieli) {
         return tekstit.get(kieli);
+    }
+
+    public Map<Kieli, String> getTeksti() {
+        EnumMap<Kieli, String> map = new EnumMap<>(Kieli.class);
+        for (Map.Entry<Kieli, String> t : tekstit.entrySet()) {
+            map.put(t.getKey(), t.getValue());
+        }
+        return map;
     }
 
     @SuppressWarnings("DtoClassesNotContainEntities")

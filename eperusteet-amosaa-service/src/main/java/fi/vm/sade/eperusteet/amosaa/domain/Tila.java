@@ -16,7 +16,6 @@
 package fi.vm.sade.eperusteet.amosaa.domain;
 
 import java.util.EnumSet;
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -45,7 +44,7 @@ public enum Tila {
     JULKAISTU("julkaistu") {
         @Override
         public Set<Tila> mahdollisetSiirtymat(boolean isPohja) {
-            return new HashSet<>();
+            return EnumSet.of(LUONNOS);
         }
     };
 

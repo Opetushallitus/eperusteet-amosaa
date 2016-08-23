@@ -316,6 +316,7 @@
   "lukko-kayttajalla": "Osa on muokattavana käyttäjällä",
   "validointi-varoitukset": "Varoitukset",
   "validointi-huomiot": "Huomiot",
+  "virheellinen-rakenteen-osa": "Virheellinen suorituspolun osa",
   "tutkinnon-osaa-ei-olemassa": "Tutkinnon osaa ei ole määritelty",
   "koodilla-liian-monta-toteutusta": "Tutkinnon osia liikaa samalla koodilla",
   "tutkinnon-osalle-ei-toteutusta-koulutustoimijalla": "Koulutuksen järjestäjällä ei löydy toteutusta tutkinnon osalle",

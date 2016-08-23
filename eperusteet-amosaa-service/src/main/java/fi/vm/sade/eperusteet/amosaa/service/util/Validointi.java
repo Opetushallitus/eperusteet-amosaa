@@ -17,6 +17,7 @@ package fi.vm.sade.eperusteet.amosaa.service.util;
 
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.service.exception.ValidointiException;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,11 @@ public class Validointi {
             this.syy = syy;
             this.nimi = t.getTeksti();
         }
+
+        Virhe(String syy, LokalisoituTekstiDto t) {
+            this.syy = syy;
+            this.nimi = t.getTeksti();
+        }
     }
 
     private List<Virhe> virheet = new ArrayList<>();
@@ -51,6 +57,13 @@ public class Validointi {
 
     public Validointi virhe(String syy) {
         virheet.add(new Virhe(syy));
+        return this;
+    }
+
+    public Validointi virhe(String syy, LokalisoituTekstiDto... args) {
+        for (LokalisoituTekstiDto arg : args) {
+            virheet.add(new Virhe(syy, arg));
+        }
         return this;
     }
 
