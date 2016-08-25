@@ -1,0 +1,32 @@
+.faq
+  h2.faq-otsikko(ng-bind="'usein-kysytyt-kysymykset' | kaanna")
+  .row
+    .col-xs-8
+      .faq-haku.input-group.input-group-sm
+        span.input-group-addon
+          i.glyphicon.glyphicon-search(style="color: gray;")
+        input.form-control(ng-change="suodata(search)" ng-model-options="{ debounce: 500 }" type="text" ng-model="search" placeholder="{{ 'hae' | kaanna }}")
+    .col-xs-4
+      .pull-right(ng-if="canEdit && !$$isEditing")
+        button.btn.btn-sm.btn-primary
+          span(kaanna="'lisaa-uusi'" ng-click="editing.add()")
+
+  // .faq-item-small(ng-repeat="item in faq")
+    div(ng-hide="item.$$editing" ng-show="item.$$filtered")
+      a(ng-bind="item.kysymys" href="")
+
+  .faq-item(ng-repeat="item in faq" id="{{ 'faq-item-' + item.id }}" ng-show="item.$$filtered")
+    div(ng-show="item.$$editing")
+      input.form-control(ng-model="item.kysymys" type="text" required="true" placeholder="{{ 'kysymys' | kaanna }}")
+      // div(ng-if="true" ckeditor ng-model="item.vastaus" layout="normal")
+      // textarea.form-control(ng-model="item.vastaus" type="text" placeholder="{{ 'vastaus' | kaanna }}")
+      div(ng-if="$$isEditing")
+        div(style="margin-bottom: 16px" ckeditor ng-model="item.vastaus" layout="normal")
+      div
+        button.btn.btn-sm.btn-primary(kaanna="'tallenna'" ng-click="editing.save(item)")
+        button.btn.btn-sm.btn-warning(kaanna="'peruuta'" ng-click="editing.cancel(item)")
+        button.btn.btn-sm.btn-danger.pull-right(kaanna="'poista'" ng-click="editing.remove(item)")
+    div(ng-hide="item.$$editing")
+      h3(ng-bind="item.kysymys")
+      p(ng-bind-html="item.vastaus | unsafe")
+      button.btn.btn-sm.btn-primary(kaanna="'muokkaa'" ng-click="editing.start(item)" ng-if="canEdit && !$$isEditing")

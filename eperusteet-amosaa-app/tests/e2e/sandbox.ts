@@ -13,6 +13,7 @@ describe("Sandbox components", () => {
         expect($("div[us-spinner]").isDisplayed()).toBeTruthy();
 
         spinner.click();
+        $("div[us-spinner]").submit
         expect($("div[us-spinner]").isDisplayed()).toBeFalsy();
     });
 

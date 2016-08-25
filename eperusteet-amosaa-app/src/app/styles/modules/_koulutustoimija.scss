@@ -1,3 +1,37 @@
+.faq {
+    .faq-otsikko {
+    }
+
+    .faq-haku {
+        margin-bottom: 10px;
+    }
+
+    .faq-item {
+        margin-bottom: 10px;
+        background: #f4fbff;
+        padding: 5px;
+
+        input {
+            margin-bottom: 5px;
+        }
+
+        textarea {
+            min-height: 150px;
+            height: 100%;
+        }
+
+        h3 {
+        }
+
+        p {
+        }
+
+        button {
+            margin: 5px 2px 2px 0px;
+        }
+    }
+}
+
 .koulutustoimija {
     $box-color: #D1D2D4;
 

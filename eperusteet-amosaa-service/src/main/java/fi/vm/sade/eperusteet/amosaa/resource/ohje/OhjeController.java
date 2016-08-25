@@ -21,6 +21,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
@@ -35,7 +36,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 /**
  *
- * @author mikkom
+ * @author nkala
  */
 @RestController
 @RequestMapping("/ohjeet")
@@ -60,7 +61,7 @@ public class OhjeController {
 
     @RequestMapping(value = "/{id}", method = PUT)
     public ResponseEntity<OhjeDto> editOhje(
-            @RequestParam Long id,
+            @PathVariable Long id,
             @RequestBody OhjeDto dto) {
         return ResponseEntity.ok(service.editOhje(id, dto));
     }

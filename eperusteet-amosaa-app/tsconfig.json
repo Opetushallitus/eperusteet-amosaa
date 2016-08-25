@@ -60,6 +60,7 @@
     "src/app/states/routelist/state.ts",
     "src/app/states/koulutustoimija/state.ts",
     "src/app/states/koulutustoimija/detail/state.ts",
+    "src/app/states/koulutustoimija/useinkysyttya/state.ts",
     "src/app/states/koulutustoimija/opetussuunnitelmat/state.ts",
     "src/app/states/koulutustoimija/opetussuunnitelmat/kasitteet/state.ts",
     "src/app/states/koulutustoimija/opetussuunnitelmat/poistetut/state.ts",

@@ -15,19 +15,18 @@
  */
 package fi.vm.sade.eperusteet.amosaa.dto.ohje;
 
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import lombok.Getter;
 import lombok.Setter;
 
 
 /**
  *
- * @author mikkom
+ * @author nkala
  */
 @Getter
 @Setter
 public class OhjeDto {
     private Long id;
-    private LokalisoituTekstiDto kysymys;
-    private LokalisoituTekstiDto vastaus;
+    private String kysymys;
+    private String vastaus;
 }
