@@ -12,7 +12,7 @@ div.modal-body.modal-sisalto
   .content-spacing(ng-show="pohjat.length > 1")
     h3(ng-bind="'valitse-pohja' | kaanna")
     div.select-list
-      div.select-item(ng-repeat="pohja in pohjat" ng-click="valitsePohja(pohja)")
+      div.select-item(ng-repeat="pohja in pohjat" ng-click="valitsePohja(pohja)" ng-init="valitsePohja(pohja)")
         input.form-control(type="radio" ng-checked="valittuPohja === pohja")
         div.select-label(ng-bind="pohja.nimi | kaanna")
 
@@ -23,6 +23,6 @@ div.modal-body.modal-sisalto
 div.modal-footer
   button.btn.btn-default(ng-click="peruuta()")
     span(ng-bind="'peruuta' | kaanna")
-  button.btn.btn-primary(ng-click="ok(yhteinen)")
+  button.btn.btn-primary(ng-click="ok(yhteinen)" ng-disabled="pohjat.length < 1 || !valittuPohja || !yhteinen.nimi")
     span(ng-bind="'lisaa' | kaanna")
 

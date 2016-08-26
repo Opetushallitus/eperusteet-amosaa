@@ -8,6 +8,7 @@
     "helpers.ts",
     "conf.ts",
     "e2e/routes.ts",
-    "e2e/sandbox.ts"
+    "e2e/koulutustoimijan-nakyma.ts",
+    "e2e/opetussuunnitelman-nakyma.ts"
   ]
 }
