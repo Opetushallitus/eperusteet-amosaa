@@ -4,13 +4,18 @@ namespace ModalRevisions {
         i = inject($injector, ["$rootScope", "$uibModal", "$q"]);
     };
 
-    export const viewRevisions = (revisions) => i.$uibModal.open({
+    export const viewRevisions = (revisions, nimiLataaja) => i.$uibModal.open({
         resolve: {
-            revisions: () => revisions
+            revisions: () => revisions,
+            nimiLataaja: () => nimiLataaja
         },
         templateUrl: "modals/revisions/revisions.jade",
-        controller: ($uibModalInstance, $scope, $state, $stateParams, revisions) => {
-            _.each(revisions, (rev, idx: number) => rev.$$number = _.size(revisions) - idx);
+        controller: ($uibModalInstance, $scope, $state, $stateParams, revisions, nimiLataaja) => {
+            console.log(revisions);
+            _.each(revisions, (rev, idx: number) => {
+                rev.$$number = _.size(revisions) - idx;
+                nimiLataaja(rev.muokkaaja).then(_.cset(rev, "$$muokkaaja"));
+            });
 
             $scope.update = (search) => {
                 $scope.frevisions = _.filter(revisions, (rev: any) => _.matchStrings($scope.search, rev.kommentti));

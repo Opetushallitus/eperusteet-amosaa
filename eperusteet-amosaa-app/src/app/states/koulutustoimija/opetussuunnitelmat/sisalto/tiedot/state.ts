@@ -17,7 +17,10 @@ namespace TiedotImpl {
         $scope.versio = versio;
         $scope.koulutustoimija = koulutustoimija;
         [$scope.uusin, $scope.historia] = Revisions.parseAll(historia);
-        nimiLataaja($scope.uusin.muokkaaja).then(nimi => $scope.uusin.$$nimi = nimi);
+        nimiLataaja($scope.uusin.muokkaaja).then(nimi => {
+            $scope.uusin = $scope.uusin || {};
+            $scope.uusin.$$nimi = nimi;
+        });
 
         $scope.edit = EditointikontrollitService.createRestangular($scope, "ops", ops, {
             done: () => historia.get("uusin").then(res => {
@@ -41,7 +44,7 @@ namespace TiedotImpl {
             };
         }
 
-        $scope.listRevisions = () => ModalRevisions.viewRevisions($scope.historia)
+        $scope.listRevisions = () => ModalRevisions.viewRevisions($scope.historia, nimiLataaja)
             .then(res => $state.go($state.current.name, { versio: res }));
 
         $scope.kieletVaihtuivat = () => {

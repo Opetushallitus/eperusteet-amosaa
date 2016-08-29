@@ -14,4 +14,4 @@ namespace Revisions {
     export const get = (revisions: Array<any>, id: number) => _(revisions)
         .find(rev => rev.id === id);
 
-};
+}

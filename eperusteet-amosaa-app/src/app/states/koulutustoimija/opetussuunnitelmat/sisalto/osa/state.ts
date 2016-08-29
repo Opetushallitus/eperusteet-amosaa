@@ -192,7 +192,7 @@ angular.module("app")
                             $scope.uusin.$$nimi = nimi;
                         });
                     $scope.restoreNew = () => $state.go($state.current.name, { versio: undefined });
-                    $scope.listRevisions = () => ModalRevisions.viewRevisions($scope.historia)
+                    $scope.listRevisions = () => ModalRevisions.viewRevisions($scope.historia, nimiLataaja)
                         .then(res => $state.go($state.current.name, { versio: res }));
                     if (versio) {
                         $scope.uusin = Revisions.get($scope.historia, versioId);

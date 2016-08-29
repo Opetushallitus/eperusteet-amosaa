@@ -47,14 +47,16 @@ import fi.vm.sade.eperusteet.amosaa.service.locking.LockManager;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.teksti.TekstiKappaleService;
-import static fi.vm.sade.eperusteet.amosaa.service.util.Nulls.assertExists;
 import fi.vm.sade.eperusteet.amosaa.service.util.PoistettuService;
-import java.util.*;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static fi.vm.sade.eperusteet.amosaa.service.util.Nulls.assertExists;
 
 /**
  * @author mikkom
@@ -282,11 +284,6 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
             viite.setLiikkumaton(uusi.isLiikkumaton());
             viite.setOhjeteksti(LokalisoituTeksti.of(uusi.getOhjeteksti()));
             viite.setPerusteteksti(LokalisoituTeksti.of(uusi.getPerusteteksti()));
-        }
-
-        // Nopea ratkaisu sisällön häviämiseen, korjaantuu oikein uuden näkymän avulla
-        if (uusi.getTekstiKappale().getTeksti() == null) {
-            uusi.getTekstiKappale().setTeksti(mapper.map(viite.getTekstiKappale(), TekstiKappaleDto.class).getTeksti());
         }
 
         switch (viite.getTyyppi()) {
