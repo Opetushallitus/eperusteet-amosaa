@@ -16,6 +16,7 @@
   "enemman":"Enemman",
   "esikatselu":"Esikatselu",
   "ei-oikeutta-suorittaa":"Ei riittäviä käyttöoikeuksia",
+  "ei-validi-paikallinen-koodi":"Paikallinen koodi on virheellinen",
   "epimage-plugin-virhe-viite-tyhja": "Lisättävää kuvaa ei ole valittu.",
   "epimage-plugin-hylatty": "Voit ladata vain jpg- tai png-tyyppisiä kuvia.",
   "epimage-plugin-select-placeholder": "Valitse kuva...",

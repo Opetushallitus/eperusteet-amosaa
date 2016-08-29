@@ -64,7 +64,7 @@ public class OmaTutkinnonosa extends AbstractAuditedEntity implements Serializab
 
     @Getter
     @Setter
-    @Pattern(message="ei-validi-paikallinen-koodi", regexp="^1\\d\\d\\d$")
+    @Pattern(message="ei-validi-paikallinen-koodi", regexp="^$|^1\\d\\d\\d$")
     private String koodi;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})

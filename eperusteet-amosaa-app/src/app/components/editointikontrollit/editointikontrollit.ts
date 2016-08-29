@@ -35,7 +35,6 @@ namespace EditointikontrollitService {
     });
 
     const handleError = (reject) => ((err) => {
-        NotifikaatioService.varoitus(err.status);
         return reject(err);
     });
 
@@ -161,12 +160,16 @@ namespace EditointikontrollitService {
     export const isEditing = () => _$rootScope.$$ekEditing;
     export const create = (callbacks = {}) => _.partial(start, callbacks, true);
     export const createLocal = (callbacks = {}) => _.partial(start, callbacks, false);
+    export const enableSaving = (yes) => yes
+        ? _$rootScope.$broadcast("editointikontrollit:enableSave")
+        : _$rootScope.$broadcast("editointikontrollit:disableSave");
 }
 
 module EditointikontrollitImpl {
     export const controller = ($scope, $rootScope, $timeout) => {
         $scope.kommentti = "";
         $scope.disableButtons = false;
+        $scope.$$disableSave = false;
 
         const progress = (promise) => {
             $scope.disableButtons = true;
@@ -192,6 +195,9 @@ module EditointikontrollitImpl {
             $scope.disableButtons = false;
             $scope.setMargins();
         });
+
+        $rootScope.$on("editointikontrollit:disableSave", () => $scope.$$disableSave = true);
+        $rootScope.$on("editointikontrollit:enableSave", () => $scope.$$disableSave = false);
 
         $scope.save = () => progress(EditointikontrollitService.save($scope.kommentti));
         $scope.cancel = () => progress(EditointikontrollitService.cancel());

@@ -230,7 +230,7 @@ angular.module("app")
             controller: ($scope) => {}
         },
         tutkinnonosa: {
-            controller: ($q, $scope, $state, $stateParams, ops, peruste, arviointiAsteikot, koodisto, koulutustoimija) => {
+            controller: ($rootScope, $q, $scope, $state, $stateParams, ops, peruste, arviointiAsteikot, koodisto, koulutustoimija, $timeout) => {
                 const
                     isPaikallinen = _.property("tosa.tyyppi")($scope.osa) === "oma",
                     osaamisalaKoodit = peruste.osaamisalat,
@@ -280,9 +280,12 @@ angular.module("app")
 
                 $scope.paikallinenKoodiUpdate = (pkoodi) => {
                     $scope.$$koodiFormaattiVaara = false;
-                    if (!_.isString(pkoodi) || !pkoodi.match(/1\d\d\d/)) {
+                    if (!_.isString(pkoodi) || !pkoodi.match(/^1\d\d\d$/)) {
                         $scope.$$koodiFormaattiVaara = true;
                     }
+
+                    EditointikontrollitService.enableSaving(_.isEmpty(pkoodi) || pkoodi.match(/^1\d\d\d$/));
+
                     if (pkoodi) {
                         const fullKoodi = Koodisto.paikallinenToFull(koulutustoimija, pkoodi);
                         paikallisetKoodit.one(fullKoodi).getList()

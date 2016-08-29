@@ -37,7 +37,25 @@ angular.module("app", [
                 NotifikaatioService.varoitus("ei-oikeutta-suorittaa");
             }
             else if (res.status === 400) {
-                NotifikaatioService.varoitus(KaannaService.kaanna(res.data.syy));
+                if (res && res.data && res.data.syy) {
+                    const syy = res.data.syy;
+                    if (_.isArray(syy)) {
+                        _.each(syy, item => {
+                            if (_.size(item.split(" ")) === 1) {
+                                NotifikaatioService.varoitus(KaannaService.kaanna(item));
+                            }
+                            else {
+                                NotifikaatioService.varoitus(KaannaService.kaanna(item.split(" ")[1]));
+                            }
+                        });
+                    }
+                    else {
+                        NotifikaatioService.varoitus(KaannaService.kaanna(res.data.syy));
+                    }
+                }
+                else {
+                    NotifikaatioService.varoitus(KaannaService.kaanna("tuntematon-syy"));
+                }
             }
             else if (res.status >= 500) {
                 NotifikaatioService.varoitus("palvelin-virhetilanne");

@@ -1,9 +1,9 @@
 mixin paikallinenLaajuus()
   +contentToggler("pTosa.$$naytaLaajuus", "'laajuus'")
     div(ng-if="$$ekEditing")
-      numberinput(type="float" model="osa.tosa.omatutkinnonosa.laajuus")
-    div(ng-if="!$$ekEditing")
       numberinput(type="float" model="osa.tosa.omatutkinnonosa.laajuus" step="0.5")
+    div(ng-if="!$$ekEditing")
+      span(ng-bind="osa.tosa.omatutkinnonosa.laajuus")
 
 
 mixin paikallinenKoodi()
@@ -400,6 +400,7 @@ mixin tosaSisalto()
     +perusteenTosaSisalto
   div(ng-if="!pTosa")
     +omaTosaSisalto
+
 
 .tutkinnonosa
   div(ng-hide="$$ekEditing" style="margin-bottom: 20px;")
