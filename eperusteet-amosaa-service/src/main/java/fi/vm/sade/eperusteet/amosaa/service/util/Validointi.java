@@ -62,14 +62,18 @@ public class Validointi {
 
     public Validointi virhe(String syy, LokalisoituTekstiDto... args) {
         for (LokalisoituTekstiDto arg : args) {
-            virheet.add(new Virhe(syy, arg));
+            if (arg != null) {
+                virheet.add(new Virhe(syy, arg));
+            }
         }
         return this;
     }
 
     public Validointi virhe(String syy, LokalisoituTeksti... args) {
         for (LokalisoituTeksti arg : args) {
-            virheet.add(new Virhe(syy, arg));
+            if (arg != null) {
+                virheet.add(new Virhe(syy, arg));
+            }
         }
         return this;
     }
@@ -81,7 +85,9 @@ public class Validointi {
 
     public Validointi varoitus(String syy, LokalisoituTeksti... args) {
         for (LokalisoituTeksti arg : args) {
-            varoitukset.add(new Virhe(syy, arg));
+            if (arg != null) {
+                varoitukset.add(new Virhe(syy, arg));
+            }
         }
         return this;
     }
@@ -93,7 +99,9 @@ public class Validointi {
 
     public Validointi huomio(String syy, LokalisoituTeksti... args) {
         for (LokalisoituTeksti arg : args) {
-            huomiot.add(new Virhe(syy, arg));
+            if (arg != null) {
+                huomiot.add(new Virhe(syy, arg));
+            }
         }
         return this;
     }
