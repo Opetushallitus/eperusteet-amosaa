@@ -23,6 +23,7 @@ describe("Koulutustoimijan näkymä", () => {
         element(by.css("div[ng-if=\"tila === 'julkaistu'\"]")).click();
 
         element(by.css("a[ui-sref=\"root\"]")).click();
+
     });
 
     it("Uuden yhteisen osan luominen", () => {
@@ -48,5 +49,6 @@ describe("Koulutustoimijan näkymä", () => {
         element(by.buttonText("Tallenna")).click();
 
         element(by.css("a[ui-sref=\"root\"]")).click();
+
     });
 });
