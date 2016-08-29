@@ -7,7 +7,7 @@
             img.murukuva(src="images/md/ikoni-eperusteet.png")
         li(ng-repeat="muru in muruPath")
           a(href="" ui-sref="{{ muru.state }}" ui-sref-opts="{ reload: true }")
-            span(ng-bind="muru.name | kaanna")
+            span(ng-bind="muru.name | kaanna | murupolku")
     .col-xs-4
       .pull-right
         +kielivalitsin

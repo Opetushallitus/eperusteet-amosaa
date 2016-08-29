@@ -36,4 +36,15 @@ angular.module("app")
             return memo + (osa ? osa[0] : '');
         }, '').toUpperCase();
     }
+})
+
+.filter("murupolku", () => {
+    const MAX_LENGTH = 20;
+    return (name) => {
+        if (name.length > MAX_LENGTH) {
+            return name.substring(0, MAX_LENGTH) + "...";
+        }
+
+        return name;
+    }
 });
