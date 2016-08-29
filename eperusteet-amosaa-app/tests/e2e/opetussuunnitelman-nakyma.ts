@@ -1,10 +1,7 @@
 describe("Koulutustoimijan näkymä", () => {
-    browser.get("http://amosaa:amosaa@localhost:9030/");
-    browser.manage().logs().get('browser').then(browserLog => {
-        console.log('browser logs: ' + require('util').inspect(browserLog));
-    });
 
     it("Uuden opsin luominen", () => {
+        browser.get("http://amosaa:amosaa@localhost:9030/");
 
         expect($("button[ng-click='addOpetussuunnitelma()']").isPresent());
         const luoOps = element.all(by.buttonText("Lisää opetussuunnitelma")).get(1);
@@ -109,6 +106,7 @@ describe("Koulutustoimijan näkymä", () => {
         element(by.css("button[ng-click=\"edit()\"]")).click();
 
         const tkTeksti = element(by.css("div[ng-model=\"osa.tekstiKappale.teksti\"]"));
+
         tkTeksti.clear();
         tkTeksti.sendKeys("tekstikappaleen vanha sisältö");
 
