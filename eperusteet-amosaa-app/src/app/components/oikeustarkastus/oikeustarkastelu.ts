@@ -3,7 +3,9 @@ namespace Oikeudet {
     export const init = _.once((oikeudet, orgoikeudet) => {
         opsOikeudet = _.indexBy(oikeudet, "_opetussuunnitelma");
         ktOikeudet = {};
-        const mapClass = (luokka, nimi) => _.each(orgoikeudet[luokka], kt => ktOikeudet[kt] = nimi);
+        const mapClass = (luokka, nimi) => _.each(orgoikeudet[luokka], kt => {
+            ktOikeudet[kt] = nimi;
+        });
         mapClass("READ",        "luku");
         mapClass("READ_UPDATE", "muokkaus");
         mapClass("CRUD",        "lisays");
