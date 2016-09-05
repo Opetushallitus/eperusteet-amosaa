@@ -3,6 +3,7 @@
   "test": "test",
   "build": "build/",
   "dist": "target/dist",
+  "frontend_utils": "./node_modules/eperusteet-frontend-utils/",
   "styles": [
   ],
   "dependencies": [

@@ -8,16 +8,26 @@ $fa-font-path: "fonts";
 //@import "vendor/checkbox";
 @import "vendor/ui_select";
 
-@import "../components/editointikontrollit/_styles.scss";
-@import "../components/ohje/_ohje.scss";
-@import "../components/loadingbar/_loading_bar.scss";
-@import "../components/notifikaatiot/_notifikaatiot.scss";
+// TODO: Saattaa vielä tarvita
+// @import "../components/editointikontrollit/_styles.scss";
+// @import "../components/ohje/_ohje.scss";
+// @import "../components/loadingbar/_loading_bar.scss";
+// @import "../components/notifikaatiot/_notifikaatiot.scss";
+// @import "../components/editointikontrollit/styles";
+// @import "../components/ohje/ohje";
+// @import "../components/loadingbar/loading_bar";
+// @import "../components/toggler/styles";
+// @import "../components/ckeditor/styles";
 
-@import "../components/editointikontrollit/styles";
-@import "../components/ohje/ohje";
-@import "../components/loadingbar/loading_bar";
-@import "../components/toggler/styles";
-@import "../components/ckeditor/styles";
+@import "../../../node_modules/eperusteet-frontend-utils/components/editointikontrollit/_styles.scss";
+@import "../../../node_modules/eperusteet-frontend-utils/components/ohje/_ohje.scss";
+@import "../../../node_modules/eperusteet-frontend-utils/components/loadingbar/_loading_bar.scss";
+@import "../../../node_modules/eperusteet-frontend-utils/components/notifikaatiot/_notifikaatiot.scss";
+@import "../../../node_modules/eperusteet-frontend-utils/components/editointikontrollit/styles";
+@import "../../../node_modules/eperusteet-frontend-utils/components/ohje/ohje";
+@import "../../../node_modules/eperusteet-frontend-utils/components/loadingbar/loading_bar";
+@import "../../../node_modules/eperusteet-frontend-utils/components/toggler/styles";
+@import "../../../node_modules/eperusteet-frontend-utils/components/ckeditor/styles";
 
 @import "../modals/add/styles";
 @import "../modals/revisions/styles";

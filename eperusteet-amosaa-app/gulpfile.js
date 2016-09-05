@@ -50,7 +50,7 @@ gulp
 .task('templatepacker', function () {
     return gulp.src([
             config.app + 'misc/mixins.jade',
-            config.app + 'components/**/*.jade',
+            config.frontend_utils + 'components/**/*.jade',
             config.app + 'views/**/*.jade',
             config.app + 'misc/guidance/**/*.jade',
             config.app + 'modals/**/*.jade',
@@ -58,7 +58,14 @@ gulp
             config.app + 'states/koulutustoimija/**/*.jade',
             config.app + 'states/virhe/**/*.jade'])
         .pipe(mkStream(function (file, cb) {
-            var fpath = file.path.slice((file.cwd + config.app).length + 1);
+            // Ruminta
+            var fpath = file.path;
+            if (file.path.indexOf("node_modules") !== -1) {
+                fpath = fpath.slice((file.cwd + config.frontend_utils).length - 1);
+            }
+            else {
+                fpath = fpath.slice((file.cwd + config.app).length + 1);
+            }
 
             if (/^win/.test(process.platform)) {
                 fpath = fpath.replace(/\\/g,'/');
