@@ -159,15 +159,40 @@
             float: left;
             left: -5px;
             top: -5px;
-            margin: 0px;
+            margin: 0;
             width: 28px;
             height: 28px;
             background: #7cf;
             position: relative;
         }
 
+        .sisalto-handle-disabled {
+            color: #fff;
+            font-size: 20px;
+            padding: 0 0 0 5px;
+            cursor: not-allowed;
+            float: left;
+            left: -5px;
+            top: -5px;
+            margin: 0;
+            width: 28px;
+            height: 28px;
+            background: #f75965;
+            position: relative;
+        }
+
         .sisalto-nimi {
             padding-left: 34px;
+        }
+        .sisalto-poistettu {
+            text-decoration: line-through;
+        }
+        .sisalto-poistaminen {
+            float: right;
+            cursor: pointer;
+            a {
+                margin-right: 10px;
+            }
         }
     }
 }

@@ -9,18 +9,23 @@ angular.module("app")
             controller: ($q, $scope, $timeout, $state, reresolver, otsikot, tekstit, sisaltoRoot) => {
                 $scope.startSorting = () => {
                     $scope.rakenne = Tekstikappaleet.teeRakenne(Tekstikappaleet.uniikit(otsikot), sisaltoRoot.id);
-                    $scope.sortableOptions = {
-                        update: (e, ui) => {
-                        },
-                        connectWith: ".sisalto-list",
-                        handle: ".sisalto-handle",
-                        cursorAt: { top: 2, left: 2 },
-                        cursor: "move",
-                        delay: 100,
-                        tolerance: "pointer",
-                        placeholder: "sisalto-item-placeholder"
-                    };
+                    $scope.misc = {
+                        sortableOptions: {
+                            update: (e, ui) => {
 
+                            },
+                            connectWith: ".sisalto-list",
+                            handle: ".sisalto-handle",
+                            cursorAt: { top: 2, left: 2 },
+                            cursor: "move",
+                            delay: 100,
+                            tolerance: "pointer",
+                            placeholder: "sisalto-item-placeholder"
+                        },
+                        poista: Tekstikappaleet.poista,
+                        palauta: Tekstikappaleet.palauta,
+                        palautaYksi: Tekstikappaleet.palautaYksi
+                    };
                     $scope.$$sorting = true;
                     EditointikontrollitService.create({
                         cancel: () => $q((resolve, reject) => {
