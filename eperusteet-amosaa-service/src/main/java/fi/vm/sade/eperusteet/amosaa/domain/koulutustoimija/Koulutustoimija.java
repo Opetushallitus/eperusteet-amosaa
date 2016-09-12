@@ -67,6 +67,10 @@ public class Koulutustoimija extends AbstractAuditedEntity implements Serializab
     @Setter
     private String organisaatio = "";
 
+    @Getter
+    @Setter
+    private boolean salliYstavat = false;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "koulutustoimija_liite", inverseJoinColumns = {
             @JoinColumn(name="liite_id")

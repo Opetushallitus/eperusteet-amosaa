@@ -23,9 +23,7 @@ namespace Pagination {
         const selector = prefix + Postfix + "Select";
 
         scope[updater] = (search: string = "") => {
-            console.log(scope[con]);
             scope[temp] = _.filter(scope[con], (ops) => matcher(search, ops));
-            console.log(scope[temp]);
             scope[pagination] = paginate(scope[temp]);
             scope[selector]();
         };

@@ -85,4 +85,11 @@ public class KoulutustoimijaController {
             @PathVariable final String koodi) {
         return new ResponseEntity<>(sisaltoViiteService.getByKoodi(ktId, koodi, SisaltoViiteSijaintiDto.class), HttpStatus.OK);
     }
+
+//    @RequestMapping(value = "/{ktId}", method = RequestMethod.GET)
+//    @ResponseBody
+//    public List get(
+//            @PathVariable final Long ktId) {
+//        return koulutustoimijaService.getKoulutustoimija(ktId);
+//    }
 }

@@ -67,11 +67,10 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
     div.row
       div.col-xs-5
         div.form-group.has-feedback.has-feedback-left
-          // input.form-control(ng-change="suodataOpetussuunnitelmat(opetussuunnitelmat, opsSearch)"
           input.form-control(ng-change="opsPaginatedUpdate(opsSearch)"
             type="text"
             ng-model="opsSearch"
-            ng-model-options="{ debounce: 500 }"
+            ng-model-options="{ debounce: 300 }"
             placeholder="{{ 'hae' | kaanna }}")
           i.form-control-feedback.glyphicon.glyphicon-search(style="color: gray;")
       div.checkbox-text.col-xs-2
