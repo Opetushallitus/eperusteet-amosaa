@@ -1,5 +1,5 @@
 div
-  div.sisalto-list.subtle-transition(style="padding-left: 30px" ui-sortable="misc.sortableOptions" ng-model="ngModel.lapset" ng-if="!ngModel.$$poistettu")
+  div.sisalto-list.subtle-transition(ui-sortable="misc.sortableOptions" ng-model="ngModel.lapset" ng-if="!ngModel.$$poistettu")
     div(ng-repeat="child in ngModel.lapset")
       div.sisalto-item
         div.sisalto-handle(ng-if="!child.$$poistettu")
@@ -8,14 +8,13 @@ div
           +icon("ban")
         div.sisalto-poistaminen
           a(ng-if="!child.$$poistettu" ng-click="misc.poista(child)" kaanna="'poista'")
-          a(ng-if="child.$$poistettu && !child.$$parent.$$poistettu && child.lapset.length > 0" ng-click="misc.palauta(child)" kaanna="'palauta-kaikki'")
+          a(ng-if="child.$$poistettu && child.lapset.length > 0" ng-click="misc.palauta(child)" kaanna="'palauta-kaikki'")
           a(ng-if="child.$$poistettu" ng-click="misc.palautaYksi(child)" kaanna="'palauta'")
         div.sisalto-nimi(ng-class="{'sisalto-poistettu': child.$$poistettu}")
           span(ng-bind="child.$$obj.tekstiKappale.nimi | kaanna")
-          span=" "
       dynamic(template="states/koulutustoimija/opetussuunnitelmat/sisalto/rakenne.jade" ng-model="child" misc="misc" depth="depth + 1")
 
-  div.sisalto-list.subtle-transition(style="padding-left: 30px" ng-model="ngModel.lapset" ng-if="ngModel.$$poistettu")
+  div.sisalto-list.subtle-transition(ng-model="ngModel.lapset" ng-if="ngModel.$$poistettu")
     div(ng-repeat="child in ngModel.lapset")
       div.sisalto-item
         div.sisalto-handle-disabled

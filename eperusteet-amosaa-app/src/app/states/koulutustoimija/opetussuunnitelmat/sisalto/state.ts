@@ -11,12 +11,14 @@ angular.module("app")
                     $scope.rakenne = Tekstikappaleet.teeRakenne(Tekstikappaleet.uniikit(otsikot), sisaltoRoot.id);
                     $scope.misc = {
                         sortableOptions: {
+                            start: (e, ui) => {
+                                ui.placeholder.height(ui.item.height() - 10);
+                            },
                             update: (e, ui) => {
-
+                                Tekstikappaleet.paivitaRakenne($scope.rakenne);
                             },
                             connectWith: ".sisalto-list",
                             handle: ".sisalto-handle",
-                            cursorAt: { top: 2, left: 2 },
                             cursor: "move",
                             delay: 100,
                             tolerance: "pointer",
@@ -33,12 +35,15 @@ angular.module("app")
                             resolve();
                         }),
                         save: (kommentti) => $q((resolve, reject) => {
+                            Tekstikappaleet.poistaPoistetut($scope.rakenne);
                             tekstit.one("rakenne")
                                 .customPUT($scope.rakenne)
                                 .then(() => {
                                     resolve();
                                     NotifikaatioService.onnistui("tallennus-onnistui");
                                     $timeout(() => $state.reload("root.koulutustoimija.opetussuunnitelmat"));
+                                }, () => {
+                                    EditointikontrollitService.cancel();
                                 });
                         }),
                         after: () => $scope.$$sorting = false

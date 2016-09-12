@@ -22,8 +22,8 @@ namespace Tekstikappaleet {
         _.indexBy(tekstikappaleviitteet, "id");
 
     export const teeRakenne = (tekstikappaleviitteet, id: number | string, depth = 0, parent = null) => {
-        const tkviite = {};
-        _.extend(tkviite, {
+        const viite = {};
+        _.extend(viite, {
             id: id,
             $$depth: depth,
             $$obj: tekstikappaleviitteet[id],
@@ -31,14 +31,30 @@ namespace Tekstikappaleet {
             $$closed: false,
             $$poistettu: false,
             lapset: _.map(tekstikappaleviitteet[id].lapset, (lapsiId: number) =>
-                teeRakenne(tekstikappaleviitteet, lapsiId, depth + 1, tkviite))
+                teeRakenne(tekstikappaleviitteet, lapsiId, depth + 1, viite))
         });
 
-        return tkviite;
+        return viite;
+    };
+
+    export const paivitaRakenne = (viite: Tekstikappaleeviite) => {
+        _(viite.lapset).forEach((lapsi: Tekstikappaleeviite) => {
+            lapsi.$$parent = viite;
+            paivitaRakenne(lapsi);
+        }).value();
     };
 
     export const poista = (viite: Tekstikappaleeviite) => {
-        viite.$$poistettu = true;
+        if (viite.$$obj.tyyppi == 'tutkinnonosat' || viite.$$obj.tyyppi == 'suorituspolut') {
+            let parent = viite.$$parent;
+            while (parent != null) {
+                parent.$$poistettu = false;
+                parent = parent.$$parent;
+            }
+            NotifikaatioService.varoitus(viite.$$obj.tyyppi + "-ei-voi-poistaa");
+        } else {
+            viite.$$poistettu = true;
+        }
         _(viite.lapset).forEach(lapsi => poista(lapsi)).value();
     };
 
@@ -53,4 +69,10 @@ namespace Tekstikappaleet {
             palautaYksi(viite.$$parent);
         }
     };
+
+    export const poistaPoistetut = (viite: Tekstikappaleeviite) => {
+        _.remove(viite.lapset, { $$poistettu: true });
+        _(viite.lapset).forEach(viite => poistaPoistetut(viite)).value();
+        return viite;
+    }
 }
