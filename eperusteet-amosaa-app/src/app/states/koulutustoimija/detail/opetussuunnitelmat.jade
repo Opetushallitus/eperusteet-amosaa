@@ -67,9 +67,11 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
     div.row
       div.col-xs-5
         div.form-group.has-feedback.has-feedback-left
-          input.form-control(ng-change="suodataOpetussuunnitelmat(opetussuunnitelmat, opsSearch)"
+          // input.form-control(ng-change="suodataOpetussuunnitelmat(opetussuunnitelmat, opsSearch)"
+          input.form-control(ng-change="opsPaginatedUpdate(opsSearch)"
             type="text"
             ng-model="opsSearch"
+            ng-model-options="{ debounce: 500 }"
             placeholder="{{ 'hae' | kaanna }}")
           i.form-control-feedback.glyphicon.glyphicon-search(style="color: gray;")
       div.checkbox-text.col-xs-2
@@ -88,5 +90,14 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
             span=" "
             span(ng-bind="'lisaa-opetussuunnitelma' | kaanna")
 
-    +opsTable("ops in opetussuunnitelmat")
+    +opsTable("ops in opsPaginated")
+    nav.text-center
+      ul.pagination
+        li
+          a(href="") «
+        li(ng-class="{ 'active': page === $$opsPaginatedPage.current }" ng-repeat=("page in $$opsPaginatedPage.pages"))
+          a(href="" ng-click="opsPaginatedSelect(page)") {{ page + 1 }}
+        li
+          a(href="") »
+
 

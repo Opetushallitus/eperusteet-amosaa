@@ -71,6 +71,15 @@ angular.module("app")
                 $scope.opetussuunnitelmat = _.reject(opetussuunnitelmat, (ops: any) => ops.tyyppi === "yhteinen");
                 $scope.opsitById = _.indexBy(opetussuunnitelmat, "id");
 
+                Pagination.addPagination(
+                    $scope,
+                    (search: string, ops: any): boolean => {
+                        return !search || _.isEmpty(search) || Algoritmit.match(search, ops.nimi);
+                    },
+                    "opetussuunnitelmat",
+                    "ops");
+
+
                 const add = (tyyppi) => ModalAdd[tyyppi]()
                     .then(opsSaver)
                     .then((res) => $scope.opetussuunnitelmat.push(res));

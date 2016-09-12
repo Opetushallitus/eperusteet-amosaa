@@ -11,7 +11,6 @@ namespace ModalRevisions {
         },
         templateUrl: "modals/revisions/revisions.jade",
         controller: ($uibModalInstance, $scope, $state, $stateParams, revisions, nimiLataaja) => {
-            console.log(revisions);
             _.each(revisions, (rev, idx: number) => {
                 rev.$$number = _.size(revisions) - idx;
                 nimiLataaja(rev.muokkaaja).then(_.cset(rev, "$$muokkaaja"));
