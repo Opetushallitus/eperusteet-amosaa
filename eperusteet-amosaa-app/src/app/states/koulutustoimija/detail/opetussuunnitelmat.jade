@@ -58,7 +58,7 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
         div.checkbox
           label
             input(type="checkbox" ng-model="poistetut" ng-click="opsPaginatedUpdate(opsSearch)")
-            span(ng-bind="'poistetut' | kaanna")
+            span(ng-bind="'nayta-arkistoidut' | kaanna")
       div.col-xs-5
         div.pull-right
           button.btn.btn-default.pull-right(ng-click="addYleinen()" oikeustarkastelu="muokkaus")

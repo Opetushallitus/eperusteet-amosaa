@@ -75,7 +75,7 @@ angular.module("app")
                 Pagination.addPagination(
                     $scope,
                     (search: string, ops: any): boolean => {
-                        return !($scope.poistetut || ops.tila !== "poistettu") && (!search || _.isEmpty(search) || Algoritmit.match(search, ops.nimi));
+                        return ($scope.poistetut || ops.tila !== "poistettu") && (!search || _.isEmpty(search) || Algoritmit.match(search, ops.nimi));
                     },
                     "opetussuunnitelmat",
                     "ops");
