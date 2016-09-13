@@ -109,12 +109,6 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     }
 
     @Override
-    public List<OpetussuunnitelmaBaseDto> getOpetussuunnitelmatByTyyppi(OpsTyyppi tyyppi) {
-        List<Opetussuunnitelma> opetussuunnitelmat = repository.findAllByTyyppi(tyyppi);
-        return mapper.mapAsList(opetussuunnitelmat, OpetussuunnitelmaBaseDto.class);
-    }
-
-    @Override
     public List<OpetussuunnitelmaBaseDto> getPohjat() {
         List<Opetussuunnitelma> opetussuunnitelmat = repository.findAllByTyyppiAndTila(OpsTyyppi.POHJA, Tila.JULKAISTU);
         return mapper.mapAsList(opetussuunnitelmat, OpetussuunnitelmaBaseDto.class);

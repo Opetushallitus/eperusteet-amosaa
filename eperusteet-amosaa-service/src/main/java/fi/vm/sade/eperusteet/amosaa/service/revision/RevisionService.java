@@ -17,25 +17,30 @@
 package fi.vm.sade.eperusteet.amosaa.service.revision;
 
 import fi.vm.sade.eperusteet.amosaa.domain.revision.Revision;
-import java.util.List;
+import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  *
  * @author nkala
  */
 @Transactional
-@PreAuthorize("isAuthenticated()")
 public interface RevisionService {
+    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
+    List<Revision> getRevisions(Long ktId, @P("opsId") Long opsId);
 
-    List<Revision> getRevisions(Long ktId, Long opsId);
+    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
+    Revision getLatestRevision(Long ktId, @P("opsId") Long opsId);
 
-    Revision getLatestRevision(Long ktId, Long opsId);
+    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
+    Integer getLatestRevisionId(Long ktId, @P("opsId") Long opsId);
 
-    Integer getLatestRevisionId(Long ktId, Long opsId);
+    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
+    Object getData(Long ktId, Long opsId,  @P("opsId")Integer rev);
 
-    Object getData(Long ktId, Long opsId, Integer rev);
-
-    Revision getRemoved(Long ktId, Long opsId);
+    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
+    Revision getRemoved(Long ktId, @P("opsId") Long opsId);
 }

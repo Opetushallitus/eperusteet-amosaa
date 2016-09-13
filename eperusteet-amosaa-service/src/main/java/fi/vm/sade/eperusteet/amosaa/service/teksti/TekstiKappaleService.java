@@ -23,10 +23,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
  * @author mikkom
  */
 public interface TekstiKappaleService {
-
-    @PreAuthorize("permitAll()")
-    TekstiKappaleDto get(Long id);
-
     @PreAuthorize("isAuthenticated()")
     TekstiKappaleDto add(SisaltoViite viite, TekstiKappaleDto tekstiKappaleDto);
 
