@@ -70,11 +70,12 @@ angular.module("app")
                 $scope.suosikit = _.indexBy(_.map(kayttajanTiedot.suosikit, (suosikki: string) => opetussuunnitelmaMap[suosikki]), "id");
                 $scope.opetussuunnitelmat = _.reject(opetussuunnitelmat, (ops: any) => ops.tyyppi === "yhteinen");
                 $scope.opsitById = _.indexBy(opetussuunnitelmat, "id");
+                $scope.poistetut = false;
 
                 Pagination.addPagination(
                     $scope,
                     (search: string, ops: any): boolean => {
-                        return !search || _.isEmpty(search) || Algoritmit.match(search, ops.nimi);
+                        return !($scope.poistetut || ops.tila !== "poistettu") && (!search || _.isEmpty(search) || Algoritmit.match(search, ops.nimi));
                     },
                     "opetussuunnitelmat",
                     "ops");

@@ -26,15 +26,6 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
 
 
     table.table.boxtable
-      thead
-        tr
-          th
-          th
-            a(href="#")
-              span(ng-bind="'pohjan-nimi' | kaanna")
-              span=" "
-              span.glyphicon.glyphicon-sort-by-attributes
-          th
       tbody
         tr(ng-hide="ops.$$hidden" ng-repeat="ops in opetussuunnitelmat")
           td
