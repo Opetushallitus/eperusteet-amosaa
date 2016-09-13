@@ -29,9 +29,9 @@ import java.util.List;
  * @author nkala
  */
 public interface PoistettuService {
-    @PreAuthorize("hasPermission(#ops.id, 'opetussuunnitelma', 'MUOKKAUS')")
+    @PreAuthorize("hasPermission(#ops.id, 'opetussuunnitelma', 'POISTO')")
     PoistettuDto lisaaPoistettu(Koulutustoimija koulutustoimija, Opetussuunnitelma ops, SisaltoViite osa);
 
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'MUOKKAUS')")
+    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'POISTO')")
     List<PoistettuDto> poistetut(Long koulutustoimija, Long opsId);
 }

@@ -45,13 +45,14 @@ namespace Tekstikappaleet {
     };
 
     export const poista = (viite: Tekstikappaleeviite) => {
-        if (viite.$$obj.tyyppi == 'tutkinnonosat' || viite.$$obj.tyyppi == 'suorituspolut') {
+        if (viite.$$obj.tyyppi == 'tutkinnonosat' || viite.$$obj.tyyppi == 'suorituspolut' || viite.$$obj.pakollinen) {
             let parent = viite.$$parent;
             while (parent != null) {
                 parent.$$poistettu = false;
                 parent = parent.$$parent;
             }
-            NotifikaatioService.varoitus(viite.$$obj.tyyppi + "-ei-voi-poistaa");
+            NotifikaatioService.varoitus(viite.$$obj.pakollinen
+                ? "pakollinen-ei-saa-poistaa" : viite.$$obj.tyyppi + "-ei-voi-poistaa");
         } else {
             viite.$$poistettu = true;
         }

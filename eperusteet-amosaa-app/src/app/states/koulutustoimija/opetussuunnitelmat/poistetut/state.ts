@@ -14,9 +14,21 @@ angular.module("app")
                     item.post("palauta")
                         .then(res => {
                             _.remove(poistetut, item);
-                            $timeout(() => $state.reload("root.koulutustoimija.opetussuunnitelmat"));
+                          // Tarvitaan päivittämään sivunavi
+                          $timeout(() => $state.reload("root.koulutustoimija.opetussuunnitelmat"));
                         });
                 };
+                $scope.palautaJaSiirry = (item) => {
+                    item.post("palauta")
+                        .then(res => {
+                            _.remove(poistetut, item);
+                            $timeout(() => $state.go("root.koulutustoimija.opetussuunnitelmat.sisalto.osa", {
+                                osaId: res.id
+                            }, {
+                                reload: true
+                            }));
+                        });
+                }
             }
         }
     }

@@ -15,7 +15,15 @@ angular.module("app")
                                 ui.placeholder.height(ui.item.height() - 10);
                             },
                             update: (e, ui) => {
-                                Tekstikappaleet.paivitaRakenne($scope.rakenne);
+                                let node = ui.item.sortable.model;
+                                if (!ui.item.sortable.received
+                                        && ui.item.sortable.source[0] !== ui.item.sortable.droptarget[0]
+                                        && node.$$obj.liikkumaton) {
+                                    ui.item.sortable.cancel();
+                                    NotifikaatioService.varoitus("liikkumaton-ei-saa-liikkua");
+                                } else {
+                                    Tekstikappaleet.paivitaRakenne($scope.rakenne);
+                                }
                             },
                             connectWith: ".sisalto-list",
                             handle: ".sisalto-handle",

@@ -1,27 +1,30 @@
 div
-  div.sisalto-list.subtle-transition(ui-sortable="misc.sortableOptions" ng-model="ngModel.lapset" ng-if="!ngModel.$$poistettu")
+  div.sisalto-list(ui-sortable="misc.sortableOptions" ng-model="ngModel.lapset" ng-if="!ngModel.$$poistettu")
     div(ng-repeat="child in ngModel.lapset")
       div.sisalto-item
         div.sisalto-handle(ng-if="!child.$$poistettu")
           +icon("arrows-v")
-        div.sisalto-handle-disabled(ng-if="child.$$poistettu")
+        div.sisalto-handle-disabled(ng-if="child.$$poistettu && !child.$$obj.liikkumaton")
           +icon("ban")
         div.sisalto-poistaminen
           a(ng-if="!child.$$poistettu" ng-click="misc.poista(child)" kaanna="'poista'")
           a(ng-if="child.$$poistettu && child.lapset.length > 0" ng-click="misc.palauta(child)" kaanna="'palauta-kaikki'")
           a(ng-if="child.$$poistettu" ng-click="misc.palautaYksi(child)" kaanna="'palauta'")
-        div.sisalto-nimi(ng-class="{'sisalto-poistettu': child.$$poistettu}")
-          span(ng-bind="child.$$obj.tekstiKappale.nimi | kaanna")
+        div.sisalto-nimi
+          span(ng-bind="child.$$obj.tekstiKappale.nimi | kaanna" ng-class="{'sisalto-poistettu': child.$$poistettu}")
+          span(tooltip-placement="right" uib-tooltip="{{'liikkumaton' | kaanna}}" ng-if="child.$$obj.liikkumaton")=" "
+            +icon("sticky-note-o")
+          span(tooltip-placement="right" uib-tooltip="{{'pakollinen' | kaanna}}" ng-if="child.$$obj.pakollinen")=" "
+            +icon("file-powerpoint-o")
       dynamic(template="states/koulutustoimija/opetussuunnitelmat/sisalto/rakenne.jade" ng-model="child" misc="misc" depth="depth + 1")
 
-  div.sisalto-list.subtle-transition(ng-model="ngModel.lapset" ng-if="ngModel.$$poistettu")
+  div.sisalto-list(ng-model="ngModel.lapset" ng-if="ngModel.$$poistettu")
     div(ng-repeat="child in ngModel.lapset")
       div.sisalto-item
         div.sisalto-handle-disabled
           +icon("ban")
         div.sisalto-poistaminen
           a(ng-click="misc.palautaYksi(child)" kaanna="'palauta'")
-        div.sisalto-nimi.sisalto-poistettu
-          span(ng-bind="child.$$obj.tekstiKappale.nimi | kaanna")
-          span=" "
+        div.sisalto-nimi
+          span.sisalto-poistettu(ng-bind="child.$$obj.tekstiKappale.nimi | kaanna")
       dynamic(template="states/koulutustoimija/opetussuunnitelmat/sisalto/rakenne.jade" ng-model="child" misc="misc" depth="depth + 1")

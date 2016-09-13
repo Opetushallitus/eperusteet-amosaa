@@ -128,7 +128,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
             tk.setNimi(LokalisoituTeksti.of(Kieli.FI, "Tutkinnon osat"));
             tk.setValmis(true);
             tosat.setTekstiKappale(tkRepository.save(tk));
-            tosat.setLiikkumaton(true);
+            tosat.setLiikkumaton(false);
             tosat.setVanhempi(rootTkv);
             tosat.setPakollinen(true);
             tosat.setTyyppi(SisaltoTyyppi.TUTKINNONOSAT);
@@ -146,7 +146,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
             suorituspolut.setPakollinen(true);
             suorituspolut.setTyyppi(SisaltoTyyppi.SUORITUSPOLUT);
             suorituspolut.setOwner(ops);
-            suorituspolut.setLiikkumaton(true);
+            suorituspolut.setLiikkumaton(false);
             suorituspolut.setVanhempi(rootTkv);
             rootTkv.getLapset().add(tkvRepository.save(suorituspolut));
         }

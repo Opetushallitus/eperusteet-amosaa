@@ -36,7 +36,7 @@ public interface SisaltoviiteRepository extends JpaWithVersioningRepository<Sisa
     SisaltoViite findOneByOwnerAndId(Opetussuunnitelma owner, Long id);
     SisaltoViite findOneByOwnerIdAndId(Long owner, Long id);
 
-    @Query(value = "SELECT tkv from SisaltoViite tkv where tkv.owner = ?1 AND tkv.vanhempi IS NULL")
+    @Query(value = "SELECT sv from SisaltoViite sv where sv.owner = ?1 AND sv.vanhempi IS NULL")
     SisaltoViite findOneRoot(Opetussuunnitelma owner);
 
     @Query(value = "SELECT sv FROM SisaltoViite sv WHERE sv.tosa.tyyppi = 'OMA' AND sv.owner.koulutustoimija = ?1")
@@ -47,4 +47,10 @@ public interface SisaltoviiteRepository extends JpaWithVersioningRepository<Sisa
 
     @Query(value = "SELECT sv FROM SisaltoViite sv WHERE sv.tosa.tyyppi = 'PERUSTEESTA' AND sv.owner.koulutustoimija = ?1 AND sv.tosa.koodi = ?2")
     List<SisaltoViite> findAllTutkinnonOsatByKoodi(Koulutustoimija kt, String koodi);
+
+    @Query(value = "SELECT sv FROM SisaltoViite sv WHERE sv.tyyppi = 'TUTKINNONOSAT' AND sv.owner = ?1")
+    SisaltoViite findTutkinnonosat(Opetussuunnitelma owner);
+
+    @Query(value = "SELECT sv FROM SisaltoViite sv WHERE sv.tyyppi = 'SUORITUSPOLUT' AND sv.owner = ?1")
+    SisaltoViite findSuorituspolut(Opetussuunnitelma owner);
 }
