@@ -21,15 +21,14 @@ import fi.vm.sade.eperusteet.amosaa.domain.liite.Liite;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
-
-import javax.persistence.*;
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  *
@@ -62,11 +61,17 @@ public class Koulutustoimija extends AbstractAuditedEntity implements Serializab
     @Getter
     @Setter
     @ElementCollection
-    private Set<String> ystavat;
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private Set<Koulutustoimija> ystavat;
 
     @Getter
     @Setter
     private String organisaatio = "";
+
+    @Getter
+    @Setter
+    private boolean salliystavat = false;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "koulutustoimija_liite", inverseJoinColumns = {

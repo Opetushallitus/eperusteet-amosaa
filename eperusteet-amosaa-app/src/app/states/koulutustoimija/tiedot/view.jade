@@ -1,0 +1,41 @@
+mixin ystavaOrganisaatio()
+  div.org-vari(ng-class="{ 'org-vari-kysytty': org.status === 'odotetaan', 'org-vari-odottaa': org.status === 'odottaa', 'org-vari-yhteistyo': org.status === 'yhteistyo' }")
+  span.nimi(ng-bind="org.nimi | kaanna")
+  button.btn.btn-danger(ng-show="$$ekEditing && (org.status === 'yhteistyo' || org.status === 'odotetaan')" ng-bind="'lopeta-yhteistyo' | kaanna" ng-click="lopetaYhteistyo(org)")
+  button.btn.btn-success(ng-show="$$ekEditing && org.status === 'odottaa'" ng-bind="'hyvaksy-yhteistyo' | kaanna" ng-click="hyvaksyYhteistyo(org)")
+
+
+h2.otsikko
+  span(ng-bind="'tiedot' | kaanna")
+  button.btn.btn-primary.pull-right(ng-hide="$$ekEditing" ng-click="edit()" ng-bind="'muokkaa' | kaanna" oikeustarkastelu="hallinta")
+  button.btn.btn-warning.pull-right(style="margin-left: 5px" ng-show="$$ekEditing" ng-click="cancel()" ng-bind="'peruuta' | kaanna")
+  button.btn.btn-primary.pull-right(ng-show="$$ekEditing" ng-click="save()" ng-bind="'tallenna' | kaanna")
+div(style="margin-top: 15px")
+  +ekeditor("koulutustoimija.kuvaus", "normal")
+
+
+div.yhteistyot
+  h2.otsikko(ng-bind="'yhteistyo' | kaanna")
+  div(style="margin-bottom: 15px;")
+    div(ng-hide="$$ekEditing")
+      div.form-group
+      label.checkbox-inline
+        span(ng-bind="'salli-yhteistyo' | kaanna")
+        input.form-control(type="checkbox" ng-model="koulutustoimija.salliystavat" disabled)
+    div(ng-show="$$ekEditing")
+      div.form-group
+      label.checkbox-inline
+        span(ng-bind="'salli-yhteistyo' | kaanna")
+        input.form-control(type="checkbox" ng-model="koulutustoimija.salliystavat")
+
+  div.ystavalista(ng-show="kaverit.length > 0")
+    h3(ng-bind="'ystava-organisaatiot' | kaanna")
+    div.org(ng-repeat="org in kaverit")
+      +ystavaOrganisaatio()
+
+  div.ystavalista(ng-show="pyynnot.length > 0")
+    h3(ng-bind="'pyynnot-muilta-organisaatioilta' | kaanna")
+    div.org(ng-repeat="org in pyynnot")
+      +ystavaOrganisaatio()
+
+button.btn.btn-primary(ng-show="$$ekEditing" ng-click="lisaa()" ng-bind="'laheta-kaveripyynto' | kaanna")

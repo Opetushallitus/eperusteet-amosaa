@@ -132,6 +132,52 @@
     }
 }
 
+.yhteistyot {
+    .ystavalista {
+        margin-top: 25px;
+    }
+
+    .org-vari {
+        content: "";
+        width: 4px;
+        height: 50px;
+        border-right: 1px solid #AEAEAE;
+        position: relative;
+        float: left;
+        top: -8px;
+        left: -12px;
+    }
+
+    .org-vari-yhteistyo {
+        background: #99D740;
+    }
+
+    .org-vari-odottaa {
+        background: #FFCF24;
+    }
+
+    .org-vari-kysytty {
+        background: #A6DCEE;
+    }
+
+    .org {
+        margin-bottom: 10px;
+        padding: 8px 8px 8px 12px;
+        border: 1px solid #AEAEAE;
+
+        .nimi {
+            font-size: 24px;
+        }
+
+        .kuvaus {
+            float: right;
+        }
+
+        button {
+            float: right;
+        }
+    }
+}
 
 .sisalto-sort {
     .sisalto-list {

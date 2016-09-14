@@ -14,6 +14,8 @@ namespace Pagination {
         return _.slice(collection, begin, begin + pagination.per);
     };
 
+    // FIXME: Refactor
+    // return { select: ..., update: ..., pagination: ..., filtered: ... }
     const Postfix = "Paginated";
     export const addPagination = (scope: any, matcher: (search: string, item: any) => boolean, con: string, prefix = con) => {
         const name = prefix + Postfix;

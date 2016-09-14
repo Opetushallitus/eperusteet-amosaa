@@ -18,7 +18,9 @@ package fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija;
 
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaYstavaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.SisaltoViiteSijaintiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViitePaikallinenIntegrationDto;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
@@ -30,6 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -59,6 +62,14 @@ public class KoulutustoimijaController {
         return koulutustoimijaService.getKoulutustoimija(ktId);
     }
 
+    @RequestMapping(value = "/{ktId}", method = RequestMethod.PUT)
+    @ResponseBody
+    public KoulutustoimijaDto update(
+            @PathVariable final Long ktId,
+            @RequestBody final KoulutustoimijaDto kt) {
+        return koulutustoimijaService.updateKoulutustoimija(ktId, kt);
+    }
+
     @RequestMapping(value = "/{ktId}/tutkinnonosat", method = RequestMethod.GET)
     @ResponseBody
     public List<SisaltoViitePaikallinenIntegrationDto> getTutkinnonosat(
@@ -86,10 +97,25 @@ public class KoulutustoimijaController {
         return new ResponseEntity<>(sisaltoViiteService.getByKoodi(ktId, koodi, SisaltoViiteSijaintiDto.class), HttpStatus.OK);
     }
 
-//    @RequestMapping(value = "/{ktId}", method = RequestMethod.GET)
-//    @ResponseBody
-//    public List get(
-//            @PathVariable final Long ktId) {
-//        return koulutustoimijaService.getKoulutustoimija(ktId);
-//    }
+    @RequestMapping(value = "/{ktId}/yhteistyo", method = RequestMethod.GET)
+    @ResponseBody
+    public List<KoulutustoimijaBaseDto> getYhteistyoKoulutustoimijat(
+            @PathVariable final Long ktId) {
+        return koulutustoimijaService.getYhteistyoKoulutustoimijat(ktId);
+    }
+
+    @RequestMapping(value = "/{ktId}/ystavat", method = RequestMethod.GET)
+    @ResponseBody
+    public List<KoulutustoimijaYstavaDto> getOmatYstavat(
+            @PathVariable final Long ktId) {
+        return koulutustoimijaService.getOmatYstavat(ktId);
+    }
+
+    @RequestMapping(value = "/{ktId}/ystavapyynnot", method = RequestMethod.GET)
+    @ResponseBody
+    public List<KoulutustoimijaBaseDto> getPyynnot(
+            @PathVariable final Long ktId) {
+        return koulutustoimijaService.getPyynnot(ktId);
+    }
+
 }

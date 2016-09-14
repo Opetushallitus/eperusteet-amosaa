@@ -18,11 +18,11 @@ package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija;
 
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
-import org.springframework.security.access.method.P;
-import org.springframework.security.access.prepost.PreAuthorize;
-
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaYstavaDto;
 import java.util.List;
 import java.util.Set;
+import org.springframework.security.access.method.P;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
  *
@@ -44,5 +44,17 @@ public interface KoulutustoimijaService {
     KoulutustoimijaDto getKoulutustoimijaJulkinen(@P("ktId") Long ktId);
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
-    <T> List<T> getPaikallisetTutkinnonOsat(Long ktId, Class<T> tyyppi);
+    <T> List<T> getPaikallisetTutkinnonOsat(@P("ktId") Long ktId, Class<T> tyyppi);
+
+    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'HALLINTA')")
+    KoulutustoimijaDto updateKoulutustoimija(@P("ktId") Long ktId, KoulutustoimijaDto kt);
+
+    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'HALLINTA')")
+    List<KoulutustoimijaBaseDto> getYhteistyoKoulutustoimijat(@P("ktId") Long ktId);
+
+    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
+    List<KoulutustoimijaYstavaDto> getOmatYstavat(Long ktId);
+
+    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
+    List<KoulutustoimijaBaseDto> getPyynnot(Long ktId);
 }

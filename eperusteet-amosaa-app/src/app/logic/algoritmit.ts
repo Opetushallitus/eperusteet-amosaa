@@ -23,10 +23,7 @@ namespace Algoritmit {
             }
         });
     };
-    
-    export const doSortByNimi = (items) => {
-        return _.sortBy(items, function (item: any) {
-            return KaannaService.kaanna(item.nimi).toLowerCase();
-        });
-    };
+
+    export const doSortByNimi = <T>(items: T[]) =>
+        _.sortBy(items, (item: T) => KaannaService.kaanna(item.nimi).toLowerCase());
 }

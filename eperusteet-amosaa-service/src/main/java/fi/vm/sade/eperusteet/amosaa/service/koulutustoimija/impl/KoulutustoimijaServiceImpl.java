@@ -22,11 +22,14 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaYstavaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.YstavaStatus;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -89,14 +92,30 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
 
     @Override
     @Transactional(readOnly = false)
+    public KoulutustoimijaDto updateKoulutustoimija(Long ktId, KoulutustoimijaDto ktDto) {
+        Koulutustoimija toimija = repository.findOne(ktId);
+        if (ktDto.getYstavat() == null) {
+            ktDto.setYstavat(new HashSet<>());
+        }
+        Koulutustoimija uusi = mapper.map(ktDto, Koulutustoimija.class);
+        uusi.getYstavat().remove(toimija);
+        toimija.setKuvaus(uusi.getKuvaus());
+        toimija.setYstavat(uusi.getYstavat());
+        toimija.getYstavat();
+        toimija.setSalliystavat(uusi.isSalliystavat());
+        return mapper.map(toimija, KoulutustoimijaDto.class);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
     public List<KoulutustoimijaBaseDto> getKoulutustoimijat(Set<String> kOid) {
         return kOid.stream()
-                .map(ktId -> {
-                    LOG.info("Käyttäjän koulutustoimija", ktId);
-                    Koulutustoimija kt = repository.findOneByOrganisaatio(ktId);
-                    return mapper.map(kt, KoulutustoimijaBaseDto.class);
-                })
-                .collect(Collectors.toList());
+            .map(ktId -> {
+                LOG.info("Käyttäjän koulutustoimija", ktId);
+                Koulutustoimija kt = repository.findOneByOrganisaatio(ktId);
+                return mapper.map(kt, KoulutustoimijaBaseDto.class);
+            })
+            .collect(Collectors.toList());
     }
 
     @Override
@@ -113,6 +132,35 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     public <T> List<T> getPaikallisetTutkinnonOsat(Long ktId, Class<T> tyyppi) {
         Koulutustoimija kt = repository.findOne(ktId);
         return mapper.mapAsList(sisaltoviiteRepository.findAllPaikallisetTutkinnonOsat(kt), tyyppi);
+    }
+
+    @Override
+    public List<KoulutustoimijaYstavaDto> getOmatYstavat(Long ktId) {
+        Koulutustoimija kt = repository.findOne(ktId);
+        List<KoulutustoimijaYstavaDto> result = kt.getYstavat().stream()
+            .map(ystava -> {
+                KoulutustoimijaYstavaDto ystavaDto = mapper.map(ystava, KoulutustoimijaYstavaDto.class);
+                ystavaDto.setStatus(ystava.getYstavat() != null && ystava.getYstavat().contains(kt)
+                        ? YstavaStatus.YHTEISTYO
+                        : YstavaStatus.ODOTETAAN);
+                return ystavaDto;
+            })
+            .collect(Collectors.toList());
+
+        return result;
+    }
+
+    @Override
+    public List<KoulutustoimijaBaseDto> getYhteistyoKoulutustoimijat(Long ktId) {
+        return mapper.mapAsList(repository.findAllYstavalliset(), KoulutustoimijaBaseDto.class);
+    }
+
+    @Override
+    public List<KoulutustoimijaBaseDto> getPyynnot(Long ktId) {
+        Koulutustoimija kt = repository.findOne(ktId);
+        Set<Koulutustoimija> pyynnot = repository.findAllYstavaPyynnotForKoulutustoimija(kt);
+        pyynnot.removeAll(kt.getYstavat());
+        return mapper.mapAsList(pyynnot, KoulutustoimijaBaseDto.class);
     }
 
 }

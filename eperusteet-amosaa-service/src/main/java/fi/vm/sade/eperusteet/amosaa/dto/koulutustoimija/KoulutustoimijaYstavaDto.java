@@ -16,9 +16,6 @@
 
 package fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija;
 
-import fi.vm.sade.eperusteet.amosaa.dto.Reference;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
-import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,8 +25,6 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class KoulutustoimijaDto extends KoulutustoimijaBaseDto {
-    LokalisoituTekstiDto kuvaus;
-    private Set<Reference> ystavat;
-    private boolean salliystavat;
+public class KoulutustoimijaYstavaDto extends KoulutustoimijaBaseDto {
+    YstavaStatus status;
 }
