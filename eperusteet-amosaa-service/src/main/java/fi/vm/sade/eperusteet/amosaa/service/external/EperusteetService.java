@@ -30,7 +30,7 @@ import org.springframework.stereotype.Service;
  * @author nkala
  */
 @Service
-@PreAuthorize("permitAll()")
+@PreAuthorize("permitAll()") // OK, koska mäppääntyy julkisiin rajapintoihin
 public interface EperusteetService {
     <T> T getPeruste(String diaariNumero, Class<T> type);
     PerusteDto getYleinenPohja();

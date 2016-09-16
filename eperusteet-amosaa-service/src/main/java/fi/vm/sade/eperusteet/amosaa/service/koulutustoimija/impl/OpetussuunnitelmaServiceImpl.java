@@ -38,6 +38,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKaikkiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.Suoritustapakoodi;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonOsaKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaoikeusRepository;
@@ -55,6 +56,10 @@ import fi.vm.sade.eperusteet.amosaa.service.ops.ValidointiService;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -176,7 +181,18 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         ops.setPeruste(cperuste);
         alustaOpetussuunnitelma(ops, rootTkv);
 
-        List<TutkinnonOsaKaikkiDto> tutkinnonOsat = eperusteetService.getPerusteSisalto(cperuste, PerusteKaikkiDto.class).getTutkinnonOsat();
+        PerusteKaikkiDto perusteSisalto = eperusteetService.getPerusteSisalto(cperuste, PerusteKaikkiDto.class);
+        Map<Long, TutkinnonOsaKaikkiDto> idToTosaMap = perusteSisalto.getTutkinnonOsat().stream()
+                .collect(Collectors.toMap(TutkinnonOsaKaikkiDto::getId, Function.identity()));
+
+        List<TutkinnonOsaKaikkiDto> tutkinnonOsat = perusteSisalto.getSuoritustavat().stream()
+                .filter(st -> st.getSuoritustapakoodi() == Suoritustapakoodi.of(ops.getSuoritustapa()))
+                .map(st -> st.getTutkinnonOsat().stream())
+                .reduce((acc, st) -> Stream.concat(acc, st))
+                .get()
+                .map(tosa -> idToTosaMap.get(tosa.getTutkinnonOsa()))
+                .collect(Collectors.toList());
+
         SisaltoViite tosat = rootTkv.getLapset().get(0);
         for (TutkinnonOsaKaikkiDto tosa : tutkinnonOsat) {
             SisaltoViite uusi = SisaltoViite.createTutkinnonOsa(tosat);
