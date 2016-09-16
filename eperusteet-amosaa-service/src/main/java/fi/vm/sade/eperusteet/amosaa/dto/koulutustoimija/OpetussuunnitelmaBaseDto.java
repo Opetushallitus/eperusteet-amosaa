@@ -36,9 +36,12 @@ public class OpetussuunnitelmaBaseDto {
     private Tila tila;
     private OpsTyyppi tyyppi;
     private LokalisoituTekstiDto kuvaus;
-    
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Reference pohja;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Long perusteId;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String perusteDiaarinumero;

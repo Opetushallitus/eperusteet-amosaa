@@ -155,6 +155,17 @@ public class EperusteetServiceImpl implements EperusteetService {
     }
 
     @Override
+    public <T> T getPeruste(Long id, Class<T> type) {
+        try {
+            JsonNode node = client.getForObject(eperusteetServiceUrl + "/api/perusteet/" + id.toString() + "", JsonNode.class);
+            T peruste = mapper.treeToValue(node, type);
+            return peruste;
+        } catch (IOException ex) {
+            throw new BusinessRuleViolationException("perustetta-ei-loytynyt");
+        }
+    }
+
+    @Override
     public <T> T getPeruste(String diaarinumero, Class<T> type) {
         try {
             JsonNode node = client.getForObject(eperusteetServiceUrl + "/api/perusteet/diaari?diaarinumero=" + diaarinumero, JsonNode.class);

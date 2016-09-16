@@ -39,6 +39,7 @@ public interface EperusteetService {
     List<PerusteInfoDto> findPerusteet();
     List<PerusteInfoDto> findPerusteet(Set<KoulutusTyyppi> tyypit);
     JsonNode getTiedotteet(Long jalkeen);
+    <T> T getPeruste(Long id, Class<T> type);
     <T> T getPerusteSisalto(Long cperusteId, Class<T> type);
     <T> T getPerusteSisalto(CachedPeruste cperuste, Class<T> type);
     JsonNode getTutkinnonOsat(Long id);

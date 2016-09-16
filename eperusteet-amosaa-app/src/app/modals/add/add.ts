@@ -104,6 +104,7 @@ namespace ModalAdd {
                     const opsSt = $scope.stMap["ops"];
                     $scope.ops = {
                         tyyppi: "ops",
+                        perusteId: peruste.id,
                         perusteDiaarinumero: peruste.diaarinumero,
                         suoritustapa: (opsSt ? "ops" : $scope.peruste.suoritustavat[0].suoritustapakoodi)
                     };
