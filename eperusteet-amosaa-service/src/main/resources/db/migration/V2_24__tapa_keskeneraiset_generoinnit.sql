@@ -1,0 +1,1 @@
+delete from dokumentti where tila = 'LUODAAN';

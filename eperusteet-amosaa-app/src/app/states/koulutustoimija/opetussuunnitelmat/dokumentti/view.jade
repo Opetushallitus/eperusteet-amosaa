@@ -31,9 +31,7 @@ div.dokumentti
   div.row
     div.col-xs-12
       h2(ng-bind="'dokumentti' | kaanna")
-      div(ng-if="ops.tyyppi !== 'ops'")
-        p(kaanna="'ops-tyyppi-ei-salli-luontia'")
-      div(ng-if="ops.tyyppi === 'ops'")
+      div
         p(ng-show="dokumenttiDto.tila === 'ei_ole'" ng-bind="'dokumentti-ei-ole' | kaanna")
         p(ng-show="dokumenttiDto.tila === 'epaonnistui'" ng-bind="'dokumentti-epaonnistui' | kaanna")
 
