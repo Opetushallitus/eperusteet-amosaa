@@ -109,4 +109,9 @@ public class EperusteetServiceMock implements EperusteetService {
         return null;
     }
 
+    @Override
+    public <T> T getPeruste(Long id, Class<T> type) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }
