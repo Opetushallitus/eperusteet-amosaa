@@ -12,6 +12,7 @@ declare module _ {
         setRemove(from: Object, what: Object): void;
         cset<O, P, V>(o: O, p: P): (v: V) => void;
         fromPairs(): any;
+        flattenBy<T>(root: T, field: string): T[];
     }
 
     interface LoDashStatic extends OwnMixins { }
@@ -71,5 +72,14 @@ _.mixin({
     print: (array) => {
         _.each(array, (v, k) => console.log(_.clone(k), _.clone(v)));
         return array;
+    },
+    flattenBy: (root: any, field: string = "lapset") => {
+        const result = [];
+        const pusher = (node) => {
+            result.push(node);
+            _.each(node[field], child => { pusher(child); });
+        };
+        pusher(root);
+        return result;
     }
 });

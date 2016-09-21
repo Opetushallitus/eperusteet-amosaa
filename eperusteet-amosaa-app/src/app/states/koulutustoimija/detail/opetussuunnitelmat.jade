@@ -75,5 +75,3 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
       ul.pagination
         li(ng-class="{ 'active': page === $$opsPaginatedPage.current }" ng-repeat=("page in $$opsPaginatedPage.pages"))
           a(href="" ng-click="opsPaginatedSelect(page)") {{ page + 1 }}
-
-

@@ -51,7 +51,6 @@ import org.hibernate.envers.RelationTargetAuditMode;
 @Audited
 @Table(name = "sisaltoviite")
 public class SisaltoViite implements ReferenceableEntity, Serializable {
-
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Getter
@@ -84,7 +83,7 @@ public class SisaltoViite implements ReferenceableEntity, Serializable {
     @Setter
     private SisaltoViite vanhempi;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST})
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @Getter
     @Setter
     private TekstiKappale tekstiKappale;
@@ -141,17 +140,24 @@ public class SisaltoViite implements ReferenceableEntity, Serializable {
     }
 
     public static SisaltoViite copy(SisaltoViite kopioitava) {
+        return copy(kopioitava, true);
+    }
+
+    public static SisaltoViite copy(SisaltoViite kopioitava, boolean copyChildren) {
         if (kopioitava != null) {
             kopioitava.setId(null);
             kopioitava.setVanhempi(null);
 
+            kopioitava.setTekstiKappale(TekstiKappale.copy(kopioitava.getTekstiKappale()));
             kopioitava.setTosa(Tutkinnonosa.copy(kopioitava.getTosa()));
             kopioitava.setSuorituspolku(Suorituspolku.copy(kopioitava.getSuorituspolku()));
 
-            List<SisaltoViite> lapset = kopioitava.getLapset();
-            kopioitava.setLapset(new ArrayList<>());
-            for (SisaltoViite lapsi : lapset) {
-                kopioitava.getLapset().add(copy(lapsi));
+            if (copyChildren) {
+                List<SisaltoViite> lapset = kopioitava.getLapset();
+                kopioitava.setLapset(new ArrayList<>());
+                for (SisaltoViite lapsi : lapset) {
+                    kopioitava.getLapset().add(copy(lapsi));
+                }
             }
         }
         return kopioitava;

@@ -9,24 +9,51 @@ div.modal-header
   .clearfix
 
 div.modal-body.modal-sisalto
-  div.sisalto-valinta(ng-hide="obj.tyyppi")
+  div.sisalto-valinta(ng-hide="obj.tyyppi || currentStage !== 'sisaltotyyppi'")
     div(ng-repeat="tyyppi in sallitut")
       div.sisalto-item
         .pull-right.sisalto-valinta
           button.btn.btn-primary(ng-bind="'lisaa' | kaanna" ng-click="valitse(tyyppi)")
-          button.btn.btn-primary(ng-bind="'tuo' | kaanna" disabled)
         span.sisalto-icon
           +icon("file-text-o")
         div.sisalto-text
           span(ng-bind="'sisaltotyyppi-' + tyyppi | kaanna")
+    div
+      div.sisalto-item
+        .pull-right.sisalto-valinta
+          button.btn.btn-primary(ng-bind="'tuo' | kaanna" ng-click="tuoSisaltoa()")
+        span.sisalto-icon
+          +icon("files-o")
+        div.sisalto-text
+          span(ng-bind="'tuo-sisaltoa-muista-opseista' | kaanna")
 
-  div.sisalto-tekstikappale(ng-show="obj")
+  div.sisalto-tekstikappale(ng-show="currentStage === 'nimenvalinta'")
     h3(ng-bind="'anna-nimi' | kaanna")
     input.form-control(slocalized ng-model="obj.tekstiKappale.nimi" type="text" required="true")
+  
+  div(ng-show="currentStage === 'opetussuunnitelma'")
+    +completePagination("opsp")
+      table.table.table-striped
+        tr
+          th(ng-bind="'nimi' | kaanna")
+          th(ng-bind="'tyyppi' | kaanna")
+          th(ng-bind="'tutkinnon-diaarinumero' | kaanna")
+        tr(ng-repeat="ops in opsp.items")
+          td
+            a(href="" ng-click="valitseOps(ops)" ng-bind="ops.nimi | kaanna")
+          td(ng-bind="'opstyyppi-' + ops.tyyppi | kaanna")
+          td(ng-bind="ops.perusteDiaarinumero")
+
+  .opslista(ng-show="currentStage === 'opssisalto'")
+    .osa(ng-repeat="node in rakenne" style="margin-left: {{ node.$$depth * 20 }}px")
+      label.checkbox-inline
+        span.nimi(ng-bind="node.$$obj.tekstiKappale.nimi | kaanna")
+        input.form-control(type="checkbox" ng-model="node.$$valittu")
 
 div.modal-footer
   button.btn.btn-default(ng-click="ok()")
     span(ng-bind="'peruuta' | kaanna")
-  button.btn.btn-primary(ng-disabled="!obj || !obj.tyyppi" ng-click="ok(obj)")
+  button.btn.btn-primary(ng-show="currentStage !== 'opssisalto'" ng-disabled="!obj || !obj.tyyppi" ng-click="ok(obj)")
     span(ng-bind="'lisaa' | kaanna")
-
+  button.btn.btn-primary(ng-show="currentStage === 'opssisalto'" ng-click="lisaaOpsSisalto()")
+    span(ng-bind="'lisaa' | kaanna")

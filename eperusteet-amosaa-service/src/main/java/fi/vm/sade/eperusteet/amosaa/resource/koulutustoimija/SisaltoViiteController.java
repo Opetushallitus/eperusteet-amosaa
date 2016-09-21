@@ -71,6 +71,15 @@ public class SisaltoViiteController {
         return service.addSisaltoViite(ktId, opsId, svId, tekstiKappaleViiteDto);
     }
 
+    @RequestMapping(value = "/lisaa", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void copyMultiple(
+            @PathVariable final Long ktId,
+            @PathVariable final Long opsId,
+            @RequestBody List<Long> viitteet) {
+        service.copySisaltoViiteet(ktId, opsId, viitteet);
+    }
+
     @RequestMapping(value = "/tekstit/{svId}", method = RequestMethod.PUT)
     void updateTekstiKappaleViite(
             @PathVariable final Long ktId,

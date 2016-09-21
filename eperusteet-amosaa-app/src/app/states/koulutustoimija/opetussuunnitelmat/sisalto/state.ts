@@ -60,7 +60,7 @@ angular.module("app")
             }
         },
         sivunavi: {
-            controller: ($q, $scope, $state, $timeout, otsikot, tekstit, sisaltoRoot, ops) => {
+            controller: ($q, $scope, $state, $stateParams, $timeout, otsikot, tekstit, sisaltoRoot, ops, koulutustoimija) => {
                 const updateSivunavi = _.callAndGive(() => {
                     $scope.sivunavi = Tekstikappaleet.teeRakenne(Tekstikappaleet.uniikit(otsikot), sisaltoRoot.id);
                 });
@@ -83,38 +83,49 @@ angular.module("app")
                 };
 
                 $scope.add = () => {
-                    ModalAdd.sisaltoAdder(Opetussuunnitelmat.sallitutSisaltoTyypit(ops))
+                    ModalAdd.sisaltoAdder(koulutustoimija, Opetussuunnitelmat.sallitutSisaltoTyypit(ops))
                         .then(uusi => {
-                            const parentNode = tekstit.clone();
-
-                            if (!uusi || !uusi.hasOwnProperty("tyyppi")) {
-                                return;
+                            if (_.isArray(uusi)) {
+                                ops.customPOST(uusi, "lisaa")
+                                    .then(() => {
+                                        // FIXME: Lisää ilman latausta
+                                        $timeout(() => {
+                                            $state.go($state.current.name, $stateParams, { reload: true });
+                                        });
+                                    });
                             }
+                            else {
+                                const parentNode = tekstit.clone();
 
-                            if (uusi.tyyppi === "tutkinnonosa") {
-                                parentNode.id = Tekstikappaleet.tutkinnonosat(otsikot).id;
-                            }
-                            else if (uusi.tyyppi === "suorituspolku") {
-                                parentNode.id = Tekstikappaleet.suorituspolut(otsikot).id;
-                            }
+                                if (!uusi || !uusi.hasOwnProperty("tyyppi")) {
+                                    return;
+                                }
 
-                            parentNode.post("", uusi)
-                                .then(res => {
-                                    res.$$depth = 1;
-                                    otsikot.push(res);
-                                    const parentOtsikko = _.find(otsikot, (otsikko: any) => otsikko.id == res._vanhempi)
-                                    parentOtsikko.lapset.push(res.id);
-                                    updateSivunavi();
-                                    $timeout(() => {
-                                        $state.go("root.koulutustoimija.opetussuunnitelmat.sisalto.osa", { osaId: res.id })
+                                if (uusi.tyyppi === "tutkinnonosa") {
+                                    parentNode.id = Tekstikappaleet.tutkinnonosat(otsikot).id;
+                                }
+                                else if (uusi.tyyppi === "suorituspolku") {
+                                    parentNode.id = Tekstikappaleet.suorituspolut(otsikot).id;
+                                }
+
+                                parentNode.post("", uusi)
+                                    .then(res => {
+                                        res.$$depth = 1;
+                                        otsikot.push(res);
+                                        const parentOtsikko = _.find(otsikot, (otsikko: any) => otsikko.id == res._vanhempi)
+                                        parentOtsikko.lapset.push(res.id);
+                                        updateSivunavi();
+                                        $timeout(() => {
+                                            $state.go("root.koulutustoimija.opetussuunnitelmat.sisalto.osa", { osaId: res.id })
                                             .then(() => {
                                                 const el = document.getElementById("sisalto-item-" + res.id);
                                                 if (el) {
                                                     el.scrollIntoView();
                                                 }
                                             });
+                                        });
                                     });
-                                });
+                            }
                         });
                 };
 

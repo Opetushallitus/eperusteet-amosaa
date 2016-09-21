@@ -61,7 +61,11 @@ public enum SisaltoTyyppi {
         return false;
     }
 
+    public static boolean isCopyable(SisaltoTyyppi tyyppi) {
+        return EnumSet.of(SUORITUSPOLKU, TUTKINNONOSA, TEKSTIKAPPALE).contains(tyyppi);
+    }
+
     public static boolean salliLuonti(SisaltoTyyppi tyyppi) {
-        return EnumSet.of(SUORITUSPOLKU, TUTKINNONOSA, TEKSTIKAPPALE, TOSARYHMA).contains(tyyppi);
+        return EnumSet.of(SUORITUSPOLKU, TUTKINNONOSA, TEKSTIKAPPALE).contains(tyyppi);
     }
 }

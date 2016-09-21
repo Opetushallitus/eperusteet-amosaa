@@ -184,3 +184,23 @@ mixin kielivalitsin
     ul.dropdown-menu.dropdown-menu-right(uib-dropdown-menu)
       li(ng-repeat="kieli in langs" ng-class="{'active': currentLang === kieli}")
         a(href="" kaanna="kieli" ng-click="selectLang(kieli)")
+
+mixin completePagination(field)
+  +paginationSearch(field)
+  block
+  +pagination(field)
+
+mixin pagination(field)
+  nav.text-center
+    ul.pagination
+      li(ng-class="{ 'active': page === " + field + ".pagination.current }" ng-repeat="page in " + field + ".pagination.pages")
+        a(href="" ng-click=field + ".selector(page)") {{ page + 1 }}
+
+mixin paginationSearch(field)
+  div.form-group.has-feedback.has-feedback-left
+    input.form-control(ng-change=field + ".updater(" + field + ".$$search)"
+      type="text"
+      ng-model=field + ".$$search"
+      ng-model-options="{ debounce: 300 }"
+      placeholder="{{ 'hae' | kaanna }}")
+    i.form-control-feedback.glyphicon.glyphicon-search(style="color: gray;")

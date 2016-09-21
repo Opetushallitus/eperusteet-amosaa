@@ -1,3 +1,17 @@
+.opslista {
+    .osa {
+        padding: 3px;
+
+        input[type="checkbox"] {
+            top: 0px;
+            margin-right: 6px;
+        }
+
+        .nimi {
+        }
+    }
+}
+
 div.tutkintohaku {
     h4 {
         color: #818284;

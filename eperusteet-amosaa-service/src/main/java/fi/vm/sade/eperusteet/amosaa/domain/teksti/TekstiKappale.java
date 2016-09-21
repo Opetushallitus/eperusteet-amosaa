@@ -104,6 +104,13 @@ public class TekstiKappale extends AbstractAuditedEntity
         }
     }
 
+    public static TekstiKappale copy(TekstiKappale tk) {
+        if (tk != null) {
+            return new TekstiKappale(tk);
+        }
+        return null;
+    }
+
     public TekstiKappale copy() { return new TekstiKappale(this); }
 
     private void copyState(TekstiKappale other) {

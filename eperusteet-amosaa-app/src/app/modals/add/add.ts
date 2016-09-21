@@ -120,14 +120,44 @@ namespace ModalAdd {
             }
         }).result;
 
-    export const sisaltoAdder = (sallitut = ["tekstikappale"]) => i.$uibModal.open({
+    export const sisaltoAdder = (koulutustoimija, sallitut = ["tekstikappale"]) => i.$uibModal.open({
             resolve: { },
             templateUrl: "modals/add/sisalto.jade",
             controller: ($uibModalInstance, $scope, $stateParams) => {
+                $scope.currentStage = "sisaltotyyppi";
+
                 $scope.sallitut = sallitut;
                 $scope.valittu = undefined;
 
+                $scope.valitseOps = (ops) => {
+                    $scope.currentStage = "opssisalto";
+                    ops.one("otsikot").get()
+                        .then(otsikot => {
+                            const root = Tekstikappaleet.root(otsikot);
+                            const rakenne = _.tail(_.flattenBy(Tekstikappaleet.teeRakenne(Tekstikappaleet.uniikit(otsikot), root.id), "lapset"));
+                            _.each(rakenne, osa => { osa.$$depth -= 1; });
+                            $scope.rakenne = rakenne;
+                        });
+                };
+
+                $scope.tuoSisaltoa = () => {
+                    $scope.currentStage = "opetussuunnitelma";
+                    koulutustoimija.all("opetussuunnitelmat").getList()
+                        .then(opsit => {
+                            $scope.opsp = PaginationV2.addPagination(opsit, (search: string, ops: any): boolean =>
+                                ($scope.poistetut || ops.tila !== "poistettu")
+                                && (!search || _.isEmpty(search) || Algoritmit.match(search, ops.nimi)));
+                        });
+                };
+
+                $scope.lisaaOpsSisalto = () => $scope.ok(_($scope.rakenne)
+                    .filter(viite => viite.$$valittu)
+                    .map("id")
+                    .map(_.parseInt)
+                    .value());
+
                 $scope.valitse = (tyyppi) => {
+                    $scope.currentStage = "nimenvalinta";
                     $scope.obj = {
                         tyyppi: tyyppi,
                         tekstiKappale: {
@@ -135,6 +165,7 @@ namespace ModalAdd {
                         }
                     };
                 };
+
                 $scope.ok = $uibModalInstance.close;
 
                 // Kielivalitsin

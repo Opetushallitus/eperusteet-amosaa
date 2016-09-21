@@ -49,6 +49,7 @@
     "src/app/logic/koulutustoimijat.ts",
     "src/app/logic/suorituspolku.ts",
     "src/app/misc/filters.ts",
+    "src/app/modals/add/composer.ts",
     "src/app/modals/add/add.ts",
     "src/app/modals/yhteistyo/yhteistyo.ts",
     "src/app/modals/validointi/validointi.ts",

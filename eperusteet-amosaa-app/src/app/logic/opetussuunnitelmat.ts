@@ -13,7 +13,7 @@ module Opetussuunnitelmat {
             return ["tekstikappale", "tutkinnonosa", "suorituspolku"]; // "tutkinnonosaryhma" ei tarvita toistaiseksi
         }
         else if (ops.tyyppi === "yleinen") {
-            return ["tekstikappale", "tutkinnonosa", "tutkinnonosaryhma"];
+            return ["tekstikappale", "tutkinnonosa"];
         }
         else {
             return ["tekstikappale"];

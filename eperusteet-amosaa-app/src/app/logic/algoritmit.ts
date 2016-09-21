@@ -24,6 +24,6 @@ namespace Algoritmit {
         });
     };
 
-    export const doSortByNimi = <T>(items: T[]) =>
-        _.sortBy(items, (item: T) => KaannaService.kaanna(item.nimi).toLowerCase());
+    export const doSortByNimi = (items: any[]) =>
+        _.sortBy(items, (item: any) => KaannaService.kaanna(item.nimi).toLowerCase());
 }

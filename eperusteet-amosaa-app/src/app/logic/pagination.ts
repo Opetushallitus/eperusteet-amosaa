@@ -1,3 +1,32 @@
+interface PaginationObject {
+    per?: number;
+    total?: number;
+    current?: number;
+    pages?: number[];
+};
+
+namespace PaginationV2 {
+    export const addPagination = (container: any[], matcher: (search: string, item: any) => boolean) => {
+        const result = {
+            items: [],
+            temp: [],
+            pagination: <PaginationObject>{},
+            updater: (search: string = "") => {
+                result.temp = _.filter(container, (item) => matcher(search, item));
+                result.pagination = Pagination.paginate(result.temp);
+                result.selector();
+            },
+            selector: (page = 0) => {
+                result.pagination.current = page;
+                result.items = Pagination.selectItems(result.temp, result.pagination);
+            }
+        };
+
+        result.updater();
+        return result;
+    };
+}
+
 namespace Pagination {
     export const paginate = (collection: Array<any>, perPage: number = 10, current = 0) => {
         const total = Math.ceil(_.size(collection) / perPage);

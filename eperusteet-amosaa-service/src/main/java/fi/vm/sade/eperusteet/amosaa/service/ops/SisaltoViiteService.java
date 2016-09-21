@@ -21,10 +21,9 @@ import fi.vm.sade.eperusteet.amosaa.dto.RevisionDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.resource.locks.contexts.SisaltoViiteCtx;
 import fi.vm.sade.eperusteet.amosaa.service.locking.LockService;
+import java.util.List;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
-
-import java.util.List;
 
 /**
  * @author mikkom
@@ -81,5 +80,8 @@ public interface SisaltoViiteService extends LockService<SisaltoViiteCtx> {
 
     @PreAuthorize("isAuthenticated()")
     int getCountByKoodi(Long ktId, String koodi);
+
+    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'MUOKKAUS')")
+    void copySisaltoViiteet(Long ktId, Long opsId, List<Long> viitteet);
 }
 
