@@ -121,40 +121,92 @@ namespace ModalAdd {
         }).result;
 
     export const sisaltoAdder = (koulutustoimija, sallitut = ["tekstikappale"]) => i.$uibModal.open({
-            resolve: { },
+            resolve: {
+            },
             templateUrl: "modals/add/sisalto.jade",
-            controller: ($uibModalInstance, $scope, $stateParams) => {
+            controller: ($uibModalInstance, $scope, $stateParams, Eperusteet) => {
                 $scope.currentStage = "sisaltotyyppi";
+                $scope.$$tutkinnonosatuonti = _.indexOf(sallitut, "tutkinnonosatuonti") !== -1;
+                $scope.$$sisaltotuonti = _.indexOf(sallitut, "sisaltotuonti") !== -1;
 
-                $scope.sallitut = sallitut;
+                $scope.sallitut = _.reject(sallitut, sallittu => sallittu === "sisaltotuonti" || sallittu === "tutkinnonosatuonti");
                 $scope.valittu = undefined;
 
-                $scope.valitseOps = (ops) => {
-                    $scope.currentStage = "opssisalto";
-                    ops.one("otsikot").get()
-                        .then(otsikot => {
-                            const root = Tekstikappaleet.root(otsikot);
-                            const rakenne = _.tail(_.flattenBy(Tekstikappaleet.teeRakenne(Tekstikappaleet.uniikit(otsikot), root.id), "lapset"));
-                            _.each(rakenne, osa => { osa.$$depth -= 1; });
-                            $scope.rakenne = rakenne;
-                        });
-                };
+                { // Opetussuunnitelmat
+                    $scope.valitseOps = (ops) => {
+                        $scope.currentStage = "opssisalto";
+                        ops.one("otsikot").get()
+                            .then(otsikot => {
+                                const root = Tekstikappaleet.root(otsikot);
+                                const rakenne = _.tail(_.flattenBy(Tekstikappaleet.teeRakenne(Tekstikappaleet.uniikit(otsikot), root.id), "lapset"));
+                                _.each(rakenne, osa => { osa.$$depth -= 1; });
+                                $scope.rakenne = rakenne;
+                            });
+                    };
 
-                $scope.tuoSisaltoa = () => {
-                    $scope.currentStage = "opetussuunnitelma";
-                    koulutustoimija.all("opetussuunnitelmat").getList()
-                        .then(opsit => {
-                            $scope.opsp = PaginationV2.addPagination(opsit, (search: string, ops: any): boolean =>
-                                ($scope.poistetut || ops.tila !== "poistettu")
-                                && (!search || _.isEmpty(search) || Algoritmit.match(search, ops.nimi)));
-                        });
-                };
+                    $scope.tuoSisaltoa = () => {
+                        $scope.currentStage = "opetussuunnitelma";
+                        koulutustoimija.all("opetussuunnitelmat").getList()
+                            .then(opsit => {
+                                $scope.opsp = PaginationV2.addPagination(opsit, (search: string, ops: any): boolean =>
+                                    ($scope.poistetut || ops.tila !== "poistettu")
+                                    && (!search || _.isEmpty(search) || Algoritmit.match(search, ops.nimi)));
+                            });
+                    };
 
-                $scope.lisaaOpsSisalto = () => $scope.ok(_($scope.rakenne)
-                    .filter(viite => viite.$$valittu)
-                    .map("id")
-                    .map(_.parseInt)
-                    .value());
+                    $scope.lisaaOpsSisalto = () => $scope.ok(_($scope.rakenne)
+                        .filter(viite => viite.$$valittu)
+                        .map("id")
+                        .map(_.parseInt)
+                        .value());
+                }
+
+                { // Perusteet
+                    const valittuPeruste = null;
+                    $scope.valitseTutkinnonosa = (tosa) => {
+                        console.log("Valittu", tosa)
+                        $scope.ok({
+                            tyyppi: "tutkinnonosa",
+                            tekstiKappale: {
+                                nimi: {}
+                            },
+                            tosa: {
+                                tyyppi: "vieras",
+                                vierastutkinnonosa: {
+                                    perusteId: valittuPeruste.id,
+                                    tosaId: tosa.id
+                                }
+                            }
+                        });
+                    };
+
+                    $scope.valitsePeruste = (peruste) => {
+                        $scope.currentStage = "perusteentutkinnonosat";
+                        Eperusteet.all("perusteet").one(peruste.id + "/kaikki").get()
+                            .then(perusteKaikki => {
+                                valittuPeruste = perusteKaikki;
+                                $scope.tosap = PaginationV2.addPagination(
+                                    Algoritmit.doSortByNimi(perusteKaikki.tutkinnonOsat),
+                                    (search: string, tosa: any): boolean =>
+                                        (!search || _.isEmpty(search) || Algoritmit.match(search, tosa.nimi)));
+                            });
+                    };
+
+                    $scope.tuoTutkinnonosa = () => {
+                        $scope.currentStage = "perusteet";
+                        Eperusteet.one("perusteet").get({
+                            sivukoko: 9999,
+                            koulutustyyppi: "koulutustyyppi_1"
+                        })
+                        .then(perusteet => {
+                            $scope.perustep = PaginationV2.addPagination(
+                                Algoritmit.doSortByNimi(perusteet.data),
+                                (search: string, peruste: any): boolean =>
+                                    ($scope.poistetut || peruste.tila !== "poistettu")
+                                        && (!search || _.isEmpty(search) || Algoritmit.match(search, peruste.nimi)));
+                        });
+                    };
+                }
 
                 $scope.valitse = (tyyppi) => {
                     $scope.currentStage = "nimenvalinta";

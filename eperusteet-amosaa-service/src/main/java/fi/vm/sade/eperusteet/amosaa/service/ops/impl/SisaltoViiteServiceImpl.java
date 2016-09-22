@@ -15,6 +15,7 @@
  */
 package fi.vm.sade.eperusteet.amosaa.service.ops.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.amosaa.domain.Poistettu;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
@@ -22,6 +23,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.SuorituspolkuRivi;
+import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.domain.revision.Revision;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
@@ -30,19 +32,27 @@ import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Suorituspolku;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Tutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaToteutus;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.VierasTutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import fi.vm.sade.eperusteet.amosaa.dto.RevisionDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKaikkiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonOsaKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.TekstiKappaleDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.VierasTutkinnonosaDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.PoistettuRepository;
+import fi.vm.sade.eperusteet.amosaa.repository.peruste.CachedPerusteRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.TekstiKappaleRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.tutkinnonosa.TutkinnonosaRepository;
+import fi.vm.sade.eperusteet.amosaa.repository.tutkinnonosa.VierastutkinnonosaRepository;
 import fi.vm.sade.eperusteet.amosaa.resource.locks.contexts.SisaltoViiteCtx;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.exception.LockingException;
+import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.amosaa.service.locking.AbstractLockService;
 import fi.vm.sade.eperusteet.amosaa.service.locking.LockManager;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
@@ -87,13 +97,24 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
     private TutkinnonosaRepository tutkinnonosaRepository;
 
     @Autowired
+    private VierastutkinnonosaRepository vierastutkinnonosaRepository;
+
+    @Autowired
     private TekstiKappaleService tekstiKappaleService;
 
     @Autowired
     PoistettuRepository poistetutRepository;
 
     @Autowired
+    CachedPerusteRepository cachedPerusteRepository;
+
+    @Autowired
+    EperusteetService eperusteetService;
+
+    @Autowired
     private LockManager lockMgr;
+
+    private ObjectMapper objMapper;
 
     @Override
     public <T> T getSisaltoViite(@P("ktId") Long ktId, Long opsId, Long viiteId, Class<T> t) {
@@ -113,8 +134,23 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
         return mapper.map(viite, SisaltoViiteDto.Matala.class);
     }
 
+    // FIXME: Muut saattavat haluta käyttää tätä myös
+    @Transactional(readOnly = false)
+    private CachedPeruste addCachedPeruste(PerusteDto peruste) {
+        CachedPeruste result = cachedPerusteRepository.findOneByDiaarinumeroAndLuotu(peruste.getDiaarinumero(), peruste.getGlobalVersion().getAikaleima());
+        if (result == null) {
+            result = new CachedPeruste();
+            result.setNimi(LokalisoituTeksti.of(peruste.getNimi().getTekstit()));
+            result.setDiaarinumero(peruste.getDiaarinumero());
+            result.setLuotu(peruste.getGlobalVersion().getAikaleima());
+            result.setPeruste(eperusteetService.getPerusteData(peruste.getId()));
+            result = cachedPerusteRepository.save(result);
+        }
+        return result;
+    }
+
     @Override
-    @Transactional
+    @Transactional(readOnly = false)
     public SisaltoViiteDto.Matala addSisaltoViite(
             Long ktId,
             Long opsId,
@@ -134,7 +170,6 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
         viiteDto.setTekstiKappale(tekstiKappaleService.add(uusiViite, viiteDto.getTekstiKappale()));
         uusiViite.setVanhempi(parentViite);
         parentViite.getLapset().add(0, uusiViite);
-        uusiViite = repository.save(uusiViite);
 
         switch (uusiViite.getTyyppi()) {
             case TOSARYHMA:
@@ -153,14 +188,42 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
                         && parentViite.getTyyppi() != SisaltoTyyppi.TOSARYHMA) {
                     throw new BusinessRuleViolationException("tutkinnonosan-voi-liittaa-ainoastaan-tutkinnonosaryhmaan-tai-tutkinnon-osiin");
                 }
-                Tutkinnonosa tosa = new Tutkinnonosa();
-                tosa.setTyyppi(TutkinnonosaTyyppi.OMA);
+
+                Tutkinnonosa tosa = uusiViite.getTosa();
+                if (tosa.getTyyppi() == TutkinnonosaTyyppi.VIERAS) {
+                    tosa.setTyyppi(TutkinnonosaTyyppi.VIERAS);
+                    VierasTutkinnonosa vt = tosa.getVierastutkinnonosa();
+                    VierasTutkinnonosaDto vtDto = viiteDto.getTosa().getVierastutkinnonosa();
+                    PerusteDto peruste = eperusteetService.getPeruste(vtDto.getPerusteId(), PerusteDto.class);
+
+                    CachedPeruste cperuste = addCachedPeruste(peruste);
+                    PerusteKaikkiDto perusteSisalto = eperusteetService.getPerusteSisalto(cperuste, PerusteKaikkiDto.class);
+                    Optional<TutkinnonOsaKaikkiDto> perusteenTosaOpt = perusteSisalto.getTutkinnonOsat().stream()
+                            .filter(osa -> vtDto.getTosaId().equals(osa.getId()))
+                            .findFirst();
+                    if (perusteenTosaOpt.isPresent()) {
+                        TutkinnonOsaKaikkiDto perusteenTosa = perusteenTosaOpt.get();
+                        uusiViite.getTekstiKappale().setNimi(LokalisoituTeksti.of(perusteenTosa.getNimi()));
+                    }
+                    else {
+                        throw new BusinessRuleViolationException("perusteella-ei-valittua-tutkinnon-osaa");
+                    }
+
+                    vt.setPerusteId(vtDto.getPerusteId());
+                    vt.setTosaId(vtDto.getTosaId());
+                    vt.setCperuste(cperuste);
+                    tosa.setVierastutkinnonosa(vierastutkinnonosaRepository.save(vt));
+                }
+                else {
+                    tosa.setTyyppi(TutkinnonosaTyyppi.OMA);
+                }
                 uusiViite.setTosa(tutkinnonosaRepository.save(tosa));
                 break;
             default:
                 break;
         }
 
+        uusiViite = repository.save(uusiViite);
         return mapper.map(uusiViite, SisaltoViiteDto.Matala.class);
     }
 
@@ -254,6 +317,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
         switch (tosa.getTyyppi()) {
             case OMA:
                 break;
+            case VIERAS:
             case PERUSTEESTA:
                 LokalisoituTeksti nimi = viite.getTekstiKappale().getNimi();
                 if (!nimi.getTeksti().equals(uusi.getTekstiKappale().getNimi().getTekstit())) {
@@ -265,6 +329,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
         }
 
         Tutkinnonosa mappedTosa = mapper.map(uusi.getTosa(), Tutkinnonosa.class);
+        mappedTosa.setVierastutkinnonosa(tosa.getVierastutkinnonosa());
 
         // Tulevaisuudessa mahdollista lisätä eri lähteitä muille tyypeille jos koetaan tarpeelliseksi
         if (TutkinnonosaTyyppi.OMA.equals(mappedTosa.getTyyppi())) {

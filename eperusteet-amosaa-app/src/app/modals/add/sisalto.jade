@@ -18,19 +18,49 @@ div.modal-body.modal-sisalto
           +icon("file-text-o")
         div.sisalto-text
           span(ng-bind="'sisaltotyyppi-' + tyyppi | kaanna")
-    div
+    div(ng-show="$$sisaltotuonti")
       div.sisalto-item
         .pull-right.sisalto-valinta
-          button.btn.btn-primary(ng-bind="'tuo' | kaanna" ng-click="tuoSisaltoa()")
+          button.btn.btn-default(ng-bind="'tuo' | kaanna" ng-click="tuoSisaltoa()")
         span.sisalto-icon
           +icon("files-o")
         div.sisalto-text
           span(ng-bind="'tuo-sisaltoa-muista-opseista' | kaanna")
+    div(ng-show="$$tutkinnonosatuonti")
+      div.sisalto-item
+        .pull-right.sisalto-valinta
+          button.btn.btn-default(ng-bind="'tuo' | kaanna" ng-click="tuoTutkinnonosa()")
+        span.sisalto-icon
+          +icon("files-o")
+        div.sisalto-text
+          span(ng-bind="'tuo-tutkinnon-osa-perusteesta' | kaanna")
 
   div.sisalto-tekstikappale(ng-show="currentStage === 'nimenvalinta'")
     h3(ng-bind="'anna-nimi' | kaanna")
     input.form-control(slocalized ng-model="obj.tekstiKappale.nimi" type="text" required="true")
   
+  div(ng-show="currentStage === 'perusteentutkinnonosat'")
+    +completePagination("tosap")
+      table.table.table-striped
+        tr
+          th(ng-bind="'nimi' | kaanna")
+          th(ng-bind="'koodi' | kaanna")
+        tr(ng-repeat="tosa in tosap.items")
+          td
+            a(href="" ng-click="valitseTutkinnonosa(tosa)" ng-bind="tosa.nimi | kaanna")
+          td(ng-bind="tosa.koodiArvo")
+
+  div(ng-show="currentStage === 'perusteet'")
+    +completePagination("perustep")
+      table.table.table-striped
+        tr
+          th(ng-bind="'nimi' | kaanna")
+          th(ng-bind="'tutkinnon-diaarinumero' | kaanna")
+        tr(ng-repeat="peruste in perustep.items")
+          td
+            a(href="" ng-click="valitsePeruste(peruste)" ng-bind="peruste.nimi | kaanna")
+          td(ng-bind="peruste.diaarinumero")
+
   div(ng-show="currentStage === 'opetussuunnitelma'")
     +completePagination("opsp")
       table.table.table-striped

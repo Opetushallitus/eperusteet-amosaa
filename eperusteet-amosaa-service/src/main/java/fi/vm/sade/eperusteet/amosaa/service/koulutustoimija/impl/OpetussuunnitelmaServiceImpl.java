@@ -185,13 +185,20 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         Map<Long, TutkinnonOsaKaikkiDto> idToTosaMap = perusteSisalto.getTutkinnonOsat().stream()
                 .collect(Collectors.toMap(TutkinnonOsaKaikkiDto::getId, Function.identity()));
 
-        List<TutkinnonOsaKaikkiDto> tutkinnonOsat = perusteSisalto.getSuoritustavat().stream()
-                .filter(st -> st.getSuoritustapakoodi() == Suoritustapakoodi.of(ops.getSuoritustapa()))
-                .map(st -> st.getTutkinnonOsat().stream())
-                .reduce((acc, st) -> Stream.concat(acc, st))
-                .get()
-                .map(tosa -> idToTosaMap.get(tosa.getTutkinnonOsa()))
-                .collect(Collectors.toList());
+        List<TutkinnonOsaKaikkiDto> tutkinnonOsat = null;
+
+        if (ops.getTyyppi() == OpsTyyppi.YLEINEN) {
+            tutkinnonOsat = perusteSisalto.getTutkinnonOsat();
+        }
+        else {
+            tutkinnonOsat = perusteSisalto.getSuoritustavat().stream()
+                    .filter(st -> st.getSuoritustapakoodi() == Suoritustapakoodi.of(ops.getSuoritustapa()))
+                    .map(st -> st.getTutkinnonOsat().stream())
+                    .reduce((acc, st) -> Stream.concat(acc, st))
+                    .get()
+                    .map(tosa -> idToTosaMap.get(tosa.getTutkinnonOsa()))
+                    .collect(Collectors.toList());
+        }
 
         SisaltoViite tosat = rootTkv.getLapset().get(0);
         for (TutkinnonOsaKaikkiDto tosa : tutkinnonOsat) {

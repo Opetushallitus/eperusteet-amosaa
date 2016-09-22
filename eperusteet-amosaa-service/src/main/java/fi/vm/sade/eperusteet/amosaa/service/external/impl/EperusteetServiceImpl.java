@@ -93,6 +93,7 @@ public class EperusteetServiceImpl implements EperusteetService {
     @Override
     public JsonNode getTutkinnonOsa(Long id, Long tosaId) {
         CachedPeruste cperuste = cachedPerusteRepository.findOne(id);
+
         try {
             JsonNode node = mapper.readTree(cperuste.getPeruste());
             for (JsonNode tosa : node.get("tutkinnonOsat")) {

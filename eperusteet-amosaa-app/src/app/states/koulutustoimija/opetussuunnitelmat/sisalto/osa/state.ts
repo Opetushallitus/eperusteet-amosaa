@@ -92,9 +92,21 @@ angular.module("app")
         kommentit: (osa) => osa.all("kommentit").getList(),
         pTosat: (Api, osa, ops) => (osa.tyyppi === "suorituspolku"
             && Api.all("perusteet/" + ops.peruste.id + "/tutkinnonosat").getList()),
-        pTosa: (Api, osa, ops) => (osa.tyyppi === "tutkinnonosa"
-            && osa.tosa.tyyppi === "perusteesta"
-            && Api.one("perusteet/" + ops.peruste.id + "/tutkinnonosat/" + osa.tosa.perusteentutkinnonosa).get()),
+        pTosa: (Api, osa, ops) => {
+            if (osa.tyyppi === "tutkinnonosa") {
+                let perusteId = null;
+                let tosaId = null;
+                if (osa.tosa.tyyppi === "perusteesta") {
+                    perusteId = ops.peruste.id;
+                    tosaId = osa.tosa.perusteentutkinnonosa;
+                }
+                else if (osa.tosa.tyyppi === "vieras") {
+                    perusteId = osa.tosa.vierastutkinnonosa._cperuste;
+                    tosaId = osa.tosa.vierastutkinnonosa.tosaId;
+                }
+                return Api.one("perusteet/" + perusteId + "/tutkinnonosat/" + tosaId).get();
+            }
+        },
         pSuoritustavat: (Api, osa, ops) => (osa.tyyppi === "suorituspolku"
             && Api.one("perusteet/" + ops.peruste.id + "/suoritustavat").get()),
         arviointiAsteikot: (Api) => Api.all("arviointiasteikot").getList()

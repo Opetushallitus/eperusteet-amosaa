@@ -14,23 +14,17 @@
  * European Union Public Licence for more details.
  */
 
-package fi.vm.sade.eperusteet.amosaa.dto.teksti;
+package fi.vm.sade.eperusteet.amosaa.repository.tutkinnonosa;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import fi.vm.sade.eperusteet.amosaa.dto.Reference;
-import lombok.Getter;
-import lombok.Setter;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.VierasTutkinnonosa;
+import fi.vm.sade.eperusteet.amosaa.repository.version.JpaWithVersioningRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author nkala
  */
-@Getter
-@Setter
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class VierasTutkinnonosaDto {
-    private Long id;
-    private Reference cperuste;
-    private Long perusteId;
-    private Long tosaId;
+@Repository
+public interface VierastutkinnonosaRepository extends JpaWithVersioningRepository<VierasTutkinnonosa, Long>  {
+
 }
