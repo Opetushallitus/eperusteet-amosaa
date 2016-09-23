@@ -106,6 +106,13 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     private CachedPerusteRepository cachedPerusteRepository;
 
     @Override
+    public List<OpetussuunnitelmaDto> getJulkisetOpetussuunnitelmat(Long ktId) {
+        Koulutustoimija koulutustoimija = koulutustoimijaRepository.findOne(ktId);
+        List<Opetussuunnitelma> opsit = repository.findAllByKoulutustoimijaAndTila(koulutustoimija, Tila.JULKAISTU);
+        return mapper.mapAsList(opsit, OpetussuunnitelmaDto.class);
+    }
+
+    @Override
     public List<OpetussuunnitelmaBaseDto> getOpetussuunnitelmat(Long ktId) {
         Koulutustoimija koulutustoimija = koulutustoimijaRepository.findOne(ktId);
         List<Opetussuunnitelma> opsit = repository.findAllByKoulutustoimija(koulutustoimija);

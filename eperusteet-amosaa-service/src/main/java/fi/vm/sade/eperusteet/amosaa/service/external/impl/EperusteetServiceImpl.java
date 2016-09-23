@@ -122,7 +122,7 @@ public class EperusteetServiceImpl implements EperusteetService {
             throw new BusinessRuleViolationException("perusteen-parsinta-epaonnistui");
         }
 
-        return null;
+        throw new BusinessRuleViolationException("suoritustapaa-ei-loytynyt");
     }
 
     @Override

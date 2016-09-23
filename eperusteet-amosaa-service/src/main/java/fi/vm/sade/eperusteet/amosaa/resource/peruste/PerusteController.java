@@ -71,6 +71,14 @@ public class PerusteController {
         return service.getSuoritustavat(id);
     }
 
+    @RequestMapping(value = "/{id}/suoritustavat/{suoritustapa}", method = RequestMethod.GET)
+    @ResponseBody
+    public JsonNode getPerusteRakenne(
+            @PathVariable Long id,
+            @PathVariable String st) {
+        return service.getSuoritustapa(id, st);
+    }
+
 //    @RequestMapping(value = "/{perusteId}/tutkintonimikekoodit", method = GET)
 //    @ResponseBody
 //    @InternalApi

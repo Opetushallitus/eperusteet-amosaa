@@ -23,10 +23,9 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.repository.version.JpaWithVersioningRepository;
 import fi.vm.sade.eperusteet.amosaa.service.util.Pair;
+import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 /**
  *
@@ -34,11 +33,9 @@ import java.util.List;
  */
 @Repository
 public interface OpetussuunnitelmaRepository extends JpaWithVersioningRepository<Opetussuunnitelma, Long> {
-
-    @Query(value = "SELECT o from Opetussuunnitelma o where o.koulutustoimija = ?1 AND o.tyyppi = ?2")
-    Opetussuunnitelma findOneYhteinen(Koulutustoimija koulutustoimija, OpsTyyppi tyyppi);
-    
     List<Opetussuunnitelma> findAllByKoulutustoimija(Koulutustoimija koulutustoimija);
+
+    List<Opetussuunnitelma> findAllByKoulutustoimijaAndTila(Koulutustoimija koulutustoimija, Tila tila);
 
     List<Opetussuunnitelma> findAllByTyyppi(OpsTyyppi tyyppi);
 

@@ -82,6 +82,12 @@ public class JulkinenController {
         return ResponseEntity.ok(svService.getByKoodiJulkinen(ktId, koodi, SisaltoViiteSijaintiDto.class));
     }
 
+    @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat", method = RequestMethod.GET)
+    public List<OpetussuunnitelmaDto> getAllOpetussuunnitelmat(
+            @PathVariable final Long ktId) {
+        return opsService.getJulkisetOpetussuunnitelmat(ktId);
+    }
+
     @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}", method = RequestMethod.GET)
     public OpetussuunnitelmaDto get(
             @PathVariable final Long ktId,
