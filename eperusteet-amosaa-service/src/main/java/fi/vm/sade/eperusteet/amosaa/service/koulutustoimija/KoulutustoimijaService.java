@@ -18,6 +18,7 @@ package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija;
 
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaJulkinenDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaYstavaDto;
 import java.util.List;
 import java.util.Set;
@@ -41,7 +42,10 @@ public interface KoulutustoimijaService {
     KoulutustoimijaDto getKoulutustoimija(@P("ktId") Long ktId);
 
     @PreAuthorize("permitAll()")
-    KoulutustoimijaDto getKoulutustoimijaJulkinen(@P("ktId") Long ktId);
+    KoulutustoimijaJulkinenDto getKoulutustoimijaJulkinen(@P("ktId") Long ktId);
+
+    @PreAuthorize("permitAll()")
+    KoulutustoimijaJulkinenDto getKoulutustoimijaJulkinen(@P("ktId") String ktOid);
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
     <T> List<T> getPaikallisetTutkinnonOsat(@P("ktId") Long ktId, Class<T> tyyppi);

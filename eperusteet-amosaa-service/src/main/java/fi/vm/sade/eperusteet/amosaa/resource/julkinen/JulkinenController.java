@@ -16,7 +16,7 @@
 
 package fi.vm.sade.eperusteet.amosaa.resource.julkinen;
 
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaJulkinenDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.SisaltoViiteSijaintiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
@@ -25,11 +25,10 @@ import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaServi
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import io.swagger.annotations.Api;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  *
@@ -59,11 +58,23 @@ public class JulkinenController {
         return opsService.getKoulutustoimijaId(opsId);
     }
 
+    @RequestMapping(value = "/koulutustoimijat/org/{ktOid}", method = RequestMethod.GET)
+    @ResponseBody
+    public KoulutustoimijaJulkinenDto getKoulutustoimija(@PathVariable final String ktOid) {
+        return ktService.getKoulutustoimijaJulkinen(ktOid);
+    }
+
     @RequestMapping(value = "/koulutustoimijat/{ktId}", method = RequestMethod.GET)
     @ResponseBody
-    public KoulutustoimijaDto getKoulutustoimija(@PathVariable final Long ktId) {
+    public KoulutustoimijaJulkinenDto getKoulutustoimija(@PathVariable final Long ktId) {
         return ktService.getKoulutustoimijaJulkinen(ktId);
     }
+
+    @RequestMapping(value = "/koodi/{koodi}", method = RequestMethod.GET)
+    public ResponseEntity<List<SisaltoViiteSijaintiDto>> getByKoodi(@PathVariable final String koodi) {
+        return ResponseEntity.ok(svService.getByKoodiJulkinen(null, koodi, SisaltoViiteSijaintiDto.class));
+    }
+
 
     @RequestMapping(value = "/koulutustoimijat/{ktId}/koodi/{koodi}", method = RequestMethod.GET)
     public ResponseEntity<List<SisaltoViiteSijaintiDto>> getByKoodi(@PathVariable final Long ktId,

@@ -104,6 +104,9 @@ angular.module("app")
                     perusteId = osa.tosa.vierastutkinnonosa._cperuste;
                     tosaId = osa.tosa.vierastutkinnonosa.tosaId;
                 }
+                else {
+                    return;
+                }
                 return Api.one("perusteet/" + perusteId + "/tutkinnonosat/" + tosaId).get();
             }
         },
@@ -346,7 +349,7 @@ angular.module("app")
                 $scope.addKoodi = (toteutus) => {
                     getTutkintonimikekoodit()
                         .then(nimikkeet => {
-                            if ($scope.pTosa.tyyppi === "tutke2") {
+                            if ($scope.pTosa && $scope.pTosa.tyyppi === "tutke2") {
                                 koodisto.all("oppiaineetyleissivistava2").getList()
                                     .then(yleissivistavat => {
                                         addKoodi(_([])

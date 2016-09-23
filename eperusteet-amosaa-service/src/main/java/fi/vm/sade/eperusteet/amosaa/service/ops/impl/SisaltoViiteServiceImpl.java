@@ -170,6 +170,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
         viiteDto.setTekstiKappale(tekstiKappaleService.add(uusiViite, viiteDto.getTekstiKappale()));
         uusiViite.setVanhempi(parentViite);
         parentViite.getLapset().add(0, uusiViite);
+        uusiViite = repository.save(uusiViite);
 
         switch (uusiViite.getTyyppi()) {
             case TOSARYHMA:
@@ -190,6 +191,11 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
                 }
 
                 Tutkinnonosa tosa = uusiViite.getTosa();
+
+                if (tosa == null) {
+                    tosa = new Tutkinnonosa();
+                }
+
                 if (tosa.getTyyppi() == TutkinnonosaTyyppi.VIERAS) {
                     tosa.setTyyppi(TutkinnonosaTyyppi.VIERAS);
                     VierasTutkinnonosa vt = tosa.getVierastutkinnonosa();
@@ -691,7 +697,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
             Koulutustoimija kt = koulutustoimijaRepository.findOneByOrganisaatio(ktOrg);
             return repository.findAllPaikallisetTutkinnonOsatByKoodi(kt, osaKoodi);
         }
-        else if (koodi.startsWith("tutkinnonosat_")) {
+        else if (ktId != null && koodi.startsWith("tutkinnonosat_")) {
             Koulutustoimija kt = koulutustoimijaRepository.findOne(ktId);
             return repository.findAllTutkinnonOsatByKoodi(kt, koodi);
         }

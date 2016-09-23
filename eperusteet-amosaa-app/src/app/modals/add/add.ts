@@ -162,7 +162,7 @@ namespace ModalAdd {
                 }
 
                 { // Perusteet
-                    const valittuPeruste = null;
+                    let valittuPeruste = null;
                     $scope.valitseTutkinnonosa = (tosa) => {
                         console.log("Valittu", tosa)
                         $scope.ok({

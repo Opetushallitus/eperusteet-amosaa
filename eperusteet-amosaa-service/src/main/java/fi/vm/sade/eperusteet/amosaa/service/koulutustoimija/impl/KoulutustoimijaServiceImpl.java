@@ -22,6 +22,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaJulkinenDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaYstavaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.YstavaStatus;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
@@ -124,8 +125,13 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     }
 
     @Override
-    public KoulutustoimijaDto getKoulutustoimijaJulkinen(Long kId) {
-        return mapper.map(repository.findOne(kId), KoulutustoimijaDto.class);
+    public KoulutustoimijaJulkinenDto getKoulutustoimijaJulkinen(Long kId) {
+        return mapper.map(repository.findOne(kId), KoulutustoimijaJulkinenDto.class);
+    }
+
+    @Override
+    public KoulutustoimijaJulkinenDto getKoulutustoimijaJulkinen(String ktOid) {
+        return mapper.map(repository.findOneByOrganisaatio(ktOid), KoulutustoimijaJulkinenDto.class);
     }
 
     @Override
