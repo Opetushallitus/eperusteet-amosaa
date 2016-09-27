@@ -154,9 +154,8 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
         docBase.setDokumentti(dokumentti);
         docBase.setMapper(mapper);
 
-        PerusteKaikkiDto perusteKaikkiDto = null;
         if (ops.getPeruste() != null) {
-            eperusteetService.getPerusteSisalto(ops.getPeruste(), PerusteKaikkiDto.class);
+            PerusteKaikkiDto perusteKaikkiDto = eperusteetService.getPerusteSisalto(ops.getPeruste(), PerusteKaikkiDto.class);
             docBase.setPeruste(perusteKaikkiDto);
         }
 
