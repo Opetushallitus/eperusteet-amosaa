@@ -158,9 +158,10 @@ public class ValidointiServiceImpl implements ValidointiService {
                     return Pair.of(0, new BigDecimal(0));
                 })
                 .reduce(Pair.of(0, new BigDecimal(0)), (acc, ms) -> {
+                    BigDecimal second = ms.getSecond() != null ? ms.getSecond() : new BigDecimal(0L);
                     return Pair.of(
                             acc.getFirst() + ms.getFirst(),
-                            acc.getSecond().add(ms.getSecond()));
+                            acc.getSecond().add(second));
                 });
 
         if (moduuli.getMuodostumisSaanto() != null) {
