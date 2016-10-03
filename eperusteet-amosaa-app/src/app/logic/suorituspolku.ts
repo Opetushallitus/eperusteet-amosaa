@@ -18,16 +18,21 @@ namespace Suorituspolku {
               : _.property("muodostumisSaanto.laajuus.maksimi")(node) || 0)
             : tosat[node._tutkinnonOsaViite].laajuus || 0;
 
+        const calculateAmounts = (node, laajuusTaiKoko) => _(node.osat)
+            .filter(shouldCount)
+            .map(laajuusTaiKoko)
+            .compact()
+            .reduce((acc: number, min: number) => (min || 0) + acc);
+
         Algoritmit.traverse(tree, "osat", (node) => {
             if (node.rooli && node.rooli !== "määrittelemätön") {
-                node.$$laskettuLaajuus = _(node.osat)
-                    .filter(shouldCount)
-                    .map(ops.suoritustapa === "ops" ? getLaajuus : getKoko)
-                    .compact()
-                    .reduce((acc: number, min: number) => (min || 0) + acc);
-
+                node.$$laskettuLaajuus = calculateAmounts(node, getLaajuus);
+                node.$$laskettuKoko = calculateAmounts(node, getKoko);
                 const laajuus: any = _.property("muodostumisSaanto.laajuus")(node);
-                node.$$valid = !laajuus || !laajuus.minimi || node.$$laskettuLaajuus >= laajuus.minimi;
+                const koko: any = _.property("muodostumisSaanto.koko")(node);
+                node.$$valid =
+                    (!laajuus || !laajuus.minimi || node.$$laskettuLaajuus >= laajuus.minimi)
+                    && (!koko || !koko.minimi || node.$$laskettuKoko >= koko.minimi);
             }
         });
         return result;
