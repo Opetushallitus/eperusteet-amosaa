@@ -189,7 +189,7 @@ gulp
 })
 .task('watch', ['connect', 'build'], function () {
     gulp.watch(config.app + '**/*.ts', ['compile']);
-    gulp.watch(config.frontend_utils + 'components/**/*.ts', ['compile']);
+    gulp.watch(config.frontend_utils + 'components/**/*.ts', ['sass']);
     gulp.watch(config.app + '**/*.jade', ['templates']);
     gulp.watch(config.app + '**/*.scss', ['sass']);
     gulp.watch('./src/localisation/*.json', ['locales']);
