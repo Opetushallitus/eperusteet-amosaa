@@ -1,19 +1,21 @@
-div.ops-nakyma
-  div.row
-    div.col-xs-12
-      div.ylatunniste
+.ops-nakyma
+  .row
+    .col-xs-12
+      .ylatunniste
         a.pull-left(href="" ng-click="muutaTila()")
-          div.muokkaa(class="{{ 'tilavari-' + ops.tila }}")
+          .muokkaa(class="{{ 'tilavari-' + ops.tila }}")
             i.fa.fa-pencil
-        div.pull-left
+        .pull-left
           h2(ng-bind="ops.nimi | kaanna")
-          div.peruste-nimi(ng-if="ops.tyyppi === 'ops'")
+          .peruste-toimija
+            p(ng-bind="ops.koulutustoimija.nimi | kaanna")
+          .peruste-nimi(ng-if="ops.tyyppi === 'ops'")
             p(ng-bind="ops.peruste.nimi | kaanna")
-          div.peruste-nimi(ng-if="ops.tyyppi === 'pohja'")
+          .peruste-nimi(ng-if="ops.tyyppi === 'pohja'")
             p(ng-bind="'yhteisien-osien-pohja' | kaanna")
 
-        div.painikkeet
-          div.keskitetty.pull-right
+        .painikkeet
+          .keskitetty.pull-right
             button.btn.btn-default(ng-click="validoi()")
               +gicon("export")
               span=" "
@@ -24,10 +26,9 @@ div.ops-nakyma
               span=" "
               span(ng-bind="'esikatselu' | kaanna")
 
-
-  div.row
-    div.col-xs-12
-      div.tabit
+  .row
+    .col-xs-12
+      .tabit
         ul.nav.nav-tabs
           li(ui-sref-active="active")
             a(ui-sref=".sisalto" ng-bind="'sisalto' | kaanna")
@@ -40,6 +41,6 @@ div.ops-nakyma
           li(ui-sref-active="active")
             a(ui-sref=".dokumentti" ng-bind="'dokumentti' | kaanna" ng-if="ops.tyyppi !== 'pohja'")
 
-  div.row
-    div.col-xs-12
-      div.ui-view
+  .row
+    .col-xs-12
+      .ui-view

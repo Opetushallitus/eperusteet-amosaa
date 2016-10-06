@@ -1,5 +1,17 @@
-mixin opsTable(repetition)
+mixin opsTable(repetition, forFriends)
   table.table.boxtable
+    thead
+      tr(ng-if=forFriends)
+        th(width="6%" ng-bind="'tila' | kaanna")
+        th(width="40%" ng-bind="'nimi' | kaanna")
+        th(width="40%")
+        th(width="2%")
+        th
+      tr(ng-if="!" + forFriends)
+        th(width="6%" ng-bind="'tila' | kaanna")
+        th(width="89%" ng-bind="'nimi' | kaanna")
+        th(width="2%")
+        th
     tbody
       tr(ng-hide="ops.$$hidden" ng-repeat=repetition)
         td
@@ -15,8 +27,13 @@ mixin opsTable(repetition)
         // td
           div
             span.ellipsis(ng-show="ops.osaamisalat.length > 0", ng-bind="ops.osaamisalat[0].nimi | kaanna")
-        // td
+        td(ng-if=forFriends)
           div
+            span.ellipsis(ng-bind="ops.koulutustoimija.nimi | kaanna")
+        td
+          div
+            div(style="text-align: center;")
+              .fa.fa-pencil-square-o(ng-show="ops.$$oikeus")
         td
           div
             a(href="" ui-sref="root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot({ opsId: ops.id })")
@@ -27,7 +44,11 @@ mixin opsTable(repetition)
 div.otsikkotaso.kaikki-opetussuunnitelmat
   div(ng-hide="isEmpty(suosikit)")
     h3(ng-bind="'suosikki-opetussuunnitelmat' | kaanna")
-    +opsTable("(opsId, ops) in suosikit")
+    +opsTable("(opsId, ops) in suosikit", "false")
+
+  div(ng-show="ystavaOpsit.length > 0")
+    h3(ng-bind="'muiden-organisaatioiden-opsit' | kaanna")
+    +opsTable("(opsId, ops) in ystavaOpsit", "true")
 
   h3(ng-bind="'kaikki-opetussuunnitelmat' | kaanna")
 
@@ -46,7 +67,7 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
 
   div(ng-show="opetussuunnitelmat.length > 0")
     div.row
-      div.col-xs-5
+      div.col-xs-4
         div.form-group.has-feedback.has-feedback-left
           input.form-control(ng-change="opsPaginatedUpdate(opsSearch)"
             type="text"
@@ -54,11 +75,11 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
             ng-model-options="{ debounce: 300 }"
             placeholder="{{ 'hae' | kaanna }}")
           i.form-control-feedback.glyphicon.glyphicon-search(style="color: gray;")
-      div.checkbox-text.col-xs-2
-        div.checkbox
-          label
-            input(type="checkbox" ng-model="poistetut" ng-click="opsPaginatedUpdate(opsSearch)")
-            span(ng-bind="'nayta-arkistoidut' | kaanna")
+      div.col-xs-3
+        .btn-group
+          .pull-left
+            +checkbox("checks.kaikki", "opsPaginatedUpdate(opsSearch)", "'nayta-kaikki' | kaanna")
+            +checkbox("checks.poistetut", "opsPaginatedUpdate(opsSearch)", "'nayta-arkistoidut' | kaanna")
       div.col-xs-5
         div.pull-right
           button.btn.btn-default.pull-right(ng-click="addYleinen()" oikeustarkastelu="muokkaus")
@@ -70,7 +91,7 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
             span=" "
             span(ng-bind="'lisaa-opetussuunnitelma' | kaanna")
 
-    +opsTable("ops in opsPaginated")
+    +opsTable("ops in opsPaginated", "false")
     nav.text-center
       ul.pagination
         li(ng-class="{ 'active': page === $$opsPaginatedPage.current }" ng-repeat=("page in $$opsPaginatedPage.pages"))

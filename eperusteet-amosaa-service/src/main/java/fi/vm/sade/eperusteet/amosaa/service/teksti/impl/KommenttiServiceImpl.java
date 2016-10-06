@@ -26,17 +26,15 @@ import fi.vm.sade.eperusteet.amosaa.service.security.PermissionManager;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionManager.Permission;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionManager.TargetType;
 import fi.vm.sade.eperusteet.amosaa.service.teksti.KommenttiService;
+import static fi.vm.sade.eperusteet.amosaa.service.util.Nulls.assertExists;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import static fi.vm.sade.eperusteet.amosaa.service.util.Nulls.assertExists;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author mikkom
@@ -62,7 +60,7 @@ public class KommenttiServiceImpl implements KommenttiService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<KommenttiDto> getAllByTekstikappaleviite(Long opsId, Long tkvId) {
+    public List<KommenttiDto> getAllByTekstikappaleviite(Long ktId, Long opsId, Long tkvId) {
         List<Kommentti> kommentit = repository.findByTekstikappaleviiteIdOrderByLuotuDesc(tkvId);
         List<KommenttiDto> kommenttiDtos = mapper.mapAsList(kommentit, KommenttiDto.class);
         return addNameToKommentit(kommenttiDtos);
@@ -100,14 +98,14 @@ public class KommenttiServiceImpl implements KommenttiService {
 
     @Override
     @Transactional(readOnly = true)
-    public KommenttiDto get(Long opsId, Long kommenttiId) {
+    public KommenttiDto get(Long ktId, Long opsId, Long kommenttiId) {
         Kommentti kommentti = repository.findOne(kommenttiId);
         return mapper.map(kommentti, KommenttiDto.class);
     }
 
     @Override
     @Transactional
-    public KommenttiDto add(@P("opsId") Long opsId, KommenttiDto kommenttiDto) {
+    public KommenttiDto add(Long ktId, @P("opsId") Long opsId, KommenttiDto kommenttiDto) {
         Kommentti kommentti = mapper.map(kommenttiDto, Kommentti.class);
         kommentti.setSisalto(clip(kommenttiDto.getSisalto()));
         kommentti.setPoistettu(false);
@@ -138,7 +136,7 @@ public class KommenttiServiceImpl implements KommenttiService {
     }
 
     @Override
-    public KommenttiDto update(Long opsId, Long kommenttiId, KommenttiDto kommenttiDto) {
+    public KommenttiDto update(Long ktId, Long opsId, Long kommenttiId, KommenttiDto kommenttiDto) {
         Kommentti kommentti = repository.findOne(kommenttiId);
         assertExists(kommentti, "Päivitettävää kommenttia ei ole olemassa");
         assertRights(kommentti, opsId, Permission.HALLINTA);
@@ -148,7 +146,7 @@ public class KommenttiServiceImpl implements KommenttiService {
     }
 
     @Override
-    public void delete(Long opsId, Long kommenttiId) {
+    public void delete(Long ktId, Long opsId, Long kommenttiId) {
         Kommentti kommentti = repository.findOne(kommenttiId);
         assertExists(kommentti, "Poistettavaa kommenttia ei ole olemassa");
         assertRights(kommentti, opsId, Permission.HALLINTA);

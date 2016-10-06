@@ -243,7 +243,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
             throw new BusinessRuleViolationException("palautettavaa-ei-olemassa");
         }
 
-        SisaltoViiteDto pelastettu = getData(opsId, poistettu.getPoistettu(), poistettu.getRev());
+        SisaltoViiteDto pelastettu = getData(ktId, opsId, poistettu.getPoistettu(), poistettu.getRev());
         SisaltoViite uusiViite = mapper.map(pelastettu, SisaltoViite.class);
         uusiViite = SisaltoViite.copy(uusiViite);
         uusiViite.setOwner(ops);
@@ -661,18 +661,18 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
     }
 
     @Override
-    public RevisionDto getLatestRevision(Long opsId, Long viiteId) {
+    public RevisionDto getLatestRevision(Long ktId, Long opsId, Long viiteId) {
         return mapper.map(repository.getLatestRevision(viiteId), RevisionDto.class);
     }
 
     @Override
-    public SisaltoViiteDto getData(Long opsId, Long viiteId, Integer revId) {
+    public SisaltoViiteDto getData(Long ktId, Long opsId, Long viiteId, Integer revId) {
         SisaltoViite viite = repository.findRevision(viiteId, revId);
         return mapper.map(viite, SisaltoViiteDto.class);
     }
 
     @Override
-    public List<RevisionDto> getRevisions(Long opsId, Long viiteId) {
+    public List<RevisionDto> getRevisions(Long ktId, Long opsId, Long viiteId) {
         SisaltoViite viite = repository.findOne(viiteId);
         if (!Objects.equals(opsId, viite.getOwner().getId())) {
             throw new BusinessRuleViolationException("viitteen-taytyy-kuulua-opetussuunnitelmaan");
@@ -682,7 +682,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
     }
 
     @Override
-    public void revertToVersion(Long opsId, Long viiteId, Integer versio) {
+    public void revertToVersion(Long ktId, Long opsId, Long viiteId, Integer versio) {
     }
 
     private List<SisaltoViite> getByKoodiRaw(Long ktId, String koodi) {

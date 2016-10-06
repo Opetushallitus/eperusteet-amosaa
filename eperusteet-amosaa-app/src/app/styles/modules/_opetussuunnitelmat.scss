@@ -1,4 +1,4 @@
-$ops-ylatunniste-height: 60px;
+$ops-ylatunniste-height: 72px;
 $ops-ylatunniste-padding: 5px;
 $ops-muokkaa-height: $ops-ylatunniste-height - 2 * $ops-ylatunniste-padding;
 $ops-muokkaa-ikoni-height: 30px;
@@ -76,11 +76,19 @@ $ops-top-vertical-margin: 10px;
             }
         }
 
+        .peruste-toimija {
+            position: relative;
+            top: 1px;
+            margin: 0 0 0 10px;
+            p {
+                color: #999;
+            }
+        }
+
         .peruste-nimi {
             position: relative;
-            top: 8px;
+            top: -8px;
             margin: 0 0 0 10px;
-
             p {
                 color: #999;
             }

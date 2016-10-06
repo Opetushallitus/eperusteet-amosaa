@@ -34,23 +34,23 @@ public abstract class AbstractLockService<T extends OpsCtx> implements LockServi
 
     @Override
     @Transactional(readOnly = true)
-    @PreAuthorize("hasPermission(#ctx.opsId,'opetussuunnitelma','luku')")
-    public LukkoDto getLock(T ctx) {
+    @PreAuthorize("hasPermission({#ctx.ktId, #ctx.opsId},'opetussuunnitelma','luku')")
+    public LukkoDto getLock(@P("ctx") T ctx) {
         Lukko lock = manager.getLock(validateCtx(ctx, true));
         return lock == null ? null : LukkoDto.of(lock, latestRevision(ctx));
     }
 
     @Override
     @Transactional
-    @PreAuthorize("hasPermission(#ctx.opsId,'opetussuunnitelma','muokkaus')")
+    @PreAuthorize("hasPermission({#ctx.ktId, #ctx.opsId},'opetussuunnitelma','muokkaus')")
     public LukkoDto lock(@P("ctx") T ctx) {
         return lock(ctx,null);
     }
 
     @Override
     @Transactional
-    @PreAuthorize("hasPermission(#ctx.opsId,'opetussuunnitelma','muokkaus')")
-    public LukkoDto lock(T ctx, Integer ifMatchRevision) {
+    @PreAuthorize("hasPermission({#ctx.ktId, #ctx.opsId},'opetussuunnitelma','muokkaus')")
+    public LukkoDto lock(@P("ctx") T ctx, Integer ifMatchRevision) {
         Long key = validateCtx(ctx, false);
         final int latestRevision = latestRevision(ctx);
         if ( ifMatchRevision == null || latestRevision == ifMatchRevision ) {
@@ -62,7 +62,7 @@ public abstract class AbstractLockService<T extends OpsCtx> implements LockServi
     @Override
     @Transactional
     @PreAuthorize("isAuthenticated()")
-    public void unlock(T ctx) {
+    public void unlock(@P("ctx") T ctx) {
         Long lockId = getLockId(ctx);
         if (lockId != null) {
             manager.unlock(lockId);

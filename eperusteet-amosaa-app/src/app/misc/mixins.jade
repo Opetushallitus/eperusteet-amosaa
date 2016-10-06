@@ -204,3 +204,16 @@ mixin paginationSearch(field)
       ng-model-options="{ debounce: 300 }"
       placeholder="{{ 'hae' | kaanna }}")
     i.form-control-feedback.glyphicon.glyphicon-search(style="color: gray;")
+
+
+mixin checkbox(model, click, text)
+  label.btn.btn-primary(
+    style="margin-left: 2px;"
+    uib-btn-checkbox
+    ng-model=model
+    ng-click=click)
+    div(style="text-align: center;")
+      span(style="margin-right: 4px;")
+        .fa.fa-square-o(style="width: 16px; position: relative; left: -1px" ng-hide=model)
+        .fa.fa-check-square-o(style="width: 16px" ng-show=model)
+      span(ng-bind=text)

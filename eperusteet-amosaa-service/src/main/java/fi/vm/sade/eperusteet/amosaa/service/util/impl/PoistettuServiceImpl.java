@@ -25,16 +25,14 @@ import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRe
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.PoistettuRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
-import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.util.PoistettuService;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
+import java.util.Calendar;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Calendar;
-import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -74,12 +72,7 @@ public class PoistettuServiceImpl implements PoistettuService {
 
     @Override
     public List<PoistettuDto> poistetut(Long koulutustoimijaId, Long opsId) {
-        Koulutustoimija koulutustoimija = koulutustoimijaRepository.findOne(koulutustoimijaId);
         Opetussuunnitelma ops = opsRepository.findOne(opsId);
-        if (ops.getKoulutustoimija() != koulutustoimija) {
-            throw new BusinessRuleViolationException("ops-pitaa-kuulua-koulutustoimijaan");
-        }
-
         List<Poistettu> poistetut = repository.findAllByOpetussuunnitelma(ops);
         return mapper.mapAsList(poistetut, PoistettuDto.class);
     }

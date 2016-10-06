@@ -30,44 +30,44 @@ import org.springframework.security.access.prepost.PreAuthorize;
  */
 public interface SisaltoViiteService extends LockService<SisaltoViiteCtx> {
 
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'ESITYS')")
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'ESITYS')")
     SisaltoViiteDto.Matala getSisaltoViite(@P("ktId") Long ktId, @P("opsId") Long opsId, Long viiteId);
 
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
     <T> T getSisaltoViite(@P("ktId") Long ktId, @P("opsId") Long opsId, Long viiteId, Class<T> t);
 
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'ESITYS')")
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'ESITYS')")
     <T> List<T> getSisaltoViitteet(@P("ktId") Long ktId, @P("opsId") Long opsId, Class<T> t);
 
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'POISTO')")
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'POISTO')")
     SisaltoViiteDto restoreSisaltoViite(@P("ktId") Long ktId, @P("opsId") Long opsId, Long poistettuId);
 
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'MUOKKAUS')")
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
     SisaltoViiteDto.Matala addSisaltoViite(@P("ktId") Long ktId, @P("opsId") Long opsId, Long viiteId,
                                                        SisaltoViiteDto.Matala viiteDto);
 
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'MUOKKAUS')")
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
     SisaltoViiteDto updateSisaltoViite(@P("ktId") Long ktId, @P("opsId") Long opsId, Long rootViiteId, SisaltoViiteDto uusi);
 
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'MUOKKAUS')")
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
     void removeSisaltoViite(@P("ktId") Long ktId, @P("opsId") Long opsId, Long viiteId);
 
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'MUOKKAUS')")
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
     SisaltoViiteDto.Puu kloonaaTekstiKappale(@P("ktId") Long ktId, @P("opsId") Long opsId, Long viiteId);
 
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'MUOKKAUS')")
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
     void reorderSubTree(@P("ktId") Long ktId, @P("opsId") Long opsId, Long rootViiteId, SisaltoViiteDto.Puu uusi);
 
     SisaltoViite kopioiHierarkia(SisaltoViite original, Opetussuunnitelma owner);
 
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
-    RevisionDto getLatestRevision(@P("opsId") Long opsId, Long viiteId);
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
+    RevisionDto getLatestRevision(@P("ktId") Long ktId, @P("opsId") Long opsId, Long viiteId);
 
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
-    List<RevisionDto> getRevisions(@P("opsId") Long opsId, Long viiteId);
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
+    List<RevisionDto> getRevisions(@P("ktId") Long ktId, @P("opsId") Long opsId, Long viiteId);
 
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
-    SisaltoViiteDto getData(@P("opsId") Long opsId, Long viiteId, Integer revId);
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
+    SisaltoViiteDto getData(@P("ktId") Long ktId, @P("opsId") Long opsId, Long viiteId, Integer revId);
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
     <T> List<T> getByKoodi(@P("ktId") Long ktId, String koodi, Class<T> tyyppi);
@@ -75,13 +75,13 @@ public interface SisaltoViiteService extends LockService<SisaltoViiteCtx> {
     @PreAuthorize("permitAll()")
     <T> List<T> getByKoodiJulkinen(@P("ktId") Long ktId, String koodi, Class<T> tyyppi);
 
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'MUOKKAUS')")
-    void revertToVersion(@P("opsId") Long opsId, Long viiteId, Integer versio);
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
+    void revertToVersion(@P("ktId") Long ktId, @P("opsId") Long opsId, Long viiteId, Integer versio);
 
     @PreAuthorize("isAuthenticated()")
     int getCountByKoodi(Long ktId, String koodi);
 
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'MUOKKAUS')")
-    void copySisaltoViiteet(Long ktId, Long opsId, List<Long> viitteet);
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
+    void copySisaltoViiteet(@P("ktId") Long ktId, @P("opsId") Long opsId, List<Long> viitteet);
 }
 

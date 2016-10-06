@@ -113,4 +113,9 @@ public class KayttajanTietoServiceMock implements KayttajanTietoService {
     public KayttajanTietoDto haeKirjautaunutKayttaja() {
         return hae("");
     }
+
+    @Override
+    public List<KayttajaDto> getKaikkiKayttajat(Long ktId) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

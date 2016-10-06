@@ -30,6 +30,12 @@ import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils
 import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.Date;
+import javax.imageio.ImageIO;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,13 +43,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.Date;
 
 
 /**
@@ -68,7 +67,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 
     @Override
     @Transactional(readOnly = true)
-    public DokumenttiDto getDto(Long id, Kieli kieli) {
+    public DokumenttiDto getDto(Long ktId, Long id, Kieli kieli) {
         Dokumentti dokumentti = dokumenttiRepository.findByOpsIdAndKieli(id, kieli);
 
         if (dokumentti != null) {
@@ -83,14 +82,14 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 
             return mapper.map(dokumentti, DokumenttiDto.class);
         } else {
-            return createDtoFor(id, kieli);
+            return createDtoFor(ktId, id, kieli);
         }
     }
 
 
     @Override
     @Transactional
-    public DokumenttiDto createDtoFor(Long id, Kieli kieli) {
+    public DokumenttiDto createDtoFor(Long ktId, Long id, Kieli kieli) {
         Dokumentti dokumentti = new Dokumentti();
         dokumentti.setTila(DokumenttiTila.EI_OLE);
         dokumentti.setKieli(kieli);
@@ -106,7 +105,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 
     @Override
     @Transactional
-    public void setStarted(Long opsId, DokumenttiDto dto) {
+    public void setStarted(Long ktId, Long opsId, DokumenttiDto dto) {
         // Asetetaan dokumentti luonti tilaan
         dto.setAloitusaika(new Date());
         dto.setLuoja(SecurityUtil.getAuthenticatedPrincipal().getName());
@@ -117,7 +116,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 
     @Override
     @Transactional
-    public void generateWithDto(Long opsId, DokumenttiDto dto) throws DokumenttiException {
+    public void generateWithDto(Long ktId, Long opsId, DokumenttiDto dto) throws DokumenttiException {
         Dokumentti dokumentti = mapper.map(dto, Dokumentti.class);
 
         try {
@@ -147,7 +146,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 
     @Override
     @Transactional(readOnly = true)
-    public byte[] get(Long id, Kieli kieli) {
+    public byte[] get(Long ktId, Long id, Kieli kieli) {
         Dokumentti dokumentti = dokumenttiRepository.findByOpsIdAndKieli(id, kieli);
         if (dokumentti != null) {
             return dokumentti.getData();
@@ -158,7 +157,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 
     @Override
     @Transactional
-    public DokumenttiDto addImage(Long opsId, DokumenttiDto dto, String tyyppi, String kieli, MultipartFile file) throws IOException {
+    public DokumenttiDto addImage(Long ktId, Long opsId, DokumenttiDto dto, String tyyppi, String kieli, MultipartFile file) throws IOException {
 
         if (!file.isEmpty()) {
 

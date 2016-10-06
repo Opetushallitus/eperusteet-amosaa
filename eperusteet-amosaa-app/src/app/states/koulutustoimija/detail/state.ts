@@ -16,11 +16,13 @@ angular.module("app")
     },
     views: {
         "": {
-            controller: ($scope, kayttajanKoulutustoimijat, koulutustoimija) => {
+            controller: ($scope, kayttajanKoulutustoimijat, koulutustoimija, oikeudet) => {
                 $scope.isOph = Koulutustoimijat.isOpetushallitus(koulutustoimija);
                 $scope.koulutustoimijat = kayttajanKoulutustoimijat;
                 $scope.koulutustoimija = koulutustoimija;
                 $scope.checkOph = Koulutustoimijat.isOpetushallitus;
+                $scope.oikeusmap = _.zipObject(_.map(oikeudet, "_opetussuunnitelma"), oikeudet);
+                $scope.ktOikeus = Oikeudet.ktOikeus(koulutustoimija);
                 $scope.suodataOpetussuunnitelmat = (opsit, search) =>
                     _.each(opsit, (ops) => {
                         ops.$$hidden = !_.isEmpty(search) && !Algoritmit.match(search, ops.nimi) });
@@ -63,19 +65,32 @@ angular.module("app")
             }
         },
         opetussuunnitelmat: {
-            controller: ($scope, koulutustoimija, kayttajanTiedot, opetussuunnitelmat, opsSaver, kayttaja) => {
+            controller: ($scope, koulutustoimija, kayttajanTiedot, opetussuunnitelmat, opsSaver, kayttaja, ystavaOpsit) => {
                 const suosikkiApi = kayttaja.all("suosikki");
                 const opetussuunnitelmaMap = _.indexBy(opetussuunnitelmat, "id");
 
+                $scope.ystavaOpsit = ystavaOpsit;
                 $scope.suosikit = _.indexBy(_.map(kayttajanTiedot.suosikit, (suosikki: string) => opetussuunnitelmaMap[suosikki]), "id");
-                $scope.opetussuunnitelmat = _.reject(opetussuunnitelmat, (ops: any) => ops.tyyppi === "yhteinen");
+                $scope.opetussuunnitelmat = _(opetussuunnitelmat)
+                    .reject((ops: any) => ops.tyyppi === "yhteinen")
+                    .each(ops => {
+                        ops.$$oikeus = $scope.ktOikeus === "hallinta"
+                            || Oikeudet.onVahintaan("muokkaus", $scope.oikeusmap[ops.id] && $scope.oikeusmap[ops.id].oikeus);
+                    })
+                    .value();
+
                 $scope.opsitById = _.indexBy(opetussuunnitelmat, "id");
-                $scope.poistetut = false;
+                $scope.checks = {
+                    poistetut: false,
+                    kaikki: false
+                };
 
                 Pagination.addPagination(
                     $scope,
                     (search: string, ops: any): boolean => {
-                        return ($scope.poistetut || ops.tila !== "poistettu") && (!search || _.isEmpty(search) || Algoritmit.match(search, ops.nimi));
+                        return ($scope.checks.poistetut || ops.tila !== "poistettu")
+                            && ($scope.checks.kaikki || ops.$$oikeus)
+                            && (!search || _.isEmpty(search) || Algoritmit.match(search, ops.nimi));
                     },
                     "opetussuunnitelmat",
                     "ops");

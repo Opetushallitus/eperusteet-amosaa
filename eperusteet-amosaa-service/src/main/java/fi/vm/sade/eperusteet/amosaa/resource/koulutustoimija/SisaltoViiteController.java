@@ -113,7 +113,7 @@ public class SisaltoViiteController {
             @PathVariable final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long svId) {
-        return service.getLatestRevision(opsId, svId);
+        return service.getLatestRevision(ktId, opsId, svId);
     }
 
     @RequestMapping(value = "/tekstit/{svId}/versiot", method = RequestMethod.GET)
@@ -122,7 +122,7 @@ public class SisaltoViiteController {
             @PathVariable final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long svId) {
-        return service.getRevisions(opsId, svId);
+        return service.getRevisions(ktId, opsId, svId);
     }
 
     @RequestMapping(value = "/tekstit/{svId}/versiot/{revId}", method = RequestMethod.GET)
@@ -132,6 +132,6 @@ public class SisaltoViiteController {
             @PathVariable final Long opsId,
             @PathVariable final Long svId,
             @PathVariable final Integer revId) {
-        return service.getData(opsId, svId, revId);
+        return service.getData(ktId, opsId, svId, revId);
     }
 }

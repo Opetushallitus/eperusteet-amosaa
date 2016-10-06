@@ -9,6 +9,7 @@ import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiService;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils;
 import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
 import io.swagger.annotations.Api;
+import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -18,8 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-
 /**
  * @author isaul
  */
@@ -27,7 +26,7 @@ import java.io.IOException;
 @RequestMapping("/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/dokumentti")
 @Api(value = "dokumentit")
 public class DokumenttiController {
-    
+
     @Autowired
     DokumenttiService service;
 
@@ -39,7 +38,7 @@ public class DokumenttiController {
             @PathVariable Long ktId,
             @PathVariable Long opsId,
             @RequestParam(value = "kieli", defaultValue = "fi") String kieli) throws DokumenttiException {
-        DokumenttiDto dokumenttiDto = service.getDto(opsId, Kieli.of(kieli));
+        DokumenttiDto dokumenttiDto = service.getDto(ktId, opsId, Kieli.of(kieli));
         if (dokumenttiDto == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -52,11 +51,11 @@ public class DokumenttiController {
                 || DokumenttiUtils.isTimePass(dokumenttiDto)
                 || dokumenttiDto.getTila() != DokumenttiTila.LUODAAN) {
             // Vaihdetaan dokumentin tila luonniksi
-            service.setStarted(opsId, dokumenttiDto);
+            service.setStarted(ktId, opsId, dokumenttiDto);
 
             // Generoidaan dokumentin datasisältö
             // Asynkroninen metodi
-            service.generateWithDto(opsId, dokumenttiDto);
+            service.generateWithDto(ktId, opsId, dokumenttiDto);
         } else {
             status = HttpStatus.BAD_REQUEST;
         }
@@ -68,7 +67,7 @@ public class DokumenttiController {
     public ResponseEntity<byte[]> get(@PathVariable Long ktId,
                                       @PathVariable Long opsId,
                                       @RequestParam(defaultValue = "fi") String kieli) {
-        byte[] pdfdata = service.get(opsId, Kieli.of(kieli));
+        byte[] pdfdata = service.get(ktId, opsId, Kieli.of(kieli));
 
         if (pdfdata == null || pdfdata.length == 0) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -88,9 +87,9 @@ public class DokumenttiController {
                                                 @RequestParam(value = "kieli", defaultValue = "fi") String kieli) {
 
         // Tehdään DokumenttiDto jos ei löydy jo valmiina
-        DokumenttiDto dokumenttiDto = service.getDto(opsId, Kieli.of(kieli));
+        DokumenttiDto dokumenttiDto = service.getDto(ktId, opsId, Kieli.of(kieli));
         if (dokumenttiDto == null) {
-            dokumenttiDto = service.createDtoFor(opsId, Kieli.of(kieli));
+            dokumenttiDto = service.createDtoFor(ktId, opsId, Kieli.of(kieli));
         }
 
         if (dokumenttiDto == null) {
@@ -106,12 +105,12 @@ public class DokumenttiController {
                                             @RequestParam String tyyppi,
                                             @RequestParam(defaultValue = "fi") String kieli,
                                             @RequestPart MultipartFile file) throws IOException {
-        DokumenttiDto dokumenttiDto = service.getDto(opsId, Kieli.of(kieli));
+        DokumenttiDto dokumenttiDto = service.getDto(ktId, opsId, Kieli.of(kieli));
         if (dokumenttiDto == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        DokumenttiDto dto = service.addImage(opsId, dokumenttiDto, tyyppi, kieli, file);
+        DokumenttiDto dto = service.addImage(ktId, opsId, dokumenttiDto, tyyppi, kieli, file);
         if (dto != null) {
             return ResponseEntity.ok(dto);
         } else {
@@ -126,7 +125,7 @@ public class DokumenttiController {
                                             @RequestParam String tyyppi,
                                             @RequestParam(defaultValue = "fi") String kieli) {
         // Tehdään DokumenttiDto jos ei löydy jo valmiina
-        DokumenttiDto dokumenttiDto = service.getDto(opsId, Kieli.of(kieli));
+        DokumenttiDto dokumenttiDto = service.getDto(ktId, opsId, Kieli.of(kieli));
         if (dokumenttiDto == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -172,7 +171,7 @@ public class DokumenttiController {
                                            @RequestParam(defaultValue = "fi") String kieli) {
 
         // Tehdään DokumenttiDto jos ei löydy jo valmiina
-        DokumenttiDto dokumenttiDto = service.getDto(opsId, Kieli.of(kieli));
+        DokumenttiDto dokumenttiDto = service.getDto(ktId, opsId, Kieli.of(kieli));
 
         if (dokumenttiDto == null) {
             return new ResponseEntity<>(HttpStatus.OK);

@@ -20,18 +20,18 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.dto.PoistettuDto;
-import org.springframework.security.access.prepost.PreAuthorize;
-
 import java.util.List;
+import org.springframework.security.access.method.P;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
  *
  * @author nkala
  */
 public interface PoistettuService {
-    @PreAuthorize("hasPermission(#ops.id, 'opetussuunnitelma', 'POISTO')")
-    PoistettuDto lisaaPoistettu(Koulutustoimija koulutustoimija, Opetussuunnitelma ops, SisaltoViite osa);
+    @PreAuthorize("hasPermission({#kt.id, #ops.id}, 'opetussuunnitelma', 'POISTO')")
+    PoistettuDto lisaaPoistettu(@P("kt") Koulutustoimija koulutustoimija, @P("ops") Opetussuunnitelma ops, SisaltoViite osa);
 
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'POISTO')")
-    List<PoistettuDto> poistetut(Long koulutustoimija, Long opsId);
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'POISTO')")
+    List<PoistettuDto> poistetut(@P("ktId") Long koulutustoimija, @P("opsId") Long opsId);
 }

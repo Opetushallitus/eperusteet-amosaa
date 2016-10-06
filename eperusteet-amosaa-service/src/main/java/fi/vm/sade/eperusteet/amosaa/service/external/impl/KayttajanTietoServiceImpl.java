@@ -38,6 +38,7 @@ import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.RolePer
 import fi.vm.sade.eperusteet.amosaa.service.util.RestClientFactory;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 import fi.vm.sade.generic.rest.CachingRestClient;
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
@@ -211,12 +212,40 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public List<KayttajaDto> getKayttajat(Long kOid) {
-        Koulutustoimija kt = koulutustoimijaRepository.findOne(kOid);
+    private List<KayttajaDto> getKayttajat(Koulutustoimija kt) {
         return ktkayttajaRepository.findAllByKoulutustoimija(kt).stream()
                 .map(kayttaja -> kayttajaRepository.findOneByOid(kayttaja.getKayttaja().getOid()))
                 .map(kayttaja -> mapper.map(kayttaja, KayttajaDto.class))
+                .map(kayttaja -> {
+                    kayttaja.setKoulutustoimija(kt.getId());
+                    return kayttaja;
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<KayttajaDto> getKayttajat(Long kOid) {
+        Koulutustoimija kt = koulutustoimijaRepository.findOne(kOid);
+        return getKayttajat(kt);
+    }
+
+    @Override
+    public List<KayttajaDto> getKaikkiKayttajat(Long kOid) {
+        List<KayttajaDto> result = new ArrayList<>();
+        Koulutustoimija self = koulutustoimijaRepository.findOne(kOid);
+        result.addAll(self.getYstavat().stream()
+                .filter(kaveri -> kaveri.isSalliystavat() && kaveri.getYstavat().contains(self))
+                .map(kt -> getKayttajat(kt))
+                .flatMap(x -> x.stream())
+                .collect(Collectors.toList()));
+        result.addAll(getKayttajat(kOid));
+
+        return result.stream()
+                .collect(Collectors.toMap(
+                        kayttaja -> kayttaja.getId(),
+                        kayttaja -> kayttaja,
+                        (a, b) -> kOid.equals(b.getKoulutustoimija()) ? b : a))
+                .values().stream()
                 .collect(Collectors.toList());
     }
 

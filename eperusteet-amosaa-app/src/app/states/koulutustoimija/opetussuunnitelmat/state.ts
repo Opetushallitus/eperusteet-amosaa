@@ -12,7 +12,8 @@ angular.module("app")
     onEnter: (ops) => Murupolku.register("root.koulutustoimija.opetussuunnitelmat", ops.nimi),
     views: {
         "": {
-            controller: ($scope, ops, $location, $stateParams) => {
+            controller: ($scope, ops, $location, $stateParams, koulutustoimija) => {
+                $scope.koulutustoimija = koulutustoimija;
                 $scope.ops = ops;
                 $scope.validoi = () => ModalValidointi.validoi(ops);
                 $scope.muutaTila = () => TilanvaihtoModal.vaihdaTila(ops)

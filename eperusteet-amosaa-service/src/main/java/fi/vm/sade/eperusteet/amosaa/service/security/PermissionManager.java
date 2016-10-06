@@ -20,6 +20,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.Tyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.KayttajaoikeusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaoikeusRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
@@ -28,15 +29,14 @@ import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.RolePer
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.RolePrefix;
 import fi.vm.sade.eperusteet.amosaa.service.util.Pair;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
+import java.io.Serializable;
+import java.util.*;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.io.Serializable;
-import java.util.*;
-import java.util.stream.Collectors;
 
 
 /**
@@ -85,6 +85,15 @@ public class PermissionManager {
         public String toString() {
             return permission;
         }
+
+        public boolean isOneOf(Permission... tyypit) {
+            for (Permission toinen : tyypit) {
+                if (toinen.toString().equals(this.permission)) {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 
     private static final String MSG_OPS_EI_OLEMASSA = "Pyydettyä opetussuunnitelmaa ei ole olemassa";
@@ -102,8 +111,19 @@ public class PermissionManager {
     private KayttajaoikeusRepository kayttajaoikeusRepository;
 
     @Transactional(readOnly = true)
-    public boolean hasPermission(Authentication authentication, Serializable targetId, TargetType target,
+    public boolean hasPermission(Authentication authentication, Serializable targetObject, TargetType target,
         Permission perm) {
+
+        Long targetId = null;
+        Long originalKtId = null;
+        if (targetObject instanceof Long) {
+            targetId = (Long)targetObject;
+        }
+        if (targetObject instanceof List) {
+            Object[] arr = ((List) targetObject).toArray();
+            originalKtId = (Long)arr[0];
+            targetId = (Long)arr[1];
+        }
 
         if (perm == Permission.HALLINTA && targetId == null && target == TargetType.TARKASTELU &&
                 hasRole(authentication, RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA, RolePermission.CRUD, Organization.OPH)) {
@@ -165,7 +185,7 @@ public class PermissionManager {
                 }
 
                 // Optiomoi
-                ops = opsRepository.findOne((Long)targetId);
+                ops = opsRepository.findOne(targetId);
                 koulutustoimija = ops.getKoulutustoimija();
                 organisaatioOid = koulutustoimija.getOrganisaatio();
                 break;
@@ -175,7 +195,7 @@ public class PermissionManager {
                 }
 
                 // Optiomoi
-                koulutustoimija = koulutustoimijaRepository.findOne((Long)targetId);
+                koulutustoimija = koulutustoimijaRepository.findOne(targetId);
                 if (koulutustoimija == null) {
                     return false;
                 }
@@ -198,14 +218,51 @@ public class PermissionManager {
             return true;
         }
 
+        // Koulutustoimijan oikeus
         if (target == TargetType.KOULUTUSTOIMIJA) {
             return hasAnyRole(authentication, RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA, permissions, organisaatio);
         }
+        // Opetussuunnitelmien oikeudet
         else if (target == TargetType.OPETUSSUUNNITELMA) {
-            KayttajaoikeusTyyppi oikeus = kayttajaoikeusRepository.findKayttajaoikeus(authentication.getName(), (Long)targetId);
-            return oikeus != null; // FIXME: Tarkista tarkempi oikeus
+            KayttajaoikeusTyyppi oikeus = kayttajaoikeusRepository.findKayttajaoikeus(authentication.getName(), targetId);
+            if (originalKtId == null || koulutustoimija == null || ops == null) {
+                return false;
+            }
+            if (!koulutustoimija.getId().equals(originalKtId)) {
+                Koulutustoimija kontekstiKt = koulutustoimijaRepository.findOne(originalKtId);
+                if (!areFriends(ops.getKoulutustoimija(), kontekstiKt) || !ops.getTyyppi().isOneOf(OpsTyyppi.OPS, OpsTyyppi.YLEINEN)) {
+                    return false;
+                }
+            }
+
+            if (oikeus == null || oikeus == KayttajaoikeusTyyppi.ESTETTY) {
+                return false;
+            }
+
+            if (perm.isOneOf(Permission.LUKU, Permission.KOMMENTOINTI, Permission.ESITYS) && oikeus.isAtLeast(KayttajaoikeusTyyppi.LUKU)) {
+                return true;
+            }
+
+            if (perm.isOneOf(Permission.MUOKKAUS, Permission.POISTO, Permission.LUONTI) && oikeus.isAtLeast(KayttajaoikeusTyyppi.MUOKKAUS)) {
+                return true;
+            }
+
+            if (perm.isOneOf(Permission.TILANVAIHTO) && oikeus.isAtLeast(KayttajaoikeusTyyppi.LISAYS)) {
+                return true;
+            }
+
+            if (perm.isOneOf(Permission.HALLINTA) && oikeus.isAtLeast(KayttajaoikeusTyyppi.HALLINTA)) {
+                return true;
+            }
         }
         return false;
+    }
+
+    private static boolean areFriends(Koulutustoimija a, Koulutustoimija b) {
+        return a.isSalliystavat()
+                && b.isSalliystavat()
+                && a.getYstavat().contains(b)
+                && b.getYstavat().contains(a);
     }
 
     private static boolean hasRole(Authentication authentication, RolePrefix prefix,

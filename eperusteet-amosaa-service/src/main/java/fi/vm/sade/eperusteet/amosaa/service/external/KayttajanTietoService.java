@@ -65,6 +65,10 @@ public interface KayttajanTietoService {
     @PreAuthorize("isAuthenticated()")
     Set<String> getUserOrganizations();
 
+    // TODO: Selvitä halutaanko ystäväorganisaatioiden haku rajata koulutuksen järjestäjän hallinnolle
+    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
+    List<KayttajaDto> getKaikkiKayttajat(@P("ktId") Long ktId);
+
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
     KayttajanTietoDto getKayttaja(@P("ktId") Long ktId, String oid);
 

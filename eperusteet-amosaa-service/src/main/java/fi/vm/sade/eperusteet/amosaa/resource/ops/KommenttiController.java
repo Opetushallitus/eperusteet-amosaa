@@ -22,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
@@ -40,7 +39,7 @@ public class KommenttiController {
     public ResponseEntity<List<KommenttiDto>> getAll(@PathVariable final long ktId,
                                                      @PathVariable final long opsId,
                                                      @PathVariable final long tkvId) {
-        List<KommenttiDto> t = kommenttiService.getAllByTekstikappaleviite(opsId, tkvId);
+        List<KommenttiDto> t = kommenttiService.getAllByTekstikappaleviite(ktId, opsId, tkvId);
         return new ResponseEntity<>(t, HttpStatus.OK);
     }
 
@@ -50,7 +49,7 @@ public class KommenttiController {
                                             @PathVariable final long tkvId,
                                             @RequestBody KommenttiDto body) {
         body.setTekstikappaleviiteId(tkvId);
-        return new ResponseEntity<>(kommenttiService.add(opsId, body), HttpStatus.CREATED);
+        return new ResponseEntity<>(kommenttiService.add(ktId, opsId, body), HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/{id}", method = GET)
@@ -58,7 +57,7 @@ public class KommenttiController {
                                             @PathVariable final long opsId,
                                             @PathVariable final long tkvId,
                                             @PathVariable final long id) {
-        KommenttiDto kommenttiDto = kommenttiService.get(opsId, id);
+        KommenttiDto kommenttiDto = kommenttiService.get(ktId, opsId, id);
         return new ResponseEntity<>(kommenttiDto, kommenttiDto == null ? HttpStatus.NOT_FOUND : HttpStatus.OK);
     }
 
@@ -68,7 +67,7 @@ public class KommenttiController {
                                                @PathVariable final long tkvId,
                                                @PathVariable final long id,
                                                @RequestBody KommenttiDto body) {
-        return new ResponseEntity<>(kommenttiService.update(opsId, id, body), HttpStatus.OK);
+        return new ResponseEntity<>(kommenttiService.update(ktId, opsId, id, body), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}", method = DELETE)
@@ -76,6 +75,6 @@ public class KommenttiController {
                        @PathVariable final long opsId,
                        @PathVariable final long tkvId,
                        @PathVariable final long id) {
-        kommenttiService.delete(opsId, id);
+        kommenttiService.delete(ktId, opsId, id);
     }
 }

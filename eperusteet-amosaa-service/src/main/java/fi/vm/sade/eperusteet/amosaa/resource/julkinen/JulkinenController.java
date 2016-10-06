@@ -92,7 +92,7 @@ public class JulkinenController {
     public OpetussuunnitelmaDto get(
             @PathVariable final Long ktId,
             @PathVariable final Long opsId) {
-        return opsService.getOpetussuunnitelma(opsId);
+        return opsService.getOpetussuunnitelma(ktId, opsId);
     }
 
     @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/otsikot", method = RequestMethod.GET)

@@ -29,10 +29,9 @@ import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.util.PoistettuService;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 import io.swagger.annotations.Api;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  *
@@ -58,6 +57,12 @@ public class OpetussuunnitelmaController {
         return service.getOpetussuunnitelmat(ktId);
     }
 
+    @RequestMapping(value = "/ystavien", method = RequestMethod.GET)
+    @ResponseBody
+    public List<OpetussuunnitelmaDto> getAllOtherOrgs(@PathVariable final Long ktId) {
+        return service.getOtherOpetussuunnitelmat(ktId);
+    }
+
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     public OpetussuunnitelmaBaseDto add(
@@ -71,7 +76,7 @@ public class OpetussuunnitelmaController {
     public OpetussuunnitelmaDto get(
             @PathVariable final Long ktId,
             @PathVariable final Long opsId) {
-        return service.getOpetussuunnitelma(opsId);
+        return service.getOpetussuunnitelma(ktId, opsId);
     }
 
     @RequestMapping(value = "/{opsId}", method = RequestMethod.PUT)

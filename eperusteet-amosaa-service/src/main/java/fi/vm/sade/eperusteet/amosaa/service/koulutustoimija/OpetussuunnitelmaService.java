@@ -45,28 +45,31 @@ public interface OpetussuunnitelmaService extends RevisionService {
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'ESITYS')")
     Long getKoulutustoimijaId(@P("opsId") Long opsId);
 
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'ESITYS')")
-    OpetussuunnitelmaDto getOpetussuunnitelma(@P("opsId") Long opsId);
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'ESITYS')")
+    OpetussuunnitelmaDto getOpetussuunnitelma(@P("ktId") Long ktId, @P("opsId") Long opsId);
 
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
-    List<PoistettuDto> getPoistetut(Long ktId, @P("opsId") Long opsId);
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
+    List<PoistettuDto> getPoistetut(@P("ktId") Long ktId, @P("opsId") Long opsId);
 
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
-    List<KayttajaoikeusDto> getOikeudet(Long ktId, @P("opsId") Long opsId);
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
+    List<KayttajaoikeusDto> getOikeudet(@P("ktId") Long ktId, @P("opsId") Long opsId);
 
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'HALLINTA')")
-    KayttajaoikeusDto updateOikeus(Long ktId, @P("opsId") Long opsId, Long oikeusId, KayttajaoikeusDto oikeus);
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'HALLINTA')")
+    KayttajaoikeusDto updateOikeus(@P("ktId") Long ktId, @P("opsId") Long opsId, Long oikeusId, KayttajaoikeusDto oikeus);
 
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'MUOKKAUS')")
-    OpetussuunnitelmaDto update(Long ktId, @P("opsId") Long opsId, OpetussuunnitelmaDto body);
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
+    OpetussuunnitelmaDto update(@P("ktId") Long ktId, @P("opsId") Long opsId, OpetussuunnitelmaDto body);
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUONTI')")
     OpetussuunnitelmaBaseDto addOpetussuunnitelma(@P("ktId") Long ktId, OpetussuunnitelmaDto opsDto);
 
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'HALLINTA')")
-    OpetussuunnitelmaBaseDto updateTila(Long ktId, @P("opsId") Long opsId, @P("tila") Tila tila);
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'HALLINTA')")
+    OpetussuunnitelmaBaseDto updateTila(@P("ktId") Long ktId, @P("opsId") Long opsId, @P("tila") Tila tila);
 
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'MUOKKAUS')")
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
     Validointi validoi(@P("ktId") Long ktId, @P("opsId") Long opsId);
+
+    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
+    List<OpetussuunnitelmaDto> getOtherOpetussuunnitelmat(@P("ktId") Long ktId);
 }
 

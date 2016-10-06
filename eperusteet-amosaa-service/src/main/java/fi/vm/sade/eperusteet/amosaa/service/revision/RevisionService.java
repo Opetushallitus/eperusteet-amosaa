@@ -17,11 +17,10 @@
 package fi.vm.sade.eperusteet.amosaa.service.revision;
 
 import fi.vm.sade.eperusteet.amosaa.domain.revision.Revision;
+import java.util.List;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 /**
  *
@@ -29,18 +28,18 @@ import java.util.List;
  */
 @Transactional
 public interface RevisionService {
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
-    List<Revision> getRevisions(Long ktId, @P("opsId") Long opsId);
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
+    List<Revision> getRevisions(@P("ktId") Long ktId, @P("opsId") Long opsId);
 
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
-    Revision getLatestRevision(Long ktId, @P("opsId") Long opsId);
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
+    Revision getLatestRevision(@P("ktId") Long ktId, @P("opsId") Long opsId);
 
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
-    Integer getLatestRevisionId(Long ktId, @P("opsId") Long opsId);
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
+    Integer getLatestRevisionId(@P("ktId") Long ktId, @P("opsId") Long opsId);
 
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
-    Object getData(Long ktId, Long opsId,  @P("opsId")Integer rev);
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
+    Object getData(@P("ktId") Long ktId, @P("opsId") Long opsId, Integer rev);
 
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
-    Revision getRemoved(Long ktId, @P("opsId") Long opsId);
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
+    Revision getRemoved(@P("ktId") Long ktId, @P("opsId") Long opsId);
 }

@@ -16,9 +16,6 @@
 
 package fi.vm.sade.eperusteet.amosaa.dto.kayttaja;
 
-import fi.vm.sade.eperusteet.amosaa.dto.Reference;
-import java.util.Date;
-import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,7 +25,8 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class KayttajaDto extends KayttajaBaseDto {
-    private Date tiedotekuittaus;
-    private Set<Reference> suosikit;
+public class KayttajaBaseDto {
+    private Long id;
+    private Long koulutustoimija;
+    private String oid;
 }
