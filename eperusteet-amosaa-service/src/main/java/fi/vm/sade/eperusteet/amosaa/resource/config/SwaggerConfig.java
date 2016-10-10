@@ -25,23 +25,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StopWatch;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.paths.AbstractPathProvider;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger1.annotations.EnableSwagger;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.servlet.ServletContext;
-
 import java.util.Optional;
 import java.util.concurrent.Callable;
-
-import static com.google.common.base.Strings.isNullOrEmpty;
 
 /**
  *
@@ -60,53 +53,35 @@ public class SwaggerConfig {
     @Bean
     public Docket swagger2Api(ServletContext ctx) {
         LOG.debug("Starting Swagger v2");
-        StopWatch watch = new StopWatch();
-        watch.start();
 
-        Docket docket = new Docket(DocumentationType.SWAGGER_2)
+        return new Docket(DocumentationType.SWAGGER_2)
                 .groupName("v2")
                 .apiInfo(apiInfo())
-                .pathProvider(new RelativeSwaggerPathProvider(ctx))
-                .select()
-                .apis(RequestHandlerSelectors.any())
-                .paths(PathSelectors.any())
-                .build()
                 .directModelSubstitute(JsonNode.class, Object.class)
                 .genericModelSubstitutes(ResponseEntity.class, Optional.class)
                 .alternateTypeRules(
-                        springfox.documentation.schema.AlternateTypeRules
-                                .newRule(typeResolver.resolve(new GenericType<Callable<ResponseEntity<Object>>>() {
-                                }), typeResolver.resolve(Object.class)));
-
-        watch.stop();
-        LOG.debug("Started Swagger v2 in {} ms", watch.getTotalTimeMillis());
-
-        return docket;
+                        springfox.documentation.schema.AlternateTypeRules.newRule(
+                                typeResolver.resolve(new GenericType<Callable<ResponseEntity<Object>>>() {}),
+                                typeResolver.resolve(Object.class)
+                        )
+                );
     }
 
     @Bean
     public Docket swagger12Api(ServletContext ctx) {
         LOG.debug("Starting Swagger");
-        StopWatch watch = new StopWatch();
-        watch.start();
 
-        Docket docket = new Docket(DocumentationType.SWAGGER_12)
+        return new Docket(DocumentationType.SWAGGER_12)
                 .apiInfo(apiInfo())
-                .pathProvider(new RelativeSwaggerPathProvider(ctx))
-                .select()
-                    .apis(RequestHandlerSelectors.any())
-                    .paths(PathSelectors.any())
-                    .build()
                 .directModelSubstitute(JsonNode.class, Object.class)
                 .genericModelSubstitutes(ResponseEntity.class, Optional.class)
                 .alternateTypeRules(
-                        springfox.documentation.schema.AlternateTypeRules
-                                .newRule(typeResolver.resolve(new GenericType<Callable<ResponseEntity<Object>>>() {
-                                }), typeResolver.resolve(Object.class)));
-        watch.stop();
-        LOG.debug("Started Swagger in {} ms", watch.getTotalTimeMillis());
+                        springfox.documentation.schema.AlternateTypeRules.newRule(
+                                typeResolver.resolve(new GenericType<Callable<ResponseEntity<Object>>>() {}),
+                                typeResolver.resolve(Object.class)
+                        )
+                );
 
-        return docket;
     }
 
     /**
@@ -115,7 +90,7 @@ public class SwaggerConfig {
     private ApiInfo apiInfo() {
 
         Contact contact = null;
-        ApiInfo apiInfo = new ApiInfo(
+        return new ApiInfo(
                 "Oppijan verkkopalvelukokonaisuus / ePerusteet ammatillisen opetussuunnitelmat",
                 "",
                 "Spring MVC API based on the swagger 2.0 and 1.2 specification",
@@ -124,28 +99,6 @@ public class SwaggerConfig {
                 "EUPL 1.1",
                 "http://ec.europa.eu/idabc/eupl");
 
-        return apiInfo;
-    }
-
-    private class RelativeSwaggerPathProvider extends AbstractPathProvider {
-        String ROOT = "/";
-        private final ServletContext servletContext;
-
-        RelativeSwaggerPathProvider(ServletContext servletContext) {
-            super();
-            this.servletContext = servletContext;
-        }
-
-        @Override
-        protected String applicationPath() {
-            return isNullOrEmpty(servletContext.getContextPath())
-                    ? ROOT : servletContext.getContextPath() + "/api";
-        }
-
-        @Override
-        protected String getDocumentationPath() {
-            return ROOT;
-        }
     }
 }
 
