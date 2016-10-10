@@ -22,7 +22,7 @@ namespace Suorituspolku {
             .filter(shouldCount)
             .map(laajuusTaiKoko)
             .compact()
-            .reduce((acc: number, min: number) => (min || 0) + acc);
+            .reduce((acc, min: any) => (min || 0) + acc);
 
         Algoritmit.traverse(tree, "osat", (node) => {
             if (node.rooli && node.rooli !== "määrittelemätön") {

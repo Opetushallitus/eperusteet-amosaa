@@ -4,12 +4,13 @@ import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.Dokumentti;
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiTila;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.repository.dokumentti.DokumenttiRepository;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiService;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils;
 import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
+import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import io.swagger.annotations.Api;
-import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 /**
  * @author isaul
@@ -29,6 +32,9 @@ public class DokumenttiController {
 
     @Autowired
     DokumenttiService service;
+
+    @Autowired
+    OpetussuunnitelmaService opsService;
 
     @Autowired
     DokumenttiRepository repository;
@@ -63,8 +69,8 @@ public class DokumenttiController {
         return new ResponseEntity<>(dokumenttiDto, status);
     }
 
-    @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<byte[]> get(@PathVariable Long ktId,
+    @RequestMapping(method = RequestMethod.GET, produces = "application/pdf")
+    public ResponseEntity<Object> get(@PathVariable Long ktId,
                                       @PathVariable Long opsId,
                                       @RequestParam(defaultValue = "fi") String kieli) {
         byte[] pdfdata = service.get(ktId, opsId, Kieli.of(kieli));
@@ -74,8 +80,16 @@ public class DokumenttiController {
         }
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(new MediaType("application", "pdf"));
-        headers.set("Content-disposition", "inline; filename=\"" + opsId + ".pdf\"");
+
+        LokalisoituTekstiDto nimiDto = opsService.getOpetussuunnitelma(ktId, opsId).getNimi();
+        String nimi = nimiDto.get(Kieli.of(kieli));
+        if (nimi != null) {
+            headers.set("Content-disposition", "inline; filename=\"" + nimi + ".pdf\"");
+        } else {
+            DokumenttiDto dokumenttiDto = service.getDto(ktId, opsId, Kieli.of(kieli));
+            headers.set("Content-disposition", "inline; filename=\"" + dokumenttiDto.getId() + ".pdf\"");
+        }
+
         headers.setContentLength(pdfdata.length);
 
         return new ResponseEntity<>(pdfdata, headers, HttpStatus.OK);

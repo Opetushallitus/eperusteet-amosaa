@@ -139,7 +139,7 @@ namespace ModalAdd {
                             .then(otsikot => {
                                 const root = Tekstikappaleet.root(otsikot);
                                 const rakenne = _.tail(_.flattenBy(Tekstikappaleet.teeRakenne(Tekstikappaleet.uniikit(otsikot), root.id), "lapset"));
-                                _.each(rakenne, osa => { osa.$$depth -= 1; });
+                                _.each(rakenne, (osa: any) => { osa.$$depth -= 1; });
                                 $scope.rakenne = rakenne;
                             });
                     };
