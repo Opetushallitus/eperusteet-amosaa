@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
  */
 public enum DokumenttiEdistyminen {
 
+    META("meta"),
     TUNTEMATON("tuntematon"),
     TEKSTIKAPPALEET("tekstikappaleet"),
     KUVAT("kuvat"),

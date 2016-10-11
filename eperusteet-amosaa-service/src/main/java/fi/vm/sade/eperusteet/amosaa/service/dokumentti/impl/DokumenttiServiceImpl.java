@@ -30,19 +30,21 @@ import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils
 import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.imageio.ImageIO;
+import javax.validation.constraints.NotNull;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Date;
-import javax.imageio.ImageIO;
-import org.apache.commons.lang.exception.ExceptionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 
 /**
@@ -116,28 +118,20 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 
     @Override
     @Transactional
-    public void generateWithDto(Long ktId, Long opsId, DokumenttiDto dto) throws DokumenttiException {
+    @Async(value = "docTaskExecutor")
+    public void generateWithDto(Long ktId, @NotNull Long opsId, DokumenttiDto dto) throws DokumenttiException {
         Dokumentti dokumentti = mapper.map(dto, Dokumentti.class);
-
         try {
-            // Luodaan pdf
-            if (dokumentti.getOpsId()!= null) {
-                Opetussuunnitelma ops = opsRepository.findOne(dokumentti.getOpsId());
-                dokumentti.setData(builderService.generatePdf(ops, dokumentti, dokumentti.getKieli()));
-            } else if (dokumentti.getOpsId() != null) {
-                LOG.info("Ops is not implemented yet");
-            }
-
+            Opetussuunnitelma ops = opsRepository.findOne(dokumentti.getOpsId());
             dokumentti.setTila(DokumenttiTila.VALMIS);
             dokumentti.setValmistumisaika(new Date());
             dokumentti.setVirhekoodi("");
             dokumentti.setEdistyminen(DokumenttiEdistyminen.TUNTEMATON);
-
-            // Tallennetaan valmis dokumentti
+            dokumentti.setData(builderService.generatePdf(ops, dokumentti, dokumentti.getKieli()));
             dokumenttiRepository.save(dokumentti);
         } catch (Exception ex) {
             dokumentti.setTila(DokumenttiTila.EPAONNISTUI);
-            dokumentti.setVirhekoodi(ExceptionUtils.getStackTrace(ex));
+            dokumentti.setVirhekoodi(ex.getLocalizedMessage());
             dokumenttiRepository.save(dokumentti);
 
             throw new DokumenttiException(ex.getMessage(), ex);

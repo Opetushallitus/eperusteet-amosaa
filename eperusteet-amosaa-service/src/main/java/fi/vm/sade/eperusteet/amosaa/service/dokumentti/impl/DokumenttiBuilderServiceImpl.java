@@ -171,35 +171,39 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
         }
 
         // Kansilehti & Infosivu
+        changeProgress(docBase, DokumenttiEdistyminen.META);
         addMetaPages(docBase);
 
-        docBase.getDokumentti().setEdistyminen(DokumenttiEdistyminen.TEKSTIKAPPALEET);
-        dokumenttiRepository.save(docBase.getDokumentti());
-
         // Sisältöelementit
+        changeProgress(docBase, DokumenttiEdistyminen.TEKSTIKAPPALEET);
         addTekstit(docBase);
-
-        docBase.getDokumentti().setEdistyminen(DokumenttiEdistyminen.VIITTEET);
-        dokumenttiRepository.save(docBase.getDokumentti());
 
 
         // Alaviitteet
+        changeProgress(docBase, DokumenttiEdistyminen.VIITTEET);
         buildFootnotes(docBase);
 
-        docBase.getDokumentti().setEdistyminen(DokumenttiEdistyminen.KUVAT);
-        dokumenttiRepository.save(docBase.getDokumentti());
+        try {
+            Thread.sleep(4000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         // Kuvat
+        changeProgress(docBase, DokumenttiEdistyminen.KUVAT);
         buildImages(docBase);
         buildKansilehti(docBase);
         buildYlatunniste(docBase);
         buildAlatunniste(docBase);
 
-        docBase.getDokumentti().setEdistyminen(DokumenttiEdistyminen.TYYLIT);
-        dokumenttiRepository.save(docBase.getDokumentti());
-
         // PDF luonti XHTML dokumentista
+        changeProgress(docBase, DokumenttiEdistyminen.TYYLIT);
         return pdfService.xhtml2pdf(doc);
+    }
+
+    private void changeProgress(DokumenttiBase docBase, DokumenttiEdistyminen edistyminen) {
+        //docBase.getDokumentti().setEdistyminen(edistyminen);
+        //dokumenttiRepository.saveAndFlush(docBase.getDokumentti());
     }
 
     private void addMetaPages(DokumenttiBase docBase) {

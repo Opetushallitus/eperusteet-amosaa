@@ -19,11 +19,11 @@ package fi.vm.sade.eperusteet.amosaa.service.dokumentti;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
-import java.io.IOException;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 /**
  *
@@ -41,7 +41,6 @@ public interface DokumenttiService {
     void setStarted(@P("ktId") Long ktId, @P("opsId") Long opsId, DokumenttiDto dto);
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
-    @Async(value = "docTaskExecutor")
     void generateWithDto(@P("ktId") Long ktId, @P("opsId") Long opsId, DokumenttiDto dto) throws DokumenttiException;
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
