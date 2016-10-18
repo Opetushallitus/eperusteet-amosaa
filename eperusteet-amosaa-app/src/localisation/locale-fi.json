@@ -214,6 +214,7 @@
   "paatosnumero": "Päätösnumero",
   "paatosnumeroa-ei-maaritelty": "Opetussuunnitelmalla ei ole päätösnumeroa",
   "paatospaivamaaraa-ei-maaritelty": "Päätöspäivämäärää ei ole määritetty",
+  "julkaisukielet-ei-maaritelty": "Julkaisukieliä ei ole määritetty",
   "paatospvm": "Päätöspäivämäärä",
   "paikallinen-koodi-info": "Paikallisen koodin pitää olla numero (1000 - 9999)",
   "paikallinen-koodi-jo-kaytossa": "Paikallisesti laaditun tutkinnon osan koodi on jo käytössä jossain muussa paikallisessa tutkinnon osassa.",

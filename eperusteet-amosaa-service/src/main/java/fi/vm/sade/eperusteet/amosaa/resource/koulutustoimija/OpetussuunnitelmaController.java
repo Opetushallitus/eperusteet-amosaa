@@ -29,9 +29,10 @@ import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.util.PoistettuService;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 import io.swagger.annotations.Api;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  *
@@ -161,65 +162,4 @@ public class OpetussuunnitelmaController {
             @PathVariable final Tila tila) {
         return service.updateTila(ktId, opsId, tila);
     }
-
-
-//    @RequestMapping(value = "/tekstit/{parentId}/lapsi/{childId}", method = RequestMethod.POST)
-//    @ResponseBody
-//    public ResponseEntity<TekstiKappaleViiteDto.Matala> addTekstiKappaleLapsi(
-//            @PathVariable final Long opsId,
-//            @PathVariable final Long parentId,
-//            @PathVariable final Long childId) {
-//        TekstiKappaleViiteDto.Matala viite = new TekstiKappaleViiteDto.Matala();
-//        viite.setTekstiKappaleRef(Reference.of(childId));
-//        return new ResponseEntity<>(
-//                service().addTekstiKappaleLapsi(opsId, parentId, viite), HttpStatus.CREATED);
-//    }
-
-//    @RequestMapping(value = "/tekstit", method = RequestMethod.GET)
-//    public ResponseEntity<TekstiKappaleViiteDto.Puu> getTekstit(
-//            @PathVariable final Long opsId) {
-//        TekstiKappaleViiteDto.Puu dto = service().getTekstit(opsId, TekstiKappaleViiteDto.Puu.class);
-//        if (dto == null) {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//        return new ResponseEntity<>(dto, HttpStatus.OK);
-//    }
-//
-//    @RequestMapping(value = "/otsikot", method = RequestMethod.GET)
-//    public ResponseEntity<TekstiKappaleViiteKevytDto> getTekstiOtsikot(@PathVariable final Long opsId) {
-//        TekstiKappaleViiteKevytDto dto = service().getTekstit(opsId, TekstiKappaleViiteKevytDto.class);
-//        if (dto == null) {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//        return new ResponseEntity<>(dto, HttpStatus.OK);
-//    }
-//
-//    @RequestMapping(value = "/tekstit/{viiteId}", method = RequestMethod.GET)
-//    public ResponseEntity<TekstiKappaleViiteDto.Matala> getTekstiKappaleViite(
-//            @PathVariable final Long opsId,
-//            @PathVariable final Long viiteId) {
-//        TekstiKappaleViiteDto.Matala dto = tekstiKappaleViiteService.getTekstiKappaleViite(opsId, viiteId);
-//        if (dto == null) {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//        return new ResponseEntity<>(dto, HttpStatus.OK);
-//    }
-//
-//    @RequestMapping(value = "/tekstit/{viiteId}/kaikki", method = RequestMethod.GET)
-//    public ResponseEntity<TekstiKappaleViiteDto.Puu> getTekstiKappaleViiteSyva(
-//            @PathVariable final Long opsId,
-//            @PathVariable final Long viiteId) {
-//        TekstiKappaleViiteDto.Puu dto = tekstiKappaleViiteService.getTekstiKappaleViite(opsId, viiteId, TekstiKappaleViiteDto.Puu.class);
-//        if (dto == null) {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//        return new ResponseEntity<>(dto, HttpStatus.OK);
-//    }
-
-//    @RequestMapping(value = "/tekstit/{viiteId}/muokattavakopio", method = RequestMeth*od.POST)
-//    public TekstiKappaleViiteDto.Puu kloonaaTekstiKappale(
-//            @PathVariable final Long opsId,
-//            @PathVariable final Long viiteId) {
-//        return tekstiKappaleViiteService.kloonaaTekstiKappale(opsId, viiteId);
-//    }
 }

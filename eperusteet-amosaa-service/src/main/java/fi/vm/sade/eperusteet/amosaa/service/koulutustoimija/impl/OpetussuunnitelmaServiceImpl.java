@@ -33,6 +33,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Tutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.PoistettuDto;
+import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
@@ -47,7 +48,9 @@ import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.Opetussuunnitelma
 import fi.vm.sade.eperusteet.amosaa.repository.peruste.CachedPerusteRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.TekstiKappaleRepository;
+import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiService;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
+import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
@@ -55,15 +58,18 @@ import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.ValidointiService;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -72,6 +78,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
+    static private final Logger LOG = LoggerFactory.getLogger(OpetussuunnitelmaServiceImpl.class);
 
     @Autowired
     private DtoMapper mapper;
@@ -108,6 +115,9 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
     @Autowired
     private CachedPerusteRepository cachedPerusteRepository;
+
+    @Autowired
+    private DokumenttiService dokumenttiService;
 
     @Override
     public List<OpetussuunnitelmaDto> getJulkisetOpetussuunnitelmat(Long ktId) {
@@ -389,6 +399,15 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         if (nykyinen.mahdollisetSiirtymat().contains(tila)) {
             if (tila == Tila.JULKAISTU) {
                 validoi(ktId, opsId).tuomitse();
+                for (Kieli kieli : ops.getJulkaisukielet()) {
+                    try {
+                        DokumenttiDto dokumenttiDto = dokumenttiService.getDto(ktId, opsId, kieli);
+                        dokumenttiService.setStarted(ktId, opsId, dokumenttiDto);
+                        dokumenttiService.generateWithDto(ktId, opsId, dokumenttiDto);
+                    } catch (DokumenttiException e) {
+                        LOG.error(e.getLocalizedMessage(), e.getCause());
+                    }
+                }
             }
             ops.setTila(tila);
         }

@@ -41,6 +41,10 @@ div.dokumentti
               b(ng-bind="'luotu' | kaanna")
               span=" "
               span(ng-bind="dokumenttiDto.valmistumisaika | aikaleima")
+              span=" "
+              b(ng-bind="'sisalto-kieli' | kaanna")
+              span=" "
+              span(ng-bind="dokumenttiDto.kieli | kaanna")
 
           a(ng-href="{{ linkki }}" target="_blank" ng-show="dokumenttiDto.tila === 'valmis'")
             button.btn.btn-default {{ "lataa" | kaanna }} {{ "pdf" | kaanna }}
@@ -65,6 +69,10 @@ div.dokumentti
                     style="width: 100%;"
                     ng-if="dokumenttiDto.edistyminen === 'tuntematon'")
                   span(ng-bind="'luodaan' | kaanna")
+          div.row
+            div.col-xs-8
+              button.btn.btn-default(ng-click="generoi()")
+                span(ng-bind="'luo-uusi-dokumentti' | kaanna")
 
   div.row
     div.col-xs-12

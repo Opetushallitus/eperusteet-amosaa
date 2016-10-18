@@ -56,11 +56,7 @@ public class DokumenttiController {
         if (dokumenttiDto.getAloitusaika() == null
                 || DokumenttiUtils.isTimePass(dokumenttiDto)
                 || dokumenttiDto.getTila() != DokumenttiTila.LUODAAN) {
-            // Vaihdetaan dokumentin tila luonniksi
             service.setStarted(ktId, opsId, dokumenttiDto);
-
-            // Generoidaan dokumentin datasisältö
-            // Asynkroninen metodi
             service.generateWithDto(ktId, opsId, dokumenttiDto);
         } else {
             status = HttpStatus.BAD_REQUEST;

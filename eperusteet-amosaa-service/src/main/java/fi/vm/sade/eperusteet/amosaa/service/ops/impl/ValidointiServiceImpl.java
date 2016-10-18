@@ -28,12 +28,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaTutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Suorituspolku;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Tutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.MuodostumisSaantoDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliRooli;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneOsaDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.SuoritustapaLaajaDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonOsaViiteSuppeaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.*;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
@@ -41,13 +36,14 @@ import fi.vm.sade.eperusteet.amosaa.service.ops.ValidointiService;
 import fi.vm.sade.eperusteet.amosaa.service.peruste.PerusteCacheService;
 import fi.vm.sade.eperusteet.amosaa.service.util.Pair;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.math.BigDecimal;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 /**
  *
@@ -261,6 +257,10 @@ public class ValidointiServiceImpl implements ValidointiService {
     static public void validoi(Validointi validointi, Opetussuunnitelma ops) {
         LokalisoituTeksti.validoi(validointi, ops, ops.getNimi());
         LokalisoituTeksti.validoi(validointi, ops, ops.getKuvaus());
+
+        if (ops.getJulkaisukielet().isEmpty()) {
+            validointi.virhe("julkaisukielet-ei-maaritelty", ops.getNimi());
+        }
 
         if (ops.getTyyppi() == OpsTyyppi.OPS || ops.getTyyppi() == OpsTyyppi.YLEINEN) {
             if (ops.getHyvaksyja() == null || ops.getHyvaksyja().isEmpty()) {

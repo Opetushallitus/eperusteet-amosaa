@@ -4,13 +4,43 @@ angular.module("app")
     url: "/dokumentti",
     resolve: {
         dokumentti: (ops) => ops.one("dokumentti"),
-        dokumenttiDto: (dokumentti) => dokumentti.one("tila").get()
+        dokumenttiDto: (dokumentti) => dokumentti.customGET("tila", {
+            kieli: KieliService.getSisaltokieli()
+        })
     },
     views: {
         "": {
-            controller: ($scope, $timeout, dokumentti, dokumenttiDto, $http, FileUploader) => {
+            controller: ($scope, $timeout, dokumentti, dokumenttiDto, $http, FileUploader, $rootScope) => {
                 const dokumenttiUrl = dokumentti.getRestangularUrl();
                 $scope.kuva = {};
+                $scope.edistymisetCount = 5;
+                $scope.edistymiset = {
+                    tuntematon: 5,
+                    tekstikappaleet: 1,
+                    kuvat: 2,
+                    viitteet: 3,
+                    tyylit: 4,
+                };
+
+                $scope.poistaKuva = (tyyppi) => {
+                    $http({
+                        method: 'DELETE',
+                        url: dokumenttiUrl + "/kuva?tyyppi=" + tyyppi + "&kieli=" + KieliService.getSisaltokieli()
+                    }).then(() => {
+                        $scope.dokumenttiDto[tyyppi] = null;
+                        paivitaKuva(tyyppi);
+                    });
+                };
+
+                // Generointi
+                $scope.dokumenttiDto = dokumenttiDto;
+                $scope.generoi = () => {
+                    dokumentti.post("", "", {
+                        kieli: KieliService.getSisaltokieli()
+                    }).then(() => {
+                        poll();
+                    });
+                };
 
                 // Kuvien päivitys
                 const paivitaKuva = (tyyppi) => {
@@ -18,10 +48,6 @@ angular.module("app")
                         + "/kuva?tyyppi=" + tyyppi + "&kieli=" + KieliService.getSisaltokieli()
                         + "&" + new Date().getTime()
                 };
-
-                paivitaKuva("kansikuva");
-                paivitaKuva("ylatunniste");
-                paivitaKuva("alatunniste");
 
                 // Kuvien lataus
                 const createUploader = (tyyppi) => {
@@ -37,45 +63,15 @@ angular.module("app")
                     return uploader;
                 };
 
-                $scope.poistaKuva = (tyyppi) => {
-                    $http({
-                        method: 'DELETE',
-                        url: dokumenttiUrl + "/kuva?tyyppi=" + tyyppi + "&kieli=" + KieliService.getSisaltokieli()
-                    }).then(() => {
-                        $scope.dokumenttiDto[tyyppi] = null;
-                        paivitaKuva(tyyppi);
-                    });
-                };
-
-                $scope.kansikuvaUploader = createUploader("kansikuva");
-                $scope.ylatunnisteUploader = createUploader("ylatunniste");
-                $scope.alatunnisteUploader = createUploader("alatunniste");
-
-                // Generointi
-                $scope.dokumenttiDto = dokumenttiDto;
-                $scope.generoi = () => {
-                    dokumentti.post("", "", {
-                        kieli: KieliService.getSisaltokieli()
-                    }).then(() => {
-                        poll();
-                    });
-                };
-
                 // Linkit
-                $scope.linkki = dokumenttiUrl + "?kieli=" + KieliService.getSisaltokieli();
-
-                // Edistyminen
-                $scope.edistymisetCount = 5;
-                $scope.edistymiset = {
-                    tuntematon: 5,
-                    tekstikappaleet: 1,
-                    kuvat: 2,
-                    viitteet: 3,
-                    tyylit: 4,
+                const createLink = () => {
+                    $scope.linkki = dokumenttiUrl + "?kieli=" + KieliService.getSisaltokieli();
                 };
 
                 const poll = () => {
-                    dokumentti.one("tila").get().then((dokumenttiDto) => {
+                    dokumentti.customGET("tila", {
+                        kieli: KieliService.getSisaltokieli()
+                    }).then((dokumenttiDto) => {
                         $scope.dokumenttiDto = dokumenttiDto;
                         if (dokumenttiDto.tila === 'luodaan') {
                             $timeout(poll, 1000);
@@ -83,9 +79,31 @@ angular.module("app")
                     });
                 };
 
-                if (dokumenttiDto && dokumenttiDto.tila === 'luodaan') {
-                    $timeout(poll, 1000);
-                }
+                const init = () => {
+                    $scope.kansikuvaUploader = createUploader("kansikuva");
+                    $scope.ylatunnisteUploader = createUploader("ylatunniste");
+                    $scope.alatunnisteUploader = createUploader("alatunniste");
+
+                    dokumentti.customGET("tila", {
+                        kieli: KieliService.getSisaltokieli()
+                    }).then(dto => {
+                        $scope.dokumenttiDto = dto;
+                        createLink();
+                        paivitaKuva("kansikuva");
+                        paivitaKuva("ylatunniste");
+                        paivitaKuva("alatunniste");
+
+                        if (dokumenttiDto && dokumenttiDto.tila === 'luodaan') {
+                            $timeout(poll, 1000);
+                        }
+                    });
+                };
+
+                init();
+
+                $rootScope.$on("changed:sisaltokieli", () => {
+                    init();
+                });
             }
         }
     }

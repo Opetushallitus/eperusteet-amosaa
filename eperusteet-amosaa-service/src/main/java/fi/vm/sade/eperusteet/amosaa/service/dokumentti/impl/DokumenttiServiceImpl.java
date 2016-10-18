@@ -117,10 +117,11 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     }
 
     @Override
-    @Transactional
+    @Transactional(noRollbackFor = DokumenttiException.class)
     @Async(value = "docTaskExecutor")
     public void generateWithDto(Long ktId, @NotNull Long opsId, DokumenttiDto dto) throws DokumenttiException {
         Dokumentti dokumentti = mapper.map(dto, Dokumentti.class);
+
         try {
             Opetussuunnitelma ops = opsRepository.findOne(dokumentti.getOpsId());
             dokumentti.setTila(DokumenttiTila.VALMIS);

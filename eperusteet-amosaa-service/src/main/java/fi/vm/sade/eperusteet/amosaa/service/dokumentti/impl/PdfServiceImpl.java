@@ -64,14 +64,10 @@ public class PdfServiceImpl implements PdfService {
 
         // Muunnetaan ops objekti xml muotoon
         convertOps2XML(doc, xmlStream);
-        //LOG.info("Generted XML  :");
-        //printStream(xmlStream);
 
         // Muunntetaan saatu xml malli fo:ksi
         InputStream xmlInputStream = new ByteArrayInputStream(xmlStream.toByteArray());
         convertXML2FO(xmlInputStream, xslt, foStream);
-        //LOG.info("Generated XSL-FO:");
-        printStream(foStream);
 
         // Muunnetaan saatu fo malli pdf:ksi
         InputStream foInputStream = new ByteArrayInputStream(foStream.toByteArray());
@@ -114,6 +110,7 @@ public class PdfServiceImpl implements PdfService {
 
         FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
         foUserAgent.getRendererOptions().put("pdf-a-mode", "PDF/A-1b");
+        foUserAgent.getEventBroadcaster().addEventListener(DokumenttiEventListener.getInstance());
 
         Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, foUserAgent, pdf);
 
