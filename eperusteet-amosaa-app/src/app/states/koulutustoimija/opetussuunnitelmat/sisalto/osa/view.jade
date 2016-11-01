@@ -1,7 +1,7 @@
 mixin valinnat()
   .tkv-valinnat
     .tkv-valinta
-      +checkbox("'valmis'", "osa.valmis")
+      // +checkbox("'valmis'", "osa.valmis")
     .tkv-valinta(ng-if="ops.tyyppi === 'pohja'")
       +checkbox("'pakollinen'", "osa.pakollinen")
     .tkv-valinta(ng-if="ops.tyyppi === 'pohja'")
@@ -31,6 +31,10 @@ mixin valinnat()
         +contentToggler("$$showPerusteteksti", "'tekstikappale-perusteteksti'")
           div(style="margin-bottom: 16px" ckeditor slocalized ng-model="osa.perusteteksti" layout="normal")
       div(ng-if="ops.tyyppi !== 'pohja'")
+        .checkbox
+          label
+            input.checked(type="checkbox" ng-model="osa.valmis")
+            span(kaanna="'valmis'")
         div.ohjeteksti(ng-if="osa.ohjeteksti")
           a(href="" ng-click="$$showOhjeteksti = !$$showOhjeteksti" ng-bind="'toggle-ohjeteksti' | kaanna")
           div(style="margin-top: 10px;" ng-show="$$showOhjeteksti")

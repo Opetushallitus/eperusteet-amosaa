@@ -151,11 +151,13 @@ angular.module("app")
                             $scope.tarkistaLukitus();
                             reject();
                         })),
-                    after: (res) => historia.get("uusin").then(res => {
-                        $scope.uusin = Revisions.parseOne(res);
-                        $scope.historia.unshift($scope.uusin);
-                        $rootScope.$broadcast("sivunavi:forcedUpdate", $scope.osa);
-                    }),
+                    after: (res) => {
+                        return historia.get("uusin").then(res => {
+                            $scope.uusin = Revisions.parseOne(res);
+                            $scope.historia.unshift($scope.uusin);
+                            $rootScope.$broadcast("sivunavi:forcedUpdate", $scope.osa);
+                        });
+                    },
                     done: () => lukko.remove()
                 });
 
