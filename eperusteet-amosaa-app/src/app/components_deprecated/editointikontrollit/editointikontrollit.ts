@@ -131,13 +131,15 @@ namespace EditointikontrollitService {
         scope[field] = resolvedObj.clone();
 
         return EditointikontrollitService.create(_.merge({
-            start: () => _$q((resolve, reject) => scope[field].get()
-                .then(res => {
-                    _.merge(resolvedObj, res);
-                    scope[field] = resolvedObj.clone();
-                    resolve();
-                })
-                .catch(reject)),
+            start: () => _$q((resolve, reject) => {
+                return scope[field].get()
+                    .then(res => {
+                        _.merge(resolvedObj, res);
+                        scope[field] = resolvedObj.clone();
+                        resolve();
+                    })
+                    .catch(reject);
+            }),
             save: (kommentti) => _$q((resolve, reject) => {
                 _$rootScope.$broadcast("notifyCKEditor");
                 scope[field].kommentti = kommentti;

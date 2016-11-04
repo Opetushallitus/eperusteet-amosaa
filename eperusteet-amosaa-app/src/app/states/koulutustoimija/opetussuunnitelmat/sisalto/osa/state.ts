@@ -84,7 +84,9 @@ angular.module("app")
 .state("root.koulutustoimija.opetussuunnitelmat.sisalto.osa", {
     url: "/osa/:osaId?versio?osio",
     resolve: {
-        osa: (ops, $stateParams) => ops.one("tekstit", $stateParams.osaId).get(),
+        osa: (ops, $state, $stateParams) => {
+            return ops.one("tekstit", $stateParams.osaId).get()
+        },
         historia: osa => osa.getList("versiot"),
         lukko: osa => osa.one("lukko"),
         versioId: $stateParams => $stateParams.versio,
@@ -138,6 +140,12 @@ angular.module("app")
                         });
                 });
 
+                $scope.$watch("osa", _.debounce((newVal, oldVal) => {
+                    if ($scope.$$ekEditing && newVal) {
+                        LocalStorage.addVanhaOsa(newVal);
+                    }
+                }, 300), true);
+
                 $scope.pTosa = pTosa;
                 nimiLataaja(osa.tekstiKappale.muokkaaja)
                     .then(_.cset(osa, "$$nimi"));
@@ -158,7 +166,10 @@ angular.module("app")
                             $rootScope.$broadcast("sivunavi:forcedUpdate", $scope.osa);
                         });
                     },
-                    done: () => lukko.remove()
+                    done: () => {
+                        LocalStorage.clearVanhaOsa();
+                        lukko.remove()
+                    }
                 });
 
                 $scope.remove = () => {
