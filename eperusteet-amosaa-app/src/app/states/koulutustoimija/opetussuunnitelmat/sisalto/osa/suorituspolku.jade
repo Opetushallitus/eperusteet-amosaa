@@ -6,6 +6,8 @@ div
         span ,
         span(style="margin-left: 5px;" ng-bind="perusteRakenne.muodostumisSaanto.laajuus.minimi || perusteRakenne.muodostumisSaanto.laajuus.maksimi")
         span(style="margin-left: 5px;" ng-bind="misc.suoritustapa.laajuusYksikko | kaanna")
+      .pull-right(ng-show="$$ekEditing")
+        +checkbox("osa.suorituspolku.naytaKuvausJulkisesti", "", "'nayta-kuvaus-julkisesti' | kaanna")
     p(ng-bind-html="perusteRakenne.kuvaus | kaanna")
 
   .pull-left.haku

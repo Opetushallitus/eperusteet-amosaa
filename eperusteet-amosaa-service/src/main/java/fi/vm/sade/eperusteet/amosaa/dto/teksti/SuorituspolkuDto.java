@@ -32,5 +32,6 @@ import lombok.Setter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SuorituspolkuDto {
     private Long id;
+    private Boolean naytaKuvausJulkisesti;
     private Set<SuorituspolkuRiviDto> rivit = new HashSet<>();
 }

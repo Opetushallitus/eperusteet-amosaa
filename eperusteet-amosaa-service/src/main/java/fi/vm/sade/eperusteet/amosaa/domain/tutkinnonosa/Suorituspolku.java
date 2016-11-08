@@ -54,6 +54,10 @@ public class Suorituspolku extends AbstractAuditedEntity implements Serializable
     @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "suorituspolku")
     private Set<SuorituspolkuRivi> rivit = new HashSet<>();
 
+    @Getter
+    @Setter
+    private Boolean naytaKuvausJulkisesti;
+
     public static Suorituspolku copy(Suorituspolku suorituspolku) {
         if (suorituspolku != null) {
             suorituspolku.setId(null);
