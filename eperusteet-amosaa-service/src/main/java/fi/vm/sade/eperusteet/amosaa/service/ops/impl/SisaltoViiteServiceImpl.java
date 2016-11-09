@@ -28,6 +28,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.revision.Revision;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.VapaaTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Suorituspolku;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Tutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaToteutus;
@@ -309,6 +310,10 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
 
         for (TutkinnonosaToteutus toteutus : tosa.getToteutukset()) {
             toteutus.setTutkinnonosa(tosa);
+        }
+
+        for (VapaaTeksti vapaaTeksti : tosa.getVapaat()) {
+            vapaaTeksti.setId(null);
         }
     }
 

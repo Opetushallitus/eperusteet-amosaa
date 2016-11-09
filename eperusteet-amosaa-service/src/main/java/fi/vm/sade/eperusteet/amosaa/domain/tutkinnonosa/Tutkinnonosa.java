@@ -19,6 +19,7 @@ package fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.domain.AbstractAuditedEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.VapaaTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -94,6 +95,12 @@ public class Tutkinnonosa extends AbstractAuditedEntity implements Serializable,
     @OrderColumn(name = "jnro")
     private List<TutkinnonosaToteutus> toteutukset = new ArrayList<>();
 
+    @Getter
+    @Setter
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OrderColumn(name = "jnro")
+    private List<VapaaTeksti> vapaat = new ArrayList<>();
+
     public static Tutkinnonosa copy(Tutkinnonosa tosa) {
         if (tosa != null) {
             tosa.setId(null);
@@ -102,6 +109,12 @@ public class Tutkinnonosa extends AbstractAuditedEntity implements Serializable,
             if (tosa.getToteutukset() != null) {
                 for (TutkinnonosaToteutus toteutus : tosa.getToteutukset()) {
                     toteutus.setId(null);
+                }
+            }
+
+            if (tosa.getToteutukset() != null) {
+                for (VapaaTeksti vapaa : tosa.getVapaat()) {
+                    vapaa.setId(null);
                 }
             }
         }

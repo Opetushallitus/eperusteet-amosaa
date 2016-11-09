@@ -212,22 +212,41 @@ mixin tosaToteutus()
   div.toteutukset
     div(ng-if="$$ekEditing")
       div
-        h1(ng-bind="'toteutus' | kaanna")
+        h1
+          span(ng-bind="'toteutus' | kaanna")
+          .pull-right
+            button.btn.btn-primary(ng-click="addVapaaTeksti()")
+              +icon("plus")
+              span(style="margin-left: 8px" ng-bind="'lisaa-vapaa-teksti' | kaanna")
 
         div(ng-if="pTosa && pTosa.tyyppi === 'tutke2'")
           h2(ng-bind="'osaamisen-osoittaminen' | kaanna")
           div(style="margin-bottom: 16px" ckeditor slocalized ng-model="osa.tosa.osaamisenOsoittaminen" layout="normal")
 
-        h2(ng-bind="'toteutukset' | kaanna")
+        div(ui-sortable="vapaatTekstitSortableOptions" ng-model="osa.tosa.vapaat")
+          div(ng-repeat="vapaa in osa.tosa.vapaat" style="margin-bottom: 16px")
+            .input-group(style="margin-bottom: 4px")
+              span.input-group-addon.pointable(ng-click="vapaa.$$nayta = !vapaa.$$nayta")
+                +turboChevron("!vapaa.$$nayta")
+              input.form-control(slocalized ng-model="vapaa.nimi")
+              span.input-group-addon.vapaa-handle.pointable
+                +gicon("sort")
+            div(ng-show="vapaa.$$nayta")
+              div(ckeditor slocalized ng-model="vapaa.teksti" layout="normal")
+              button.btn.btn-danger(style="margin-top: 6px" ng-click="removeVapaa(vapaa)")
+                +itext("remove", 'poista')
 
-        div.toolbar
-          button.btn.btn-primary(ng-bind="'lisaa-uusi' | kaanna" ng-click="lisaaUusiToteutus()")
+        h2(style="margin: 18px 0 18px 0")
+          span(ng-bind="'toteutukset' | kaanna")
+          .pull-right
+            button.btn.btn-primary
+              +icon("plus")
+              span(style="margin-left: 8px" ng-bind="'lisaa-uusi' | kaanna" ng-click="lisaaUusiToteutus()")
+
 
         div(ng-hide="osa.tosa.toteutukset.length > 0")
           div.alert.alert-info
             span(ng-bind="'tutkinnon-osalle-ei-maaritelty-paikallisia-toteutuksia' | kaanna")
-
-        .clearfix
 
         div(ui-sortable="sortableOptions" ng-model="osa.tosa.toteutukset")
           div.toteutus(ng-repeat="toteutus in osa.tosa.toteutukset")
@@ -271,6 +290,10 @@ mixin tosaToteutus()
       div(ng-if="pTosa && pTosa.tyyppi === 'tutke2'")
         +contentToggler("$$showOsaamisenOsoittaminen", "'osaamisen-osoittaminen'")
           +teksti("osa.tosa.osaamisenOsoittaminen")
+
+      div(ng-repeat="vapaa in osa.tosa.vapaat")
+        +contentToggler("vapaa.$$show", "vapaa.nimi")
+          +teksti("vapaa.teksti")
 
       div(ng-hide="osa.tosa.toteutukset.length > 0")
         div.alert.alert-info

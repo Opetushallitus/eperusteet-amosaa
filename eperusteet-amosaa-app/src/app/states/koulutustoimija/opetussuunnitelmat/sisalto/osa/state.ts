@@ -317,6 +317,16 @@ angular.module("app")
                             paivitaKoodistoTiedot();
                         });
 
+                $scope.addVapaaTeksti = () => {
+                    if (!_.isArray($scope.osa.tosa.vapaat)) {
+                        $scope.osa.tosa.vapaat = [];
+                    }
+                    $scope.osa.tosa.vapaat.push({
+                        nimi: {},
+                        teksti: {}
+                    });
+                };
+
                 $scope.paikallinenKoodiUpdate = (pkoodi) => {
                     $scope.$$koodiFormaattiVaara = false;
                     if (!_.isString(pkoodi) || !pkoodi.match(/^1\d\d\d$/)) {
@@ -353,6 +363,14 @@ angular.module("app")
                         placeholder: "toteutus-placeholder"
                     };
 
+                    $scope.vapaatTekstitSortableOptions = {
+                        handle: ".vapaa-handle",
+                        cursor: "move",
+                        delay: 100,
+                        tolerance: "pointer",
+                        placeholder: "vapaa-placeholder"
+                    };
+
                     paivitaKoodistoTiedot();
                 }
 
@@ -369,6 +387,7 @@ angular.module("app")
                 };
 
                 $scope.removeToteutus = (toteutus) => _.remove($scope.osa.tosa.toteutukset, toteutus);
+                $scope.removeVapaa = (item) => _.remove($scope.osa.tosa.vapaat, item);
 
                 $scope.addKoodi = (toteutus) => {
                     getTutkintonimikekoodit()
