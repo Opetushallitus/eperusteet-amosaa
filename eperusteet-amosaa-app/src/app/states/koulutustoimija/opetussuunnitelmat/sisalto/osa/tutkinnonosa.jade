@@ -239,9 +239,9 @@ mixin tosaToteutus()
         h2(style="margin: 18px 0 18px 0")
           span(ng-bind="'toteutukset' | kaanna")
           .pull-right
-            button.btn.btn-primary
+            button.btn.btn-primary(ng-click="lisaaUusiToteutus()")
               +icon("plus")
-              span(style="margin-left: 8px" ng-bind="'lisaa-uusi' | kaanna" ng-click="lisaaUusiToteutus()")
+              span(style="margin-left: 8px" ng-bind="'lisaa-uusi' | kaanna")
 
 
         div(ng-hide="osa.tosa.toteutukset.length > 0")
