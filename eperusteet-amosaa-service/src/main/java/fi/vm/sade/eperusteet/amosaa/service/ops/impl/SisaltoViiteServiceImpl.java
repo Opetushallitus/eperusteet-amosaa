@@ -595,8 +595,8 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
             }
         }
 
-        if (!tutkinnonOsat && (ops.getTyyppi() == OpsTyyppi.OPS || ops.getTyyppi() == OpsTyyppi.YHTEINEN)) {
-            throw new BusinessRuleViolationException("tosa-puuttuu");
+        if (!tutkinnonOsat && (ops.getTyyppi() == OpsTyyppi.OPS || ops.getTyyppi() == OpsTyyppi.YLEINEN)) {
+            throw new BusinessRuleViolationException("tosa-otsikko-puuttuu");
         }
 
         if (!suorituspolut && ops.getTyyppi() == OpsTyyppi.OPS) {
