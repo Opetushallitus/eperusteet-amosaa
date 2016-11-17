@@ -21,6 +21,7 @@ mixin valinnat()
       +itext("remove", 'poista')
 
   div
+    history-modal(versions="historia" endpoint="osa")
     div(ng-if="$$ekEditing")
       h1(ng-bind="'nimi' | kaanna" style="margin-bottom: 16px; margin-top: 16px" )
       input.form-control(style="margin-bottom: 16px; margin-top: 16px" slocalized ng-model="osa.tekstiKappale.nimi" type="text" required="true" ng-disabled="pTosa")

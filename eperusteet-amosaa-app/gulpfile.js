@@ -112,7 +112,7 @@ gulp
                 .pipe(sass().on('error', sass.logError)))
         .pipe(concat('styles.css'))
         .pipe(autoprefixer({
-            browser: ['last 1 version'],
+            browsers: ['last 1 version'],
             cascade: false
         }))
         .pipe(gulp.dest(config.build))
@@ -191,6 +191,7 @@ gulp
     gulp.watch(config.app + '**/*.ts', ['compile']);
     gulp.watch(config.frontend_utils + 'components/**/*.ts', ['compile']);
     gulp.watch(config.frontend_utils + 'components/**/*.jade', ['templates']);
+    gulp.watch(config.frontend_utils + 'components/**/*.scss', ['sass']);
     gulp.watch(config.app + '**/*.jade', ['templates']);
     gulp.watch(config.app + '**/*.scss', ['sass']);
     gulp.watch('./src/localisation/*.json', ['locales']);

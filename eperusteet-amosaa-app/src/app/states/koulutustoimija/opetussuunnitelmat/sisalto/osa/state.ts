@@ -123,8 +123,6 @@ angular.module("app")
         "": {
             controller: ($q, $state, $stateParams, $location, $scope, $rootScope, $document, $timeout, $filter, $sce,
                          koulutustoimija, osa, nimiLataaja, Varmistusdialogi, historia, versioId, versio, pTosa, lukko) => {
-
-                // HistoryModal.dialogi().then(_.noop);
                 $scope.$$showOhjeteksti = LocalStorage.getItem("$$showOhjeteksti").value;
                 $scope.$$showPerusteteksti = LocalStorage.getItem("$$showPerusteteksti").value;
 

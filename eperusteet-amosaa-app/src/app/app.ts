@@ -12,7 +12,8 @@ angular.module("app", [
     "ngSanitize",
     "ui.bootstrap",
     "angular-loading-bar",
-    "angularFileUpload"
+    "angularFileUpload",
+    "rzModule"
 ])
 
 // Route configuration

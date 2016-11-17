@@ -33,6 +33,9 @@
     "./node_modules/spin.js/spin.min.js",
     "./node_modules/moment/moment.js",
     "./node_modules/jquery-sticky/jquery.sticky.js",
-    "./node_modules/ckeditor/ckeditor.js"
+    "./node_modules/ckeditor/ckeditor.js",
+    "./node_modules/angularjs-slider/dist/rzslider.min.js",
+    "./node_modules/string/dist/string.min.js",
+    "./node_modules/diff/dist/diff.min.js"
   ]
 }

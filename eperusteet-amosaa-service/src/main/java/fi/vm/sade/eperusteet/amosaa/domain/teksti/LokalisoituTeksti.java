@@ -23,6 +23,7 @@ import java.text.Normalizer;
 import java.util.*;
 import javax.persistence.Cacheable;
 import javax.persistence.CollectionTable;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -30,6 +31,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import lombok.Getter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Immutable;
@@ -49,6 +51,10 @@ public class LokalisoituTeksti implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
+    @Getter
+    @Column(updatable = false)
+    private UUID tunniste;
+
     @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
     @Immutable
     @CollectionTable(name = "lokalisoituteksti_teksti")
@@ -58,8 +64,9 @@ public class LokalisoituTeksti implements Serializable {
     protected LokalisoituTeksti() {
     }
 
-    private LokalisoituTeksti(Set<Teksti> tekstit) {
+    private LokalisoituTeksti(Set<Teksti> tekstit, UUID tunniste) {
         this.teksti = tekstit;
+        this.tunniste = tunniste != null ? tunniste : UUID.randomUUID();
     }
 
     public Long getId() {
@@ -96,7 +103,7 @@ public class LokalisoituTeksti implements Serializable {
         return false;
     }
 
-    public static LokalisoituTeksti of(Map<Kieli, String> tekstit) {
+    public static LokalisoituTeksti of(Map<Kieli, String> tekstit, UUID tunniste) {
         if (tekstit == null) {
             return null;
         }
@@ -112,7 +119,12 @@ public class LokalisoituTeksti implements Serializable {
         if (tmp.isEmpty()) {
             return null;
         }
-        return new LokalisoituTeksti(tmp);
+
+        return new LokalisoituTeksti(tmp, tunniste);
+    }
+
+    public static LokalisoituTeksti of(Map<Kieli, String> tekstit) {
+        return of(tekstit, null);
     }
 
     public static LokalisoituTeksti of(LokalisoituTekstiDto tekstiDto) {
