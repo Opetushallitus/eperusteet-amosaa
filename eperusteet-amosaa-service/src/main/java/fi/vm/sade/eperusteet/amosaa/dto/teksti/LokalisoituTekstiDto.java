@@ -42,6 +42,10 @@ public class LokalisoituTekstiDto {
     @Getter
     private final Map<Kieli, String> tekstit;
 
+    public LokalisoituTekstiDto(Long id, Map<Kieli, String> values) {
+        this(id, null, values);
+    }
+
     public LokalisoituTekstiDto(Long id, UUID tunniste, Map<Kieli, String> values) {
         this.id = id;
         this.tunniste = tunniste;
