@@ -116,13 +116,6 @@ mixin ekeditor(model, layout)
     p(ng-bind-html=model + "| kaanna")
 
 
-mixin checkbox(name, model)
-  .checkbox
-    label
-      input.checked(type="checkbox" ng-model=model ng-disabled="!$$ekEditing")
-      span(kaanna=name)
-
-
 mixin formfieldDense(label)
   div.row(style="margin-bottom: 8px")
     .col-xs-3: span(kaanna=label)
@@ -216,4 +209,4 @@ mixin checkbox(model, click, text)
       span(style="margin-right: 4px;")
         .fa.fa-square-o(style="width: 16px; position: relative; left: -1px" ng-hide=model)
         .fa.fa-check-square-o(style="width: 16px" ng-show=model)
-      span(ng-bind=text)
+      span(kaanna=text)

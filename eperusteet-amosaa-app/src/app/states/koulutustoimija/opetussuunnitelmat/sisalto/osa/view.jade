@@ -3,9 +3,9 @@ mixin valinnat()
     .tkv-valinta
       // +checkbox("'valmis'", "osa.valmis")
     .tkv-valinta(ng-if="ops.tyyppi === 'pohja'")
-      +checkbox("'pakollinen'", "osa.pakollinen")
+      +checkbox("osa.pakollinen", "", "'pakollinen'")
     .tkv-valinta(ng-if="ops.tyyppi === 'pohja'")
-      +checkbox("'liikuttaminen-estetty'", "osa.liikkumaton")
+      +checkbox("osa.liikkumaton", "", "'liikuttaminen-estetty'")
   .clearfix
 
 .tekstikappaleet.subtle-transition
