@@ -28,5 +28,6 @@ import lombok.Setter;
 @Setter
 public class CachedPerusteBaseDto {
     private Long id;
+    private String diaarinumero;
     private LokalisoituTekstiDto nimi;
 }

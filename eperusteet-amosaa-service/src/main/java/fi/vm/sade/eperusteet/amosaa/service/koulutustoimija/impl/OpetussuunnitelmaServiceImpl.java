@@ -16,6 +16,7 @@
 
 package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.impl;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.Kayttaja;
@@ -58,18 +59,17 @@ import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.ValidointiService;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -131,6 +131,19 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         Koulutustoimija koulutustoimija = koulutustoimijaRepository.findOne(ktId);
         List<Opetussuunnitelma> opsit = repository.findAllByKoulutustoimija(koulutustoimija);
         return mapper.mapAsList(opsit, OpetussuunnitelmaBaseDto.class);
+    }
+
+    @Override
+    public List<OpetussuunnitelmaBaseDto> getPerusteenOpetussuunnitelmat(String diaari) {
+        List<Opetussuunnitelma> opsit = repository.findAllByPerusteDiaarinumero(diaari);
+        return mapper.mapAsList(opsit, OpetussuunnitelmaBaseDto.class);
+    }
+
+    @Override
+    public JsonNode getOpetussuunnitelmanPeruste(Long ktId, Long opsId) {
+        Opetussuunnitelma ops = repository.findOne(opsId);
+        JsonNode peruste = eperusteetService.getPerusteSisalto(ops.getPeruste().getId(), JsonNode.class);
+        return peruste;
     }
 
     @Override

@@ -17,13 +17,17 @@
 package fi.vm.sade.eperusteet.amosaa.resource.peruste;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
+import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import io.swagger.annotations.Api;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,6 +39,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/perusteet")
 @Api(value = "perusteet")
 public class PerusteController {
+
+    @Autowired
+    private OpetussuunnitelmaService opetussuunnitelmaService;
 
     @Autowired
     private EperusteetService service;
@@ -77,6 +84,12 @@ public class PerusteController {
             @PathVariable Long id,
             @PathVariable String st) {
         return service.getSuoritustapa(id, st);
+    }
+
+    @RequestMapping(value = "opetussuunnitelmat", method = RequestMethod.GET)
+    @ResponseBody
+    public List<OpetussuunnitelmaBaseDto> getOpetussuunnitelmat(@RequestParam String diaarinumero) {
+        return opetussuunnitelmaService.getPerusteenOpetussuunnitelmat(diaarinumero);
     }
 
 //    @RequestMapping(value = "/{perusteId}/tutkintonimikekoodit", method = GET)

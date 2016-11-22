@@ -61,6 +61,20 @@ public class SisaltoViiteController {
         return service.getSisaltoViitteet(ktId, opsId, SisaltoViiteKevytDto.class);
     }
 
+    @RequestMapping(value = "/suorituspolut", method = RequestMethod.GET)
+    List<SisaltoViiteDto> getSuorituspolut(
+            @PathVariable final Long ktId,
+            @PathVariable final Long opsId) {
+        return service.getSuorituspolut(ktId, opsId, SisaltoViiteDto.class);
+    }
+
+    @RequestMapping(value = "/tutkinnonosat", method = RequestMethod.GET)
+    List<SisaltoViiteDto> getTutkinnonosat(
+            @PathVariable final Long ktId,
+            @PathVariable final Long opsId) {
+        return service.getTutkinnonOsat(ktId, opsId, SisaltoViiteDto.class);
+    }
+
     @RequestMapping(value = "/tekstit/{svId}", method = RequestMethod.POST)
     SisaltoViiteDto.Matala addTekstiKappaleLapsi(
             @PathVariable final Long ktId,

@@ -16,6 +16,7 @@
 
 package fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.revision.Revision;
 import fi.vm.sade.eperusteet.amosaa.dto.PoistettuDto;
@@ -29,10 +30,9 @@ import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.util.PoistettuService;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 import io.swagger.annotations.Api;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  *
@@ -78,6 +78,14 @@ public class OpetussuunnitelmaController {
             @PathVariable final Long ktId,
             @PathVariable final Long opsId) {
         return service.getOpetussuunnitelma(ktId, opsId);
+    }
+
+    @RequestMapping(value = "/{opsId}/peruste", method = RequestMethod.GET)
+    @ResponseBody
+    public JsonNode getPeruste(
+            @PathVariable final Long ktId,
+            @PathVariable final Long opsId) {
+        return service.getOpetussuunnitelmanPeruste(ktId, opsId);
     }
 
     @RequestMapping(value = "/{opsId}", method = RequestMethod.PUT)

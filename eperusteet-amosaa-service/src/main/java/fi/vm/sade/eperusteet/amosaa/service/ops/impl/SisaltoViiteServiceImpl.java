@@ -252,10 +252,10 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
         SisaltoViite parentViite;
         switch (pelastettu.getTyyppi()) {
             case TUTKINNONOSA:
-                parentViite = repository.findTutkinnonosat(ops);
+                parentViite = repository.findTutkinnonosatRoot(ops);
                 break;
             case SUORITUSPOLKU:
-                parentViite = repository.findSuorituspolut(ops);
+                parentViite = repository.findSuorituspolutRoot(ops);
                 break;
             default:
                 parentViite = repository.findOneRoot(ops);
@@ -767,6 +767,20 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
     @Override
     protected int latestRevision(SisaltoViiteCtx ctx) {
         return repository.getLatestRevisionId(ctx.getSvId());
+    }
+
+    @Override
+    public <T> List<T> getSuorituspolut(Long ktId, Long opsId, Class<T> aClass) {
+        Opetussuunnitelma ops = opsRepository.findOne(opsId);
+        List<SisaltoViite> polut = repository.findSuorituspolut(ops);
+        return mapper.mapAsList(polut, aClass);
+    }
+
+    @Override
+    public <T> List<T> getTutkinnonOsat(Long ktId, Long opsId, Class<T> aClass) {
+        Opetussuunnitelma ops = opsRepository.findOne(opsId);
+        List<SisaltoViite> tosat = repository.findTutkinnonosat(ops);
+        return mapper.mapAsList(tosat, aClass);
     }
 
     @Override
