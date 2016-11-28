@@ -121,7 +121,7 @@ mixin kriteeri()
     .painikkeet
       span.sortable-item-handle.pull-right
         +gicon("sort")
-      span.pull-right.linkki(ng-click="poistaKriteeri(osaamistasonKriteeri, kriteeri)")
+      span.pull-right.linkki(ng-click="poistaKriteeri((arviointiKohde.osaamistasonKriteerit | orderBy:'-_osaamistaso')[index], kriteeri)")
         +icon("trash-o")
 
 
