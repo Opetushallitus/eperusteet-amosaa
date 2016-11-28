@@ -41,7 +41,7 @@ angular.module("app", [
                 if (res && res.data && res.data.syy) {
                     const syy = res.data.syy;
                     if (_.isArray(syy)) {
-                        _.each(syy, item => {
+                        _.each(syy, (item: any) => {
                             if (_.size(item.split(" ")) === 1) {
                                 NotifikaatioService.varoitus(KaannaService.kaanna(item));
                             }

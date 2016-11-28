@@ -164,7 +164,6 @@ namespace ModalAdd {
                 { // Perusteet
                     let valittuPeruste = null;
                     $scope.valitseTutkinnonosa = (tosa) => {
-                        console.log("Valittu", tosa)
                         $scope.ok({
                             tyyppi: "tutkinnonosa",
                             tekstiKappale: {

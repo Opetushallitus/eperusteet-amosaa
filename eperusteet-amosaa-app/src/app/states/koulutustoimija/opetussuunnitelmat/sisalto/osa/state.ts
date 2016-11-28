@@ -128,7 +128,6 @@ angular.module("app")
 
                 $scope.toggleVar = (str) => {
                     $scope[str] = !$scope[str];
-                    console.log(str, $scope[str])
                     LocalStorage.setItem(str, $scope[str]);
                 };
 

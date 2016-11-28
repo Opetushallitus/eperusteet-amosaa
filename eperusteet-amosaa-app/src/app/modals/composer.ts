@@ -7,12 +7,12 @@ namespace Modals {
 
     interface ModalStep {
         ctx: any;
-    };
+    }
 
     export const composeModals = (...steps: ModalStep[]) => {
 
     };
-};
+}
 
 angular.module("app")
 .run(Modals.init);

@@ -57,7 +57,6 @@ _.mixin({
         _.merge(to, from);
     },
     spy: (obj) => {
-        console.log(obj);
         return obj;
     },
     fromPairs: (pairs) => {
