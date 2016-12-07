@@ -35,7 +35,7 @@ div.dokumentti
         p(ng-show="dokumenttiDto.tila === 'ei_ole'" ng-bind="'dokumentti-ei-ole' | kaanna")
         p(ng-show="dokumenttiDto.tila === 'epaonnistui'" ng-bind="'dokumentti-epaonnistui' | kaanna")
 
-        div(ng-hide="dokumenttiDto.tila === 'luodaan'")
+        div(ng-hide="dokumenttiDto.tila === 'luodaan' || dokumenttiDto.tila === 'jonossa'")
           p.tiedot(ng-show="dokumenttiDto.tila === 'valmis'")
             span
               b(ng-bind="'luotu' | kaanna")
@@ -54,7 +54,7 @@ div.dokumentti
           button.btn.btn-default(ng-click="generoi()")
             span(ng-bind="'luo-uusi-dokumentti' | kaanna")
 
-        div(ng-show="dokumenttiDto.tila === 'luodaan'")
+        div(ng-show="dokumenttiDto.tila === 'luodaan' || dokumenttiDto.tila === 'jonossa'")
           p(ng-bind="'luodaan-dokumenttia' | kaanna")
           div.row
             div.col-xs-8
@@ -68,7 +68,7 @@ div.dokumentti
                 div.progress-bar.progress-bar-striped.active(
                     style="width: 100%;"
                     ng-if="dokumenttiDto.edistyminen === 'tuntematon'")
-                  span(ng-bind="'luodaan' | kaanna")
+                  span(ng-bind="dokumenttiDto.tila | kaanna")
           div.row
             div.col-xs-8
               button.btn.btn-default(ng-click="generoi()")

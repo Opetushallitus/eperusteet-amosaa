@@ -26,6 +26,7 @@ import fi.vm.sade.eperusteet.amosaa.repository.dokumentti.DokumenttiRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiBuilderService;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiService;
+import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiStateService;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils;
 import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
@@ -66,6 +67,9 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 
     @Autowired
     private DokumenttiBuilderService builderService;
+
+    @Autowired
+    private DokumenttiStateService dokumenttiStateService;
 
     @Override
     @Transactional(readOnly = true)
@@ -111,29 +115,32 @@ public class DokumenttiServiceImpl implements DokumenttiService {
         // Asetetaan dokumentti luonti tilaan
         dto.setAloitusaika(new Date());
         dto.setLuoja(SecurityUtil.getAuthenticatedPrincipal().getName());
-        dto.setTila(DokumenttiTila.LUODAAN);
-        dto.setVirhekoodi("");
-        dokumenttiRepository.save(mapper.map(dto, Dokumentti.class));
+        dto.setTila(DokumenttiTila.JONOSSA);
+        dokumenttiStateService.save(dto);
     }
 
     @Override
     @Transactional(noRollbackFor = DokumenttiException.class)
     @Async(value = "docTaskExecutor")
     public void generateWithDto(Long ktId, @NotNull Long opsId, DokumenttiDto dto) throws DokumenttiException {
-        Dokumentti dokumentti = mapper.map(dto, Dokumentti.class);
+        dto.setTila(DokumenttiTila.LUODAAN);
+        dokumenttiStateService.save(dto);
 
         try {
+            Dokumentti dokumentti = mapper.map(dto, Dokumentti.class);
             Opetussuunnitelma ops = opsRepository.findOne(dokumentti.getOpsId());
             dokumentti.setTila(DokumenttiTila.VALMIS);
             dokumentti.setValmistumisaika(new Date());
             dokumentti.setVirhekoodi("");
             dokumentti.setEdistyminen(DokumenttiEdistyminen.TUNTEMATON);
             dokumentti.setData(builderService.generatePdf(ops, dokumentti, dokumentti.getKieli()));
+
             dokumenttiRepository.save(dokumentti);
         } catch (Exception ex) {
-            dokumentti.setTila(DokumenttiTila.EPAONNISTUI);
-            dokumentti.setVirhekoodi(ex.getLocalizedMessage());
-            dokumenttiRepository.save(dokumentti);
+            dto.setTila(DokumenttiTila.EPAONNISTUI);
+            dto.setVirhekoodi(ex.getLocalizedMessage());
+
+            dokumenttiStateService.save(dto);
 
             throw new DokumenttiException(ex.getMessage(), ex);
         }

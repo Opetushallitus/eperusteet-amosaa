@@ -73,7 +73,7 @@ angular.module("app")
                         kieli: KieliService.getSisaltokieli()
                     }).then((dokumenttiDto) => {
                         $scope.dokumenttiDto = dokumenttiDto;
-                        if (dokumenttiDto.tila === 'luodaan') {
+                        if (dokumenttiDto.tila === 'luodaan' || dokumenttiDto.tila === 'jonossa') {
                             $timeout(poll, 1000);
                         }
                     });
@@ -93,7 +93,7 @@ angular.module("app")
                         paivitaKuva("ylatunniste");
                         paivitaKuva("alatunniste");
 
-                        if (dokumenttiDto && dokumenttiDto.tila === 'luodaan') {
+                        if (dokumenttiDto && (dokumenttiDto.tila === 'luodaan' || dokumenttiDto.tila === 'jonossa')) {
                             $timeout(poll, 1000);
                         }
                     });
