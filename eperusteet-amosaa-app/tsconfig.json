@@ -9,6 +9,7 @@
   "files": [
     "typings/tsd.d.ts",
     "src/app/globals.ts",
+    "src/app/amosaaconfig.ts",
     "node_modules/eperusteet-frontend-utils/components/injector/injector.ts",
     "node_modules/eperusteet-frontend-utils/components/numberinput/numberinput.ts",
     "node_modules/eperusteet-frontend-utils/components/palautus/palautus.ts",

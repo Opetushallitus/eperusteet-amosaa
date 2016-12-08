@@ -17,10 +17,27 @@ div.modal-body
 
     div.listaus(ng-show="input.length > 0")
       div.tutkinto(ng-show="perusteet.length > 0" ng-repeat="peruste in perusteet" ng-click="valitsePeruste(peruste)")
-        div.nimi(ng-bind="peruste.nimi | kaanna")
+        div.nimi
+          span(ng-bind="peruste.nimi | kaanna")
+
+          span(ng-show="peruste.$$siirtymalla")
+            span=" ("
+            span(ng-bind="'siirtyma-aika-loppuu' | kaanna")
+            span=": "
+            span(ng-bind="peruste.siirtymaPaattyy | aikaleima:'date'")
+            span=")"
+
+          span(ng-show="peruste.$$tuleva")
+            span=" ("
+            span(ng-bind="'tulee-voimaan' | kaanna")
+            span=": "
+            span(ng-bind="peruste.voimassaoloAlkaa | aikaleima:'date'")
+            span=")"
+
         div.diaari(ng-bind="peruste.diaarinumero")
+        div.koulutustyyppi(ng-bind="peruste.koulutustyyppi | kaanna")
       div(ng-show="perusteet.length === 0")
-        span.ei-tuloksia(ng-bind="'ei-hakutuloksia' | kaanna")
+        div.ei-tuloksia(ng-bind="'ei-hakutuloksia' | kaanna")
 
     div.peruste(ng-show="peruste")
       div

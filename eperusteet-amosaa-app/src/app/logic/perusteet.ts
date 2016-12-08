@@ -15,4 +15,12 @@ namespace Perusteet {
     export const getRakenne = (suoritustapa) => suoritustapa.rakenne;
 
     export const getTosaViitteet = (suoritustapa) => suoritustapa.tutkinnonOsaViitteet;
+
+    export const isSiirtymalla = (peruste) => peruste.siirtymaPaattyy && peruste.siirtymaPaattyy < Date.now();
+
+    export const isVanhentunut = (peruste) => !isSiirtymalla(peruste)
+        && peruste.voimassaoloLoppuu
+        && peruste.voimassaoloLoppuu < Date.now();
+
+    export const isTuleva = (peruste) => peruste.voimassaoloAlkaa && peruste.voimassaoloAlkaa > Date.now();
 }
