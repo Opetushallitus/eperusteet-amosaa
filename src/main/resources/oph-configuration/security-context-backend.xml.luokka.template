@@ -33,6 +33,10 @@
                     http://www.springframework.org/schema/security
                     http://www.springframework.org/schema/security/spring-security.xsd">
 
+    <http>
+        <csrf disabled="true"/>
+    </http>
+
     <!-- /buildversion.txt?auth forced to require authentication (needed for auth health checking purposes) -->
     <http entry-point-ref="casEntryPoint" use-expressions="true" request-matcher="regex" pattern="/buildversion.txt.auth|/healthcheck.auth|/healthcheck.userinfo">
         <intercept-url pattern="/**" access="isAuthenticated()"/>
