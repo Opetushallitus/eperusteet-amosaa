@@ -25,7 +25,6 @@ import fi.vm.sade.eperusteet.amosaa.domain.arviointi.ArvioinninKohde;
 import fi.vm.sade.eperusteet.amosaa.domain.arviointi.ArvioinninKohdealue;
 import fi.vm.sade.eperusteet.amosaa.domain.arviointi.Arviointi;
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.Dokumentti;
-import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiEdistyminen;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.SuorituspolkuRivi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
@@ -49,21 +48,22 @@ import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.CharapterNumber
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiBase;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiRivi;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiTaulukko;
-import static fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils.*;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.ops.LiiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.TermistoService;
 import fi.vm.sade.eperusteet.amosaa.service.util.KoodistoClient;
-import java.awt.Color;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriteParam;
@@ -74,15 +74,17 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.List;
+
+import static fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils.*;
 
 /**
  *
@@ -167,16 +169,13 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
         }
 
         // Kansilehti & Infosivu
-        changeProgress(docBase, DokumenttiEdistyminen.META);
         addMetaPages(docBase);
 
         // Sisältöelementit
-        changeProgress(docBase, DokumenttiEdistyminen.TEKSTIKAPPALEET);
         addTekstit(docBase);
 
 
         // Alaviitteet
-        changeProgress(docBase, DokumenttiEdistyminen.VIITTEET);
         buildFootnotes(docBase);
 
         try {
@@ -186,20 +185,14 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
         }
 
         // Kuvat
-        changeProgress(docBase, DokumenttiEdistyminen.KUVAT);
         buildImages(docBase);
         buildKansilehti(docBase);
         buildYlatunniste(docBase);
         buildAlatunniste(docBase);
 
         // PDF luonti XHTML dokumentista
-        changeProgress(docBase, DokumenttiEdistyminen.TYYLIT);
+        LOG.info("Generate PDF (opsId=" + docBase.getOpetussuunnitelma().getId() + ")");
         return pdfService.xhtml2pdf(doc);
-    }
-
-    private void changeProgress(DokumenttiBase docBase, DokumenttiEdistyminen edistyminen) {
-        //docBase.getDokumentti().setEdistyminen(edistyminen);
-        //dokumenttiRepository.saveAndFlush(docBase.getDokumentti());
     }
 
     private void addMetaPages(DokumenttiBase docBase) {
