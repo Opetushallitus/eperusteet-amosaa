@@ -49,23 +49,21 @@ import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.CharapterNumber
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiBase;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiRivi;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiTaulukko;
+import static fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils.*;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.ops.LiiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.TermistoService;
 import fi.vm.sade.eperusteet.amosaa.service.util.KoodistoClient;
-import org.apache.xml.security.utils.Base64;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriteParam;
@@ -76,17 +74,15 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.*;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.List;
-
-import static fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -819,7 +815,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
                 IIOImage outputImage = new IIOImage(bufferedImage, null, null);
                 jpgWriter.write(null, outputImage, jpgWriteParam);
                 jpgWriter.dispose();
-                String base64 = Base64.encode(out.toByteArray());
+                String base64 = Base64.getEncoder().encodeToString(out.toByteArray());
 
                 // Lisätään bas64 kuva img elementtiin
                 element.setAttribute("width", String.valueOf(width));
@@ -842,7 +838,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
             return;
         }
 
-        String base64 = Base64.encode(image);
+        String base64 = Base64.getEncoder().encodeToString(image);
         kuva.setAttribute("src", "data:image/jpg;base64," + base64);
 
         kansikuva.appendChild(kuva);
@@ -859,7 +855,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
             return;
         }
 
-        String base64 = Base64.encode(image);
+        String base64 = Base64.getEncoder().encodeToString(image);
         kuva.setAttribute("src", "data:image/jpg;base64," + base64);
 
         ylatunniste.appendChild(kuva);
@@ -876,7 +872,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
             return;
         }
 
-        String base64 = Base64.encode(image);
+        String base64 = Base64.getEncoder().encodeToString(image);
         kuva.setAttribute("src", "data:image/jpg;base64," + base64);
 
         alatunniste.appendChild(kuva);

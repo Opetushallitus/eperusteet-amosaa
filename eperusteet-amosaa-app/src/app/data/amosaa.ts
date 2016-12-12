@@ -9,6 +9,7 @@ angular.module("app")
 .run(AmosaaApi.init)
 .factory("Api", Restangular => Restangular.withConfig(config => {
     config.setBaseUrl("/eperusteet-amosaa-service/api");
+
     config.addResponseInterceptor((data, operation, what, url, response, deferred) => {
         if (response && response.status >= 400) {
             if (response.status >= 500) {
