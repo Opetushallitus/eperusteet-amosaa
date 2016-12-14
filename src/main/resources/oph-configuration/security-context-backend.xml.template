@@ -38,28 +38,23 @@
     <http entry-point-ref="casEntryPoint" use-expressions="true" request-matcher="regex" pattern="/buildversion.txt.auth|/healthcheck.auth|/healthcheck.userinfo">
         <intercept-url pattern="/**" access="isAuthenticated()"/>
         <custom-filter position="CAS_FILTER" ref="casFilter" />
-        <csrf disabled="true"/>
     </http>
 
     <http entry-point-ref="forbiddenEntryPoint" use-expressions="true" request-matcher="regex" pattern="/buildversion.txt|/healthcheck">
         <intercept-url pattern="/**" access="permitAll"/>
-        <csrf disabled="true"/>
     </http>
 
     <!-- wsdl/xsd resources must be public -->
     <http entry-point-ref="forbiddenEntryPoint" use-expressions="true" request-matcher="regex" pattern="[\w/]*[.?]wsdl">
         <intercept-url pattern="/**" access="permitAll"/>
-        <csrf disabled="true"/>
     </http>
     <http entry-point-ref="forbiddenEntryPoint" use-expressions="true" request-matcher="regex" pattern="[\w/]*\?xsd=[\w/]*\.xsd">
         <intercept-url pattern="/**" access="permitAll"/>
-        <csrf disabled="true"/>
     </http>
 
     <http entry-point-ref="casEntryPoint" use-expressions="true" request-matcher="regex" pattern="/user/postLogin.*">
         <intercept-url pattern="/user/postLogin.*" access="isAuthenticated()"/> <!-- todo: -->
         <custom-filter position="CAS_FILTER" ref="casFilter" />
-        <csrf disabled="true"/>
     </http>
 
     <!-- own config for single logout, because: xTODO: singleLogoutFilter aiheuttaa POSTeissa formin tyhjenemisen, consuumaa formin mystisesti, ilmeni haku-projektin yhteydessa -->
@@ -70,7 +65,6 @@
         <custom-filter ref="singleLogoutFilter" before="CAS_FILTER" />
         <custom-filter ref="casFilter" position="CAS_FILTER"/>
         <logout logout-success-url="/user/logout"/> <!-- huom! vain haku tarvitsee tata? -->
-        <csrf disabled="true"/>
     </http>
 
     <!--
@@ -85,7 +79,8 @@
         <intercept-url pattern="/**" access="${spring_security_default_access}"/>
         <custom-filter ref="casFilter" position="CAS_FILTER"/>
         <logout logout-success-url="/user/logout"/> <!-- huom! vain haku tarvitsee tata? -->
-        <csrf token-repository-ref="tokenRepository"/>
+        <csrf disabled="true"/>
+        <!-- <csrf token-repository-ref="tokenRepository"/> -->
     </http>
 
     <beans:bean id="tokenRepository" class="org.springframework.security.web.csrf.CookieCsrfTokenRepository">
