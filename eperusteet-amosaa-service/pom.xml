@@ -296,8 +296,13 @@
         </dependency>
         <dependency>
             <groupId>fi.vm.sade.generic</groupId>
-            <version>9.1-SNAPSHOT</version>
+            <version>9.6-SNAPSHOT</version>
             <artifactId>generic-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+            <version>3.1</version>
         </dependency>
         <dependency>
             <groupId>net.sf.ehcache</groupId>
