@@ -10,6 +10,7 @@ angular.module("app", [
     "pascalprecht.translate",
     "ngAnimate",
     "ngSanitize",
+    "ngCookies",
     "ui.bootstrap",
     "angular-loading-bar",
     "angularFileUpload",
@@ -30,7 +31,12 @@ angular.module("app", [
     moment.locale("fi");
 })
 
+// HTTP configs
 .config(($httpProvider) => {
+    $httpProvider.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
+    $httpProvider.defaults.xsrfHeaderName = "X-XSRF-TOKEN-EPERUSTEET-AMOSAA";
+    $httpProvider.defaults.xsrfCookieName = "XSRF-TOKEN-EPERUSTEET-AMOSAA";
+
     $httpProvider.interceptors.push(["$q", ($q) => ({
         response: (res) => res,
         responseError: (res) => {
@@ -162,9 +168,6 @@ angular.module("app", [
 })
 .run(($rootScope, $timeout, $log, $urlMatcherFactory, $state) => {
     $rootScope.$on("$stateChangeStart", (event, state, params) => {
-        // if (!params.lang || _.isNumber(_.parseInt(params.lang))) {
-        //     $state.go("root", { lang: "fi" }, { reload: true });
-        // }
         if (EditointikontrollitService.isEditing()) {
             event.preventDefault();
             NotifikaatioService.normaali("ohje-editointi-on-paalla");
@@ -182,7 +185,4 @@ angular.module("app", [
         $location.hash(loc);
         $anchorScroll();
     };
-    // $.get("templates.html", function(data) {
-    //     $("#includedTemplates").replaceWith(data);
-    // });
-});
+})
