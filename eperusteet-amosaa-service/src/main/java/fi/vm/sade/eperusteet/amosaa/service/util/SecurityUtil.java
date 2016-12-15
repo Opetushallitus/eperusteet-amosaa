@@ -67,7 +67,7 @@ public final class SecurityUtil {
     public static Set<String> getOrganizations(Authentication authentication, Set<RolePermission> permissions) {
         return authentication.getAuthorities().stream()
                              .map(grantedAuthority -> parseOid(grantedAuthority.getAuthority(),
-                                                               RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA,
+                                                               RolePrefix.APP_EPERUSTEET_AMOSAA,
                                                                permissions))
                              .filter(Optional::isPresent)
                              .map(Optional::get)

@@ -53,7 +53,7 @@ public class PermissionEvaluator implements org.springframework.security.access.
     }
 
     public enum RolePrefix {
-        ROLE_APP_EPERUSTEET_AMOSAA,
+        APP_EPERUSTEET_AMOSAA,
         ROLE_VIRKAILIJA
     }
 
