@@ -126,14 +126,14 @@ public class PermissionManager {
         }
 
         if (perm == Permission.HALLINTA && targetId == null && target == TargetType.TARKASTELU &&
-                hasRole(authentication, RolePrefix.APP_EPERUSTEET_AMOSAA, RolePermission.CRUD, Organization.OPH)) {
+                hasRole(authentication, RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA, RolePermission.CRUD, Organization.OPH)) {
             return true;
         }
 
         if (perm == Permission.HALLINTA
                 && target == TargetType.OPH
                 && hasRole(authentication,
-                        RolePrefix.APP_EPERUSTEET_AMOSAA,
+                        RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA,
                         RolePermission.ADMIN,
                         Organization.OPH)) {
             return true;
@@ -209,18 +209,18 @@ public class PermissionManager {
 
         // Jos käyttäjällä on jokin rooli organisaatiossa niin on lupa lukea
         if (( perm == Permission.ESITYS || perm == Permission.LUKU || perm == Permission.KOMMENTOINTI)
-                && hasAnyRole(authentication, RolePrefix.APP_EPERUSTEET_AMOSAA, permissions, organisaatio)) {
+                && hasAnyRole(authentication, RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA, permissions, organisaatio)) {
             return true;
         }
 
         // Jos käyttäjällä on organisaatiossa hallintaoikeus
-        if (hasRole(authentication, RolePrefix.APP_EPERUSTEET_AMOSAA, RolePermission.ADMIN, organisaatio)) {
+        if (hasRole(authentication, RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA, RolePermission.ADMIN, organisaatio)) {
             return true;
         }
 
         // Koulutustoimijan oikeus
         if (target == TargetType.KOULUTUSTOIMIJA) {
-            return hasAnyRole(authentication, RolePrefix.APP_EPERUSTEET_AMOSAA, permissions, organisaatio);
+            return hasAnyRole(authentication, RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA, permissions, organisaatio);
         }
         // Opetussuunnitelmien oikeudet
         else if (target == TargetType.OPETUSSUUNNITELMA) {

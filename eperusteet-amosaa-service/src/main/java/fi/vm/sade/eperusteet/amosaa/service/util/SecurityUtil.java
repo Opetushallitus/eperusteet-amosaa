@@ -24,6 +24,8 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,6 +36,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
  * @author jhyoty
  */
 public final class SecurityUtil {
+    private static final Logger LOG = LoggerFactory.getLogger(SecurityUtil.class);
 
     public static final String OPH_OID = "1.2.246.562.10.00000000001";
 
@@ -67,7 +70,7 @@ public final class SecurityUtil {
     public static Set<String> getOrganizations(Authentication authentication, Set<RolePermission> permissions) {
         return authentication.getAuthorities().stream()
                              .map(grantedAuthority -> parseOid(grantedAuthority.getAuthority(),
-                                                               RolePrefix.APP_EPERUSTEET_AMOSAA,
+                                                               RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA,
                                                                permissions))
                              .filter(Optional::isPresent)
                              .map(Optional::get)
@@ -75,6 +78,7 @@ public final class SecurityUtil {
     }
 
     private static Optional<String> parseOid(String authority, RolePrefix prefix, Set<RolePermission> permissions) {
+        LOG.error("CHECKING AUTHORITY " + authority);
         return permissions.stream()
                           .map(p -> {
                               String authPrefix = prefix.name() + "_" + p.name() + "_";
