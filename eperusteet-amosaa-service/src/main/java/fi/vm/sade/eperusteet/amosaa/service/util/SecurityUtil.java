@@ -78,7 +78,7 @@ public final class SecurityUtil {
     }
 
     private static Optional<String> parseOid(String authority, RolePrefix prefix, Set<RolePermission> permissions) {
-        LOG.error("CHECKING AUTHORITY " + authority);
+        LOG.info("CHECKING AUTHORITY " + authority);
         return permissions.stream()
                           .map(p -> {
                               String authPrefix = prefix.name() + "_" + p.name() + "_";
