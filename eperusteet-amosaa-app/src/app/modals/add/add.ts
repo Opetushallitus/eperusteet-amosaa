@@ -95,7 +95,7 @@ namespace ModalAdd {
                     })
                     .value();
 
-                $scope.perusteet = filterPerusteet(perusteet.data);
+                $scope.perusteet = filterPerusteet(amosaaPerusteet);
                 $scope.peruste = undefined;
                 $scope.ok = $uibModalInstance.close;
                 $scope.peruuta = $uibModalInstance.dismiss;
@@ -104,7 +104,7 @@ namespace ModalAdd {
                     if (!_.isEmpty(input)) {
                         $scope.peruste = undefined;
                     }
-                    $scope.perusteet = filterPerusteet(perusteet.data, input);
+                    $scope.perusteet = filterPerusteet(amosaaPerusteet, input);
                 };
 
                 $scope.valitsePeruste = (peruste) => {
