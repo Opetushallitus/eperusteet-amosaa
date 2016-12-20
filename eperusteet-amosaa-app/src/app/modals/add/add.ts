@@ -80,12 +80,13 @@ namespace ModalAdd {
             resolve: {
                 perusteet: Eperusteet => Eperusteet.one("perusteet").get({
                     sivukoko: 9999,
-                    koulutustyyppi: Amosaa.tuetutKoulutustyypit()
+                    // koulutustyyppi: Amosaa.tuetutKoulutustyypit()
                 }) // FIXME paginointihärveli
             },
             templateUrl: "modals/add/opetussuunnitelma.jade",
             controller: ($scope, $state, $stateParams, $uibModalInstance, perusteet) => {
                 const amosaaPerusteet = _(perusteet.data)
+                    .filter(peruste => _.includes(Amosaa.tuetutKoulutustyypit(), peruste.koulutustyyppi))
                     .reject(Perusteet.isVanhentunut)
                     .map(peruste => {
                         peruste.$$tuleva = Perusteet.isTuleva(peruste);
@@ -204,7 +205,7 @@ namespace ModalAdd {
                         $scope.currentStage = "perusteet";
                         Eperusteet.one("perusteet").get({
                             sivukoko: 9999,
-                            koulutustyyppi: "koulutustyyppi_1"
+                            koulutustyyppi: "koulutustyyppi_1" // FIXME
                         })
                         .then(perusteet => {
                             $scope.perustep = PaginationV2.addPagination(
