@@ -89,7 +89,7 @@
 
     <!--  ===== end of mappings ===== -->
     
-    <beans:bean id="casFilter" class="fi.vm.sade.security.CustomCasAuthenticationFilter">
+    <beans:bean id="casFilter" class="fi.vm.sade.security.OpintopolkuCasAuthenticationFilter">
         <!-- <beans:constructor-arg ref="casServiceProperties"/> -->
         <beans:property name="serviceProperties" ref="casServiceProperties"/>
         <beans:property name="authenticationManager" ref="authenticationManager"/>

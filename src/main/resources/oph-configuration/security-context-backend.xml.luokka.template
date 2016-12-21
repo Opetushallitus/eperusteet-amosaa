@@ -118,7 +118,7 @@
     <!-- urlRewriteFilter is needed only for auth.mode=dev !!! -->
     <beans:bean id="urlRewriteFilter" class="fi.vm.sade.security.UrlRewriteFilter"/>
 
-    <beans:bean id="casFilter" class="fi.vm.sade.security.CustomCasAuthenticationFilter">
+    <beans:bean id="casFilter" class="fi.vm.sade.security.OpintopolkuCasAuthenticationFilter">
         <beans:property name="authenticationManager" ref="authenticationManager"/>
         <beans:property name="serviceProperties" ref="casServiceProperties"/>
         <beans:property name="proxyGrantingTicketStorage" ref="pgtStorage"/>
