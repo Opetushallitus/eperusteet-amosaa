@@ -19,7 +19,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteInfoDto;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import java.util.Collections;
@@ -93,14 +92,14 @@ public class EperusteetServiceMock implements EperusteetService {
     }
 
     @Override
-    public List<PerusteInfoDto> findPerusteet(Set<KoulutusTyyppi> tyypit) {
-        PerusteInfoDto perusteInfo = new PerusteInfoDto();
-        perusteInfo.setDiaarinumero(DIAARINUMERO);
-        return Collections.singletonList(perusteInfo);
+    public List<PerusteDto> findPerusteet(Set<KoulutusTyyppi> tyypit) {
+        PerusteDto peruste = new PerusteDto();
+        peruste.setDiaarinumero(DIAARINUMERO);
+        return Collections.singletonList(peruste);
     }
 
     @Override
-    public List<PerusteInfoDto> findPerusteet() {
+    public List<PerusteDto> findPerusteet() {
         return findPerusteet(null);
     }
 
