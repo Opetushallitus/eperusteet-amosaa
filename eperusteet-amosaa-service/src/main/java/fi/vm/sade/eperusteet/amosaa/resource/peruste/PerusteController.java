@@ -46,6 +46,12 @@ public class PerusteController {
     @Autowired
     private EperusteetService service;
 
+    @RequestMapping(method = RequestMethod.GET)
+    @ResponseBody
+    public List<PerusteDto> getPerusteet() {
+        return service.findPerusteet();
+    }
+
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
     public PerusteDto getPeruste(@PathVariable Long id) {

@@ -78,14 +78,12 @@ namespace ModalAdd {
 
     export const opetussuunnitelma = () => i.$uibModal.open({
             resolve: {
-                perusteet: Eperusteet => Eperusteet.one("perusteet").get({
-                    sivukoko: 9999,
-                    // koulutustyyppi: Amosaa.tuetutKoulutustyypit()
-                }) // FIXME paginointihärveli
+                perusteet: Api => Api.all("perusteet").getList()
             },
             templateUrl: "modals/add/opetussuunnitelma.jade",
             controller: ($scope, $state, $stateParams, $uibModalInstance, perusteet) => {
-                const amosaaPerusteet = _(perusteet.data)
+                // perusteet: Api => Api.all("perusteet")
+                const amosaaPerusteet = _(perusteet)
                     .filter(peruste => _.includes(Amosaa.tuetutKoulutustyypit(), peruste.koulutustyyppi))
                     .reject(Perusteet.isVanhentunut)
                     .map(peruste => {
@@ -134,7 +132,7 @@ namespace ModalAdd {
             resolve: {
             },
             templateUrl: "modals/add/sisalto.jade",
-            controller: ($uibModalInstance, $scope, $stateParams, Eperusteet) => {
+            controller: ($uibModalInstance, $scope, $stateParams, Api) => {
                 $scope.currentStage = "sisaltotyyppi";
                 $scope.$$tutkinnonosatuonti = _.indexOf(sallitut, "tutkinnonosatuonti") !== -1;
                 $scope.$$sisaltotuonti = _.indexOf(sallitut, "sisaltotuonti") !== -1;
@@ -154,14 +152,12 @@ namespace ModalAdd {
                             });
                     };
 
-                    $scope.tuoSisaltoa = () => {
+                    $scope.tuoSisaltoa = async () => {
                         $scope.currentStage = "opetussuunnitelma";
-                        koulutustoimija.all("opetussuunnitelmat").getList()
-                            .then(opsit => {
-                                $scope.opsp = PaginationV2.addPagination(opsit, (search: string, ops: any): boolean =>
-                                    ($scope.poistetut || ops.tila !== "poistettu")
-                                    && (!search || _.isEmpty(search) || Algoritmit.match(search, ops.nimi)));
-                            });
+                        const opsit = await koulutustoimija.all("opetussuunnitelmat").getList()
+                        $scope.opsp = PaginationV2.addPagination(opsit, (search: string, ops: any): boolean =>
+                            ($scope.poistetut || ops.tila !== "poistettu")
+                            && (!search || _.isEmpty(search) || Algoritmit.match(search, ops.nimi)));
                     };
 
                     $scope.lisaaOpsSisalto = () => $scope.ok(_($scope.rakenne)
@@ -189,31 +185,24 @@ namespace ModalAdd {
                         });
                     };
 
-                    $scope.valitsePeruste = (peruste) => {
+                    $scope.valitsePeruste = async (peruste) => {
                         $scope.currentStage = "perusteentutkinnonosat";
-                        Eperusteet.all("perusteet").one(peruste.id + "/kaikki").get()
-                            .then(perusteKaikki => {
-                                valittuPeruste = perusteKaikki;
-                                $scope.tosap = PaginationV2.addPagination(
-                                    Algoritmit.doSortByNimi(perusteKaikki.tutkinnonOsat),
-                                    (search: string, tosa: any): boolean =>
-                                        (!search || _.isEmpty(search) || Algoritmit.match(search, tosa.nimi)));
-                            });
+                        const perusteKaikki = await Api.all("perusteet").one(peruste.id + "/kaikki").get();
+                        valittuPeruste = perusteKaikki;
+                        $scope.tosap = PaginationV2.addPagination(
+                            Algoritmit.doSortByNimi(perusteKaikki.tutkinnonOsat),
+                            (search: string, tosa: any): boolean =>
+                                (!search || _.isEmpty(search) || Algoritmit.match(search, tosa.nimi)));
                     };
 
-                    $scope.tuoTutkinnonosa = () => {
+                    $scope.tuoTutkinnonosa = async () => {
                         $scope.currentStage = "perusteet";
-                        Eperusteet.one("perusteet").get({
-                            sivukoko: 9999,
-                            koulutustyyppi: "koulutustyyppi_1" // FIXME
-                        })
-                        .then(perusteet => {
-                            $scope.perustep = PaginationV2.addPagination(
-                                Algoritmit.doSortByNimi(perusteet.data),
-                                (search: string, peruste: any): boolean =>
-                                    ($scope.poistetut || peruste.tila !== "poistettu")
-                                        && (!search || _.isEmpty(search) || Algoritmit.match(search, peruste.nimi)));
-                        });
+                        const perusteet = await Api.one("perusteet").get()
+                        $scope.perustep = PaginationV2.addPagination(
+                            Algoritmit.doSortByNimi(perusteet),
+                            (search: string, peruste: any): boolean =>
+                                ($scope.poistetut || peruste.tila !== "poistettu")
+                                    && (!search || _.isEmpty(search) || Algoritmit.match(search, peruste.nimi)));
                     };
                 }
 

@@ -19,7 +19,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteInfoDto;
 import java.util.List;
 import java.util.Set;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -36,8 +35,8 @@ public interface EperusteetService {
     PerusteDto getYleinenPohja();
     String getYleinenPohjaSisalto();
     String getPerusteData(Long id);
-    List<PerusteInfoDto> findPerusteet();
-    List<PerusteInfoDto> findPerusteet(Set<KoulutusTyyppi> tyypit);
+    List<PerusteDto> findPerusteet();
+    List<PerusteDto> findPerusteet(Set<KoulutusTyyppi> tyypit);
     JsonNode getTiedotteet(Long jalkeen);
     <T> T getPeruste(Long id, Class<T> type);
     <T> T getPerusteSisalto(Long cperusteId, Class<T> type);

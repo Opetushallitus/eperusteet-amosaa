@@ -131,6 +131,7 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
     public static class KayttajaClient {
         @Autowired
         private RestClientFactory restClientFactory;
+        
         @Value("${cas.service.authentication-service:''}")
         private String serviceUrl;
 

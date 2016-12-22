@@ -22,16 +22,17 @@ import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.AbstractRakenneOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteInfoDto;
 import fi.vm.sade.eperusteet.amosaa.repository.peruste.CachedPerusteRepository;
 import fi.vm.sade.eperusteet.amosaa.resource.config.AbstractRakenneOsaDeserializer;
 import fi.vm.sade.eperusteet.amosaa.resource.config.MappingModule;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
-import fi.vm.sade.eperusteet.amosaa.service.util.JsonMapper;
+import fi.vm.sade.eperusteet.amosaa.service.util.RestClientFactory;
+import fi.vm.sade.generic.rest.CachingRestClient;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
-import static java.util.Collections.singletonList;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +41,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 /**
  *
@@ -62,11 +62,22 @@ public class EperusteetServiceImpl implements EperusteetService {
     CachedPerusteRepository cachedPerusteRepository;
 
     @Autowired
-    private JsonMapper jsonMapper;
+    RestClientFactory restClientFactory;
 
-    private RestTemplate client;
+    private CachingRestClient client;
 
     private ObjectMapper mapper;
+
+
+    @PostConstruct
+    protected void init() {
+        client = restClientFactory.get(eperusteetServiceUrl, false);
+        mapper = new ObjectMapper();
+        MappingModule module = new MappingModule();
+        module.addDeserializer(AbstractRakenneOsaDto.class, new AbstractRakenneOsaDeserializer());
+        mapper.registerModule(module);
+        mapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
+    }
 
     @Override
     public JsonNode getTutkinnonOsat(Long id) {
@@ -146,7 +157,7 @@ public class EperusteetServiceImpl implements EperusteetService {
     @Override
     public String getPerusteData(Long id) {
         try {
-            JsonNode node = client.getForObject(eperusteetServiceUrl + "/api/perusteet/" + String.valueOf(id) + "/kaikki", JsonNode.class);
+            JsonNode node = commonGet("/api/perusteet/" + String.valueOf(id) + "/kaikki", JsonNode.class);
             Object perusteObj = mapper.treeToValue(node, Object.class);
             String json = mapper.writeValueAsString(perusteObj);
             return json;
@@ -157,51 +168,26 @@ public class EperusteetServiceImpl implements EperusteetService {
 
     @Override
     public <T> T getPeruste(Long id, Class<T> type) {
-        try {
-            JsonNode node = client.getForObject(eperusteetServiceUrl + "/api/perusteet/" + id.toString() + "", JsonNode.class);
-            T peruste = mapper.treeToValue(node, type);
-            return peruste;
-        } catch (IOException ex) {
-            throw new BusinessRuleViolationException("perustetta-ei-loytynyt");
-        }
+        T peruste = commonGet("/api/perusteet/" + id.toString() + "", type);
+        return peruste;
     }
 
     @Override
     public <T> T getPeruste(String diaarinumero, Class<T> type) {
-        try {
-            JsonNode node = client.getForObject(eperusteetServiceUrl + "/api/perusteet/diaari?diaarinumero=" + diaarinumero, JsonNode.class);
-            T peruste = mapper.treeToValue(node, type);
-            return peruste;
-        } catch (IOException ex) {
-            throw new BusinessRuleViolationException("perustetta-ei-loytynyt");
-        }
-    }
-
-    @PostConstruct
-    protected void init() {
-        client = new RestTemplate(singletonList(jsonMapper.messageConverter().orElseThrow(IllegalStateException::new)));
-        mapper = new ObjectMapper();
-        MappingModule module = new MappingModule();
-        module.addDeserializer(AbstractRakenneOsaDto.class, new AbstractRakenneOsaDeserializer());
-        mapper.registerModule(module);
-        mapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
+        T peruste = commonGet("/api/perusteet/diaari?diaarinumero=" + diaarinumero, type);
+        return peruste;
     }
 
     @Override
     public PerusteDto getYleinenPohja() {
-        try {
-            JsonNode node = client.getForObject(eperusteetServiceUrl + "/api/perusteet/amosaapohja", JsonNode.class);
-            PerusteDto peruste = mapper.treeToValue(node, PerusteDto.class);
-            return peruste;
-        } catch (IOException ex) {
-            throw new BusinessRuleViolationException("pohjaa-ei-loytynyt");
-        }
+        PerusteDto peruste = commonGet("/api/perusteet/amosaapohja", PerusteDto.class);
+        return peruste;
     }
 
     @Override
     public String getYleinenPohjaSisalto() {
         try {
-            JsonNode node = client.getForObject(eperusteetServiceUrl + "/api/perusteet/amosaapohja", JsonNode.class);
+            JsonNode node = commonGet("/api/perusteet/amosaapohja", JsonNode.class);
             Object perusteObj = mapper.treeToValue(node, Object.class);
             String json = mapper.writeValueAsString(perusteObj);
             return json;
@@ -210,14 +196,42 @@ public class EperusteetServiceImpl implements EperusteetService {
         }
     }
 
-    @Override
-    public List<PerusteInfoDto> findPerusteet() {
-        return new ArrayList<>();
+    private <T> T commonGet(String endpoint, Class<T> type) {
+        try {
+            InputStream stream = client.get(eperusteetServiceUrl + endpoint);
+            T node = mapper.readValue(stream, type);
+            return node;
+        } catch (IOException ex) {
+            throw new BusinessRuleViolationException("haku-epaonnistui");
+        }
     }
 
     @Override
-    public List<PerusteInfoDto> findPerusteet(Set<KoulutusTyyppi> tyypit) {
-        return new ArrayList<>();
+    public List<PerusteDto> findPerusteet(Set<KoulutusTyyppi> tyypit) {
+        List<PerusteDto> perusteet = new ArrayList<>();
+        JsonNode node = commonGet("/api/perusteet?sivukoko=999", JsonNode.class);
+        for (JsonNode perusteJson : node.get("data")) {
+            try {
+                PerusteDto peruste = mapper.treeToValue(perusteJson, PerusteDto.class);
+                perusteet.add(peruste);
+            }
+            catch (IOException ex) {
+                logger.error(ex.getMessage());
+            }
+        }
+
+        return perusteet.stream()
+                .filter(peruste -> tyypit.contains(peruste.getKoulutustyyppi()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PerusteDto> findPerusteet() {
+        HashSet<KoulutusTyyppi> koulutustyypit = new HashSet<>();
+        koulutustyypit.add(KoulutusTyyppi.AMMATTITUTKINTO);
+        koulutustyypit.add(KoulutusTyyppi.ERIKOISAMMATTITUTKINTO);
+        koulutustyypit.add(KoulutusTyyppi.PERUSTUTKINTO);
+        return findPerusteet(koulutustyypit);
     }
 
     @Override
@@ -226,7 +240,7 @@ public class EperusteetServiceImpl implements EperusteetService {
         if (jalkeen != null) {
             params = "?alkaen=" + String.valueOf(jalkeen);
         }
-        JsonNode tiedotteet = client.getForObject(eperusteetServiceUrl + "/api/tiedotteet" + params, JsonNode.class);
+        JsonNode tiedotteet = commonGet(eperusteetServiceUrl + "/api/tiedotteet" + params, JsonNode.class);
         return tiedotteet;
     }
 }

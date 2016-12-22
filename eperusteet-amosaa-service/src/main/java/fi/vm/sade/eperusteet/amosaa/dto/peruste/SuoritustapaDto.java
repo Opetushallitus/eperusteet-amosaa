@@ -17,9 +17,7 @@
 package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,17 +25,13 @@ import lombok.Setter;
  *
  * @author nkala
  */
+
 @Getter
 @Setter
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PerusteInfoDto {
-    private Long id;
-    private PerusteVersionDto globalVersion;
-    private LokalisoituTekstiDto nimi;
-    private String diaarinumero;
-    private Date voimassaoloAlkaa;
-    private Date voimassaoloLoppuu;
-    private Date muokattu;
-    private String tila;
-    private KoulutusTyyppi koulutustyyppi;
+public class SuoritustapaDto {
+    private Suoritustapakoodi suoritustapakoodi;
+    private LaajuusYksikko laajuusYksikko;
+
 }

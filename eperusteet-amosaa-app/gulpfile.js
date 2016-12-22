@@ -145,11 +145,10 @@ gulp
         //     emitError: false,
         //     summarizeFailureOutput: true
         // }))
-        .pipe(typescript())
-        .on('error', function (error) {
-            console.log(error.toString());
-            this.emit('end');
-        })
+        .pipe(typescript({
+            // lib: ["DOM", "ES2015", "ES5"]
+        }))
+        .on('error', function (error) { })
         .pipe(concat('amosaa-app.js'))
         .pipe(gulp.dest(config.build))
         .pipe(connect.reload());
