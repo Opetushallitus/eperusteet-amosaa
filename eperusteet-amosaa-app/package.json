@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "main": "index.js",
   "description": "",
-  "private": "true",
+  "private": true,
   "devDependencies": {
     "event-stream": "3.3.2",
     "gulp": "3.9.0",
@@ -24,7 +24,7 @@
     "jquery-ui": "1.10.5",
     "jquery-ui-build": "1.8.1-6.1",
     "lazy.js": "0.4.2",
-    "lodash": "3.10.0",
+    "lodash": "3.10.1",
     "merge-stream": "1.0.0",
     "proxy-middleware": "0.15.0"
   },

@@ -10,7 +10,7 @@
   <artifactId>eperusteet-amosaa</artifactId>
   <packaging>pom</packaging>
   <version>1.1-SNAPSHOT</version>
-  <name>ePerusteet amosaa</name>
+  <name>ePerusteet AMOSAA</name>
   <organization>
     <name>The Finnish Board of Education - Opetushallitus</name>
   </organization>
@@ -37,7 +37,8 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
-        <version>1.4.1</version>
+        <version>${enforcer.plugin.version}</version>
+        <inherited>false</inherited>
         <executions>
           <execution>
             <id>enforce</id>
@@ -64,7 +65,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.5.1</version>
+          <version>${compiler.plugin.version}</version>
           <configuration>
             <source>1.8</source>
             <target>1.8</target>

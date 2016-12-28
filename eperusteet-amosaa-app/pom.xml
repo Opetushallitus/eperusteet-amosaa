@@ -15,46 +15,10 @@
     </properties>
     <build>
         <plugins>
-            <!-- <plugin> -->
-            <!--     <groupId>org.codehaus.mojo</groupId> -->
-            <!--     <artifactId>exec&#45;maven&#45;plugin</artifactId> -->
-            <!--     <executions> -->
-            <!--         <execution> -->
-            <!--             <id>exec&#45;npm&#45;install</id> -->
-            <!--             <phase>generate&#45;sources</phase> -->
-            <!--             <configuration> -->
-            <!--                 <executable>npm</executable> -->
-            <!--                 <arguments> -->
-            <!--                     <argument>install</argument> -->
-            <!--                 </arguments> -->
-            <!--             </configuration> -->
-            <!--             <goals> -->
-            <!--                 <goal>exec</goal> -->
-            <!--             </goals> -->
-            <!--         </execution> -->
-            <!--         <execution> -->
-            <!--             <id>exec&#45;gulp&#45;dist</id> -->
-            <!--             <phase>generate&#45;sources</phase> -->
-            <!--             <configuration> -->
-            <!--                 <executable>./node_modules/gulp/bin/gulp.js</executable> -->
-            <!--                 <arguments> -->
-            <!--                     <argument>dist</argument> -->
-            <!--                     <argument>&#45;&#45;no&#45;color</argument> -->
-            <!--                 </arguments> -->
-            <!--             </configuration> -->
-            <!--             <goals> -->
-            <!--                 <goal>exec</goal> -->
-            <!--             </goals> -->
-            <!--         </execution> -->
-            <!--     </executions> -->
-            <!-- </plugin> -->
             <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
-                <version>0.0.25</version>
-                <!-- <configuration> -->
-                <!--     <workingDirectory></workingDirectory> -->
-                <!-- </configuration> -->
+                <version>1.0</version>
                 <executions>
                     <execution>
                         <id>install node and npm</id>
@@ -62,8 +26,8 @@
                             <goal>install-node-and-npm</goal>
                         </goals>
                         <configuration>
-                            <nodeVersion>v5.2.0</nodeVersion>
-                            <npmVersion>3.5.2</npmVersion>
+                            <nodeVersion>v6.3.1</nodeVersion>
+                            <npmVersion>3.10.3</npmVersion>
                         </configuration>
                     </execution>
                     <execution>
@@ -126,49 +90,7 @@
                     </filesets>
                 </configuration>
             </plugin>
-            <!-- <plugin> -->
-            <!--     <groupId>org.apache.maven.plugins</groupId> -->
-            <!--     <artifactId>maven&#45;compiler&#45;plugin</artifactId> -->
-            <!--     <version>2.3.2</version> -->
-            <!--     <configuration> -->
-            <!--         <source>1.8</source> -->
-            <!--         <target>1.8</target> -->
-            <!--     </configuration> -->
-            <!-- </plugin> -->
         </plugins>
         <finalName>eperusteet-amosaa-app</finalName>
     </build>
-    <profiles>
-        <profile>
-            <!--
-            Älä tyhjennä node_modules ja bower_componets -hakemistoja cleanin yhteydessä jos
-            tämä profiili on käytössä (tyhjentäminen hidastaa käännöstä mutta tyhjententämättä jättäminen voi
-            joskus aiheuttaa ongelmia)
-            -->
-            <id>app-dev</id>
-            <activation>
-                <property>
-                    <name>eperusteet.dev</name>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-clean-plugin</artifactId>
-                        <version>2.5</version>
-                        <configuration>
-                            <filesets>
-                                <fileset>
-                                    <directory>target/dist</directory>
-                                </fileset>
-                                <fileset>
-                                    <directory>.tmp</directory>
-                                </fileset>
-                            </filesets>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 </project>
