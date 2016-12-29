@@ -243,6 +243,11 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                     .map(st -> st.getTutkinnonOsat().stream())
                     .reduce((acc, st) -> Stream.concat(acc, st))
                     .get()
+                    .sorted((a, b) -> {
+                        return a.getJarjestys() > b.getJarjestys()
+                                ? 1
+                                : -1;
+                    })
                     .map(tosa -> idToTosaMap.get(tosa.getTutkinnonOsa()))
                     .collect(Collectors.toList());
         }
