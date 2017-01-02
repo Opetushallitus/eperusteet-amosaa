@@ -1,11 +1,11 @@
 namespace ModalAdd {
     let i;
     export const init = ($injector) => {
-        i = inject($injector, ["$rootScope", "$uibModal", "$q"]);
+        i = inject($injector, ["$rootScope", "$uibModal", "$q", "$timeout"]);
     };
 
     const filterPerusteet = (perusteet = [], query = "") => _(perusteet)
-        .filter((peruste) => KaannaService.hae(peruste.nimi, query))
+        .filter(peruste => KaannaService.hae(peruste.nimi, query))
         .value();
 
     export const yhteinen = () => i.$uibModal.open({
@@ -93,17 +93,24 @@ namespace ModalAdd {
                     })
                     .value();
 
-                $scope.perusteet = filterPerusteet(amosaaPerusteet);
+                $scope.perusteet = amosaaPerusteet;
                 $scope.peruste = undefined;
                 $scope.ok = $uibModalInstance.close;
                 $scope.peruuta = $uibModalInstance.dismiss;
 
                 $scope.update = (input) => {
                     if (!_.isEmpty(input)) {
+                        const filtered = filterPerusteet(amosaaPerusteet, input);
+                        $scope.perusteet = filtered;
+                        for (let peruste of $scope.perusteet) {
+                            peruste.$$haettu = KaannaService.hae(peruste.nimi, input);
+                        }
+                    }
+                    else {
+                        $scope.perusteet = [];
                         $scope.peruste = undefined;
                     }
-                    $scope.perusteet = filterPerusteet(amosaaPerusteet, input);
-                };
+                }
 
                 $scope.valitsePeruste = (peruste) => {
                     $scope.input = "";

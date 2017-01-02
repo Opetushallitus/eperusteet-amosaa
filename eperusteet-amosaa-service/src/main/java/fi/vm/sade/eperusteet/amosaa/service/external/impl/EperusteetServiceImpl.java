@@ -209,8 +209,8 @@ public class EperusteetServiceImpl implements EperusteetService {
     @Override
     public List<PerusteDto> findPerusteet(Set<KoulutusTyyppi> tyypit) {
         List<PerusteDto> perusteet = new ArrayList<>();
-        JsonNode node = commonGet("/api/perusteet?sivukoko=999", JsonNode.class);
-        for (JsonNode perusteJson : node.get("data")) {
+        JsonNode node = commonGet("/api/perusteet/amosaaops", JsonNode.class);
+        for (JsonNode perusteJson : node) {
             try {
                 PerusteDto peruste = mapper.treeToValue(perusteJson, PerusteDto.class);
                 perusteet.add(peruste);

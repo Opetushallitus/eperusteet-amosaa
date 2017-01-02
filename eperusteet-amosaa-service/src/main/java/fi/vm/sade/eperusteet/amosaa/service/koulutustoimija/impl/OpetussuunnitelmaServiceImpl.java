@@ -244,6 +244,15 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                     .reduce((acc, st) -> Stream.concat(acc, st))
                     .get()
                     .sorted((a, b) -> {
+                        if (a.getJarjestys() == null && b.getJarjestys() == null) {
+                            return 0;
+                        }
+                        if (a.getJarjestys() == null) {
+                            return -1;
+                        }
+                        if (b.getJarjestys() == null) {
+                            return 1;
+                        }
                         return a.getJarjestys() > b.getJarjestys()
                                 ? 1
                                 : -1;

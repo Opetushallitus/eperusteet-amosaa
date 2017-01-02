@@ -11,12 +11,12 @@ div.modal-body
         type="text"
         placeholder="{{ 'hae-peruste' | kaanna }}"
         ng-model="input"
-        ng-model-options="{ debounce: 200 }"
+        ng-model-options="{ debounce: 300 }"
         ng-change="update(input)")
       i.form-control-feedback.glyphicon.glyphicon-search(style="color: gray;")
 
     div.listaus(ng-show="input.length > 0")
-      div.tutkinto(ng-show="perusteet.length > 0" ng-repeat="peruste in perusteet" ng-click="valitsePeruste(peruste)")
+      div.tutkinto(ng-show="perusteet.length > 0" ng-repeat="peruste in perusteet | filter:{ $$haettu: true }" ng-click="valitsePeruste(peruste)" ng-cloak)
         div.nimi
           span(ng-bind="peruste.nimi | kaanna")
 
