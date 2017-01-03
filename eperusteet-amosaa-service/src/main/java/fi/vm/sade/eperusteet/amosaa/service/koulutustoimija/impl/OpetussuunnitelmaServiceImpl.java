@@ -59,17 +59,18 @@ import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.ValidointiService;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -142,8 +143,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     @Override
     public JsonNode getOpetussuunnitelmanPeruste(Long ktId, Long opsId) {
         Opetussuunnitelma ops = repository.findOne(opsId);
-        JsonNode peruste = eperusteetService.getPerusteSisalto(ops.getPeruste().getId(), JsonNode.class);
-        return peruste;
+        return eperusteetService.getPerusteSisalto(ops.getPeruste().getId(), JsonNode.class);
     }
 
     @Override
@@ -152,7 +152,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         Koulutustoimija omaKoulutustoimija = koulutustoimijaRepository.findOne(ktId);
         List<Kayttajaoikeus> oikeudet = kayttajaoikeusRepository.findAllByKayttaja(kayttaja);
         return oikeudet.stream()
-                .map(oikeus -> oikeus.getOpetussuunnitelma())
+                .map(Kayttajaoikeus::getOpetussuunnitelma)
                 .filter(ops -> ops.getKoulutustoimija().getYstavat().contains(omaKoulutustoimija)
                     && omaKoulutustoimija.getYstavat().contains(ops.getKoulutustoimija()))
                 .map(ops -> mapper.map(ops, OpetussuunnitelmaDto.class))
@@ -232,7 +232,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         Map<Long, TutkinnonOsaKaikkiDto> idToTosaMap = perusteSisalto.getTutkinnonOsat().stream()
                 .collect(Collectors.toMap(TutkinnonOsaKaikkiDto::getId, Function.identity()));
 
-        List<TutkinnonOsaKaikkiDto> tutkinnonOsat = null;
+        List<TutkinnonOsaKaikkiDto> tutkinnonOsat;
 
         if (ops.getTyyppi() == OpsTyyppi.YLEINEN) {
             tutkinnonOsat = perusteSisalto.getTutkinnonOsat();
@@ -241,7 +241,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
             tutkinnonOsat = perusteSisalto.getSuoritustavat().stream()
                     .filter(st -> st.getSuoritustapakoodi() == Suoritustapakoodi.of(ops.getSuoritustapa()))
                     .map(st -> st.getTutkinnonOsat().stream())
-                    .reduce((acc, st) -> Stream.concat(acc, st))
+                    .reduce(Stream::concat)
                     .get()
                     .sorted((a, b) -> {
                         if (a.getJarjestys() == null && b.getJarjestys() == null) {
@@ -275,7 +275,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public OpetussuunnitelmaBaseDto addOpetussuunnitelma(Long ktId, OpetussuunnitelmaDto opsDto) {
         Koulutustoimija kt = koulutustoimijaRepository.findOne(ktId);
         Opetussuunnitelma ops = mapper.map(opsDto, Opetussuunnitelma.class);
@@ -342,8 +342,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
     @Override
     public List<PoistettuDto> getPoistetut(Long ktId, Long id) {
-        ArrayList<PoistettuDto> result = new ArrayList<>();
-        return result;
+        return new ArrayList<>();
     }
 
     @Override
@@ -390,8 +389,10 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     public List<KayttajaoikeusDto> getOikeudet(Long ktId, Long opsId) {
         Koulutustoimija kt = koulutustoimijaRepository.findOne(ktId);
         Opetussuunnitelma ops = repository.findOne(opsId);
-        List<KayttajaoikeusDto> oikeusDtot = mapper.mapAsList(kayttajaoikeusRepository.findAllByKoulutustoimijaAndOpetussuunnitelma(kt, ops), KayttajaoikeusDto.class);
-        return oikeusDtot;
+        return mapper.mapAsList(
+                kayttajaoikeusRepository.findAllByKoulutustoimijaAndOpetussuunnitelma(kt, ops),
+                KayttajaoikeusDto.class
+        );
     }
 
     @Override
