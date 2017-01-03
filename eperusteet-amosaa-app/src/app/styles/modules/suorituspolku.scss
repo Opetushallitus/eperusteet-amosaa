@@ -113,11 +113,10 @@
 
     .sp-sisalto {
       border: 1px solid #dBdCdD;
-      height: 30px;
+      min-height: 30px;
 
       .sp-toolbar {
         float: right;
-        height: 29px;
         top: -29px;
         padding-top: 1px;
         position: relative;
