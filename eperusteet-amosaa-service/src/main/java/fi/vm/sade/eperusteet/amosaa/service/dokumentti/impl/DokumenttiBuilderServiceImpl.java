@@ -690,9 +690,8 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
         DokumenttiTaulukko taulukko = new DokumenttiTaulukko();
 
         osaamistasonKriteerit.stream()
-                .filter(k -> k.getOsaamistaso() != null)
-                .sorted((k1, k2) -> k2.getOsaamistaso().getId().compareTo(
-                        k1.getOsaamistaso().getId()))
+                .filter(o -> o.getOsaamistaso() != null)
+                .sorted(Comparator.comparing(o -> o.getOsaamistaso().getId()))
                 .forEach(osaamistasonKriteeri -> {
                     DokumenttiRivi rivi = new DokumenttiRivi();
 
