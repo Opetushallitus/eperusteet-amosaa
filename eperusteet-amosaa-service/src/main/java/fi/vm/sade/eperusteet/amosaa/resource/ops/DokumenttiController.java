@@ -43,7 +43,8 @@ public class DokumenttiController {
     public ResponseEntity<DokumenttiDto> create(
             @PathVariable Long ktId,
             @PathVariable Long opsId,
-            @RequestParam(value = "kieli", defaultValue = "fi") String kieli) throws DokumenttiException {
+            @RequestParam(defaultValue = "fi") String kieli
+    ) throws DokumenttiException {
         DokumenttiDto dokumenttiDto = service.getDto(ktId, opsId, Kieli.of(kieli));
         if (dokumenttiDto == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -66,9 +67,11 @@ public class DokumenttiController {
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = "application/pdf")
-    public ResponseEntity<Object> get(@PathVariable Long ktId,
-                                      @PathVariable Long opsId,
-                                      @RequestParam(defaultValue = "fi") String kieli) {
+    public ResponseEntity<Object> get(
+            @PathVariable Long ktId,
+            @PathVariable Long opsId,
+            @RequestParam(defaultValue = "fi") String kieli
+    ) {
         byte[] pdfdata = service.get(ktId, opsId, Kieli.of(kieli));
 
         if (pdfdata == null || pdfdata.length == 0) {
@@ -92,10 +95,11 @@ public class DokumenttiController {
     }
 
     @RequestMapping(value = "/tila", method = RequestMethod.GET)
-    public ResponseEntity<DokumenttiDto> query(@PathVariable Long ktId,
-                                                @PathVariable Long opsId,
-                                                @RequestParam(value = "kieli", defaultValue = "fi") String kieli) {
-
+    public ResponseEntity<DokumenttiDto> query(
+            @PathVariable Long ktId,
+            @PathVariable Long opsId,
+            @RequestParam(defaultValue = "fi") String kieli
+    ) {
         // Tehdään DokumenttiDto jos ei löydy jo valmiina
         DokumenttiDto dokumenttiDto = service.getDto(ktId, opsId, Kieli.of(kieli));
         if (dokumenttiDto == null) {
@@ -110,11 +114,13 @@ public class DokumenttiController {
     }
 
     @RequestMapping(value = "/kuva", method=RequestMethod.POST)
-    public ResponseEntity<Object> addImage(@PathVariable Long ktId,
-                                            @PathVariable Long opsId,
-                                            @RequestParam String tyyppi,
-                                            @RequestParam(defaultValue = "fi") String kieli,
-                                            @RequestPart MultipartFile file) throws IOException {
+    public ResponseEntity<Object> addImage(
+            @PathVariable Long ktId,
+            @PathVariable Long opsId,
+            @RequestParam String tyyppi,
+            @RequestParam(defaultValue = "fi") String kieli,
+            @RequestPart MultipartFile file
+    ) throws IOException {
         DokumenttiDto dokumenttiDto = service.getDto(ktId, opsId, Kieli.of(kieli));
         if (dokumenttiDto == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -130,10 +136,12 @@ public class DokumenttiController {
 
     @Transactional(readOnly = true)
     @RequestMapping(value = "/kuva", method=RequestMethod.GET)
-    public ResponseEntity<Object> getImage(@PathVariable Long ktId,
-                                            @PathVariable Long opsId,
-                                            @RequestParam String tyyppi,
-                                            @RequestParam(defaultValue = "fi") String kieli) {
+    public ResponseEntity<Object> getImage(
+            @PathVariable Long ktId,
+            @PathVariable Long opsId,
+            @RequestParam String tyyppi,
+            @RequestParam(defaultValue = "fi") String kieli
+    ) {
         // Tehdään DokumenttiDto jos ei löydy jo valmiina
         DokumenttiDto dokumenttiDto = service.getDto(ktId, opsId, Kieli.of(kieli));
         if (dokumenttiDto == null) {
@@ -175,11 +183,12 @@ public class DokumenttiController {
 
     @Transactional
     @RequestMapping(value = "/kuva", method=RequestMethod.DELETE)
-    public ResponseEntity<Object> deleteImage(@PathVariable Long ktId,
-                                           @PathVariable Long opsId,
-                                           @RequestParam(required = true) String tyyppi,
-                                           @RequestParam(defaultValue = "fi") String kieli) {
-
+    public ResponseEntity<Object> deleteImage(
+            @PathVariable Long ktId,
+            @PathVariable Long opsId,
+            @RequestParam String tyyppi,
+            @RequestParam(defaultValue = "fi") String kieli
+    ) {
         // Tehdään DokumenttiDto jos ei löydy jo valmiina
         DokumenttiDto dokumenttiDto = service.getDto(ktId, opsId, Kieli.of(kieli));
 
