@@ -50,15 +50,13 @@ public class DokumenttiController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        HttpStatus status = HttpStatus.ACCEPTED;
-        int maxTimeInMinutes = 2;
+        HttpStatus status;
 
         // Aloitetaan luonti jos luonti ei ole jo päällä tai maksimi luontiaika ylitetty
-        if (dokumenttiDto.getAloitusaika() == null
-                || DokumenttiUtils.isTimePass(dokumenttiDto)
-                || dokumenttiDto.getTila() != DokumenttiTila.LUODAAN) {
+        if (DokumenttiUtils.isTimePass(dokumenttiDto) || dokumenttiDto.getTila() != DokumenttiTila.LUODAAN) {
             service.setStarted(ktId, opsId, dokumenttiDto);
             service.generateWithDto(ktId, opsId, dokumenttiDto);
+            status = HttpStatus.ACCEPTED;
         } else {
             status = HttpStatus.BAD_REQUEST;
         }
