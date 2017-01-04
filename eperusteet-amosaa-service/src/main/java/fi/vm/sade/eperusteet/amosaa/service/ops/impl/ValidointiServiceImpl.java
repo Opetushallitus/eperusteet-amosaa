@@ -36,14 +36,13 @@ import fi.vm.sade.eperusteet.amosaa.service.ops.ValidointiService;
 import fi.vm.sade.eperusteet.amosaa.service.peruste.PerusteCacheService;
 import fi.vm.sade.eperusteet.amosaa.service.util.Pair;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  *
@@ -120,45 +119,60 @@ public class ValidointiServiceImpl implements ValidointiService {
         }
     }
 
+    private boolean isUsedRakenneOsa(ValidointiHelper ctx, AbstractRakenneOsaDto osa) {
+        UUID tunniste = osa.getTunniste();
+        SuorituspolkuRivi rivi = ctx.rivit.get(tunniste);
+        return rivi == null || rivi.getPiilotettu() == null || !rivi.getPiilotettu();
+    }
+
+    private Pair<Integer, BigDecimal> laajuusJaKokoReducer(Pair<Integer, BigDecimal> acc, Pair<Integer, BigDecimal> next) {
+        BigDecimal second = next.getSecond() != null ? next.getSecond() : new BigDecimal(0L);
+        return Pair.of(
+                acc.getFirst() + next.getFirst(),
+                acc.getSecond().add(second));
+    }
+
+    private Pair<Integer, BigDecimal> laskettuLaajuusJaKoko(ValidointiHelper ctx, AbstractRakenneOsaDto osa) {
+        if (osa instanceof RakenneModuuliDto) {
+            MuodostumisSaantoDto ms = ((RakenneModuuliDto)osa).getMuodostumisSaanto();
+            if (ms != null) {
+                int kokoMin = (ms.getKoko() != null && ms.getKoko().getMinimi() != null) ? ms.getKoko().getMinimi() : 0;
+                int kokoMax = (ms.getKoko() != null && ms.getKoko().getMaksimi() != null) ? ms.getKoko().getMaksimi() : 0;
+                int koko = kokoMax > kokoMin ? kokoMax : kokoMin;
+                int laajuusMin = (ms.getLaajuus() != null && ms.getLaajuus().getMinimi() != null) ? ms.getLaajuus().getMinimi() : 0;
+                int laajuusMax = (ms.getLaajuus() != null && ms.getLaajuus().getMaksimi() != null) ? ms.getLaajuus().getMaksimi() : 0;
+                int laajuus = laajuusMax > laajuusMin ? laajuusMax : laajuusMin;
+                return Pair.of(koko, new BigDecimal(laajuus));
+            }
+            // Ryhmälle ei ole määritelty osien laajuutta
+            else {
+                Pair<Integer, BigDecimal> ryhmanSisallonMuodostuminen = sisallonLaajuusJaKoko(ctx, (RakenneModuuliDto)osa);
+                return ryhmanSisallonMuodostuminen;
+            }
+        }
+        else if (osa instanceof RakenneOsaDto) {
+            Long tovId = ((RakenneOsaDto)osa).getTutkinnonOsaViite();
+            if (tovId != null) {
+                TutkinnonOsaViiteSuppeaDto tov = ctx.tov.get(tovId);
+                if (tov != null) {
+                    return Pair.of(1, tov.getLaajuus());
+                }
+            }
+        }
+        return Pair.of(0, new BigDecimal(0));
+    }
+
+    private Pair<Integer, BigDecimal> sisallonLaajuusJaKoko(ValidointiHelper ctx, RakenneModuuliDto moduuli) {
+        return moduuli.getOsat().stream()
+            .filter(osa -> isUsedRakenneOsa(ctx, osa))
+            .map(osa -> laskettuLaajuusJaKoko(ctx, osa))
+            .reduce(Pair.of(0, new BigDecimal(0)), (acc, next) -> laajuusJaKokoReducer(acc, next));
+    }
+
     /// Yksittäisen ryhmän tarkastus
     private void validoiSpRyhma(ValidointiHelper ctx, RakenneModuuliDto moduuli) {
 
-        Pair<Integer, BigDecimal> sisallonKokoJaLaajuus = moduuli.getOsat().stream()
-                .filter(osa -> {
-                    UUID tunniste = osa.getTunniste();
-                    SuorituspolkuRivi rivi = ctx.rivit.get(tunniste);
-                    return rivi == null || rivi.getPiilotettu() == null || !rivi.getPiilotettu();
-                })
-                .map(osa -> {
-                    if (osa instanceof RakenneModuuliDto) {
-                        MuodostumisSaantoDto ms = ((RakenneModuuliDto)osa).getMuodostumisSaanto();
-                        if (ms != null) {
-                            int kokoMin = (ms.getKoko() != null && ms.getKoko().getMinimi() != null) ? ms.getKoko().getMinimi() : 0;
-                            int kokoMax = (ms.getKoko() != null && ms.getKoko().getMaksimi() != null) ? ms.getKoko().getMaksimi() : 0;
-                            int koko = kokoMax > kokoMin ? kokoMax : kokoMin;
-                            int laajuusMin = (ms.getLaajuus() != null && ms.getLaajuus().getMinimi() != null) ? ms.getLaajuus().getMinimi() : 0;
-                            int laajuusMax = (ms.getLaajuus() != null && ms.getLaajuus().getMaksimi() != null) ? ms.getLaajuus().getMaksimi() : 0;
-                            int laajuus = laajuusMax > laajuusMin ? laajuusMax : laajuusMin;
-                            return Pair.of(koko, new BigDecimal(laajuus));
-                        }
-                    }
-                    else if (osa instanceof RakenneOsaDto) {
-                        Long tovId = ((RakenneOsaDto)osa).getTutkinnonOsaViite();
-                        if (tovId != null) {
-                            TutkinnonOsaViiteSuppeaDto tov = ctx.tov.get(tovId);
-                            if (tov != null) {
-                                return Pair.of(1, tov.getLaajuus());
-                            }
-                        }
-                    }
-                    return Pair.of(0, new BigDecimal(0));
-                })
-                .reduce(Pair.of(0, new BigDecimal(0)), (acc, ms) -> {
-                    BigDecimal second = ms.getSecond() != null ? ms.getSecond() : new BigDecimal(0L);
-                    return Pair.of(
-                            acc.getFirst() + ms.getFirst(),
-                            acc.getSecond().add(second));
-                });
+        Pair<Integer, BigDecimal> sisallonKokoJaLaajuus = sisallonLaajuusJaKoko(ctx, moduuli);
 
         if (moduuli.getMuodostumisSaanto() != null) {
             try {
@@ -168,6 +182,7 @@ public class ValidointiServiceImpl implements ValidointiService {
                 }
             }
             catch (NullPointerException ex) {}
+
             try {
                 BigDecimal minimi = new BigDecimal(moduuli.getMuodostumisSaanto().getLaajuus().getMinimi());
                 if (sisallonKokoJaLaajuus.getSecond().compareTo(minimi) == -1) {

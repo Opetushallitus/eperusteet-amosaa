@@ -25,5 +25,9 @@ div
       ng-bind="(collapsed_dirty ? 'sulje-kaikki' : 'avaa-kaikki') | kaanna")
 
 div.suorituspolku
+  div(ng-show="!$$ekEditing && !perusteRakenne.$$valid")
+    div.alert.alert-warning
+      h3(ng-bind="'suorituspolku-sisaltaa-virheita' | kaanna")
+
   div.sp-ryhma-lapset(ng-repeat="osa in perusteRakenne.osat")
     dynamic(template="states/koulutustoimija/opetussuunnitelmat/sisalto/osa/polunrakenne.jade" misc="misc" ng-model="osa" depth="depth + 1")
