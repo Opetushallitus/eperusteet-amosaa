@@ -54,10 +54,6 @@ namespace Suorituspolku {
                 }
             });
 
-            if (tree.osat[2].tunniste === node.tunniste) {
-                console.log(node.rooli && node.rooli !== "määrittelemätön", node)
-            }
-
             if (node.rooli && node.rooli !== "määrittelemätön") {
                 // Käytetään ryhmän oman muodostumisen laskemiseen
                 node.$$laskettuLaajuus = calculateAmounts(node, getLaajuus);
