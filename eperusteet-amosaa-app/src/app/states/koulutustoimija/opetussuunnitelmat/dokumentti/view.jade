@@ -80,20 +80,27 @@ div.dokumentti
 
       form.form-horizontal
         div.form-group
-          label.col-xs-2(for="kansikuva")
+          label.col-xs-2
             span(ng-bind="'kansilehti' | kaanna")
             span=":"
           div.col-xs-10
             +kuva("kansikuva")
         div.form-group
-          label.col-xs-2(for="header")
+          label.col-xs-2
             span(ng-bind="'ylatunniste' | kaanna")
             span=":"
           div.col-xs-10
             +kuva("ylatunniste")
         div.form-group
-          label.col-xs-2(for="header")
+          label.col-xs-2
             span(ng-bind="'alatunniste' | kaanna")
             span=":"
           div.col-xs-10
             +kuva("alatunniste")
+
+        div.form-group
+          label.col-xs-2(uib-tooltip="{{'perusteen-sisalto-tooltip' | kaanna}}")
+            span(ng-bind="'perusteen-sisalto' | kaanna")
+            span=":"
+          div.col-xs-10
+            input(type="checkbox" ng-model="dokumenttiDto.perusteenSisalto" ng-change="paivitaAsetukset()")

@@ -1,0 +1,1 @@
+ALTER TABLE dokumentti ADD COLUMN perusteen_sisalto BOOLEAN NOT NULL DEFAULT FALSE;

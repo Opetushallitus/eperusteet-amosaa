@@ -199,6 +199,8 @@
   "hyvaksy-yhteistyo": "Hyväksy yhteistyö",
   "laheta-kaveripyynto": "Tee yhteistyöpyyntö",
   "peruuta-pyynto": "Peruuta pyynto",
+  "perusteen-sisalto": "Perusteen sisältö",
+  "perusteen-sisalto-tooltip": "Tällä asetuksella voidaan lisätä perusteen sisältö generoitavaan dokumenttiin",
   "nimi": "Nimi",
   "ohje-editointi-on-paalla": "Tallenna tai peruuta muutoksesi ennen siirtymistä",
   "ohjeistus": "Ohjeistus",

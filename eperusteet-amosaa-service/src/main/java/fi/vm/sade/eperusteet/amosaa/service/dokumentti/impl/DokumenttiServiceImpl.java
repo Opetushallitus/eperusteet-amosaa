@@ -35,6 +35,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -53,6 +54,7 @@ import java.util.Date;
  * @author iSaul
  */
 @Service
+@Transactional
 public class DokumenttiServiceImpl implements DokumenttiService {
     private static final Logger LOG = LoggerFactory.getLogger(DokumenttiServiceImpl.class);
 
@@ -73,8 +75,8 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 
     @Override
     @Transactional(readOnly = true)
-    public DokumenttiDto getDto(Long ktId, Long id, Kieli kieli) {
-        Dokumentti dokumentti = dokumenttiRepository.findByOpsIdAndKieli(id, kieli);
+    public DokumenttiDto getDto(Long ktId, Long opsId, Kieli kieli) {
+        Dokumentti dokumentti = dokumenttiRepository.findByOpsIdAndKieli(opsId, kieli);
 
         if (dokumentti != null) {
 
@@ -88,13 +90,21 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 
             return mapper.map(dokumentti, DokumenttiDto.class);
         } else {
-            return createDtoFor(ktId, id, kieli);
+            return createDtoFor(ktId, opsId, kieli);
         }
+    }
+
+    @Override
+    public DokumenttiDto update(Long ktId, Long opsId, Kieli kieli, DokumenttiDto dto) {
+        Dokumentti dokumentti = dokumenttiRepository.findByOpsIdAndKieli(opsId, kieli);
+        mapper.map(dto, dokumentti);
+        //dokumenttiRepository.save(dokumentti);
+
+        return mapper.map(dokumentti, DokumenttiDto.class);
     }
 
 
     @Override
-    @Transactional
     public DokumenttiDto createDtoFor(Long ktId, Long id, Kieli kieli) {
         Dokumentti dokumentti = new Dokumentti();
         dokumentti.setTila(DokumenttiTila.EI_OLE);
@@ -110,13 +120,12 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     }
 
     @Override
-    @Transactional
-    public void setStarted(Long ktId, Long opsId, DokumenttiDto dto) {
+    public DokumenttiDto setStarted(Long ktId, Long opsId, DokumenttiDto dto) {
         // Asetetaan dokumentti luonti tilaan
         dto.setAloitusaika(new Date());
         dto.setLuoja(SecurityUtil.getAuthenticatedPrincipal().getName());
         dto.setTila(DokumenttiTila.JONOSSA);
-        dokumenttiStateService.save(dto);
+        return dokumenttiStateService.save(dto);
     }
 
     @Override
@@ -158,7 +167,6 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     }
 
     @Override
-    @Transactional
     public DokumenttiDto addImage(Long ktId, Long opsId, DokumenttiDto dto, String tyyppi, String kieli, MultipartFile file) throws IOException {
 
         if (!file.isEmpty()) {
@@ -185,7 +193,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
             byte[] image = baos.toByteArray();
             baos.close();
 
-            // todo: tarkista onko tiedosto sallittu kuva
+            // Todo: Tarkista onko tiedosto sallittu kuva
 
             // Haetaan domain dokumentti
             Dokumentti dokumentti = dokumenttiRepository.findByOpsIdAndKieli(dto.getOpsId(), Kieli.of(kieli));

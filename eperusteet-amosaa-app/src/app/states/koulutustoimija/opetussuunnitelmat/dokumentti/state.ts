@@ -10,8 +10,9 @@ angular.module("app")
     },
     views: {
         "": {
-            controller: ($scope, $timeout, dokumentti, dokumenttiDto, $http, FileUploader, $rootScope) => {
+            controller: ($scope, $timeout, dokumentti, dokumenttiDto, $http, FileUploader, $rootScope, $cookies) => {
                 const dokumenttiUrl = dokumentti.getRestangularUrl();
+                $scope.dokumenttiDto = dokumenttiDto;
                 $scope.kuva = {};
                 $scope.edistymisetCount = 5;
                 $scope.edistymiset = {
@@ -20,6 +21,12 @@ angular.module("app")
                     kuvat: 2,
                     viitteet: 3,
                     tyylit: 4,
+                };
+
+                $scope.paivitaAsetukset = () => {
+                    $scope.dokumenttiDto.put({
+                        kieli: KieliService.getSisaltokieli()
+                    }).then(dto => $scope.dokumenttiDto = dto);
                 };
 
                 $scope.poistaKuva = (tyyppi) => {
@@ -33,7 +40,6 @@ angular.module("app")
                 };
 
                 // Generointi
-                $scope.dokumenttiDto = dokumenttiDto;
                 $scope.generoi = () => {
                     dokumentti.post("", "", {
                         kieli: KieliService.getSisaltokieli()
@@ -53,6 +59,9 @@ angular.module("app")
                 const createUploader = (tyyppi) => {
                     var uploader = new FileUploader({
                         url: dokumenttiUrl + "/kuva?tyyppi=" + tyyppi + "&kieli=" + KieliService.getSisaltokieli(),
+                        headers: {
+                            CSRF: $cookies.get("CSRF")
+                        },
                         queueLimit: '1',
                         removeAfterUpload: true
                     });

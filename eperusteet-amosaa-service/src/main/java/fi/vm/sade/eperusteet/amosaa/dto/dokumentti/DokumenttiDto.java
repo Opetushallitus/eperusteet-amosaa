@@ -44,4 +44,5 @@ public class DokumenttiDto {
     private byte[] kansikuva;
     private byte[] ylatunniste;
     private byte[] alatunniste;
+    private boolean perusteenSisalto;
 }

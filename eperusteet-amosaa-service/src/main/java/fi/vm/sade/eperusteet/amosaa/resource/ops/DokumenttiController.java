@@ -8,6 +8,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.repository.dokumentti.DokumenttiRepository;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiService;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils;
+import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import io.swagger.annotations.Api;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Optional;
 
 /**
  * @author isaul
@@ -45,23 +47,22 @@ public class DokumenttiController {
             @PathVariable Long opsId,
             @RequestParam(defaultValue = "fi") String kieli
     ) throws DokumenttiException {
-        DokumenttiDto dokumenttiDto = service.getDto(ktId, opsId, Kieli.of(kieli));
-        if (dokumenttiDto == null) {
+        DokumenttiDto dto = service.getDto(ktId, opsId, Kieli.of(kieli));
+        if (dto == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         HttpStatus status;
 
         // Aloitetaan luonti jos luonti ei ole jo päällä tai maksimi luontiaika ylitetty
-        if (DokumenttiUtils.isTimePass(dokumenttiDto) || dokumenttiDto.getTila() != DokumenttiTila.LUODAAN) {
-            service.setStarted(ktId, opsId, dokumenttiDto);
-            service.generateWithDto(ktId, opsId, dokumenttiDto);
+        if (DokumenttiUtils.isTimePass(dto) || dto.getTila() != DokumenttiTila.LUODAAN) {
+            dto = service.setStarted(ktId, opsId, dto);
+            service.generateWithDto(ktId, opsId, dto);
             status = HttpStatus.ACCEPTED;
+            return new ResponseEntity<>(dto, status);
         } else {
-            status = HttpStatus.BAD_REQUEST;
+            throw new BusinessRuleViolationException("Luonti on jo käynissä");
         }
-
-        return new ResponseEntity<>(dokumenttiDto, status);
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = "application/pdf")
@@ -90,6 +91,21 @@ public class DokumenttiController {
         headers.setContentLength(pdfdata.length);
 
         return new ResponseEntity<>(pdfdata, headers, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/{id}", method=RequestMethod.PUT)
+    public ResponseEntity<DokumenttiDto> update(
+            @PathVariable Long ktId,
+            @PathVariable Long opsId,
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "fi") String kieli,
+            @RequestBody DokumenttiDto body
+    ) {
+        DokumenttiDto newDto = service.update(ktId, opsId, Kieli.of(kieli), body);
+
+        return Optional.ofNullable(newDto)
+                .map(ResponseEntity::ok)
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @RequestMapping(value = "/tila", method = RequestMethod.GET)

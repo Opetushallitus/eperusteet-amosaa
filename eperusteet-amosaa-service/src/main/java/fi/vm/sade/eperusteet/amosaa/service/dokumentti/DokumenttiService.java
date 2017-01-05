@@ -34,16 +34,19 @@ public interface DokumenttiService {
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
     DokumenttiDto getDto(@P("ktId") Long ktId, @P("opsId") Long opsId, Kieli kieli);
 
-    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
+    DokumenttiDto update(@P("ktId") Long ktId, @P("opsId") Long opsId, Kieli kieli, DokumenttiDto dto);
+
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
     DokumenttiDto createDtoFor(@P("ktId") Long ktId, @P("opsId") Long opsId, Kieli kieli);
 
-    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
-    void setStarted(@P("ktId") Long ktId, @P("opsId") Long opsId, DokumenttiDto dto);
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
+    DokumenttiDto setStarted(@P("ktId") Long ktId, @P("opsId") Long opsId, DokumenttiDto dto);
 
-    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
     void generateWithDto(@P("ktId") Long ktId, @P("opsId") Long opsId, DokumenttiDto dto) throws DokumenttiException;
 
-    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
     DokumenttiDto addImage(@P("ktId") Long ktId, @P("opsId") Long opsId, DokumenttiDto dto, String tyyppi, String kieli, MultipartFile image) throws IOException;
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")

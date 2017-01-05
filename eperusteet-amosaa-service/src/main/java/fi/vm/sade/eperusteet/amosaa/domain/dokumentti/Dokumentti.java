@@ -79,4 +79,9 @@ public class Dokumentti {
 
     @Column(name = "virhekoodi")
     private String virhekoodi;
+
+    @Getter
+    @Setter
+    @Column(name = "perusteen_sisalto")
+    private boolean perusteenSisalto = false;
 }
