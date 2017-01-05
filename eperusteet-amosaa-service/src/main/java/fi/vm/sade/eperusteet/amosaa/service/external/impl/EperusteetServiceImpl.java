@@ -15,6 +15,7 @@
  */
 package fi.vm.sade.eperusteet.amosaa.service.external.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,6 +23,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.AbstractRakenneOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonOsaSuoritustapaDto;
 import fi.vm.sade.eperusteet.amosaa.repository.peruste.CachedPerusteRepository;
 import fi.vm.sade.eperusteet.amosaa.resource.config.AbstractRakenneOsaDeserializer;
 import fi.vm.sade.eperusteet.amosaa.resource.config.MappingModule;
@@ -32,6 +34,7 @@ import fi.vm.sade.generic.rest.CachingRestClient;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
@@ -88,6 +91,20 @@ public class EperusteetServiceImpl implements EperusteetService {
         } catch (IOException ex) {
             throw new BusinessRuleViolationException("perusteen-parsinta-epaonnistui");
         }
+    }
+
+    @Override
+    public List<TutkinnonOsaSuoritustapaDto> convertTutkinnonOsat(JsonNode tutkinnonosat) {
+        List<TutkinnonOsaSuoritustapaDto> result = new ArrayList<>();
+        for (JsonNode tosaJson : tutkinnonosat) {
+            try {
+                result.add(mapper.treeToValue(tosaJson, TutkinnonOsaSuoritustapaDto.class));
+            } catch (JsonProcessingException ex) {
+                java.util.logging.Logger.getLogger(EperusteetServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+                throw new BusinessRuleViolationException("tutkinnon-osan-muuttaminen-epaonnistui");
+            }
+        }
+        return result;
     }
 
     @Override

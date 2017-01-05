@@ -16,6 +16,7 @@
 
 package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.AmmattitaitovaatimusKohdealueetDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
@@ -30,6 +31,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonTypeName("tutkinnonosa")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TutkinnonOsaDto extends PerusteenOsaDto.Laaja {
     private LokalisoituTekstiDto tavoitteet;
     private ArviointiDto arviointi;

@@ -19,6 +19,7 @@ package fi.vm.sade.eperusteet.amosaa.resource.peruste;
 import com.fasterxml.jackson.databind.JsonNode;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonOsaSuoritustapaDto;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import io.swagger.annotations.Api;
@@ -68,6 +69,13 @@ public class PerusteController {
     @ResponseBody
     public JsonNode getPerusteTutkinnonOsat(@PathVariable Long id) {
         return service.getTutkinnonOsat(id);
+    }
+
+    @RequestMapping(value = "/{id}/suorituspolkuosat", method = RequestMethod.GET)
+    @ResponseBody
+    public List<TutkinnonOsaSuoritustapaDto> getPerusteTutkinnonOsatKevyt(@PathVariable Long id) {
+        List<TutkinnonOsaSuoritustapaDto> tosat = service.convertTutkinnonOsat(service.getTutkinnonOsat(id));
+        return tosat;
     }
 
     @RequestMapping(value = "/{id}/tutkinnonosat/{tosaId}", method = RequestMethod.GET)

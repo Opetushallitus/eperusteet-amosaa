@@ -15,8 +15,8 @@
  */
 package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
@@ -33,13 +33,11 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class PerusteenOsaDto {
     private Long id;
     private Date luotu;
     private Date muokattu;
-    private String muokkaaja;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String muokkaajanNimi;
     private LokalisoituTekstiDto nimi;
     private PerusteTila tila;
     @JsonInclude(JsonInclude.Include.NON_NULL)

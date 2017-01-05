@@ -93,7 +93,7 @@ angular.module("app")
         versio: (versioId, historia) => versioId && historia.get(versioId),
         kommentit: (osa) => osa.all("kommentit").getList(),
         pTosat: (Api, osa, ops) => (osa.tyyppi === "suorituspolku"
-            && Api.all("perusteet/" + ops.peruste.id + "/tutkinnonosat").getList()),
+            && Api.all("perusteet/" + ops.peruste.id + "/suorituspolkuosat").getList()),
         pTosa: (Api, osa, ops) => {
             if (osa.tyyppi === "tutkinnonosa") {
                 let perusteId = null;
