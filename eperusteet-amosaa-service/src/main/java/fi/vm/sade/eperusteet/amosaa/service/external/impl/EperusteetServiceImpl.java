@@ -31,12 +31,6 @@ import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationExcep
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.amosaa.service.util.RestClientFactory;
 import fi.vm.sade.generic.rest.CachingRestClient;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +38,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -174,7 +178,7 @@ public class EperusteetServiceImpl implements EperusteetService {
     @Override
     public String getPerusteData(Long id) {
         try {
-            JsonNode node = commonGet("/api/perusteet/" + String.valueOf(id) + "/kaikki", JsonNode.class);
+            JsonNode node = commonGet("/api/v2/perusteet/" + String.valueOf(id) + "/kaikki", JsonNode.class);
             Object perusteObj = mapper.treeToValue(node, Object.class);
             String json = mapper.writeValueAsString(perusteObj);
             return json;
