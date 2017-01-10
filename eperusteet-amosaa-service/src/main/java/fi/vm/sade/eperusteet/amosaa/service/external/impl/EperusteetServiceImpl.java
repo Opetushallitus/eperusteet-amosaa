@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.AbstractRakenneOsaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.ArviointiasteikkoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonOsaSuoritustapaDto;
 import fi.vm.sade.eperusteet.amosaa.repository.peruste.CachedPerusteRepository;
@@ -257,7 +258,12 @@ public class EperusteetServiceImpl implements EperusteetService {
         if (jalkeen != null) {
             params = "?alkaen=" + String.valueOf(jalkeen);
         }
-        JsonNode tiedotteet = commonGet(eperusteetServiceUrl + "/api/tiedotteet" + params, JsonNode.class);
+        JsonNode tiedotteet = commonGet("/api/tiedotteet" + params, JsonNode.class);
         return tiedotteet;
+    }
+
+    @Override
+    public ArviointiasteikkoDto getArviointiasteikko(Long id) {
+        return commonGet("/api/arviointiasteikot/" + id, ArviointiasteikkoDto.class);
     }
 }

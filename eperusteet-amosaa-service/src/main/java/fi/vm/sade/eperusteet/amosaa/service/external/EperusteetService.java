@@ -18,12 +18,14 @@ package fi.vm.sade.eperusteet.amosaa.service.external;
 import com.fasterxml.jackson.databind.JsonNode;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.ArviointiasteikkoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonOsaSuoritustapaDto;
-import java.util.List;
-import java.util.Set;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -47,4 +49,5 @@ public interface EperusteetService {
     JsonNode getSuoritustavat(Long id);
     JsonNode getTutkinnonOsa(Long id, Long tosaId);
     JsonNode getSuoritustapa(Long id, String tyyppi);
+    ArviointiasteikkoDto getArviointiasteikko(Long id);
 }

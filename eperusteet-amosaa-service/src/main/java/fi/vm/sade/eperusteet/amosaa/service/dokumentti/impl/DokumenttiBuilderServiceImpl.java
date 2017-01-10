@@ -16,6 +16,7 @@
 
 package fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl;
 
+import fi.vm.sade.eperusteet.amosaa.domain.Osaamistaso;
 import fi.vm.sade.eperusteet.amosaa.domain.OsaamistasonKriteeri;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.ammattitaitovaatimukset.AmmattitaitovaatimuksenKohde;
@@ -24,6 +25,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.ammattitaitovaatimukset.Ammattitaitov
 import fi.vm.sade.eperusteet.amosaa.domain.arviointi.ArvioinninKohde;
 import fi.vm.sade.eperusteet.amosaa.domain.arviointi.ArvioinninKohdealue;
 import fi.vm.sade.eperusteet.amosaa.domain.arviointi.Arviointi;
+import fi.vm.sade.eperusteet.amosaa.domain.arviointi.Arviointiasteikko;
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.Dokumentti;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.SuorituspolkuRivi;
@@ -84,6 +86,7 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils.*;
 
@@ -745,6 +748,30 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
 
                 arviointiDto.getArvioinninKohdealueet().forEach(arvioinninKohdealueDto -> {
                     ArvioinninKohdealue arvioinninKohdealue = mapper.map(arvioinninKohdealueDto, ArvioinninKohdealue.class);
+
+                    for (int i = 0; i < arvioinninKohdealue.getArvioinninKohteet().size(); i++) {
+                        ArvioinninKohde arvioinninKohde = arvioinninKohdealue.getArvioinninKohteet().get(i);
+                        ArvioinninKohdeDto arvioinninKohdeDto = arvioinninKohdealueDto.getArvioinninKohteet().get(i);
+                        //ArviointiasteikkoDto dto = eperusteetService.getArviointiasteikko(arvioinninKohdeDto.getArviointiAsteikko());
+                        ArviointiasteikkoDto dto = arviointiasteikkoService.get(arvioinninKohdeDto.getArviointiAsteikko());
+                        Arviointiasteikko arviointiasteikko = mapper.map(dto, Arviointiasteikko.class);
+                        arvioinninKohde.setArviointiasteikko(arviointiasteikko);
+
+                        Set<OsaamistasonKriteeri> osaamistasonKriteerit = arvioinninKohdeDto.getOsaamistasonKriteerit().stream()
+                                .sorted(Comparator.comparing(OsaamistasonKriteeriDto::getOsaamistaso))
+                                .map(osaamistasonKriteeriDto -> {
+                                    Osaamistaso osaamistaso = arviointiasteikko.getOsaamistasot().stream()
+                                            .filter(o -> o.getId().equals(osaamistasonKriteeriDto.getOsaamistaso()))
+                                            .findFirst().get();
+                                    OsaamistasonKriteeri osaamistasonKriteeri = mapper.map(osaamistasonKriteeriDto, OsaamistasonKriteeri.class);
+                                    osaamistasonKriteeri.setOsaamistaso(osaamistaso);
+                                    return osaamistasonKriteeri;
+                                })
+                                .collect(Collectors.toSet());
+
+                        arvioinninKohde.setOsaamistasonKriteerit(osaamistasonKriteerit);
+                    }
+
                     addArvioinninKohdealue(docBase, arvioinninKohdealue);
                 });
             }
