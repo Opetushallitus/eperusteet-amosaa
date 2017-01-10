@@ -280,9 +280,9 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
                 return;
             }
 
-            TekstiKappale kappale = lapsi.getTekstiKappale();
+            TekstiKappale tekstiKappale = lapsi.getTekstiKappale();
             StringBuilder otsikkoBuilder = new StringBuilder();
-            otsikkoBuilder.append(getTextString(docBase, kappale.getNimi()));
+            otsikkoBuilder.append(getTextString(docBase, tekstiKappale.getNimi()));
 
             if (lapsi.getTyyppi().equals(SisaltoTyyppi.TUTKINNONOSA) && lapsi.getTosa() != null) {
                 Tutkinnonosa tosa = lapsi.getTosa();
@@ -321,8 +321,8 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
 
             addHeader(docBase, otsikkoBuilder.toString());
 
-            if (kappale.getTeksti() != null) {
-                addLokalisoituteksti(docBase, kappale.getTeksti(), "div");
+            if (tekstiKappale.getTeksti() != null) {
+                addLokalisoituteksti(docBase, tekstiKappale.getTeksti(), "div");
             } else {
                 addTeksti(docBase, "", "p"); // Sivutuksen kannalta välttämätön
             }
@@ -521,6 +521,12 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
             default:
                 break;
         }
+
+        // Tutkinnon osan vapaat tekstit
+        tutkinnonOsa.getVapaat().forEach(vapaaTeksti -> {
+            addLokalisoituteksti(docBase, vapaaTeksti.getNimi(), "h5");
+            addLokalisoituteksti(docBase, vapaaTeksti.getTeksti(), "div");
+        });
 
         // Osaamisen osoittaminen
         if (tutkinnonOsa.getOsaamisenOsoittaminen() != null) {
