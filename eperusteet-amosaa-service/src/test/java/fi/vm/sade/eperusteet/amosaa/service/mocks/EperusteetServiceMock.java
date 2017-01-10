@@ -18,15 +18,17 @@ package fi.vm.sade.eperusteet.amosaa.service.mocks;
 import com.fasterxml.jackson.databind.JsonNode;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.ArviointiasteikkoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonOsaSuoritustapaDto;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 /**
  *
@@ -60,6 +62,11 @@ public class EperusteetServiceMock implements EperusteetService {
 
     @Override
     public JsonNode getSuoritustapa(Long id, String tyyppi) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public ArviointiasteikkoDto getArviointiasteikko(Long id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
