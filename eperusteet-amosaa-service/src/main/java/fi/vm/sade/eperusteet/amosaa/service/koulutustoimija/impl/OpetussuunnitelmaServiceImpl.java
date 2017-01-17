@@ -59,18 +59,17 @@ import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.ValidointiService;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -216,7 +215,10 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         CachedPeruste cperuste = cachedPerusteRepository.findOneByDiaarinumeroAndLuotu(peruste.getDiaarinumero(), peruste.getGlobalVersion().getAikaleima());
         if (cperuste == null) {
             cperuste = new CachedPeruste();
-            cperuste.setNimi(LokalisoituTeksti.of(peruste.getNimi().getTekstit()));
+            if (peruste.getNimi() != null) {
+                cperuste.setNimi(LokalisoituTeksti.of(peruste.getNimi().getTekstit()));
+            }
+
             cperuste.setDiaarinumero(peruste.getDiaarinumero());
             cperuste.setLuotu(peruste.getGlobalVersion().getAikaleima());
             cperuste.setPeruste(ops.getTyyppi() == OpsTyyppi.YLEINEN
