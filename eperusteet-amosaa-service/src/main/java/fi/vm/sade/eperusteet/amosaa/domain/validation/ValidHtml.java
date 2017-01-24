@@ -15,12 +15,13 @@
  */
 package fi.vm.sade.eperusteet.amosaa.domain.validation;
 
+import org.jsoup.safety.Whitelist;
+
+import javax.validation.Constraint;
+import javax.validation.Payload;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
-import javax.validation.Constraint;
-import javax.validation.Payload;
-import org.jsoup.safety.Whitelist;
 
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.ElementType.FIELD;
@@ -46,16 +47,16 @@ public @interface ValidHtml {
     public enum WhitelistType {
         NONE(Whitelist.none()),
         MINIMAL(Whitelist.none().addTags("p")),
-        SIMPLIFIED(Whitelist.none().addTags("p","strong","em","s","ol","li","ul")),
+        SIMPLIFIED(Whitelist.none().addTags("p", "strong", "em", "s", "ol", "li", "ul")),
         NORMAL(Whitelist.none()
-                        .addTags("p", "strong", "em", "s", "ol", "li", "ul", "blockquote", "table", "caption",
+                .addTags("p", "strong", "em", "s", "ol", "li", "ul", "blockquote", "table", "caption",
                                  "tbody", "tr", "td", "hr", "pre", "th", "thead", "a", "abbr")
-                        .addAttributes("table", "align", "border", "cellpadding", "cellspacing", "style", "summary")
-                        .addAttributes("th", "scope", "colspan", "rowspan")
-                        .addAttributes("td", "colspan", "rowspan", "style")
-                        .addAttributes("a", "href", "target")
-                        .addAttributes("img", "data-uid", "alt", "height", "width")
-                        .addAttributes("abbr", "data-viite"));
+                .addAttributes("table", "align", "border", "cellpadding", "cellspacing", "style", "summary")
+                .addAttributes("th", "scope", "colspan", "rowspan")
+                .addAttributes("td", "colspan", "rowspan", "style")
+                .addAttributes("a", "href", "target")
+                .addAttributes("img", "data-uid", "alt", "height", "width")
+                .addAttributes("abbr", "data-viite"));
 
         private Whitelist whitelist;
 

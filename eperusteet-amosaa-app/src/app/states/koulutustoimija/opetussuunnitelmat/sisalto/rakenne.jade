@@ -12,8 +12,6 @@ div
           a(ng-if="child.$$poistettu" ng-click="misc.palautaYksi(child)" kaanna="'palauta'")
         div.sisalto-nimi
           span(ng-bind="child.$$obj.tekstiKappale.nimi | kaanna" ng-class="{'sisalto-poistettu': child.$$poistettu}")
-          span(tooltip-placement="right" uib-tooltip="{{'liikkumaton' | kaanna}}" ng-if="child.$$obj.liikkumaton")=" "
-            +icon("sticky-note-o")
           span(tooltip-placement="right" uib-tooltip="{{'pakollinen' | kaanna}}" ng-if="child.$$obj.pakollinen")=" "
             +icon("file-powerpoint-o")
       dynamic(template="states/koulutustoimija/opetussuunnitelmat/sisalto/rakenne.jade" ng-model="child" misc="misc" depth="depth + 1")

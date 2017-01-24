@@ -9,6 +9,7 @@ angular.module("app")
             controller: ($q, $scope, $timeout, $state, reresolver, otsikot, tekstit, sisaltoRoot) => {
                 $scope.startSorting = () => {
                     $scope.rakenne = Tekstikappaleet.teeRakenne(Tekstikappaleet.uniikit(otsikot), sisaltoRoot.id);
+
                     $scope.misc = {
                         sortableOptions: {
                             start: (e, ui) => {
@@ -16,11 +17,12 @@ angular.module("app")
                             },
                             update: (e, ui) => {
                                 let node = ui.item.sortable.model;
-                                if (!ui.item.sortable.received
-                                        && ui.item.sortable.source[0] !== ui.item.sortable.droptarget[0]
-                                        && node.$$obj.liikkumaton) {
+                                let target = ui.item.sortable.droptarget[0];
+                                let targetScope: any = angular.element(target).scope();
+                                if (node.$$obj.tyyppi === "tutkinnonosa"
+                                    && targetScope.ngModel.$$obj.tyyppi === "tutkinnonosa") {
                                     ui.item.sortable.cancel();
-                                    NotifikaatioService.varoitus("liikkumaton-ei-saa-liikkua");
+                                    NotifikaatioService.varoitus("tutkinnonosa-parent-ei-voi-olla-tutkinnonosa");
                                 } else {
                                     Tekstikappaleet.paivitaRakenne($scope.rakenne);
                                 }

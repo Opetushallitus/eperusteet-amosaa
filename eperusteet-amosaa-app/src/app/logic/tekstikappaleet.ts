@@ -75,5 +75,5 @@ namespace Tekstikappaleet {
         _.remove(viite.lapset, { $$poistettu: true });
         _(viite.lapset).forEach(viite => poistaPoistetut(viite)).value();
         return viite;
-    }
+    };
 }

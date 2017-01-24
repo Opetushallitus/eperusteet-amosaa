@@ -237,6 +237,7 @@
   "otsikko-tekstikappale": "Lisää tekstikappale",
   "otsikko-tutkinnonosa": "Lisää tutkinnon osa",
   "otsikko-tutkinnonosaryhma": "Lisää ryhmä tutkinnon osille",
+  "tutkinnonosa-parent-ei-voi-olla-tutkinnonosa": "Tutkinnon osa ei voi olla tutkinnon osan alla",
   "paatosnumero": "Päätösnumero",
   "paatosnumeroa-ei-maaritelty": "Opetussuunnitelmalla ei ole päätösnumeroa",
   "paatospaivamaaraa-ei-maaritelty": "Päätöspäivämäärää ei ole määritetty",
