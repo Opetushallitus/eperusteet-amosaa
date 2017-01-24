@@ -570,6 +570,8 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
                 throw new BusinessRuleViolationException("vanhempi-puuttuu");
             }
 
+            // liikkumaton
+            /*
             Reference uusiParent = viiteDto.getVanhempi();
             SisaltoViite parent = vanhatViitteetMap.get(viiteDto.getId()).getVanhempi();
             if (viiteDto.isLiikkumaton()) {
@@ -580,6 +582,15 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
                     throw new BusinessRuleViolationException("liikkumaton-ei-saa-liikkua");
                 }
             }
+            */
+
+            Reference uusiParent = viiteDto.getVanhempi();
+            SisaltoViite parent = vanhatViitteetMap.get(viiteDto.getId()).getVanhempi();
+            if (viiteDto.getTyyppi().equals(SisaltoTyyppi.TUTKINNONOSA)
+                && vanhatViitteetMap.get(uusiParent.getIdLong()).getTyyppi().equals(SisaltoTyyppi.TUTKINNONOSA)) {
+                throw new BusinessRuleViolationException("tutkinnonosa-parent-ei-voi-olla-tutkinnonosa");
+            }
+
 
             if (viiteDto.getTyyppi() != null && viiteDto.getTyyppi().equals(SisaltoTyyppi.TUTKINNONOSAT)) {
                 tutkinnonOsat = true;
