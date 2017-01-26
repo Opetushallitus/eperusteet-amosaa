@@ -1,0 +1,12 @@
+.cke, .cke_reset_all {
+  a {
+    &:link, &:visited, &:hover, &:active {
+      text-decoration: none;
+    }
+    span {
+      &:link, &:visited, &:hover, &:active {
+        text-decoration: none;
+      }
+    }
+  }
+}
