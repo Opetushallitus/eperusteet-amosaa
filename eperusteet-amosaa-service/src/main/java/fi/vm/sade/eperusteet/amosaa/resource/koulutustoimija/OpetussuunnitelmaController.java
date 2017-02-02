@@ -54,8 +54,10 @@ public class OpetussuunnitelmaController {
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public List<OpetussuunnitelmaBaseDto> getAll(@PathVariable final Long ktId) {
-        return service.getOpetussuunnitelmat(ktId);
+    public List<OpetussuunnitelmaBaseDto> getAll(
+            @PathVariable final Long ktId,
+            @RequestParam(name = "peruste", required = false) Long perusteId) {
+        return service.getOpetussuunnitelmat(ktId, perusteId);
     }
 
     @RequestMapping(value = "/ystavien", method = RequestMethod.GET)

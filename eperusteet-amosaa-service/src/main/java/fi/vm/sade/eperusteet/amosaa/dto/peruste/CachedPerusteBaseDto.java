@@ -29,5 +29,6 @@ import lombok.Setter;
 public class CachedPerusteBaseDto {
     private Long id;
     private String diaarinumero;
+    private Long perusteId;
     private LokalisoituTekstiDto nimi;
 }

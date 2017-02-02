@@ -18,6 +18,10 @@ package fi.vm.sade.eperusteet.amosaa.resource.config;
 import com.fasterxml.classmate.GenericType;
 import com.fasterxml.classmate.TypeResolver;
 import com.fasterxml.jackson.databind.JsonNode;
+import static com.google.common.base.Predicates.not;
+import java.util.Optional;
+import java.util.concurrent.Callable;
+import javax.servlet.ServletContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,16 +29,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
+import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger1.annotations.EnableSwagger;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
-
-import javax.servlet.ServletContext;
-import java.util.Optional;
-import java.util.concurrent.Callable;
 
 /**
  *
@@ -58,6 +59,9 @@ public class SwaggerConfig {
                 .groupName("v2")
                 .apiInfo(apiInfo())
                 .directModelSubstitute(JsonNode.class, Object.class)
+                .select()
+                .apis(not(RequestHandlerSelectors.withClassAnnotation(InternalApi.class)))
+                .build()
                 .genericModelSubstitutes(ResponseEntity.class, Optional.class)
                 .alternateTypeRules(
                         springfox.documentation.schema.AlternateTypeRules.newRule(

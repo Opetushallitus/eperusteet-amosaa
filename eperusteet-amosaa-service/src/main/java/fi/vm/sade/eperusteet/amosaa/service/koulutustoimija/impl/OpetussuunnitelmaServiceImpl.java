@@ -120,6 +120,16 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     private DokumenttiService dokumenttiService;
 
     @Override
+    @Transactional
+    public void mapPerusteIds() {
+        List<CachedPeruste> cperusteet = cachedPerusteRepository.findAll();
+        for (CachedPeruste cperuste : cperusteet) {
+            JsonNode peruste = eperusteetService.getPerusteSisalto(cperuste, JsonNode.class);
+            cperuste.setPerusteId(peruste.get("id").asLong());
+        }
+    }
+
+    @Override
     public List<OpetussuunnitelmaDto> getJulkisetOpetussuunnitelmat(Long ktId) {
         Koulutustoimija koulutustoimija = koulutustoimijaRepository.findOne(ktId);
         List<Opetussuunnitelma> opsit = repository.findAllByKoulutustoimijaAndTila(koulutustoimija, Tila.JULKAISTU);
@@ -128,8 +138,15 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
     @Override
     public List<OpetussuunnitelmaBaseDto> getOpetussuunnitelmat(Long ktId) {
+        return getOpetussuunnitelmat(ktId, null);
+    }
+
+    @Override
+    public List<OpetussuunnitelmaBaseDto> getOpetussuunnitelmat(Long ktId, Long perusteId) {
         Koulutustoimija koulutustoimija = koulutustoimijaRepository.findOne(ktId);
-        List<Opetussuunnitelma> opsit = repository.findAllByKoulutustoimija(koulutustoimija);
+        List<Opetussuunnitelma> opsit = (perusteId != null)
+            ? repository.findAllByKoulutustoimijaAndPerusteId(koulutustoimija, perusteId)
+            : repository.findAllByKoulutustoimija(koulutustoimija);
         return mapper.mapAsList(opsit, OpetussuunnitelmaBaseDto.class);
     }
 
@@ -220,6 +237,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
             }
 
             cperuste.setDiaarinumero(peruste.getDiaarinumero());
+            cperuste.setPerusteId(peruste.getId());
             cperuste.setLuotu(peruste.getGlobalVersion().getAikaleima());
             cperuste.setPeruste(ops.getTyyppi() == OpsTyyppi.YLEINEN
                     ? eperusteetService.getYleinenPohjaSisalto()

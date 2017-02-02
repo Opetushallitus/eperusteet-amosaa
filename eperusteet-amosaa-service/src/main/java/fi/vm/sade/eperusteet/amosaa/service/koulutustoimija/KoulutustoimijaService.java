@@ -23,6 +23,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaYstavaDto
 import java.util.List;
 import java.util.Set;
 import org.springframework.security.access.method.P;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
@@ -40,6 +41,9 @@ public interface KoulutustoimijaService {
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
     KoulutustoimijaDto getKoulutustoimija(@P("ktId") Long ktId);
+
+    @PostAuthorize("hasPermission(returnObject.id, 'koulutustoimija', 'LUKU')")
+    KoulutustoimijaDto getKoulutustoimija(String idTaiOid);
 
     @PreAuthorize("permitAll()")
     KoulutustoimijaJulkinenDto getKoulutustoimijaJulkinen(@P("ktId") Long ktId);

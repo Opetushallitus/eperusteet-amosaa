@@ -125,6 +125,18 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     }
 
     @Override
+    public KoulutustoimijaDto getKoulutustoimija(String idTaiOid) {
+        Koulutustoimija result;
+        try {
+            result = repository.findOne(Long.parseLong(idTaiOid));
+        }
+        catch (NumberFormatException ex) {
+            result = repository.findOneByOrganisaatio(idTaiOid);
+        }
+        return mapper.map(result, KoulutustoimijaDto.class);
+    }
+
+    @Override
     public KoulutustoimijaJulkinenDto getKoulutustoimijaJulkinen(Long kId) {
         return mapper.map(repository.findOne(kId), KoulutustoimijaJulkinenDto.class);
     }

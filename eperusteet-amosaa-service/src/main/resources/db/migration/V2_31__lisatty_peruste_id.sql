@@ -1,0 +1,1 @@
+ALTER TABLE peruste_cache ADD COLUMN peruste_id BIGINT;
