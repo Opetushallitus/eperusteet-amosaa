@@ -25,7 +25,6 @@ import fi.vm.sade.eperusteet.amosaa.dto.ops.SisaltoViiteSijaintiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViitePaikallinenIntegrationDto;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
-import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import io.swagger.annotations.Api;
 import java.util.List;
@@ -51,9 +50,6 @@ public class KoulutustoimijaController {
     private KoulutustoimijaService koulutustoimijaService;
 
     @Autowired
-    private OpetussuunnitelmaService opsService;
-
-    @Autowired
     private SisaltoViiteService sisaltoViiteService;
 
     @Autowired
@@ -62,7 +58,7 @@ public class KoulutustoimijaController {
     @RequestMapping(value = "/{ktId}", method = RequestMethod.GET)
     @ResponseBody
     public KoulutustoimijaDto get(
-            @PathVariable final String ktId) {
+            @PathVariable final Long ktId) {
         return koulutustoimijaService.getKoulutustoimija(ktId);
     }
 
