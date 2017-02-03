@@ -59,11 +59,6 @@ public class KoulutustoimijaController {
     @Autowired
     private KayttajanTietoService kayttajaTietoService;
 
-    @RequestMapping(value = "/mapPerusteId", method = RequestMethod.GET)
-    public void get() {
-        opsService.mapPerusteIds();
-    }
-
     @RequestMapping(value = "/{ktId}", method = RequestMethod.GET)
     @ResponseBody
     public KoulutustoimijaDto get(
