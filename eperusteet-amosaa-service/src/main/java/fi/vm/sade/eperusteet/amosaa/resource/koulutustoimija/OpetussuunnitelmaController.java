@@ -41,7 +41,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/koulutustoimijat/{ktId}/opetussuunnitelmat")
 @Api(value = "opetussuunnitelmat")
-public class OpetussuunnitelmaController {
+public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstractController {
 
     @Autowired
     private OpetussuunnitelmaService service;
@@ -55,21 +55,21 @@ public class OpetussuunnitelmaController {
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public List<OpetussuunnitelmaBaseDto> getAll(
-            @PathVariable final Long ktId,
+            @ModelAttribute("solvedKtId") final Long ktId,
             @RequestParam(name = "peruste", required = false) Long perusteId) {
         return service.getOpetussuunnitelmat(ktId, perusteId);
     }
 
     @RequestMapping(value = "/ystavien", method = RequestMethod.GET)
     @ResponseBody
-    public List<OpetussuunnitelmaDto> getAllOtherOrgs(@PathVariable final Long ktId) {
+    public List<OpetussuunnitelmaDto> getAllOtherOrgs(@ModelAttribute("solvedKtId") final Long ktId) {
         return service.getOtherOpetussuunnitelmat(ktId);
     }
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     public OpetussuunnitelmaBaseDto add(
-            @PathVariable final Long ktId,
+            @ModelAttribute("solvedKtId") final Long ktId,
             @RequestBody OpetussuunnitelmaDto opsDto) {
         return service.addOpetussuunnitelma(ktId, opsDto);
     }
@@ -77,7 +77,7 @@ public class OpetussuunnitelmaController {
     @RequestMapping(value = "/{opsId}", method = RequestMethod.GET)
     @ResponseBody
     public OpetussuunnitelmaDto get(
-            @PathVariable final Long ktId,
+            @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId) {
         return service.getOpetussuunnitelma(ktId, opsId);
     }
@@ -85,7 +85,7 @@ public class OpetussuunnitelmaController {
     @RequestMapping(value = "/{opsId}/peruste", method = RequestMethod.GET)
     @ResponseBody
     public JsonNode getPeruste(
-            @PathVariable final Long ktId,
+            @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId) {
         return service.getOpetussuunnitelmanPeruste(ktId, opsId);
     }
@@ -93,7 +93,7 @@ public class OpetussuunnitelmaController {
     @RequestMapping(value = "/{opsId}", method = RequestMethod.PUT)
     @ResponseBody
     public OpetussuunnitelmaDto update(
-            @PathVariable final Long ktId,
+            @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @RequestBody(required = false) OpetussuunnitelmaDto body) {
         return service.update(ktId, opsId, body);
@@ -102,7 +102,7 @@ public class OpetussuunnitelmaController {
     @RequestMapping(value = "/{opsId}/poistetut", method = RequestMethod.GET)
     @ResponseBody
     public List<PoistettuDto> getPoistetut(
-            @PathVariable final Long ktId,
+            @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId) {
         return poistetutService.poistetut(ktId, opsId);
     }
@@ -110,7 +110,7 @@ public class OpetussuunnitelmaController {
     @RequestMapping(value = "/{opsId}/poistetut/{poistettuId}/palauta", method = RequestMethod.POST)
     @ResponseBody
     public SisaltoViiteDto getPoistetut(
-            @PathVariable final Long ktId,
+            @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long poistettuId) {
         return sisaltoviiteService.restoreSisaltoViite(ktId, opsId, poistettuId);
@@ -118,14 +118,14 @@ public class OpetussuunnitelmaController {
 
     @RequestMapping(value = "/{opsId}/oikeudet", method = RequestMethod.GET)
     public List<KayttajaoikeusDto> getOikeudet(
-            @PathVariable final Long ktId,
+            @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId) {
         return service.getOikeudet(ktId, opsId);
     }
 
     @RequestMapping(value = "/{opsId}/oikeudet/{kayttajaId}", method = RequestMethod.POST)
     public KayttajaoikeusDto updateOikeus(
-            @PathVariable final Long ktId,
+            @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long kayttajaId,
             @RequestBody(required = false) KayttajaoikeusDto body) {
@@ -135,7 +135,7 @@ public class OpetussuunnitelmaController {
     @RequestMapping(value = "/{opsId}/versiot/uusin", method = RequestMethod.GET)
     @InternalApi
     Revision getLatestRevision(
-            @PathVariable final Long ktId,
+            @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId) {
         return service.getLatestRevision(ktId, opsId);
     }
@@ -143,7 +143,7 @@ public class OpetussuunnitelmaController {
     @RequestMapping(value = "/{opsId}/validoi", method = RequestMethod.GET)
     @InternalApi
     Validointi validoi(
-            @PathVariable final Long ktId,
+            @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId) {
         return service.validoi(ktId, opsId);
     }
@@ -151,7 +151,7 @@ public class OpetussuunnitelmaController {
     @RequestMapping(value = "/{opsId}/versiot", method = RequestMethod.GET)
     @InternalApi
     List<Revision> getRevisions(
-            @PathVariable final Long ktId,
+            @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId) {
         return service.getRevisions(ktId, opsId);
     }
@@ -159,7 +159,7 @@ public class OpetussuunnitelmaController {
     @RequestMapping(value = "/{opsId}/versiot/{revId}", method = RequestMethod.GET)
     @InternalApi
     Object getRevisions(
-            @PathVariable final Long ktId,
+            @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Integer revId) {
         return service.getData(ktId, opsId, revId);
@@ -167,7 +167,7 @@ public class OpetussuunnitelmaController {
 
     @RequestMapping(value = "/{opsId}/tila/{tila}", method = RequestMethod.POST)
     public OpetussuunnitelmaBaseDto updateTila(
-            @PathVariable final Long ktId,
+            @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Tila tila) {
         return service.updateTila(ktId, opsId, tila);

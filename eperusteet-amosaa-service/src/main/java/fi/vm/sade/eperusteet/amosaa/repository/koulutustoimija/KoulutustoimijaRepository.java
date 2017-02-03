@@ -32,6 +32,9 @@ import org.springframework.stereotype.Repository;
 public interface KoulutustoimijaRepository extends JpaWithVersioningRepository<Koulutustoimija, Long> {
     Koulutustoimija findOneByOrganisaatio(final String organisaatio);
 
+    @Query("SELECT kt.id FROM Koulutustoimija kt WHERE kt.organisaatio = ?1")
+    Long findOneIdByOrganisaatio(final String organisaatio);
+
     default Koulutustoimija findOph() {
         return findOneByOrganisaatio(SecurityUtil.OPH_OID);
     }

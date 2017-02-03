@@ -1,12 +1,14 @@
 package fi.vm.sade.eperusteet.amosaa.resource.ops;
 
 import fi.vm.sade.eperusteet.amosaa.dto.ops.TiedoteDto;
+import fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija.KoulutustoimijaIdGetterAbstractController;
 import fi.vm.sade.eperusteet.amosaa.service.ops.TiedoteService;
 import io.swagger.annotations.Api;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,20 +25,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/koulutustoimijat/{ktId}")
 @Api(value = "Tiedotteet", description = "Tiedotteiden hallinta")
-public class TiedoteController {
+public class TiedoteController extends KoulutustoimijaIdGetterAbstractController {
 
     @Autowired
     private TiedoteService tiedoteService;
 
     @RequestMapping(method = GET, value = "/tiedotteet")
     public ResponseEntity<List<TiedoteDto>> getAll(
-            @PathVariable final Long ktId) {
+            @ModelAttribute("solvedKtId") final Long ktId) {
         return ResponseEntity.ok(tiedoteService.getTiedotteet(ktId));
     }
 
     @RequestMapping(value = "/tiedotteet/{id}", method = GET)
     public ResponseEntity<TiedoteDto> getTiedote(
-            @PathVariable final Long ktId,
+            @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long id) {
         return ResponseEntity.ok(tiedoteService.getTiedote(ktId, id));
     }
@@ -44,14 +46,14 @@ public class TiedoteController {
     @RequestMapping(method = POST, value = "/tiedotteet")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<TiedoteDto> addTiedote(
-            @PathVariable final Long ktId,
+            @ModelAttribute("solvedKtId") final Long ktId,
             @RequestBody TiedoteDto tiedoteDto) {
         return ResponseEntity.ok(tiedoteService.addTiedote(ktId, tiedoteDto));
     }
 
     @RequestMapping(value = "/tiedotteet/{id}", method = PUT)
     public ResponseEntity<TiedoteDto> updateTiedote(
-            @PathVariable final Long ktId,
+            @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long id,
             @RequestBody TiedoteDto tiedoteDto) {
         return ResponseEntity.ok(tiedoteService.updateTiedote(ktId, tiedoteDto));
@@ -59,7 +61,7 @@ public class TiedoteController {
 
     @RequestMapping(value = "/tiedotteet/{id}/kuittaa", method = POST)
     public void updateTiedote(
-            @PathVariable final Long ktId,
+            @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long id) {
         tiedoteService.kuittaaLuetuksi(ktId, id);
     }
@@ -67,7 +69,7 @@ public class TiedoteController {
     @RequestMapping(value = "/tiedotteet/{id}", method = DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteTiedote(
-            @PathVariable final Long ktId,
+            @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long id) {
         tiedoteService.deleteTiedote(ktId, id);
     }

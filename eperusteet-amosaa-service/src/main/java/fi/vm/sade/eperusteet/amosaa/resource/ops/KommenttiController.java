@@ -16,6 +16,7 @@
 package fi.vm.sade.eperusteet.amosaa.resource.ops;
 
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.KommenttiDto;
+import fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija.KoulutustoimijaIdGetterAbstractController;
 import fi.vm.sade.eperusteet.amosaa.service.teksti.KommenttiService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,13 +31,13 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @RestController
 @RequestMapping("/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tekstit/{tkvId}/kommentit")
 //@ApiIgnore
-public class KommenttiController {
+public class KommenttiController extends KoulutustoimijaIdGetterAbstractController {
 
     @Autowired
     private KommenttiService kommenttiService;
 
     @RequestMapping(method = GET)
-    public ResponseEntity<List<KommenttiDto>> getAll(@PathVariable final long ktId,
+    public ResponseEntity<List<KommenttiDto>> getAll(@ModelAttribute("solvedKtId") final Long ktId,
                                                      @PathVariable final long opsId,
                                                      @PathVariable final long tkvId) {
         List<KommenttiDto> t = kommenttiService.getAllByTekstikappaleviite(ktId, opsId, tkvId);
@@ -44,7 +45,7 @@ public class KommenttiController {
     }
 
     @RequestMapping(method = POST)
-    public ResponseEntity<KommenttiDto> add(@PathVariable final long ktId,
+    public ResponseEntity<KommenttiDto> add(@ModelAttribute("solvedKtId") final Long ktId,
                                             @PathVariable final long opsId,
                                             @PathVariable final long tkvId,
                                             @RequestBody KommenttiDto body) {
@@ -53,7 +54,7 @@ public class KommenttiController {
     }
 
     @RequestMapping(value = "/{id}", method = GET)
-    public ResponseEntity<KommenttiDto> get(@PathVariable final long ktId,
+    public ResponseEntity<KommenttiDto> get(@ModelAttribute("solvedKtId") final Long ktId,
                                             @PathVariable final long opsId,
                                             @PathVariable final long tkvId,
                                             @PathVariable final long id) {
@@ -62,7 +63,7 @@ public class KommenttiController {
     }
 
     @RequestMapping(value = "/{id}", method = PUT)
-    public ResponseEntity<KommenttiDto> update(@PathVariable final long ktId,
+    public ResponseEntity<KommenttiDto> update(@ModelAttribute("solvedKtId") final Long ktId,
                                                @PathVariable final long opsId,
                                                @PathVariable final long tkvId,
                                                @PathVariable final long id,
@@ -71,7 +72,7 @@ public class KommenttiController {
     }
 
     @RequestMapping(value = "/{id}", method = DELETE)
-    public void delete(@PathVariable final long ktId,
+    public void delete(@ModelAttribute("solvedKtId") final Long ktId,
                        @PathVariable final long opsId,
                        @PathVariable final long tkvId,
                        @PathVariable final long id) {

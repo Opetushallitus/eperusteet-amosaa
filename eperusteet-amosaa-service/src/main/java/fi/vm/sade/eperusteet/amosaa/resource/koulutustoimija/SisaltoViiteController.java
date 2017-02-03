@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,14 +42,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}")
 @Api(value = "sisältö")
-public class SisaltoViiteController {
+public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractController {
 
     @Autowired
     private SisaltoViiteService service;
 
     @RequestMapping(value = "/tekstit/{svId}", method = RequestMethod.GET)
     SisaltoViiteDto.Matala getTekstit(
-            @PathVariable final Long ktId,
+            @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long svId) {
         return service.getSisaltoViite(ktId, opsId, svId);
@@ -56,28 +57,28 @@ public class SisaltoViiteController {
 
     @RequestMapping(value = "/otsikot", method = RequestMethod.GET)
     List<SisaltoViiteKevytDto> getOtsikot(
-            @PathVariable final Long ktId,
+            @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId) {
         return service.getSisaltoViitteet(ktId, opsId, SisaltoViiteKevytDto.class);
     }
 
     @RequestMapping(value = "/suorituspolut", method = RequestMethod.GET)
     List<SisaltoViiteDto> getSuorituspolut(
-            @PathVariable final Long ktId,
+            @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId) {
         return service.getSuorituspolut(ktId, opsId, SisaltoViiteDto.class);
     }
 
     @RequestMapping(value = "/tutkinnonosat", method = RequestMethod.GET)
     List<SisaltoViiteDto> getTutkinnonosat(
-            @PathVariable final Long ktId,
+            @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId) {
         return service.getTutkinnonOsat(ktId, opsId, SisaltoViiteDto.class);
     }
 
     @RequestMapping(value = "/tekstit/{svId}", method = RequestMethod.POST)
     SisaltoViiteDto.Matala addTekstiKappaleLapsi(
-            @PathVariable final Long ktId,
+            @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long svId,
             @RequestBody(required = false) SisaltoViiteDto.Matala tekstiKappaleViiteDto) {
@@ -88,7 +89,7 @@ public class SisaltoViiteController {
     @RequestMapping(value = "/lisaa", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void copyMultiple(
-            @PathVariable final Long ktId,
+            @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @RequestBody List<Long> viitteet) {
         service.copySisaltoViiteet(ktId, opsId, viitteet);
@@ -96,7 +97,7 @@ public class SisaltoViiteController {
 
     @RequestMapping(value = "/tekstit/{svId}", method = RequestMethod.PUT)
     void updateTekstiKappaleViite(
-            @PathVariable final Long ktId,
+            @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long svId,
             @RequestBody final SisaltoViiteDto tekstiKappaleViiteDto) {
@@ -105,7 +106,7 @@ public class SisaltoViiteController {
 
     @RequestMapping(value = "/tekstit/{svId}/rakenne", method = RequestMethod.PUT)
     void updateSisaltoViiteRakenne(
-            @PathVariable final Long ktId,
+            @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long svId,
             @RequestBody final SisaltoViiteDto.Puu tekstiKappaleViiteDto) {
@@ -115,7 +116,7 @@ public class SisaltoViiteController {
     @RequestMapping(value = "/tekstit/{svId}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void removeSisaltoViite(
-            @PathVariable final Long ktId,
+            @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long svId) {
         service.removeSisaltoViite(ktId, opsId, svId);
@@ -124,7 +125,7 @@ public class SisaltoViiteController {
     @RequestMapping(value = "/tekstit/{svId}/versiot/uusin", method = RequestMethod.GET)
     @InternalApi
     RevisionDto getLatestRevision(
-            @PathVariable final Long ktId,
+            @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long svId) {
         return service.getLatestRevision(ktId, opsId, svId);
@@ -133,7 +134,7 @@ public class SisaltoViiteController {
     @RequestMapping(value = "/tekstit/{svId}/versiot", method = RequestMethod.GET)
     @InternalApi
     List<RevisionDto> getRevisions(
-            @PathVariable final Long ktId,
+            @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long svId) {
         return service.getRevisions(ktId, opsId, svId);
@@ -142,7 +143,7 @@ public class SisaltoViiteController {
     @RequestMapping(value = "/tekstit/{svId}/versiot/{revId}", method = RequestMethod.GET)
     @InternalApi
     SisaltoViiteDto getRevisions(
-            @PathVariable final Long ktId,
+            @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long svId,
             @PathVariable final Integer revId) {

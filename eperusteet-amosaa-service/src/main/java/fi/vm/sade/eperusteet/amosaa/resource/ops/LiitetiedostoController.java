@@ -16,9 +16,17 @@
 package fi.vm.sade.eperusteet.amosaa.resource.ops;
 
 import fi.vm.sade.eperusteet.amosaa.dto.liite.LiiteDto;
+import fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija.KoulutustoimijaIdGetterAbstractController;
 import fi.vm.sade.eperusteet.amosaa.resource.util.CacheControl;
 import fi.vm.sade.eperusteet.amosaa.service.ops.LiiteService;
 import io.swagger.annotations.Api;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.util.*;
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 import org.apache.tika.Tika;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,15 +39,6 @@ import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.*;
-import java.util.*;
-import java.util.List;
-
 /**
  *
  * @author jhyoty
@@ -47,7 +46,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/koulutustoimijat")
 @Api("liitetiedostot")
-public class LiitetiedostoController {
+public class LiitetiedostoController extends KoulutustoimijaIdGetterAbstractController {
     private static final Logger LOG = LoggerFactory.getLogger(LiitetiedostoController.class);
 
     private static final int BUFSIZE = 64 * 1024;
@@ -64,7 +63,7 @@ public class LiitetiedostoController {
     }
 
     @RequestMapping(value = "/{ktId}/opetussuunnitelmat/{opsId}/kuvat", method = RequestMethod.POST)
-    public ResponseEntity<String> upload(@PathVariable Long ktId,
+    public ResponseEntity<String> upload(@ModelAttribute("solvedKtId") final Long ktId,
                                          @PathVariable Long opsId,
                                          @RequestParam String nimi,
                                          @RequestParam Part file,
@@ -128,7 +127,7 @@ public class LiitetiedostoController {
 
     @RequestMapping(value = "/{ktId}/kuvat/{id}", method = RequestMethod.GET)
     @CacheControl(age = CacheControl.ONE_YEAR)
-    public void get(@PathVariable Long ktId,
+    public void get(@ModelAttribute("solvedKtId") final Long ktId,
                     @PathVariable UUID id,
                     @RequestHeader(value = "If-None-Match", required = false) String etag,
                     HttpServletResponse response) throws IOException {
@@ -152,13 +151,13 @@ public class LiitetiedostoController {
 
     @RequestMapping(value = "/{ktId}/kuvat/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long ktId,
+    public void delete(@ModelAttribute("solvedKtId") final Long ktId,
                        @PathVariable UUID id) {
         liitteet.delete(ktId, id);
     }
 
     @RequestMapping(value = "/{ktId}/kuvat", method = RequestMethod.GET)
-    public List<LiiteDto> getAll(@PathVariable Long ktId) {
+    public List<LiiteDto> getAll(@ModelAttribute("solvedKtId") final Long ktId) {
         return liitteet.getAll(ktId);
     }
 }

@@ -6,12 +6,15 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.repository.dokumentti.DokumenttiRepository;
+import fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija.KoulutustoimijaIdGetterAbstractController;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiService;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import io.swagger.annotations.Api;
+import java.io.IOException;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -21,16 +24,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.Optional;
-
 /**
  * @author isaul
  */
 @RestController
 @RequestMapping("/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/dokumentti")
 @Api(value = "dokumentit")
-public class DokumenttiController {
+public class DokumenttiController extends KoulutustoimijaIdGetterAbstractController {
 
     @Autowired
     DokumenttiService service;
@@ -43,7 +43,7 @@ public class DokumenttiController {
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<DokumenttiDto> create(
-            @PathVariable Long ktId,
+            @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable Long opsId,
             @RequestParam(defaultValue = "fi") String kieli
     ) throws DokumenttiException {
@@ -67,7 +67,7 @@ public class DokumenttiController {
 
     @RequestMapping(method = RequestMethod.GET, produces = "application/pdf")
     public ResponseEntity<Object> get(
-            @PathVariable Long ktId,
+            @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable Long opsId,
             @RequestParam(defaultValue = "fi") String kieli
     ) {
@@ -95,7 +95,7 @@ public class DokumenttiController {
 
     @RequestMapping(value = "/{id}", method=RequestMethod.PUT)
     public ResponseEntity<DokumenttiDto> update(
-            @PathVariable Long ktId,
+            @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable Long opsId,
             @PathVariable Long id,
             @RequestParam(defaultValue = "fi") String kieli,
@@ -110,7 +110,7 @@ public class DokumenttiController {
 
     @RequestMapping(value = "/tila", method = RequestMethod.GET)
     public ResponseEntity<DokumenttiDto> query(
-            @PathVariable Long ktId,
+            @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable Long opsId,
             @RequestParam(defaultValue = "fi") String kieli
     ) {
@@ -129,7 +129,7 @@ public class DokumenttiController {
 
     @RequestMapping(value = "/kuva", method=RequestMethod.POST)
     public ResponseEntity<Object> addImage(
-            @PathVariable Long ktId,
+            @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable Long opsId,
             @RequestParam String tyyppi,
             @RequestParam(defaultValue = "fi") String kieli,
@@ -151,7 +151,7 @@ public class DokumenttiController {
     @Transactional(readOnly = true)
     @RequestMapping(value = "/kuva", method=RequestMethod.GET)
     public ResponseEntity<Object> getImage(
-            @PathVariable Long ktId,
+            @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable Long opsId,
             @RequestParam String tyyppi,
             @RequestParam(defaultValue = "fi") String kieli
@@ -198,7 +198,7 @@ public class DokumenttiController {
     @Transactional
     @RequestMapping(value = "/kuva", method=RequestMethod.DELETE)
     public ResponseEntity<Object> deleteImage(
-            @PathVariable Long ktId,
+            @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable Long opsId,
             @RequestParam String tyyppi,
             @RequestParam(defaultValue = "fi") String kieli

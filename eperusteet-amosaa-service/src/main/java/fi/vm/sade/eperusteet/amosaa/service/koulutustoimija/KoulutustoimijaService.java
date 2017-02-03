@@ -61,4 +61,6 @@ public interface KoulutustoimijaService {
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
     List<KoulutustoimijaBaseDto> getPyynnot(Long ktId);
+
+    Long getKoulutustoimija(String idTaiOid);
 }
