@@ -2,6 +2,12 @@ package fi.vm.sade.eperusteet.amosaa.resource.ops;
 
 import fi.vm.sade.eperusteet.amosaa.dto.ops.TiedoteDto;
 import fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija.KoulutustoimijaIdGetterAbstractController;
+import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaMessageFields.KAYTTAJA;
+import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaMessageFields.KOULUTUSTOIMIJA;
+import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.TIEDOTE_KUITTAUS;
+import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.TIEDOTE_MUOKKAUS;
+import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.TIEDOTE_POISTO;
+import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 import fi.vm.sade.eperusteet.amosaa.service.ops.TiedoteService;
 import io.swagger.annotations.Api;
 import java.util.List;
@@ -48,6 +54,7 @@ public class TiedoteController extends KoulutustoimijaIdGetterAbstractController
     public ResponseEntity<TiedoteDto> addTiedote(
             @ModelAttribute("solvedKtId") final Long ktId,
             @RequestBody TiedoteDto tiedoteDto) {
+        LogMessage.builder(KOULUTUSTOIMIJA, TIEDOTE_POISTO).log();
         return ResponseEntity.ok(tiedoteService.addTiedote(ktId, tiedoteDto));
     }
 
@@ -56,6 +63,7 @@ public class TiedoteController extends KoulutustoimijaIdGetterAbstractController
             @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long id,
             @RequestBody TiedoteDto tiedoteDto) {
+        LogMessage.builder(KOULUTUSTOIMIJA, TIEDOTE_MUOKKAUS).log();
         return ResponseEntity.ok(tiedoteService.updateTiedote(ktId, tiedoteDto));
     }
 
@@ -63,6 +71,7 @@ public class TiedoteController extends KoulutustoimijaIdGetterAbstractController
     public void updateTiedote(
             @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long id) {
+        LogMessage.builder(KAYTTAJA, TIEDOTE_KUITTAUS).log();
         tiedoteService.kuittaaLuetuksi(ktId, id);
     }
 
@@ -71,6 +80,7 @@ public class TiedoteController extends KoulutustoimijaIdGetterAbstractController
     public void deleteTiedote(
             @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long id) {
+        LogMessage.builder(KOULUTUSTOIMIJA, TIEDOTE_POISTO).log();
         tiedoteService.deleteTiedote(ktId, id);
     }
 

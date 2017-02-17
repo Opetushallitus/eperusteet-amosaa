@@ -17,6 +17,11 @@ package fi.vm.sade.eperusteet.amosaa.resource.ops;
 
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.KommenttiDto;
 import fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija.KoulutustoimijaIdGetterAbstractController;
+import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaMessageFields.OPETUSSUUNNITELMA;
+import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.KOMMENTTI_LISAYS;
+import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.KOMMENTTI_MUOKKAUS;
+import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.KOMMENTTI_POISTO;
+import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 import fi.vm.sade.eperusteet.amosaa.service.teksti.KommenttiService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +55,7 @@ public class KommenttiController extends KoulutustoimijaIdGetterAbstractControll
                                             @PathVariable final long tkvId,
                                             @RequestBody KommenttiDto body) {
         body.setTekstikappaleviiteId(tkvId);
+        LogMessage.builder(OPETUSSUUNNITELMA, KOMMENTTI_LISAYS).log();
         return new ResponseEntity<>(kommenttiService.add(ktId, opsId, body), HttpStatus.CREATED);
     }
 
@@ -68,6 +74,7 @@ public class KommenttiController extends KoulutustoimijaIdGetterAbstractControll
                                                @PathVariable final long tkvId,
                                                @PathVariable final long id,
                                                @RequestBody KommenttiDto body) {
+        LogMessage.builder(OPETUSSUUNNITELMA, KOMMENTTI_MUOKKAUS).log();
         return new ResponseEntity<>(kommenttiService.update(ktId, opsId, id, body), HttpStatus.OK);
     }
 
@@ -76,6 +83,7 @@ public class KommenttiController extends KoulutustoimijaIdGetterAbstractControll
                        @PathVariable final long opsId,
                        @PathVariable final long tkvId,
                        @PathVariable final long id) {
+        LogMessage.builder(OPETUSSUUNNITELMA, KOMMENTTI_POISTO).log();
         kommenttiService.delete(ktId, opsId, id);
     }
 }

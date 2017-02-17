@@ -19,6 +19,8 @@ import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
+import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
+import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
  *
@@ -26,7 +28,11 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class PerusteTekstiKappaleDto {
+public class PerusteTekstiKappaleDto implements AuditLoggableDto {
+    @Override
+    public void auditLog(LogMessage.LogMessageBuilder msg) {
+    }
+
     private Long id;
     private Date luotu;
     private Date muokattu;

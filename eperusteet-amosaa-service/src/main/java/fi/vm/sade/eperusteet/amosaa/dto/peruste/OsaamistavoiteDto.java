@@ -22,6 +22,8 @@ import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import java.math.BigDecimal;
 import lombok.Getter;
 import lombok.Setter;
+import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
+import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
  *
@@ -29,7 +31,11 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class OsaamistavoiteDto {
+public class OsaamistavoiteDto implements AuditLoggableDto {
+    @Override
+    public void auditLog(LogMessage.LogMessageBuilder msg) {
+    }
+
     private Long id;
     private LokalisoituTekstiDto nimi;
     private boolean pakollinen;

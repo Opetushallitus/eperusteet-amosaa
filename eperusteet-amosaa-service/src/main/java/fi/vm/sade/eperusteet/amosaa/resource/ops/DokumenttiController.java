@@ -7,6 +7,12 @@ import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.repository.dokumentti.DokumenttiRepository;
 import fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija.KoulutustoimijaIdGetterAbstractController;
+import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaMessageFields.OPETUSSUUNNITELMA;
+import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.DOKUMENTTI_KUVAN_LISAYS;
+import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.DOKUMENTTI_KUVAN_POISTO;
+import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.DOKUMENTTI_LUONTI;
+import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.DOKUMENTTI_PAIVITYS;
+import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiService;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
@@ -59,6 +65,7 @@ public class DokumenttiController extends KoulutustoimijaIdGetterAbstractControl
             dto = service.setStarted(ktId, opsId, dto);
             service.generateWithDto(ktId, opsId, dto);
             status = HttpStatus.ACCEPTED;
+            LogMessage.builder(OPETUSSUUNNITELMA, DOKUMENTTI_LUONTI).log();
             return new ResponseEntity<>(dto, status);
         } else {
             throw new BusinessRuleViolationException("Luonti on jo käynissä");
@@ -102,6 +109,7 @@ public class DokumenttiController extends KoulutustoimijaIdGetterAbstractControl
             @RequestBody DokumenttiDto body
     ) {
         DokumenttiDto newDto = service.update(ktId, opsId, Kieli.of(kieli), body);
+        LogMessage.builder(OPETUSSUUNNITELMA, DOKUMENTTI_PAIVITYS).log();
 
         return Optional.ofNullable(newDto)
                 .map(ResponseEntity::ok)
@@ -140,6 +148,7 @@ public class DokumenttiController extends KoulutustoimijaIdGetterAbstractControl
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
+        LogMessage.builder(OPETUSSUUNNITELMA, DOKUMENTTI_KUVAN_LISAYS).log();
         DokumenttiDto dto = service.addImage(ktId, opsId, dokumenttiDto, tyyppi, kieli, file);
         if (dto != null) {
             return ResponseEntity.ok(dto);
@@ -215,6 +224,8 @@ public class DokumenttiController extends KoulutustoimijaIdGetterAbstractControl
         if (dokumentti == null) {
             return new ResponseEntity<>(HttpStatus.OK);
         }
+
+        LogMessage.builder(OPETUSSUUNNITELMA, DOKUMENTTI_KUVAN_POISTO).log();
 
         switch (tyyppi) {
             case "kansikuva":

@@ -19,6 +19,8 @@ import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
+import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
  *
@@ -27,7 +29,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @EqualsAndHashCode(of = {"uri","arvo"})
-public class KoodiDto {
+public class KoodiDto implements AuditLoggableDto {
+    @Override
+    public void auditLog(LogMessage.LogMessageBuilder msg) {
+    }
+
     private LokalisoituTekstiDto nimi;
     private String arvo;
     private String uri;

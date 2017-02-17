@@ -23,6 +23,9 @@ import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaYstavaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.SisaltoViiteSijaintiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViitePaikallinenIntegrationDto;
+import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaMessageFields.KOULUTUSTOIMIJA;
+import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.KOULUTUSTOIMIJA_MUOKKAUS;
+import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
@@ -68,6 +71,7 @@ public class KoulutustoimijaController extends KoulutustoimijaIdGetterAbstractCo
     public KoulutustoimijaDto update(
             @ModelAttribute("solvedKtId") final Long ktId,
             @RequestBody final KoulutustoimijaDto kt) {
+        LogMessage.builder(KOULUTUSTOIMIJA, KOULUTUSTOIMIJA_MUOKKAUS, kt).log();
         return koulutustoimijaService.updateKoulutustoimija(ktId, kt);
     }
 

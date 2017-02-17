@@ -18,6 +18,10 @@ package fi.vm.sade.eperusteet.amosaa.resource.ops;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.TermiDto;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija.KoulutustoimijaIdGetterAbstractController;
+import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaMessageFields.OPETUSSUUNNITELMA;
+import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.TERMI_MUOKKAUS;
+import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.TERMI_POISTO;
+import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 import fi.vm.sade.eperusteet.amosaa.service.ops.TermistoService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,6 +77,7 @@ public class TermistoController extends KoulutustoimijaIdGetterAbstractControlle
             @ModelAttribute("solvedKtId") final Long ktId,
             @RequestBody TermiDto dto) {
         dto.setId(null);
+        LogMessage.builder(OPETUSSUUNNITELMA, TERMI_POISTO).log();
         return ResponseEntity.ok(termistoService.addTermi(ktId, dto));
     }
 
@@ -82,6 +87,7 @@ public class TermistoController extends KoulutustoimijaIdGetterAbstractControlle
             @PathVariable final Long termiId,
             @RequestBody TermiDto dto) {
         dto.setId(termiId);
+        LogMessage.builder(OPETUSSUUNNITELMA, TERMI_MUOKKAUS).log();
         return ResponseEntity.ok(termistoService.updateTermi(ktId, dto));
     }
 
@@ -90,6 +96,7 @@ public class TermistoController extends KoulutustoimijaIdGetterAbstractControlle
     public void deleteTermi(
             @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long termiId) {
+        LogMessage.builder(OPETUSSUUNNITELMA, TERMI_POISTO).log();
         termistoService.deleteTermi(ktId, termiId);
     }
 }

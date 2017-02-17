@@ -19,6 +19,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Optional;
+import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
+import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
  *
@@ -26,7 +28,11 @@ import java.util.Optional;
  */
 @Getter
 @Setter
-public class TekstiosaDto {
+public class TekstiosaDto implements AuditLoggableDto {
+    @Override
+    public void auditLog(LogMessage.LogMessageBuilder msg) {
+    }
+
     private Optional<Long> id;
     private Optional<LokalisoituTekstiDto> otsikko;
     private Optional<LokalisoituTekstiDto> teksti;

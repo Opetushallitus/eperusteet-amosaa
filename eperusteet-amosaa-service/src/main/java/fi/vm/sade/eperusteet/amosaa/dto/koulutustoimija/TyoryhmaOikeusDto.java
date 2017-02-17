@@ -19,6 +19,8 @@ package fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
+import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
+import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
  *
@@ -26,7 +28,11 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class TyoryhmaOikeusDto {
+public class TyoryhmaOikeusDto implements AuditLoggableDto {
+    @Override
+    public void auditLog(LogMessage.LogMessageBuilder msg) {
+    }
+
     Long id;
     String henkiloOid;
     HenkiloOikeus oikeus;

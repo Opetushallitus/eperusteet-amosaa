@@ -20,6 +20,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
+import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
  * User: tommiratamaa
@@ -28,7 +30,11 @@ import java.util.Date;
  */
 @Getter
 @Setter
-public class PerusteVersionDto {
+public class PerusteVersionDto implements AuditLoggableDto {
+    @Override
+    public void auditLog(LogMessage.LogMessageBuilder msg) {
+    }
+
     private Date aikaleima;
 
     public PerusteVersionDto() {

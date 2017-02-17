@@ -25,6 +25,11 @@ import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
+import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaMessageFields.OPETUSSUUNNITELMA;
+import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.OPETUSSUUNNITELMA_LISAYS;
+import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.OPETUSSUUNNITELMA_MUOKKAUS;
+import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.SISALTO_PALAUTUS;
+import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.util.PoistettuService;
@@ -33,6 +38,8 @@ import io.swagger.annotations.Api;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.TILA_MUOKKAUS;
+import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.OIKEUS_MUOKKAUS;
 
 /**
  *
@@ -71,6 +78,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
     public OpetussuunnitelmaBaseDto add(
             @ModelAttribute("solvedKtId") final Long ktId,
             @RequestBody OpetussuunnitelmaDto opsDto) {
+        LogMessage.builder(OPETUSSUUNNITELMA, OPETUSSUUNNITELMA_LISAYS, opsDto).log();
         return service.addOpetussuunnitelma(ktId, opsDto);
     }
 
@@ -96,6 +104,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
             @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @RequestBody(required = false) OpetussuunnitelmaDto body) {
+        LogMessage.builder(OPETUSSUUNNITELMA, OPETUSSUUNNITELMA_MUOKKAUS, body).log();
         return service.update(ktId, opsId, body);
     }
 
@@ -113,6 +122,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
             @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long poistettuId) {
+        LogMessage.builder(OPETUSSUUNNITELMA, SISALTO_PALAUTUS).log();
         return sisaltoviiteService.restoreSisaltoViite(ktId, opsId, poistettuId);
     }
 
@@ -129,6 +139,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
             @PathVariable final Long opsId,
             @PathVariable final Long kayttajaId,
             @RequestBody(required = false) KayttajaoikeusDto body) {
+        LogMessage.builder(OPETUSSUUNNITELMA, OIKEUS_MUOKKAUS).log();
         return service.updateOikeus(ktId, opsId, kayttajaId, body);
     }
 
@@ -170,6 +181,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
             @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Tila tila) {
+        LogMessage.builder(OPETUSSUUNNITELMA, TILA_MUOKKAUS).log();
         return service.updateTila(ktId, opsId, tila);
     }
 }

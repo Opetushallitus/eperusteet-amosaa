@@ -16,6 +16,11 @@
 package fi.vm.sade.eperusteet.amosaa.resource.ohje;
 
 import fi.vm.sade.eperusteet.amosaa.dto.ohje.OhjeDto;
+import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaMessageFields.OPH;
+import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.OHJE_LISAYS;
+import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.OHJE_MUOKKAUS;
+import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.OHJE_POISTO;
+import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 import fi.vm.sade.eperusteet.amosaa.service.ohje.OhjeService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +61,7 @@ public class OhjeController {
     public ResponseEntity<OhjeDto> addOhje(
             @RequestBody OhjeDto dto) {
         dto.setId(null);
+        LogMessage.builder(OPH, OHJE_LISAYS).log();
         return ResponseEntity.ok(service.addOhje(dto));
     }
 
@@ -63,6 +69,7 @@ public class OhjeController {
     public ResponseEntity<OhjeDto> editOhje(
             @PathVariable Long id,
             @RequestBody OhjeDto dto) {
+        LogMessage.builder(OPH, OHJE_MUOKKAUS).log();
         return ResponseEntity.ok(service.editOhje(id, dto));
     }
 
@@ -70,6 +77,7 @@ public class OhjeController {
     public ResponseEntity editOhje(
             @RequestParam Long id) {
         service.removeOhje(id);
+        LogMessage.builder(OPH, OHJE_POISTO).log();
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

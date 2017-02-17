@@ -21,6 +21,8 @@ import java.util.Date;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
+import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
+import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
  *
@@ -28,7 +30,11 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class KayttajaDto extends KayttajaBaseDto {
+public class KayttajaDto extends KayttajaBaseDto implements AuditLoggableDto {
+    @Override
+    public void auditLog(LogMessage.LogMessageBuilder msg) {
+    }
+
     private Date tiedotekuittaus;
     private Set<Reference> suosikit;
 }

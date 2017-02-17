@@ -19,6 +19,8 @@ package fi.vm.sade.eperusteet.amosaa.dto.ops;
 import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
+import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
+import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
  *
@@ -26,7 +28,11 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class TiedoteDto {
+public class TiedoteDto implements AuditLoggableDto {
+    @Override
+    public void auditLog(LogMessage.LogMessageBuilder msg) {
+    }
+
     private Long id;
     private String otsikko;
     private String teksti;

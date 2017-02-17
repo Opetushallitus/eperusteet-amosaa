@@ -40,7 +40,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/perusteet")
 @Api(value = "perusteet")
 public class PerusteController {
-
     @Autowired
     private OpetussuunnitelmaService opetussuunnitelmaService;
 

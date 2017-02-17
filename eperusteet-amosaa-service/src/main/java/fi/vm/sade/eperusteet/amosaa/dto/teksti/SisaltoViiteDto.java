@@ -22,6 +22,8 @@ import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
+import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
+import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
  *
@@ -30,7 +32,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class SisaltoViiteDto {
+public class SisaltoViiteDto implements AuditLoggableDto {
+    @Override
+    public void auditLog(LogMessage.LogMessageBuilder msg) {
+    }
+
     private Long id;
     private TekstiKappaleDto tekstiKappale;
     private boolean pakollinen;

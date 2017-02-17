@@ -18,6 +18,10 @@ package fi.vm.sade.eperusteet.amosaa.resource.ops;
 import fi.vm.sade.eperusteet.amosaa.dto.liite.LiiteDto;
 import fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija.KoulutustoimijaIdGetterAbstractController;
 import fi.vm.sade.eperusteet.amosaa.resource.util.CacheControl;
+import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaMessageFields.OPETUSSUUNNITELMA;
+import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.KUVA_LISAYS;
+import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.KUVA_POISTO;
+import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 import fi.vm.sade.eperusteet.amosaa.service.ops.LiiteService;
 import io.swagger.annotations.Api;
 import java.awt.Image;
@@ -72,6 +76,7 @@ public class LiitetiedostoController extends KoulutustoimijaIdGetterAbstractCont
                                          UriComponentsBuilder ucb)
             throws IOException, HttpMediaTypeNotSupportedException {
 
+        LogMessage.builder(OPETUSSUUNNITELMA, KUVA_LISAYS).log();
         final long koko = file.getSize();
         try (PushbackInputStream pis = new PushbackInputStream(file.getInputStream(), BUFSIZE)) {
             byte[] buf = new byte[koko < BUFSIZE ? (int) koko : BUFSIZE];
@@ -153,6 +158,7 @@ public class LiitetiedostoController extends KoulutustoimijaIdGetterAbstractCont
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@ModelAttribute("solvedKtId") final Long ktId,
                        @PathVariable UUID id) {
+        LogMessage.builder(OPETUSSUUNNITELMA, KUVA_POISTO).log();
         liitteet.delete(ktId, id);
     }
 
