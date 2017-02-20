@@ -16,6 +16,7 @@
 package fi.vm.sade.eperusteet.amosaa.resource.ohje;
 
 import fi.vm.sade.eperusteet.amosaa.dto.ohje.OhjeDto;
+import fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaAudit;
 import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaMessageFields.OPH;
 import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.OHJE_LISAYS;
 import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.OHJE_MUOKKAUS;
@@ -49,6 +50,9 @@ import springfox.documentation.annotations.ApiIgnore;
 public class OhjeController {
 
     @Autowired
+    private EperusteetAmosaaAudit audit;
+
+    @Autowired
     private OhjeService service;
 
     @RequestMapping(method = GET)
@@ -61,23 +65,26 @@ public class OhjeController {
     public ResponseEntity<OhjeDto> addOhje(
             @RequestBody OhjeDto dto) {
         dto.setId(null);
-        LogMessage.builder(OPH, OHJE_LISAYS).log();
-        return ResponseEntity.ok(service.addOhje(dto));
+        return audit.withAudit(LogMessage.builder(OPH, OHJE_LISAYS), (Void) -> {
+            return ResponseEntity.ok(service.addOhje(dto));
+        });
     }
 
     @RequestMapping(value = "/{id}", method = PUT)
     public ResponseEntity<OhjeDto> editOhje(
             @PathVariable Long id,
             @RequestBody OhjeDto dto) {
-        LogMessage.builder(OPH, OHJE_MUOKKAUS).log();
-        return ResponseEntity.ok(service.editOhje(id, dto));
+        return audit.withAudit(LogMessage.builder(OPH, OHJE_MUOKKAUS), (Void) -> {
+            return ResponseEntity.ok(service.editOhje(id, dto));
+        });
     }
 
     @RequestMapping(value = "/{id}", method = DELETE)
     public ResponseEntity editOhje(
             @RequestParam Long id) {
         service.removeOhje(id);
-        LogMessage.builder(OPH, OHJE_POISTO).log();
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return audit.withAudit(LogMessage.builder(OPH, OHJE_POISTO), (Void) -> {
+            return ResponseEntity.status(HttpStatus.OK).build();
+        });
     }
 }

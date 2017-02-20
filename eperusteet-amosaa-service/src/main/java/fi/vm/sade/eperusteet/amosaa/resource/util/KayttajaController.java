@@ -18,6 +18,7 @@ package fi.vm.sade.eperusteet.amosaa.resource.util;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
+import fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaAudit;
 import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaMessageFields.KAYTTAJA;
 import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.KOULUTUSTOIMIJA_LISAYS;
 import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.SUOSIKKI_LISAYS;
@@ -44,6 +45,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class KayttajaController {
 
     @Autowired
+    private EperusteetAmosaaAudit audit;
+
+    @Autowired
     private KayttajanTietoService kayttajat;
 
     @RequestMapping(method = RequestMethod.GET)
@@ -59,15 +63,17 @@ public class KayttajaController {
     @RequestMapping(value = "/suosikki/{opsId}", method = RequestMethod.POST)
     public ResponseEntity addSuosikki(@PathVariable final Long opsId) {
         kayttajat.addSuosikki(opsId);
-        LogMessage.builder(KAYTTAJA, SUOSIKKI_LISAYS).log();
-        return ResponseEntity.ok().build();
+        return audit.withAudit(LogMessage.builder(KAYTTAJA, SUOSIKKI_LISAYS), (Void) -> {
+            return ResponseEntity.ok().build();
+        });
     }
 
     @RequestMapping(value = "/suosikki/{opsId}", method = RequestMethod.DELETE)
     public ResponseEntity removeSuosikki(@PathVariable final Long opsId) {
         kayttajat.removeSuosikki(opsId);
-        LogMessage.builder(KAYTTAJA, SUOSIKKI_POISTO).log();
-        return ResponseEntity.ok().build();
+        return audit.withAudit(LogMessage.builder(KAYTTAJA, SUOSIKKI_POISTO), (Void) -> {
+            return ResponseEntity.ok().build();
+        });
     }
 
     @RequestMapping(value = "/koulutustoimijat", method = RequestMethod.GET)
@@ -77,10 +83,11 @@ public class KayttajaController {
 
     @RequestMapping(value = "/koulutustoimijat", method = RequestMethod.POST)
     public ResponseEntity updateKoulutustoimijat() {
-        LogMessage.builder(KAYTTAJA, KOULUTUSTOIMIJA_LISAYS).log();
-        return kayttajat.updateKoulutustoimijat()
-                ? ResponseEntity.ok().build()
-                : ResponseEntity.badRequest().build();
+        return audit.withAudit(LogMessage.builder(KAYTTAJA, KOULUTUSTOIMIJA_LISAYS), (Void) -> {
+            return kayttajat.updateKoulutustoimijat()
+                    ? ResponseEntity.ok().build()
+                    : ResponseEntity.badRequest().build();
+        });
     }
 
     @RequestMapping(value = "/organisaatiot", method = RequestMethod.GET)

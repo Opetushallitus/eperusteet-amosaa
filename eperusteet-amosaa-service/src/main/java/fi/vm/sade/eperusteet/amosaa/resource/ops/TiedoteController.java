@@ -2,6 +2,7 @@ package fi.vm.sade.eperusteet.amosaa.resource.ops;
 
 import fi.vm.sade.eperusteet.amosaa.dto.ops.TiedoteDto;
 import fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija.KoulutustoimijaIdGetterAbstractController;
+import fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaAudit;
 import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaMessageFields.KAYTTAJA;
 import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaMessageFields.KOULUTUSTOIMIJA;
 import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.TIEDOTE_KUITTAUS;
@@ -34,6 +35,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class TiedoteController extends KoulutustoimijaIdGetterAbstractController {
 
     @Autowired
+    private EperusteetAmosaaAudit audit;
+
+    @Autowired
     private TiedoteService tiedoteService;
 
     @RequestMapping(method = GET, value = "/tiedotteet")
@@ -54,8 +58,9 @@ public class TiedoteController extends KoulutustoimijaIdGetterAbstractController
     public ResponseEntity<TiedoteDto> addTiedote(
             @ModelAttribute("solvedKtId") final Long ktId,
             @RequestBody TiedoteDto tiedoteDto) {
-        LogMessage.builder(KOULUTUSTOIMIJA, TIEDOTE_POISTO).log();
-        return ResponseEntity.ok(tiedoteService.addTiedote(ktId, tiedoteDto));
+        return audit.withAudit(LogMessage.builder(KOULUTUSTOIMIJA, TIEDOTE_POISTO), (Void) -> {
+            return ResponseEntity.ok(tiedoteService.addTiedote(ktId, tiedoteDto));
+        });
     }
 
     @RequestMapping(value = "/tiedotteet/{id}", method = PUT)
@@ -63,16 +68,19 @@ public class TiedoteController extends KoulutustoimijaIdGetterAbstractController
             @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long id,
             @RequestBody TiedoteDto tiedoteDto) {
-        LogMessage.builder(KOULUTUSTOIMIJA, TIEDOTE_MUOKKAUS).log();
-        return ResponseEntity.ok(tiedoteService.updateTiedote(ktId, tiedoteDto));
+        return audit.withAudit(LogMessage.builder(KOULUTUSTOIMIJA, TIEDOTE_MUOKKAUS), (Void) -> {
+            return ResponseEntity.ok(tiedoteService.updateTiedote(ktId, tiedoteDto));
+        });
     }
 
     @RequestMapping(value = "/tiedotteet/{id}/kuittaa", method = POST)
     public void updateTiedote(
             @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long id) {
-        LogMessage.builder(KAYTTAJA, TIEDOTE_KUITTAUS).log();
-        tiedoteService.kuittaaLuetuksi(ktId, id);
+        audit.withAudit(LogMessage.builder(KAYTTAJA, TIEDOTE_KUITTAUS), (Void) -> {
+            tiedoteService.kuittaaLuetuksi(ktId, id);
+            return null;
+        });
     }
 
     @RequestMapping(value = "/tiedotteet/{id}", method = DELETE)
@@ -80,8 +88,10 @@ public class TiedoteController extends KoulutustoimijaIdGetterAbstractController
     public void deleteTiedote(
             @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long id) {
-        LogMessage.builder(KOULUTUSTOIMIJA, TIEDOTE_POISTO).log();
-        tiedoteService.deleteTiedote(ktId, id);
+        audit.withAudit(LogMessage.builder(KOULUTUSTOIMIJA, TIEDOTE_POISTO), (Void) -> {
+            tiedoteService.deleteTiedote(ktId, id);
+            return null;
+        });
     }
 
 }

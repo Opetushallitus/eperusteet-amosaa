@@ -18,6 +18,7 @@ package fi.vm.sade.eperusteet.amosaa.resource.ops;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.TermiDto;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija.KoulutustoimijaIdGetterAbstractController;
+import fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaAudit;
 import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaMessageFields.OPETUSSUUNNITELMA;
 import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.TERMI_MUOKKAUS;
 import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.TERMI_POISTO;
@@ -49,6 +50,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class TermistoController extends KoulutustoimijaIdGetterAbstractController {
 
     @Autowired
+    private EperusteetAmosaaAudit audit;
+
+    @Autowired
     private TermistoService termistoService;
 
     @RequestMapping(value = "/termisto", method = GET)
@@ -77,8 +81,9 @@ public class TermistoController extends KoulutustoimijaIdGetterAbstractControlle
             @ModelAttribute("solvedKtId") final Long ktId,
             @RequestBody TermiDto dto) {
         dto.setId(null);
-        LogMessage.builder(OPETUSSUUNNITELMA, TERMI_POISTO).log();
-        return ResponseEntity.ok(termistoService.addTermi(ktId, dto));
+        return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, TERMI_POISTO), (Void) -> {
+            return ResponseEntity.ok(termistoService.addTermi(ktId, dto));
+        });
     }
 
     @RequestMapping(value = "/termisto/{termiId}", method = PUT)
@@ -87,8 +92,9 @@ public class TermistoController extends KoulutustoimijaIdGetterAbstractControlle
             @PathVariable final Long termiId,
             @RequestBody TermiDto dto) {
         dto.setId(termiId);
-        LogMessage.builder(OPETUSSUUNNITELMA, TERMI_MUOKKAUS).log();
-        return ResponseEntity.ok(termistoService.updateTermi(ktId, dto));
+        return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, TERMI_MUOKKAUS), (Void) -> {
+            return ResponseEntity.ok(termistoService.updateTermi(ktId, dto));
+        });
     }
 
     @RequestMapping(value = "/termisto/{termiId}", method = DELETE)
@@ -96,7 +102,9 @@ public class TermistoController extends KoulutustoimijaIdGetterAbstractControlle
     public void deleteTermi(
             @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long termiId) {
-        LogMessage.builder(OPETUSSUUNNITELMA, TERMI_POISTO).log();
-        termistoService.deleteTermi(ktId, termiId);
+        audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, TERMI_POISTO), (Void) -> {
+            termistoService.deleteTermi(ktId, termiId);
+            return null;
+        });
     }
 }

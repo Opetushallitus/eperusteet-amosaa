@@ -17,6 +17,7 @@ package fi.vm.sade.eperusteet.amosaa.resource.ops;
 
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.KommenttiDto;
 import fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija.KoulutustoimijaIdGetterAbstractController;
+import fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaAudit;
 import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaMessageFields.OPETUSSUUNNITELMA;
 import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.KOMMENTTI_LISAYS;
 import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.KOMMENTTI_MUOKKAUS;
@@ -41,6 +42,9 @@ public class KommenttiController extends KoulutustoimijaIdGetterAbstractControll
     @Autowired
     private KommenttiService kommenttiService;
 
+    @Autowired
+    private EperusteetAmosaaAudit audit;
+
     @RequestMapping(method = GET)
     public ResponseEntity<List<KommenttiDto>> getAll(@ModelAttribute("solvedKtId") final Long ktId,
                                                      @PathVariable final long opsId,
@@ -55,8 +59,9 @@ public class KommenttiController extends KoulutustoimijaIdGetterAbstractControll
                                             @PathVariable final long tkvId,
                                             @RequestBody KommenttiDto body) {
         body.setTekstikappaleviiteId(tkvId);
-        LogMessage.builder(OPETUSSUUNNITELMA, KOMMENTTI_LISAYS).log();
-        return new ResponseEntity<>(kommenttiService.add(ktId, opsId, body), HttpStatus.CREATED);
+        return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, KOMMENTTI_LISAYS), (Void) -> {
+            return new ResponseEntity<>(kommenttiService.add(ktId, opsId, body), HttpStatus.CREATED);
+        });
     }
 
     @RequestMapping(value = "/{id}", method = GET)
@@ -74,8 +79,9 @@ public class KommenttiController extends KoulutustoimijaIdGetterAbstractControll
                                                @PathVariable final long tkvId,
                                                @PathVariable final long id,
                                                @RequestBody KommenttiDto body) {
-        LogMessage.builder(OPETUSSUUNNITELMA, KOMMENTTI_MUOKKAUS).log();
-        return new ResponseEntity<>(kommenttiService.update(ktId, opsId, id, body), HttpStatus.OK);
+        return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, KOMMENTTI_MUOKKAUS), (Void) -> {
+            return new ResponseEntity<>(kommenttiService.update(ktId, opsId, id, body), HttpStatus.OK);
+        });
     }
 
     @RequestMapping(value = "/{id}", method = DELETE)
@@ -83,7 +89,9 @@ public class KommenttiController extends KoulutustoimijaIdGetterAbstractControll
                        @PathVariable final long opsId,
                        @PathVariable final long tkvId,
                        @PathVariable final long id) {
-        LogMessage.builder(OPETUSSUUNNITELMA, KOMMENTTI_POISTO).log();
-        kommenttiService.delete(ktId, opsId, id);
+        audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, KOMMENTTI_POISTO), (Void) -> {
+            kommenttiService.delete(ktId, opsId, id);
+            return null;
+        });
     }
 }

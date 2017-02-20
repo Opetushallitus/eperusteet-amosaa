@@ -10,7 +10,6 @@ import fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija.KoulutustoimijaIdGe
 import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaMessageFields.OPETUSSUUNNITELMA;
 import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.DOKUMENTTI_KUVAN_LISAYS;
 import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.DOKUMENTTI_KUVAN_POISTO;
-import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.DOKUMENTTI_LUONTI;
 import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.DOKUMENTTI_PAIVITYS;
 import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiService;
@@ -65,7 +64,6 @@ public class DokumenttiController extends KoulutustoimijaIdGetterAbstractControl
             dto = service.setStarted(ktId, opsId, dto);
             service.generateWithDto(ktId, opsId, dto);
             status = HttpStatus.ACCEPTED;
-            LogMessage.builder(OPETUSSUUNNITELMA, DOKUMENTTI_LUONTI).log();
             return new ResponseEntity<>(dto, status);
         } else {
             throw new BusinessRuleViolationException("Luonti on jo käynissä");

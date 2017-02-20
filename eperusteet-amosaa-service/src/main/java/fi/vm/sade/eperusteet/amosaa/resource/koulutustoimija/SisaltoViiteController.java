@@ -20,8 +20,13 @@ import fi.vm.sade.eperusteet.amosaa.dto.RevisionDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteKevytDto;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
+import fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaAudit;
 import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaMessageFields.OPETUSSUUNNITELMA;
 import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.RAKENNE_MUOKKAUS;
+import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.SISALTO_KLOONAUS;
+import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.SISALTO_LISAYS;
+import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.SISALTO_MUOKKAUS;
+import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.SISALTO_POISTO;
 import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import io.swagger.annotations.Api;
@@ -36,10 +41,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.SISALTO_LISAYS;
-import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.SISALTO_MUOKKAUS;
-import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.SISALTO_POISTO;
-import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.SISALTO_KLOONAUS;
 
 
 /**
@@ -50,9 +51,11 @@ import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperati
 @RequestMapping("/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}")
 @Api(value = "sisältö")
 public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractController {
-
     @Autowired
     private SisaltoViiteService service;
+
+    @Autowired
+    private EperusteetAmosaaAudit audit;
 
     @RequestMapping(value = "/tekstit/{svId}", method = RequestMethod.GET)
     SisaltoViiteDto.Matala getTekstit(
@@ -90,8 +93,9 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
             @PathVariable final Long svId,
             @RequestBody(required = false) SisaltoViiteDto.Matala tekstiKappaleViiteDto) {
         tekstiKappaleViiteDto.setLapset(new ArrayList<>());
-        LogMessage.builder(OPETUSSUUNNITELMA, SISALTO_LISAYS, tekstiKappaleViiteDto).log();
-        return service.addSisaltoViite(ktId, opsId, svId, tekstiKappaleViiteDto);
+        return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, SISALTO_LISAYS, tekstiKappaleViiteDto), (Void) -> {
+            return service.addSisaltoViite(ktId, opsId, svId, tekstiKappaleViiteDto);
+        });
     }
 
     @RequestMapping(value = "/lisaa", method = RequestMethod.POST)
@@ -100,8 +104,10 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
             @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @RequestBody List<Long> viitteet) {
-        LogMessage.builder(OPETUSSUUNNITELMA, SISALTO_KLOONAUS).log();
-        service.copySisaltoViiteet(ktId, opsId, viitteet);
+        audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, SISALTO_KLOONAUS), (Void) -> {
+            service.copySisaltoViiteet(ktId, opsId, viitteet);
+            return null;
+        });
     }
 
     @RequestMapping(value = "/tekstit/{svId}", method = RequestMethod.PUT)
@@ -110,8 +116,10 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
             @PathVariable final Long opsId,
             @PathVariable final Long svId,
             @RequestBody final SisaltoViiteDto tekstiKappaleViiteDto) {
-        LogMessage.builder(OPETUSSUUNNITELMA, SISALTO_MUOKKAUS, tekstiKappaleViiteDto).log();
-        service.updateSisaltoViite(ktId, opsId, svId, tekstiKappaleViiteDto);
+        audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, SISALTO_MUOKKAUS, tekstiKappaleViiteDto), (Void) -> {
+            service.updateSisaltoViite(ktId, opsId, svId, tekstiKappaleViiteDto);
+            return null;
+        });
     }
 
     @RequestMapping(value = "/tekstit/{svId}/rakenne", method = RequestMethod.PUT)
@@ -120,8 +128,10 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
             @PathVariable final Long opsId,
             @PathVariable final Long svId,
             @RequestBody final SisaltoViiteDto.Puu tekstiKappaleViiteDto) {
-        LogMessage.builder(OPETUSSUUNNITELMA, RAKENNE_MUOKKAUS, tekstiKappaleViiteDto).log();
-        service.reorderSubTree(ktId, opsId, svId, tekstiKappaleViiteDto);
+        audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, RAKENNE_MUOKKAUS, tekstiKappaleViiteDto), (Void) -> {
+            service.reorderSubTree(ktId, opsId, svId, tekstiKappaleViiteDto);
+            return null;
+        });
     }
 
     @RequestMapping(value = "/tekstit/{svId}", method = RequestMethod.DELETE)
@@ -130,8 +140,10 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
             @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long svId) {
-        LogMessage.builder(OPETUSSUUNNITELMA, SISALTO_POISTO).log();
-        service.removeSisaltoViite(ktId, opsId, svId);
+        audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, SISALTO_POISTO), (Void) -> {
+            service.removeSisaltoViite(ktId, opsId, svId);
+            return null;
+        });
     }
 
     @RequestMapping(value = "/tekstit/{svId}/versiot/uusin", method = RequestMethod.GET)
