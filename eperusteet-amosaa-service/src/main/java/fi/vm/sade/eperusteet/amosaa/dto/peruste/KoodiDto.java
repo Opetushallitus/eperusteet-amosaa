@@ -15,12 +15,12 @@
  */
 package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
+import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
+import java.util.Map;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
-import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
  *
@@ -28,13 +28,15 @@ import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
  */
 @Getter
 @Setter
-@EqualsAndHashCode(of = {"uri","arvo"})
+@EqualsAndHashCode(of = {"uri","versio"})
 public class KoodiDto implements AuditLoggableDto {
     @Override
     public void auditLog(LogMessage.LogMessageBuilder msg) {
     }
 
-    private LokalisoituTekstiDto nimi;
+    Map<String, String> nimi;
     private String arvo;
     private String uri;
+    private String koodisto;
+    private Long versio;
 }
