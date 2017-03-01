@@ -11,7 +11,7 @@ mixin listKayttajat(klista)
           span(ng-bind="'oikeus' | kaanna")
     tbody
       tr(class="{{ (isSelf && 'success') || 'tyyppi-' + oikeus(kayttaja) }}"
-        ng-show="suodata(kayttaja) && (!vainOikeudelliset || isSelf || oikeus(kayttaja) !== 'luku')"
+        ng-show="suodata(kayttaja) && (!vainOikeudelliset || isSelf || oikeus(kayttaja) !== 'estetty')"
         ng-repeat="kayttaja in " + klista
         ng-init="isSelf = (me.oidHenkilo === kayttaja.oid)")
         td

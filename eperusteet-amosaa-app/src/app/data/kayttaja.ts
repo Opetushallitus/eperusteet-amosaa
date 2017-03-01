@@ -25,7 +25,7 @@ module Kayttaja {
             .catch(() => resolve({})));
 
     export const oikeusVaihtoehdot = () =>
-        (["luku", "muokkaus", "lisays", "poisto", "hallinta"]);
+        (["estetty", "luku", "muokkaus", "lisays", "poisto", "hallinta"]);
 }
 
 

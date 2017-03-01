@@ -382,11 +382,9 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         Opetussuunnitelma ops = repository.findOne(opsId);
         Kayttaja kayttaja = kayttajaRepository.findOne(kayttajaId);
 
-        // FIXME lisää oikeustarkistelu muokkaajalle
-
         Kayttajaoikeus oikeus = kayttajaoikeusRepository.findOneByKayttajaAndOpetussuunnitelma(kayttaja, ops);
 
-        if (oikeusDto.getOikeus() == KayttajaoikeusTyyppi.LUKU) {
+        if (oikeusDto.getOikeus() == KayttajaoikeusTyyppi.ESTETTY) {
             if (oikeus != null) {
                 kayttajaoikeusRepository.delete(oikeus);
             }
