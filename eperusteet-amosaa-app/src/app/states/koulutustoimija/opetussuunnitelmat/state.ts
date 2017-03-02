@@ -4,6 +4,7 @@ angular.module("app")
     url: "/ops/:opsId",
     resolve: {
         ops: ($stateParams, koulutustoimija) => koulutustoimija.one("opetussuunnitelmat", $stateParams.opsId).get(),
+        oikeustarkastelunKonteksti: (ops) => Oikeudet.asetaOpetussuunnitelma(ops),
         otsikot: (ops) => ops.all("otsikot").getList(),
         sisaltoRoot: (otsikot) => Tekstikappaleet.root(otsikot),
         tekstit: (ops, sisaltoRoot) => ops.one("tekstit", sisaltoRoot.id),
@@ -12,7 +13,7 @@ angular.module("app")
     onEnter: (ops) => Murupolku.register("root.koulutustoimija.opetussuunnitelmat", ops.nimi),
     views: {
         "": {
-            controller: ($scope, ops, $location, $stateParams, koulutustoimija) => {
+            controller: ($scope, $location, $stateParams, koulutustoimija, ops) => {
                 $scope.koulutustoimija = koulutustoimija;
                 $scope.ops = ops;
                 $scope.validoi = () => ModalValidointi.validoi(ops);
