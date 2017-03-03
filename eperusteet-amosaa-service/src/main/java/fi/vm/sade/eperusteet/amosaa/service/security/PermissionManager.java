@@ -229,15 +229,15 @@ public class PermissionManager {
                 return false;
             }
 
-            if (!koulutustoimija.getId().equals(originalKtId)) {
+            if (oikeus == null || oikeus == KayttajaoikeusTyyppi.ESTETTY) {
+                return false;
+            }
+
+            if (originalKtId != null && !koulutustoimija.getId().equals(originalKtId)) {
                 Koulutustoimija kontekstiKt = koulutustoimijaRepository.findOne(originalKtId);
                 if (!areFriends(ops.getKoulutustoimija(), kontekstiKt) || !ops.getTyyppi().isOneOf(OpsTyyppi.OPS, OpsTyyppi.YLEINEN)) {
                     return false;
                 }
-            }
-
-            if (oikeus == null || oikeus == KayttajaoikeusTyyppi.ESTETTY) {
-                return false;
             }
 
             if (perm.isOneOf(Permission.LUKU, Permission.KOMMENTOINTI, Permission.ESITYS) && oikeus.isAtLeast(KayttajaoikeusTyyppi.LUKU)) {
