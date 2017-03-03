@@ -54,46 +54,46 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
     h3(ng-bind="'kaikki-opetussuunnitelmat' | kaanna")
 
     div(ng-hide="opetussuunnitelmat.length > 0")
-        div.alert.alert-info
+      div.alert.alert-info
         div(ng-bind="'koulutustoimijalla-ei-ole-opetussuunnitelmia' | kaanna")
         div.pull-right(style="position: relative; top: -26px")
-            button.btn.btn-primary(style="margin-right: 16px" ng-click="addOpetussuunnitelma()" oikeustarkastelu="muokkaus")
+          button.btn.btn-primary(style="margin-right: 16px" ng-click="addOpetussuunnitelma()" oikeustarkastelu="muokkaus")
             +gicon("plus")
             span=" "
             span(ng-bind="'lisaa-opetussuunnitelma' | kaanna")
-            button.btn.btn-primary.pull-right(ng-click="addYleinen()" oikeustarkastelu="muokkaus")
+          button.btn.btn-primary.pull-right(ng-click="addYleinen()" oikeustarkastelu="muokkaus")
             +gicon("plus")
             span=" "
             span(ng-bind="'lisaa-yleinen' | kaanna")
 
     div(ng-show="opetussuunnitelmat.length > 0")
-        div.row
+      div.row
         div.col-xs-4
-            div.form-group.has-feedback.has-feedback-left
+          div.form-group.has-feedback.has-feedback-left
             input.form-control(ng-change="opsPaginatedUpdate(opsSearch)"
-                type="text"
-                ng-model="opsSearch"
-                ng-model-options="{ debounce: 300 }"
-                placeholder="{{ 'hae' | kaanna }}")
+              type="text"
+              ng-model="opsSearch"
+              ng-model-options="{ debounce: 300 }"
+              placeholder="{{ 'hae' | kaanna }}")
             i.form-control-feedback.glyphicon.glyphicon-search(style="color: gray;")
         div.col-xs-3
-            .btn-group
+          .btn-group
             .pull-left
-                +checkbox("checks.kaikki", "opsPaginatedUpdate(opsSearch)", "'nayta-kaikki' | kaanna")
-                +checkbox("checks.poistetut", "opsPaginatedUpdate(opsSearch)", "'nayta-arkistoidut' | kaanna")
+              +checkbox("checks.kaikki", "opsPaginatedUpdate(opsSearch)", "'nayta-kaikki' | kaanna")
+              +checkbox("checks.poistetut", "opsPaginatedUpdate(opsSearch)", "'nayta-arkistoidut' | kaanna")
         div.col-xs-5
-            div.pull-right
+          div.pull-right
             button.btn.btn-default.pull-right(ng-click="addYleinen()" oikeustarkastelu="muokkaus")
-                +gicon("plus")
-                span=" "
-                span(ng-bind="'lisaa-yleinen' | kaanna")
+              +gicon("plus")
+              span=" "
+              span(ng-bind="'lisaa-yleinen' | kaanna")
             button.btn.btn-default.pull-right(style="margin-right: 16px" ng-click="addOpetussuunnitelma()" oikeustarkastelu="muokkaus")
-                +gicon("plus")
-                span=" "
-                span(ng-bind="'lisaa-opetussuunnitelma' | kaanna")
+              +gicon("plus")
+              span=" "
+              span(ng-bind="'lisaa-opetussuunnitelma' | kaanna")
 
-    +opsTable("ops in opsPaginated", "false")
-    nav.text-center
-      ul.pagination
-        li(ng-class="{ 'active': page === $$opsPaginatedPage.current }" ng-repeat=("page in $$opsPaginatedPage.pages"))
-          a(href="" ng-click="opsPaginatedSelect(page)") {{ page + 1 }}
+      +opsTable("ops in opsPaginated", "false")
+      nav.text-center
+        ul.pagination
+          li(ng-class="{ 'active': page === $$opsPaginatedPage.current }" ng-repeat=("page in $$opsPaginatedPage.pages"))
+            a(href="" ng-click="opsPaginatedSelect(page)") {{ page + 1 }}

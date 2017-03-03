@@ -31,12 +31,12 @@ public interface KommenttiService {
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
     KommenttiDto get(@P("ktId") Long ktId, @P("opsId") Long opsId, Long kommenttiId);
 
-    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'KOMMENTOINTI')")
     KommenttiDto add(@P("ktId") Long ktId, @P("opsId") Long opsId, KommenttiDto kommenttiDto);
 
-    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'KOMMENTOINTI')")
     KommenttiDto update(@P("ktId") Long ktId, @P("opsId") Long opsId, Long kommenttiId, KommenttiDto kommenttiDto);
 
-    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'KOMMENTOINTI')")
     void delete(@P("ktId") Long ktId, @P("opsId") Long opsId, Long kommenttiId);
 }

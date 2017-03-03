@@ -225,9 +225,10 @@ public class PermissionManager {
         // Opetussuunnitelmien oikeudet
         else if (target == TargetType.OPETUSSUUNNITELMA) {
             KayttajaoikeusTyyppi oikeus = kayttajaoikeusRepository.findKayttajaoikeus(authentication.getName(), targetId);
-            if (originalKtId == null || koulutustoimija == null || ops == null) {
+            if (koulutustoimija == null || ops == null) {
                 return false;
             }
+
             if (!koulutustoimija.getId().equals(originalKtId)) {
                 Koulutustoimija kontekstiKt = koulutustoimijaRepository.findOne(originalKtId);
                 if (!areFriends(ops.getKoulutustoimija(), kontekstiKt) || !ops.getTyyppi().isOneOf(OpsTyyppi.OPS, OpsTyyppi.YLEINEN)) {
