@@ -146,7 +146,10 @@ gulp
         //     summarizeFailureOutput: true
         // }))
         .pipe(typescript({
-            // lib: ["DOM", "ES2015", "ES5"]
+            target: "es3",
+            noFallthroughCasesInSwitch: true,
+            noImplicitReturns: true,
+            lib: ["DOM", "ES2015", "ES5"]
         }))
         .on('error', function (error) { })
         .pipe(concat('amosaa-app.js'))

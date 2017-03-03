@@ -57,13 +57,13 @@
     "diff": "3.0.1",
     "eperusteet-frontend-utils": "https://github.com/Opetushallitus/eperusteet-frontend-utils#master",
     "font-awesome": "4.5.0",
-    "gulp-typescript": "3.1.3",
+    "gulp-typescript": "3.1.5",
     "jquery-sticky": "1.0.3",
     "node-sass": "4.0.0",
     "restangular": "1.5.1",
     "spin.js": "2.3.2",
     "string": "3.3.3",
     "striptags": "2.1.1",
-    "typescript": "2.1.4"
+    "typescript": "2.2.0"
   }
 }

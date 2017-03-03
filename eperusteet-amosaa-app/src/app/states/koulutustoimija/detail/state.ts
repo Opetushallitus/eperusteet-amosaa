@@ -6,17 +6,20 @@ angular.module("app")
         tiedotteet: (koulutustoimija) => koulutustoimija.all("tiedotteet").getList(),
         ohjeistus: (Api) => Api.all("ohjeistus"),
         tilastot: (Api) => Api.one("tilastot"),
-        opsSaver: ($state, opetussuunnitelmat) => (uusiOps) => uusiOps && opetussuunnitelmat
-            .post(uusiOps)
-            .then((res) => $state.go("root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot", {
-                opsId: res.id
-            }, {
-                reload: true // Reloads koulutustoimijainfo and user permissions
-            })),
+        opsSaver: ($state, opetussuunnitelmat) => async (uusiOps) => {
+            if (uusiOps) {
+                const res = await opetussuunnitelmat.post(uusiOps);
+                $state.go("root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot", {
+                    opsId: res.id
+                }, {
+                    reload: true // Reloads koulutustoimijainfo and user permissions
+                });
+            }
+        }
     },
     views: {
         "": {
-            controller: ($scope, kayttajanKoulutustoimijat, koulutustoimija, oikeudet) => {
+            controller: ($scope, kayttajanKoulutustoimijat, koulutustoimija, oikeudet, tiedotteet) => {
                 $scope.isOph = Koulutustoimijat.isOpetushallitus(koulutustoimija);
                 $scope.koulutustoimijat = kayttajanKoulutustoimijat;
                 $scope.koulutustoimija = koulutustoimija;
