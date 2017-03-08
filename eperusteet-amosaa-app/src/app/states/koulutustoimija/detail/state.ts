@@ -88,7 +88,6 @@ angular.module("app")
                     kaikki: true
                 };
 
-                console.log(opetussuunnitelmat)
                 Pagination.addPagination(
                     $scope,
                     (search: string, ops: any): boolean => {

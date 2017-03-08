@@ -224,6 +224,10 @@ public class PermissionManager {
         }
         // Opetussuunnitelmien oikeudet
         else if (target == TargetType.OPETUSSUUNNITELMA) {
+            if (hasAnyRole(authentication, RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA, permissions, organisaatio)) {
+                return true;
+            }
+
             KayttajaoikeusTyyppi oikeus = kayttajaoikeusRepository.findKayttajaoikeus(authentication.getName(), targetId);
             if (koulutustoimija == null || ops == null) {
                 return false;
