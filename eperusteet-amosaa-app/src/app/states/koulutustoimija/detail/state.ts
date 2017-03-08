@@ -85,9 +85,10 @@ angular.module("app")
                 $scope.opsitById = _.indexBy(opetussuunnitelmat, "id");
                 $scope.checks = {
                     poistetut: false,
-                    kaikki: false
+                    kaikki: true
                 };
 
+                console.log(opetussuunnitelmat)
                 Pagination.addPagination(
                     $scope,
                     (search: string, ops: any): boolean => {

@@ -1,44 +1,47 @@
 mixin opsTable(repetition, forFriends)
-  table.table.boxtable
-    thead
-      tr(ng-if=forFriends)
-        th(width="6%" ng-bind="'tila' | kaanna")
-        th(width="40%" ng-bind="'nimi' | kaanna")
-        th(width="40%")
-        th(width="2%")
-        th
-      tr(ng-if="!" + forFriends)
-        th(width="6%" ng-bind="'tila' | kaanna")
-        th(width="89%" ng-bind="'nimi' | kaanna")
-        th(width="2%")
-        th
-    tbody
-      tr(ng-hide="ops.$$hidden" ng-repeat=repetition)
-        td
-          div
-            div(class="{{ 'tilavari-' + ops.tila }}")
+  div.alert.alert-info(ng-if="opsPaginated.length === 0")
+    span(ng-bind="'ei-hakutuloksia' | kaanna")
+  div(ng-if="opsPaginated.length > 0")
+    table.table.boxtable
+      thead
+        tr(ng-if=forFriends)
+          th(width="6%" ng-bind="'tila' | kaanna")
+          th(width="40%" ng-bind="'nimi' | kaanna")
+          th(width="40%")
+          th(width="2%")
+          th
+        tr(ng-if="!" + forFriends)
+          th(width="6%" ng-bind="'tila' | kaanna")
+          th(width="89%" ng-bind="'nimi' | kaanna")
+          th(width="2%")
+          th
+      tbody
+        tr(ng-hide="ops.$$hidden" ng-repeat=repetition)
+          td
             div
-              a(href="" ng-click="toggleSuosikki(ops)")
-                span.glyphicon.glyphicon-star(ng-class="{ 'suosikki-ops': !!suosikit[ops.id] }")
-        td
-          div
-            a(href="" ui-sref="root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot({ opsId: ops.id })")
-              span.ellipsis(ng-bind="ops.nimi | kaanna")
-        // td
-          div
-            span.ellipsis(ng-show="ops.osaamisalat.length > 0", ng-bind="ops.osaamisalat[0].nimi | kaanna")
-        td(ng-if=forFriends)
-          div
-            span.ellipsis(ng-bind="ops.koulutustoimija.nimi | kaanna")
-        td
-          div
-            div(style="text-align: center;")
-              .fa.fa-pencil-square-o(ng-show="ops.$$oikeus")
-        td
-          div
-            a(href="" ui-sref="root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot({ opsId: ops.id })")
+              div(class="{{ 'tilavari-' + ops.tila }}")
               div
-                span.glyphicon.glyphicon-chevron-right
+                a(href="" ng-click="toggleSuosikki(ops)")
+                  span.glyphicon.glyphicon-star(ng-class="{ 'suosikki-ops': !!suosikit[ops.id] }")
+          td
+            div
+              a(href="" ui-sref="root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot({ opsId: ops.id })")
+                span.ellipsis(ng-bind="ops.nimi | kaanna")
+          // td
+            div
+              span.ellipsis(ng-show="ops.osaamisalat.length > 0", ng-bind="ops.osaamisalat[0].nimi | kaanna")
+          td(ng-if=forFriends)
+            div
+              span.ellipsis(ng-bind="ops.koulutustoimija.nimi | kaanna")
+          td
+            div
+              div(style="text-align: center;")
+                .fa.fa-pencil-square-o(ng-show="ops.$$oikeus")
+          td
+            div
+              a(href="" ui-sref="root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot({ opsId: ops.id })")
+                div
+                  span.glyphicon.glyphicon-chevron-right
 
 
 div.otsikkotaso.kaikki-opetussuunnitelmat
