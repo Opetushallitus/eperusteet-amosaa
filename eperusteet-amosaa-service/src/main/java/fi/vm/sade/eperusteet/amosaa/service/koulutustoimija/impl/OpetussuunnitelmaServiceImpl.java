@@ -36,6 +36,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.PoistettuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaJulkinenDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
@@ -349,9 +350,9 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     }
 
     @Override
-    public Long getKoulutustoimijaId(Long opsId) {
+    public KoulutustoimijaJulkinenDto getKoulutustoimijaId(Long opsId) {
         Opetussuunnitelma ops = repository.findOne(opsId);
-        return ops.getKoulutustoimija().getId();
+        return mapper.map(ops.getKoulutustoimija(), KoulutustoimijaJulkinenDto.class);
     }
 
     @Override

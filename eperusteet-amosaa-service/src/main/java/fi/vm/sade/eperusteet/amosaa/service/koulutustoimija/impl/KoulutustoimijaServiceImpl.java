@@ -17,9 +17,15 @@
 package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.collect.Lists;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija_;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti_;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.Teksti;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.Teksti_;
+import fi.vm.sade.eperusteet.amosaa.dto.PageDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaJulkinenDto;
@@ -31,17 +37,31 @@ import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Tuple;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Order;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.SetJoin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import springfox.documentation.annotations.ApiIgnore;
 
 /**
  *
@@ -63,6 +83,9 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
 
     @Autowired
     private DtoMapper mapper;
+
+    @PersistenceContext
+    private EntityManager em;
 
     @Transactional(readOnly = false)
     private Koulutustoimija initialize(String kOid) {
@@ -123,14 +146,81 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     }
 
     @Override
-    public KoulutustoimijaDto getKoulutustoimija(Long kId) {
-        return mapper.map(repository.findOne(kId), KoulutustoimijaDto.class);
+    public Page<KoulutustoimijaJulkinenDto> findKoulutustoimijat(PageRequest page, KoulutustoimijaQueryDto pquery) {
+        Page<Koulutustoimija> toimijat = findBy(page, pquery);
+        PageDto<Koulutustoimija, KoulutustoimijaJulkinenDto> resultDto = new PageDto<>(toimijat, KoulutustoimijaJulkinenDto.class, page, mapper);
+        return null;
+    }
+
+    private Page<Koulutustoimija> findBy(PageRequest page, KoulutustoimijaQueryDto pquery) {
+        TypedQuery<Long> countQuery = getCountQuery(pquery);
+        TypedQuery<Tuple> query = getQuery(pquery);
+        if (page != null) {
+            query.setFirstResult(page.getOffset());
+            query.setMaxResults(page.getPageSize());
+        }
+        return new PageImpl<>(Lists.transform(query.getResultList(), (item) -> item.get(0, Koulutustoimija.class)), page, countQuery.getSingleResult());
+    }
+
+    private TypedQuery<Tuple> getQuery(KoulutustoimijaQueryDto pquery) {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Tuple> query = cb.createTupleQuery();
+        Root<Koulutustoimija> root = query.from(Koulutustoimija.class);
+        SetJoin<LokalisoituTeksti, Teksti> teksti = root.join(Koulutustoimija_.nimi).join(LokalisoituTeksti_.teksti);
+        Predicate pred = buildPredicate(root, teksti, cb, pquery);
+        query.distinct(true);
+        final Expression<String> n = cb.lower(teksti.get(Teksti_.teksti));
+
+        final List<Order> order = new ArrayList<>();
+        if ("muokattu".equals(pquery.getJarjestys())) {
+            order.add(cb.desc(root.get(Koulutustoimija_.luotu)));
+        }
+        order.add(cb.asc(n));
+        order.add(cb.asc(root.get(Koulutustoimija_.id)));
+//        query.multiselect(root, n).where(pred).orderBy(order);
+
+        return em.createQuery(query);
+    }
+
+    private TypedQuery<Long> getCountQuery(KoulutustoimijaQueryDto pquery) {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Long> query = cb.createQuery(Long.class);
+        Root<Koulutustoimija> root = query.from(Koulutustoimija.class);
+        Join<LokalisoituTeksti, Teksti> teksti = root.join(Koulutustoimija_.nimi).join(LokalisoituTeksti_.teksti);
+        Predicate pred = buildPredicate(root, teksti, cb, pquery);
+        query.select(cb.countDistinct(root)).where(pred);
+        return em.createQuery(query);
+    }
+
+    private Predicate buildPredicate(
+        Root<Koulutustoimija> root,
+        Join<LokalisoituTeksti, Teksti> teksti,
+        CriteriaBuilder cb,
+        KoulutustoimijaQueryDto pq
+    ) {
+        final Kieli kieli = Kieli.of(pq.getKieli());
+//        Predicate pred = cb.equal(teksti.get(LokalisoituTeksti_.kieli), kieli);
+
+        if (pq.getNimi() != null) {
+//            Predicate nimessa = cb.like(cb.lower(teksti.get(LokalisoituTeksti_.teksti)), cb.literal(RepositoryUtil.kuten(pq.getNimi())));
+//            pred = cb.and(pred, nimessa);
+        }
+
+//        if (pq.getDiaarinumero() != null) {
+//            pred = cb.and(pred, cb.equal(root.get(Koulutustoimija_.diaarinumero), cb.literal(new Diaarinumero(pq.getDiaarinumero()))));
+//        }
+
+//        if (!empty(pq.getKoulutustyyppi())) {
+//            pred = cb.and(pred, root.get(Koulutustoimija_.koulutustyyppi).in(pq.getKoulutustyyppi()));
+//        }
+
+        return null;
+//        return pred;
     }
 
     @Override
-    public Page<KoulutustoimijaJulkinenDto> findKoulutustoimijat(
-            @ApiIgnore KoulutustoimijaQueryDto pquery) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public KoulutustoimijaDto getKoulutustoimija(Long kId) {
+        return mapper.map(repository.findOne(kId), KoulutustoimijaDto.class);
     }
 
     @Override

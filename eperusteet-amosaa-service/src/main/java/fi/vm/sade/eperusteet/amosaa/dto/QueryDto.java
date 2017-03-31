@@ -33,4 +33,6 @@ public class QueryDto {
     private boolean voimassaolo = true;
     private boolean poistunut = true;
     private String nimi;
+    private String kieli = "fi";
+    private String jarjestys = "aakkoset";
 }

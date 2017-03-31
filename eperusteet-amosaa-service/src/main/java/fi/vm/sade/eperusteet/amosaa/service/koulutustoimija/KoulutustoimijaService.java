@@ -24,6 +24,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaYstavaDto
 import java.util.List;
 import java.util.Set;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -66,5 +67,6 @@ public interface KoulutustoimijaService {
 
     Long getKoulutustoimija(String idTaiOid);
 
-    Page<KoulutustoimijaJulkinenDto> findKoulutustoimijat(KoulutustoimijaQueryDto query);
+    @PreAuthorize("permitAll()")
+    Page<KoulutustoimijaJulkinenDto> findKoulutustoimijat(PageRequest page, KoulutustoimijaQueryDto query);
 }
