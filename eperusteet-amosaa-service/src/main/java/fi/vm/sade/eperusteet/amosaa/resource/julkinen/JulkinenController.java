@@ -21,7 +21,6 @@ import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.SisaltoViiteSijaintiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteKevytDto;
-import fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija.KoulutustoimijaIdGetterAbstractController;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
@@ -38,7 +37,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/julkinen")
 @Api(value = "julkinen")
-public class JulkinenController extends KoulutustoimijaIdGetterAbstractController {
+public class JulkinenController {
+
+    @Autowired
+    private KoulutustoimijaService ktService;
 
     @Autowired
     private SisaltoViiteService svService;
@@ -46,16 +48,13 @@ public class JulkinenController extends KoulutustoimijaIdGetterAbstractControlle
     @Autowired
     private OpetussuunnitelmaService opsService;
 
-    @Autowired
-    private KoulutustoimijaService ktService;
-
     @RequestMapping(value = "/tutkinnonosat/{koodi}", method = RequestMethod.GET)
     public SisaltoViiteDto getTutkinnonOsa(@PathVariable final String koodi) {
         throw new UnsupportedOperationException("ei-toteutettu-viela");
     }
 
     @RequestMapping(value = "/opetussuunnitelmat/{opsId}/koulutustoimija", method = RequestMethod.GET)
-    public Long get(@PathVariable final Long opsId) {
+    public KoulutustoimijaJulkinenDto getOpetussuunnitelmanToimija(@PathVariable final Long opsId) {
         return opsService.getKoulutustoimijaId(opsId);
     }
 
@@ -67,7 +66,7 @@ public class JulkinenController extends KoulutustoimijaIdGetterAbstractControlle
 
     @RequestMapping(value = "/koulutustoimijat/{ktId}", method = RequestMethod.GET)
     @ResponseBody
-    public KoulutustoimijaJulkinenDto getKoulutustoimija(@ModelAttribute("solvedKtId") final Long ktId) {
+    public KoulutustoimijaJulkinenDto getKoulutustoimija(@PathVariable("ktId") final Long ktId) {
         return ktService.getKoulutustoimijaJulkinen(ktId);
     }
 
@@ -85,27 +84,27 @@ public class JulkinenController extends KoulutustoimijaIdGetterAbstractControlle
 
     @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat", method = RequestMethod.GET)
     public List<OpetussuunnitelmaDto> getAllOpetussuunnitelmat(
-            @ModelAttribute("solvedKtId") final Long ktId) {
+            @ModelAttribute("ktId") final Long ktId) {
         return opsService.getJulkisetOpetussuunnitelmat(ktId);
     }
 
     @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}", method = RequestMethod.GET)
     public OpetussuunnitelmaDto get(
-            @ModelAttribute("solvedKtId") final Long ktId,
+            @ModelAttribute("ktId") final Long ktId,
             @PathVariable final Long opsId) {
         return opsService.getOpetussuunnitelma(ktId, opsId);
     }
 
     @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/otsikot", method = RequestMethod.GET)
     List<SisaltoViiteKevytDto> getOtsikot(
-            @ModelAttribute("solvedKtId") final Long ktId,
+            @ModelAttribute("ktId") final Long ktId,
             @PathVariable final Long opsId) {
         return svService.getSisaltoViitteet(ktId, opsId, SisaltoViiteKevytDto.class);
     }
 
     @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tekstit/{svId}", method = RequestMethod.GET)
     SisaltoViiteDto.Matala getTekstit(
-            @ModelAttribute("solvedKtId") final Long ktId,
+            @ModelAttribute("ktId") final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long svId) {
         return svService.getSisaltoViite(ktId, opsId, svId);
