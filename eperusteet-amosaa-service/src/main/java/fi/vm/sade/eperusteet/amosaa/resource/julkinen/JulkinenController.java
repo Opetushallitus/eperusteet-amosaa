@@ -17,6 +17,7 @@
 package fi.vm.sade.eperusteet.amosaa.resource.julkinen;
 
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaJulkinenDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaQueryDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.SisaltoViiteSijaintiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
@@ -26,10 +27,14 @@ import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaServi
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  *
@@ -69,6 +74,21 @@ public class JulkinenController extends KoulutustoimijaIdGetterAbstractControlle
     @ResponseBody
     public KoulutustoimijaJulkinenDto getKoulutustoimija(@ModelAttribute("solvedKtId") final Long ktId) {
         return ktService.getKoulutustoimijaJulkinen(ktId);
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "sivu", dataType = "integer", paramType = "query"),
+            @ApiImplicitParam(name = "sivukoko", dataType = "integer", paramType = "query"),
+            @ApiImplicitParam(name = "tuleva", dataType = "boolean", paramType = "query", defaultValue = "true", value = "hae myös tulevatperusteet"),
+            @ApiImplicitParam(name = "siirtyma", dataType = "boolean", paramType = "query", defaultValue = "true", value = "hae myös siirtymäajalla olevat perusteet"),
+            @ApiImplicitParam(name = "voimassaolo", dataType = "boolean", paramType = "query", defaultValue = "true", value = "hae myös voimassaolevat perusteet"),
+            @ApiImplicitParam(name = "poistunut", dataType = "boolean", paramType = "query", defaultValue = "true", value = "hae myös poistuneet perusteet"),
+            @ApiImplicitParam(name = "nimi", dataType = "string", paramType = "query"),
+    })
+    @RequestMapping(value = "/koulutustoimijat", method = RequestMethod.GET)
+    @ResponseBody
+    public Page<KoulutustoimijaJulkinenDto> findKoulutustoimijat(@ApiIgnore KoulutustoimijaQueryDto pquery) {
+        return ktService.findKoulutustoimijat(pquery);
     }
 
     @RequestMapping(value = "/koodi/{koodi}", method = RequestMethod.GET)

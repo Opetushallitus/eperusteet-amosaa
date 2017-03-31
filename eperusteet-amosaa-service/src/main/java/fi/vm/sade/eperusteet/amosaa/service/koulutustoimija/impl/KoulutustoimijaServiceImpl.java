@@ -23,6 +23,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaJulkinenDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaQueryDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaYstavaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.YstavaStatus;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
@@ -37,8 +38,10 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  *
@@ -123,8 +126,12 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     public KoulutustoimijaDto getKoulutustoimija(Long kId) {
         return mapper.map(repository.findOne(kId), KoulutustoimijaDto.class);
     }
-//    @Autowired
-//    private KoulutustoimijaService ktService;
+
+    @Override
+    public Page<KoulutustoimijaJulkinenDto> findKoulutustoimijat(
+            @ApiIgnore KoulutustoimijaQueryDto pquery) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
     @Override
     public Long getKoulutustoimija(String idTaiOid) {
