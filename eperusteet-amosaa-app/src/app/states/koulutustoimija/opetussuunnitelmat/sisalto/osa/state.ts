@@ -122,9 +122,13 @@ angular.module("app")
     views: {
         "": {
             controller: ($q, $state, $stateParams, $location, $scope, $rootScope, $document, $timeout, $filter, $sce,
-                         koulutustoimija, osa, nimiLataaja, Varmistusdialogi, historia, versioId, versio, pTosa, lukko) => {
+                         koulutustoimija, ops, osa, nimiLataaja, Varmistusdialogi, historia, versioId, versio, pTosa, lukko) => {
                 $scope.$$showOhjeteksti = LocalStorage.getItem("$$showOhjeteksti").value;
                 $scope.$$showPerusteteksti = LocalStorage.getItem("$$showPerusteteksti").value;
+
+                if (ops.peruste) {
+                    $scope.perusteenNimi = ops.peruste.nimi;
+                }
 
                 $scope.toggleVar = (str) => {
                     $scope[str] = !$scope[str];
@@ -168,8 +172,8 @@ angular.module("app")
                             reject();
                         })),
                     after: (res) => {
-                        return historia.get("uusin").then(res => {
-                            $scope.uusin = Revisions.parseOne(res);
+                        return historia.get("uusin").then(uusin => {
+                            $scope.uusin = Revisions.parseOne(uusin);
                             $scope.historia.unshift($scope.uusin);
                             $rootScope.$broadcast("sivunavi:forcedUpdate", $scope.osa);
                         });
@@ -200,7 +204,7 @@ angular.module("app")
                 };
 
                 const clickHandler = (event) => {
-                    var ohjeEl = angular.element(event.target).closest(".popover, .popover-element");
+                    let ohjeEl = angular.element(event.target).closest(".popover, .popover-element");
                     if (ohjeEl.length === 0) {
                         $rootScope.$broadcast("ohje:closeAll");
                     }

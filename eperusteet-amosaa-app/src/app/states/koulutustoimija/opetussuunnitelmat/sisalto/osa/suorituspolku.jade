@@ -1,7 +1,7 @@
 div
   .suorituspolku-otsikko
     h2
-      span(ng-bind="perusteRakenne.nimi | kaanna")
+      span(ng-bind="perusteenNimi | kaanna")
       span.suorituspolku-laajuus(ng-show="perusteRakenne.muodostumisSaanto.laajuus.minimi || perusteRakenne.muodostumisSaanto.laajuus.maksimi")
         span ,
         span(style="margin-left: 5px;" ng-bind="perusteRakenne.muodostumisSaanto.laajuus.minimi || perusteRakenne.muodostumisSaanto.laajuus.maksimi")
