@@ -27,6 +27,10 @@ public class DokumenttiUtils {
     }
 
     public static void addLokalisoituteksti(DokumenttiBase docBase, LokalisoituTeksti lTeksti, String tagi) {
+        addLokalisoituteksti(docBase, lTeksti, tagi, null);
+    }
+
+    public static void addLokalisoituteksti(DokumenttiBase docBase, LokalisoituTeksti lTeksti, String tagi, Element el) {
         if (lTeksti != null && lTeksti.getTeksti() != null && lTeksti.getTeksti().get(docBase.getKieli()) != null) {
             String teksti = lTeksti.getTeksti().get(docBase.getKieli());
             teksti = "<" + tagi + ">" + unescapeHtml5(teksti) + "</" + tagi + ">";
@@ -34,7 +38,11 @@ public class DokumenttiUtils {
             Document tempDoc = new W3CDom().fromJsoup(Jsoup.parseBodyFragment(teksti));
             Node node = tempDoc.getDocumentElement().getChildNodes().item(1).getFirstChild();
 
-            docBase.getBodyElement().appendChild(docBase.getDocument().importNode(node, true));
+            if (el != null) {
+                el.appendChild(docBase.getDocument().importNode(node, true));
+            } else {
+                docBase.getBodyElement().appendChild(docBase.getDocument().importNode(node, true));
+            }
         }
     }
 

@@ -27,6 +27,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import javax.xml.transform.*;
@@ -34,6 +36,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
+import javax.xml.xpath.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
@@ -71,7 +74,7 @@ public class PdfServiceImpl implements PdfService {
 
         // Muunnetaan saatu fo malli pdf:ksi
         InputStream foInputStream = new ByteArrayInputStream(foStream.toByteArray());
-        convertFO2PDF(foInputStream, pdfStream);
+        convertFO2PDF(doc, foInputStream, pdfStream);
 
         return pdfStream.toByteArray();
     }
@@ -103,7 +106,7 @@ public class PdfServiceImpl implements PdfService {
     }
 
     @SuppressWarnings("unchecked")
-    private void convertFO2PDF(InputStream fo, OutputStream pdf)
+    private void convertFO2PDF(Document doc, InputStream fo, OutputStream pdf)
             throws IOException, SAXException, TransformerException {
 
         FopFactory fopFactory = FopFactory.newInstance(config.getFile());
@@ -111,6 +114,22 @@ public class PdfServiceImpl implements PdfService {
         FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
         foUserAgent.getRendererOptions().put("pdf-a-mode", "PDF/A-1b");
         foUserAgent.getEventBroadcaster().addEventListener(DokumenttiEventListener.getInstance());
+
+        try {
+            XPathFactory xPathfactory = XPathFactory.newInstance();
+            XPath xpath = xPathfactory.newXPath();
+            XPathExpression expr = xpath.compile("/html/head/title");
+            NodeList nl = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+            if (nl.getLength() > 0) {
+                Node titleNode = nl.item(0);
+                String title = titleNode.getTextContent();
+                if (title != null) {
+                    foUserAgent.setTitle(title);
+                }
+            }
+        } catch (XPathExpressionException e) {
+            LOG.error(e.getLocalizedMessage());
+        }
 
         Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, foUserAgent, pdf);
 

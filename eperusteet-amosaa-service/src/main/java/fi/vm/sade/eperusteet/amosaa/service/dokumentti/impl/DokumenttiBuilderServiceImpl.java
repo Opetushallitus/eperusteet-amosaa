@@ -32,10 +32,10 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.SuorituspolkuRivi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.Tekstiosa;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaTutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Suorituspolku;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Tutkinnonosa;
-import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaToteutus;
 import fi.vm.sade.eperusteet.amosaa.dto.koodisto.KoodistoKoodiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koodisto.KoodistoMetadataDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.TermiDto;
@@ -538,39 +538,81 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
         if (tutkinnonOsa.getToteutukset().size() > 0) {
             addTeksti(docBase, messages.translate("docgen.toteutukset", docBase.getKieli()), "h5");
 
-            DokumenttiTaulukko taulukko = new DokumenttiTaulukko();
+            tutkinnonOsa.getToteutukset().forEach(toteutus -> {
+                addLokalisoituteksti(docBase, toteutus.getOtsikko(), "h6");
+                boolean toteutuksellaSisaltoa = false;
 
-            taulukko.addOtsikkoSarake(messages.translate("docgen.liitetyt-koodit", docBase.getKieli()));
-            taulukko.addOtsikkoSarake(messages.translate("docgen.osaamisen-arvioinnista", docBase.getKieli()));
-            taulukko.addOtsikkoSarake(messages.translate("docgen.tavat-ja-ymparisto", docBase.getKieli()));
-
-            for (TutkinnonosaToteutus toteutus : tutkinnonOsa.getToteutukset()) {
+                Element toteutusTaulukko = docBase.getDocument().createElement("table");
+                toteutusTaulukko.setAttribute("border", "1");
 
 
-                DokumenttiRivi rivi = new DokumenttiRivi();
-                StringJoiner koodit = new StringJoiner(", ");
-                toteutus.getKoodit().forEach(koodiUri -> {
+                Element kooditTr = docBase.getDocument().createElement("tr");
+                Element kooditTd = docBase.getDocument().createElement("th");
+                kooditTr.appendChild(kooditTd);
+                Element koodit = docBase.getDocument().createElement("div");
+                kooditTd.appendChild(koodit);
+
+                for (String koodiUri : toteutus.getKoodit()) {
                     KoodistoKoodiDto koodistoKoodiDto = koodistoClient.getByUri(koodiUri);
                     KoodistoMetadataDto[] metadata = koodistoKoodiDto.getMetadata();
                     for (KoodistoMetadataDto metadataDto : metadata) {
-                        // Valitaan oikea kieli
+                        // Valitaan haluttu kieli
                         if (metadataDto.getKieli().toLowerCase().equals(docBase.getKieli().toString())) {
-                            koodit.add(metadataDto.getNimi() + " (" + koodistoKoodiDto.getKoodiArvo() + ")");
+                            addTeksti(docBase,
+                                    metadataDto.getNimi() + " (" + koodistoKoodiDto.getKoodiArvo() + ")",
+                                    "p",
+                                    koodit);
+                            toteutuksellaSisaltoa = true;
                         }
 
                     }
-                });
+                }
 
-                rivi.addSarake(koodit.toString());
-                rivi.addSarake(getTextString(docBase, toteutus.getArvioinnista().getTeksti()));
-                rivi.addSarake(getTextString(docBase, toteutus.getTavatjaymparisto().getTeksti()));
+                if (toteutuksellaSisaltoa) {
+                    DokumenttiTaulukko.addRow(docBase, toteutusTaulukko,
+                            messages.translate("docgen.liitetyt-koodit", docBase.getKieli()), true);
+                    toteutusTaulukko.appendChild(kooditTr);
+                }
 
-                taulukko.addRivi(rivi);
-            }
+                Tekstiosa arvioinnista = toteutus.getArvioinnista();
+                if (arvioinnista != null && arvioinnista.getTeksti() != null) {
+                    DokumenttiTaulukko.addRow(docBase,
+                            toteutusTaulukko,
+                            messages.translate("docgen.osaamisen-arvioinnista", docBase.getKieli()),
+                            true);
 
-            taulukko.addToDokumentti(docBase);
+                    Element tr = docBase.getDocument().createElement("tr");
+                    toteutusTaulukko.appendChild(tr);
+                    Element td = docBase.getDocument().createElement("th");
+                    tr.appendChild(td);
+                    addLokalisoituteksti(docBase, arvioinnista.getTeksti(), "div", td);
+
+                    toteutuksellaSisaltoa = true;
+                }
+
+                Tekstiosa tavatjaymparisto = toteutus.getTavatjaymparisto();
+                if (tavatjaymparisto != null && tavatjaymparisto.getTeksti() != null) {
+                    DokumenttiTaulukko.addRow(docBase,
+                            toteutusTaulukko,
+                            messages.translate("docgen.tavat-ja-ymparisto", docBase.getKieli()),
+                            true);
+
+                    Element tr = docBase.getDocument().createElement("tr");
+                    toteutusTaulukko.appendChild(tr);
+                    Element td = docBase.getDocument().createElement("th");
+                    tr.appendChild(td);
+                    addLokalisoituteksti(docBase, tavatjaymparisto.getTeksti(), "div", td);
+                    toteutuksellaSisaltoa = true;
+                }
+
+                // Lisätään toteutuksen taulukko jos on sisältöä
+                if (toteutuksellaSisaltoa) {
+                    docBase.getBodyElement().appendChild(toteutusTaulukko);
+                }
+            });
         }
     }
+
 
     private void addOmaTutkinnonOsa(DokumenttiBase docBase, OmaTutkinnonosa omaTutkinnonosa) {
 
@@ -758,7 +800,6 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
                     for (int i = 0; i < arvioinninKohdealue.getArvioinninKohteet().size(); i++) {
                         ArvioinninKohde arvioinninKohde = arvioinninKohdealue.getArvioinninKohteet().get(i);
                         ArvioinninKohdeDto arvioinninKohdeDto = arvioinninKohdealueDto.getArvioinninKohteet().get(i);
-                        //ArviointiasteikkoDto dto = eperusteetService.getArviointiasteikko(arvioinninKohdeDto.getArviointiAsteikko());
                         ArviointiasteikkoDto dto = arviointiasteikkoService.get(arvioinninKohdeDto.getArviointiAsteikko());
                         Arviointiasteikko arviointiasteikko = mapper.map(dto, Arviointiasteikko.class);
                         arvioinninKohde.setArviointiasteikko(arviointiasteikko);
@@ -766,11 +807,17 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
                         Set<OsaamistasonKriteeri> osaamistasonKriteerit = arvioinninKohdeDto.getOsaamistasonKriteerit().stream()
                                 .sorted(Comparator.comparing(OsaamistasonKriteeriDto::getOsaamistaso))
                                 .map(osaamistasonKriteeriDto -> {
-                                    Osaamistaso osaamistaso = arviointiasteikko.getOsaamistasot().stream()
+                                    Optional<Osaamistaso> optOsaamistaso = arviointiasteikko.getOsaamistasot().stream()
                                             .filter(o -> o.getId().equals(osaamistasonKriteeriDto.getOsaamistaso()))
-                                            .findFirst().get();
+                                            .findFirst();
+
                                     OsaamistasonKriteeri osaamistasonKriteeri = mapper.map(osaamistasonKriteeriDto, OsaamistasonKriteeri.class);
-                                    osaamistasonKriteeri.setOsaamistaso(osaamistaso);
+
+                                    if (optOsaamistaso.isPresent()) {
+                                        Osaamistaso osaamistaso = optOsaamistaso.get();
+                                        osaamistasonKriteeri.setOsaamistaso(osaamistaso);
+                                    }
+
                                     return osaamistasonKriteeri;
                                 })
                                 .collect(Collectors.toSet());
