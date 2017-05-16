@@ -36,6 +36,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.Tekstiosa;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaTutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Suorituspolku;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Tutkinnonosa;
+import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import fi.vm.sade.eperusteet.amosaa.dto.koodisto.KoodistoKoodiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koodisto.KoodistoMetadataDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.TermiDto;
@@ -800,29 +801,34 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
                     for (int i = 0; i < arvioinninKohdealue.getArvioinninKohteet().size(); i++) {
                         ArvioinninKohde arvioinninKohde = arvioinninKohdealue.getArvioinninKohteet().get(i);
                         ArvioinninKohdeDto arvioinninKohdeDto = arvioinninKohdealueDto.getArvioinninKohteet().get(i);
-                        ArviointiasteikkoDto dto = arviointiasteikkoService.get(arvioinninKohdeDto.getArviointiAsteikko());
-                        Arviointiasteikko arviointiasteikko = mapper.map(dto, Arviointiasteikko.class);
-                        arvioinninKohde.setArviointiasteikko(arviointiasteikko);
+                        Reference arviointiasteikkoRef = arvioinninKohdeDto.getArviointiasteikko();
+                        if (arviointiasteikkoRef != null) {
+                            Long arviointiasteikkoId = arviointiasteikkoRef.getIdLong();
+                            ArviointiasteikkoDto dto = arviointiasteikkoService.get(arviointiasteikkoId);
+                            Arviointiasteikko arviointiasteikko = mapper.map(dto, Arviointiasteikko.class);
 
-                        Set<OsaamistasonKriteeri> osaamistasonKriteerit = arvioinninKohdeDto.getOsaamistasonKriteerit().stream()
-                                .sorted(Comparator.comparing(OsaamistasonKriteeriDto::getOsaamistaso))
-                                .map(osaamistasonKriteeriDto -> {
-                                    Optional<Osaamistaso> optOsaamistaso = arviointiasteikko.getOsaamistasot().stream()
-                                            .filter(o -> o.getId().equals(osaamistasonKriteeriDto.getOsaamistaso()))
-                                            .findFirst();
+                            arvioinninKohde.setArviointiasteikko(arviointiasteikko);
 
-                                    OsaamistasonKriteeri osaamistasonKriteeri = mapper.map(osaamistasonKriteeriDto, OsaamistasonKriteeri.class);
+                            Set<OsaamistasonKriteeri> osaamistasonKriteerit = arvioinninKohdeDto.getOsaamistasonKriteerit().stream()
+                                    .sorted(Comparator.comparing(osaamistasonKriteeriDto -> osaamistasonKriteeriDto.getOsaamistaso().getIdLong()))
+                                    .map(osaamistasonKriteeriDto -> {
+                                        Optional<Osaamistaso> optOsaamistaso = arviointiasteikko.getOsaamistasot().stream()
+                                                .filter(o -> o.getId().equals(osaamistasonKriteeriDto.getOsaamistaso().getIdLong()))
+                                                .findFirst();
 
-                                    if (optOsaamistaso.isPresent()) {
-                                        Osaamistaso osaamistaso = optOsaamistaso.get();
-                                        osaamistasonKriteeri.setOsaamistaso(osaamistaso);
-                                    }
+                                        OsaamistasonKriteeri osaamistasonKriteeri = mapper.map(osaamistasonKriteeriDto, OsaamistasonKriteeri.class);
 
-                                    return osaamistasonKriteeri;
-                                })
-                                .collect(Collectors.toSet());
+                                        if (optOsaamistaso.isPresent()) {
+                                            Osaamistaso osaamistaso = optOsaamistaso.get();
+                                            osaamistasonKriteeri.setOsaamistaso(osaamistaso);
+                                        }
 
-                        arvioinninKohde.setOsaamistasonKriteerit(osaamistasonKriteerit);
+                                        return osaamistasonKriteeri;
+                                    })
+                                    .collect(Collectors.toSet());
+
+                            arvioinninKohde.setOsaamistasonKriteerit(osaamistasonKriteerit);
+                        }
                     }
 
                     addArvioinninKohdealue(docBase, arvioinninKohdealue);
@@ -860,7 +866,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
 
                         }*/
 
-                        if (termiDto != null && termiDto.getAlaviite() && termiDto.getSelitys() != null) {
+                        if (termiDto != null && termiDto.getAlaviite() != null && termiDto.getAlaviite() && termiDto.getSelitys() != null) {
                             element.setAttribute("number", String.valueOf(noteNumber));
 
                             LokalisoituTekstiDto tekstiDto = termiDto.getSelitys();

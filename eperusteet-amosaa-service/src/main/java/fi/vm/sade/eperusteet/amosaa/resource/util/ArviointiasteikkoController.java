@@ -41,7 +41,8 @@ public class ArviointiasteikkoController {
 
     @RequestMapping(method = RequestMethod.GET)
     public List<ArviointiasteikkoDto> getAll() {
-        return service.getAll();
+        List<ArviointiasteikkoDto> all = service.getAll();
+        return all;
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)

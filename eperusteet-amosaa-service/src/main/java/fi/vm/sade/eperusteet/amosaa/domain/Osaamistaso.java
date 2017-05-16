@@ -34,6 +34,7 @@ import java.io.Serializable;
 @Table(name = "osaamistaso")
 public class Osaamistaso implements Serializable, ReferenceableEntity {
 
+    // Ei voi luoda lisää muuten kuin migraatiolla
     @Id
     private Long id;
 

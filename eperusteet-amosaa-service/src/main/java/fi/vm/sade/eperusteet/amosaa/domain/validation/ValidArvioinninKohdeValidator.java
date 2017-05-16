@@ -54,8 +54,8 @@ public class ValidArvioinninKohdeValidator implements ConstraintValidator<ValidA
         return true;
     }
 
-    private boolean osaamistasoExistsInArviointiasteikko(Osaamistaso targetOsaamistaso, Arviointiasteikko arviointiAsteikko) {
-        for (Osaamistaso osaamistaso : arviointiAsteikko.getOsaamistasot()) {
+    private boolean osaamistasoExistsInArviointiasteikko(Osaamistaso targetOsaamistaso, Arviointiasteikko arviointiasteikko) {
+        for (Osaamistaso osaamistaso : arviointiasteikko.getOsaamistasot()) {
             if (osaamistaso.getId().equals(targetOsaamistaso.getId())) {
                 return true;
             }

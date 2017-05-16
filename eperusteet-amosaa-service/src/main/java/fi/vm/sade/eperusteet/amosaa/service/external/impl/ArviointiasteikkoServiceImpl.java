@@ -20,7 +20,6 @@ import fi.vm.sade.eperusteet.amosaa.dto.peruste.ArviointiasteikkoDto;
 import fi.vm.sade.eperusteet.amosaa.repository.ops.ArviointiasteikkoRepository;
 import fi.vm.sade.eperusteet.amosaa.service.external.ArviointiasteikkoService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +30,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
 
 /**
  * @author isaul
@@ -61,20 +62,19 @@ public class ArviointiasteikkoServiceImpl implements ArviointiasteikkoService {
         return mapper.mapAsList(arviointiasteikot, ArviointiasteikkoDto.class);
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     private List<Arviointiasteikko> getAllFromPeruste() {
         ResponseEntity<List<ArviointiasteikkoDto>> res = new RestTemplate()
                 .exchange(eperusteetServiceUrl + "/api/arviointiasteikot",
                         HttpMethod.GET, null, new ParameterizedTypeReference<List<ArviointiasteikkoDto>>() {});
         List<Arviointiasteikko> arviointiasteikot = mapper.mapAsList(res.getBody(), Arviointiasteikko.class);
 
-        arviointiasteikot.stream()
-                .forEach(asteikko -> repository.save(asteikko));
+        arviointiasteikot.forEach(asteikko -> repository.save(asteikko));
         return arviointiasteikot;
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public ArviointiasteikkoDto get(Long id) {
         if (repository.count() == 0) {
             getAllFromPeruste();

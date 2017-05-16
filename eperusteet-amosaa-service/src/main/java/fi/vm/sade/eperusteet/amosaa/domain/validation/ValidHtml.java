@@ -37,7 +37,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 public @interface ValidHtml {
 
-    String message() default "Teksti saa sisältää vain ennaltamääriteltyjä html-elementtejä";
+    String message() default "ei-validia-html";
     WhitelistType whitelist() default WhitelistType.NORMAL;
 
     Class<?>[] groups() default {};

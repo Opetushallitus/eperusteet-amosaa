@@ -35,7 +35,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Constraint(validatedBy = ValidOsaamistavoiteEsitietoValidator.class)
 @Documented
 public @interface ValidOsaamistavoiteEsitieto {
-    String message() default "Osaamistavoitteen esitieto voi osoittaa vain pakolliseen osaamistavoitteeseen.";
+    String message() default "osaamistavoite-esitieto-virhe";
     
     Class<?>[] groups() default { };
     

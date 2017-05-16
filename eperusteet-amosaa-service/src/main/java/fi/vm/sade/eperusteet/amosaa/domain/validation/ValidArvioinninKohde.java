@@ -36,8 +36,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 public @interface ValidArvioinninKohde {
     
-    String message() default "Arvioinnin kohteella tulee olla arviointiasteikko ja kaikki "
-            + "kohteen kriteerit tulee sitoa näihin arviointiasteikon osaamistasoihin.";
+    String message() default "arviointi-rakenne-virhe";
     
     Class<?>[] groups() default { };
     

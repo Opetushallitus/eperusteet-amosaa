@@ -344,7 +344,8 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
         // Tulevaisuudessa mahdollista lisätä eri lähteitä muille tyypeille jos koetaan tarpeelliseksi
         if (TutkinnonosaTyyppi.OMA.equals(mappedTosa.getTyyppi())) {
             if (mappedTosa.getOmatutkinnonosa() != null) {
-                mappedTosa.getOmatutkinnonosa().setKoodiPrefix(ops.getKoulutustoimija().getOrganisaatio());
+                OmaTutkinnonosa omatutkinnonosa = mappedTosa.getOmatutkinnonosa();
+                omatutkinnonosa.setKoodiPrefix(ops.getKoulutustoimija().getOrganisaatio());
             }
         }
 
@@ -354,7 +355,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
 
     @Override
     @Transactional
-    public SisaltoViiteDto updateSisaltoViite(Long ktId, Long opsId, Long viiteId, SisaltoViiteDto uusi) {
+    public void updateSisaltoViite(Long ktId, Long opsId, Long viiteId, SisaltoViiteDto uusi) {
         SisaltoViite viite = findViite(opsId, viiteId);
         Opetussuunnitelma ops = opsRepository.findOne(opsId);
         if (viite.getOwner() != ops) {
@@ -391,8 +392,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
         updateTekstiKappale(opsId, viite, uusi.getTekstiKappale(), false);
         viite.setValmis(uusi.isValmis());
         viite.setVersio((viite.getVersio() != null ? viite.getVersio() : 0) + 1);
-        viite = repository.save(viite);
-        return mapper.map(viite, SisaltoViiteDto.class);
+        repository.save(viite);
     }
 
     @Override

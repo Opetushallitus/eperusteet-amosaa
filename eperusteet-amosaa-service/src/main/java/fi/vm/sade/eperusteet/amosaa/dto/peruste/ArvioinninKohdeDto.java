@@ -18,13 +18,14 @@ package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
+import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Set;
-import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
-import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
  *
@@ -40,7 +41,7 @@ public class ArvioinninKohdeDto implements AuditLoggableDto {
 
     private LokalisoituTekstiDto otsikko;
     private LokalisoituTekstiDto selite;
-    @JsonProperty("_arviointiAsteikko")
-    private Long arviointiAsteikko;
+    @JsonProperty("_arviointiasteikko")
+    private Reference arviointiasteikko;
     private Set<OsaamistasonKriteeriDto> osaamistasonKriteerit;
 }

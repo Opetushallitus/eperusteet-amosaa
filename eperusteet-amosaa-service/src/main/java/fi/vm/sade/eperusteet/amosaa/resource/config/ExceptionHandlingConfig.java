@@ -16,19 +16,9 @@
 package fi.vm.sade.eperusteet.amosaa.resource.config;
 
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
-import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
 import fi.vm.sade.eperusteet.amosaa.service.exception.NotExistsException;
 import fi.vm.sade.eperusteet.amosaa.service.exception.ServiceException;
 import fi.vm.sade.eperusteet.amosaa.service.exception.ValidointiException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import javax.servlet.ServletException;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.ConversionNotSupportedException;
@@ -55,6 +45,16 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
+
+import javax.servlet.ServletException;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.ValidationException;
+import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -162,6 +162,10 @@ public class ExceptionHandlingConfig extends ResponseEntityExceptionHandler {
             map.put("data", ((ValidointiException) ex).getValidointi());
         } else if (ex instanceof ServiceException) {
             map.put("syy", ex.getLocalizedMessage());
+        } else if (ex instanceof SocketException) {
+            suppresstrace = true;
+            map.put("syy", ex.getLocalizedMessage());
+            map.put("avain", "client-abort-virhe");
         } else {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
             map.put("syy", "Sovelluspalvelimessa tapahtui odottamaton virhe");
