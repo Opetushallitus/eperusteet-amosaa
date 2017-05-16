@@ -65,7 +65,7 @@ angular.module("app", [
                 }
             }
             else if (res.status >= 500) {
-                NotifikaatioService.varoitus("palvelin-virhetilanne");
+                NotifikaatioService.varoitus(KaannaService.kaanna("palvelin-virhetilanne"));
             }
             return $q.reject(res);
         }
