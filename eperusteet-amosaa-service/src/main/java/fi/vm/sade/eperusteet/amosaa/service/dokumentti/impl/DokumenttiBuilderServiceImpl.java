@@ -575,6 +575,21 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
                     toteutusTaulukko.appendChild(kooditTr);
                 }
 
+                Tekstiosa tavatjaymparisto = toteutus.getTavatjaymparisto();
+                if (tavatjaymparisto != null && tavatjaymparisto.getTeksti() != null) {
+                    DokumenttiTaulukko.addRow(docBase,
+                            toteutusTaulukko,
+                            messages.translate("docgen.tavat-ja-ymparisto", docBase.getKieli()),
+                            true);
+
+                    Element tr = docBase.getDocument().createElement("tr");
+                    toteutusTaulukko.appendChild(tr);
+                    Element td = docBase.getDocument().createElement("th");
+                    tr.appendChild(td);
+                    addLokalisoituteksti(docBase, tavatjaymparisto.getTeksti(), "div", td);
+                    toteutuksellaSisaltoa = true;
+                }
+
                 Tekstiosa arvioinnista = toteutus.getArvioinnista();
                 if (arvioinnista != null && arvioinnista.getTeksti() != null) {
                     DokumenttiTaulukko.addRow(docBase,
@@ -591,21 +606,6 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
                     toteutuksellaSisaltoa = true;
                 }
 
-                Tekstiosa tavatjaymparisto = toteutus.getTavatjaymparisto();
-                if (tavatjaymparisto != null && tavatjaymparisto.getTeksti() != null) {
-                    DokumenttiTaulukko.addRow(docBase,
-                            toteutusTaulukko,
-                            messages.translate("docgen.tavat-ja-ymparisto", docBase.getKieli()),
-                            true);
-
-                    Element tr = docBase.getDocument().createElement("tr");
-                    toteutusTaulukko.appendChild(tr);
-                    Element td = docBase.getDocument().createElement("th");
-                    tr.appendChild(td);
-                    addLokalisoituteksti(docBase, tavatjaymparisto.getTeksti(), "div", td);
-                    toteutuksellaSisaltoa = true;
-                }
-
                 // Lisätään toteutuksen taulukko jos on sisältöä
                 if (toteutuksellaSisaltoa) {
                     docBase.getBodyElement().appendChild(toteutusTaulukko);
@@ -616,6 +616,18 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
 
 
     private void addOmaTutkinnonOsa(DokumenttiBase docBase, OmaTutkinnonosa omaTutkinnonosa) {
+
+        // Laajuus
+        if (omaTutkinnonosa.getLaajuus() != null) {
+            addTeksti(docBase, messages.translate("docgen.laajuus", docBase.getKieli()), "h5");
+            addTeksti(docBase, omaTutkinnonosa.getLaajuus().toString(), "div");
+        }
+
+        // Koodi
+        if (omaTutkinnonosa.getKoodi() != null) {
+            addTeksti(docBase, messages.translate("docgen.koodi", docBase.getKieli()), "h5");
+            addTeksti(docBase, omaTutkinnonosa.getKoodi(), "div");
+        }
 
         // Tavoitteet
         if (omaTutkinnonosa.getTavoitteet() != null) {
