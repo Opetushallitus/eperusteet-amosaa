@@ -19,12 +19,16 @@ package fi.vm.sade.eperusteet.amosaa.resource.julkinen;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaJulkinenDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaQueryDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaJulkinenDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaQueryDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.SisaltoViiteSijaintiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.ops.TiedoteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteKevytDto;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
+import fi.vm.sade.eperusteet.amosaa.service.ops.TiedoteService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -54,6 +58,9 @@ public class JulkinenController {
     @Autowired
     private OpetussuunnitelmaService opsService;
 
+    @Autowired
+    private TiedoteService tiedoteService;
+
     @RequestMapping(value = "/tutkinnonosat/{koodi}", method = RequestMethod.GET)
     public SisaltoViiteDto getTutkinnonOsa(@PathVariable final String koodi) {
         throw new UnsupportedOperationException("ei-toteutettu-viela");
@@ -77,13 +84,38 @@ public class JulkinenController {
     }
 
     @ApiImplicitParams({
+            @ApiImplicitParam(name = "perusteenDiaarinumero", dataType = "string", paramType = "query"),
+            @ApiImplicitParam(name = "organisaatio", dataType = "string", paramType = "query"),
+            @ApiImplicitParam(name = "tyyppi", dataType = "string", paramType = "query"),
+            @ApiImplicitParam(name = "sivu", dataType = "integer", paramType = "query"),
+            @ApiImplicitParam(name = "sivukoko", dataType = "integer", paramType = "query"),
+            @ApiImplicitParam(name = "nimi", dataType = "string", paramType = "query"),
+    })
+    @RequestMapping(value = "/opetussuunnitelmat", method = RequestMethod.GET)
+    @ResponseBody
+    public Page<OpetussuunnitelmaDto> findOpetussuunnitelmat(
+            @ApiIgnore OpetussuunnitelmaQueryDto pquery) {
+        // Oletuksena älä palauta pohjia
+        PageRequest p = new PageRequest(pquery.getSivu(), Math.min(pquery.getSivukoko(), 100));
+        return opsService.findOpetussuunnitelmat(p, pquery);
+    }
+
+    @RequestMapping(value = "/perusteenopetussuunnitelmat", method = RequestMethod.GET)
+    @ResponseBody
+    public List<OpetussuunnitelmaJulkinenDto> getPerusteenOpetussuunnitelmat(
+            @RequestParam final String perusteenDiaarinumero) {
+        return opsService.getJulkaistutPerusteenOpetussuunnitelmat(perusteenDiaarinumero, OpetussuunnitelmaJulkinenDto.class);
+    }
+
+    @ApiImplicitParams({
             @ApiImplicitParam(name = "sivu", dataType = "integer", paramType = "query"),
             @ApiImplicitParam(name = "sivukoko", dataType = "integer", paramType = "query"),
             @ApiImplicitParam(name = "nimi", dataType = "string", paramType = "query"),
     })
     @RequestMapping(value = "/koulutustoimijat", method = RequestMethod.GET)
     @ResponseBody
-    public Page<KoulutustoimijaJulkinenDto> findKoulutustoimijat(@ApiIgnore KoulutustoimijaQueryDto pquery) {
+    public Page<KoulutustoimijaJulkinenDto> findKoulutustoimijat(
+            @ApiIgnore KoulutustoimijaQueryDto pquery) {
         // Oletuksena älä palauta pohjia
         PageRequest p = new PageRequest(pquery.getSivu(), Math.min(pquery.getSivukoko(), 100));
         return ktService.findKoulutustoimijat(p, pquery);
@@ -105,6 +137,12 @@ public class JulkinenController {
     public List<OpetussuunnitelmaDto> getAllOpetussuunnitelmat(
             @ModelAttribute("ktId") final Long ktId) {
         return opsService.getJulkisetOpetussuunnitelmat(ktId);
+    }
+
+    @RequestMapping(value = "/koulutustoimijat/{ktId}/tiedotteet", method = RequestMethod.GET)
+    public List<TiedoteDto> getJulkisetTiedotteet(
+            @ModelAttribute("ktId") final Long ktId) {
+        return tiedoteService.getJulkisetTiedotteet(ktId);
     }
 
     @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}", method = RequestMethod.GET)

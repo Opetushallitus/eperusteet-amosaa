@@ -21,6 +21,7 @@ import java.util.Date;
 import javax.persistence.EntityManager;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
+import org.hibernate.envers.exception.RevisionDoesNotExistException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,8 +39,12 @@ public class RevisionMetaServiceImpl implements RevisionMetaService {
     @Override
     public Number getCurrentRevision() {
         AuditReader reader = AuditReaderFactory.get(em);
-        Number revision = reader.getRevisionNumberForDate(new Date(Long.MAX_VALUE));
-        return revision;
+        try {
+            return reader.getRevisionNumberForDate(new Date(Long.MAX_VALUE));
+        }
+        catch (RevisionDoesNotExistException ex) {
+            return 0;
+        }
     }
 
 }

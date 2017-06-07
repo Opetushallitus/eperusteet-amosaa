@@ -12,6 +12,7 @@ import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.ops.TiedoteService;
 import static fi.vm.sade.eperusteet.amosaa.service.util.Nulls.assertExists;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
@@ -42,6 +43,16 @@ public class TiedoteServiceImpl implements TiedoteService {
 
     @Autowired
     KayttajaKuittausRepository kuittausRepository;
+
+    @Override
+    public List<TiedoteDto> getJulkisetTiedotteet(Long ktId) {
+        Koulutustoimija toimija = koulutustoimijaRepository.findOne(ktId);
+        if (toimija == null) {
+            return new ArrayList<>();
+        }
+        List<Tiedote> tiedotteet = tiedoteRepository.findAllByKoulutustoimijaAndJulkinenTrue(toimija);
+        return mapper.mapAsList(tiedotteet, TiedoteDto.class);
+    }
 
     @Override
     @Transactional(readOnly = true)

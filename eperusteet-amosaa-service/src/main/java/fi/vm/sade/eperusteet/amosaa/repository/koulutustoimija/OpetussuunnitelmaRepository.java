@@ -32,11 +32,13 @@ import org.springframework.stereotype.Repository;
  * @author nkala
  */
 @Repository
-public interface OpetussuunnitelmaRepository extends JpaWithVersioningRepository<Opetussuunnitelma, Long> {
+public interface OpetussuunnitelmaRepository extends JpaWithVersioningRepository<Opetussuunnitelma, Long>, OpetussuunnitelmaCustomRepository {
     @Query("SELECT o FROM Opetussuunnitelma o WHERE o.koulutustoimija = ?1 AND o.peruste.perusteId = ?2")
     List<Opetussuunnitelma> findAllByKoulutustoimijaAndPerusteId(Koulutustoimija koulutustoimija, Long perusteId);
 
     List<Opetussuunnitelma> findAllByKoulutustoimija(Koulutustoimija koulutustoimija);
+
+    long countByKoulutustoimija(Koulutustoimija koulutustoimija);
 
     List<Opetussuunnitelma> findAllByKoulutustoimijaAndTila(Koulutustoimija koulutustoimija, Tila tila);
 
@@ -52,4 +54,7 @@ public interface OpetussuunnitelmaRepository extends JpaWithVersioningRepository
 
     @Query(value = "SELECT o FROM Opetussuunnitelma o WHERE o.perusteDiaarinumero = ?1 AND (o.tila = fi.vm.sade.eperusteet.amosaa.domain.Tila.JULKAISTU or o.esikatseltavissa = true)")
     List<Opetussuunnitelma> findAllByPerusteDiaarinumero(String diaari);
+
+    @Query(value = "SELECT o FROM Opetussuunnitelma o WHERE o.perusteDiaarinumero = ?1 AND (o.tila = fi.vm.sade.eperusteet.amosaa.domain.Tila.JULKAISTU)")
+    List<Opetussuunnitelma> findAllJulkaistutByPerusteDiaarinumero(String diaari);
 }

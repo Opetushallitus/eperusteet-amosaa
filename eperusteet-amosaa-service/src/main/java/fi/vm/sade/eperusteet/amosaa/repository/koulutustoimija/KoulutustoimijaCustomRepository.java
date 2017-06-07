@@ -14,18 +14,19 @@
  * European Union Public Licence for more details.
  */
 
-package fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija;
+package fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija;
 
-import fi.vm.sade.eperusteet.amosaa.dto.QueryDto;
-import lombok.Getter;
-import lombok.Setter;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaQueryDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.repository.NoRepositoryBean;
 
 /**
  *
  * @author nkala
  */
-@Getter
-@Setter
-public class KoulutustoimijaQueryDto extends QueryDto {
-    private String organisaatio;
+@NoRepositoryBean
+public interface KoulutustoimijaCustomRepository {
+    Page<Koulutustoimija> findBy(PageRequest page, KoulutustoimijaQueryDto query);
 }

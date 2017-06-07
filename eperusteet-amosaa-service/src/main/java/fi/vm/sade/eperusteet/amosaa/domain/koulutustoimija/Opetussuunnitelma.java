@@ -50,6 +50,7 @@ import org.hibernate.envers.RelationTargetAuditMode;
  *
  * @author nkala
  */
+
 @Entity
 @Audited
 @Table(name = "opetussuunnitelma")

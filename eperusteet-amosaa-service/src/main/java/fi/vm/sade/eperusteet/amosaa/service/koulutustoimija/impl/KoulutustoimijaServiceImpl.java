@@ -25,7 +25,6 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti_;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Teksti;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Teksti_;
-import fi.vm.sade.eperusteet.amosaa.dto.PageDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaJulkinenDto;
@@ -147,9 +146,8 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
 
     @Override
     public Page<KoulutustoimijaJulkinenDto> findKoulutustoimijat(PageRequest page, KoulutustoimijaQueryDto pquery) {
-        Page<Koulutustoimija> toimijat = findBy(page, pquery);
-        PageDto<Koulutustoimija, KoulutustoimijaJulkinenDto> resultDto = new PageDto<>(toimijat, KoulutustoimijaJulkinenDto.class, page, mapper);
-        return null;
+        return repository.findBy(page, pquery)
+                .map(ops -> mapper.map(ops, KoulutustoimijaJulkinenDto.class));
     }
 
     private Page<Koulutustoimija> findBy(PageRequest page, KoulutustoimijaQueryDto pquery) {
@@ -188,7 +186,7 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
         Root<Koulutustoimija> root = query.from(Koulutustoimija.class);
         Join<LokalisoituTeksti, Teksti> teksti = root.join(Koulutustoimija_.nimi).join(LokalisoituTeksti_.teksti);
         Predicate pred = buildPredicate(root, teksti, cb, pquery);
-        query.select(cb.countDistinct(root)).where(pred);
+//        query.select(cb.countDistinct(root)).where(pred);
         return em.createQuery(query);
     }
 
