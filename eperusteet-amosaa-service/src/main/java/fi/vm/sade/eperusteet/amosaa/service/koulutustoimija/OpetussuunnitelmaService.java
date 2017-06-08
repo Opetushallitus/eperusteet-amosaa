@@ -23,9 +23,12 @@ import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaJulkinenDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaQueryDto;
 import fi.vm.sade.eperusteet.amosaa.service.revision.RevisionService;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -83,6 +86,13 @@ public interface OpetussuunnitelmaService extends RevisionService {
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
     JsonNode getOpetussuunnitelmanPeruste(@P("ktId") Long ktId, @P("opsId") Long opsId);
 
-    List<OpetussuunnitelmaBaseDto> getPerusteenOpetussuunnitelmat(String diaari);
+    @PreAuthorize("permitAll()")
+    <T extends OpetussuunnitelmaBaseDto> List<T> getPerusteenOpetussuunnitelmat(String diaari, Class<T> type);
+
+    @PreAuthorize("permitAll()")
+    <T extends OpetussuunnitelmaBaseDto> List<T> getJulkaistutPerusteenOpetussuunnitelmat(String diaari, Class<T> type);
+
+    @PreAuthorize("permitAll()")
+    Page<OpetussuunnitelmaDto> findOpetussuunnitelmat(PageRequest p, OpetussuunnitelmaQueryDto pquery);
 }
 

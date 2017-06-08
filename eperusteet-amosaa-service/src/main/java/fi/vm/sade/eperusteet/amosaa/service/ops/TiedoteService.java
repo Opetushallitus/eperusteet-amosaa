@@ -10,6 +10,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
  */
 public interface TiedoteService {
 
+    @PreAuthorize("permitAll()")
+    List<TiedoteDto> getJulkisetTiedotteet(@P("ktId") Long ktId);
+
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
     List<TiedoteDto> getTiedotteet(@P("ktId") Long ktId);
 

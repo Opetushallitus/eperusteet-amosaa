@@ -102,7 +102,7 @@ public class PerusteController {
     @RequestMapping(value = "opetussuunnitelmat", method = RequestMethod.GET)
     @ResponseBody
     public List<OpetussuunnitelmaBaseDto> getOpetussuunnitelmat(@RequestParam String diaarinumero) {
-        return opetussuunnitelmaService.getPerusteenOpetussuunnitelmat(diaarinumero);
+        return opetussuunnitelmaService.getPerusteenOpetussuunnitelmat(diaarinumero, OpetussuunnitelmaBaseDto.class);
     }
 
 //    @RequestMapping(value = "/{perusteId}/tutkintonimikekoodit", method = GET)

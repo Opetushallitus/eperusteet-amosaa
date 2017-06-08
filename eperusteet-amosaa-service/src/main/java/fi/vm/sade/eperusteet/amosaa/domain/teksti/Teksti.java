@@ -28,7 +28,7 @@ import javax.validation.constraints.NotNull;
  * @author jhyoty
  */
 @Embeddable
-class Teksti implements Serializable {
+public class Teksti implements Serializable {
 
     public Teksti() {
         //NOP

@@ -29,7 +29,7 @@ import org.springframework.stereotype.Repository;
  * @author nkala
  */
 @Repository
-public interface KoulutustoimijaRepository extends JpaWithVersioningRepository<Koulutustoimija, Long> {
+public interface KoulutustoimijaRepository extends JpaWithVersioningRepository<Koulutustoimija, Long>, KoulutustoimijaCustomRepository {
     Koulutustoimija findOneByOrganisaatio(final String organisaatio);
 
     @Query("SELECT kt.id FROM Koulutustoimija kt WHERE kt.organisaatio = ?1")

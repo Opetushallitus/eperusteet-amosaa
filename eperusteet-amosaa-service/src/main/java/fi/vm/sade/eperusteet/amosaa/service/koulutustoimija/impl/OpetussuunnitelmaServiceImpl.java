@@ -39,6 +39,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaJulkinenDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaQueryDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.Suoritustapakoodi;
@@ -69,6 +70,8 @@ import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -152,9 +155,15 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     }
 
     @Override
-    public List<OpetussuunnitelmaBaseDto> getPerusteenOpetussuunnitelmat(String diaari) {
+    public <T extends OpetussuunnitelmaBaseDto> List<T> getJulkaistutPerusteenOpetussuunnitelmat(String diaari, Class<T> type) {
+        List<Opetussuunnitelma> opsit = repository.findAllJulkaistutByPerusteDiaarinumero(diaari);
+        return mapper.mapAsList(opsit, type);
+    }
+
+    @Override
+    public <T extends OpetussuunnitelmaBaseDto> List<T> getPerusteenOpetussuunnitelmat(String diaari, Class<T> type) {
         List<Opetussuunnitelma> opsit = repository.findAllByPerusteDiaarinumero(diaari);
-        return mapper.mapAsList(opsit, OpetussuunnitelmaBaseDto.class);
+        return mapper.mapAsList(opsit, type);
     }
 
     @Override
@@ -465,6 +474,12 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     public Validointi validoi(Long ktId, Long opsId) {
         Opetussuunnitelma ops = findOps(ktId, opsId);
         return validointiService.validoi(ops);
+    }
+
+    @Override
+    public Page<OpetussuunnitelmaDto> findOpetussuunnitelmat(PageRequest p, OpetussuunnitelmaQueryDto pquery) {
+        return repository.findBy(p, pquery)
+                .map(ops -> mapper.map(ops, OpetussuunnitelmaDto.class));
     }
 
 }
