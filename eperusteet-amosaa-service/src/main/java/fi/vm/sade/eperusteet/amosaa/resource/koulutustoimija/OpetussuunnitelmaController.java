@@ -82,9 +82,8 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
     public OpetussuunnitelmaBaseDto add(
             @ModelAttribute("solvedKtId") final Long ktId,
             @RequestBody OpetussuunnitelmaDto opsDto) {
-        return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, OPETUSSUUNNITELMA_LISAYS, opsDto), (Void) -> {
-            return service.addOpetussuunnitelma(ktId, opsDto);
-        });
+        return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, OPETUSSUUNNITELMA_LISAYS, opsDto),
+                (Void) -> service.addOpetussuunnitelma(ktId, opsDto));
     }
 
     @RequestMapping(value = "/{opsId}", method = RequestMethod.GET)
