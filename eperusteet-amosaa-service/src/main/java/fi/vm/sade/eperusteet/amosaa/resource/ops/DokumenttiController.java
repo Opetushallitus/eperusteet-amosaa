@@ -19,6 +19,7 @@ import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import io.swagger.annotations.Api;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -170,7 +171,9 @@ public class DokumenttiController extends KoulutustoimijaIdGetterAbstractControl
         }
 
         // Haetaan kuva
-        Dokumentti dokumentti = repository.findByOpsIdAndKieli(opsId, Kieli.of(kieli));
+        // FIXME miksi tämä on kontrollerissa?
+        List<Dokumentti> dokumentit = repository.findByOpsIdAndKieli(opsId, Kieli.of(kieli));
+        Dokumentti dokumentti = dokumentit.isEmpty() ? null : dokumentit.get(0);
         if (dokumentti == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -218,7 +221,8 @@ public class DokumenttiController extends KoulutustoimijaIdGetterAbstractControl
         }
 
         // Haetaan kuva
-        Dokumentti dokumentti = repository.findByOpsIdAndKieli(opsId, Kieli.of(kieli));
+        List<Dokumentti> dokumentit = repository.findByOpsIdAndKieli(opsId, Kieli.of(kieli));
+        Dokumentti dokumentti = dokumentit.isEmpty() ? null : dokumentit.get(0);
         if (dokumentti == null) {
             return new ResponseEntity<>(HttpStatus.OK);
         }

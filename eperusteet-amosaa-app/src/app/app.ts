@@ -17,6 +17,8 @@ angular.module("app", [
     "rzModule"
 ])
 
+.constant("Palvelu", "amosaa")
+
 // Route configuration
 .config(($stateProvider, $urlRouterProvider, $translateProvider, $urlMatcherFactoryProvider, $sceProvider) => {
     $sceProvider.enabled(true);

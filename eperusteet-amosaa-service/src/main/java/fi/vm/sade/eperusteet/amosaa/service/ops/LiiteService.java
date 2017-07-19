@@ -16,13 +16,12 @@
 package fi.vm.sade.eperusteet.amosaa.service.ops;
 
 import fi.vm.sade.eperusteet.amosaa.dto.liite.LiiteDto;
-import org.springframework.security.access.method.P;
-import org.springframework.security.access.prepost.PreAuthorize;
-
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.UUID;
+import org.springframework.security.access.method.P;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
  *
@@ -32,15 +31,15 @@ public interface LiiteService {
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'MUOKKAUS')")
     UUID add(Long ktId, @P("opsId") Long opsId, String tyyppi, String nimi, long length, InputStream is);
 
-    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
-    LiiteDto get(@P("ktId") Long ktId, UUID id);
+    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'ESITYS')")
+    LiiteDto get(@P("ktId") Long ktId, @P("opsId") Long opsId, UUID id);
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
-    List<LiiteDto> getAll(@P("ktId") Long ktId);
+    List<LiiteDto> getAll(@P("ktId") Long ktId, @P("opsId") Long opsId);
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'MUOKKAUS')")
-    void delete(@P("opsId") Long ktId, UUID id);
+    void delete(@P("opsId") Long ktId, @P("opsId") Long opsId, UUID id);
 
-    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
-    void export(@P("ktId") Long ktId, UUID id, OutputStream os);
+    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'ESITYS')")
+    void export(@P("ktId") Long ktId, @P("opsId") Long opsId, UUID id, OutputStream os);
 }

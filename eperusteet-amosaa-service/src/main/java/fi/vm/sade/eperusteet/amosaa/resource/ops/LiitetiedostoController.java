@@ -99,7 +99,7 @@ public class LiitetiedostoController extends KoulutustoimijaIdGetterAbstractCont
             }
 
             HttpHeaders h = new HttpHeaders();
-            h.setLocation(ucb.path("/opetussuunnitelmat/{ktId}/kuvat/{id}").buildAndExpand(ktId, id.toString()).toUri());
+            h.setLocation(ucb.path("/opetussuunnitelmat/{opsId}/kuvat/{id}").buildAndExpand(opsId, id.toString()).toUri());
             return new ResponseEntity<>(id.toString(), h, HttpStatus.CREATED);
         }
     }
@@ -130,14 +130,15 @@ public class LiitetiedostoController extends KoulutustoimijaIdGetterAbstractCont
         return preview;
     }
 
-    @RequestMapping(value = "/{ktId}/kuvat/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{ktId}/opetussuunnitelmat/{opsId}/kuvat/{id}", method = RequestMethod.GET)
     @CacheControl(age = CacheControl.ONE_YEAR)
     public void get(@ModelAttribute("solvedKtId") final Long ktId,
+                    @PathVariable Long opsId,
                     @PathVariable UUID id,
                     @RequestHeader(value = "If-None-Match", required = false) String etag,
                     HttpServletResponse response) throws IOException {
 
-        LiiteDto dto = liitteet.get(ktId, id);
+        LiiteDto dto = liitteet.get(ktId, opsId, id);
         if (dto != null) {
             if (etag != null && dto.getId().toString().equals(etag)) {
                 response.setStatus(HttpStatus.NOT_MODIFIED.value());
@@ -145,7 +146,7 @@ public class LiitetiedostoController extends KoulutustoimijaIdGetterAbstractCont
                 response.setHeader("Content-Type", dto.getTyyppi());
                 response.setHeader("ETag", id.toString());
                 try (OutputStream os = response.getOutputStream()) {
-                    liitteet.export(ktId, id, os);
+                    liitteet.export(ktId, opsId, id, os);
                     os.flush();
                 }
             }
@@ -154,16 +155,18 @@ public class LiitetiedostoController extends KoulutustoimijaIdGetterAbstractCont
         }
     }
 
-    @RequestMapping(value = "/{ktId}/kuvat/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{ktId}/opetussuunnitelmat/{opsId}/kuvat/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@ModelAttribute("solvedKtId") final Long ktId,
+                       @PathVariable Long opsId,
                        @PathVariable UUID id) {
         LogMessage.builder(OPETUSSUUNNITELMA, KUVA_POISTO).log();
-        liitteet.delete(ktId, id);
+        liitteet.delete(ktId, opsId, id);
     }
 
-    @RequestMapping(value = "/{ktId}/kuvat", method = RequestMethod.GET)
-    public List<LiiteDto> getAll(@ModelAttribute("solvedKtId") final Long ktId) {
-        return liitteet.getAll(ktId);
+    @RequestMapping(value = "/{ktId}/opetussuunnitelmat/{opsId}/kuvat", method = RequestMethod.GET)
+    public List<LiiteDto> getAll(@ModelAttribute("solvedKtId") final Long ktId,
+                                         @PathVariable Long opsId) {
+        return liitteet.getAll(ktId, opsId);
     }
 }
