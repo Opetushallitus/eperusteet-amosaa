@@ -19,6 +19,7 @@ package fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.AbstractAuditedEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
+import fi.vm.sade.eperusteet.amosaa.domain.liite.Liite;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
@@ -36,6 +37,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -141,4 +145,21 @@ public class Opetussuunnitelma extends AbstractAuditedEntity implements Serializ
     @Getter
     @Setter
     private Opetussuunnitelma pohja;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "opetussuunnitelma_liite", inverseJoinColumns = {
+            @JoinColumn(name="liite_id")
+    }, joinColumns = {
+            @JoinColumn(name="opetussuunnitelma_id")
+    })
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    private Set<Liite> liitteet = new HashSet<>();
+
+    public void attachLiite(Liite liite) {
+        liitteet.add(liite);
+    }
+
+    public void removeLiite(Liite liite) {
+        liitteet.remove(liite);
+    }
 }
