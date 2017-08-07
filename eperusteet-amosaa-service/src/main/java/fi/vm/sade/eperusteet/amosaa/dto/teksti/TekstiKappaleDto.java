@@ -23,8 +23,6 @@ import lombok.Setter;
 
 import java.util.Date;
 import java.util.UUID;
-import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
-import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
  *
@@ -32,10 +30,7 @@ import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
  */
 @Getter
 @Setter
-public class TekstiKappaleDto implements AuditLoggableDto {
-    @Override
-    public void auditLog(LogMessage.LogMessageBuilder msg) {
-    }
+public class TekstiKappaleDto {
 
     private Long id;
     private Date luotu;

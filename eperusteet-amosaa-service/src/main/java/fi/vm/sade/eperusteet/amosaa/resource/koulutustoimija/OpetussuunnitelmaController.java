@@ -82,7 +82,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
     public OpetussuunnitelmaBaseDto add(
             @ModelAttribute("solvedKtId") final Long ktId,
             @RequestBody OpetussuunnitelmaDto opsDto) {
-        return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, OPETUSSUUNNITELMA_LISAYS, opsDto),
+        return audit.withAudit(LogMessage.builder(ktId, null, OPETUSSUUNNITELMA, OPETUSSUUNNITELMA_LISAYS),
                 (Void) -> service.addOpetussuunnitelma(ktId, opsDto));
     }
 
@@ -108,7 +108,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
             @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @RequestBody(required = false) OpetussuunnitelmaDto body) {
-        return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, OPETUSSUUNNITELMA_MUOKKAUS, body), (Void) -> {
+        return audit.withAudit(LogMessage.builder(ktId, opsId, OPETUSSUUNNITELMA, OPETUSSUUNNITELMA_MUOKKAUS), (Void) -> {
             return service.update(ktId, opsId, body);
         });
     }
@@ -127,7 +127,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
             @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long poistettuId) {
-        return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, SISALTO_PALAUTUS), (Void) -> {
+        return audit.withAudit(LogMessage.builder(ktId, opsId, OPETUSSUUNNITELMA, SISALTO_PALAUTUS), (Void) -> {
             return sisaltoviiteService.restoreSisaltoViite(ktId, opsId, poistettuId);
         });
     }
@@ -145,7 +145,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
             @PathVariable final Long opsId,
             @PathVariable final Long kayttajaId,
             @RequestBody(required = false) KayttajaoikeusDto body) {
-        return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, OIKEUS_MUOKKAUS), (Void) -> {
+        return audit.withAudit(LogMessage.builder(ktId, opsId, OPETUSSUUNNITELMA, OIKEUS_MUOKKAUS), (Void) -> {
             return service.updateOikeus(ktId, opsId, kayttajaId, body);
         });
     }
@@ -188,7 +188,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
             @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Tila tila) {
-        return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, TILA_MUOKKAUS), (Void) -> {
+        return audit.withAudit(LogMessage.builder(ktId, opsId, OPETUSSUUNNITELMA, TILA_MUOKKAUS), (Void) -> {
             return service.updateTila(ktId, opsId, tila);
         });
     }

@@ -63,7 +63,7 @@ public class KayttajaController {
     @RequestMapping(value = "/suosikki/{opsId}", method = RequestMethod.POST)
     public ResponseEntity addSuosikki(@PathVariable final Long opsId) {
         kayttajat.addSuosikki(opsId);
-        return audit.withAudit(LogMessage.builder(KAYTTAJA, SUOSIKKI_LISAYS), (Void) -> {
+        return audit.withAudit(LogMessage.builder(null, opsId, KAYTTAJA, SUOSIKKI_LISAYS), (Void) -> {
             return ResponseEntity.ok().build();
         });
     }
@@ -71,7 +71,7 @@ public class KayttajaController {
     @RequestMapping(value = "/suosikki/{opsId}", method = RequestMethod.DELETE)
     public ResponseEntity removeSuosikki(@PathVariable final Long opsId) {
         kayttajat.removeSuosikki(opsId);
-        return audit.withAudit(LogMessage.builder(KAYTTAJA, SUOSIKKI_POISTO), (Void) -> {
+        return audit.withAudit(LogMessage.builder(null, opsId, KAYTTAJA, SUOSIKKI_POISTO), (Void) -> {
             return ResponseEntity.ok().build();
         });
     }
@@ -83,7 +83,7 @@ public class KayttajaController {
 
     @RequestMapping(value = "/koulutustoimijat", method = RequestMethod.POST)
     public ResponseEntity updateKoulutustoimijat() {
-        return audit.withAudit(LogMessage.builder(KAYTTAJA, KOULUTUSTOIMIJA_LISAYS), (Void) -> {
+        return audit.withAudit(LogMessage.builder(null, null, KAYTTAJA, KOULUTUSTOIMIJA_LISAYS), (Void) -> {
             return kayttajat.updateKoulutustoimijat()
                     ? ResponseEntity.ok().build()
                     : ResponseEntity.badRequest().build();
