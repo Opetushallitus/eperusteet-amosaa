@@ -506,14 +506,14 @@ angular.module("app")
                     suoritustapa = Perusteet.getSuoritustapa(ops, pSuoritustavat),
                     tosat = _.indexBy(pTosat, "id"),
                     tosaViitteet: any = _(_.cloneDeep(Perusteet.getTosaViitteet(suoritustapa)))
-                        .each(viite => viite.$$tosa = tosat[viite._tutkinnonOsa])
+                        .each((viite: any) => viite.$$tosa = tosat[viite._tutkinnonOsa])
                         .indexBy("id")
                         .value(),
                     paikallisetKoodit = koulutustoimija.all("koodi"),
                     update = () => {
                         const spRivit: any = _.indexBy($scope.osa.suorituspolku.rivit, "rakennemoduuli");
                         Algoritmit.traverse($scope.perusteRakenne, "osat", (node, depth) => {
-                            node.pakollinen = Suorituspolku.pakollinen(node);
+                            //node.pakollinen = Suorituspolku.pakollinen(node);
                             node.$$poistettu = spRivit[node.tunniste] && spRivit[node.tunniste].piilotettu;
                         });
                         Suorituspolku.calculateRealAmount(ops, $scope.perusteRakenne, $scope.misc.tosat, spRivit);
@@ -543,7 +543,7 @@ angular.module("app")
                                         nimi: "tutkinnon-osaa-ei-olemassa",
                                         uri: koodi.route,
                                         arvo: _.last(koodi.route.split("_"))
-                                    }
+                                    };
 
                                     if (_.size(koodi) === 1) {
                                         $scope.misc.koodinimet[koodi.route].nimi = koodi[0].tekstiKappale.nimi;
@@ -662,7 +662,7 @@ angular.module("app")
                     update();
                     Algoritmit.traverse($scope.perusteRakenne, "osat", (node, depth) => {
                         node.$$collapsed = depth > 0;
-                        node.pakollinen = Suorituspolku.pakollinen(node);
+                        //node.pakollinen = Suorituspolku.pakollinen(node);
                     });
                     $scope.toggleAll();
                 }

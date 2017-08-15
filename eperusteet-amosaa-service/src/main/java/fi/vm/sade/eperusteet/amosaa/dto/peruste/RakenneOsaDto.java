@@ -36,7 +36,6 @@ public class RakenneOsaDto extends AbstractRakenneOsaDto implements AuditLoggabl
     public void auditLog(LogMessage.LogMessageBuilder msg) {
     }
 
-    private boolean pakollinen;
     private String erikoisuus;
     @JsonProperty("_tutkinnonOsaViite")
     private Long tutkinnonOsaViite;

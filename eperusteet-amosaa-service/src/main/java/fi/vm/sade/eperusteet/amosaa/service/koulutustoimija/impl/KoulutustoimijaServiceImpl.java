@@ -33,6 +33,7 @@ import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaServi
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
@@ -69,7 +70,7 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     @PersistenceContext
     private EntityManager em;
 
-    @Transactional(readOnly = false)
+    @Transactional
     private Koulutustoimija initialize(String kOid) {
         Koulutustoimija koulutustoimija = repository.findOneByOrganisaatio(kOid);
         if (koulutustoimija != null) {
@@ -94,13 +95,13 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     public List<KoulutustoimijaBaseDto> initKoulutustoimijat(Set<String> kOid) {
         return kOid.stream()
                 .map(this::initialize)
-                .filter(kt -> kt != null)
+                .filter(Objects::nonNull)
                 .map(kt -> mapper.map(kt, KoulutustoimijaBaseDto.class))
                 .collect(Collectors.toList());
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public KoulutustoimijaDto updateKoulutustoimija(Long ktId, KoulutustoimijaDto ktDto) {
         Koulutustoimija toimija = repository.findOne(ktId);
         if (ktDto.getYstavat() == null) {
@@ -116,7 +117,7 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public List<KoulutustoimijaBaseDto> getKoulutustoimijat(Set<String> kOid) {
         return kOid.stream()
             .map(ktId -> {
@@ -142,9 +143,9 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     public Long getKoulutustoimija(String idTaiOid) {
         Long result;
         try {
-            result = repository.findOne(Long.parseLong(idTaiOid)).getId();
-        }
-        catch (NumberFormatException ex) {
+            Koulutustoimija koulutustoimija = repository.findOne(Long.parseLong(idTaiOid));
+            result = koulutustoimija.getId();
+        } catch (NumberFormatException | NullPointerException ex) {
             result = repository.findOneIdByOrganisaatio(idTaiOid);
         }
         return result;

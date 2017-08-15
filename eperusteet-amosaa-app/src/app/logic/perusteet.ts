@@ -3,7 +3,7 @@ namespace Perusteet {
     export const getSuoritustapa = (ops, suoritustavat) => {
         const result: any = _.size(suoritustavat) === 1
             ? _.first(suoritustavat)
-            : _.find(suoritustavat, { suoritustapakoodi: ops.suoritustapa })
+            : _.find(suoritustavat, { suoritustapakoodi: ops.suoritustapa });
         if (result.suoritustapakoodi === "naytto") {
             result.laajuusYksikko = "";
         }
