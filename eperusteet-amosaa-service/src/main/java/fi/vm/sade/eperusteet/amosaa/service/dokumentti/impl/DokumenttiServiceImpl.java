@@ -106,10 +106,9 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     @Override
     public DokumenttiDto update(Long ktId, Long opsId, Kieli kieli, DokumenttiDto dto) {
         Dokumentti dokumentti = getLatestDokumentti(opsId, kieli);
-        if (dokumentti != null) {
+        if (dokumentti == null) {
             return null;
-        }
-        else {
+        } else {
             mapper.map(dto, dokumentti);
             return mapper.map(dokumentti, DokumenttiDto.class);
         }
