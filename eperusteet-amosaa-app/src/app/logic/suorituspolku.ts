@@ -73,10 +73,7 @@ namespace Suorituspolku {
             }
             return true;
         })(tree);
-        console.log(tree);
 
         return result;
     };
-
-    // const export pakollinen = (osa) => true;
 }
