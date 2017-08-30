@@ -364,7 +364,8 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
 
         if (peruste != null) {
             peruste.getSuoritustavat().stream()
-                    .filter(suoritustapaLaajaDto -> suoritustapaLaajaDto.getSuoritustapakoodi().equals(Suoritustapakoodi.OPS))
+                    .filter(suoritustapaLaajaDto -> suoritustapaLaajaDto.getSuoritustapakoodi().equals(Suoritustapakoodi.OPS)
+                            || suoritustapaLaajaDto.getSuoritustapakoodi().equals(Suoritustapakoodi.REFORMI))
                     .findAny()
                     .filter(suoritustapaLaajaDto -> suoritustapaLaajaDto.getRakenne() != null)
                     .ifPresent(suoritustapaLaajaDto -> {

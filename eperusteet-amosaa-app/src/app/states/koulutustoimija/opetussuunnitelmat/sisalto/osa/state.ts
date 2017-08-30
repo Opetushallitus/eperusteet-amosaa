@@ -506,7 +506,7 @@ angular.module("app")
                     suoritustapa = Perusteet.getSuoritustapa(ops, pSuoritustavat),
                     tosat = _.indexBy(pTosat, "id"),
                     tosaViitteet: any = _(_.cloneDeep(Perusteet.getTosaViitteet(suoritustapa)))
-                        .each(viite => viite.$$tosa = tosat[viite._tutkinnonOsa])
+                        .each((viite: any) => viite.$$tosa = tosat[viite._tutkinnonOsa])
                         .indexBy("id")
                         .value(),
                     paikallisetKoodit = koulutustoimija.all("koodi"),
@@ -543,7 +543,7 @@ angular.module("app")
                                         nimi: "tutkinnon-osaa-ei-olemassa",
                                         uri: koodi.route,
                                         arvo: _.last(koodi.route.split("_"))
-                                    }
+                                    };
 
                                     if (_.size(koodi) === 1) {
                                         $scope.misc.koodinimet[koodi.route].nimi = koodi[0].tekstiKappale.nimi;
