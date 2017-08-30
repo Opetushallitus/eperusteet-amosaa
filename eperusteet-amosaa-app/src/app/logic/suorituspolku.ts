@@ -2,7 +2,6 @@ namespace Suorituspolku {
     export const pakollinen = _.memoize((osa) => !osa.osaamisala && (osa.pakollinen || _.some(osa.osat, pakollinen)));
 
     export const calculateRealAmount = (ops, tree, tosat, poistetut) => {
-        const result = {};
         const shouldCount = (node) => !poistetut[node.tunniste] || !poistetut[node.tunniste].piilotettu;
         const isRyhma = (node) => !node._tutkinnonOsaViite;
 
@@ -48,7 +47,7 @@ namespace Suorituspolku {
 
         (function recur(node) {
             let osatValidit = true;
-            _.each(node.osat || [], (osa) => {
+            _.each(node.osat || [], osa => {
                 if (!recur(osa)) {
                     osatValidit = false;
                 }
@@ -62,8 +61,8 @@ namespace Suorituspolku {
                 node.$$laskettuKoko = calculateAmounts(node, getKoko);
 
                 // Validoidaan ryhmät
-                const laajuus = _.property("muodostumisSaanto.laajuus")(node);
-                const koko = _.property("muodostumisSaanto.koko")(node);
+                const laajuus: any = _.property("muodostumisSaanto.laajuus")(node);
+                const koko : any = _.property("muodostumisSaanto.koko")(node);
 
                 const laajuusValidi = () => !laajuus || !laajuus.minimi || node.$$laskettuLaajuus >= laajuus.minimi;
                 const kokoValidi = () => !koko || !koko.minimi || node.$$laskettuKoko >= koko.minimi;
@@ -71,12 +70,12 @@ namespace Suorituspolku {
                 node.$$valid = laajuusValidi() && kokoValidi() && osatValidit;
 
                 return node.$$valid || !shouldCount(node);
+            } else {
+                node.$$valid = true;
             }
             return true;
         })(tree);
-
-        return result;
     };
 
     // const export pakollinen = (osa) => true;
-};
+}
