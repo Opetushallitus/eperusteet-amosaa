@@ -513,7 +513,7 @@ angular.module("app")
                     update = () => {
                         const spRivit: any = _.indexBy($scope.osa.suorituspolku.rivit, "rakennemoduuli");
                         Algoritmit.traverse($scope.perusteRakenne, "osat", (node, depth) => {
-                            //node.pakollinen = Suorituspolku.pakollinen(node);
+                            node.pakollinen = Suorituspolku.pakollinen(node);
                             node.$$poistettu = spRivit[node.tunniste] && spRivit[node.tunniste].piilotettu;
                         });
                         Suorituspolku.calculateRealAmount(ops, $scope.perusteRakenne, $scope.misc.tosat, spRivit);
@@ -662,7 +662,7 @@ angular.module("app")
                     update();
                     Algoritmit.traverse($scope.perusteRakenne, "osat", (node, depth) => {
                         node.$$collapsed = depth > 0;
-                        //node.pakollinen = Suorituspolku.pakollinen(node);
+                        node.pakollinen = Suorituspolku.pakollinen(node);
                     });
                     $scope.toggleAll();
                 }
