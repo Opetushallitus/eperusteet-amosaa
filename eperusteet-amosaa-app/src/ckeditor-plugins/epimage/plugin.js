@@ -15,12 +15,11 @@
  */
 
 'use strict';
-/* global CKEDITOR */
 
 CKEDITOR.plugins.add('epimage', {
-	requires: 'dialog',
-	icons: 'epimage',
-	init: function(editor) {
+    requires: 'dialog',
+    icons: 'epimage',
+    init: function(editor) {
     var kaanna = editor.config.customData.kaanna;
     editor.addCommand('epimageEdit', new CKEDITOR.dialogCommand('epimageDialog'));
 

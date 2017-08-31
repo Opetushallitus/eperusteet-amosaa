@@ -31,22 +31,21 @@ import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils
 import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.security.access.method.P;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.imageio.ImageIO;
-import javax.validation.constraints.NotNull;
-import java.awt.*;
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
+import javax.imageio.ImageIO;
+import javax.validation.constraints.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 
 /**
@@ -76,7 +75,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     @Override
     @Transactional(readOnly = true)
     public DokumenttiDto getDto(Long ktId, Long opsId, Kieli kieli) {
-        Dokumentti dokumentti = dokumenttiRepository.findByOpsIdAndKieli(opsId, kieli);
+        Dokumentti dokumentti = getLatestDokumentti(opsId, kieli);
 
         if (dokumentti != null) {
 
@@ -94,13 +93,25 @@ public class DokumenttiServiceImpl implements DokumenttiService {
         }
     }
 
+    private Dokumentti getLatestDokumentti(Long opsId, Kieli kieli) {
+        List<Dokumentti> dokumentit = dokumenttiRepository.findByOpsIdAndKieli(opsId, kieli);
+        if (dokumentit.isEmpty()) {
+            return null;
+        }
+        else {
+            return dokumentit.get(0);
+        }
+    }
+
     @Override
     public DokumenttiDto update(Long ktId, Long opsId, Kieli kieli, DokumenttiDto dto) {
-        Dokumentti dokumentti = dokumenttiRepository.findByOpsIdAndKieli(opsId, kieli);
-        mapper.map(dto, dokumentti);
-        //dokumenttiRepository.save(dokumentti);
-
-        return mapper.map(dokumentti, DokumenttiDto.class);
+        Dokumentti dokumentti = getLatestDokumentti(opsId, kieli);
+        if (dokumentti == null) {
+            return null;
+        } else {
+            mapper.map(dto, dokumentti);
+            return mapper.map(dokumentti, DokumenttiDto.class);
+        }
     }
 
 
@@ -158,7 +169,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     @Override
     @Transactional(readOnly = true)
     public byte[] get(Long ktId, Long id, Kieli kieli) {
-        Dokumentti dokumentti = dokumenttiRepository.findByOpsIdAndKieli(id, kieli);
+        Dokumentti dokumentti = getLatestDokumentti(id, kieli);
         if (dokumentti != null) {
             return dokumentti.getData();
         }
@@ -196,7 +207,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
             // Todo: Tarkista onko tiedosto sallittu kuva
 
             // Haetaan domain dokumentti
-            Dokumentti dokumentti = dokumenttiRepository.findByOpsIdAndKieli(dto.getOpsId(), Kieli.of(kieli));
+            Dokumentti dokumentti = getLatestDokumentti(dto.getOpsId(), Kieli.of(kieli));
 
             switch (tyyppi) {
                 case "kansikuva":

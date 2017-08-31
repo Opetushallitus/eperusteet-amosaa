@@ -100,8 +100,7 @@ namespace ModalAdd {
 
                 $scope.update = (input) => {
                     if (!_.isEmpty(input)) {
-                        const filtered = filterPerusteet(amosaaPerusteet, input);
-                        $scope.perusteet = filtered;
+                        $scope.perusteet = filterPerusteet(amosaaPerusteet, input);
                         for (let peruste of $scope.perusteet) {
                             peruste.$$haettu = KaannaService.hae(peruste.nimi, input);
                         }
@@ -110,7 +109,7 @@ namespace ModalAdd {
                         $scope.perusteet = [];
                         $scope.peruste = undefined;
                     }
-                }
+                };
 
                 $scope.valitsePeruste = (peruste) => {
                     $scope.input = "";
@@ -161,7 +160,7 @@ namespace ModalAdd {
 
                     $scope.tuoSisaltoa = async () => {
                         $scope.currentStage = "opetussuunnitelma";
-                        const opsit = await koulutustoimija.all("opetussuunnitelmat").getList()
+                        const opsit = await koulutustoimija.all("opetussuunnitelmat").getList();
                         $scope.opsp = PaginationV2.addPagination(opsit, (search: string, ops: any): boolean =>
                             ($scope.poistetut || ops.tila !== "poistettu")
                             && (!search || _.isEmpty(search) || Algoritmit.match(search, ops.nimi)));
@@ -174,7 +173,8 @@ namespace ModalAdd {
                         .value());
                 }
 
-                { // Perusteet
+                // Perusteet
+                {
                     let valittuPeruste = null;
                     $scope.valitseTutkinnonosa = (tosa) => {
                         $scope.ok({
@@ -204,7 +204,7 @@ namespace ModalAdd {
 
                     $scope.tuoTutkinnonosa = async () => {
                         $scope.currentStage = "perusteet";
-                        const perusteet = await Api.one("perusteet").get()
+                        const perusteet = await Api.one("perusteet").get();
                         $scope.perustep = PaginationV2.addPagination(
                             Algoritmit.doSortByNimi(perusteet),
                             (search: string, peruste: any): boolean =>

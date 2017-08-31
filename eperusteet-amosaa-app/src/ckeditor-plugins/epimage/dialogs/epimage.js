@@ -15,9 +15,8 @@
  */
 
 'use strict';
-/* global CKEDITOR */
 
-CKEDITOR.dialog.add('epimageDialog', function( editor ) {
+CKEDITOR.dialog.add('epimageDialog', function (editor) {
   var kaanna = editor.config.customData.kaanna;
   var controllerScope = null;
   return {
@@ -32,7 +31,7 @@ CKEDITOR.dialog.add('epimageDialog', function( editor ) {
           {
             type: 'html',
             id: 'epimage-html',
-            validate: function() {
+            validate: function () {
               return !this.getValue() ? kaanna('epimage-plugin-virhe-viite-tyhja') : true;
             },
             html:

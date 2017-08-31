@@ -36,8 +36,7 @@ public class AbstractRakenneOsaDeserializer extends StdDeserializer<AbstractRake
     }
 
     @Override
-    public AbstractRakenneOsaDto deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException,
-        JsonProcessingException {
+    public AbstractRakenneOsaDto deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
         final TreeNode tree = jp.readValueAsTree();
         final ObjectCodec codec = jp.getCodec();
         TreeNode erikoisuus = tree.get("erikoisuus");

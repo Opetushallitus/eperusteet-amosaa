@@ -51,6 +51,7 @@ import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.CharapterNumber
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiBase;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiRivi;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiTaulukko;
+import static fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils.*;
 import fi.vm.sade.eperusteet.amosaa.service.external.ArviointiasteikkoService;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
@@ -58,16 +59,15 @@ import fi.vm.sade.eperusteet.amosaa.service.ops.LiiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.TermistoService;
 import fi.vm.sade.eperusteet.amosaa.service.util.KoodistoClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.stream.Collectors;
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriteParam;
@@ -78,18 +78,15 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.*;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -204,29 +201,33 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
     }
 
     private void addMetaPages(DokumenttiBase docBase) {
+        Opetussuunnitelma ops = docBase.getOpetussuunnitelma();
+
         Element title = docBase.getDocument().createElement("title");
-        String nimi = getTextString(docBase, docBase.getOpetussuunnitelma().getNimi());
+        String nimi = getTextString(docBase, ops.getNimi());
         title.appendChild(docBase.getDocument().createTextNode(nimi));
         docBase.getHeadElement().appendChild(title);
 
         // Kuvaus
-        String kuvaus = getTextString(docBase, docBase.getOpetussuunnitelma().getKuvaus());
+        String kuvaus = getTextString(docBase, ops.getKuvaus());
         if (kuvaus != null && kuvaus.length() != 0) {
             Element description = docBase.getDocument().createElement("description");
             addTeksti(docBase, kuvaus, "div", description);
             docBase.getHeadElement().appendChild(description);
         }
 
-        String perusteNimi = getTextString(docBase, docBase.getOpetussuunnitelma().getPeruste().getNimi());
-        if (perusteNimi != null) {
-            Element perusteNimiEl = docBase.getDocument().createElement("meta");
-            perusteNimiEl.setAttribute("name", "perusteNimi");
-            perusteNimiEl.setAttribute("content", perusteNimi);
-            docBase.getHeadElement().appendChild(perusteNimiEl);
+        if (ops.getPeruste() != null) {
+            String perusteNimi = getTextString(docBase, ops.getPeruste().getNimi());
+            if (perusteNimi != null) {
+                Element perusteNimiEl = docBase.getDocument().createElement("meta");
+                perusteNimiEl.setAttribute("name", "perusteNimi");
+                perusteNimiEl.setAttribute("content", perusteNimi);
+                docBase.getHeadElement().appendChild(perusteNimiEl);
+            }
         }
 
         // Päätösnumero
-        String paatosnumero = docBase.getOpetussuunnitelma().getPaatosnumero();
+        String paatosnumero = ops.getPaatosnumero();
         if (paatosnumero != null) {
             Element paatosnumeroEl = docBase.getDocument().createElement("meta");
             paatosnumeroEl.setAttribute("name", "paatosnumero");
@@ -235,7 +236,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
         }
 
         // Hyväksyjä
-        String hyvaksyja = docBase.getOpetussuunnitelma().getHyvaksyja();
+        String hyvaksyja = ops.getHyvaksyja();
         if (hyvaksyja != null) {
             Element hyvaksyjaEl = docBase.getDocument().createElement("meta");
             hyvaksyjaEl.setAttribute("name", "hyvaksyja");
@@ -244,7 +245,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
         }
 
         // Päätöspäivämäärä
-        Date paatospaivamaara = docBase.getOpetussuunnitelma().getPaatospaivamaara();
+        Date paatospaivamaara = ops.getPaatospaivamaara();
         if (paatospaivamaara != null) {
             Element paatospaivamaaraEl = docBase.getDocument().createElement("meta");
             paatospaivamaaraEl.setAttribute("name", "paatospaivamaara");
@@ -254,7 +255,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
         }
 
         // Voimaantulopäivämäärä
-        Date voimaantulopaivamaara = docBase.getOpetussuunnitelma().getVoimaantulo();
+        Date voimaantulopaivamaara = ops.getVoimaantulo();
         if (voimaantulopaivamaara != null) {
             Element voimaantulopaivamaaraEl = docBase.getDocument().createElement("meta");
             voimaantulopaivamaaraEl.setAttribute("name", "voimaantulopaivamaara");
@@ -302,11 +303,12 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
                         break;
                     case PERUSTEESTA:
                         Long perusteenTutkinnonosaId = tosa.getPerusteentutkinnonosa();
-                        if (perusteenTutkinnonosaId == null) {
+                        PerusteKaikkiDto peruste = docBase.getPeruste();
+                        if (perusteenTutkinnonosaId == null || peruste == null) {
                             break;
                         }
 
-                        docBase.getPeruste().getTutkinnonOsat().stream()
+                        peruste.getTutkinnonOsat().stream()
                                 .filter(dto -> dto.getId().equals(perusteenTutkinnonosaId))
                                 .findAny()
                                 .ifPresent(dto -> otsikkoBuilder
@@ -358,28 +360,33 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
             suorituspolku.getRivit().forEach(rivi -> suorituspolkuMap.put(rivi.getRakennemoduuli(), rivi));
         }
 
-        docBase.getPeruste().getSuoritustavat().stream()
-                .filter(suoritustapaLaajaDto -> suoritustapaLaajaDto.getSuoritustapakoodi().toString().equals("ops"))
-                .findAny()
-                .filter(suoritustapaLaajaDto -> suoritustapaLaajaDto.getRakenne() != null)
-                .ifPresent(suoritustapaLaajaDto -> {
+        PerusteKaikkiDto peruste = docBase.getPeruste();
 
-                    // Luodaan muodostumistaulukko
-                    Element taulukko = docBase.getDocument().createElement("table");
-                    taulukko.setAttribute("border", "1");
-                    Element otsikko = docBase.getDocument().createElement("caption");
-                    otsikko.setTextContent(suorituspolkuNimi);
-                    taulukko.appendChild(otsikko);
-                    docBase.getBodyElement().appendChild(taulukko);
-                    Element tbody = docBase.getDocument().createElement("tbody");
-                    taulukko.appendChild(tbody);
+        if (peruste != null) {
+            peruste.getSuoritustavat().stream()
+                    .filter(suoritustapaLaajaDto -> suoritustapaLaajaDto.getSuoritustapakoodi().equals(Suoritustapakoodi.OPS)
+                            || suoritustapaLaajaDto.getSuoritustapakoodi().equals(Suoritustapakoodi.REFORMI))
+                    .findAny()
+                    .filter(suoritustapaLaajaDto -> suoritustapaLaajaDto.getRakenne() != null)
+                    .ifPresent(suoritustapaLaajaDto -> {
 
-                    suoritustapaLaajaDto.getRakenne().getOsat().stream()
-                            .filter(dto -> dto instanceof RakenneModuuliDto)
-                            .map(dto -> (RakenneModuuliDto) dto)
-                            .forEach(rakenneModuuliDto -> addSuorituspolkuOsa(
-                                    docBase, rakenneModuuliDto, tbody, 1, suoritustapaLaajaDto, suorituspolkuMap));
-                });
+                        // Luodaan muodostumistaulukko
+                        Element taulukko = docBase.getDocument().createElement("table");
+                        taulukko.setAttribute("border", "1");
+                        Element otsikko = docBase.getDocument().createElement("caption");
+                        otsikko.setTextContent(suorituspolkuNimi);
+                        taulukko.appendChild(otsikko);
+                        docBase.getBodyElement().appendChild(taulukko);
+                        Element tbody = docBase.getDocument().createElement("tbody");
+                        taulukko.appendChild(tbody);
+
+                        suoritustapaLaajaDto.getRakenne().getOsat().stream()
+                                .filter(dto -> dto instanceof RakenneModuuliDto)
+                                .map(dto -> (RakenneModuuliDto) dto)
+                                .forEach(rakenneModuuliDto -> addSuorituspolkuOsa(
+                                        docBase, rakenneModuuliDto, tbody, 1, suoritustapaLaajaDto, suorituspolkuMap));
+                    });
+        }
     }
 
     private void addSuorituspolkuOsa(DokumenttiBase docBase,
@@ -434,11 +441,16 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
                     suoritustapaLaajaDto.getTutkinnonOsat().stream()
                             .filter(dto -> dto.getId().equals(lapsiDto.getTutkinnonOsaViite()))
                             .findAny()
-                            .ifPresent(dto -> docBase.getPeruste().getTutkinnonOsat().stream()
-                                    .filter(tutkinnonOsaDto -> tutkinnonOsaDto.getId().equals(dto.getTutkinnonOsa()))
-                                    .findAny()
-                                    .ifPresent(tutkinnonOsaKaikkiDto -> addSuorituspolunTutkinnonOsa(
-                                            docBase, tutkinnonOsaKaikkiDto, dto, tbody, depth + 1)));
+                            .ifPresent(dto -> {
+                                PerusteKaikkiDto peruste = docBase.getPeruste();
+                                if (peruste != null) {
+                                    peruste.getTutkinnonOsat().stream()
+                                            .filter(tutkinnonOsaDto -> tutkinnonOsaDto.getId().equals(dto.getTutkinnonOsa()))
+                                            .findAny()
+                                            .ifPresent(tutkinnonOsaKaikkiDto -> addSuorituspolunTutkinnonOsa(
+                                                    docBase, tutkinnonOsaKaikkiDto, dto, tbody, depth + 1));
+                                }
+                            });
                 }
             }
         });
@@ -774,8 +786,12 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
     }
 
     private void addPerusteenTutkinnonOsa(DokumenttiBase docBase, Long perusteenTutkinnonosaId) {
+        PerusteKaikkiDto peruste = docBase.getPeruste();
+        if (peruste == null) {
+            return;
+        }
 
-        Optional<TutkinnonOsaKaikkiDto> optPerusteenTutkinnonosa = docBase.getPeruste().getTutkinnonOsat().stream()
+        Optional<TutkinnonOsaKaikkiDto> optPerusteenTutkinnonosa = peruste.getTutkinnonOsat().stream()
                 .filter(dto -> dto.getId().equals(perusteenTutkinnonosaId))
                 .findFirst();
 
@@ -909,7 +925,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
 
                 // Ladataan kuvan data muistiin
                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                liiteService.export(docBase.getOpetussuunnitelma().getKoulutustoimija().getId(), uuid, byteArrayOutputStream);
+                liiteService.export(docBase.getOpetussuunnitelma().getKoulutustoimija().getId(), docBase.getOpetussuunnitelma().getId(), uuid, byteArrayOutputStream);
 
                 // Tehdään muistissa olevasta datasta kuva
                 InputStream in = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());

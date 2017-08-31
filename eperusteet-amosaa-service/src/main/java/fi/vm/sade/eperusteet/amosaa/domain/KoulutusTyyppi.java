@@ -59,6 +59,6 @@ public enum KoulutusTyyppi {
     }
 
     public boolean isAmmatillinen() {
-        return tyyppi != null && tyyppi.equals(AMMATTITUTKINTO.toString()) || tyyppi.equals(ERIKOISAMMATTITUTKINTO.toString());
+        return tyyppi != null && (tyyppi.equals(AMMATTITUTKINTO.toString()) || tyyppi.equals(ERIKOISAMMATTITUTKINTO.toString()));
     }
 }

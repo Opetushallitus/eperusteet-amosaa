@@ -57,10 +57,10 @@ mixin muodostuminen()
 mixin polkuRyhmaToolbar()
   .sp-toolbar
     +muodostuminen
-    span(ng-show="misc.root.$$ekEditing")
-      .sp-edit(ng-show="misc.root.$$ekEditing && (ngModel.osaamisala || ngModel.rooli === 'määrittelemätön' || ngModel.vieras)")
+    span
+      .sp-edit(ng-show="misc.root.$$ekEditing && !ngModel.pakollinen && (ngModel.osaamisala || ngModel.rooli === 'määrittelemätön' || ngModel.vieras || ngModel.rooli === 'vieras')")
         +poistoToggler
-      .sp-edit(ng-hide="ngModel.$$poistettu")
+      .sp-edit(ng-show="misc.root.$$ekEditing && !ngModel.$$poistettu")
         a(href="" ng-click="misc.editNode(ngModel)")
           +gicon("pencil")
 

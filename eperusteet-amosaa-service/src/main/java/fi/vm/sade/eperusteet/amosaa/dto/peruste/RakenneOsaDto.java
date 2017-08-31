@@ -31,7 +31,6 @@ import lombok.Setter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RakenneOsaDto extends AbstractRakenneOsaDto {
 
-    private boolean pakollinen;
     private String erikoisuus;
     @JsonProperty("_tutkinnonOsaViite")
     private Long tutkinnonOsaViite;

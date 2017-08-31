@@ -15,24 +15,28 @@
  */
 package fi.vm.sade.eperusteet.amosaa.domain.liite;
 
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import java.io.Serializable;
 import java.sql.Blob;
 import java.util.Date;
+import java.util.Set;
 import java.util.UUID;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  *
@@ -64,6 +68,14 @@ public class Liite implements Serializable {
     @Lob
     @NotNull
     private Blob data;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "opetussuunnitelma_liite",
+            joinColumns = @JoinColumn(name="liite_id"),
+            inverseJoinColumns = @JoinColumn(name="opetussuunnitelma_id"))
+    @Getter
+    @Setter
+    private Set<Opetussuunnitelma> opetussuunnitelmat;
 
     protected Liite() {
         //JPA
