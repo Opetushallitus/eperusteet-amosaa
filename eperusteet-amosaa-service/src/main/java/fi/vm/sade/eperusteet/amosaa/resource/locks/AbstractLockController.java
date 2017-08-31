@@ -54,7 +54,7 @@ public abstract class AbstractLockController<T> {
     public ResponseEntity<LukkoDto> lock(T ctx,
                                          @RequestHeader(value = "If-Match", required = false) String eTag) {
         LukkoDto lock = service().lock(ctx, Etags.revisionOf(eTag));
-        return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, SISALTO_LUKITUS), (Void) -> {
+        return audit.withAudit(LogMessage.builder(null, null, OPETUSSUUNNITELMA, SISALTO_LUKITUS), (Void) -> {
             if (lock == null) {
                 return new ResponseEntity<>(HttpStatus.PRECONDITION_FAILED);
             } else {

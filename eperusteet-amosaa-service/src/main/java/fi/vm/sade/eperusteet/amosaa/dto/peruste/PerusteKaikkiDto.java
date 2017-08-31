@@ -23,8 +23,6 @@ import java.util.Set;
 
 import lombok.Getter;
 import lombok.Setter;
-import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
-import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
  *
@@ -34,10 +32,7 @@ import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 @Setter
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PerusteKaikkiDto extends PerusteBaseDto implements AuditLoggableDto {
-    @Override
-    public void auditLog(LogMessage.LogMessageBuilder msg) {
-    }
+public class PerusteKaikkiDto extends PerusteBaseDto {
 
     Set<SuoritustapaLaajaDto> suoritustavat;
     List<TutkinnonOsaKaikkiDto> tutkinnonOsat;

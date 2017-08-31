@@ -21,8 +21,6 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
-import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
-import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
  * @author isaul
@@ -30,10 +28,7 @@ import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class AmmattitaitovaatimuksenKohdealueDto implements AuditLoggableDto {
-    @Override
-    public void auditLog(LogMessage.LogMessageBuilder msg) {
-    }
+public class AmmattitaitovaatimuksenKohdealueDto {
 
     private LokalisoituTekstiDto otsikko;
     private List<AmmattitaitovaatimuksenKohdeDto> vaatimuksenKohteet = new ArrayList<>();

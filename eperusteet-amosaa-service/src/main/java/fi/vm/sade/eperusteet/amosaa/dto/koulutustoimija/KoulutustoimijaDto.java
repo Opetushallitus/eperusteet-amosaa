@@ -18,8 +18,6 @@ package fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija;
 
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
-import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
-import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,14 +28,8 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class KoulutustoimijaDto extends KoulutustoimijaBaseDto implements AuditLoggableDto {
+public class KoulutustoimijaDto extends KoulutustoimijaBaseDto {
     LokalisoituTekstiDto kuvaus;
     private Set<Reference> ystavat;
     private boolean salliystavat;
-
-    @Override
-    public void auditLog(LogMessage.LogMessageBuilder msg) {
-    }
-
-
 }

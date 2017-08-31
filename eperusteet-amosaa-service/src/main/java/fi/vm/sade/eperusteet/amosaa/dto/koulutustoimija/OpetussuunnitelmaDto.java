@@ -23,8 +23,6 @@ import java.util.Date;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
-import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
-import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
  *
@@ -32,10 +30,7 @@ import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
  */
 @Getter
 @Setter
-public class OpetussuunnitelmaDto extends OpetussuunnitelmaBaseDto implements AuditLoggableDto {
-    @Override
-    public void auditLog(LogMessage.LogMessageBuilder msg) {
-    }
+public class OpetussuunnitelmaDto extends OpetussuunnitelmaBaseDto {
 
     private String kommentti;
     private Set<Kieli> julkaisukielet;

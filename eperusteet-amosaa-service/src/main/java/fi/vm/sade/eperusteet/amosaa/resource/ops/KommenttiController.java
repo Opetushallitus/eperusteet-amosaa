@@ -59,7 +59,8 @@ public class KommenttiController extends KoulutustoimijaIdGetterAbstractControll
                                             @PathVariable final long tkvId,
                                             @RequestBody KommenttiDto body) {
         body.setTekstikappaleviiteId(tkvId);
-        return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, KOMMENTTI_LISAYS), (Void) -> {
+        return audit.withAudit(LogMessage.builder(ktId, opsId, OPETUSSUUNNITELMA, KOMMENTTI_LISAYS)
+                .addTarget("tkvId", tkvId), (Void) -> {
             return new ResponseEntity<>(kommenttiService.add(ktId, opsId, body), HttpStatus.CREATED);
         });
     }
@@ -79,7 +80,8 @@ public class KommenttiController extends KoulutustoimijaIdGetterAbstractControll
                                                @PathVariable final long tkvId,
                                                @PathVariable final long id,
                                                @RequestBody KommenttiDto body) {
-        return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, KOMMENTTI_MUOKKAUS), (Void) -> {
+        return audit.withAudit(LogMessage.builder(ktId, opsId, OPETUSSUUNNITELMA, KOMMENTTI_MUOKKAUS)
+                .addTarget("tkvId", tkvId), (Void) -> {
             return new ResponseEntity<>(kommenttiService.update(ktId, opsId, id, body), HttpStatus.OK);
         });
     }
@@ -89,7 +91,8 @@ public class KommenttiController extends KoulutustoimijaIdGetterAbstractControll
                        @PathVariable final long opsId,
                        @PathVariable final long tkvId,
                        @PathVariable final long id) {
-        audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, KOMMENTTI_POISTO), (Void) -> {
+        audit.withAudit(LogMessage.builder(ktId, opsId, OPETUSSUUNNITELMA, KOMMENTTI_POISTO)
+                .addTarget("tkvId", tkvId), (Void) -> {
             kommenttiService.delete(ktId, opsId, id);
             return null;
         });

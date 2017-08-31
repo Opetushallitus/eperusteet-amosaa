@@ -26,17 +26,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.Getter;
-import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
-import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
  *
  * @author jhyoty
  */
-public class LokalisoituTekstiDto implements AuditLoggableDto {
-    @Override
-    public void auditLog(LogMessage.LogMessageBuilder msg) {
-    }
+public class LokalisoituTekstiDto {
 
 
     @Getter

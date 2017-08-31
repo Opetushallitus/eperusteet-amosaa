@@ -16,15 +16,19 @@
 
 package fi.vm.sade.eperusteet.amosaa.service.audit;
 
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import fi.vm.sade.auditlog.ApplicationType;
 import fi.vm.sade.auditlog.Audit;
 import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage.LogMessageBuilder;
 import fi.vm.sade.eperusteet.amosaa.service.revision.RevisionMetaService;
 import java.util.function.Function;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
 
 /**
  *
@@ -44,10 +48,28 @@ public class EperusteetAmosaaAudit {
                 : "Tuntematon käyttäjä";
     }
 
+    @Autowired
+    private HttpServletRequest request;
+
+    JsonNodeFactory nodeFactory = new JsonNodeFactory(false);
+
+    public ObjectNode getLoggableUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String oid = auth != null ? auth.getName() : "";
+        String ip = request.getHeader("X-Forwarded-For");
+        String sessionId = RequestContextHolder.currentRequestAttributes().getSessionId();
+        String userAgent = request.getHeader("User-Agent");
+        return nodeFactory.objectNode()
+                .put("oid", oid)
+                .put("ip", ip)
+//                .put("session", sessionId) TODO: ?
+                .put("userAgent", userAgent);
+    }
+
     public <T> T withAudit(LogMessageBuilder audit, Function<Void, T> fn) {
         audit.beforeRevision(revisionMetaService.getCurrentRevision());
         T result = fn.apply(null);
-        audit.afterRevision(revisionMetaService.getCurrentRevision()).log();
+        audit.afterRevision(revisionMetaService.getCurrentRevision()).build(this).log();
         return result;
     }
 }

@@ -81,7 +81,7 @@ public class TermistoController extends KoulutustoimijaIdGetterAbstractControlle
             @ModelAttribute("solvedKtId") final Long ktId,
             @RequestBody TermiDto dto) {
         dto.setId(null);
-        return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, TERMI_POISTO), (Void) -> {
+        return audit.withAudit(LogMessage.builder(ktId, null, OPETUSSUUNNITELMA, TERMI_POISTO), (Void) -> {
             return ResponseEntity.ok(termistoService.addTermi(ktId, dto));
         });
     }
@@ -92,7 +92,7 @@ public class TermistoController extends KoulutustoimijaIdGetterAbstractControlle
             @PathVariable final Long termiId,
             @RequestBody TermiDto dto) {
         dto.setId(termiId);
-        return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, TERMI_MUOKKAUS), (Void) -> {
+        return audit.withAudit(LogMessage.builder(ktId, null, OPETUSSUUNNITELMA, TERMI_MUOKKAUS), (Void) -> {
             return ResponseEntity.ok(termistoService.updateTermi(ktId, dto));
         });
     }
@@ -102,7 +102,7 @@ public class TermistoController extends KoulutustoimijaIdGetterAbstractControlle
     public void deleteTermi(
             @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long termiId) {
-        audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, TERMI_POISTO), (Void) -> {
+        audit.withAudit(LogMessage.builder(ktId, null, OPETUSSUUNNITELMA, TERMI_POISTO), (Void) -> {
             termistoService.deleteTermi(ktId, termiId);
             return null;
         });

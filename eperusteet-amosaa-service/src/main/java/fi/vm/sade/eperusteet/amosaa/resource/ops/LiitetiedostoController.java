@@ -18,6 +18,7 @@ package fi.vm.sade.eperusteet.amosaa.resource.ops;
 import fi.vm.sade.eperusteet.amosaa.dto.liite.LiiteDto;
 import fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija.KoulutustoimijaIdGetterAbstractController;
 import fi.vm.sade.eperusteet.amosaa.resource.util.CacheControl;
+import fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaAudit;
 import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaMessageFields.OPETUSSUUNNITELMA;
 import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.KUVA_LISAYS;
 import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.KUVA_POISTO;
@@ -53,6 +54,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class LiitetiedostoController extends KoulutustoimijaIdGetterAbstractController {
     private static final Logger LOG = LoggerFactory.getLogger(LiitetiedostoController.class);
 
+    @Autowired
+    EperusteetAmosaaAudit audit;
+
     private static final int BUFSIZE = 64 * 1024;
     final private Tika tika = new Tika();
 
@@ -76,7 +80,7 @@ public class LiitetiedostoController extends KoulutustoimijaIdGetterAbstractCont
                                          UriComponentsBuilder ucb)
             throws IOException, HttpMediaTypeNotSupportedException {
 
-        LogMessage.builder(OPETUSSUUNNITELMA, KUVA_LISAYS).log();
+        LogMessage.builder(ktId, opsId, OPETUSSUUNNITELMA, KUVA_LISAYS).build(audit).log();
         final long koko = file.getSize();
         try (PushbackInputStream pis = new PushbackInputStream(file.getInputStream(), BUFSIZE)) {
             byte[] buf = new byte[koko < BUFSIZE ? (int) koko : BUFSIZE];
@@ -160,7 +164,10 @@ public class LiitetiedostoController extends KoulutustoimijaIdGetterAbstractCont
     public void delete(@ModelAttribute("solvedKtId") final Long ktId,
                        @PathVariable Long opsId,
                        @PathVariable UUID id) {
-        LogMessage.builder(OPETUSSUUNNITELMA, KUVA_POISTO).log();
+        LogMessage.builder(ktId, null, OPETUSSUUNNITELMA, KUVA_POISTO)
+                .addTarget("id", id)
+                .build(audit)
+                .log();;
         liitteet.delete(ktId, opsId, id);
     }
 
