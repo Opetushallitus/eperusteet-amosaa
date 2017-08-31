@@ -25,17 +25,16 @@ namespace Suorituspolku {
                     return laajuus;
                 }
                 else {
-                    const lastenLaajuus = _(node.osat || [])
+                    return _(node.osat || [])
                         .filter(shouldCount)
                         .map(getLaajuus)
                         .reduce(sum);
-                    return lastenLaajuus;
                 }
             }
             else {
                 return tosat[node._tutkinnonOsaViite].laajuus || 0;
             }
-        }
+        };
 
         const sum = (acc, min: any) => (min || 0) + acc;
 
@@ -53,7 +52,7 @@ namespace Suorituspolku {
                 }
             });
 
-            if (node.rooli && node.rooli !== "määrittelemätön") {
+            if (node === tree || (node.rooli && node.rooli !== "määrittelemätön")) {
                 // Käytetään ryhmän oman muodostumisen laskemiseen
                 node.$$laskettuLaajuus = calculateAmounts(node, getLaajuus);
 
@@ -62,7 +61,7 @@ namespace Suorituspolku {
 
                 // Validoidaan ryhmät
                 const laajuus: any = _.property("muodostumisSaanto.laajuus")(node);
-                const koko : any = _.property("muodostumisSaanto.koko")(node);
+                const koko: any = _.property("muodostumisSaanto.koko")(node);
 
                 const laajuusValidi = () => !laajuus || !laajuus.minimi || node.$$laskettuLaajuus >= laajuus.minimi;
                 const kokoValidi = () => !koko || !koko.minimi || node.$$laskettuKoko >= koko.minimi;
@@ -76,6 +75,4 @@ namespace Suorituspolku {
             return true;
         })(tree);
     };
-
-    // const export pakollinen = (osa) => true;
 }
