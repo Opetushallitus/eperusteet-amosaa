@@ -17,13 +17,18 @@ package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 
 import lombok.Getter;
 import lombok.Setter;
+import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
+import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
  * @author isaul
  */
 @Getter
 @Setter
-public class AmmattitaitovaatimusDto {
+public class AmmattitaitovaatimusDto implements AuditLoggableDto {
+    @Override
+    public void auditLog(LogMessage.LogMessageBuilder msg) {
+    }
 
     private LokalisoituTekstiDto selite;
     private String ammattitaitovaatimusKoodi;

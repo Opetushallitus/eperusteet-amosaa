@@ -20,6 +20,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
+import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
  *
@@ -27,7 +29,10 @@ import java.util.List;
  */
 @Getter
 @Setter
-public class ArviointiasteikkoDto {
+public class ArviointiasteikkoDto implements AuditLoggableDto {
+    @Override
+    public void auditLog(LogMessage.LogMessageBuilder msg) {
+    }
 
     private Long id;
     private List<OsaamistasoDto> osaamistasot;

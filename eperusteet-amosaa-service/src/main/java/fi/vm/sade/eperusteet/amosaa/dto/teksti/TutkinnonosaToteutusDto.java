@@ -20,6 +20,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
+import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
+import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
  *
@@ -28,7 +30,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class TutkinnonosaToteutusDto {
+public class TutkinnonosaToteutusDto implements AuditLoggableDto {
+    @Override
+    public void auditLog(LogMessage.LogMessageBuilder msg) {
+    }
 
     private Long id;
     private LokalisoituTekstiDto otsikko;

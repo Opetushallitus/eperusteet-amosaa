@@ -20,6 +20,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
+import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
  * @author isaul
@@ -27,7 +29,10 @@ import java.util.Date;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class KommenttiDto {
+public class KommenttiDto implements AuditLoggableDto {
+    @Override
+    public void auditLog(LogMessage.LogMessageBuilder msg) {
+    }
 
     private Long id;
     private Date luotu;

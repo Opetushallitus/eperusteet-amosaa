@@ -101,8 +101,6 @@ public class OmaTutkinnonosa extends AbstractAuditedEntity implements Serializab
     static OmaTutkinnonosa copy(OmaTutkinnonosa omatutkinnonosa) {
         if (omatutkinnonosa != null) {
             omatutkinnonosa.setId(null);
-            omatutkinnonosa.setKoodi(null);
-            omatutkinnonosa.setKoodiPrefix(null);
         }
         return omatutkinnonosa;
     }

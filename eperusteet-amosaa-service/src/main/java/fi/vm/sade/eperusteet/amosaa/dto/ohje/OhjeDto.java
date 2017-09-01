@@ -17,6 +17,8 @@ package fi.vm.sade.eperusteet.amosaa.dto.ohje;
 
 import lombok.Getter;
 import lombok.Setter;
+import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
+import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 
 /**
@@ -25,7 +27,10 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class OhjeDto {
+public class OhjeDto implements AuditLoggableDto {
+    @Override
+    public void auditLog(LogMessage.LogMessageBuilder msg) {
+    }
 
     private Long id;
     private String kysymys;

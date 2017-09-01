@@ -20,6 +20,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import java.util.UUID;
 import lombok.EqualsAndHashCode;
+import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
+import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
  * Kuvaa viitettä toiseen entiteettiin.
@@ -27,7 +29,10 @@ import lombok.EqualsAndHashCode;
  * @author jhyoty
  */
 @EqualsAndHashCode
-public class Reference {
+public class Reference implements AuditLoggableDto {
+    @Override
+    public void auditLog(LogMessage.LogMessageBuilder msg) {
+    }
 
     private final String id;
 

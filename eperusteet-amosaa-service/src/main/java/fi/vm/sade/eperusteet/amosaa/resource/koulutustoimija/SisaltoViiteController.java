@@ -21,16 +21,18 @@ import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteKevytDto;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaAudit;
-import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaMessageFields.OPETUSSUUNNITELMA;
-import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.*;
 import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import io.swagger.annotations.Api;
-import java.util.ArrayList;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaMessageFields.OPETUSSUUNNITELMA;
+import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.*;
 
 
 /**
@@ -83,7 +85,7 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
             @PathVariable final Long svId,
             @RequestBody(required = false) SisaltoViiteDto.Matala tekstiKappaleViiteDto) {
         tekstiKappaleViiteDto.setLapset(new ArrayList<>());
-        return audit.withAudit(LogMessage.builder(ktId, opsId, OPETUSSUUNNITELMA, SISALTO_LISAYS), (Void) -> {
+        return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, SISALTO_LISAYS, tekstiKappaleViiteDto), (Void) -> {
             return service.addSisaltoViite(ktId, opsId, svId, tekstiKappaleViiteDto);
         });
     }
@@ -94,7 +96,7 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
             @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @RequestBody List<Long> viitteet) {
-        audit.withAudit(LogMessage.builder(ktId, opsId, OPETUSSUUNNITELMA, SISALTO_KLOONAUS), (Void) -> {
+        audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, SISALTO_KLOONAUS), (Void) -> {
             service.copySisaltoViiteet(ktId, opsId, viitteet);
             return null;
         });
@@ -106,7 +108,7 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
             @PathVariable final Long opsId,
             @PathVariable final Long svId,
             @RequestBody final SisaltoViiteDto tekstiKappaleViiteDto) {
-        audit.withAudit(LogMessage.builder(ktId, opsId, OPETUSSUUNNITELMA, SISALTO_MUOKKAUS), (Void) -> {
+        audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, SISALTO_MUOKKAUS, tekstiKappaleViiteDto), (Void) -> {
             service.updateSisaltoViite(ktId, opsId, svId, tekstiKappaleViiteDto);
             return null;
         });
@@ -118,7 +120,7 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
             @PathVariable final Long opsId,
             @PathVariable final Long svId,
             @RequestBody final SisaltoViiteDto.Puu tekstiKappaleViiteDto) {
-        audit.withAudit(LogMessage.builder(ktId, opsId, OPETUSSUUNNITELMA, RAKENNE_MUOKKAUS), (Void) -> {
+        audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, RAKENNE_MUOKKAUS, tekstiKappaleViiteDto), (Void) -> {
             service.reorderSubTree(ktId, opsId, svId, tekstiKappaleViiteDto);
             return null;
         });
@@ -130,7 +132,7 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
             @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long svId) {
-        audit.withAudit(LogMessage.builder(ktId, opsId, OPETUSSUUNNITELMA, SISALTO_POISTO), (Void) -> {
+        audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, SISALTO_POISTO), (Void) -> {
             service.removeSisaltoViite(ktId, opsId, svId);
             return null;
         });

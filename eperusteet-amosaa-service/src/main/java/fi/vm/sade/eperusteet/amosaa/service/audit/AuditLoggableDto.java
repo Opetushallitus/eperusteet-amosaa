@@ -13,30 +13,13 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * European Union Public Licence for more details.
  */
-package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 
-import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
-import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
-import java.util.Map;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+package fi.vm.sade.eperusteet.amosaa.service.audit;
 
 /**
  *
  * @author nkala
  */
-@Getter
-@Setter
-@EqualsAndHashCode(of = {"uri","versio"})
-public class KoodiDto implements AuditLoggableDto {
-    @Override
-    public void auditLog(LogMessage.LogMessageBuilder msg) {
-    }
-
-    Map<String, String> nimi;
-    private String arvo;
-    private String uri;
-    private String koodisto;
-    private Long versio;
+public interface AuditLoggableDto {
+    public void auditLog(LogMessage.LogMessageBuilder msg);
 }

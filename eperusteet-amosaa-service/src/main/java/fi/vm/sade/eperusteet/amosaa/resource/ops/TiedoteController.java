@@ -58,7 +58,7 @@ public class TiedoteController extends KoulutustoimijaIdGetterAbstractController
     public ResponseEntity<TiedoteDto> addTiedote(
             @ModelAttribute("solvedKtId") final Long ktId,
             @RequestBody TiedoteDto tiedoteDto) {
-        return audit.withAudit(LogMessage.builder(ktId, null, KOULUTUSTOIMIJA, TIEDOTE_POISTO), (Void) -> {
+        return audit.withAudit(LogMessage.builder(KOULUTUSTOIMIJA, TIEDOTE_POISTO), (Void) -> {
             return ResponseEntity.ok(tiedoteService.addTiedote(ktId, tiedoteDto));
         });
     }
@@ -68,7 +68,7 @@ public class TiedoteController extends KoulutustoimijaIdGetterAbstractController
             @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long id,
             @RequestBody TiedoteDto tiedoteDto) {
-        return audit.withAudit(LogMessage.builder(ktId, null, KOULUTUSTOIMIJA, TIEDOTE_MUOKKAUS), (Void) -> {
+        return audit.withAudit(LogMessage.builder(KOULUTUSTOIMIJA, TIEDOTE_MUOKKAUS), (Void) -> {
             return ResponseEntity.ok(tiedoteService.updateTiedote(ktId, tiedoteDto));
         });
     }
@@ -77,7 +77,7 @@ public class TiedoteController extends KoulutustoimijaIdGetterAbstractController
     public void updateTiedote(
             @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long id) {
-        audit.withAudit(LogMessage.builder(ktId, null, KAYTTAJA, TIEDOTE_KUITTAUS), (Void) -> {
+        audit.withAudit(LogMessage.builder(KAYTTAJA, TIEDOTE_KUITTAUS), (Void) -> {
             tiedoteService.kuittaaLuetuksi(ktId, id);
             return null;
         });
@@ -88,7 +88,7 @@ public class TiedoteController extends KoulutustoimijaIdGetterAbstractController
     public void deleteTiedote(
             @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long id) {
-        audit.withAudit(LogMessage.builder(ktId, null, KOULUTUSTOIMIJA, TIEDOTE_POISTO), (Void) -> {
+        audit.withAudit(LogMessage.builder(KOULUTUSTOIMIJA, TIEDOTE_POISTO), (Void) -> {
             tiedoteService.deleteTiedote(ktId, id);
             return null;
         });

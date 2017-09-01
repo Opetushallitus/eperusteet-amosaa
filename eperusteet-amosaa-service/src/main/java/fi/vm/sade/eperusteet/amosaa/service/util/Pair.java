@@ -23,7 +23,6 @@ import lombok.Getter;
  * Yksinkertainen "pari"
  * @author jhyoty
  */
-
 @Getter
 @EqualsAndHashCode
 public final class Pair<F,S> {
