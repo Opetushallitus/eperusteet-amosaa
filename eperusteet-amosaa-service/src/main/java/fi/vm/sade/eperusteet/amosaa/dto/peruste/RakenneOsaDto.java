@@ -21,6 +21,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import lombok.Getter;
 import lombok.Setter;
+import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
+import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
  *
@@ -29,7 +31,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RakenneOsaDto extends AbstractRakenneOsaDto {
+public class RakenneOsaDto extends AbstractRakenneOsaDto implements AuditLoggableDto {
+    @Override
+    public void auditLog(LogMessage.LogMessageBuilder msg) {
+    }
 
     private String erikoisuus;
     @JsonProperty("_tutkinnonOsaViite")

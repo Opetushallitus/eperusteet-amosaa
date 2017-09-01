@@ -75,7 +75,7 @@ public class KoulutustoimijaController extends KoulutustoimijaIdGetterAbstractCo
     public KoulutustoimijaDto update(
             @ModelAttribute("solvedKtId") final Long ktId,
             @RequestBody final KoulutustoimijaDto kt) {
-        return audit.withAudit(LogMessage.builder(ktId, null, KOULUTUSTOIMIJA, KOULUTUSTOIMIJA_MUOKKAUS), (Void) -> {
+        return audit.withAudit(LogMessage.builder(KOULUTUSTOIMIJA, KOULUTUSTOIMIJA_MUOKKAUS, kt), (Void) -> {
             return koulutustoimijaService.updateKoulutustoimija(ktId, kt);
         });
     }

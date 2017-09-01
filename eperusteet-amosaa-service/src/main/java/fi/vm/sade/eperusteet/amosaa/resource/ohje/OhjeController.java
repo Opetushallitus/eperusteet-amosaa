@@ -65,7 +65,7 @@ public class OhjeController {
     public ResponseEntity<OhjeDto> addOhje(
             @RequestBody OhjeDto dto) {
         dto.setId(null);
-        return audit.withAudit(LogMessage.builder(null, null, OPH, OHJE_LISAYS), (Void) -> {
+        return audit.withAudit(LogMessage.builder(OPH, OHJE_LISAYS), (Void) -> {
             return ResponseEntity.ok(service.addOhje(dto));
         });
     }
@@ -74,7 +74,7 @@ public class OhjeController {
     public ResponseEntity<OhjeDto> editOhje(
             @PathVariable Long id,
             @RequestBody OhjeDto dto) {
-        return audit.withAudit(LogMessage.builder(null, null, OPH, OHJE_MUOKKAUS), (Void) -> {
+        return audit.withAudit(LogMessage.builder(OPH, OHJE_MUOKKAUS), (Void) -> {
             return ResponseEntity.ok(service.editOhje(id, dto));
         });
     }
@@ -83,7 +83,7 @@ public class OhjeController {
     public ResponseEntity editOhje(
             @RequestParam Long id) {
         service.removeOhje(id);
-        return audit.withAudit(LogMessage.builder(null, null, OPH, OHJE_POISTO), (Void) -> {
+        return audit.withAudit(LogMessage.builder(OPH, OHJE_POISTO), (Void) -> {
             return ResponseEntity.status(HttpStatus.OK).build();
         });
     }

@@ -22,11 +22,16 @@ import java.math.BigDecimal;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
+import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
+import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class TutkinnonOsaViiteSuppeaDto {
+public class TutkinnonOsaViiteSuppeaDto implements AuditLoggableDto {
+    @Override
+    public void auditLog(LogMessage.LogMessageBuilder msg) {
+    }
 
     private Long id;
     private BigDecimal laajuus;

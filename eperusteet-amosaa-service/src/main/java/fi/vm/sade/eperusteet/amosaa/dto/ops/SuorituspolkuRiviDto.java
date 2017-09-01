@@ -21,6 +21,8 @@ import java.util.Set;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
+import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
+import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
  *
@@ -28,7 +30,10 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class SuorituspolkuRiviDto {
+public class SuorituspolkuRiviDto implements AuditLoggableDto {
+    @Override
+    public void auditLog(LogMessage.LogMessageBuilder msg) {
+    }
 
     private Long id;
     private UUID rakennemoduuli;

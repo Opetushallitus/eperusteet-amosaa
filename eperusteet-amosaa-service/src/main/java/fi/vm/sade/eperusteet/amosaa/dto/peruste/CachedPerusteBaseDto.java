@@ -19,6 +19,8 @@ package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import lombok.Getter;
 import lombok.Setter;
+import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
+import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /*
  *
@@ -26,7 +28,10 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class CachedPerusteBaseDto {
+public class CachedPerusteBaseDto implements AuditLoggableDto {
+    @Override
+    public void auditLog(LogMessage.LogMessageBuilder msg) {
+    }
 
     private Long id;
     private String diaarinumero;

@@ -22,6 +22,8 @@ import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
+import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
+import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
  *
@@ -30,7 +32,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class OsaamistavoiteLaajaDto extends OsaamistavoiteDto {
+public class OsaamistavoiteLaajaDto extends OsaamistavoiteDto implements AuditLoggableDto {
+    @Override
+    public void auditLog(LogMessage.LogMessageBuilder msg) {
+    }
 
     private LokalisoituTekstiDto tavoitteet;
     private LokalisoituTekstiDto tunnustaminen;

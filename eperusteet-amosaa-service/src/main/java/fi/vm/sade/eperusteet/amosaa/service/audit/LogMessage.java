@@ -16,13 +16,8 @@
 
 package fi.vm.sade.eperusteet.amosaa.service.audit;
 
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import fi.vm.sade.auditlog.AbstractLogMessage;
 import fi.vm.sade.auditlog.SimpleLogMessageBuilder;
-import fi.vm.sade.eperusteet.amosaa.service.util.Pair;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -39,66 +34,34 @@ public class LogMessage extends AbstractLogMessage {
         getMessageMapping().putAll(messageMapping);
     }
 
-    public static LogMessageBuilder builder(Long ktId, Long opsId, EperusteetAmosaaMessageFields target, EperusteetAmosaaOperation op) {
-        LogMessageBuilder result = new LogMessageBuilder()
-                .addTarget("tyyppi", target)
+    public static LogMessageBuilder builder(EperusteetAmosaaMessageFields target, EperusteetAmosaaOperation op) {
+        return new LogMessageBuilder()
+                .add("target", target.toString())
                 .setOperation(op)
                 .id(EperusteetAmosaaAudit.username());
-
-        if (ktId != null) {
-            result.addTarget("ktId", ktId);
-        }
-        if (opsId != null) {
-            result.addTarget("opsId", opsId);
-        }
-        return result;
     }
 
-    public void log() {
-        EperusteetAmosaaAudit.AUDIT.log(this);
+    public static <T extends AuditLoggableDto> LogMessageBuilder builder(EperusteetAmosaaMessageFields target, EperusteetAmosaaOperation op, T dto) {
+        return new LogMessageBuilder()
+                .add("target", target.toString())
+                .setOperation(op)
+                .id(EperusteetAmosaaAudit.username())
+                .addDto(dto);
     }
 
     public static class LogMessageBuilder extends SimpleLogMessageBuilder<LogMessageBuilder> {
-        private Long beforeRev;
-        private Long afterRev;
-        private List<Pair<String, String>> targets = new ArrayList<>();
+        private Number beforeRev;
 
-        public LogMessage build(EperusteetAmosaaAudit audit) {
-            JsonNodeFactory nodeFactory = new JsonNodeFactory(false);
-
-            // FIXME: auditlogger syö vain merkkijonoja
-            { // Changes
-                ObjectNode changes = nodeFactory.objectNode();
-                changes.put("rev", nodeFactory.objectNode()
-                    .put("oldValue", beforeRev)
-                    .put("newValue", afterRev));
-                mapping.put("changes", changes.toString());
-            }
-
-            { // Target
-                ObjectNode targetsObj = nodeFactory.objectNode();
-                for (Pair<String, String> target : targets) {
-                    targetsObj.put(target.getFirst(), target.getSecond());
-                }
-                mapping.put("target", targetsObj.toString());
-            }
-
-            { // User
-                mapping.put("user", audit.getLoggableUser().toString());
-            }
-
+        public LogMessage build() {
             return new LogMessage(mapping);
         }
 
-        public LogMessageBuilder palautus(Long id, Long version) {
-            return safePut("osaId", id.toString())
-                .safePut("versio", id.toString());
+        public void log() {
+            EperusteetAmosaaAudit.AUDIT.log(build());
         }
 
-        public LogMessageBuilder addTarget(String name, Object op) {
-            if (op != null) {
-                targets.add(Pair.of(name, op.toString()));
-            }
+        public <T extends AuditLoggableDto> LogMessageBuilder addDto(T dto) {
+            dto.auditLog(this);
             return this;
         }
 
@@ -107,23 +70,13 @@ public class LogMessage extends AbstractLogMessage {
         }
 
         public LogMessageBuilder beforeRevision(Number rev) {
-            if (rev != null) {
-                this.beforeRev = rev.longValue();
-            }
-            else {
-                this.beforeRev = 0L;
-            }
+            beforeRev = rev;
             return this;
         }
 
         public LogMessageBuilder afterRevision(Number rev) {
-            if (rev != null) {
-                this.afterRev = rev.longValue();
-            }
-            else {
-                this.afterRev = 0L;
-            }
-            return this;
+            return add("rev", rev.toString(), beforeRev.toString());
         }
     }
+
 }

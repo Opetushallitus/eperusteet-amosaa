@@ -19,6 +19,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
+import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
+import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
  *
@@ -27,7 +29,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PerusteDto extends PerusteBaseDto {
+public class PerusteDto extends PerusteBaseDto implements AuditLoggableDto {
+    @Override
+    public void auditLog(LogMessage.LogMessageBuilder msg) {
+    }
 
     private PerusteVersionDto globalVersion;
     Set<SuoritustapaDto> suoritustavat;
