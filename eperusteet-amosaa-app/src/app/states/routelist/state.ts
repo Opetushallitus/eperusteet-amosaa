@@ -1,10 +1,9 @@
-angular.module("app")
-.config($stateProvider => $stateProvider
-.state("root.routelist", {
-    url: "/routelist",
-    resolve: {},
-    controller: ($scope, $state) => {
-        /*$scope.params = _($state.get())
+angular.module("app").config($stateProvider =>
+    $stateProvider.state("root.routelist", {
+        url: "/routelist",
+        resolve: {},
+        controller: ($scope, $state) => {
+            /*$scope.params = _($state.get())
             .map(state => state.url.split("/"))
             .compact()
             .flatten(true)
@@ -13,17 +12,18 @@ angular.module("app")
             .fromPairs()
             .value();*/
 
-        $scope.params.lang = "fi";
+            $scope.params.lang = "fi";
 
-        const helpTemplates = OhjeService.getHelpTemplates();
+            const helpTemplates = OhjeService.getHelpTemplates();
 
-        $scope.states = _($state.get())
-            .each(state => {
-                state.$$depth = _.size((state.name).split("."));
-                state.$$helpUrl = helpTemplates[state.name];
-            })
-            .value();
+            $scope.states = _($state.get())
+                .each(state => {
+                    state.$$depth = _.size(state.name.split("."));
+                    state.$$helpUrl = helpTemplates[state.name];
+                })
+                .value();
 
-        $scope.urlify = (state) => $state.href(state, $scope.params);
-    }
-}));
+            $scope.urlify = state => $state.href(state, $scope.params);
+        }
+    })
+);

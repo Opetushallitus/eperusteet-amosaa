@@ -1,22 +1,20 @@
-angular.module("app")
-    .config($stateProvider => $stateProvider
-        .state("root.oph", {
-            url: "/oph",
-            resolve: {
+angular.module("app").config($stateProvider =>
+    $stateProvider.state("root.oph", {
+        url: "/oph",
+        resolve: {},
+        views: {
+            "": {
+                controller: $scope => {}
             },
-            views: {
-                "": {
-                    controller: ($scope) => {}
-                },
-                pohjat: {
-                    controller: ($scope) => {
-                    }
-                },
-                tiedotteet: {
-                    controller: ($scope) => {}
-                },
-                tilastot: {
-                    controller: ($scope) => {}
-                }
+            pohjat: {
+                controller: $scope => {}
+            },
+            tiedotteet: {
+                controller: $scope => {}
+            },
+            tilastot: {
+                controller: $scope => {}
             }
-        }));
+        }
+    })
+);

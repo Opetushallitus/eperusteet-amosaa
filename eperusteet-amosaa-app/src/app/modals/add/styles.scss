@@ -39,7 +39,7 @@ div.tutkintohaku {
 
             &:hover {
                 transition: color 0.5s linear;
-                background: #F3FAFD;
+                background: #f3fafd;
             }
 
             .nimi {
@@ -121,9 +121,7 @@ $sisalto-item-link-hover-color: #125572;
                 float: left;
                 padding: $sisalto-item-text-padding;
                 height: $sisalto-item-height - 2 * $sisalto-item-border;
-                line-height: $sisalto-item-height
-                        - 2 * $sisalto-item-border
-                        - 2 * $sisalto-item-text-padding;
+                line-height: $sisalto-item-height - 2 * $sisalto-item-border - 2 * $sisalto-item-text-padding;
                 a {
                     text-decoration: none;
                 }

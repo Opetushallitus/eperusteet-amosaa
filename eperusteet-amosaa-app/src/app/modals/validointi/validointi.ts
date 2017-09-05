@@ -1,6 +1,6 @@
 namespace ModalValidointi {
     let i;
-    export const init = ($injector) => {
+    export const init = $injector => {
         i = inject($injector, ["$rootScope", "$uibModal", "$q"]);
     };
 
@@ -10,24 +10,23 @@ namespace ModalValidointi {
             varoitukset: validointi.varoitukset,
             huomiot: validointi.huomiot,
             eiVirheita:
-                _.isEmpty(validointi.virheet) &&
-                _.isEmpty(validointi.varoitukset) &&
-                _.isEmpty(validointi.huomiot),
+                _.isEmpty(validointi.virheet) && _.isEmpty(validointi.varoitukset) && _.isEmpty(validointi.huomiot),
             ok: $uibModalInstance.dismiss
         });
     };
 
-    export const validoi = (ops) => ops.one("validoi").get()
-        .then(res => {
-            return i.$uibModal.open({
-                templateUrl: "modals/validointi/validointi.jade",
-                controller: validointiController,
-                size: "lg",
-                resolve: { validointi: _.constant(res) }
-            })
-            .result;
-        });
-};
+    export const validoi = ops =>
+        ops
+            .one("validoi")
+            .get()
+            .then(res => {
+                return i.$uibModal.open({
+                    templateUrl: "modals/validointi/validointi.jade",
+                    controller: validointiController,
+                    size: "lg",
+                    resolve: { validointi: _.constant(res) }
+                }).result;
+            });
+}
 
-angular.module("app")
-.run(ModalValidointi.init);
+angular.module("app").run(ModalValidointi.init);

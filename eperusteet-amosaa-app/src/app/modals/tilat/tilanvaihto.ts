@@ -1,6 +1,6 @@
 namespace TilanvaihtoModal {
     let i;
-    export const init = ($injector) => {
+    export const init = $injector => {
         i = inject($injector, ["$rootScope", "$uibModal", "$q"]);
     };
 
@@ -11,21 +11,20 @@ namespace TilanvaihtoModal {
         julkaistu: ["luonnos", "poistettu"]
     });
 
-    export const vaihdaTila = (ops) => i.$uibModal.open({
-            resolve: { },
+    export const vaihdaTila = ops =>
+        i.$uibModal.open({
+            resolve: {},
             templateUrl: "modals/tilat/tilanvaihto.jade",
             controller: ($scope, $state, $uibModalInstance) => {
                 $scope.ok = $uibModalInstance.close;
                 $scope.peruuta = $uibModalInstance.dismiss;
                 $scope.sallitutTilat = sallitutTilat();
                 $scope.ops = ops;
-                $scope.valitseTila = (tila) => {
-                    ops.customPOST(null, "tila/" + tila)
-                        .then($uibModalInstance.close);
+                $scope.valitseTila = tila => {
+                    ops.customPOST(null, "tila/" + tila).then($uibModalInstance.close);
                 };
             }
         }).result;
 }
 
-angular.module("app")
-.run(TilanvaihtoModal.init);
+angular.module("app").run(TilanvaihtoModal.init);

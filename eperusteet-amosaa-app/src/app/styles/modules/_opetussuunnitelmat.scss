@@ -109,7 +109,6 @@ $ops-top-vertical-margin: 10px;
 
     .sisalto {
         .sivunavi {
-
             .multi-item {
                 position: relative;
 
@@ -156,7 +155,7 @@ $ops-top-vertical-margin: 10px;
             }
 
             .valikko {
-                background: #F9FDFF;
+                background: #f9fdff;
                 overflow-y: scroll;
                 // width: 275px;
                 // top: 0;
@@ -210,7 +209,7 @@ $ops-top-vertical-margin: 10px;
             }
 
             .oikea {
-                padding-left:  300px;
+                padding-left: 300px;
             }
 
             margin-top: $ops-top-vertical-margin;
@@ -221,7 +220,7 @@ $ops-top-vertical-margin: 10px;
 
             .ylapalkki {
                 height: $input-height-base + $ops-top-vertical-margin - 3px;
-                border-bottom: 1px solid #DEDEDF;
+                border-bottom: 1px solid #dededf;
 
                 p {
                     line-height: $input-height-base;
@@ -296,7 +295,9 @@ $ops-top-vertical-margin: 10px;
                 .kommentointi {
                     & > a {
                         font-size: 18px;
-                        &, span, i {
+                        &,
+                        span,
+                        i {
                             text-decoration: none;
                         }
                     }
@@ -340,7 +341,6 @@ $ops-top-vertical-margin: 10px;
                             margin-left: 84px;
 
                             .kommentti-muokattu {
-
                             }
                             .kommentti-nimi {
                                 font-size: 18px;
@@ -391,7 +391,6 @@ $ops-top-vertical-margin: 10px;
                             margin-top: 5px;
                             margin-left: 5px;
                         }
-
                     }
                     .kommentti-poistettu {
                         background-color: #f6f6f6;
@@ -428,22 +427,34 @@ $ops-top-vertical-margin: 10px;
             }
         }
 
-        .tyyppi-luku { background: #ddd; }
-        .tyyppi-hallinta { background: #FCF8E3; }
+        .tyyppi-luku {
+            background: #ddd;
+        }
+        .tyyppi-hallinta {
+            background: #fcf8e3;
+        }
 
         .special {
             margin-left: 8px;
         }
 
         table {
-            a, a > span {
+            a,
+            a > span {
                 text-decoration: none;
-
             }
-            td:nth-child(1) { width: 40%; }
-            td:nth-child(2) { width: 20%; }
-            td:nth-child(3) { width: 25%; }
-            td:nth-child(4) { width: 15%; }
+            td:nth-child(1) {
+                width: 40%;
+            }
+            td:nth-child(2) {
+                width: 20%;
+            }
+            td:nth-child(3) {
+                width: 25%;
+            }
+            td:nth-child(4) {
+                width: 15%;
+            }
         }
     }
 
@@ -457,14 +468,22 @@ $ops-top-vertical-margin: 10px;
         }
 
         table {
-            a, a > span {
+            a,
+            a > span {
                 text-decoration: none;
-
             }
-            td:nth-child(1) { width: 40%; }
-            td:nth-child(2) { width: 20%; }
-            td:nth-child(3) { width: 25%; }
-            td:nth-child(4) { width: 15%; }
+            td:nth-child(1) {
+                width: 40%;
+            }
+            td:nth-child(2) {
+                width: 20%;
+            }
+            td:nth-child(3) {
+                width: 25%;
+            }
+            td:nth-child(4) {
+                width: 15%;
+            }
         }
     }
     .dokumentti {
