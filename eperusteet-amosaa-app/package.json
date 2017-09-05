@@ -4,6 +4,14 @@
   "main": "index.js",
   "description": "",
   "private": true,
+  "engines": {
+    "node": "6.11.2"
+  },
+  "scripts": {
+    "dev": "gulp",
+    "build": "gulp build",
+    "prettier": "prettier --config .prettierrc --write src/**/*.{ts,json,scss}"
+  },
   "devDependencies": {
     "event-stream": "3.3.2",
     "gulp": "3.9.0",
@@ -26,6 +34,7 @@
     "lazy.js": "0.4.2",
     "lodash": "3.10.1",
     "merge-stream": "1.0.0",
+    "prettier": "1.6.1",
     "proxy-middleware": "0.15.0"
   },
   "dependencies": {
@@ -55,16 +64,17 @@
     "ckeditor": "4.5.9",
     "d3": "3.5.14",
     "diff": "3.0.1",
-    "eperusteet-frontend-utils": "https://github.com/Opetushallitus/eperusteet-frontend-utils#master",
-    "es6-promise": "^4.1.0",
+    "eperusteet-frontend-utils": "git+https://github.com/Opetushallitus/eperusteet-frontend-utils.git#master",
+    "es6-promise": "4.1.0",
     "font-awesome": "4.5.0",
     "gulp-typescript": "3.1.5",
     "jquery-sticky": "1.0.3",
     "node-sass": "4.0.0",
+    "pug-beautify": "0.1.1",
     "restangular": "1.5.1",
     "spin.js": "2.3.2",
     "string": "3.3.3",
     "striptags": "2.1.1",
-    "typescript": "2.2.0"
+    "typescript": "2.5.2"
   }
 }
