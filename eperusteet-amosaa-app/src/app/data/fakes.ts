@@ -1,4 +1,4 @@
-module Fake {
+namespace Fake {
     const createSisalto = (id, tyyppi, nimi, lapset = []) => ({
         id: id,
         nimi: { fi: nimi },
@@ -6,7 +6,7 @@ module Fake {
         lapset: lapset
     });
 
-    export const Kayttajaprofiili = (id) => {
+    export const Kayttajaprofiili = id => {
         return {
             koulutustoimijat: [1],
             opetussuunnitelmat: [1]
@@ -16,14 +16,14 @@ module Fake {
     export const YhteisetOsat = () => ({
         6: {
             id: 6,
-            julkaisukielet: [ "fi" ],
+            julkaisukielet: ["fi"],
             kuvaus: "Jotain yhteisiä juttuja on",
             luoja: "test",
             luotu: 1450162628037,
             muokattu: 1450162654256,
             muokkaaja: "test",
             nimi: {
-                fi: "Kokkolan kokkikoulun yhteiset",
+                fi: "Kokkolan kokkikoulun yhteiset"
             },
             tila: "luonnos",
             paatospaivamaara: null,
@@ -32,55 +32,62 @@ module Fake {
         },
         5: {
             id: 5,
-            julkaisukielet: [ "fi" ],
+            julkaisukielet: ["fi"],
             kuvaus: "Jotain ihan älytöntä",
             luoja: "test",
             luotu: 1450162628037,
             muokattu: 1450162654256,
             muokkaaja: "test",
             nimi: {
-                fi: "Kuun sirkuslaitoksen asiat",
+                fi: "Kuun sirkuslaitoksen asiat"
             },
             tila: "luonnos",
             paatospaivamaara: null,
             esikatseltavissa: true,
             pohja: 1
-        },
+        }
     });
 
-    export const Koulutustoimijat = () => [{
-        id: 1,
-        organisaatiot: [ {
-            oid: "1.2.246.562.10.1234",
-            nimi: {
-                fi: "Kuun sirkuslaitos"
-            }
-        } ],
-        kunnat: [ ],
-        kuvaus: {
-            fi: "Vuonna 2127 haluttiin huikeampia sirkustaiteilijoita toimimaan pienemmässä painovoimassa."
+    export const Koulutustoimijat = () => [
+        {
+            id: 1,
+            organisaatiot: [
+                {
+                    oid: "1.2.246.562.10.1234",
+                    nimi: {
+                        fi: "Kuun sirkuslaitos"
+                    }
+                }
+            ],
+            kunnat: [],
+            kuvaus: {
+                fi: "Vuonna 2127 haluttiin huikeampia sirkustaiteilijoita toimimaan pienemmässä painovoimassa."
+            },
+            yhteisetOsa: 5
         },
-        yhteisetOsa: 5
-    }, {
-        id: 2,
-        organisaatiot: [ {
-            oid: "1.2.246.562.10.1235",
-            tyypit: [ "Koulutustoimija" ],
-            nimi: {
-                fi: "Kokkolan kokkikoulu"
-            }
-        } ],
-        kunnat: [ ],
-        kuvaus: {
-            fi: "Ideat loppuu"
-        },
-        yhteisetOsa: 6
-    }];
+        {
+            id: 2,
+            organisaatiot: [
+                {
+                    oid: "1.2.246.562.10.1235",
+                    tyypit: ["Koulutustoimija"],
+                    nimi: {
+                        fi: "Kokkolan kokkikoulu"
+                    }
+                }
+            ],
+            kunnat: [],
+            kuvaus: {
+                fi: "Ideat loppuu"
+            },
+            yhteisetOsa: 6
+        }
+    ];
 
-    export const Opetussuunnitelmat = (koulutustoimijaId) => ({
+    export const Opetussuunnitelmat = koulutustoimijaId => ({
         3: {
             id: 3,
-            julkaisukielet: [ "fi" ],
+            julkaisukielet: ["fi"],
             organisaatiot: ["1.2.246.562.10.1234"],
             kuvaus: "Jotain ihan älytöntä",
             luoja: "test",
@@ -88,7 +95,7 @@ module Fake {
             muokattu: 1450162654256,
             muokkaaja: "test",
             nimi: {
-                fi: "Avaruusjonglöörin tutkinto",
+                fi: "Avaruusjonglöörin tutkinto"
             },
             perusteenDiaarinumero: "x/y/1",
             tila: "luonnos",
@@ -100,7 +107,7 @@ module Fake {
         },
         4: {
             id: 4,
-            julkaisukielet: [ "fi" ],
+            julkaisukielet: ["fi"],
             organisaatiot: ["1.2.246.562.10.1234", "1.2.246.562.10.1235"],
             kuvaus: "",
             luoja: "test",
@@ -108,7 +115,7 @@ module Fake {
             muokattu: 1450162654256,
             muokkaaja: "test",
             nimi: {
-                fi: "Matalan gravitaation kokkitutkinto",
+                fi: "Matalan gravitaation kokkitutkinto"
             },
             perusteenDiaarinumero: "x/y/2",
             tila: "luonnos",
@@ -120,7 +127,7 @@ module Fake {
         }
     });
 
-    export const Poistetut = (yhteisetId) => ([
+    export const Poistetut = yhteisetId => [
         {
             id: 1,
             nimi: "Jotain ihan älytöntä",
@@ -157,7 +164,7 @@ module Fake {
             poistaja: "Testi Testi2",
             poistoAika: 1451162638037
         }
-    ]);
+    ];
 
     // export const Suoritustapa = (id, suoritustapaTunniste) => Opetussuunnitelma(id).suoritustapa[suoritustapaTunniste];
 }

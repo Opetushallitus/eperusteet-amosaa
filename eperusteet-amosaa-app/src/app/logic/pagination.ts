@@ -3,7 +3,7 @@ interface PaginationObject {
     total?: number;
     current?: number;
     pages?: number[];
-};
+}
 
 namespace PaginationV2 {
     export const addPagination = (container: any[], matcher: (search: string, item: any) => boolean) => {
@@ -12,7 +12,7 @@ namespace PaginationV2 {
             temp: [],
             pagination: <PaginationObject>{},
             updater: (search: string = "") => {
-                result.temp = _.filter(container, (item) => matcher(search, item));
+                result.temp = _.filter(container, item => matcher(search, item));
                 result.pagination = Pagination.paginate(result.temp);
                 result.selector();
             },
@@ -46,7 +46,12 @@ namespace Pagination {
     // FIXME: Refactor
     // return { select: ..., update: ..., pagination: ..., filtered: ... }
     const Postfix = "Paginated";
-    export const addPagination = (scope: any, matcher: (search: string, item: any) => boolean, con: string, prefix = con) => {
+    export const addPagination = (
+        scope: any,
+        matcher: (search: string, item: any) => boolean,
+        con: string,
+        prefix = con
+    ) => {
         const name = prefix + Postfix;
         const pagination = "$$" + prefix + Postfix + "Page";
         const temp = "$$" + prefix + Postfix;
@@ -54,7 +59,7 @@ namespace Pagination {
         const selector = prefix + Postfix + "Select";
 
         scope[updater] = (search: string = "") => {
-            scope[temp] = _.filter(scope[con], (ops) => matcher(search, ops));
+            scope[temp] = _.filter(scope[con], ops => matcher(search, ops));
             scope[pagination] = paginate(scope[temp]);
             scope[selector]();
         };

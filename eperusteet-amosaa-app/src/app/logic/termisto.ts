@@ -1,18 +1,17 @@
 interface LocalisedString {
-    fi?: String,
-    sv?: String
+    fi?: String;
+    sv?: String;
 }
 
 interface Kasite {
-    avain?: String,
-    termi: LocalisedString,
-    selitys: LocalisedString,
-    alaviite?: Boolean
+    avain?: String;
+    termi: LocalisedString;
+    selitys: LocalisedString;
+    alaviite?: Boolean;
 }
 
 namespace Termisto {
-
-    export const parseOne = (revision) => ({
+    export const parseOne = revision => ({
         id: revision.numero,
         muokkaaja: revision.muokkaajaOid, // TODO: Hae käyttäjän nimi organisaatiopalvelusta promisena
         kommentti: revision.kommentti,
@@ -27,5 +26,4 @@ namespace Termisto {
         selitys: { fi: "" },
         alaviite: false
     });
-
 }

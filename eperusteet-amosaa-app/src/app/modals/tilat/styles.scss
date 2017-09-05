@@ -5,10 +5,18 @@ $status-color-viimeistely: green;
 $status-color-julkaistu: purple;
 $status-color-poistettu: #c44;
 
-.tilavari-luonnos { background-color: $status-color-luonnos; }
-.tilavari-valmis { background-color: $status-color-valmis; }
-.tilavari-julkaistu { background-color: $status-color-julkaistu; }
-.tilavari-poistettu { background-color: $status-color-poistettu; }
+.tilavari-luonnos {
+    background-color: $status-color-luonnos;
+}
+.tilavari-valmis {
+    background-color: $status-color-valmis;
+}
+.tilavari-julkaistu {
+    background-color: $status-color-julkaistu;
+}
+.tilavari-poistettu {
+    background-color: $status-color-poistettu;
+}
 
 .tilat {
     .nykyinen-tila {

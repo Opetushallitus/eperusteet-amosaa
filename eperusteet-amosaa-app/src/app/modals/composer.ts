@@ -1,7 +1,7 @@
 /// Composes multiple modals into a chain
 namespace Modals {
     let i;
-    export const init = ($injector) => {
+    export const init = $injector => {
         i = inject($injector, ["$rootScope", "$uibModal", "$q"]);
     };
 
@@ -9,10 +9,7 @@ namespace Modals {
         ctx: any;
     }
 
-    export const composeModals = (...steps: ModalStep[]) => {
-
-    };
+    export const composeModals = (...steps: ModalStep[]) => {};
 }
 
-angular.module("app")
-.run(Modals.init);
+angular.module("app").run(Modals.init);

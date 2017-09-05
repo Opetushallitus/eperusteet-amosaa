@@ -1,20 +1,22 @@
 namespace TermistoData {
     let i, _termisto;
 
-    const termistoAPI = (ktId) => {
-        return i.Api.all("koulutustoimijat").one(ktId).all('termisto');
+    const termistoAPI = ktId => {
+        return i.Api
+            .all("koulutustoimijat")
+            .one(ktId)
+            .all("termisto");
     };
 
-    export const init = ($injector) => {
+    export const init = $injector => {
         i = inject($injector, ["Api", "$stateParams", "$q"]);
     };
-    
+
     const getTermisto = (ktId = i.$stateParams.ktId) => {
         var deferred = i.$q.defer();
         if (_termisto) {
             deferred.resolve(_termisto);
-        }
-        else {
+        } else {
             _termisto = termistoAPI(ktId).getList();
             deferred.resolve(_termisto);
         }
@@ -26,13 +28,13 @@ namespace TermistoData {
     };
 
     const filterByKey = (kasitteet, key) => {
-        return _.filter(kasitteet, (kasite:any) => kasite.avain === key)[0];
+        return _.filter(kasitteet, (kasite: any) => kasite.avain === key)[0];
     };
 
     const getByKey = (key, termisto = _termisto) => {
-        return termisto.then((kasitteet) => {
+        return termisto.then(kasitteet => {
             return filterByKey(kasitteet, key);
-        })
+        });
     };
 
     export const refresh = () => {
@@ -43,16 +45,17 @@ namespace TermistoData {
     export const getByAvain = (avain, ktId = i.$stateParams.ktId) => {
         if (_termisto && getByKey(avain)) {
             return getByKey(avain);
-        };
-        return refresh().then((res) => getByKey(avain));
+        }
+        return refresh().then(res => getByKey(avain));
     };
 
-    export const add = (kasite) => {
-        return termistoAPI(i.$stateParams.ktId).post(kasite).then(() => {
-            return refresh().then((res) => res);
-        });
+    export const add = kasite => {
+        return termistoAPI(i.$stateParams.ktId)
+            .post(kasite)
+            .then(() => {
+                return refresh().then(res => res);
+            });
     };
 }
 
-angular.module("app")
-    .run(($injector) => $injector.invoke(TermistoData.init));
+angular.module("app").run($injector => $injector.invoke(TermistoData.init));

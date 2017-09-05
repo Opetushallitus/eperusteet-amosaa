@@ -8,4 +8,4 @@ interface JQueryExtensions {
     sticky(x: Object);
 }
 
-interface JQuery extends JQueryExtensions { }
+interface JQuery extends JQueryExtensions {}

@@ -1,6 +1,8 @@
 $icon-font-path: "fonts/bootstrap/";
 $fa-font-path: "fonts";
-@function font-path($path) { @return $path; }
+@function font-path($path) {
+    @return $path;
+}
 
 @import "vendor/bootstrap";
 @import "vendor/font_awesome";
@@ -56,8 +58,12 @@ $fa-font-path: "fonts";
 @import "modules/suorituspolku";
 
 @keyframes subtle-transition {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 .subtle-transition {

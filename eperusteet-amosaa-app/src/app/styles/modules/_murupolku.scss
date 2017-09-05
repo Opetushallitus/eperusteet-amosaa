@@ -1,20 +1,20 @@
 .breadcrumb {
-  padding: $breadcrumb-padding-vertical 0;
-  margin-bottom: 0;
-  background-color: transparent;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+    padding: $breadcrumb-padding-vertical 0;
+    margin-bottom: 0;
+    background-color: transparent;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
-  > li {
-    display: inline-block;
+    > li {
+        display: inline-block;
 
-    a {
-      color: #939598;
+        a {
+            color: #939598;
+        }
     }
-  }
 
-  > .active {
-    color: $breadcrumb-active-color;
-  }
+    > .active {
+        color: $breadcrumb-active-color;
+    }
 }

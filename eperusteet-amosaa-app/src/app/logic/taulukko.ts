@@ -13,6 +13,6 @@ namespace Taulukot {
                 $scope.jarjestysKaanteinen = $scope.jarjestysKaanteinen === false;
             }
             $scope.jarjestys = uusiJarjestys;
-        }
-    }
+        };
+    };
 }

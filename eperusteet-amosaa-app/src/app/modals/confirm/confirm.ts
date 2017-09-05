@@ -1,6 +1,6 @@
 namespace ModalConfirm {
     let i;
-    export const init = ($injector) => {
+    export const init = $injector => {
         i = inject($injector, ["$rootScope", "$uibModal", "$q"]);
     };
 
@@ -9,20 +9,19 @@ namespace ModalConfirm {
         actionBtnText: "OK",
         headText: "Vahvista poisto",
         bodyText: "Poistetaanko",
-        name: ''
+        name: ""
     };
 
-    export const generalConfirm = (options = {}, data) => i.$uibModal.open({
-        templateUrl: "modals/confirm/confirm.jade",
-        size: 'sm',
-        controller: ($uibModalInstance, $scope) => {
-            $scope.opts = _.merge(modalOptions, options);
-            $scope.ok = () => $uibModalInstance.close(data);
-            $scope.cancel = $uibModalInstance.dismiss;
-        }
-    }).result;
-
+    export const generalConfirm = (options = {}, data) =>
+        i.$uibModal.open({
+            templateUrl: "modals/confirm/confirm.jade",
+            size: "sm",
+            controller: ($uibModalInstance, $scope) => {
+                $scope.opts = _.merge(modalOptions, options);
+                $scope.ok = () => $uibModalInstance.close(data);
+                $scope.cancel = $uibModalInstance.dismiss;
+            }
+        }).result;
 }
 
-angular.module("app")
-.run(ModalConfirm.init);
+angular.module("app").run(ModalConfirm.init);

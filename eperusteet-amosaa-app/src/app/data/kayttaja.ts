@@ -1,4 +1,4 @@
-module Kayttaja {
+namespace Kayttaja {
     let _Api, _Cas, _$q;
 
     export const init = (Api, Cas, $q) => {
@@ -9,28 +9,45 @@ module Kayttaja {
 
     export const kayttaja = () => _Api.one("kayttaja").get();
 
-    export const oikeudet = () => _Api.one("kayttaja").all("oikeudet").get();
+    export const oikeudet = () =>
+        _Api
+            .one("kayttaja")
+            .all("oikeudet")
+            .get();
 
     // TODO: Map by koulutustoimija
-    export const tyoryhmat = () => _Api.one("kayttaja").all("tyoryhmat").get();
+    export const tyoryhmat = () =>
+        _Api
+            .one("kayttaja")
+            .all("tyoryhmat")
+            .get();
 
-    export const casRoles = () => _$q((resolve) =>
-        _Cas.one("myroles").get()
-            .then(resolve)
-            .catch(() => resolve({})));
+    export const casRoles = () =>
+        _$q(resolve =>
+            _Cas
+                .one("myroles")
+                .get()
+                .then(resolve)
+                .catch(() => resolve({}))
+        );
 
-    export const casMe = () => _$q((resolve) =>
-        _Cas.one("me").get()
-            .then(resolve)
-            .catch(() => resolve({})));
+    export const casMe = () =>
+        _$q(resolve =>
+            _Cas
+                .one("me")
+                .get()
+                .then(resolve)
+                .catch(() => resolve({}))
+        );
 
-    export const oikeusVaihtoehdot = () =>
-        (["estetty", "luku", "muokkaus", "lisays", "poisto", "hallinta"]);
+    export const oikeusVaihtoehdot = () => ["estetty", "luku", "muokkaus", "lisays", "poisto", "hallinta"];
 }
 
-
-angular.module("app")
-.run(($injector) => $injector.invoke(Kayttaja.init))
-.factory("Cas", Restangular => Restangular.withConfig(config => {
-    config.setBaseUrl("/cas");
-}));
+angular
+    .module("app")
+    .run($injector => $injector.invoke(Kayttaja.init))
+    .factory("Cas", Restangular =>
+        Restangular.withConfig(config => {
+            config.setBaseUrl("/cas");
+        })
+    );

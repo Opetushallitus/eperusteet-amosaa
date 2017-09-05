@@ -1,19 +1,17 @@
-angular.module("app")
-.config($stateProvider => $stateProvider
-    .state("root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot", {
+angular.module("app").config($stateProvider =>
+    $stateProvider.state("root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot", {
         url: "/tiedot?versio",
         resolve: {
             historia: ops => ops.getList("versiot"),
             versioId: $stateParams => $stateParams.versio,
-            versio: (versioId, historia) => versioId && historia.get(versioId),
+            versio: (versioId, historia) => versioId && historia.get(versioId)
         },
         controller: TiedotImpl.controller
-    }));
-
+    })
+);
 
 namespace TiedotImpl {
-    export const controller = ($q, $scope, $state, koulutustoimija, ops, historia,
-                               versioId, versio, nimiLataaja) => {
+    export const controller = ($q, $scope, $state, koulutustoimija, ops, historia, versioId, versio, nimiLataaja) => {
         $scope.versio = versio;
         $scope.koulutustoimija = koulutustoimija;
         [$scope.uusin, $scope.historia] = Revisions.parseAll(historia);
@@ -23,10 +21,11 @@ namespace TiedotImpl {
         });
 
         $scope.edit = EditointikontrollitService.createRestangular($scope, "ops", ops, {
-            done: () => historia.get("uusin").then(res => {
-                $scope.uusin = Revisions.parseOne(res);
-                $scope.historia.unshift($scope.uusin);
-            })
+            done: () =>
+                historia.get("uusin").then(res => {
+                    $scope.uusin = Revisions.parseOne(res);
+                    $scope.historia.unshift($scope.uusin);
+                })
         });
 
         $scope.restoreNew = () => $state.go($state.current.name, { versio: undefined });
@@ -44,8 +43,10 @@ namespace TiedotImpl {
             };
         }
 
-        $scope.listRevisions = () => ModalRevisions.viewRevisions($scope.historia, nimiLataaja)
-            .then(res => $state.go($state.current.name, { versio: res }));
+        $scope.listRevisions = () =>
+            ModalRevisions.viewRevisions($scope.historia, nimiLataaja).then(res =>
+                $state.go($state.current.name, { versio: res })
+            );
 
         $scope.kieletVaihtuivat = () => {
             $scope.ops.julkaisukielet = _.values($scope.$$julkaisukielet);

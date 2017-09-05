@@ -43,8 +43,8 @@ table.boxtable {
                     height: $boxtable-row-height + $boxtable-border-width * 2;
                     border-top: solid $boxtable-border-width $boxtable-border-color;
                     border-bottom: solid $boxtable-border-width $boxtable-border-color;
-                    & > a, & > a > span {
-
+                    & > a,
+                    & > a > span {
                         text-decoration: none;
                     }
 
@@ -52,7 +52,7 @@ table.boxtable {
                         display: block;
                         width: 350px;
                         white-space: nowrap;
-                        overflow:hidden !important;
+                        overflow: hidden !important;
                         text-overflow: ellipsis;
                     }
                 }
@@ -78,11 +78,17 @@ table.boxtable {
 
                             a {
                                 color: $boxtable-star-color;
-                                &:link, &:visited, &:hover, &:active {
+                                &:link,
+                                &:visited,
+                                &:hover,
+                                &:active {
                                     text-decoration: none;
                                 }
                                 span {
-                                    &:link, &:visited, &:hover, &:active {
+                                    &:link,
+                                    &:visited,
+                                    &:hover,
+                                    &:active {
                                         text-decoration: none;
                                     }
                                 }
@@ -104,9 +110,14 @@ table.boxtable {
                     & > a {
                         // Remove underlines
                         cursor: pointer;
-                        &:link, &:visited, &:hover, &:active,
-                        & > div > span:link, & > div > span:visited,
-                        & > div > span:hover, & > div > span:active {
+                        &:link,
+                        &:visited,
+                        &:hover,
+                        &:active,
+                        & > div > span:link,
+                        & > div > span:visited,
+                        & > div > span:hover,
+                        & > div > span:active {
                             text-decoration: none;
                         }
 
@@ -125,7 +136,6 @@ table.boxtable {
                     }
                 }
             }
-
         }
     }
 }

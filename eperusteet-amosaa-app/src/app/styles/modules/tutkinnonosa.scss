@@ -1,99 +1,99 @@
 $box-table-bgcolor: #199dd0;
 $box-table-padding: 5px;
-$tosa-color: #199DD0;
+$tosa-color: #199dd0;
 
 .tutkinnonosa {
-  .koodi-kaytossa {
-  }
-
-  .tutke2osa {
-    .valitsin {
-      .valitsin-osaalue {
-        .pipe {
-          padding: 0 5px 0 5px;
-        }
-      }
-    }
-    .osa-alue {
-      margin-top: 16px;
-
-      .osa-alue-nimi {
-        .koodi {
-          margin-left: 6px;
-        }
-      }
-
-      .osaamistavoite {
-        border-bottom: 1px solid #ddd;
-        .osaamistavoite-nimi {
-        }
-      }
-    }
-  }
-
-  .toteutukset {
-    .toolbar {
-      position: relative;
-      float: right;
-      top: -41px;
+    .koodi-kaytossa {
     }
 
-    .toteutus-esitys {
-      margin-top: 10px;
-      border: 1px solid $tosa-color;
-
-      .otsikko { font-size: 16px;
-        background: $tosa-color;
-        padding: 6px;
-        color: white;
-        cursor: pointer;
-
-        .turbochevron {
-          margin-right: 5px;
+    .tutke2osa {
+        .valitsin {
+            .valitsin-osaalue {
+                .pipe {
+                    padding: 0 5px 0 5px;
+                }
+            }
         }
-      }
+        .osa-alue {
+            margin-top: 16px;
 
-      .sisalto {
+            .osa-alue-nimi {
+                .koodi {
+                    margin-left: 6px;
+                }
+            }
+
+            .osaamistavoite {
+                border-bottom: 1px solid #ddd;
+                .osaamistavoite-nimi {
+                }
+            }
+        }
+    }
+
+    .toteutukset {
+        .toolbar {
+            position: relative;
+            float: right;
+            top: -41px;
+        }
+
+        .toteutus-esitys {
+            margin-top: 10px;
+            border: 1px solid $tosa-color;
+
+            .otsikko {
+                font-size: 16px;
+                background: $tosa-color;
+                padding: 6px;
+                color: white;
+                cursor: pointer;
+
+                .turbochevron {
+                    margin-right: 5px;
+                }
+            }
+
+            .sisalto {
+                margin-top: 10px;
+                padding: 0 10px 0 10px;
+            }
+        }
+
+        .toteutus {
+            margin-top: 10px;
+            border: 1px solid $tosa-color;
+
+            .toteutus-header {
+                padding: 5px;
+                background: $tosa-color;
+            }
+
+            .toteutus-content {
+                padding: 5px;
+            }
+
+            .content-toggler-header {
+                margin-top: 10px;
+            }
+
+            .toolbar-bottom {
+                margin-top: 14px;
+            }
+
+            .osaamisalatieto {
+                margin: 8px 0 5px 0;
+            }
+        }
+    }
+
+    .toteutus-placeholder {
         margin-top: 10px;
-        padding: 0 10px 0 10px;
-      }
-    }
-
-    .toteutus {
-      margin-top: 10px;
-      border: 1px solid $tosa-color;
-
-      .toteutus-header {
-        padding: 5px;
+        height: 44px;
         background: $tosa-color;
-      }
-
-      .toteutus-content {
-        padding: 5px;
-      }
-
-      .content-toggler-header {
-        margin-top: 10px;
-      }
-
-      .toolbar-bottom {
-        margin-top: 14px;
-      }
-
-      .osaamisalatieto {
-        margin: 8px 0 5px 0;
-      }
     }
-  }
-
-  .toteutus-placeholder {
-    margin-top: 10px;
-    height: 44px;
-    background: $tosa-color;
-  }
 
     .arviointi-kohdealueet {
-
         .arviointi-kohteet {
             min-height: 2em;
 
@@ -117,7 +117,6 @@ $tosa-color: #199DD0;
                     }
                 }
             }
-
         }
 
         .uusi-arviointi-kohde {
