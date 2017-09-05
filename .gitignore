@@ -17,3 +17,5 @@ target/**
 
 eperusteet-amosaa-app/tests/node_modules/
 eperusteet-amosaa-app/tests/typings/
+
+yarn.lock
