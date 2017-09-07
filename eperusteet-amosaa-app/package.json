@@ -10,7 +10,7 @@
   "scripts": {
     "dev": "gulp",
     "build": "gulp build",
-    "prettier": "prettier --config .prettierrc --write src/**/*.{ts,json,scss}"
+    "prettier": "./node_modules/prettier/bin/prettier.js --config .prettierrc --write \"src/**/*.{ts,json,scss}\""
   },
   "devDependencies": {
     "event-stream": "3.3.2",

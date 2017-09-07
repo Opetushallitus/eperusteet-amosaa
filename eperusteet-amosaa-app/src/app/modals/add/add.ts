@@ -1,16 +1,21 @@
 namespace ModalAdd {
     let i;
-    export const init = ($injector) => {
+    export const init = $injector => {
         i = inject($injector, ["$rootScope", "$uibModal", "$q", "$timeout"]);
     };
 
-    const filterPerusteet = (perusteet = [], query = "") => _(perusteet)
-        .filter(peruste => KaannaService.hae(peruste.nimi, query))
-        .value();
+    const filterPerusteet = (perusteet = [], query = "") =>
+        _(perusteet)
+            .filter(peruste => KaannaService.hae(peruste.nimi, query))
+            .value();
 
-    export const yhteinen = () => i.$uibModal.open({
+    export const yhteinen = () =>
+        i.$uibModal.open({
             resolve: {
-                pohjat: Api => Api.all("opetussuunnitelmat").all("pohjat").getList()
+                pohjat: Api =>
+                    Api.all("opetussuunnitelmat")
+                        .all("pohjat")
+                        .getList()
             },
             templateUrl: "modals/add/yhteinen.jade",
             controller: ($scope, $state, $stateParams, $uibModalInstance, pohjat) => {
@@ -21,7 +26,7 @@ namespace ModalAdd {
                     tyyppi: "yhteinen"
                 };
 
-                $scope.valitsePohja = (pohja) => {
+                $scope.valitsePohja = pohja => {
                     $scope.valittuPohja = pohja;
                     $scope.yhteinen._pohja = "" + pohja.id;
                 };
@@ -33,15 +38,16 @@ namespace ModalAdd {
                 // Kielivalitsin
                 $scope.langs = KieliService.getSisaltokielet();
                 $scope.currentLang = $stateParams.lang;
-                $scope.selectLang = (lang) => {
+                $scope.selectLang = lang => {
                     $scope.currentLang = lang;
                     KieliService.setSisaltokieli(lang);
                 };
             }
         }).result;
 
-    export const yleinen = () => i.$uibModal.open({
-            resolve: { },
+    export const yleinen = () =>
+        i.$uibModal.open({
+            resolve: {},
             templateUrl: "modals/add/yleinen.jade",
             controller: ($scope, $state, $stateParams, $uibModalInstance) => {
                 $scope.ok = $uibModalInstance.close;
@@ -50,15 +56,16 @@ namespace ModalAdd {
                 // Kielivalitsin
                 $scope.langs = KieliService.getSisaltokielet();
                 $scope.currentLang = $stateParams.lang;
-                $scope.selectLang = (lang) => {
+                $scope.selectLang = lang => {
                     $scope.currentLang = lang;
                     KieliService.setSisaltokieli(lang);
                 };
             }
         }).result;
 
-    export const pohja = () => i.$uibModal.open({
-            resolve: { },
+    export const pohja = () =>
+        i.$uibModal.open({
+            resolve: {},
             templateUrl: "modals/add/pohja.jade",
             controller: ($scope, $state, $stateParams, $uibModalInstance) => {
                 $scope.ok = $uibModalInstance.close;
@@ -69,14 +76,15 @@ namespace ModalAdd {
                 // Kielivalitsin
                 $scope.langs = KieliService.getSisaltokielet();
                 $scope.currentLang = $stateParams.lang;
-                $scope.selectLang = (lang) => {
+                $scope.selectLang = lang => {
                     $scope.currentLang = lang;
                     KieliService.setSisaltokieli(lang);
                 };
             }
         }).result;
 
-    export const opetussuunnitelma = () => i.$uibModal.open({
+    export const opetussuunnitelma = () =>
+        i.$uibModal.open({
             resolve: {
                 perusteet: Api => Api.all("perusteet").getList()
             },
@@ -98,20 +106,19 @@ namespace ModalAdd {
                 $scope.ok = $uibModalInstance.close;
                 $scope.peruuta = $uibModalInstance.dismiss;
 
-                $scope.update = (input) => {
+                $scope.update = input => {
                     if (!_.isEmpty(input)) {
                         $scope.perusteet = filterPerusteet(amosaaPerusteet, input);
                         for (let peruste of $scope.perusteet) {
                             peruste.$$haettu = KaannaService.hae(peruste.nimi, input);
                         }
-                    }
-                    else {
+                    } else {
                         $scope.perusteet = [];
                         $scope.peruste = undefined;
                     }
                 };
 
-                $scope.valitsePeruste = (peruste) => {
+                $scope.valitsePeruste = peruste => {
                     $scope.input = "";
                     $scope.peruste = peruste;
                     $scope.stMap = _.indexBy($scope.peruste.suoritustavat, "suoritustapakoodi");
@@ -120,40 +127,53 @@ namespace ModalAdd {
                         tyyppi: "ops",
                         perusteId: peruste.id,
                         perusteDiaarinumero: peruste.diaarinumero,
-                        suoritustapa: (opsSt ? "ops" : $scope.peruste.suoritustavat[0].suoritustapakoodi)
+                        suoritustapa: opsSt ? "ops" : $scope.peruste.suoritustavat[0].suoritustapakoodi
                     };
                 };
 
                 // Kielivalitsin
                 $scope.langs = KieliService.getSisaltokielet();
                 $scope.currentLang = $stateParams.lang;
-                $scope.selectLang = (lang) => {
+                $scope.selectLang = lang => {
                     $scope.currentLang = lang;
                     KieliService.setSisaltokieli(lang);
                 };
             }
         }).result;
 
-    export const sisaltoAdder = (koulutustoimija, sallitut = ["tekstikappale"]) => i.$uibModal.open({
-            resolve: {
-            },
+    export const sisaltoAdder = (koulutustoimija, sallitut = ["tekstikappale"]) =>
+        i.$uibModal.open({
+            resolve: {},
             templateUrl: "modals/add/sisalto.jade",
             controller: ($uibModalInstance, $scope, $stateParams, Api) => {
                 $scope.currentStage = "sisaltotyyppi";
                 $scope.$$tutkinnonosatuonti = _.indexOf(sallitut, "tutkinnonosatuonti") !== -1;
                 $scope.$$sisaltotuonti = _.indexOf(sallitut, "sisaltotuonti") !== -1;
 
-                $scope.sallitut = _.reject(sallitut, sallittu => sallittu === "sisaltotuonti" || sallittu === "tutkinnonosatuonti");
+                $scope.sallitut = _.reject(
+                    sallitut,
+                    sallittu => sallittu === "sisaltotuonti" || sallittu === "tutkinnonosatuonti"
+                );
                 $scope.valittu = undefined;
 
-                { // Opetussuunnitelmat
-                    $scope.valitseOps = (ops) => {
+                {
+                    // Opetussuunnitelmat
+                    $scope.valitseOps = ops => {
                         $scope.currentStage = "opssisalto";
-                        ops.one("otsikot").get()
+                        ops
+                            .one("otsikot")
+                            .get()
                             .then(otsikot => {
                                 const root = Tekstikappaleet.root(otsikot);
-                                const rakenne = _.tail(_.flattenBy(Tekstikappaleet.teeRakenne(Tekstikappaleet.uniikit(otsikot), root.id), "lapset"));
-                                _.each(rakenne, (osa: any) => { osa.$$depth -= 1; });
+                                const rakenne = _.tail(
+                                    _.flattenBy(
+                                        Tekstikappaleet.teeRakenne(Tekstikappaleet.uniikit(otsikot), root.id),
+                                        "lapset"
+                                    )
+                                );
+                                _.each(rakenne, (osa: any) => {
+                                    osa.$$depth -= 1;
+                                });
                                 $scope.rakenne = rakenne;
                             });
                     };
@@ -161,22 +181,28 @@ namespace ModalAdd {
                     $scope.tuoSisaltoa = async () => {
                         $scope.currentStage = "opetussuunnitelma";
                         const opsit = await koulutustoimija.all("opetussuunnitelmat").getList();
-                        $scope.opsp = PaginationV2.addPagination(opsit, (search: string, ops: any): boolean =>
-                            ($scope.poistetut || ops.tila !== "poistettu")
-                            && (!search || _.isEmpty(search) || Algoritmit.match(search, ops.nimi)));
+                        $scope.opsp = PaginationV2.addPagination(
+                            opsit,
+                            (search: string, ops: any): boolean =>
+                                ($scope.poistetut || ops.tila !== "poistettu") &&
+                                (!search || _.isEmpty(search) || Algoritmit.match(search, ops.nimi))
+                        );
                     };
 
-                    $scope.lisaaOpsSisalto = () => $scope.ok(_($scope.rakenne)
-                        .filter(viite => viite.$$valittu)
-                        .map("id")
-                        .map(_.parseInt)
-                        .value());
+                    $scope.lisaaOpsSisalto = () =>
+                        $scope.ok(
+                            _($scope.rakenne)
+                                .filter(viite => viite.$$valittu)
+                                .map("id")
+                                .map(_.parseInt)
+                                .value()
+                        );
                 }
 
                 // Perusteet
                 {
                     let valittuPeruste = null;
-                    $scope.valitseTutkinnonosa = (tosa) => {
+                    $scope.valitseTutkinnonosa = tosa => {
                         $scope.ok({
                             tyyppi: "tutkinnonosa",
                             tekstiKappale: {
@@ -192,14 +218,17 @@ namespace ModalAdd {
                         });
                     };
 
-                    $scope.valitsePeruste = async (peruste) => {
+                    $scope.valitsePeruste = async peruste => {
                         $scope.currentStage = "perusteentutkinnonosat";
-                        const perusteKaikki = await Api.all("perusteet").one(peruste.id + "/kaikki").get();
+                        const perusteKaikki = await Api.all("perusteet")
+                            .one(peruste.id + "/kaikki")
+                            .get();
                         valittuPeruste = perusteKaikki;
                         $scope.tosap = PaginationV2.addPagination(
                             Algoritmit.doSortByNimi(perusteKaikki.tutkinnonOsat),
                             (search: string, tosa: any): boolean =>
-                                (!search || _.isEmpty(search) || Algoritmit.match(search, tosa.nimi)));
+                                !search || _.isEmpty(search) || Algoritmit.match(search, tosa.nimi)
+                        );
                     };
 
                     $scope.tuoTutkinnonosa = async () => {
@@ -208,12 +237,13 @@ namespace ModalAdd {
                         $scope.perustep = PaginationV2.addPagination(
                             Algoritmit.doSortByNimi(perusteet),
                             (search: string, peruste: any): boolean =>
-                                ($scope.poistetut || peruste.tila !== "poistettu")
-                                    && (!search || _.isEmpty(search) || Algoritmit.match(search, peruste.nimi)));
+                                ($scope.poistetut || peruste.tila !== "poistettu") &&
+                                (!search || _.isEmpty(search) || Algoritmit.match(search, peruste.nimi))
+                        );
                     };
                 }
 
-                $scope.valitse = (tyyppi) => {
+                $scope.valitse = tyyppi => {
                     $scope.currentStage = "nimenvalinta";
                     $scope.obj = {
                         tyyppi: tyyppi,
@@ -228,7 +258,7 @@ namespace ModalAdd {
                 // Kielivalitsin
                 $scope.langs = KieliService.getSisaltokielet();
                 $scope.currentLang = $stateParams.lang;
-                $scope.selectLang = (lang) => {
+                $scope.selectLang = lang => {
                     $scope.currentLang = lang;
                     KieliService.setSisaltokieli(lang);
                 };
@@ -236,5 +266,4 @@ namespace ModalAdd {
         }).result;
 }
 
-angular.module("app")
-.run(ModalAdd.init);
+angular.module("app").run(ModalAdd.init);
