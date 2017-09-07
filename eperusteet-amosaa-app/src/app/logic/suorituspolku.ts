@@ -1,21 +1,23 @@
 namespace Suorituspolku {
-    export const pakollinen = _.memoize((osa) => !osa.osaamisala && (osa.pakollinen || _.some(osa.osat, pakollinen)));
+    export const pakollinen = _.memoize(osa => !osa.osaamisala && (osa.pakollinen || _.some(osa.osat, pakollinen)));
 
     export const calculateRealAmount = (ops, tree, tosat, poistetut) => {
-        const shouldCount = (node) => !poistetut[node.tunniste] || !poistetut[node.tunniste].piilotettu;
-        const isRyhma = (node) => !node._tutkinnonOsaViite;
+        const shouldCount = node => !poistetut[node.tunniste] || !poistetut[node.tunniste].piilotettu;
+        const isRyhma = node => !node._tutkinnonOsaViite;
 
-        const calculateSubstituteLaajuus = (node) => _(node.osat)
-            .map(getLaajuus)
-            .reduce(sum);
+        const calculateSubstituteLaajuus = node =>
+            _(node.osat)
+                .map(getLaajuus)
+                .reduce(sum);
 
-        const getKoko = (node) => isRyhma(node)
-            ? (node.rooli !== "määrittelemätön"
-              ? _.property("muodostumisSaanto.koko.minimi")(node) || 0
-              : _.property("muodostumisSaanto.koko.maksimi")(node) || 0)
-            : tosat[node._tutkinnonOsaViite] ? 1 : 0;
+        const getKoko = node =>
+            isRyhma(node)
+                ? node.rooli !== "määrittelemätön"
+                  ? _.property("muodostumisSaanto.koko.minimi")(node) || 0
+                  : _.property("muodostumisSaanto.koko.maksimi")(node) || 0
+                : tosat[node._tutkinnonOsaViite] ? 1 : 0;
 
-        const getLaajuus = (node) => {
+        const getLaajuus = node => {
             if (isRyhma(node)) {
                 const minimi = _.property("muodostumisSaanto.laajuus.minimi")(node);
                 const maksimi = _.property("muodostumisSaanto.laajuus.maksimi")(node);
@@ -23,26 +25,25 @@ namespace Suorituspolku {
 
                 if (laajuus) {
                     return laajuus;
-                }
-                else {
+                } else {
                     return _(node.osat || [])
                         .filter(shouldCount)
                         .map(getLaajuus)
                         .reduce(sum);
                 }
-            }
-            else {
+            } else {
                 return tosat[node._tutkinnonOsaViite].laajuus || 0;
             }
         };
 
         const sum = (acc, min: any) => (min || 0) + acc;
 
-        const calculateAmounts = (node, laajuusTaiKoko) => _(node.osat)
-            .filter(shouldCount)
-            .map(laajuusTaiKoko)
-            .compact()
-            .reduce(sum);
+        const calculateAmounts = (node, laajuusTaiKoko) =>
+            _(node.osat)
+                .filter(shouldCount)
+                .map(laajuusTaiKoko)
+                .compact()
+                .reduce(sum);
 
         (function recur(node) {
             let osatValidit = true;
