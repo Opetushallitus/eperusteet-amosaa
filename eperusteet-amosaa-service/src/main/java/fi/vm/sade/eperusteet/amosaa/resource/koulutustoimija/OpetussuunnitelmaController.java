@@ -37,10 +37,13 @@ import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaSer
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.util.PoistettuService;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
-import io.swagger.annotations.Api;
+import io.swagger.annotations.*;
+
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  *
@@ -63,133 +66,181 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
     @Autowired
     private EperusteetAmosaaAudit audit;
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(method = RequestMethod.GET)
-    @ResponseBody
     public List<OpetussuunnitelmaBaseDto> getAll(
-            @ModelAttribute("solvedKtId") final Long ktId,
-            @RequestParam(name = "peruste", required = false) Long perusteId) {
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @RequestParam(name = "peruste", required = false) Long perusteId
+    ) {
         return service.getOpetussuunnitelmat(ktId, perusteId);
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/ystavien", method = RequestMethod.GET)
-    @ResponseBody
-    public List<OpetussuunnitelmaDto> getAllOtherOrgs(@ModelAttribute("solvedKtId") final Long ktId) {
+    public List<OpetussuunnitelmaDto> getAllOtherOrgs(
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId
+    ) {
         return service.getOtherOpetussuunnitelmat(ktId);
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(method = RequestMethod.POST)
-    @ResponseBody
     public OpetussuunnitelmaBaseDto add(
-            @ModelAttribute("solvedKtId") final Long ktId,
-            @RequestBody OpetussuunnitelmaDto opsDto) {
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @RequestBody OpetussuunnitelmaDto opsDto
+    ) {
         return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, OPETUSSUUNNITELMA_LISAYS, opsDto),
                 (Void) -> service.addOpetussuunnitelma(ktId, opsDto));
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/{opsId}", method = RequestMethod.GET)
-    @ResponseBody
     public OpetussuunnitelmaDto get(
-            @ModelAttribute("solvedKtId") final Long ktId,
-            @PathVariable final Long opsId) {
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @PathVariable final Long opsId
+    ) {
         return service.getOpetussuunnitelma(ktId, opsId);
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/{opsId}/peruste", method = RequestMethod.GET)
-    @ResponseBody
     public JsonNode getPeruste(
-            @ModelAttribute("solvedKtId") final Long ktId,
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId) {
         return service.getOpetussuunnitelmanPeruste(ktId, opsId);
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/{opsId}", method = RequestMethod.PUT)
-    @ResponseBody
     public OpetussuunnitelmaDto update(
-            @ModelAttribute("solvedKtId") final Long ktId,
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
-            @RequestBody(required = false) OpetussuunnitelmaDto body) {
-        return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, OPETUSSUUNNITELMA_MUOKKAUS, body), (Void) -> {
-            return service.update(ktId, opsId, body);
-        });
+            @RequestBody(required = false) OpetussuunnitelmaDto body
+    ) {
+        return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, OPETUSSUUNNITELMA_MUOKKAUS, body),
+                (Void) -> service.update(ktId, opsId, body));
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/{opsId}/poistetut", method = RequestMethod.GET)
-    @ResponseBody
     public List<PoistettuDto> getPoistetut(
-            @ModelAttribute("solvedKtId") final Long ktId,
-            @PathVariable final Long opsId) {
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @PathVariable final Long opsId
+    ) {
         return poistetutService.poistetut(ktId, opsId);
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/{opsId}/poistetut/{poistettuId}/palauta", method = RequestMethod.POST)
-    @ResponseBody
     public SisaltoViiteDto getPoistetut(
-            @ModelAttribute("solvedKtId") final Long ktId,
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
-            @PathVariable final Long poistettuId) {
-        return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, SISALTO_PALAUTUS), (Void) -> {
-            return sisaltoviiteService.restoreSisaltoViite(ktId, opsId, poistettuId);
-        });
+            @PathVariable final Long poistettuId
+    ) {
+        return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, SISALTO_PALAUTUS),
+                (Void) -> sisaltoviiteService.restoreSisaltoViite(ktId, opsId, poistettuId));
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/{opsId}/oikeudet", method = RequestMethod.GET)
     public List<KayttajaoikeusDto> getOikeudet(
-            @ModelAttribute("solvedKtId") final Long ktId,
-            @PathVariable final Long opsId) {
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @PathVariable final Long opsId
+    ) {
         return service.getOikeudet(ktId, opsId);
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/{opsId}/oikeudet/{kayttajaId}", method = RequestMethod.POST)
     public KayttajaoikeusDto updateOikeus(
-            @ModelAttribute("solvedKtId") final Long ktId,
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long kayttajaId,
-            @RequestBody(required = false) KayttajaoikeusDto body) {
-        return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, OIKEUS_MUOKKAUS), (Void) -> {
-            return service.updateOikeus(ktId, opsId, kayttajaId, body);
-        });
+            @RequestBody(required = false) KayttajaoikeusDto body
+    ) {
+        return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, OIKEUS_MUOKKAUS),
+                (Void) -> service.updateOikeus(ktId, opsId, kayttajaId, body));
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/{opsId}/versiot/uusin", method = RequestMethod.GET)
     @InternalApi
     Revision getLatestRevision(
-            @ModelAttribute("solvedKtId") final Long ktId,
-            @PathVariable final Long opsId) {
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @PathVariable final Long opsId
+    ) {
         return service.getLatestRevision(ktId, opsId);
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/{opsId}/validoi", method = RequestMethod.GET)
     @InternalApi
     Validointi validoi(
-            @ModelAttribute("solvedKtId") final Long ktId,
-            @PathVariable final Long opsId) {
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @PathVariable final Long opsId
+    ) {
         return service.validoi(ktId, opsId);
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/{opsId}/versiot", method = RequestMethod.GET)
     @InternalApi
     List<Revision> getRevisions(
-            @ModelAttribute("solvedKtId") final Long ktId,
-            @PathVariable final Long opsId) {
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @PathVariable final Long opsId
+    ) {
         return service.getRevisions(ktId, opsId);
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/{opsId}/versiot/{revId}", method = RequestMethod.GET)
     @InternalApi
     Object getRevisions(
-            @ModelAttribute("solvedKtId") final Long ktId,
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
-            @PathVariable final Integer revId) {
+            @PathVariable final Integer revId
+    ) {
         return service.getData(ktId, opsId, revId);
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/{opsId}/tila/{tila}", method = RequestMethod.POST)
     public OpetussuunnitelmaBaseDto updateTila(
-            @ModelAttribute("solvedKtId") final Long ktId,
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
-            @PathVariable final Tila tila) {
-        return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, TILA_MUOKKAUS), (Void) -> {
-            return service.updateTila(ktId, opsId, tila);
-        });
+            @PathVariable final Tila tila
+    ) {
+        return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, TILA_MUOKKAUS),
+                (Void) -> service.updateTila(ktId, opsId, tila));
     }
 }

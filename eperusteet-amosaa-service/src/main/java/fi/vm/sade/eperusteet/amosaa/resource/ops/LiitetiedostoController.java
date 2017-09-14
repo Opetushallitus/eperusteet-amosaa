@@ -31,6 +31,9 @@ import java.util.*;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
+
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import org.apache.tika.Tika;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +45,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  *
@@ -66,16 +70,19 @@ public class LiitetiedostoController extends KoulutustoimijaIdGetterAbstractCont
         SUPPORTED_TYPES = Collections.unmodifiableSet(tmp);
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/{ktId}/opetussuunnitelmat/{opsId}/kuvat", method = RequestMethod.POST)
-    public ResponseEntity<String> upload(@ModelAttribute("solvedKtId") final Long ktId,
-                                         @PathVariable Long opsId,
-                                         @RequestParam String nimi,
-                                         @RequestParam Part file,
-                                         @RequestParam Integer width,
-                                         @RequestParam Integer height,
-                                         UriComponentsBuilder ucb)
-            throws IOException, HttpMediaTypeNotSupportedException {
-
+    public ResponseEntity<String> upload(
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @PathVariable Long opsId,
+            @RequestParam String nimi,
+            @RequestParam Part file,
+            @RequestParam Integer width,
+            @RequestParam Integer height,
+            UriComponentsBuilder ucb
+    ) throws IOException, HttpMediaTypeNotSupportedException {
         LogMessage.builder(OPETUSSUUNNITELMA, KUVA_LISAYS).log();
         final long koko = file.getSize();
         try (PushbackInputStream pis = new PushbackInputStream(file.getInputStream(), BUFSIZE)) {
@@ -104,10 +111,12 @@ public class LiitetiedostoController extends KoulutustoimijaIdGetterAbstractCont
         }
     }
 
-    private ByteArrayOutputStream scaleImage(@RequestParam("file") Part file,
-                                             String tyyppi,
-                                             Integer width,
-                                             Integer height) throws IOException {
+    private ByteArrayOutputStream scaleImage(
+            @RequestParam("file") Part file,
+            String tyyppi,
+            Integer width,
+            Integer height
+    ) throws IOException {
         BufferedImage a = ImageIO.read(file.getInputStream());
         BufferedImage preview = new BufferedImage(width, height, a.getType());
         preview.createGraphics().drawImage(a.getScaledInstance(width, height, Image.SCALE_SMOOTH), 0, 0, null);
@@ -130,14 +139,18 @@ public class LiitetiedostoController extends KoulutustoimijaIdGetterAbstractCont
         return preview;
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/{ktId}/opetussuunnitelmat/{opsId}/kuvat/{id}", method = RequestMethod.GET)
     @CacheControl(age = CacheControl.ONE_YEAR)
-    public void get(@ModelAttribute("solvedKtId") final Long ktId,
-                    @PathVariable Long opsId,
-                    @PathVariable UUID id,
-                    @RequestHeader(value = "If-None-Match", required = false) String etag,
-                    HttpServletResponse response) throws IOException {
-
+    public void get(
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @PathVariable Long opsId,
+            @PathVariable UUID id,
+            @RequestHeader(value = "If-None-Match", required = false) String etag,
+            HttpServletResponse response
+    ) throws IOException {
         LiiteDto dto = liitteet.get(ktId, opsId, id);
         if (dto != null) {
             if (etag != null && dto.getId().toString().equals(etag)) {
@@ -155,18 +168,28 @@ public class LiitetiedostoController extends KoulutustoimijaIdGetterAbstractCont
         }
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/{ktId}/opetussuunnitelmat/{opsId}/kuvat/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@ModelAttribute("solvedKtId") final Long ktId,
-                       @PathVariable Long opsId,
-                       @PathVariable UUID id) {
+    public void delete(
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @PathVariable Long opsId,
+            @PathVariable UUID id
+    ) {
         LogMessage.builder(OPETUSSUUNNITELMA, KUVA_POISTO).log();
         liitteet.delete(ktId, opsId, id);
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/{ktId}/opetussuunnitelmat/{opsId}/kuvat", method = RequestMethod.GET)
-    public List<LiiteDto> getAll(@ModelAttribute("solvedKtId") final Long ktId,
-                                         @PathVariable Long opsId) {
+    public List<LiiteDto> getAll(
+            @ApiIgnore@ModelAttribute("solvedKtId") final Long ktId,
+            @PathVariable Long opsId
+    ) {
         return liitteet.getAll(ktId, opsId);
     }
 }
