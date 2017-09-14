@@ -32,6 +32,9 @@ import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaServi
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import io.swagger.annotations.Api;
 import java.util.List;
+
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,6 +45,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  *
@@ -52,7 +56,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(value = "koulutustoimijat")
 public class KoulutustoimijaController extends KoulutustoimijaIdGetterAbstractController {
     @Autowired
-    protected KoulutustoimijaService koulutustoimijaService;
+    private KoulutustoimijaService koulutustoimijaService;
 
     @Autowired
     private SisaltoViiteService sisaltoViiteService;
@@ -63,74 +67,109 @@ public class KoulutustoimijaController extends KoulutustoimijaIdGetterAbstractCo
     @Autowired
     private EperusteetAmosaaAudit audit;
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/{ktId}", method = RequestMethod.GET)
     @ResponseBody
     public KoulutustoimijaDto get(
-            @ModelAttribute("solvedKtId") final Long ktId) {
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId
+    ) {
         return koulutustoimijaService.getKoulutustoimija(ktId);
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/{ktId}", method = RequestMethod.PUT)
     @ResponseBody
     public KoulutustoimijaDto update(
-            @ModelAttribute("solvedKtId") final Long ktId,
-            @RequestBody final KoulutustoimijaDto kt) {
-        return audit.withAudit(LogMessage.builder(KOULUTUSTOIMIJA, KOULUTUSTOIMIJA_MUOKKAUS, kt), (Void) -> {
-            return koulutustoimijaService.updateKoulutustoimija(ktId, kt);
-        });
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @RequestBody final KoulutustoimijaDto kt
+    ) {
+        return audit.withAudit(LogMessage.builder(KOULUTUSTOIMIJA, KOULUTUSTOIMIJA_MUOKKAUS, kt),
+                (Void) -> koulutustoimijaService.updateKoulutustoimija(ktId, kt));
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/{ktId}/tutkinnonosat", method = RequestMethod.GET)
-    @ResponseBody
     public List<SisaltoViitePaikallinenIntegrationDto> getTutkinnonosat(
-            @ModelAttribute("solvedKtId") final Long ktId) {
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId
+    ) {
         return koulutustoimijaService.getPaikallisetTutkinnonOsat(ktId, SisaltoViitePaikallinenIntegrationDto.class);
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/{ktId}/kayttajat", method = RequestMethod.GET)
     public ResponseEntity<List<KayttajaDto>> getKayttajat(
-            @ModelAttribute("solvedKtId") final Long ktId) {
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId
+    ) {
         return new ResponseEntity<>(kayttajaTietoService.getKayttajat(ktId), HttpStatus.OK);
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/{ktId}/kaikkiKayttajat", method = RequestMethod.GET)
     public ResponseEntity<List<KayttajaDto>> getKaikkiKayttajat(
-            @ModelAttribute("solvedKtId") final Long ktId) {
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId
+    ) {
         return new ResponseEntity<>(kayttajaTietoService.getKaikkiKayttajat(ktId), HttpStatus.OK);
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/{ktId}/kayttajat/{kayttajaOid}", method = RequestMethod.GET)
     public ResponseEntity<KayttajanTietoDto> getKayttajat(
-            @ModelAttribute("solvedKtId") final Long ktId,
-            @PathVariable final String kayttajaOid) {
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @PathVariable final String kayttajaOid
+    ) {
         return ResponseEntity.ok(kayttajaTietoService.getKayttaja(ktId, kayttajaOid));
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/{ktId}/koodi/{koodi}", method = RequestMethod.GET)
     public ResponseEntity<List<SisaltoViiteSijaintiDto>> getByKoodi(
-            @ModelAttribute("solvedKtId") final Long ktId,
-            @PathVariable final String koodi) {
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @PathVariable final String koodi
+    ) {
         return new ResponseEntity<>(sisaltoViiteService.getByKoodi(ktId, koodi, SisaltoViiteSijaintiDto.class), HttpStatus.OK);
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/{ktId}/yhteistyo", method = RequestMethod.GET)
-    @ResponseBody
     public List<KoulutustoimijaBaseDto> getYhteistyoKoulutustoimijat(
-            @ModelAttribute("solvedKtId") final Long ktId) {
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId
+    ) {
         return koulutustoimijaService.getYhteistyoKoulutustoimijat(ktId);
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/{ktId}/ystavat", method = RequestMethod.GET)
-    @ResponseBody
     public List<KoulutustoimijaYstavaDto> getOmatYstavat(
-            @ModelAttribute("solvedKtId") final Long ktId) {
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId
+    ) {
         return koulutustoimijaService.getOmatYstavat(ktId);
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/{ktId}/ystavapyynnot", method = RequestMethod.GET)
-    @ResponseBody
     public List<KoulutustoimijaBaseDto> getPyynnot(
-            @ModelAttribute("solvedKtId") final Long ktId) {
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId
+    ) {
         return koulutustoimijaService.getPyynnot(ktId);
     }
 

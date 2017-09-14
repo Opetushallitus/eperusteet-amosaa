@@ -31,6 +31,7 @@ public class KoulutustoimijaIdGetterAbstractController {
     @Autowired
     private KoulutustoimijaService ktService;
 
+    // Käytetään, koska ktId voi oll joko ktId tai organisaatioId
     @ModelAttribute("solvedKtId")
     protected Long getKtId(@PathVariable("ktId") String ktId) {
         return ktService.getKoulutustoimija(ktId);

@@ -12,6 +12,9 @@ import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 import fi.vm.sade.eperusteet.amosaa.service.ops.TiedoteService;
 import io.swagger.annotations.Api;
 import java.util.List;
+
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +28,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * Created by richard.vancamp on 29/03/16.
@@ -40,58 +44,81 @@ public class TiedoteController extends KoulutustoimijaIdGetterAbstractController
     @Autowired
     private TiedoteService tiedoteService;
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(method = GET, value = "/tiedotteet")
     public ResponseEntity<List<TiedoteDto>> getAll(
-            @ModelAttribute("solvedKtId") final Long ktId) {
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId
+    ) {
         return ResponseEntity.ok(tiedoteService.getTiedotteet(ktId));
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/tiedotteet/{id}", method = GET)
     public ResponseEntity<TiedoteDto> getTiedote(
-            @ModelAttribute("solvedKtId") final Long ktId,
-            @PathVariable final Long id) {
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @PathVariable final Long id
+    ) {
         return ResponseEntity.ok(tiedoteService.getTiedote(ktId, id));
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(method = POST, value = "/tiedotteet")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<TiedoteDto> addTiedote(
-            @ModelAttribute("solvedKtId") final Long ktId,
-            @RequestBody TiedoteDto tiedoteDto) {
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @RequestBody TiedoteDto tiedoteDto
+    ) {
         return audit.withAudit(LogMessage.builder(KOULUTUSTOIMIJA, TIEDOTE_POISTO), (Void) -> {
             return ResponseEntity.ok(tiedoteService.addTiedote(ktId, tiedoteDto));
         });
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/tiedotteet/{id}", method = PUT)
     public ResponseEntity<TiedoteDto> updateTiedote(
-            @ModelAttribute("solvedKtId") final Long ktId,
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long id,
-            @RequestBody TiedoteDto tiedoteDto) {
+            @RequestBody TiedoteDto tiedoteDto
+    ) {
         return audit.withAudit(LogMessage.builder(KOULUTUSTOIMIJA, TIEDOTE_MUOKKAUS), (Void) -> {
             return ResponseEntity.ok(tiedoteService.updateTiedote(ktId, tiedoteDto));
         });
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/tiedotteet/{id}/kuittaa", method = POST)
     public void updateTiedote(
-            @ModelAttribute("solvedKtId") final Long ktId,
-            @PathVariable final Long id) {
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @PathVariable final Long id
+    ) {
         audit.withAudit(LogMessage.builder(KAYTTAJA, TIEDOTE_KUITTAUS), (Void) -> {
             tiedoteService.kuittaaLuetuksi(ktId, id);
             return null;
         });
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/tiedotteet/{id}", method = DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteTiedote(
-            @ModelAttribute("solvedKtId") final Long ktId,
-            @PathVariable final Long id) {
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @PathVariable final Long id
+    ) {
         audit.withAudit(LogMessage.builder(KOULUTUSTOIMIJA, TIEDOTE_POISTO), (Void) -> {
             tiedoteService.deleteTiedote(ktId, id);
             return null;
         });
     }
-
 }

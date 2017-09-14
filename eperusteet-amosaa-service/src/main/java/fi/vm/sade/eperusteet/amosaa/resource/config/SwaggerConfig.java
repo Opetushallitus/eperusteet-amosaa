@@ -19,6 +19,9 @@ import com.fasterxml.classmate.GenericType;
 import com.fasterxml.classmate.TypeResolver;
 import com.fasterxml.jackson.databind.JsonNode;
 import static com.google.common.base.Predicates.not;
+
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 import javax.servlet.ServletContext;
@@ -32,6 +35,7 @@ import org.springframework.http.ResponseEntity;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
+import springfox.documentation.service.VendorExtension;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger1.annotations.EnableSwagger;
@@ -92,16 +96,16 @@ public class SwaggerConfig {
      * API Info as it appears on the swagger-ui page
      */
     private ApiInfo apiInfo() {
-
-        Contact contact = null;
+        Collection<VendorExtension> vendorExtensions = new ArrayList<>();
         return new ApiInfo(
                 "Oppijan verkkopalvelukokonaisuus / ePerusteet ammatillisen opetussuunnitelmat",
                 "",
                 "Spring MVC API based on the swagger 2.0 and 1.2 specification",
                 "https://confluence.csc.fi/display/oppija/Rajapinnat+toisen+asteen+ja+perusasteen+toimijoille",
-                contact,
+                null,
                 "EUPL 1.1",
-                "http://ec.europa.eu/idabc/eupl");
+                "http://ec.europa.eu/idabc/eupl",
+                vendorExtensions);
 
     }
 }

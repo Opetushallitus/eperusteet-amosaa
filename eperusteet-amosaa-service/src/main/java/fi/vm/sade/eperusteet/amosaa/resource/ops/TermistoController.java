@@ -25,6 +25,9 @@ import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperati
 import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 import fi.vm.sade.eperusteet.amosaa.service.ops.TermistoService;
 import java.util.List;
+
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +41,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 
 /**
@@ -55,53 +59,75 @@ public class TermistoController extends KoulutustoimijaIdGetterAbstractControlle
     @Autowired
     private TermistoService termistoService;
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/termisto", method = GET)
     public ResponseEntity<List<TermiDto>> getAll(
-            @ModelAttribute("solvedKtId") final Long ktId) {
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId
+    ) {
         return ResponseEntity.ok(termistoService.getTermit(ktId));
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/termisto/{termiId}", method = GET)
     public ResponseEntity<TermiDto> get(
-            @ModelAttribute("solvedKtId") final Long ktId,
-            @PathVariable final Long termiId) {
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @PathVariable final Long termiId
+    ) {
         return ResponseEntity.ok(termistoService.getTermi(ktId, termiId));
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/termisto/{avain}/avain", method = GET)
     public ResponseEntity<TermiDto> get(
-            @ModelAttribute("solvedKtId") final Long ktId,
-            @PathVariable final String avain) {
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @PathVariable final String avain
+    ) {
         return ResponseEntity.ok(termistoService.getTermiByAvain(ktId, avain));
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/termisto", method = POST)
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<TermiDto> addTermi(
-            @ModelAttribute("solvedKtId") final Long ktId,
-            @RequestBody TermiDto dto) {
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @RequestBody TermiDto dto
+    ) {
         dto.setId(null);
-        return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, TERMI_POISTO), (Void) -> {
-            return ResponseEntity.ok(termistoService.addTermi(ktId, dto));
-        });
+        return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, TERMI_POISTO),
+                (Void) -> ResponseEntity.ok(termistoService.addTermi(ktId, dto)));
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/termisto/{termiId}", method = PUT)
     public ResponseEntity<TermiDto> updateTermi(
-            @ModelAttribute("solvedKtId") final Long ktId,
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long termiId,
-            @RequestBody TermiDto dto) {
+            @RequestBody TermiDto dto
+    ) {
         dto.setId(termiId);
-        return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, TERMI_MUOKKAUS), (Void) -> {
-            return ResponseEntity.ok(termistoService.updateTermi(ktId, dto));
-        });
+        return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, TERMI_MUOKKAUS),
+                (Void) -> ResponseEntity.ok(termistoService.updateTermi(ktId, dto)));
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/termisto/{termiId}", method = DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteTermi(
-            @ModelAttribute("solvedKtId") final Long ktId,
-            @PathVariable final Long termiId) {
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @PathVariable final Long termiId
+    ) {
         audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, TERMI_POISTO), (Void) -> {
             termistoService.deleteTermi(ktId, termiId);
             return null;
