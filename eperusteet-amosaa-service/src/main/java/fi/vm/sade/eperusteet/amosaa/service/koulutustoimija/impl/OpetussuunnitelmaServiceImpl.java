@@ -61,12 +61,14 @@ import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.ValidointiService;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,7 +78,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- *
  * @author nkala
  */
 @Service
@@ -149,8 +150,8 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     public List<OpetussuunnitelmaBaseDto> getOpetussuunnitelmat(Long ktId, Long perusteId) {
         Koulutustoimija koulutustoimija = koulutustoimijaRepository.findOne(ktId);
         List<Opetussuunnitelma> opsit = (perusteId != null)
-            ? repository.findAllByKoulutustoimijaAndPerusteId(koulutustoimija, perusteId)
-            : repository.findAllByKoulutustoimija(koulutustoimija);
+                ? repository.findAllByKoulutustoimijaAndPerusteId(koulutustoimija, perusteId)
+                : repository.findAllByKoulutustoimija(koulutustoimija);
         return mapper.mapAsList(opsit, OpetussuunnitelmaBaseDto.class);
     }
 
@@ -180,7 +181,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         return oikeudet.stream()
                 .map(Kayttajaoikeus::getOpetussuunnitelma)
                 .filter(ops -> ops.getKoulutustoimija().getYstavat().contains(omaKoulutustoimija)
-                    && omaKoulutustoimija.getYstavat().contains(ops.getKoulutustoimija()))
+                        && omaKoulutustoimija.getYstavat().contains(ops.getKoulutustoimija()))
                 .map(ops -> mapper.map(ops, OpetussuunnitelmaDto.class))
                 .collect(Collectors.toList());
     }
@@ -266,8 +267,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
         if (ops.getTyyppi() == OpsTyyppi.YLEINEN) {
             tutkinnonOsat = perusteSisalto.getTutkinnonOsat();
-        }
-        else {
+        } else {
             tutkinnonOsat = perusteSisalto.getSuoritustavat().stream()
                     .filter(st -> st.getSuoritustapakoodi() == Suoritustapakoodi.of(ops.getSuoritustapa()))
                     .map(st -> st.getTutkinnonOsat().stream())
@@ -323,8 +323,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         if (kt.isOph()) {
             opsDto.setTyyppi(OpsTyyppi.POHJA);
             opsDto.setSuoritustapa("pohja");
-        }
-        else {
+        } else {
             switch (opsDto.getTyyppi()) {
                 case OPS:
                     PerusteDto peruste = eperusteetService.getPeruste(opsDto.getPerusteId(), PerusteDto.class);
@@ -339,8 +338,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                     Opetussuunnitelma pohja = repository.findOne(opsDto.getPohja().getIdLong());
                     if (pohja == null) {
                         throw new BusinessRuleViolationException("pohjaa-ei-loytynyt");
-                    }
-                    else if (pohja.getTila() != Tila.JULKAISTU) {
+                    } else if (pohja.getTila() != Tila.JULKAISTU) {
                         throw new BusinessRuleViolationException("vain-julkaistua-pohjaa-voi-kayttaa");
                     }
 
@@ -436,7 +434,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     @Override
     public Integer getLatestRevisionId(Long ktId, Long opsId) {
         return repository.getLatestRevisionId(opsId);
-        }
+    }
 
     @Override
     public Object getData(Long ktId, Long opsId, Integer rev) {

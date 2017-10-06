@@ -18,14 +18,15 @@ package fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija;
 
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.QueryDto;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import lombok.Getter;
 import lombok.Setter;
 
 /**
- *
  * @author nkala
  */
 @Getter
@@ -41,8 +42,7 @@ public class OpetussuunnitelmaQueryDto extends QueryDto {
                     .map(t -> OpsTyyppi.of(t.toUpperCase()))
                     .filter(t -> t != OpsTyyppi.POHJA)
                     .collect(Collectors.toList());
-        }
-        else {
+        } else {
             return Arrays.asList(OpsTyyppi.OPS);
         }
     }

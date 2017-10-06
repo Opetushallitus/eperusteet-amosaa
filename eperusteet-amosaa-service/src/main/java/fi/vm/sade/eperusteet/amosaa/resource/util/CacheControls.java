@@ -16,7 +16,6 @@
 package fi.vm.sade.eperusteet.amosaa.resource.util;
 
 /**
- *
  * @author jhyoty
  */
 final class CacheControls {

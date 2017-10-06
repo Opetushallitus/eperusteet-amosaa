@@ -24,7 +24,6 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 /**
- *
  * @author teele1
  */
 @Entity

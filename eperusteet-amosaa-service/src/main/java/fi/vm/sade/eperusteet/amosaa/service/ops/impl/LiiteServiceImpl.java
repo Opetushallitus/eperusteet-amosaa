@@ -25,19 +25,20 @@ import fi.vm.sade.eperusteet.amosaa.service.exception.NotExistsException;
 import fi.vm.sade.eperusteet.amosaa.service.exception.ServiceException;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.ops.LiiteService;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
+
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- *
  * @author jhyoty
  */
 @Service
@@ -59,10 +60,10 @@ public class LiiteServiceImpl implements LiiteService {
     @Transactional(readOnly = true)
     public void export(Long ktId, Long opsId, UUID id, OutputStream os) {
         Liite liite = liiteRepository.findOne(id);
-        if ( liite == null ) {
+        if (liite == null) {
             throw new NotExistsException("ei ole");
         }
-        try ( InputStream is = liite.getData().getBinaryStream() ) {
+        try (InputStream is = liite.getData().getBinaryStream()) {
             IOUtils.copy(is, os);
         } catch (SQLException | IOException ex) {
             throw new ServiceException("Liiteen lataaminen ei onnistu", ex);
@@ -94,7 +95,7 @@ public class LiiteServiceImpl implements LiiteService {
     @Override
     public void delete(Long ktId, Long opsId, UUID id) {
         Liite liite = liiteRepository.findOne(ktId, id);
-        if ( liite == null ) {
+        if (liite == null) {
             throw new NotExistsException("Liitettä ei ole");
         }
         koulutustoimijaRepository.findOne(ktId).removeLiite(liite);

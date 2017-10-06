@@ -20,20 +20,25 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
 import fi.vm.sade.eperusteet.amosaa.repository.version.JpaWithVersioningRepository;
+
 import java.util.List;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
- *
  * @author mikkom
  */
 @Repository
 public interface SisaltoviiteRepository extends JpaWithVersioningRepository<SisaltoViite, Long> {
     List<SisaltoViite> findAllByTekstiKappale(TekstiKappale tekstiKappale);
+
     List<SisaltoViite> findAllByOwner(Opetussuunnitelma owner);
+
     List<SisaltoViite> findAllByOwnerId(Long owner);
+
     SisaltoViite findOneByOwnerAndId(Opetussuunnitelma owner, Long id);
+
     SisaltoViite findOneByOwnerIdAndId(Long owner, Long id);
 
     @Query(value = "SELECT sv from SisaltoViite sv where sv.owner = ?1 AND sv.vanhempi IS NULL")

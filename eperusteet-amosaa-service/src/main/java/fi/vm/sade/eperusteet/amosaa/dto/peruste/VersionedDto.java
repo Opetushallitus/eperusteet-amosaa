@@ -18,10 +18,10 @@ package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 
 
 /**
- *
  * @author harrik
  */
 public interface VersionedDto {
     Integer getVersioId();
+
     void setVersionId(Integer id);
 }

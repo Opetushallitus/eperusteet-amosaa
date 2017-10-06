@@ -20,15 +20,14 @@ import fi.vm.sade.eperusteet.amosaa.domain.revision.RevisionInfo;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 
 /**
- *
  * @author jhyoty
  */
 public class AuditRevisionListener implements org.hibernate.envers.RevisionListener {
 
     @Override
     public void newRevision(Object revisionEntity) {
-        if ( revisionEntity instanceof RevisionInfo ) {
-            RevisionInfo ri = (RevisionInfo)revisionEntity;
+        if (revisionEntity instanceof RevisionInfo) {
+            RevisionInfo ri = (RevisionInfo) revisionEntity;
             ri.setMuokkaajaOid(SecurityUtil.getAuthenticatedPrincipal().getName());
         }
     }

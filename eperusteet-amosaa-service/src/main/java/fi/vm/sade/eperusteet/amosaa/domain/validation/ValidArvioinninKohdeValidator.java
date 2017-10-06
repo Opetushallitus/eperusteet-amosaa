@@ -24,7 +24,6 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 /**
- *
  * @author teele1
  */
 public class ValidArvioinninKohdeValidator implements ConstraintValidator<ValidArvioinninKohde, ArvioinninKohde> {
@@ -41,7 +40,7 @@ public class ValidArvioinninKohdeValidator implements ConstraintValidator<ValidA
         }
 
         if (arvioinninKohde.getArviointiasteikko() == null
-            || arvioinninKohde.getArviointiasteikko().getOsaamistasot().size() != arvioinninKohde.getOsaamistasonKriteerit().size()) {
+                || arvioinninKohde.getArviointiasteikko().getOsaamistasot().size() != arvioinninKohde.getOsaamistasonKriteerit().size()) {
             return false;
         }
 

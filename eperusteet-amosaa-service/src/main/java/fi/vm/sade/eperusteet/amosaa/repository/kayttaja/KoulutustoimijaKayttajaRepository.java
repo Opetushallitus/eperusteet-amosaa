@@ -19,14 +19,16 @@ package fi.vm.sade.eperusteet.amosaa.repository.kayttaja;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.Kayttaja;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.KoulutustoimijaKayttaja;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
+
 import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
- *
  * @author nkala
  */
 public interface KoulutustoimijaKayttajaRepository extends JpaRepository<KoulutustoimijaKayttaja, Long> {
     List<KoulutustoimijaKayttaja> findAllByKoulutustoimija(Koulutustoimija kt);
+
     KoulutustoimijaKayttaja findOneByKoulutustoimijaAndKayttaja(Koulutustoimija kt, Kayttaja kayttaja);
 }

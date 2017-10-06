@@ -18,15 +18,16 @@ package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.SuorituspolkuRiviDto;
+
 import java.util.HashSet;
 import java.util.Set;
+
 import lombok.Getter;
 import lombok.Setter;
 import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
 import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
- *
  * @author nkala
  */
 @Getter

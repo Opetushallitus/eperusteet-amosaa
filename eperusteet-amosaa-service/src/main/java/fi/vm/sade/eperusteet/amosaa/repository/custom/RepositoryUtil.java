@@ -16,7 +16,6 @@
 package fi.vm.sade.eperusteet.amosaa.repository.custom;
 
 /**
- *
  * @author jhyoty
  */
 public final class RepositoryUtil {

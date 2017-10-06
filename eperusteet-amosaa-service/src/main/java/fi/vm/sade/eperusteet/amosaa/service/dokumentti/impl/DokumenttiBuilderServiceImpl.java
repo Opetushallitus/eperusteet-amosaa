@@ -51,7 +51,9 @@ import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.CharapterNumber
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiBase;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiRivi;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiTaulukko;
+
 import static fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils.*;
+
 import fi.vm.sade.eperusteet.amosaa.service.external.ArviointiasteikkoService;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
@@ -59,6 +61,7 @@ import fi.vm.sade.eperusteet.amosaa.service.ops.LiiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.TermistoService;
 import fi.vm.sade.eperusteet.amosaa.service.util.KoodistoClient;
+
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -78,6 +81,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,7 +93,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- *
  * @author iSaul
  */
 @Service
@@ -812,7 +815,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
                     AmmattitaitovaatimuksenKohdealue ammattitaitovaatimuksenKohdealue = mapper.map(dto,
                             AmmattitaitovaatimuksenKohdealue.class);
                     addAmmattitaitovaatimuksenKohdealue(docBase, ammattitaitovaatimuksenKohdealue);
-                    });
+                });
             } else if (perusteenTutkinnonosa.getAmmattitaitovaatimukset() != null) {
                 addTeksti(docBase, messages.translate("docgen.ammattitaitovaatimukset", docBase.getKieli()), "h5");
                 addLokalisoituteksti(docBase, perusteenTutkinnonosa.getAmmattitaitovaatimukset(), "div");
@@ -939,7 +942,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
                 BufferedImage tempImage = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(),
                         BufferedImage.TYPE_3BYTE_BGR);
                 tempImage.getGraphics().setColor(new Color(255, 255, 255, 0));
-                tempImage.getGraphics().fillRect (0, 0, width, height);
+                tempImage.getGraphics().fillRect(0, 0, width, height);
                 tempImage.getGraphics().drawImage(bufferedImage, 0, 0, null);
                 bufferedImage = tempImage;
 

@@ -20,7 +20,6 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 
 /**
- *
  * @author nkala
  */
 public interface ValidointiService {

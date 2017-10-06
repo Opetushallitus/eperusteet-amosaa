@@ -1,6 +1,7 @@
 package fi.vm.sade.eperusteet.amosaa.domain;
 
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
+
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Entity;
@@ -12,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,7 +24,7 @@ import lombok.Setter;
 @Table(name = "tiedote")
 @Getter
 @Setter
-public class Tiedote implements Serializable{
+public class Tiedote implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

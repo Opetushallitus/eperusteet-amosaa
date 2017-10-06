@@ -19,13 +19,14 @@ package fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.repository.version.JpaWithVersioningRepository;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
+
 import java.util.List;
 import java.util.Set;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
- *
  * @author nkala
  */
 @Repository

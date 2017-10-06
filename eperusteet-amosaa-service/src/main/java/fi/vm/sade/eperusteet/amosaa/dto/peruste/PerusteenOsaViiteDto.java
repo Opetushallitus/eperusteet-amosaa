@@ -18,6 +18,7 @@ package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
@@ -25,7 +26,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- *
  * @author jhyoty
  */
 @Getter

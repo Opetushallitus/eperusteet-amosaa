@@ -20,10 +20,12 @@ import fi.vm.sade.eperusteet.amosaa.dto.koodisto.KoodistoKoodiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koodisto.KoodistoMetadataDto;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.util.KoodistoClient;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
@@ -33,7 +35,6 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 /**
- *
  * @author nkala
  */
 @Service
@@ -66,8 +67,7 @@ public class KoodistoClientImpl implements KoodistoClient {
         try {
             KoodistoKoodiDto re = restTemplate.getForObject(url, KoodistoKoodiDto.class);
             return re;
-        }
-        catch (RestClientException ex) {
+        } catch (RestClientException ex) {
             return null;
         }
     }
@@ -77,14 +77,11 @@ public class KoodistoClientImpl implements KoodistoClient {
         String[] splitted = uri.split("_");
         if (splitted.length < 2) {
             return null;
-        }
-        else if (splitted.length == 2) {
+        } else if (splitted.length == 2) {
             return get(splitted[0], uri);
-        }
-        else if (splitted[0].startsWith("paikallinen_tutkinnonosa")) {
+        } else if (splitted[0].startsWith("paikallinen_tutkinnonosa")) {
             return null; // FIXME
-        }
-        else {
+        } else {
             return null;
         }
     }
@@ -94,7 +91,7 @@ public class KoodistoClientImpl implements KoodistoClient {
     public List<KoodistoKoodiDto> queryByKoodi(String koodisto, String query) {
         return getAll(koodisto).stream()
                 .filter(k -> k.getKoodiArvo().contains(query) || Arrays.asList(k.getMetadata()).stream()
-                    .anyMatch(meta -> meta.getNimi().contains(query)))
+                        .anyMatch(meta -> meta.getNimi().contains(query)))
                 .collect(Collectors.toList());
     }
 
@@ -121,7 +118,7 @@ public class KoodistoClientImpl implements KoodistoClient {
     }
 
     @Override
-    @Cacheable(value = "koodistot", key="'alarelaatio:'+#p0")
+    @Cacheable(value = "koodistot", key = "'alarelaatio:'+#p0")
     public List<KoodistoKoodiDto> getAlarelaatio(String koodi) {
         RestTemplate restTemplate = new RestTemplate();
         String url = koodistoServiceUrl + KOODISTO_API + ALARELAATIO + koodi;
@@ -131,7 +128,7 @@ public class KoodistoClientImpl implements KoodistoClient {
     }
 
     @Override
-    @Cacheable(value = "koodistot", key="'ylarelaatio:'+#p0")
+    @Cacheable(value = "koodistot", key = "'ylarelaatio:'+#p0")
     public List<KoodistoKoodiDto> getYlarelaatio(String koodi) {
         RestTemplate restTemplate = new RestTemplate();
         String url = koodistoServiceUrl + KOODISTO_API + YLARELAATIO + koodi;

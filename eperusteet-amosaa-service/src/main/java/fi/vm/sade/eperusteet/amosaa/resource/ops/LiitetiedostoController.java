@@ -18,12 +18,15 @@ package fi.vm.sade.eperusteet.amosaa.resource.ops;
 import fi.vm.sade.eperusteet.amosaa.dto.liite.LiiteDto;
 import fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija.KoulutustoimijaIdGetterAbstractController;
 import fi.vm.sade.eperusteet.amosaa.resource.util.CacheControl;
+
 import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaMessageFields.OPETUSSUUNNITELMA;
 import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.KUVA_LISAYS;
 import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.KUVA_POISTO;
+
 import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 import fi.vm.sade.eperusteet.amosaa.service.ops.LiiteService;
 import io.swagger.annotations.Api;
+
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -48,7 +51,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import springfox.documentation.annotations.ApiIgnore;
 
 /**
- *
  * @author jhyoty
  */
 @RestController
@@ -101,7 +103,7 @@ public class LiitetiedostoController extends KoulutustoimijaIdGetterAbstractCont
             if (width != null && height != null) {
                 ByteArrayOutputStream os = scaleImage(file, tyyppi, width, height);
                 id = liitteet.add(ktId, opsId, tyyppi, nimi, os.size(), new PushbackInputStream(new ByteArrayInputStream(os.toByteArray())));
-            } else{
+            } else {
                 id = liitteet.add(ktId, opsId, tyyppi, nimi, koko, pis);
             }
 
@@ -129,10 +131,10 @@ public class LiitetiedostoController extends KoulutustoimijaIdGetterAbstractCont
 
     private BufferedImage scaleImage(BufferedImage img, int maxDimension) {
         int w = (img.getWidth() > img.getHeight() ? maxDimension :
-                (int)(((double)img.getWidth() / img.getHeight()) * maxDimension));
+                (int) (((double) img.getWidth() / img.getHeight()) * maxDimension));
 
         int h = (img.getHeight() > img.getWidth() ? maxDimension :
-                (int)(((double)img.getHeight() / img.getWidth()) * maxDimension));
+                (int) (((double) img.getHeight() / img.getWidth()) * maxDimension));
 
         BufferedImage preview = new BufferedImage(w, h, img.getType());
         preview.createGraphics().drawImage(img.getScaledInstance(w, h, Image.SCALE_SMOOTH), 0, 0, null);
@@ -187,7 +189,7 @@ public class LiitetiedostoController extends KoulutustoimijaIdGetterAbstractCont
     })
     @RequestMapping(value = "/{ktId}/opetussuunnitelmat/{opsId}/kuvat", method = RequestMethod.GET)
     public List<LiiteDto> getAll(
-            @ApiIgnore@ModelAttribute("solvedKtId") final Long ktId,
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable Long opsId
     ) {
         return liitteet.getAll(ktId, opsId);

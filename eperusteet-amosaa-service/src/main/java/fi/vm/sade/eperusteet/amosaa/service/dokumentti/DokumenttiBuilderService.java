@@ -27,7 +27,6 @@ import java.io.IOException;
 
 
 /**
- *
  * @author iSaul
  */
 public interface DokumenttiBuilderService {

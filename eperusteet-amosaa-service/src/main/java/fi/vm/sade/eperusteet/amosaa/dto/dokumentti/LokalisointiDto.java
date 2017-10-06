@@ -21,11 +21,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+
 import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
 import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
- *
  * @author iSaul
  */
 @Getter

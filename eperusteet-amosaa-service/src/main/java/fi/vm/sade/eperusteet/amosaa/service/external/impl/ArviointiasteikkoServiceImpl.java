@@ -66,7 +66,8 @@ public class ArviointiasteikkoServiceImpl implements ArviointiasteikkoService {
     private List<Arviointiasteikko> getAllFromPeruste() {
         ResponseEntity<List<ArviointiasteikkoDto>> res = new RestTemplate()
                 .exchange(eperusteetServiceUrl + "/api/arviointiasteikot",
-                        HttpMethod.GET, null, new ParameterizedTypeReference<List<ArviointiasteikkoDto>>() {});
+                        HttpMethod.GET, null, new ParameterizedTypeReference<List<ArviointiasteikkoDto>>() {
+                        });
         List<Arviointiasteikko> arviointiasteikot = mapper.mapAsList(res.getBody(), Arviointiasteikko.class);
 
         arviointiasteikot.forEach(asteikko -> repository.save(asteikko));

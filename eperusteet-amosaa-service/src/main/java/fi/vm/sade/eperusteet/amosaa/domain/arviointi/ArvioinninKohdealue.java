@@ -49,8 +49,8 @@ public class ArvioinninKohdealue implements Serializable {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL}, orphanRemoval = true)
     @JoinTable(name = "arvioinninkohdealue_arvioinninkohde",
-               joinColumns = @JoinColumn(name = "arvioinninkohdealue_id"),
-               inverseJoinColumns = @JoinColumn(name = "arvioinninkohde_id"))
+            joinColumns = @JoinColumn(name = "arvioinninkohdealue_id"),
+            inverseJoinColumns = @JoinColumn(name = "arvioinninkohde_id"))
     @OrderColumn
     @BatchSize(size = 10)
     private List<ArvioinninKohde> arvioinninKohteet = new ArrayList<>();

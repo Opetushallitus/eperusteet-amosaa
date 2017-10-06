@@ -41,7 +41,6 @@ import java.util.Set;
 import static fi.vm.sade.eperusteet.amosaa.service.util.Util.refXnor;
 
 /**
- *
  * @author harrik
  */
 @Entity
@@ -177,7 +176,7 @@ public class Osaamistavoite implements Serializable, PartialMergeable<Osaamistav
 
     private List<AmmattitaitovaatimuksenKohdealue> connectAmmattitaitovaatimusListToTutkinnonOsa(Osaamistavoite other) {
         for (AmmattitaitovaatimuksenKohdealue ammattitaitovaatimuksenKohdealue : other.getAmmattitaitovaatimuksetLista()) {
-            ammattitaitovaatimuksenKohdealue.connectAmmattitaitovaatimuksetToKohdealue(ammattitaitovaatimuksenKohdealue );
+            ammattitaitovaatimuksenKohdealue.connectAmmattitaitovaatimuksetToKohdealue(ammattitaitovaatimuksenKohdealue);
         }
         return other.getAmmattitaitovaatimuksetLista();
     }

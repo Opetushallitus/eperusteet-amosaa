@@ -36,16 +36,17 @@ import fi.vm.sade.eperusteet.amosaa.service.ops.ValidointiService;
 import fi.vm.sade.eperusteet.amosaa.service.peruste.PerusteCacheService;
 import fi.vm.sade.eperusteet.amosaa.service.util.Pair;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
+
 import java.math.BigDecimal;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- *
  * @author nkala
  */
 @Service
@@ -83,8 +84,7 @@ public class ValidointiServiceImpl implements ValidointiService {
             OmaTutkinnonosa oma = tosa.getOmatutkinnonosa();
             if (oma == null) {
                 validointi.virhe("oma-tutkinnon-osa-ei-sisaltoa", nimi);
-            }
-            else {
+            } else {
                 if (oma.getKoodi() == null || oma.getKoodi().isEmpty()) {
                     validointi.virhe("oma-tutkinnon-osa-ei-koodia", nimi);
                 }
@@ -134,7 +134,7 @@ public class ValidointiServiceImpl implements ValidointiService {
 
     private Pair<Integer, BigDecimal> laskettuLaajuusJaKoko(ValidointiHelper ctx, AbstractRakenneOsaDto osa) {
         if (osa instanceof RakenneModuuliDto) {
-            MuodostumisSaantoDto ms = ((RakenneModuuliDto)osa).getMuodostumisSaanto();
+            MuodostumisSaantoDto ms = ((RakenneModuuliDto) osa).getMuodostumisSaanto();
             if (ms != null) {
                 int kokoMin = (ms.getKoko() != null && ms.getKoko().getMinimi() != null) ? ms.getKoko().getMinimi() : 0;
                 int kokoMax = (ms.getKoko() != null && ms.getKoko().getMaksimi() != null) ? ms.getKoko().getMaksimi() : 0;
@@ -146,12 +146,11 @@ public class ValidointiServiceImpl implements ValidointiService {
             }
             // Ryhmälle ei ole määritelty osien laajuutta
             else {
-                Pair<Integer, BigDecimal> ryhmanSisallonMuodostuminen = sisallonLaajuusJaKoko(ctx, (RakenneModuuliDto)osa);
+                Pair<Integer, BigDecimal> ryhmanSisallonMuodostuminen = sisallonLaajuusJaKoko(ctx, (RakenneModuuliDto) osa);
                 return ryhmanSisallonMuodostuminen;
             }
-        }
-        else if (osa instanceof RakenneOsaDto) {
-            Long tovId = ((RakenneOsaDto)osa).getTutkinnonOsaViite();
+        } else if (osa instanceof RakenneOsaDto) {
+            Long tovId = ((RakenneOsaDto) osa).getTutkinnonOsaViite();
             if (tovId != null) {
                 TutkinnonOsaViiteSuppeaDto tov = ctx.tov.get(tovId);
                 if (tov != null) {
@@ -164,9 +163,9 @@ public class ValidointiServiceImpl implements ValidointiService {
 
     private Pair<Integer, BigDecimal> sisallonLaajuusJaKoko(ValidointiHelper ctx, RakenneModuuliDto moduuli) {
         return moduuli.getOsat().stream()
-            .filter(osa -> isUsedRakenneOsa(ctx, osa))
-            .map(osa -> laskettuLaajuusJaKoko(ctx, osa))
-            .reduce(Pair.of(0, new BigDecimal(0)), (acc, next) -> laajuusJaKokoReducer(acc, next));
+                .filter(osa -> isUsedRakenneOsa(ctx, osa))
+                .map(osa -> laskettuLaajuusJaKoko(ctx, osa))
+                .reduce(Pair.of(0, new BigDecimal(0)), (acc, next) -> laajuusJaKokoReducer(acc, next));
     }
 
     /// Yksittäisen ryhmän tarkastus
@@ -180,16 +179,16 @@ public class ValidointiServiceImpl implements ValidointiService {
                 if (sisallonKokoJaLaajuus.getFirst() < minimi) {
                     ctx.validointi.virhe("virheellinen-rakenteen-osa", moduuli.getNimi());
                 }
+            } catch (NullPointerException ex) {
             }
-            catch (NullPointerException ex) {}
 
             try {
                 BigDecimal minimi = new BigDecimal(moduuli.getMuodostumisSaanto().getLaajuus().getMinimi());
                 if (sisallonKokoJaLaajuus.getSecond().compareTo(minimi) == -1) {
                     ctx.validointi.virhe("virheellinen-rakenteen-osa", moduuli.getNimi());
                 }
+            } catch (NullPointerException ex) {
             }
-            catch (NullPointerException ex) {}
         }
     }
 
@@ -205,7 +204,7 @@ public class ValidointiServiceImpl implements ValidointiService {
 
         moduuli.getOsat().stream()
                 .filter(osa -> osa instanceof RakenneModuuliDto)
-                .map(osa -> (RakenneModuuliDto)osa)
+                .map(osa -> (RakenneModuuliDto) osa)
                 .filter(osa -> osa.getRooli() == RakenneModuuliRooli.NORMAALI || osa.getRooli() == RakenneModuuliRooli.OSAAMISALA)
                 .forEach(osa -> {
                     validoiSpRakenne(ctx, osa);
@@ -260,8 +259,7 @@ public class ValidointiServiceImpl implements ValidointiService {
             if (lapsi.isPakollinen()) {
                 if (lapsi.getTekstiKappale() != null) {
                     LokalisoituTeksti.validoi(validointi, ops, lapsi.getTekstiKappale().getNimi(), nimi);
-                }
-                else {
+                } else {
                     validointi.virhe("tekstikappaleella-ei-lainkaan-sisaltoa", nimi);
                 }
             }
@@ -282,7 +280,7 @@ public class ValidointiServiceImpl implements ValidointiService {
                 validointi.virhe("hyvaksyjaa-ei-maaritelty", ops.getNimi());
             }
 
-            if (ops.getPaatosnumero()== null || ops.getPaatosnumero().isEmpty()) {
+            if (ops.getPaatosnumero() == null || ops.getPaatosnumero().isEmpty()) {
                 validointi.virhe("paatosnumeroa-ei-maaritelty", ops.getNimi());
             }
 

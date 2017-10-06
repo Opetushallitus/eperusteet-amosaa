@@ -23,13 +23,15 @@ import fi.vm.sade.eperusteet.amosaa.dto.peruste.SuoritustapaLaajaDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
- *
  * @author nkala
  */
 @PreAuthorize("isAuthenticated()")
 public interface PerusteCacheService {
     PerusteDto get(Long id);
+
     JsonNode getTutkinnonOsat(Long id);
+
     SuoritustapaLaajaDto getSuoritustapa(Opetussuunnitelma ops, Long id);
+
     JsonNode getTutkinnonOsa(Long id, Long tosaId);
 }

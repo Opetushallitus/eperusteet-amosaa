@@ -27,7 +27,6 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- *
  * @author teele1
  */
 @Entity

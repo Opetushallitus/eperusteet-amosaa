@@ -22,8 +22,10 @@ import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.AbstractRakenneOsaDto;
 import fi.vm.sade.eperusteet.amosaa.resource.util.CacheHeaderInterceptor;
 import fi.vm.sade.eperusteet.amosaa.resource.util.LoggingInterceptor;
+
 import java.util.List;
 import javax.persistence.EntityManagerFactory;
+
 import org.apache.commons.io.Charsets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -38,7 +40,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.servlet.config.annotation.*;
 
 /**
- *
  * @author jhyoty
  */
 @Configuration

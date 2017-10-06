@@ -7,10 +7,12 @@ import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.repository.dokumentti.DokumenttiRepository;
 import fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija.KoulutustoimijaIdGetterAbstractController;
+
 import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaMessageFields.OPETUSSUUNNITELMA;
 import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.DOKUMENTTI_KUVAN_LISAYS;
 import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.DOKUMENTTI_KUVAN_POISTO;
 import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.DOKUMENTTI_PAIVITYS;
+
 import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiService;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils;
@@ -18,6 +20,7 @@ import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationExcep
 import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import io.swagger.annotations.Api;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -112,7 +115,7 @@ public class DokumenttiController extends KoulutustoimijaIdGetterAbstractControl
     @ApiImplicitParams({
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
-    @RequestMapping(value = "/{id}", method=RequestMethod.PUT)
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public ResponseEntity<DokumenttiDto> update(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable Long opsId,
@@ -153,7 +156,7 @@ public class DokumenttiController extends KoulutustoimijaIdGetterAbstractControl
     @ApiImplicitParams({
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
-    @RequestMapping(value = "/kuva", method=RequestMethod.POST)
+    @RequestMapping(value = "/kuva", method = RequestMethod.POST)
     public ResponseEntity<Object> addImage(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable Long opsId,
@@ -179,7 +182,7 @@ public class DokumenttiController extends KoulutustoimijaIdGetterAbstractControl
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @Transactional(readOnly = true)
-    @RequestMapping(value = "/kuva", method=RequestMethod.GET)
+    @RequestMapping(value = "/kuva", method = RequestMethod.GET)
     public ResponseEntity<Object> getImage(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable Long opsId,
@@ -231,7 +234,7 @@ public class DokumenttiController extends KoulutustoimijaIdGetterAbstractControl
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @Transactional
-    @RequestMapping(value = "/kuva", method=RequestMethod.DELETE)
+    @RequestMapping(value = "/kuva", method = RequestMethod.DELETE)
     public ResponseEntity<Object> deleteImage(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable Long opsId,

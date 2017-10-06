@@ -18,6 +18,7 @@ package fi.vm.sade.eperusteet.amosaa.domain.teksti;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
+
 import java.io.Serializable;
 import java.text.Normalizer;
 import java.util.*;
@@ -31,13 +32,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
 import lombok.Getter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Immutable;
 
 /**
- *
  * @author jhyoty
  */
 @Entity

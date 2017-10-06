@@ -19,13 +19,12 @@ package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 /**
- *
  * @author harrik
  */
 public enum TutkinnonOsaTyyppi {
     NORMAALI("normaali"),
     TUTKE2("tutke2");
-            
+
     private final String tyyppi;
 
     private TutkinnonOsaTyyppi(String tyyppi) {

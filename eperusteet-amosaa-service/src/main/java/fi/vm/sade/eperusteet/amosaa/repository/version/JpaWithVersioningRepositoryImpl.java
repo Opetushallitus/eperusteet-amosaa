@@ -18,11 +18,13 @@ package fi.vm.sade.eperusteet.amosaa.repository.version;
 import fi.vm.sade.eperusteet.amosaa.domain.revision.Revision;
 import fi.vm.sade.eperusteet.amosaa.domain.revision.RevisionInfo;
 import fi.vm.sade.eperusteet.amosaa.domain.revision.RevisionInfo_;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
+
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.query.AuditEntity;
@@ -45,7 +47,7 @@ class JpaWithVersioningRepositoryImpl<T, ID extends Serializable> extends Simple
     @Override
     public Revision getLatestRevision(ID id) {
         AuditReader auditReader = AuditReaderFactory.get(entityManager);
-        Object[] rev = (Object[])auditReader.createQuery()
+        Object[] rev = (Object[]) auditReader.createQuery()
                 .forRevisionsOfEntity(entityInformation.getJavaType(), false, true)
                 .add(AuditEntity.id().eq(id))
                 .addOrder(AuditEntity.revisionNumber().desc())

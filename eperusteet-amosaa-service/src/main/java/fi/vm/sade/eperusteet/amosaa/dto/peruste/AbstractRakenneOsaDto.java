@@ -18,7 +18,9 @@ package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
+
 import java.util.UUID;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -36,7 +38,7 @@ public abstract class AbstractRakenneOsaDto {
         foreach(visitor, 0);
     }
 
-    protected abstract void foreach(final Visitor visitor,final int currentDepth);
+    protected abstract void foreach(final Visitor visitor, final int currentDepth);
 
     public interface Visitor {
         void visit(final AbstractRakenneOsaDto dto, final int depth);

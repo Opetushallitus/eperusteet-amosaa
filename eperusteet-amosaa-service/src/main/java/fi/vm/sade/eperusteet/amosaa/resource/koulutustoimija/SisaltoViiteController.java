@@ -39,7 +39,6 @@ import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperati
 
 
 /**
- *
  * @author nkala
  */
 @RestController

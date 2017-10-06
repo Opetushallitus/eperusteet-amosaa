@@ -27,7 +27,6 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- *
  * @author harrik
  */
 @Target({TYPE, ANNOTATION_TYPE})
@@ -36,8 +35,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 public @interface ValidOsaamistavoiteEsitieto {
     String message() default "osaamistavoite-esitieto-virhe";
-    
-    Class<?>[] groups() default { };
-    
-    Class<? extends Payload>[] payload() default { };
+
+    Class<?>[] groups() default {};
+
+    Class<? extends Payload>[] payload() default {};
 }

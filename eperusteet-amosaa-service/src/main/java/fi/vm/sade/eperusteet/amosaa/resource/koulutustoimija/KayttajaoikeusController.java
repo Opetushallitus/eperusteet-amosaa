@@ -20,9 +20,11 @@ import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KayttajaoikeusService;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator;
 import io.swagger.annotations.Api;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,7 +32,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- *
  * @author nkala
  */
 @RestController
@@ -46,7 +47,7 @@ public class KayttajaoikeusController {
     }
 
     @RequestMapping(value = "/organisaatiooikeudet", method = RequestMethod.GET)
-    public ResponseEntity<Map<PermissionEvaluator.RolePermission,Set<Long>>> getOikeudet() {
+    public ResponseEntity<Map<PermissionEvaluator.RolePermission, Set<Long>>> getOikeudet() {
         return service.getOrganisaatiooikeudet();
     }
 }

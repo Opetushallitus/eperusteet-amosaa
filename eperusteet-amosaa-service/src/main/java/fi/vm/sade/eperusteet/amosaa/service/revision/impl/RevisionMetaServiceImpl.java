@@ -17,8 +17,10 @@
 package fi.vm.sade.eperusteet.amosaa.service.revision.impl;
 
 import fi.vm.sade.eperusteet.amosaa.service.revision.RevisionMetaService;
+
 import java.util.Date;
 import javax.persistence.EntityManager;
+
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.exception.RevisionDoesNotExistException;
@@ -27,7 +29,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- *
  * @author nkala
  */
 @Service
@@ -41,8 +42,7 @@ public class RevisionMetaServiceImpl implements RevisionMetaService {
         AuditReader reader = AuditReaderFactory.get(em);
         try {
             return reader.getRevisionNumberForDate(new Date(Long.MAX_VALUE));
-        }
-        catch (RevisionDoesNotExistException ex) {
+        } catch (RevisionDoesNotExistException ex) {
             return 0;
         }
     }

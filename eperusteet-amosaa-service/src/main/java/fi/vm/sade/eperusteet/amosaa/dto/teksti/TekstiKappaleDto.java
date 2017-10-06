@@ -23,11 +23,11 @@ import lombok.Setter;
 
 import java.util.Date;
 import java.util.UUID;
+
 import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
 import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
- *
  * @author nkala
  */
 @Getter
@@ -51,7 +51,8 @@ public class TekstiKappaleDto implements AuditLoggableDto {
     private Boolean valmis;
     private SisaltoTyyppi tyyppi;
 
-    public TekstiKappaleDto() {}
+    public TekstiKappaleDto() {
+    }
 
     public TekstiKappaleDto(LokalisoituTekstiDto nimi, LokalisoituTekstiDto teksti, Tila tila) {
         this.nimi = nimi;

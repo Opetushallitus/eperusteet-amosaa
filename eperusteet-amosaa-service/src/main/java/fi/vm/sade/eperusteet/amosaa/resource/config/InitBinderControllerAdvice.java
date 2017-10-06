@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.InitBinder;
 
 /**
- *
  * @author jhyoty
  */
 @ControllerAdvice

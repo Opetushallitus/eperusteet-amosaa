@@ -20,7 +20,6 @@ import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
 import org.springframework.stereotype.Service;
 
 /**
- *
  * @author mikkom
  */
 @Service

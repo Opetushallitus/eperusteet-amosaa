@@ -17,10 +17,12 @@ package fi.vm.sade.eperusteet.amosaa.domain.ammattitaitovaatimukset;
 
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
+
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
@@ -62,6 +64,6 @@ public class AmmattitaitovaatimuksenKohde implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @Getter
     @Setter
-    @OrderColumn(name="jarjestys")
+    @OrderColumn(name = "jarjestys")
     private List<Ammattitaitovaatimus> vaatimukset = new ArrayList<>();
 }

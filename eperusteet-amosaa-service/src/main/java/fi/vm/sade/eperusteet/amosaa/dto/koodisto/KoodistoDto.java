@@ -24,7 +24,6 @@ import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
 import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
- *
  * @author mikkom
  */
 @Getter
@@ -40,7 +39,8 @@ public class KoodistoDto implements AuditLoggableDto {
     private String koodiArvo;
     private LokalisoituTekstiDto nimi;
 
-    public KoodistoDto() { }
+    public KoodistoDto() {
+    }
 
     public KoodistoDto(Long id, String koodiUri, String koodiArvo) {
         this.id = id;

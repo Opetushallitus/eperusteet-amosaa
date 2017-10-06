@@ -18,6 +18,7 @@ package fi.vm.sade.eperusteet.amosaa.resource.config;
 import com.fasterxml.classmate.GenericType;
 import com.fasterxml.classmate.TypeResolver;
 import com.fasterxml.jackson.databind.JsonNode;
+
 import static com.google.common.base.Predicates.not;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 import javax.servlet.ServletContext;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +44,6 @@ import springfox.documentation.swagger1.annotations.EnableSwagger;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
- *
  * @author isaul
  */
 @Configuration
@@ -69,7 +70,8 @@ public class SwaggerConfig {
                 .genericModelSubstitutes(ResponseEntity.class, Optional.class)
                 .alternateTypeRules(
                         springfox.documentation.schema.AlternateTypeRules.newRule(
-                                typeResolver.resolve(new GenericType<Callable<ResponseEntity<Object>>>() {}),
+                                typeResolver.resolve(new GenericType<Callable<ResponseEntity<Object>>>() {
+                                }),
                                 typeResolver.resolve(Object.class)
                         )
                 );
@@ -85,7 +87,8 @@ public class SwaggerConfig {
                 .genericModelSubstitutes(ResponseEntity.class, Optional.class)
                 .alternateTypeRules(
                         springfox.documentation.schema.AlternateTypeRules.newRule(
-                                typeResolver.resolve(new GenericType<Callable<ResponseEntity<Object>>>() {}),
+                                typeResolver.resolve(new GenericType<Callable<ResponseEntity<Object>>>() {
+                                }),
                                 typeResolver.resolve(Object.class)
                         )
                 );

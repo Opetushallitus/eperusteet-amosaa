@@ -16,12 +16,13 @@
 package fi.vm.sade.eperusteet.amosaa.service.teksti;
 
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.KommenttiDto;
+
 import java.util.List;
+
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
- *
  * @author isaul
  */
 public interface KommenttiService {

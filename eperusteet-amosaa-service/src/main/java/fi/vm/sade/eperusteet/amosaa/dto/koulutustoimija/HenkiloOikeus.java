@@ -19,7 +19,6 @@ package fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 /**
- *
  * @author nkala
  */
 public enum HenkiloOikeus {

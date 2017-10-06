@@ -28,21 +28,21 @@ import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- *
  * @author mikkom
  */
-@Target({ FIELD, ANNOTATION_TYPE })
+@Target({FIELD, ANNOTATION_TYPE})
 @Retention(RUNTIME)
 @Constraint(validatedBy = {ValidHtmlValidator.class, ValidHtmlCollectionValidator.class, ValidHtmlStringValidator.class})
 @Documented
 public @interface ValidHtml {
 
     String message() default "ei-validia-html";
+
     WhitelistType whitelist() default WhitelistType.NORMAL;
 
     Class<?>[] groups() default {};
 
-    Class<? extends Payload>[] payload() default { };
+    Class<? extends Payload>[] payload() default {};
 
     public enum WhitelistType {
         NONE(Whitelist.none()),
@@ -50,7 +50,7 @@ public @interface ValidHtml {
         SIMPLIFIED(Whitelist.none().addTags("p", "strong", "em", "s", "ol", "li", "ul")),
         NORMAL(Whitelist.none()
                 .addTags("p", "strong", "em", "s", "ol", "li", "ul", "blockquote", "table", "caption",
-                                 "tbody", "tr", "td", "hr", "pre", "th", "thead", "a", "abbr")
+                        "tbody", "tr", "td", "hr", "pre", "th", "thead", "a", "abbr")
                 .addAttributes("table", "align", "border", "cellpadding", "cellspacing", "style", "summary")
                 .addAttributes("th", "scope", "colspan", "rowspan")
                 .addAttributes("td", "colspan", "rowspan", "style")

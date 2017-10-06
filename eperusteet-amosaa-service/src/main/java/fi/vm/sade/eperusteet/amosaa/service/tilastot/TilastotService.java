@@ -20,7 +20,6 @@ import fi.vm.sade.eperusteet.amosaa.dto.tilastot.TilastotDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
- *
  * @author nkala
  */
 public interface TilastotService {

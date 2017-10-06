@@ -19,6 +19,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.AbstractAuditedEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
+
 import java.io.Serializable;
 import java.util.UUID;
 import javax.persistence.CascadeType;
@@ -33,13 +34,13 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
 /**
- *
  * @author mikkom
  */
 @Entity
@@ -111,7 +112,9 @@ public class TekstiKappale extends AbstractAuditedEntity
         return null;
     }
 
-    public TekstiKappale copy() { return new TekstiKappale(this); }
+    public TekstiKappale copy() {
+        return new TekstiKappale(this);
+    }
 
     private void copyState(TekstiKappale other) {
         this.setNimi(other.getNimi());

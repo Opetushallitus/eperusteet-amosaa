@@ -17,14 +17,15 @@
 package fi.vm.sade.eperusteet.amosaa.domain.dokumentti;
 
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
+
 import java.util.Date;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+
 import lombok.Getter;
 import lombok.Setter;
 
 /**
- *
  * @author iSaul
  */
 @Entity

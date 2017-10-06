@@ -16,10 +16,10 @@
 package fi.vm.sade.eperusteet.amosaa.repository.liite;
 
 import fi.vm.sade.eperusteet.amosaa.domain.liite.Liite;
+
 import java.io.InputStream;
 
 /**
- *
  * @author jhyoty
  */
 public interface LiiteRepositoryCustom {

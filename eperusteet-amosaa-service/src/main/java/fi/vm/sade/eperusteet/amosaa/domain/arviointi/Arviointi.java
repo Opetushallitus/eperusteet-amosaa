@@ -35,7 +35,6 @@ import static fi.vm.sade.eperusteet.amosaa.service.util.Util.refXnor;
 
 
 /**
- *
  * @author teele1
  */
 @Entity
@@ -57,8 +56,8 @@ public class Arviointi implements Serializable {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL}, orphanRemoval = true)
     @JoinTable(name = "arviointi_arvioinninkohdealue",
-               joinColumns = @JoinColumn(name = "arviointi_id"),
-               inverseJoinColumns = @JoinColumn(name = "arvioinninkohdealue_id"))
+            joinColumns = @JoinColumn(name = "arviointi_id"),
+            inverseJoinColumns = @JoinColumn(name = "arvioinninkohdealue_id"))
     @OrderColumn
     @Getter
     private List<ArvioinninKohdealue> arvioinninKohdealueet = new ArrayList<>();

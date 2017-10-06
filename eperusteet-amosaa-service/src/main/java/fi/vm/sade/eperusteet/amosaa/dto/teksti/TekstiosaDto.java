@@ -19,11 +19,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Optional;
+
 import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
 import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
- *
  * @author mikkom
  */
 @Getter
@@ -37,7 +37,8 @@ public class TekstiosaDto implements AuditLoggableDto {
     private Optional<LokalisoituTekstiDto> otsikko;
     private Optional<LokalisoituTekstiDto> teksti;
 
-    public TekstiosaDto() { }
+    public TekstiosaDto() {
+    }
 
     public TekstiosaDto(Optional<LokalisoituTekstiDto> otsikko, Optional<LokalisoituTekstiDto> teksti) {
         this.otsikko = otsikko;

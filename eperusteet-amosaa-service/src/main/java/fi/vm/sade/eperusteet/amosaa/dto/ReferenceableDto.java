@@ -18,7 +18,6 @@ package fi.vm.sade.eperusteet.amosaa.dto;
 import java.io.Serializable;
 
 /**
- *
  * @author jhyoty
  */
 public interface ReferenceableDto {
