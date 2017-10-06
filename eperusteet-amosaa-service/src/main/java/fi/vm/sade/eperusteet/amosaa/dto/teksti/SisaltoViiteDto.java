@@ -27,7 +27,6 @@ import lombok.Setter;
 import java.util.List;
 
 /**
- *
  * @author mikkom
  */
 @Getter
@@ -55,7 +54,8 @@ public class SisaltoViiteDto implements AuditLoggableDto {
     @JsonProperty("_tekstiKappale")
     private Reference tekstiKappaleRef;
 
-    public SisaltoViiteDto() { }
+    public SisaltoViiteDto() {
+    }
 
     public SisaltoViiteDto(TekstiKappaleDto tekstiKappale) {
         this.tekstiKappale = tekstiKappale;
@@ -66,7 +66,8 @@ public class SisaltoViiteDto implements AuditLoggableDto {
     public static class Matala extends SisaltoViiteDto {
         private List<Reference> lapset;
 
-        public Matala() {}
+        public Matala() {
+        }
 
         public Matala(TekstiKappaleDto tekstiKappale) {
             super(tekstiKappale);

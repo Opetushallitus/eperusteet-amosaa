@@ -29,9 +29,11 @@ import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.RolePer
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.RolePrefix;
 import fi.vm.sade.eperusteet.amosaa.service.util.Pair;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
+
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -40,7 +42,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 /**
- *
  * @author mikkom
  */
 @Service
@@ -112,17 +113,17 @@ public class PermissionManager {
 
     @Transactional(readOnly = true)
     public boolean hasPermission(Authentication authentication, Serializable targetObject, TargetType target,
-        Permission perm) {
+                                 Permission perm) {
 
         Long targetId = null;
         Long originalKtId = null;
         if (targetObject instanceof Long) {
-            targetId = (Long)targetObject;
+            targetId = (Long) targetObject;
         }
         if (targetObject instanceof List) {
             Object[] arr = ((List) targetObject).toArray();
-            originalKtId = (Long)arr[0];
-            targetId = (Long)arr[1];
+            originalKtId = (Long) arr[0];
+            targetId = (Long) arr[1];
         }
 
         if (perm == Permission.HALLINTA && targetId == null && target == TargetType.TARKASTELU &&
@@ -133,9 +134,9 @@ public class PermissionManager {
         if (perm == Permission.HALLINTA
                 && target == TargetType.OPH
                 && hasRole(authentication,
-                        RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA,
-                        RolePermission.ADMIN,
-                        Organization.OPH)) {
+                RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA,
+                RolePermission.ADMIN,
+                Organization.OPH)) {
             return true;
         }
 
@@ -208,7 +209,7 @@ public class PermissionManager {
         Organization organisaatio = organisaatioOid != null ? new Organization(organisaatioOid) : Organization.ANY;
 
         // Jos käyttäjällä on jokin rooli organisaatiossa niin on lupa lukea
-        if (( perm == Permission.ESITYS || perm == Permission.LUKU || perm == Permission.KOMMENTOINTI)
+        if ((perm == Permission.ESITYS || perm == Permission.LUKU || perm == Permission.KOMMENTOINTI)
                 && hasAnyRole(authentication, RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA, permissions, organisaatio)) {
             return true;
         }
@@ -271,18 +272,18 @@ public class PermissionManager {
     }
 
     private static boolean hasRole(Authentication authentication, RolePrefix prefix,
-        RolePermission permission, Organization org) {
+                                   RolePermission permission, Organization org) {
         return hasAnyRole(authentication, prefix, Collections.singleton(permission), org);
     }
 
     private static boolean hasAnyRole(Authentication authentication, RolePrefix prefix,
-        Set<RolePermission> permission, Organization org) {
+                                      Set<RolePermission> permission, Organization org) {
         return authentication.getAuthorities().stream()
-            .anyMatch(a -> permission.stream().anyMatch(p -> roleEquals(a.getAuthority(), prefix, p, org)));
+                .anyMatch(a -> permission.stream().anyMatch(p -> roleEquals(a.getAuthority(), prefix, p, org)));
     }
 
     private static boolean roleEquals(String authority, RolePrefix prefix,
-        RolePermission permission, Organization org) {
+                                      RolePermission permission, Organization org) {
         if (Organization.ANY.equals(org)) {
             return authority.equals(prefix.name() + "_" + permission.name());
         } else if (org.getOrganization().isPresent()) {
@@ -297,10 +298,10 @@ public class PermissionManager {
     public Map<RolePermission, Set<Long>> getOrganisaatioOikeudet() {
         return EnumSet.allOf(RolePermission.class).stream()
                 .map(r -> new Pair<>(r, SecurityUtil.getOrganizations(Collections.singleton(r)).stream()
-                    .map(oid -> koulutustoimijaRepository.findOneByOrganisaatio(oid))
-                    .filter(kt -> kt != null)
-                    .map(Koulutustoimija::getId)
-                    .collect(Collectors.toSet())))
+                        .map(oid -> koulutustoimijaRepository.findOneByOrganisaatio(oid))
+                        .filter(kt -> kt != null)
+                        .map(Koulutustoimija::getId)
+                        .collect(Collectors.toSet())))
                 .collect(Collectors.toMap(Pair::getFirst, Pair::getSecond));
     }
 

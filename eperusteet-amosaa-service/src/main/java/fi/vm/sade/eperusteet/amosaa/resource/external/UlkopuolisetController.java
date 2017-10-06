@@ -21,16 +21,19 @@ import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import fi.vm.sade.eperusteet.amosaa.service.external.KoodistoService;
+
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+
 import springfox.documentation.annotations.ApiIgnore;
 
 /**
- *
  * @author mikkom
  */
 @RestController
@@ -71,8 +74,8 @@ public class UlkopuolisetController {
             @PathVariable final String koodisto,
             @RequestParam(value = "haku", required = false) final String haku) {
         return new ResponseEntity<>(haku == null || haku.isEmpty()
-                                    ? koodistoService.getAll(koodisto)
-                                    : koodistoService.filterBy(koodisto, haku), HttpStatus.OK);
+                ? koodistoService.getAll(koodisto)
+                : koodistoService.filterBy(koodisto, haku), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/koodisto/{koodisto}/{koodi}", method = GET)

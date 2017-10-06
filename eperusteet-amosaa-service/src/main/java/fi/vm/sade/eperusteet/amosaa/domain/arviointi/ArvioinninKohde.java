@@ -37,7 +37,6 @@ import static fi.vm.sade.eperusteet.amosaa.service.util.Util.refXnor;
 
 
 /**
- *
  * @author teele1
  */
 @Entity

@@ -17,7 +17,6 @@
 package fi.vm.sade.eperusteet.amosaa.domain;
 
 /**
- *
  * @author jhyoty
  */
 public interface PartialMergeable<T> extends Mergeable<T> {

@@ -16,7 +16,6 @@
 package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 
 /**
- *
  * @author jhyoty
  */
 public enum LaajuusYksikko {

@@ -31,6 +31,7 @@ import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils
 import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
+
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -39,6 +40,7 @@ import java.util.Date;
 import java.util.List;
 import javax.imageio.ImageIO;
 import javax.validation.constraints.NotNull;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +51,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 /**
- *
  * @author iSaul
  */
 @Service
@@ -97,8 +98,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
         List<Dokumentti> dokumentit = dokumenttiRepository.findByOpsIdAndKieli(opsId, kieli);
         if (dokumentit.isEmpty()) {
             return null;
-        }
-        else {
+        } else {
             return dokumentit.get(0);
         }
     }
@@ -192,7 +192,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
             BufferedImage tempImage = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(),
                     BufferedImage.TYPE_3BYTE_BGR);
             tempImage.getGraphics().setColor(new Color(255, 255, 255, 0));
-            tempImage.getGraphics().fillRect (0, 0, width, height);
+            tempImage.getGraphics().fillRect(0, 0, width, height);
             tempImage.getGraphics().drawImage(bufferedImage, 0, 0, null);
 
             bufferedImage = tempImage;

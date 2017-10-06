@@ -17,20 +17,27 @@
 package fi.vm.sade.eperusteet.amosaa.service.util;
 
 import fi.vm.sade.eperusteet.amosaa.dto.koodisto.KoodistoKoodiDto;
+
 import java.util.List;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
- *
  * @author nkala
  */
 @PreAuthorize("permitAll()")
 public interface KoodistoClient {
     List<KoodistoKoodiDto> getAll(String koodisto);
+
     KoodistoKoodiDto get(String koodisto, String koodi);
+
     List<KoodistoKoodiDto> queryByKoodi(String koodisto, String koodi);
+
     KoodistoKoodiDto getByUri(String uri);
+
     List<KoodistoKoodiDto> filterBy(String koodisto, String haku);
+
     List<KoodistoKoodiDto> getAlarelaatio(String koodi);
+
     List<KoodistoKoodiDto> getYlarelaatio(String koodi);
 }

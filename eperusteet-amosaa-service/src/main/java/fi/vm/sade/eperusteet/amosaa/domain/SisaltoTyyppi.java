@@ -16,11 +16,11 @@
 package fi.vm.sade.eperusteet.amosaa.domain;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+
 import java.util.EnumSet;
 
 
 /**
- *
  * @author nkala
  */
 public enum SisaltoTyyppi {

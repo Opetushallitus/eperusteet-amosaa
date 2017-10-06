@@ -17,15 +17,16 @@ package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
+
 import java.util.Date;
 import java.util.UUID;
+
 import lombok.Getter;
 import lombok.Setter;
 import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
 import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
- *
  * @author nkala
  */
 @Getter

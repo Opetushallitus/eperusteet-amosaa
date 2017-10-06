@@ -17,7 +17,6 @@
 package fi.vm.sade.eperusteet.amosaa.service.audit;
 
 /**
- *
  * @author nkala
  */
 public interface AuditLoggableDto {

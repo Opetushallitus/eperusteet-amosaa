@@ -23,12 +23,13 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.repository.version.JpaWithVersioningRepository;
 import fi.vm.sade.eperusteet.amosaa.service.util.Pair;
+
 import java.util.List;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
- *
  * @author nkala
  */
 @Repository
@@ -47,7 +48,7 @@ public interface OpetussuunnitelmaRepository extends JpaWithVersioningRepository
     List<Opetussuunnitelma> findAllByTyyppiAndTila(OpsTyyppi tyyppi, Tila tila);
 
     @Query(value = "SELECT NEW fi.vm.sade.eperusteet.amosaa.service.util.Pair(o.tyyppi, o.tila) from Opetussuunnitelma o where o.id = ?1")
-    Pair<Tyyppi,Tila> findTyyppiAndTila(long id);
+    Pair<Tyyppi, Tila> findTyyppiAndTila(long id);
 
     @Query(value = "SELECT NEW java.lang.Boolean(o.esikatseltavissa) from Opetussuunnitelma o where o.id = ?1")
     Boolean isEsikatseltavissa(long id);

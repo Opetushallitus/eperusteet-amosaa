@@ -59,30 +59,30 @@ public class DokumenttiTaulukko {
         builder.append("<div>");
 
         // Tyhjää taulukkoa on turha antaa
-            if (otsikko != null) {
-                builder.append("<strong>");
-                builder.append(otsikko);
-                builder.append("</strong>");
-            }
+        if (otsikko != null) {
+            builder.append("<strong>");
+            builder.append(otsikko);
+            builder.append("</strong>");
+        }
 
-            builder.append("<table border=\"1\">");
+        builder.append("<table border=\"1\">");
 
-            // Otsikko rivi
-            if (otsikkoSarakkeet.size() > 0) {
-                builder.append("<tr bgcolor=\"" + TABLE_HEADER_BGCOLOR + " \">");
-                otsikkoSarakkeet.forEach(sarake -> {
-                            builder.append("<th>");
-                            builder.append(sarake);
-                            builder.append("</th>");
-                        });
-                builder.append("</tr>");
-            }
+        // Otsikko rivi
+        if (otsikkoSarakkeet.size() > 0) {
+            builder.append("<tr bgcolor=\"" + TABLE_HEADER_BGCOLOR + " \">");
+            otsikkoSarakkeet.forEach(sarake -> {
+                builder.append("<th>");
+                builder.append(sarake);
+                builder.append("</th>");
+            });
+            builder.append("</tr>");
+        }
 
         rivit.forEach(rivi -> {
-                    builder.append("<tr>");
-                    builder.append(rivi.toString());
-                    builder.append("</tr>");
-                });
+            builder.append("<tr>");
+            builder.append(rivi.toString());
+            builder.append("</tr>");
+        });
 
         builder.append("</table>");
 

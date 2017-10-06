@@ -20,6 +20,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.ammattitaitovaatimukset.AmmattitaitovaatimuksenKohdealue;
 import fi.vm.sade.eperusteet.amosaa.domain.arviointi.Arviointi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -27,13 +28,13 @@ import java.util.List;
 import java.util.Objects;
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
+
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
 /**
- *
  * @author nkala
  */
 @Entity
@@ -64,7 +65,7 @@ public class OmaTutkinnonosa extends AbstractAuditedEntity implements Serializab
 
     @Getter
     @Setter
-    @Pattern(message="ei-validi-paikallinen-koodi", regexp="^$|^1\\d\\d\\d$")
+    @Pattern(message = "ei-validi-paikallinen-koodi", regexp = "^$|^1\\d\\d\\d$")
     private String koodi;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})

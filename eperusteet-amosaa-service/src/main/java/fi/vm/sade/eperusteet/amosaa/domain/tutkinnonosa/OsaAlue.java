@@ -33,7 +33,6 @@ import java.util.*;
 import static fi.vm.sade.eperusteet.amosaa.service.util.Util.refXnor;
 
 /**
- *
  * @author harrik
  */
 @Entity
@@ -65,8 +64,8 @@ public class OsaAlue implements Serializable, PartialMergeable<OsaAlue> {
     //@Setter
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @JoinTable(name = "tutkinnonosa_osaalue_osaamistavoite",
-               joinColumns = @JoinColumn(name = "tutkinnonosa_osaalue_id"),
-               inverseJoinColumns = @JoinColumn(name = "osaamistavoite_id"))
+            joinColumns = @JoinColumn(name = "tutkinnonosa_osaalue_id"),
+            inverseJoinColumns = @JoinColumn(name = "osaamistavoite_id"))
     @OrderColumn
     private List<Osaamistavoite> osaamistavoitteet;
 
@@ -105,8 +104,8 @@ public class OsaAlue implements Serializable, PartialMergeable<OsaAlue> {
         this.kuvaus = o.kuvaus;
         this.osaamistavoitteet = new ArrayList<>();
         IdentityHashMap<Osaamistavoite, Osaamistavoite> identityMap = new IdentityHashMap<>();
-        for ( Osaamistavoite ot : o.getOsaamistavoitteet() ) {
-            if ( identityMap.containsKey(ot) ) {
+        for (Osaamistavoite ot : o.getOsaamistavoitteet()) {
+            if (identityMap.containsKey(ot)) {
                 this.osaamistavoitteet.add(identityMap.get(ot));
             } else {
                 Osaamistavoite t = new Osaamistavoite(ot, identityMap);
@@ -129,7 +128,7 @@ public class OsaAlue implements Serializable, PartialMergeable<OsaAlue> {
     public boolean structureEquals(OsaAlue other) {
         boolean result = refXnor(getNimi(), other.getNimi());
         result &= refXnor(getKuvaus(), other.getKuvaus());
-        if ( result && getOsaamistavoitteet() != null && other.getOsaamistavoitteet() != null ) {
+        if (result && getOsaamistavoitteet() != null && other.getOsaamistavoitteet() != null) {
             Iterator<Osaamistavoite> i = getOsaamistavoitteet().iterator();
             Iterator<Osaamistavoite> j = other.getOsaamistavoitteet().iterator();
             while (result && i.hasNext() && j.hasNext()) {

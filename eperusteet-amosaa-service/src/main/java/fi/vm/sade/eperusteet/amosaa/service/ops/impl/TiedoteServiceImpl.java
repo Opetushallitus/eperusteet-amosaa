@@ -11,12 +11,15 @@ import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.TiedoteRepository
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.ops.TiedoteService;
+
 import static fi.vm.sade.eperusteet.amosaa.service.util.Nulls.assertExists;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

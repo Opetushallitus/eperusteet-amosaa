@@ -19,13 +19,14 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.service.exception.ValidointiException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import lombok.Getter;
 
 /**
- *
  * @author nkala
  */
 @Getter

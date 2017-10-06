@@ -26,16 +26,17 @@ import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KayttajaoikeusServic
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionManager;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- *
  * @author nkala
  */
 @Service
@@ -65,7 +66,7 @@ public class KayttajaoikeusServiceImpl implements KayttajaoikeusService {
     }
 
     @Override
-    public ResponseEntity<Map<PermissionEvaluator.RolePermission,Set<Long>>> getOrganisaatiooikeudet() {
+    public ResponseEntity<Map<PermissionEvaluator.RolePermission, Set<Long>>> getOrganisaatiooikeudet() {
         return ResponseEntity.ok(permissionManager.getOrganisaatioOikeudet());
     }
 

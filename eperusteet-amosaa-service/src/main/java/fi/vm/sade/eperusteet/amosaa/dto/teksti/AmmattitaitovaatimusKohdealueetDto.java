@@ -19,6 +19,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+
 import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
 import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 

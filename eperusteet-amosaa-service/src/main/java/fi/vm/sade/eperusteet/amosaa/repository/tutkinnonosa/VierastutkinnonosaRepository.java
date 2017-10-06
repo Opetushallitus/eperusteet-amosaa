@@ -21,10 +21,9 @@ import fi.vm.sade.eperusteet.amosaa.repository.version.JpaWithVersioningReposito
 import org.springframework.stereotype.Repository;
 
 /**
- *
  * @author nkala
  */
 @Repository
-public interface VierastutkinnonosaRepository extends JpaWithVersioningRepository<VierasTutkinnonosa, Long>  {
+public interface VierastutkinnonosaRepository extends JpaWithVersioningRepository<VierasTutkinnonosa, Long> {
 
 }

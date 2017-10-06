@@ -19,15 +19,16 @@ package fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.liite.LiiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteBaseDto;
+
 import java.util.Date;
 import java.util.Set;
+
 import lombok.Getter;
 import lombok.Setter;
 import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
 import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
- *
  * @author nkala
  */
 @Getter

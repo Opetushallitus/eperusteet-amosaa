@@ -16,6 +16,7 @@
 package fi.vm.sade.eperusteet.amosaa.domain.liite;
 
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
+
 import java.io.Serializable;
 import java.sql.Blob;
 import java.util.Date;
@@ -35,11 +36,11 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
 import lombok.Getter;
 import lombok.Setter;
 
 /**
- *
  * @author jhyoty
  */
 @Entity
@@ -71,8 +72,8 @@ public class Liite implements Serializable {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "opetussuunnitelma_liite",
-            joinColumns = @JoinColumn(name="liite_id"),
-            inverseJoinColumns = @JoinColumn(name="opetussuunnitelma_id"))
+            joinColumns = @JoinColumn(name = "liite_id"),
+            inverseJoinColumns = @JoinColumn(name = "opetussuunnitelma_id"))
     @Getter
     @Setter
     private Set<Opetussuunnitelma> opetussuunnitelmat;

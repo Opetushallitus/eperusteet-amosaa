@@ -25,7 +25,6 @@ import org.springframework.context.annotation.Configuration;
 import java.time.Instant;
 
 /**
- *
  * @author jhyoty
  */
 @Configuration
@@ -33,11 +32,11 @@ public class DtoMapperConfig {
 
     @Bean
     public DtoMapper dtoMapper(
-        ReferenceableEntityConverter referenceableEntityConverter,
-        LokalisoituTekstiConverter lokalisoituTekstiConverter,
-        KoodistoKoodiConverter koodistoKoodiConverter) {
+            ReferenceableEntityConverter referenceableEntityConverter,
+            LokalisoituTekstiConverter lokalisoituTekstiConverter,
+            KoodistoKoodiConverter koodistoKoodiConverter) {
         DefaultMapperFactory factory = new DefaultMapperFactory.Builder()
-            .build();
+                .build();
 
         factory.getConverterFactory().registerConverter(referenceableEntityConverter);
         factory.getConverterFactory().registerConverter(lokalisoituTekstiConverter);

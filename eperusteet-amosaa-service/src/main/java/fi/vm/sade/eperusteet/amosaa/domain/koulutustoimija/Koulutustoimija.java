@@ -15,23 +15,25 @@
  */
 
 package fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija;
+
 import fi.vm.sade.eperusteet.amosaa.domain.AbstractAuditedEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.liite.Liite;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
+
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
+
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
 /**
- *
  * @author nkala
  */
 @Entity
@@ -75,9 +77,9 @@ public class Koulutustoimija extends AbstractAuditedEntity implements Serializab
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "koulutustoimija_liite", inverseJoinColumns = {
-            @JoinColumn(name="liite_id")
+            @JoinColumn(name = "liite_id")
     }, joinColumns = {
-            @JoinColumn(name="koulutustoimija_id")
+            @JoinColumn(name = "koulutustoimija_id")
     })
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     private Set<Liite> liitteet = new HashSet<>();

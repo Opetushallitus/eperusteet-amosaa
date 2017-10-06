@@ -27,7 +27,6 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- *
  * @author teele1
  */
 @Target({TYPE, ANNOTATION_TYPE})
@@ -35,10 +34,10 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Constraint(validatedBy = ValidArvioinninKohdeValidator.class)
 @Documented
 public @interface ValidArvioinninKohde {
-    
+
     String message() default "arviointi-rakenne-virhe";
-    
-    Class<?>[] groups() default { };
-    
-    Class<? extends Payload>[] payload() default { };
+
+    Class<?>[] groups() default {};
+
+    Class<? extends Payload>[] payload() default {};
 }

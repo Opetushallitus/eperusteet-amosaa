@@ -18,8 +18,10 @@ package fi.vm.sade.eperusteet.amosaa.service.security;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionManager.Permission;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionManager.TargetType;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
+
 import java.io.Serializable;
 import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

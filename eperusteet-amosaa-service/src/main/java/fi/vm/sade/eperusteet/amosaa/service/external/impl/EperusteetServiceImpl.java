@@ -32,12 +32,14 @@ import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationExcep
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.amosaa.service.util.RestClientFactory;
 import fi.vm.sade.generic.rest.CachingRestClient;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,9 +49,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- *
  * @author nkala
- *
+ * <p>
  * FIXME: Refaktoroi turhat pois
  */
 @Service
@@ -232,8 +233,7 @@ public class EperusteetServiceImpl implements EperusteetService {
             try {
                 PerusteDto peruste = mapper.treeToValue(perusteJson, PerusteDto.class);
                 perusteet.add(peruste);
-            }
-            catch (IOException ex) {
+            } catch (IOException ex) {
                 logger.error(ex.getMessage());
             }
         }

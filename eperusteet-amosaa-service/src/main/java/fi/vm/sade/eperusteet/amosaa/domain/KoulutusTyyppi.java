@@ -18,7 +18,6 @@ package fi.vm.sade.eperusteet.amosaa.domain;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 /**
- *
  * @author nkala
  */
 public enum KoulutusTyyppi {

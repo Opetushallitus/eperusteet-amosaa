@@ -32,7 +32,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/arviointiasteikot")
-@Api(value="Arviointiasteikot")
+@Api(value = "Arviointiasteikot")
 public class ArviointiasteikkoController {
 
     @Autowired

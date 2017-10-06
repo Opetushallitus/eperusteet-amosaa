@@ -31,6 +31,7 @@ import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -38,6 +39,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +49,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- *
  * @author nkala
  */
 @Service
@@ -120,12 +121,12 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     @Transactional
     public List<KoulutustoimijaBaseDto> getKoulutustoimijat(Set<String> kOid) {
         return kOid.stream()
-            .map(ktId -> {
-                LOG.info("Käyttäjän koulutustoimija", ktId);
-                Koulutustoimija kt = repository.findOneByOrganisaatio(ktId);
-                return mapper.map(kt, KoulutustoimijaBaseDto.class);
-            })
-            .collect(Collectors.toList());
+                .map(ktId -> {
+                    LOG.info("Käyttäjän koulutustoimija", ktId);
+                    Koulutustoimija kt = repository.findOneByOrganisaatio(ktId);
+                    return mapper.map(kt, KoulutustoimijaBaseDto.class);
+                })
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -171,14 +172,14 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     public List<KoulutustoimijaYstavaDto> getOmatYstavat(Long ktId) {
         Koulutustoimija kt = repository.findOne(ktId);
         List<KoulutustoimijaYstavaDto> result = kt.getYstavat().stream()
-            .map(ystava -> {
-                KoulutustoimijaYstavaDto ystavaDto = mapper.map(ystava, KoulutustoimijaYstavaDto.class);
-                ystavaDto.setStatus(ystava.getYstavat() != null && ystava.getYstavat().contains(kt)
-                        ? YstavaStatus.YHTEISTYO
-                        : YstavaStatus.ODOTETAAN);
-                return ystavaDto;
-            })
-            .collect(Collectors.toList());
+                .map(ystava -> {
+                    KoulutustoimijaYstavaDto ystavaDto = mapper.map(ystava, KoulutustoimijaYstavaDto.class);
+                    ystavaDto.setStatus(ystava.getYstavat() != null && ystava.getYstavat().contains(kt)
+                            ? YstavaStatus.YHTEISTYO
+                            : YstavaStatus.ODOTETAAN);
+                    return ystavaDto;
+                })
+                .collect(Collectors.toList());
 
         return result;
     }

@@ -117,7 +117,7 @@ public class DokumenttiUtils {
         return isTimePass(dokumenttiDto.getAloitusaika());
     }
 
-    public   static boolean isTimePass(Date date) {
+    public static boolean isTimePass(Date date) {
         if (date == null) {
             return true;
         }

@@ -17,8 +17,8 @@
 package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+
 /**
- *
  * @author harrik
  */
 public enum Suoritustapakoodi {

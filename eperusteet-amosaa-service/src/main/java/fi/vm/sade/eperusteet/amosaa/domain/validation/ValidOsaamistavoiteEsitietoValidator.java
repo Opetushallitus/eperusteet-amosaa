@@ -22,7 +22,6 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 /**
- *
  * @author harrik
  */
 public class ValidOsaamistavoiteEsitietoValidator implements ConstraintValidator<ValidOsaamistavoiteEsitieto, Osaamistavoite> {
@@ -35,8 +34,8 @@ public class ValidOsaamistavoiteEsitietoValidator implements ConstraintValidator
     public boolean isValid(Osaamistavoite osaamistavoite, ConstraintValidatorContext cvc) {
         if (osaamistavoite.getEsitieto() != null) {
             return osaamistavoite.getEsitieto() != osaamistavoite &&
-                   osaamistavoite.getEsitieto().isPakollinen() &&
-                   osaamistavoite.getEsitieto().getEsitieto() == null;
+                    osaamistavoite.getEsitieto().isPakollinen() &&
+                    osaamistavoite.getEsitieto().getEsitieto() == null;
         }
         return true;
     }

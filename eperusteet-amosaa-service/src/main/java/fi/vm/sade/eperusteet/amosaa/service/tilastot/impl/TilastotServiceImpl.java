@@ -25,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- *
  * @author nkala
  */
 @Service
@@ -33,7 +32,7 @@ public class TilastotServiceImpl implements TilastotService {
 
     @Autowired
     KayttajaRepository kayttajat;
-    
+
     @Autowired
     OpetussuunnitelmaRepository opetussuunnitelmat;
 

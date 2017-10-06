@@ -18,6 +18,7 @@ package fi.vm.sade.eperusteet.amosaa.domain.teksti;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
+
 import java.io.Serializable;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -27,13 +28,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
 /**
- *
  * @author jhyoty
  */
 @Audited
@@ -73,7 +74,7 @@ public class Tekstiosa implements Serializable {
     }
 
     public static Tekstiosa copyOf(Tekstiosa other) {
-        if ( other == null ) return null;
+        if (other == null) return null;
         return new Tekstiosa(other);
     }
 

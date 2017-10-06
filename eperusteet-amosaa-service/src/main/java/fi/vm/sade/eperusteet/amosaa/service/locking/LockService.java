@@ -19,7 +19,6 @@ import fi.vm.sade.eperusteet.amosaa.dto.LukkoDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
- *
  * @author jhyoty
  */
 public interface LockService<T> {
@@ -35,7 +34,7 @@ public interface LockService<T> {
 
     @PreAuthorize("isAuthenticated()")
     void unlock(T ctx);
-    
+
     @PreAuthorize("isAuthenticated()")
     void assertLock(T ctx);
 

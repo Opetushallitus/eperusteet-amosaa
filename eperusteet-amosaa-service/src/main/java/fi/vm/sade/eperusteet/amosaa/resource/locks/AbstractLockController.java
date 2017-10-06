@@ -19,8 +19,10 @@ import fi.vm.sade.eperusteet.amosaa.dto.LukkoDto;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.resource.util.Etags;
 import fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaAudit;
+
 import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaMessageFields.OPETUSSUUNNITELMA;
 import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.SISALTO_LUKITUS;
+
 import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 import fi.vm.sade.eperusteet.amosaa.service.locking.LockService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,15 +30,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+
 import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
+
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
- *
- * @author jhyoty
  * @param <T>
+ * @author jhyoty
  */
 @InternalApi
 public abstract class AbstractLockController<T> {
@@ -47,7 +50,7 @@ public abstract class AbstractLockController<T> {
     public ResponseEntity<LukkoDto> checkLock(T ctx) {
         LukkoDto lock = service().getLock(ctx);
         return lock == null ? new ResponseEntity<>(HttpStatus.OK)
-            : new ResponseEntity<>(lock, Etags.eTagHeader(lock.getRevisio()), HttpStatus.LOCKED);
+                : new ResponseEntity<>(lock, Etags.eTagHeader(lock.getRevisio()), HttpStatus.LOCKED);
     }
 
     @RequestMapping(method = POST)

@@ -19,7 +19,6 @@ import fi.vm.sade.eperusteet.amosaa.domain.Lukko;
 import fi.vm.sade.eperusteet.amosaa.service.exception.LockingException;
 
 /**
- *
  * @author jhyoty
  */
 public interface LockManager {

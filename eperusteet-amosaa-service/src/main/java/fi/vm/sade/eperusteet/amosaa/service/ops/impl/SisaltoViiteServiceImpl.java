@@ -210,8 +210,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
                     if (perusteenTosaOpt.isPresent()) {
                         TutkinnonOsaKaikkiDto perusteenTosa = perusteenTosaOpt.get();
                         uusiViite.getTekstiKappale().setNimi(LokalisoituTeksti.of(perusteenTosa.getNimi()));
-                    }
-                    else {
+                    } else {
                         throw new BusinessRuleViolationException("perusteella-ei-valittua-tutkinnon-osaa");
                     }
 
@@ -219,8 +218,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
                     vt.setTosaId(vtDto.getTosaId());
                     vt.setCperuste(cperuste);
                     tosa.setVierastutkinnonosa(vierastutkinnonosaRepository.save(vt));
-                }
-                else {
+                } else {
                     tosa.setTyyppi(TutkinnonosaTyyppi.OMA);
                 }
                 uusiViite.setTosa(tutkinnonosaRepository.save(tosa));
@@ -295,16 +293,16 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
                 && tosa.getOmatutkinnonosa().getAmmattitaitovaatimuksetLista() != null) {
 
             tosa.getOmatutkinnonosa().getAmmattitaitovaatimuksetLista().stream()
-                .filter(ammattitaitovaatimuksenKohdealue -> ammattitaitovaatimuksenKohdealue.getVaatimuksenKohteet() != null)
-                .forEach(ammattitaitovaatimuksenKohdealue -> ammattitaitovaatimuksenKohdealue.getVaatimuksenKohteet().forEach(ammattitaitovaatimuksenKohde -> {
+                    .filter(ammattitaitovaatimuksenKohdealue -> ammattitaitovaatimuksenKohdealue.getVaatimuksenKohteet() != null)
+                    .forEach(ammattitaitovaatimuksenKohdealue -> ammattitaitovaatimuksenKohdealue.getVaatimuksenKohteet().forEach(ammattitaitovaatimuksenKohde -> {
 
-                    ammattitaitovaatimuksenKohde.setAmmattitaitovaatimuksenkohdealue(ammattitaitovaatimuksenKohdealue);
+                        ammattitaitovaatimuksenKohde.setAmmattitaitovaatimuksenkohdealue(ammattitaitovaatimuksenKohdealue);
 
-                    if (ammattitaitovaatimuksenKohde.getVaatimukset() != null) {
-                        ammattitaitovaatimuksenKohde.getVaatimukset()
-                                .forEach(ammattitaitovaatimus -> ammattitaitovaatimus.setAmmattitaitovaatimuksenkohde(ammattitaitovaatimuksenKohde));
-                    }
-                }));
+                        if (ammattitaitovaatimuksenKohde.getVaatimukset() != null) {
+                            ammattitaitovaatimuksenKohde.getVaatimukset()
+                                    .forEach(ammattitaitovaatimus -> ammattitaitovaatimus.setAmmattitaitovaatimuksenkohde(ammattitaitovaatimuksenKohde));
+                        }
+                    }));
         }
 
         for (TutkinnonosaToteutus toteutus : tosa.getToteutukset()) {
@@ -587,7 +585,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
             Reference uusiParent = viiteDto.getVanhempi();
             SisaltoViite parent = vanhatViitteetMap.get(viiteDto.getId()).getVanhempi();
             if (viiteDto.getTyyppi().equals(SisaltoTyyppi.TUTKINNONOSA)
-                && vanhatViitteetMap.get(uusiParent.getIdLong()).getTyyppi().equals(SisaltoTyyppi.TUTKINNONOSA)) {
+                    && vanhatViitteetMap.get(uusiParent.getIdLong()).getTyyppi().equals(SisaltoTyyppi.TUTKINNONOSA)) {
                 throw new BusinessRuleViolationException("tutkinnonosa-parent-ei-voi-olla-tutkinnonosa");
             }
 
@@ -711,8 +709,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
             String osaKoodi = osat[3];
             Koulutustoimija kt = koulutustoimijaRepository.findOneByOrganisaatio(ktOrg);
             return repository.findAllPaikallisetTutkinnonOsatByKoodi(kt, osaKoodi);
-        }
-        else if (ktId != null && koodi.startsWith("tutkinnonosat_")) {
+        } else if (ktId != null && koodi.startsWith("tutkinnonosat_")) {
             Koulutustoimija kt = koulutustoimijaRepository.findOne(ktId);
             return repository.findAllTutkinnonOsatByKoodi(kt, koodi);
         }

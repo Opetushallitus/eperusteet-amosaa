@@ -18,10 +18,10 @@ package fi.vm.sade.eperusteet.amosaa.service.audit;
 
 import fi.vm.sade.auditlog.AbstractLogMessage;
 import fi.vm.sade.auditlog.SimpleLogMessageBuilder;
+
 import java.util.Map;
 
 /**
- *
  * @author nkala
  */
 public class LogMessage extends AbstractLogMessage {

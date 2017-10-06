@@ -58,7 +58,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
  * @author teele1
  */
 //TODO: vaatii refaktorointia
@@ -71,7 +70,7 @@ public class ExceptionHandlingConfig extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleTransactionExceptions(TransactionSystemException e, WebRequest request) {
         if (e.getRootCause() != null && e.getRootCause() instanceof ConstraintViolationException) {
             return handleExceptionInternal((ConstraintViolationException) e.getRootCause(), null, new HttpHeaders(),
-                                           HttpStatus.BAD_REQUEST, request);
+                    HttpStatus.BAD_REQUEST, request);
         } else {
             return handleExceptionInternal(e, null, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
         }
@@ -79,7 +78,7 @@ public class ExceptionHandlingConfig extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status,
-        WebRequest request) {
+                                                                  WebRequest request) {
         if (ex.getRootCause() != null && ex.getRootCause() instanceof UnrecognizedPropertyException) {
             return handleExceptionInternal((UnrecognizedPropertyException) ex.getRootCause(), null, headers, status, request);
         } else {
@@ -88,10 +87,10 @@ public class ExceptionHandlingConfig extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(value = {
-        NestedRuntimeException.class,
-        NestedCheckedException.class,
-        ServletException.class,
-        ValidationException.class})
+            NestedRuntimeException.class,
+            NestedCheckedException.class,
+            ServletException.class,
+            ValidationException.class})
     public ResponseEntity<Object> handleAllExceptions(Exception e, WebRequest request) throws Exception {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         ResponseStatus rs = e.getClass().getAnnotation(ResponseStatus.class);
@@ -140,7 +139,7 @@ public class ExceptionHandlingConfig extends ResponseEntityExceptionHandler {
             describe(map, "datan-käsittelyssä-odottamaton-virhe", "Datan käsittelyssä tapahtui odottamaton virhe.");
         } else if (ex instanceof UnrecognizedPropertyException) {
             describe(map, "datassa-tuntematon-kenttä", "Dataa ei pystytty käsittelemään. Lähetetyssä datassa esiintyi tuntematon kenttä \"" +
-                     ((UnrecognizedPropertyException) ex).getPropertyName() + "\"");
+                    ((UnrecognizedPropertyException) ex).getPropertyName() + "\"");
         } else if (ex instanceof ConstraintViolationException) {
             suppresstrace = true;
             List<String> reasons = new ArrayList<>();
@@ -170,7 +169,7 @@ public class ExceptionHandlingConfig extends ResponseEntityExceptionHandler {
                 map.put("syy", ex.getLocalizedMessage());
                 map.put("avain", "client-abort-virhe");
             }
-        }  else {
+        } else {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
             map.put("syy", "Sovelluspalvelimessa tapahtui odottamaton virhe");
             map.put("avain", "server-odottamaton-virhe");

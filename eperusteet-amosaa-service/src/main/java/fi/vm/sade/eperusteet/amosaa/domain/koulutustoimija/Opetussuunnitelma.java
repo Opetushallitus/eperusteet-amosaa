@@ -24,6 +24,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
@@ -45,13 +46,13 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
 /**
- *
  * @author nkala
  */
 
@@ -148,9 +149,9 @@ public class Opetussuunnitelma extends AbstractAuditedEntity implements Serializ
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "opetussuunnitelma_liite", inverseJoinColumns = {
-            @JoinColumn(name="liite_id")
+            @JoinColumn(name = "liite_id")
     }, joinColumns = {
-            @JoinColumn(name="opetussuunnitelma_id")
+            @JoinColumn(name = "opetussuunnitelma_id")
     })
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     private Set<Liite> liitteet = new HashSet<>();

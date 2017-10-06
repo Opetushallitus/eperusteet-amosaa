@@ -17,6 +17,7 @@ package fi.vm.sade.eperusteet.amosaa.domain.revision;
 
 import java.io.Serializable;
 import java.util.Date;
+
 import lombok.EqualsAndHashCode;
 
 import lombok.Getter;

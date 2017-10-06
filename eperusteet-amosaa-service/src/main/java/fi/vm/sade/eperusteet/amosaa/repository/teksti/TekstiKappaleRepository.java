@@ -20,7 +20,6 @@ import fi.vm.sade.eperusteet.amosaa.repository.version.JpaWithVersioningReposito
 import org.springframework.stereotype.Repository;
 
 /**
- *
  * @author mikkom
  */
 @Repository

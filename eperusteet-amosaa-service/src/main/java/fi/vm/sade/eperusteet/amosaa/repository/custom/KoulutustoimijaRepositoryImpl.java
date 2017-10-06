@@ -28,6 +28,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.Teksti_;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaQueryDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaCustomRepository;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,12 +44,12 @@ import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.SetJoin;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
 /**
- *
  * @author nkala
  */
 public class KoulutustoimijaRepositoryImpl implements KoulutustoimijaCustomRepository {

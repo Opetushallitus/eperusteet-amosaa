@@ -26,9 +26,12 @@ import fi.vm.sade.eperusteet.amosaa.service.security.PermissionManager;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionManager.Permission;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionManager.TargetType;
 import fi.vm.sade.eperusteet.amosaa.service.teksti.KommenttiService;
+
 import static fi.vm.sade.eperusteet.amosaa.service.util.Nulls.assertExists;
+
 import java.util.List;
 import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
 import org.springframework.security.core.Authentication;
@@ -93,7 +96,7 @@ public class KommenttiServiceImpl implements KommenttiService {
         if (kommenttiDto.getPoistettu()) {
             kommenttiDto.setSisalto(null);
         }
-        return  kommenttiDto;
+        return kommenttiDto;
     }
 
     @Override

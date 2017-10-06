@@ -17,15 +17,16 @@
 package fi.vm.sade.eperusteet.amosaa.dto.kayttaja;
 
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
+
 import java.util.Date;
 import java.util.Set;
+
 import lombok.Getter;
 import lombok.Setter;
 import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
 import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
- *
  * @author nkala
  */
 @Getter

@@ -17,6 +17,7 @@
 package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.math.BigDecimal;
 
 import com.fasterxml.jackson.annotation.JsonProperty;

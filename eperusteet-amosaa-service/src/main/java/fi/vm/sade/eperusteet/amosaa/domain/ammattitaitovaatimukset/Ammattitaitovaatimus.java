@@ -31,7 +31,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "ammattitaitovaatimus")
 @Audited
-public class Ammattitaitovaatimus implements Serializable{
+public class Ammattitaitovaatimus implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

@@ -19,7 +19,6 @@ import java.util.EnumSet;
 import java.util.Set;
 
 /**
- *
  * @author mikkom
  */
 public enum Tila {
@@ -50,10 +49,14 @@ public enum Tila {
 
     private final String tila;
 
-    private Tila(String tila) { this.tila = tila; }
+    private Tila(String tila) {
+        this.tila = tila;
+    }
 
     @Override
-    public String toString() { return tila; }
+    public String toString() {
+        return tila;
+    }
 
     public Set<Tila> mahdollisetSiirtymat() {
         return mahdollisetSiirtymat(false);

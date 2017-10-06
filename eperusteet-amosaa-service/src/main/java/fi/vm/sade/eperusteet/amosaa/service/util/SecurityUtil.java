@@ -18,12 +18,14 @@ package fi.vm.sade.eperusteet.amosaa.service.util;
 
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.RolePermission;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.RolePrefix;
+
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.AccessDeniedException;
@@ -32,7 +34,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 
 /**
- *
  * @author jhyoty
  */
 public final class SecurityUtil {
@@ -50,7 +51,7 @@ public final class SecurityUtil {
 
     public static void allow(String principalName) {
         Principal p = getAuthenticatedPrincipal();
-        if ( p == null || !p.getName().equals(principalName)) {
+        if (p == null || !p.getName().equals(principalName)) {
             throw new AccessDeniedException("Pääsy evätty");
         }
     }
@@ -69,23 +70,23 @@ public final class SecurityUtil {
 
     public static Set<String> getOrganizations(Authentication authentication, Set<RolePermission> permissions) {
         return authentication.getAuthorities().stream()
-                             .map(grantedAuthority -> parseOid(grantedAuthority.getAuthority(),
-                                                               RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA,
-                                                               permissions))
-                             .filter(Optional::isPresent)
-                             .map(Optional::get)
-                             .collect(Collectors.toSet());
+                .map(grantedAuthority -> parseOid(grantedAuthority.getAuthority(),
+                        RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA,
+                        permissions))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toSet());
     }
 
     private static Optional<String> parseOid(String authority, RolePrefix prefix, Set<RolePermission> permissions) {
         return permissions.stream()
-                          .map(p -> {
-                              String authPrefix = prefix.name() + "_" + p.name() + "_";
-                              return authority.startsWith(authPrefix) ?
-                                     Optional.of(authority.substring(authPrefix.length())) : Optional.<String>empty();
-                          })
-                          .filter(Optional::isPresent)
-                          .map(Optional::get)
-                          .findAny();
+                .map(p -> {
+                    String authPrefix = prefix.name() + "_" + p.name() + "_";
+                    return authority.startsWith(authPrefix) ?
+                            Optional.of(authority.substring(authPrefix.length())) : Optional.<String>empty();
+                })
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .findAny();
     }
 }

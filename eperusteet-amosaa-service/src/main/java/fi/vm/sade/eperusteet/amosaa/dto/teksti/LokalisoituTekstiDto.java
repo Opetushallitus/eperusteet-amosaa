@@ -20,17 +20,18 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonValue;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
+
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+
 import lombok.Getter;
 import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
 import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
- *
  * @author jhyoty
  */
 public class LokalisoituTekstiDto implements AuditLoggableDto {
@@ -67,11 +68,9 @@ public class LokalisoituTekstiDto implements AuditLoggableDto {
             for (Map.Entry<String, String> entry : values.entrySet()) {
                 if ("_id".equals(entry.getKey())) {
                     tmpId = Long.valueOf(entry.getValue());
-                }
-                else if ("_tunniste".equals(entry.getKey())) {
+                } else if ("_tunniste".equals(entry.getKey())) {
                     this.tunniste = UUID.fromString(entry.getValue());
-                }
-                else {
+                } else {
                     Kieli k = Kieli.of(entry.getKey());
                     tmpValues.put(k, entry.getValue());
                 }
@@ -111,9 +110,9 @@ public class LokalisoituTekstiDto implements AuditLoggableDto {
     }
 
     @SuppressWarnings("DtoClassesNotContainEntities")
-    public static<K> Map<K,Optional<LokalisoituTekstiDto>> ofOptionalMap(Map<K,Optional<LokalisoituTeksti>> map) {
-        Map<K,Optional<LokalisoituTekstiDto>> result = new HashMap<>();
-        for (Map.Entry<K,Optional<LokalisoituTeksti>> kv : map.entrySet()) {
+    public static <K> Map<K, Optional<LokalisoituTekstiDto>> ofOptionalMap(Map<K, Optional<LokalisoituTeksti>> map) {
+        Map<K, Optional<LokalisoituTekstiDto>> result = new HashMap<>();
+        for (Map.Entry<K, Optional<LokalisoituTeksti>> kv : map.entrySet()) {
             result.put(kv.getKey(), kv.getValue().map(teksti -> new LokalisoituTekstiDto(teksti.getId(), teksti.getTunniste(), teksti.getTeksti())));
         }
         return result;
