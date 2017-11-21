@@ -65,7 +65,7 @@ public class Koulutustoimija extends AbstractAuditedEntity implements Serializab
     @ElementCollection
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private Set<Koulutustoimija> ystavat;
+    private Set<Koulutustoimija> ystavat = new HashSet<>();
 
     @Getter
     @Setter

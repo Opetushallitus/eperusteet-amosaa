@@ -1,3 +1,9 @@
+mixin oikeussiirto()
+  div(oikeustarkastelu="hallinta")
+    // h2(kaanna="opetussuunnitelman-siirto")
+    button.btn.btn-danger(ng-click="siirraOpetussuunnitelma()" ng-bind="'siirra-opetussuunnitelma' | kaanna")
+
+
 mixin kielivalinta(kieli)
   label.checkbox-inline
     input(type="checkbox" ng-model="$$julkaisukielet[" + kieli + "]"
@@ -5,9 +11,11 @@ mixin kielivalinta(kieli)
       ng-true-value=kieli ng-false-value="" ng-disabled="!$$ekEditing")
     span(ng-bind=kieli)
 
+
 mixin esikatselu()
   label.checkbox-inline
     input(type="checkbox" ng-model="ops.esikatseltavissa" ng-disabled="!$$ekEditing")
+
 
 .tiedot.subtle-transition
   +historia("versio",
@@ -49,3 +57,6 @@ mixin esikatselu()
 
           +formfield("'voimaantulopvm'")
             +ekdate("ops.voimaantulo", "'voimaantulopvm'")
+
+      div(ng-show="ops.tyyppi !== 'pohja'")
+        +oikeussiirto()

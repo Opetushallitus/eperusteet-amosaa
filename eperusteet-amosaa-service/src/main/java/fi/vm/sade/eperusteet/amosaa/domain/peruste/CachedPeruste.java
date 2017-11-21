@@ -60,6 +60,7 @@ public class CachedPeruste implements Serializable, ReferenceableEntity {
 
     @Getter
     @Setter
+    @Column(columnDefinition = "text")
     private String peruste;
 
     @Getter

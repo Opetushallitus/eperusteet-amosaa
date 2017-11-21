@@ -30,6 +30,7 @@ import fi.vm.sade.eperusteet.amosaa.resource.config.AbstractRakenneOsaDeserializ
 import fi.vm.sade.eperusteet.amosaa.resource.config.MappingModule;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
+import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetServiceClient;
 import fi.vm.sade.eperusteet.amosaa.service.util.RestClientFactory;
 import fi.vm.sade.generic.rest.CachingRestClient;
 
@@ -54,8 +55,6 @@ import org.springframework.transaction.annotation.Transactional;
  * FIXME: Refaktoroi turhat pois
  */
 @Service
-@Profile(value = "default")
-@SuppressWarnings("TransactionalAnnotations")
 @Transactional
 public class EperusteetServiceImpl implements EperusteetService {
     private static final Logger logger = LoggerFactory.getLogger(EperusteetServiceImpl.class);
@@ -68,6 +67,9 @@ public class EperusteetServiceImpl implements EperusteetService {
 
     @Autowired
     RestClientFactory restClientFactory;
+
+    @Autowired
+    EperusteetServiceClient eperusteetServiceClient;
 
     private CachingRestClient client;
 
@@ -174,96 +176,11 @@ public class EperusteetServiceImpl implements EperusteetService {
     }
 
     @Override
-    public String getPerusteData(Long id) {
-        try {
-            JsonNode node = commonGet("/api/perusteet/" + String.valueOf(id) + "/kaikki", JsonNode.class);
-            Object perusteObj = mapper.treeToValue(node, Object.class);
-            String json = mapper.writeValueAsString(perusteObj);
-            return json;
-        } catch (IOException ex) {
-            throw new BusinessRuleViolationException("perustetta-ei-loytynyt");
-        }
-    }
-
-    @Override
-    public <T> T getPeruste(Long id, Class<T> type) {
-        T peruste = commonGet("/api/perusteet/" + id.toString() + "", type);
-        return peruste;
-    }
-
-    @Override
-    public <T> T getPeruste(String diaarinumero, Class<T> type) {
-        T peruste = commonGet("/api/perusteet/diaari?diaarinumero=" + diaarinumero, type);
-        return peruste;
-    }
-
-    @Override
-    public PerusteDto getYleinenPohja() {
-        PerusteDto peruste = commonGet("/api/perusteet/amosaapohja", PerusteDto.class);
-        return peruste;
-    }
-
-    @Override
-    public String getYleinenPohjaSisalto() {
-        try {
-            JsonNode node = commonGet("/api/perusteet/amosaapohja", JsonNode.class);
-            Object perusteObj = mapper.treeToValue(node, Object.class);
-            String json = mapper.writeValueAsString(perusteObj);
-            return json;
-        } catch (IOException ex) {
-            throw new BusinessRuleViolationException("perustetta-ei-loytynyt");
-        }
-    }
-
-    private <T> T commonGet(String endpoint, Class<T> type) {
-        try {
-            InputStream stream = client.get(eperusteetServiceUrl + endpoint);
-            T node = mapper.readValue(stream, type);
-            return node;
-        } catch (IOException ex) {
-            throw new BusinessRuleViolationException("haku-epaonnistui");
-        }
-    }
-
-    @Override
-    public List<PerusteDto> findPerusteet(Set<KoulutusTyyppi> tyypit) {
-        List<PerusteDto> perusteet = new ArrayList<>();
-        JsonNode node = commonGet("/api/perusteet/amosaaops", JsonNode.class);
-        for (JsonNode perusteJson : node) {
-            try {
-                PerusteDto peruste = mapper.treeToValue(perusteJson, PerusteDto.class);
-                perusteet.add(peruste);
-            } catch (IOException ex) {
-                logger.error(ex.getMessage());
-            }
-        }
-
-        return perusteet.stream()
-                .filter(peruste -> tyypit.contains(peruste.getKoulutustyyppi()))
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public List<PerusteDto> findPerusteet() {
         HashSet<KoulutusTyyppi> koulutustyypit = new HashSet<>();
         koulutustyypit.add(KoulutusTyyppi.AMMATTITUTKINTO);
         koulutustyypit.add(KoulutusTyyppi.ERIKOISAMMATTITUTKINTO);
         koulutustyypit.add(KoulutusTyyppi.PERUSTUTKINTO);
-        return findPerusteet(koulutustyypit);
-    }
-
-    @Override
-    public JsonNode getTiedotteet(Long jalkeen) {
-        String params = "";
-        if (jalkeen != null) {
-            params = "?alkaen=" + String.valueOf(jalkeen);
-        }
-        JsonNode tiedotteet = commonGet("/api/tiedotteet" + params, JsonNode.class);
-        return tiedotteet;
-    }
-
-    @Override
-    public ArviointiasteikkoDto getArviointiasteikko(Long id) {
-        return commonGet("/api/arviointiasteikot/" + id, ArviointiasteikkoDto.class);
+        return eperusteetServiceClient.findPerusteet(koulutustyypit);
     }
 }

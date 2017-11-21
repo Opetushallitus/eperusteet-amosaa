@@ -21,18 +21,18 @@
   <!-- Default set of monitored resources -->
   <WatchedResource>WEB-INF/web.xml</WatchedResource>
 
-  <Resource 
-    name="jdbc/eperusteet-amosaa" 
+  <Resource
+    name="jdbc/eperusteet-amosaa"
     auth="Container"
     type="javax.sql.DataSource"
     maxActive="{{ host_postgresql_eperusteet_amosaa_maxActive | default(50) }}"
     maxIdle="{{ host_postgresql_eperusteet_amosaa_maxIdle | default(30) }}"
     maxWait="{{ host_postgresql_eperusteet_amosaa_maxWait | default(10000) }}"
-    username="{{ host_postgresql_eperusteet_amosaa_user }}" 
+    username="{{ host_postgresql_eperusteet_amosaa_user }}"
     password="{{ host_postgresql_eperusteet_amosaa_password }}"
     driverClassName="org.postgresql.Driver"
     validationQuery="select 1"
-    url="jdbc:postgresql://{{host_postgresql_eperusteet_amosaa}}:{{port_postgresql}}/eperusteet-amosaa" />
+    url="jdbc:postgresql://{{host_postgresql_eperusteet_amosaa}}:{{port_postgresql}}/{{host_postgresql_eperusteet_amosaa_database | default('eperusteet-amosaa') }}" />
 
 </Context>
 

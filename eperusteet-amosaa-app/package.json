@@ -29,7 +29,7 @@
     "gulp-tsc": "1.2.6",
     "gulp-watch": "4.3.5",
     "jquery": "2.1.4",
-    "jquery-ui": "1.10.5",
+    "jquery-ui": "1.12.1",
     "jquery-ui-build": "1.8.1-6.1",
     "lazy.js": "0.4.2",
     "lodash": "3.10.1",

@@ -33,29 +33,9 @@ import java.util.Set;
 @Service
 @PreAuthorize("permitAll()") // OK, koska mäppääntyy julkisiin rajapintoihin
 public interface EperusteetService {
-    <T> T getPeruste(String diaariNumero, Class<T> type);
-
-    PerusteDto getYleinenPohja();
-
-    String getYleinenPohjaSisalto();
-
-    String getPerusteData(Long id);
-
-    List<PerusteDto> findPerusteet();
-
-    List<PerusteDto> findPerusteet(Set<KoulutusTyyppi> tyypit);
-
-    JsonNode getTiedotteet(Long jalkeen);
+    JsonNode getTutkinnonOsat(Long id);
 
     List<TutkinnonOsaSuoritustapaDto> convertTutkinnonOsat(JsonNode tutkinnonosat);
-
-    <T> T getPeruste(Long id, Class<T> type);
-
-    <T> T getPerusteSisalto(Long cperusteId, Class<T> type);
-
-    <T> T getPerusteSisalto(CachedPeruste cperuste, Class<T> type);
-
-    JsonNode getTutkinnonOsat(Long id);
 
     JsonNode getSuoritustavat(Long id);
 
@@ -63,5 +43,40 @@ public interface EperusteetService {
 
     JsonNode getSuoritustapa(Long id, String tyyppi);
 
-    ArviointiasteikkoDto getArviointiasteikko(Long id);
+    <T> T getPerusteSisalto(Long cperusteId, Class<T> type);
+
+    <T> T getPerusteSisalto(CachedPeruste cperuste, Class<T> type);
+
+    List<PerusteDto> findPerusteet();
+//    <T> T getPeruste(String diaariNumero, Class<T> type);
+//
+//    PerusteDto getYleinenPohja();
+//
+//    String getYleinenPohjaSisalto();
+//
+//    String getPerusteData(Long id);
+//
+//    List<PerusteDto> findPerusteet();
+//
+//    List<PerusteDto> findPerusteet(Set<KoulutusTyyppi> tyypit);
+//
+//    JsonNode getTiedotteet(Long jalkeen);
+//
+//    List<TutkinnonOsaSuoritustapaDto> convertTutkinnonOsat(JsonNode tutkinnonosat);
+//
+//    <T> T getPeruste(Long id, Class<T> type);
+//
+//    <T> T getPerusteSisalto(Long cperusteId, Class<T> type);
+//
+//    <T> T getPerusteSisalto(CachedPeruste cperuste, Class<T> type);
+//
+//    JsonNode getTutkinnonOsat(Long id);
+//
+//    JsonNode getSuoritustavat(Long id);
+//
+//    JsonNode getTutkinnonOsa(Long id, Long tosaId);
+//
+//    JsonNode getSuoritustapa(Long id, String tyyppi);
+//
+//    ArviointiasteikkoDto getArviointiasteikko(Long id);
 }

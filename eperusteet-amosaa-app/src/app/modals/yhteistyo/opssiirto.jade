@@ -1,0 +1,31 @@
+.modal-header
+  h3(ng-bind="'yhteistyon-sallivat-koulutustoimijat' | kaanna")
+
+
+.modal-body
+  div.form-group.has-feedback.has-feedback-left
+    input.form-control(ng-change="orgPaginatedUpdate(orgSearch)"
+      type="text"
+      ng-model="orgSearch"
+      ng-model-options="{ debounce: 300 }"
+      placeholder="{{ 'hae' | kaanna }}")
+    i.form-control-feedback.glyphicon.glyphicon-search(style="color: gray;")
+  table.table.table-striped
+    tr
+      th(ng-bind="'nimi' | kaanna")
+    tr(ng-if="org.id !== koulutustoimija.id" ng-repeat="org in orgPaginated")
+      td
+        a(href="" ng-click="ok(org)" ng-bind="org.nimi | kaanna")
+
+  nav.text-center
+    ul.pagination
+      li
+        a(href="") «
+      li(ng-class="{ 'active': page === $$orgPaginatedPage.current }" ng-repeat=("page in $$orgPaginatedPage.pages"))
+        a(href="" ng-click="orgPaginatedSelect(page)") {{ page + 1 }}
+      li
+        a(href="") »
+
+
+.modal-footer
+  button.btn.btn-default(type="button" ng-click="cancel()" ng-bind="'peruuta' | kaanna")

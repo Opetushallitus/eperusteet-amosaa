@@ -36,10 +36,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.PoistettuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaJulkinenDto;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaQueryDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.*;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.Suoritustapakoodi;
@@ -55,7 +52,9 @@ import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiService;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
+import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetServiceClient;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
+import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
@@ -65,6 +64,7 @@ import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -98,6 +98,9 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     private EperusteetService eperusteetService;
 
     @Autowired
+    private EperusteetServiceClient eperusteetServiceClient;
+
+    @Autowired
     private KayttajaoikeusRepository kayttajaoikeusRepository;
 
     @Autowired
@@ -123,6 +126,17 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
     @Autowired
     private DokumenttiService dokumenttiService;
+
+    private KoulutustoimijaService koulutustoimijaService;
+
+    @Autowired
+    public void setKoulutustoimijaService(KoulutustoimijaService kts) {
+        this.koulutustoimijaService = kts;
+    }
+
+    public KoulutustoimijaService getKoulutustoimijaService() {
+        return this.koulutustoimijaService;
+    }
 
     @Override
     @Transactional
@@ -251,8 +265,8 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
             cperuste.setPerusteId(peruste.getId());
             cperuste.setLuotu(peruste.getGlobalVersion().getAikaleima());
             cperuste.setPeruste(ops.getTyyppi() == OpsTyyppi.YLEINEN
-                    ? eperusteetService.getYleinenPohjaSisalto()
-                    : eperusteetService.getPerusteData(peruste.getId()));
+                    ? eperusteetServiceClient.getYleinenPohjaSisalto()
+                    : eperusteetServiceClient.getPerusteData(peruste.getId()));
             cperuste = cachedPerusteRepository.save(cperuste);
         }
 
@@ -309,7 +323,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     public OpetussuunnitelmaBaseDto addOpetussuunnitelma(Long ktId, OpetussuunnitelmaDto opsDto) {
         Koulutustoimija kt = koulutustoimijaRepository.findOne(ktId);
         Opetussuunnitelma ops = mapper.map(opsDto, Opetussuunnitelma.class);
-        ops.setKoulutustoimija(kt);
+        ops.changeKoulutustoimija(kt);
         ops.setTila(Tila.LUONNOS);
         ops = repository.save(ops);
 
@@ -326,11 +340,11 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         } else {
             switch (opsDto.getTyyppi()) {
                 case OPS:
-                    PerusteDto peruste = eperusteetService.getPeruste(opsDto.getPerusteId(), PerusteDto.class);
+                    PerusteDto peruste = eperusteetServiceClient.getPeruste(opsDto.getPerusteId(), PerusteDto.class);
                     setOpsCommon(ops, peruste, rootTkv);
                     break;
                 case YLEINEN:
-                    PerusteDto yleinen = eperusteetService.getYleinenPohja();
+                    PerusteDto yleinen = eperusteetServiceClient.getYleinenPohja();
                     setOpsCommon(ops, yleinen, rootTkv);
                     opsDto.setSuoritustapa("yleinen");
                     break;
@@ -480,4 +494,20 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                 .map(ops -> mapper.map(ops, OpetussuunnitelmaDto.class));
     }
 
+    @Override
+    public OpetussuunnitelmaDto updateKoulutustoimija(Long ktId, Long opsId, KoulutustoimijaBaseDto body) {
+        Opetussuunnitelma ops = findOps(ktId, opsId);
+        if (ops.getKoulutustoimija().getId() != ktId) {
+            throw new BusinessRuleViolationException("vain-oman-opetussuunnitelman-voi-siirtaa");
+        }
+
+        if (koulutustoimijaService.getOmatYstavat(ktId).stream()
+                .noneMatch(ystava -> ystava.getId() == body.getId())) {
+            throw new BusinessRuleViolationException("siirto-mahdollinen-vain-ystavaorganisaatiolle");
+        }
+
+        Koulutustoimija kt = koulutustoimijaRepository.findOne(body.getId());
+        ops.changeKoulutustoimija(kt);
+        return mapper.map(ops, OpetussuunnitelmaDto.class);
+    }
 }

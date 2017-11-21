@@ -13,10 +13,11 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * European Union Public Licence for more details.
  */
-package fi.vm.sade.eperusteet.amosaa.service.mocks;
+package fi.vm.sade.eperusteet.amosaa.service.util;
 
 import fi.vm.sade.eperusteet.amosaa.dto.koodisto.KoodistoKoodiDto;
 import fi.vm.sade.eperusteet.amosaa.service.external.KoodistoService;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -26,6 +27,7 @@ import java.util.List;
  * @author mikkom
  */
 @Service
+@Profile("test")
 public class KoodistoServiceMock implements KoodistoService {
     @Override
     public List<KoodistoKoodiDto> getAll(String koodisto) {

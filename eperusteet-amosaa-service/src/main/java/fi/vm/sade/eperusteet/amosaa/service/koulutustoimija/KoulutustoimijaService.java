@@ -16,15 +16,11 @@
 
 package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija;
 
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaJulkinenDto;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaQueryDto;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaYstavaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.OrganisaatioHierarkia;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.*;
 
 import java.util.List;
 import java.util.Set;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.method.P;
@@ -68,6 +64,12 @@ public interface KoulutustoimijaService {
 
     Long getKoulutustoimija(String idTaiOid);
 
+    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
+    OrganisaatioHierarkia getOrganisaatioHierarkia(Long ktId);
+
     @PreAuthorize("permitAll()")
     Page<KoulutustoimijaJulkinenDto> findKoulutustoimijat(PageRequest page, KoulutustoimijaQueryDto query);
+
+//    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'HALLINTA')")
+//    OpetussuunnitelmaBaseDto moveOpetussuunnitelma(Long ktId, Long opsId, KoulutustoimijaBaseDto body);
 }

@@ -16,6 +16,7 @@
 
 package fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija;
 
+import fi.vm.sade.eperusteet.amosaa.dto.OrganisaatioHierarkia;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
@@ -24,20 +25,16 @@ import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaYstavaDto
 import fi.vm.sade.eperusteet.amosaa.dto.ops.SisaltoViiteSijaintiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViitePaikallinenIntegrationDto;
 import fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaAudit;
-
 import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaMessageFields.KOULUTUSTOIMIJA;
 import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.KOULUTUSTOIMIJA_MUOKKAUS;
-
 import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import io.swagger.annotations.Api;
-
-import java.util.List;
-
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -153,6 +150,16 @@ public class KoulutustoimijaController extends KoulutustoimijaIdGetterAbstractCo
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId
     ) {
         return koulutustoimijaService.getYhteistyoKoulutustoimijat(ktId);
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
+    @RequestMapping(value = "/{ktId}/hierarkia", method = RequestMethod.GET)
+    public OrganisaatioHierarkia getHierarkia(
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId
+    ) {
+        return koulutustoimijaService.getOrganisaatioHierarkia(ktId);
     }
 
     @ApiImplicitParams({

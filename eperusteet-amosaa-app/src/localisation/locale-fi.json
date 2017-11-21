@@ -3,6 +3,7 @@
     "OSAAMISPISTE": "osp",
     "osan-historia": "Osan muutoshistoria",
     "lisaa-vapaa-teksti": "Tekstikappale",
+    "siirra-opetussuunnitelma": "Siirrä opetussuunnitelma ystäväorganisaatiolle",
     "vanhaa-versiota-ei-loytynyt": "Osalle ei löytynyt vanhaa versiosta",
     "ei-hakutuloksia": "Ei hakutuloksia",
     "vanhaa-versiota-ei-loytynyt-selite":
@@ -287,6 +288,9 @@
     "poistotyyppi-tekstikappale": "Tekstikappale",
     "poistotyyppi-tutkinnonosa": "Tutkinnon osa",
     "poistotyyppi-tutkinnonosaryhma": "Moduuli",
+    "opetussuunnitelman-siirto-ohje": "Tällä toiminnolla voit siirtää opetussuunnitelman toisen organisaation omistukseen. <b>Palautus on mahdollinen ainoastaan koulutuksen järjestäjän näkymästä mille opetussuunnitelma on lisätty.</b>",
+    "siirra": "Siirrä",
+    "suodata": "Suodata",
     "rajaa-sisaltoa": "Rajaa sisältöä",
     "ru": "venäjä",
     "salli-yhteistyo": "Salli yhteistyöpyynnöt muilta organisaatioilta",
@@ -353,6 +357,8 @@
     "tilastot-opetussuunnitelmia": "Opetussuunnitelmia",
     "tyyppi": "Tyyppi",
     "tutkinnon-diaarinumero": "Tutkinnon diaarinumero",
+    "organisaatiohierarkia": "Organisaatiohierarkia",
+    "muut-organisaatiot": "Muut organisaatiot",
     "toggle-ohjeteksti": "Näytä ohje",
     "toggle-perusteteksti": "Näytä tukiteksti",
     "pyynnot-muilta-organisaatioilta": "Pyynnöt muilta organisaatioilta",
@@ -420,5 +426,7 @@
     "yhteisien-osien-pohjia-ei-viela-luotu": "Yhteisien osien pohjia ei luotu",
     "tuo-sisaltoa-muista-opseista": "Tuo sisältöä muista opseista",
     "yhteistyo": "Yhteistyö",
-    "ylatunniste": "Ylätunniste"
+    "ylatunniste": "Ylätunniste",
+    "varmista-siirto": "Varmista siirto",
+    "src/app/states/koulutustoimija/tiedot/organisaatio.jade": "Haluatko varmasti siirtää opetussuunnitelman organisaatiolle: {{ nimi }}"
 }
