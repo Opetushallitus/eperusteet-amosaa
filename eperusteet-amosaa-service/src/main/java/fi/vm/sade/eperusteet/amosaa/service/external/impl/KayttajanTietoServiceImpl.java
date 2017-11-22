@@ -155,6 +155,26 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
                 return result;
             }
         }
+
+        public List<KayttajanTietoDto> haeByOrganisaatio(String orgOid) {
+            try {
+                CachingRestClient crc = restClientFactory.get(onrServiceUrl);
+                // Todo: Make paging
+                String url = onrServiceUrl + HENKILO_API + "?organisaatioOids=" + orgOid + "&passivoitu=false&duplikaatti=false&count=10000";
+                JsonNode json = mapper.readTree(crc.getAsString(url));
+                JsonNode results = json.get("results");
+
+                ArrayList<KayttajanTietoDto> kayttajienTiedot = new ArrayList<>();
+                for (JsonNode element : results) {
+                    KayttajanTietoDto kayttajanTietoDto = parsiKayttaja(element);
+                    kayttajienTiedot.add(kayttajanTietoDto);
+                }
+
+                return kayttajienTiedot;
+            } catch (Exception e) {
+                return null;
+            }
+        }
     }
 
     @Override
