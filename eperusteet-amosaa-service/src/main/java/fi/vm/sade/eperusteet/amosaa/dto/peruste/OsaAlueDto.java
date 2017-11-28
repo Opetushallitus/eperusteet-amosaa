@@ -19,10 +19,10 @@ package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
-import lombok.Getter;
-import lombok.Setter;
 import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
 import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * @author harrik
@@ -37,6 +37,7 @@ public class OsaAlueDto implements AuditLoggableDto {
     private Long id;
     private LokalisoituTekstiDto nimi;
     private LokalisoituTekstiDto kuvaus;
+    private KoodiDto koodi;
     private String koodiUri;
     private String koodiArvo;
     @JsonInclude(JsonInclude.Include.NON_NULL)

@@ -19,13 +19,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.AmmattitaitovaatimusKohdealueetDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
-
-import java.util.List;
-
-import lombok.Getter;
-import lombok.Setter;
 import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
 import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
+import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * @author harrik
@@ -45,4 +43,5 @@ public class OsaamistavoiteLaajaDto extends OsaamistavoiteDto implements AuditLo
     private String koodiUri;
     private String koodiArvo;
     private Reference esitieto;
+    private KoodiDto koodi;
 }
