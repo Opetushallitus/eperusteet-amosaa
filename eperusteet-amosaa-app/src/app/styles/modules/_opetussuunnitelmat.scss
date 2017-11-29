@@ -439,6 +439,9 @@ $ops-top-vertical-margin: 10px;
         }
 
         table {
+            td {
+                border-top: 1px solid #ccc;
+            }
             a,
             a > span {
                 text-decoration: none;
