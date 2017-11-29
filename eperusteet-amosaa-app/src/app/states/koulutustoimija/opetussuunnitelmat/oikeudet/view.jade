@@ -64,8 +64,3 @@ div.oikeudet.subtle-transition
   div.row
     div.col-xs-12
       +listKayttajat("kayttajat")
-  div(ng-if="naytaRekisteroimattomat")
-    h3(ng-bind="'rekisteroimattomat' | kaanna")
-    div.row
-      div.col-xs-12
-        +listRekisteroimattomat("rekisteroimattomat")

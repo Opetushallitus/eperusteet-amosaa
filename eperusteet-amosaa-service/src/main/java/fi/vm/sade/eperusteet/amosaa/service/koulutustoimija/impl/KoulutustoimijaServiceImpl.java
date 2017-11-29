@@ -17,17 +17,16 @@
 package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
-import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaJulkinenDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaQueryDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaYstavaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.YstavaStatus;
+import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
@@ -69,13 +68,16 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     private SisaltoviiteRepository sisaltoviiteRepository;
 
     @Autowired
+    private KayttajanTietoServiceImpl.KayttajaClient kayttajaClient;
+
+    @Autowired
+    private KayttajaRepository kayttajaRepository;
+
+    @Autowired
     private DtoMapper mapper;
 
     @PersistenceContext
     private EntityManager em;
-
-    @Autowired
-    private KayttajanTietoServiceImpl.KayttajaClient kayttajaClient;
 
     @Transactional
     private Koulutustoimija initialize(String kOid) {
@@ -188,12 +190,6 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
                 .collect(Collectors.toList());
 
         return result;
-    }
-
-    @Override
-    public List<KayttajanTietoDto> getRekisteroimattomat(Long ktId) {
-        Koulutustoimija kt = repository.findOne(ktId);
-        return kayttajaClient.haeByOrganisaatio(kt.getOrganisaatio());
     }
 
     @Override

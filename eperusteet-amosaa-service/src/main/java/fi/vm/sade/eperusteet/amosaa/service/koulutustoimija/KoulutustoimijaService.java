@@ -16,7 +16,6 @@
 
 package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija;
 
-import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaJulkinenDto;
@@ -63,9 +62,6 @@ public interface KoulutustoimijaService {
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
     List<KoulutustoimijaYstavaDto> getOmatYstavat(Long ktId);
-
-    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
-    List<KayttajanTietoDto> getRekisteroimattomat(Long ktId);
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
     List<KoulutustoimijaBaseDto> getPyynnot(Long ktId);

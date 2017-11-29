@@ -15,12 +15,14 @@ angular.module("app").config($stateProvider =>
             kayttajanTiedot: kayttaja => kayttaja.one("tiedot").get(),
             oikeudet: (kkAlustus, Api) => Api.all("kayttaja/oikeudet").getList(),
             orgoikeudet: (kkAlustus, Api) => Api.one("kayttaja/organisaatiooikeudet").get(),
+            oikeudetInit(oikeudet, orgoikeudet) {
+                Oikeudet.init(oikeudet, orgoikeudet);
+            },
             koodisto: Api => Api.one("koodisto")
         },
         views: {
             "": {
-                controller: ($scope, $state, $stateParams, kayttajanKoulutustoimijat, oikeudet, orgoikeudet) => {
-                    Oikeudet.init(oikeudet, orgoikeudet);
+                controller: ($scope, $state, $stateParams, oikeudetInit, kayttajanKoulutustoimijat) => {
                     if (_.isEmpty(kayttajanKoulutustoimijat)) {
                         $state.go("root.virhe", { tyyppi: "ei-koulutustoimijoita" });
                     } else if ($state.current.name === "root") {
