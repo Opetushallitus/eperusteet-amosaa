@@ -28,6 +28,15 @@ angular.module("app").config($stateProvider =>
                         }
                     };
 
+                    _.each($scope.kayttajat, kayttaja =>
+                        nimiLataaja(kayttaja.oid)
+                            .then(res => {
+                                kayttaja.$$nimi = res;
+                                $scope.oikeudet[kayttaja.id] = $scope.oikeudet[kayttaja.id] || { oikeus: "luku" };
+                            })
+                            .catch(() => (kayttaja.$$nimi = kayttaja.oid))
+                    );
+
                     $scope.valitse = (oikeus: string, kayttaja) => {
                         const vaihtoehto = _.clone($scope.oikeudet[kayttaja.id]);
                         vaihtoehto.oikeus = oikeus;
