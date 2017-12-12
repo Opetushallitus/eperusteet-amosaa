@@ -64,6 +64,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class KayttajanTietoServiceImpl implements KayttajanTietoService {
+
     @Autowired
     private KayttajaClient client;
 
@@ -137,13 +138,18 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
 
     @Component
     public static class KayttajaClient {
-        @Autowired
-        private RestClientFactory restClientFactory;
+
+        @Value("${cas.service.kayttooikeus-service:''}")
+        private String koServiceUrl;
 
         @Value("${cas.service.oppijanumerorekisteri-service:''}")
         private String onrServiceUrl;
 
+        @Autowired
+        private RestClientFactory restClientFactory;
+
         private static final String HENKILO_API = "/henkilo/";
+        private static final String KAYTTOOIKEUSRYHMA_API = "/kayttooikeusryhma/";
         private final ObjectMapper mapper = new ObjectMapper();
 
         @Cacheable("kayttajat")
@@ -162,15 +168,25 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
 
         public List<KayttajanTietoDto> haeByOrganisaatio(String... orgOids) {
             try {
-                CachingRestClient crc = restClientFactory.get(onrServiceUrl);
+                CachingRestClient onrCrc = restClientFactory.get(onrServiceUrl);
+
                 StringBuilder urlBuilder = new StringBuilder();
-                urlBuilder.append(onrServiceUrl).append(HENKILO_API);
-                for(String orgOid : orgOids) {
-                    urlBuilder.append("?organisaatioOids=").append(orgOid);
+                urlBuilder.append(onrServiceUrl).append(HENKILO_API).append("?");
+                for (String orgOid : orgOids) {
+                    urlBuilder.append("organisaatioOids=").append(orgOid).append("&");
                 }
-                // Todo: Make paging
-                urlBuilder.append("&passivoitu=false&duplikaatti=false&count=10000");
-                JsonNode json = mapper.readTree(crc.getAsString(urlBuilder.toString()));
+
+                /*CachingRestClient koCrc = restClientFactory.get(koServiceUrl);
+
+                String url = onrServiceUrl + KAYTTOOIKEUSRYHMA_API;
+                JsonNode kayttoOikeusRyhmat = mapper.readTree(koCrc.getAsString(url));
+
+                for(String kayttoOikeusRyhmaNimi : kayttoOikeusRyhmaNimet) {
+                    urlBuilder.append("organisaatioOids=").append(kayttoOikeusRyhmaNimi).append("&");
+                }*/
+                urlBuilder.append("passivoitu=false&duplikaatti=false&count=10000"); // Todo: Make paging
+
+                JsonNode json = mapper.readTree(onrCrc.getAsString(urlBuilder.toString()));
                 JsonNode results = json.get("results");
 
                 ArrayList<KayttajanTietoDto> kayttajienTiedot = new ArrayList<>();
