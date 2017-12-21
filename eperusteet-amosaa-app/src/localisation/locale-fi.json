@@ -210,6 +210,7 @@
     "laheta-kaveripyynto": "Tee yhteistyöpyyntö",
     "peruuta-pyynto": "Peruuta pyynto",
     "perusteen-sisalto": "Perusteen sisältö",
+    "perusteen-parsinta-epaonnistui": "Perusteen haku epäonnistui",
     "perusteen-sisalto-tooltip": "Tällä asetuksella voidaan lisätä perusteen sisältö generoitavaan dokumenttiin",
     "nimi": "Nimi",
     "ohje-editointi-on-paalla": "Tallenna tai peruuta muutoksesi ennen siirtymistä",
