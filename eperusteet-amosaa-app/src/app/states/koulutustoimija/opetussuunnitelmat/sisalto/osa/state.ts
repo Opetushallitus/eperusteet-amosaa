@@ -194,7 +194,9 @@ angular
                         );
 
                         $scope.pTosa = pTosa;
-                        $scope.pTosa.$$isTutke2 = Osat.isTutke2(pTosa);
+                        if (pTosa) {
+                            $scope.pTosa.$$isTutke2 = Osat.isTutke2(pTosa);
+                        }
                         nimiLataaja(osa.tekstiKappale.muokkaaja).then(_.cset(osa, "$$nimi"));
 
                         // Item handling

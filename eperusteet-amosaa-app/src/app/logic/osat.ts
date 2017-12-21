@@ -3,7 +3,7 @@ namespace Osat {
         return true;
     };
 
-    export const isTutke2 = ({ tyyppi }) => {
-        return tyyppi === "tutke2" || tyyppi === "reformi_tutke2";
+    export const isTutke2 = (osa) => {
+        return _.isObject(osa) && (osa.tyyppi === "tutke2" || osa.tyyppi === "reformi_tutke2");
     };
 }
