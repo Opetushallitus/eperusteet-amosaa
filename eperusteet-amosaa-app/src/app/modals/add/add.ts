@@ -94,7 +94,7 @@ namespace ModalAdd {
                 const amosaaPerusteet = _(perusteet)
                     .filter(peruste => _.includes(Amosaa.tuetutKoulutustyypit(), peruste.koulutustyyppi))
                     .reject(Perusteet.isVanhentunut)
-                    .map(peruste => {
+                    .map((peruste: any) => {
                         peruste.$$tuleva = Perusteet.isTuleva(peruste);
                         peruste.$$siirtymalla = Perusteet.isSiirtymalla(peruste);
                         return peruste;
