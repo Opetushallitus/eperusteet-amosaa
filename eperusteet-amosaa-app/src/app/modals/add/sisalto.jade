@@ -1,5 +1,6 @@
 div.modal-header
-  h2.pull-left(ng-show="obj.tyyppi === 'tutkinnonosa'" kaanna="'otsikko-tutkinnonosa'")
+  h2.pull-left(ng-show="obj.tyyppi === 'tutkinnonosa' && !$$isValmaTelma" kaanna="'otsikko-tutkinnonosa'")
+  h2.pull-left(ng-show="obj.tyyppi === 'tutkinnonosa' && $$isValmaTelma" kaanna="'otsikko-koulutuksenosa'")
   h2.pull-left(ng-show="obj.tyyppi === 'tutkinnonosaryhma'" kaanna="'otsikko-tutkinnonosaryhma'")
   h2.pull-left(ng-show="obj.tyyppi === 'suorituspolku'" kaanna="'otsikko-suorituspolku'")
   h2.pull-left(ng-show="obj.tyyppi === 'tekstikappale'" kaanna="'otsikko-tekstikappale'")
@@ -17,7 +18,9 @@ div.modal-body.modal-sisalto
         span.sisalto-icon
           +icon("file-text-o")
         div.sisalto-text
-          span(ng-bind="'sisaltotyyppi-' + tyyppi | kaanna")
+          span(ng-bind="'sisaltotyyppi-' + tyyppi | kaanna" ng-if="!$$isValmaTelma")
+          span(ng-bind="'sisaltotyyppi-' + tyyppi | kaanna" ng-if="$$isValmaTelma && tyyppi !== 'tutkinnonosa'")
+          span(ng-bind="'sisaltotyyppi-koulutuksenosa' | kaanna" ng-if="$$isValmaTelma && tyyppi === 'tutkinnonosa'")
     div(ng-show="$$sisaltotuonti")
       div.sisalto-item
         .pull-right.sisalto-valinta

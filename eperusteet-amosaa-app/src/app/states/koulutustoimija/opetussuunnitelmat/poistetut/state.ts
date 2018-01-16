@@ -6,7 +6,8 @@ angular.module("app").config($stateProvider =>
         },
         views: {
             "": {
-                controller: ($scope, $state, $timeout, poistetut) => {
+                controller: ($scope, $state, $timeout, poistetut, peruste) => {
+                    $scope.$$isValmaTelma = _.includes(Amosaa.valmaTelmaKoulutustyypit(), peruste.koulutustyyppi);
                     $scope.vaihdaJarjestys = Taulukot.bindSivutus($scope, "poistoAika", poistetut);
                     $scope.suodata = item => KaannaService.hae(item.nimi, $scope.search);
                     $scope.palauta = item => {

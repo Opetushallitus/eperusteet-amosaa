@@ -1,3 +1,41 @@
+mixin tutkinnonOsatKoodit()
+  div(ng-if="!koodit")
+    span(ng-bind="'ladataan-koodistoa' | kaanna")
+  div(ng-if="koodit")
+    .row
+      .col-xs-6
+        .form-group.has-feedback.has-feedback-left
+          input.form-control(ng-change="suodata(search)" type="text" ng-model="search" ng-model-options="{ debounce: 200 }" placeholder="{{ 'etsi-koodistoista' | kaanna }}")
+          i.form-control-feedback.glyphicon.glyphicon-search(style="color: gray;")
+      .col-xs-6
+        .pull-right
+          .btn-group(ng-click="suodata(search)")
+            label.btn.btn-primary(ng-bind="'vain-paikalliset' | kaanna" ng-model="tosaRajaus.paikalliset" uib-btn-checkbox)
+            label.btn.btn-primary(ng-bind="'vain-valitut' | kaanna" ng-model="tosaRajaus.valitut" uib-btn-checkbox)
+    table.table
+      thead
+        tr
+          th(width="5%")
+          th(width="10%" ng-bind="'koodi' | kaanna")
+          th(ng-bind="'nimi' | kaanna")
+      tbody
+        tr(ng-repeat="koodi in koodit | limitTo:alkioitaSivulla:(sivu - 1) * alkioitaSivulla")
+          td(style="padding: 4px 0 0 10px;")
+            input(type="checkbox" ng-model="koodi.$$valittu")
+          td(ng-bind="koodi.arvo | kaanna" ng-click="koodi.$$valittu = !koodi.$$valittu" style="cursor: pointer")
+          td(ng-click="koodi.$$valittu = !koodi.$$valittu")
+            span(ng-bind="koodi.nimi | kaanna" style="cursor: pointer")
+            span.pull-right(ng-show="koodi.$$paikallinen")
+              +icon("map-marker")
+    nav.text-center
+      uib-pagination(
+      ng-model="sivu"
+      total-items="koodit.length"
+      max-size="10"
+      items-per-page="alkioitaSivulla"
+      force-ellipses="true"
+      direction-links="false")
+
 div.modal-header
   h2(ng-bind="'muokkaa-osaa' | kaanna")
 
@@ -5,44 +43,12 @@ div.modal-body
   +contentToggler("$$showKuvaus", "'kuvaus'")
     div(ckeditor slocalized ng-model="editable.kuvaus" layout="normal")
 
-  div(ng-show="node.rooli === 'määrittelemätön'")
+  div(ng-if="node.rooli === 'määrittelemätön' && !$$isValmaTelma")
     +contentToggler("$$showTosat", "'tutkinnon-osat'")
-      div(ng-if="!koodit")
-        span(ng-bind="'ladataan-koodistoa' | kaanna")
-      div(ng-if="koodit")
-        .row
-          .col-xs-6
-            .form-group.has-feedback.has-feedback-left
-              input.form-control(ng-change="suodata(search)" type="text" ng-model="search" ng-model-options="{ debounce: 200 }" placeholder="{{ 'etsi-koodistoista' | kaanna }}")
-              i.form-control-feedback.glyphicon.glyphicon-search(style="color: gray;")
-          .col-xs-6
-            .pull-right
-              .btn-group(ng-click="suodata(search)")
-                label.btn.btn-primary(ng-bind="'vain-paikalliset' | kaanna" ng-model="tosaRajaus.paikalliset" uib-btn-checkbox)
-                label.btn.btn-primary(ng-bind="'vain-valitut' | kaanna" ng-model="tosaRajaus.valitut" uib-btn-checkbox)
-        table.table
-          thead
-            tr
-              th(width="5%")
-              th(width="10%" ng-bind="'koodi' | kaanna")
-              th(ng-bind="'nimi' | kaanna")
-          tbody
-            tr(ng-repeat="koodi in koodit | limitTo:alkioitaSivulla:(sivu - 1) * alkioitaSivulla")
-              td(style="padding: 4px 0 0 10px;")
-                input(type="checkbox" ng-model="koodi.$$valittu")
-              td(ng-bind="koodi.arvo | kaanna" ng-click="koodi.$$valittu = !koodi.$$valittu" style="cursor: pointer")
-              td(ng-click="koodi.$$valittu = !koodi.$$valittu")
-                span(ng-bind="koodi.nimi | kaanna" style="cursor: pointer")
-                span.pull-right(ng-show="koodi.$$paikallinen")
-                  +icon("map-marker")
-        nav.text-center
-          uib-pagination(
-            ng-model="sivu"
-            total-items="koodit.length"
-            max-size="10"
-            items-per-page="alkioitaSivulla"
-            force-ellipses="true"
-            direction-links="false")
+      +tutkinnonOsatKoodit()
+  div(ng-if="node.rooli === 'määrittelemätön' && $$isValmaTelma")
+    +contentToggler("$$showTosat", "'koulutuksen-osat'")
+      +tutkinnonOsatKoodit()
 
 // FIXME: Vanha toteutus mitä saatetaan tarvita
 // div.modal-body
