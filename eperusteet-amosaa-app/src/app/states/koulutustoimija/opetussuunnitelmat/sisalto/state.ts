@@ -80,7 +80,8 @@ angular.module("app").config($stateProvider =>
                     tekstit,
                     sisaltoRoot,
                     ops,
-                    koulutustoimija
+                    koulutustoimija,
+                    peruste
                 ) => {
                     const updateSivunavi = _.callAndGive(() => {
                         $scope.sivunavi = Tekstikappaleet.teeRakenne(Tekstikappaleet.uniikit(otsikot), sisaltoRoot.id);
@@ -106,7 +107,8 @@ angular.module("app").config($stateProvider =>
                     $scope.add = () => {
                         ModalAdd.sisaltoAdder(
                             koulutustoimija,
-                            Opetussuunnitelmat.sallitutSisaltoTyypit(ops)
+                            Opetussuunnitelmat.sallitutSisaltoTyypit(ops),
+                            peruste
                         ).then(uusi => {
                             if (_.isArray(uusi)) {
                                 ops.customPOST(uusi, "lisaa").then(() => {

@@ -1,40 +1,42 @@
 mixin paikallinenLaajuus()
-  +contentToggler("pTosa.$$naytaLaajuus", "'laajuus'")
-    div(ng-if="$$ekEditing")
-      numberinput(type="float" model="osa.tosa.omatutkinnonosa.laajuus" step="0.5")
-    div(ng-if="!$$ekEditing")
-      span(ng-bind="osa.tosa.omatutkinnonosa.laajuus")
+  div(ng-if="osa.tosa.omatutkinnonosa.laajuus || $$ekEditing")
+    +contentToggler("pTosa.$$naytaLaajuus", "'laajuus'")
+      div(ng-if="$$ekEditing")
+        numberinput(type="float" model="osa.tosa.omatutkinnonosa.laajuus" step="0.5")
+      div(ng-if="!$$ekEditing")
+        span(ng-bind="osa.tosa.omatutkinnonosa.laajuus")
 
 
 mixin paikallinenKoodi()
-  +contentToggler("pTosa.$$naytaPaikallinenKoodi", "'koodi'")
-    div(ng-show="$$ekEditing")
-      input.form-control(type="text"
-        ng-model="osa.tosa.omatutkinnonosa.koodi"
-        ng-change="paikallinenKoodiUpdate(osa.tosa.omatutkinnonosa.koodi)"
-        ng-model-options="{ debounce: 500 }")
-    div(ng-hide="$$ekEditing || !osa.tosa.omatutkinnonosa.koodi")
-      input.form-control(type="text"
-        ng-model="osa.tosa.omatutkinnonosa.koodi"
-        disabled)
-    div.koodi-kaytossa.alert.alert-info(ng-show="$$ekEditing && $$koodiFormaattiVaara" style="margin-top: 10px")
-      div(ng-bind="'paikallinen-koodi-info' | kaanna")
-    div.koodi-kaytossa.alert(ng-show="tormaavatKoodit.length > 0")
-      div(ng-bind="'paikallinen-koodi-jo-kaytossa' | kaanna")
-      table.table
-        thead
-          tr
-            th(ng-bind="'opetussuunnitelma' | kaanna")
-            th(ng-bind="'osa' | kaanna")
-            th(ng-bind="'tila' | kaanna")
-        tbody
-          tr(ng-repeat="collision in tormaavatKoodit")
-            td
-              a(href="" ui-sref="root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot({ opsId: ops.id })" ng-bind="collision.owner.nimi | kaanna")
-            td
-              a(href="" ui-sref="root.koulutustoimija.opetussuunnitelmat.sisalto.osa({ opsId: collision.owner.id, osaId: collision.id })" ng-bind="collision.tekstiKappale.nimi | kaanna")
-            td
-              a(href="" ng-bind="'tila-' + collision.owner.tila | kaanna")
+  div(ng-if="osa.tosa.omatutkinnonosa.koodi || $$ekEditing")
+    +contentToggler("pTosa.$$naytaPaikallinenKoodi", "'koodi'")
+      div(ng-show="$$ekEditing")
+        input.form-control(type="text"
+          ng-model="osa.tosa.omatutkinnonosa.koodi"
+          ng-change="paikallinenKoodiUpdate(osa.tosa.omatutkinnonosa.koodi)"
+          ng-model-options="{ debounce: 500 }")
+      div(ng-hide="$$ekEditing || !osa.tosa.omatutkinnonosa.koodi")
+        input.form-control(type="text"
+          ng-model="osa.tosa.omatutkinnonosa.koodi"
+          disabled)
+      div.koodi-kaytossa.alert.alert-info(ng-show="$$ekEditing && $$koodiFormaattiVaara" style="margin-top: 10px")
+        div(ng-bind="'paikallinen-koodi-info' | kaanna")
+      div.koodi-kaytossa.alert(ng-show="tormaavatKoodit.length > 0")
+        div(ng-bind="'paikallinen-koodi-jo-kaytossa' | kaanna")
+        table.table
+          thead
+            tr
+              th(ng-bind="'opetussuunnitelma' | kaanna")
+              th(ng-bind="'osa' | kaanna")
+              th(ng-bind="'tila' | kaanna")
+          tbody
+            tr(ng-repeat="collision in tormaavatKoodit")
+              td
+                a(href="" ui-sref="root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot({ opsId: ops.id })" ng-bind="collision.owner.nimi | kaanna")
+              td
+                a(href="" ui-sref="root.koulutustoimija.opetussuunnitelmat.sisalto.osa({ opsId: collision.owner.id, osaId: collision.id })" ng-bind="collision.tekstiKappale.nimi | kaanna")
+              td
+                a(href="" ng-bind="'tila-' + collision.owner.tila | kaanna")
 
 
 mixin vaatimus()
@@ -208,6 +210,24 @@ mixin arviointi()
         span(ng-bind="'lisaa-arviointi-kohde' | kaanna")
 
 
+mixin osaamistavoite(field)
+  .box-panel
+    .box-panel-title
+      h3
+        span(ng-if=field + ".nimi" ng-bind=field + ".nimi | kaanna")
+        span(ng-if="!" + field + ".nimi && " + field + ".kohde" ng-bind=field + ".kohde | kaanna")
+
+    .box-panel-content
+      h4
+        span(ng-if=field + ".kohde && " + field + ".nimi" ng-bind=field + ".kohde | kaanna")
+
+      ul
+        li(ng-repeat="tavoite in " + field +".tavoitteet")
+          span(ng-bind="tavoite | kaanna")
+
+      p
+        span(ng-if=field + ".selite" ng-bind=field + ".selite | kaanna")
+
 mixin tosaToteutus()
   div.toteutukset
     div(ng-if="$$ekEditing")
@@ -246,7 +266,8 @@ mixin tosaToteutus()
 
         div(ng-hide="osa.tosa.toteutukset.length > 0")
           div.alert.alert-info
-            span(ng-bind="'tutkinnon-osalle-ei-maaritelty-paikallisia-toteutuksia' | kaanna")
+            span(ng-bind="'tutkinnon-osalle-ei-maaritelty-paikallisia-toteutuksia' | kaanna" ng-if="!$$isValmaTelma")
+            span(ng-bind="'koulutuksen-osalle-ei-maaritelty-paikallisia-toteutuksia' | kaanna" ng-if="$$isValmaTelma")
 
         div(ui-sortable="sortableOptions" ng-model="osa.tosa.toteutukset")
           div.toteutus(ng-repeat="toteutus in osa.tosa.toteutukset")
@@ -297,7 +318,8 @@ mixin tosaToteutus()
 
       div(ng-hide="osa.tosa.toteutukset.length > 0")
         div.alert.alert-info
-          span(ng-bind="'tutkinnon-osalle-ei-maaritelty-paikallisia-toteutuksia' | kaanna")
+          span(ng-bind="'tutkinnon-osalle-ei-maaritelty-paikallisia-toteutuksia' | kaanna" ng-if="!$$isValmaTelma")
+          span(ng-bind="'koulutuksen-osalle-ei-maaritelty-paikallisia-toteutuksia' | kaanna" ng-if="$$isValmaTelma")
 
       div.toteutus-esitys(ng-repeat="toteutus in osa.tosa.toteutukset")
         div
@@ -354,18 +376,22 @@ mixin omaTosaSisalto()
   div(ng-if="!$$ekEditing")
     +paikallinenLaajuus
     +paikallinenKoodi
-    +contentToggler("$$showTavoitteet", "'tavoitteet'")
-      +teksti("osa.tosa.omatutkinnonosa.tavoitteet")
-    +contentToggler("$$showAmmattitaitovaatimukset", "'ammattitaitovaatimukset'")
-      .ammattitaitovaatimukset
-        div(ng-repeat="ammattitaitovaatimus in osa.tosa.omatutkinnonosa.ammattitaitovaatimuksetLista")
-          +ammattitaitovaatimus
-    +contentToggler("$$showArviointi", "'arviointi'")
-      .arviointi-kohdealueet
-        div(ng-repeat="arvioinninKohdealue in osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet")
-          +arviointi
-    +contentToggler("$$showAmmattitaidonOsoittamistavat", "'ammattitaidon-osoittamistavat'")
-      +teksti("osa.tosa.omatutkinnonosa.ammattitaidonOsoittamistavat")
+    div(ng-if="osa.tosa.omatutkinnonosa.tavoitteet")
+      +contentToggler("$$showTavoitteet", "'tavoitteet'")
+        +teksti("osa.tosa.omatutkinnonosa.tavoitteet")
+    div(ng-if="osa.tosa.omatutkinnonosa.ammattitaitovaatimuksetLista && osa.tosa.omatutkinnonosa.ammattitaitovaatimuksetLista.length > 0")
+      +contentToggler("$$showAmmattitaitovaatimukset", "'ammattitaitovaatimukset'")
+        .ammattitaitovaatimukset
+          div(ng-repeat="ammattitaitovaatimus in osa.tosa.omatutkinnonosa.ammattitaitovaatimuksetLista")
+            +ammattitaitovaatimus
+    div(ng-if="osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet && osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet.length > 0")
+      +contentToggler("$$showArviointi", "'arviointi'")
+        .arviointi-kohdealueet
+          div(ng-repeat="arvioinninKohdealue in osa.tosa.omatutkinnonosa.arviointi.arvioinninKohdealueet")
+            +arviointi
+    div(ng-if="osa.tosa.omatutkinnonosa.ammattitaidonOsoittamistavat && osa.tosa.omatutkinnonosa.ammattitaidonOsoittamistavat.length > 0")
+      +contentToggler("$$showAmmattitaidonOsoittamistavat", "'ammattitaidon-osoittamistavat'")
+        +teksti("osa.tosa.omatutkinnonosa.ammattitaidonOsoittamistavat")
 
 
 
@@ -383,11 +409,31 @@ mixin tutke2osa()
         span.koodi(ng-show="osaAlue.koodiArvo") ({{ osaAlue.koodiArvo }})
       .osaamistavoite(ng-repeat="osaamistavoite in osaAlue.osaamistavoitteet")
         h2.osaamistavoite-nimi(ng-bind="osaamistavoite.nimi | kaanna")
-        +contentToggler("$$showOsaamistavoitteet", "'osaamistavoitteet'")
-          +teksti("osaamistavoite.tavoitteet")
-        div(ng-repeat="arvioinninKohdealue in osaamistavoite.arviointi.arvioinninKohdealueet")
-          +arviointi
-        +teksti("osaamistavoite.tunnustaminen")
+        div(ng-if="osaamistavoite.tavoitteet")
+          +contentToggler("$$showOsaamistavoitteet", "'osaamistavoitteet'")
+            +teksti("osaamistavoite.tavoitteet")
+        div(ng-if="osaamistavoite.arviointi && osaamistavoite.arviointi.arvioinninKohdealueet.length > 0")
+          div(ng-repeat="arvioinninKohdealue in osaamistavoite.arviointi.arvioinninKohdealueet")
+            +arviointi
+        div(ng-if="osaamistavoite.tunnustaminen")
+          +teksti("osaamistavoite.tunnustaminen")
+      div(ng-if="osaAlue.valmaTelmaSisalto")
+        +valmaTelma("osaAlue")
+
+mixin valmaTelma(field)
+  .valma-telma(ng-if=field + ".valmaTelmaSisalto")
+    div(ng-if=field + ".valmaTelmaSisalto.osaamistavoite && " + field + ".valmaTelmaSisalto.osaamistavoite.length > 0")
+      +contentToggler(field + ".$$showOsaamistavoitteet", "'osaamistavoitteet'")
+        div(ng-repeat="osaamistavoite in " + field + ".valmaTelmaSisalto.osaamistavoite")
+          +osaamistavoite("osaamistavoite")
+
+    div(ng-if=field + ".valmaTelmaSisalto.osaamisenarviointi")
+      +contentToggler(field + ".$$showArviointi", "'osaamisen-arviointi'")
+        +osaamistavoite(field + ".valmaTelmaSisalto.osaamisenarviointi")
+
+    div(ng-if=field + ".valmaTelmaSisalto.osaamisenarviointiTekstina")
+      +contentToggler(field + ".$$showArviointiTekstina", "'osaamisen-arviointi-tekstina'")
+        +teksti(field + ".valmaTelmaSisalto.osaamisenarviointiTekstina")
 
 
 mixin perusteenTosaSisalto()
@@ -402,20 +448,25 @@ mixin perusteenTosaSisalto()
   div(ng-if="pTosa.$$isTutke2")
     +tutke2osa
   div(ng-if="!pTosa.$$isTutke2")
-    +contentToggler("pTosa.$$showAmVaatimukset", "'ammattitaitovaatimukset'")
-      +teksti("pTosa.ammattitaitovaatimukset")
+    div(ng-if="pTosa.ammattitaitovaatimukset")
+      +contentToggler("pTosa.$$showAmVaatimukset", "'ammattitaitovaatimukset'")
+        +teksti("pTosa.ammattitaitovaatimukset")
     // +contentToggler("$$showTavoitteet", "'tavoitteet'")
       +teksti("pTosa.tavoitteet")
     // +contentToggler("$$showAmmattitaitovaatimukset", "'ammattitaitovaatimukset'")
       .ammattitaitovaatimukset
         div(ng-repeat="ammattitaitovaatimus in pTosa.ammattitaitovaatimuksetLista")
           +ammattitaitovaatimus
-    +contentToggler("$$showArviointi", "'arviointi'")
-      .arviointi-kohdealueet
-        div(ng-repeat="arvioinninKohdealue in pTosa.arviointi.arvioinninKohdealueet")
-          +arviointi
-    +contentToggler("pTosa.$$showAmOsoittamiset", "'ammattitaidon-osoittamistavat'")
-      +teksti("pTosa.ammattitaidonOsoittamistavat")
+    div(ng-if="pTosa.arviointi && pTosa.arviointi.arvioinninKohdealueet.length > 0")
+      +contentToggler("$$showArviointi", "'arviointi'")
+        .arviointi-kohdealueet
+          div(ng-repeat="arvioinninKohdealue in pTosa.arviointi.arvioinninKohdealueet")
+            +arviointi
+    div(ng-if="pTosa.ammattitaidonOsoittamistavat")
+      +contentToggler("pTosa.$$showAmOsoittamiset", "'ammattitaidon-osoittamistavat'")
+        +teksti("pTosa.ammattitaidonOsoittamistavat")
+    div(ng-if="pTosa.valmaTelmaSisalto")
+      +valmaTelma("pTosa")
 
 
 mixin tosaSisalto()

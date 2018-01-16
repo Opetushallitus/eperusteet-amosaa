@@ -141,7 +141,7 @@ namespace ModalAdd {
             }
         }).result;
 
-    export const sisaltoAdder = (koulutustoimija, sallitut = ["tekstikappale"]) =>
+    export const sisaltoAdder = (koulutustoimija, sallitut = ["tekstikappale"], peruste) =>
         i.$uibModal.open({
             resolve: {},
             templateUrl: "modals/add/sisalto.jade",
@@ -155,6 +155,9 @@ namespace ModalAdd {
                     sallittu => sallittu === "sisaltotuonti" || sallittu === "tutkinnonosatuonti"
                 );
                 $scope.valittu = undefined;
+                $scope.koulutustyyppi = peruste.koulutustyyppi;
+                $scope.$$isValmaTelma = _.includes(Amosaa.valmaTelmaKoulutustyypit(), peruste.koulutustyyppi);
+
 
                 {
                     // Opetussuunnitelmat

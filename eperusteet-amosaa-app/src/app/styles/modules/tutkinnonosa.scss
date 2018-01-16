@@ -175,7 +175,7 @@ $tosa-color: #199dd0;
         }
 
         .box-panel-content {
-            padding: 4px;
+            padding: $box-table-padding;
             h4 {
                 font-weight: bold;
             }
