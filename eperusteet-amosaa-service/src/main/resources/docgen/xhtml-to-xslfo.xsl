@@ -542,8 +542,6 @@
 
     <xsl:template match="img">
         <fo:block space-after="12pt" text-align="center">
-            <!--<fo:external-graphic src="{@src}" content-width="scale-to-fit" content-height="100%"
-                                 width="100%" scaling="uniform"/>-->
             <fo:table table-layout="fixed" width="100%">
                 <fo:table-column column-width="proportional-column-width(1)"/>
                 <fo:table-body>
@@ -637,7 +635,7 @@
                 </fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block>
+                <fo:block font-size="10pt">
                     <xsl:apply-templates select="*|text()"/>
                 </fo:block>
             </fo:list-item-body>
@@ -951,7 +949,7 @@
                             <xsl:text>0pt</xsl:text>
                         </xsl:when>
                         <xsl:otherwise>
-                            <xsl:text>12pt</xsl:text>
+                            <xsl:text>10pt</xsl:text>
                         </xsl:otherwise>
                     </xsl:choose>
                 </xsl:attribute>
@@ -982,7 +980,7 @@
                 <fo:block>&#x2022;</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block>
+                <fo:block font-size="10pt">
                     <xsl:apply-templates select="*|text()"/>
                 </fo:block>
             </fo:list-item-body>
