@@ -16,6 +16,10 @@
 
 package fi.vm.sade.eperusteet.amosaa.service.ops.impl;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
@@ -30,6 +34,9 @@ import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Tutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.*;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
+import fi.vm.sade.eperusteet.amosaa.resource.config.AbstractRakenneOsaDeserializer;
+import fi.vm.sade.eperusteet.amosaa.resource.config.MappingModule;
+import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.ValidointiService;
@@ -37,6 +44,7 @@ import fi.vm.sade.eperusteet.amosaa.service.peruste.PerusteCacheService;
 import fi.vm.sade.eperusteet.amosaa.service.util.Pair;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Map;
 import java.util.UUID;
@@ -45,6 +53,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.PostConstruct;
 
 /**
  * @author nkala
@@ -63,6 +73,17 @@ public class ValidointiServiceImpl implements ValidointiService {
     @Autowired
     private DtoMapper mapper;
 
+    private ObjectMapper objMapper;
+
+    @PostConstruct
+    protected void init() {
+        objMapper = new ObjectMapper();
+        MappingModule module = new MappingModule();
+        module.addDeserializer(AbstractRakenneOsaDto.class, new AbstractRakenneOsaDeserializer());
+        objMapper.registerModule(module);
+        objMapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
+    }
+
     @Override
     public Validointi validoi(Opetussuunnitelma ops) {
         Validointi validointi = new Validointi();
@@ -76,24 +97,50 @@ public class ValidointiServiceImpl implements ValidointiService {
         Tutkinnonosa tosa = viite.getTosa();
         LokalisoituTeksti nimi = viite.getTekstiKappale() != null ? viite.getTekstiKappale().getNimi() : null;
 
+        CachedPeruste cperuste = ops.getPeruste();
+        String koulutustyppi;
+        try {
+            JsonNode node = objMapper.readTree(cperuste.getPeruste());
+            JsonNode koulutustyyppi = node.get("koulutustyyppi");
+            koulutustyppi = koulutustyyppi.asText();
+        } catch (IOException ex) {
+            throw new BusinessRuleViolationException("perusteen-parsinta-epaonnistui");
+        }
+
         if (tosa.getToteutukset().isEmpty()) {
-            validointi.varoitus("tutkinnon-osalla-ei-toteutuksia", nimi);
+            if (KoulutusTyyppi.of(koulutustyppi).isValmaTelma()) {
+                validointi.varoitus("koulutuksen-osalla-ei-toteutuksia", nimi);
+            } else {
+                validointi.varoitus("tutkinnon-osalla-ei-toteutuksia", nimi);
+            }
         }
 
         if (tosa.getTyyppi() == TutkinnonosaTyyppi.OMA) {
             OmaTutkinnonosa oma = tosa.getOmatutkinnonosa();
             if (oma == null) {
-                validointi.virhe("oma-tutkinnon-osa-ei-sisaltoa", nimi);
+                if (KoulutusTyyppi.of(koulutustyppi).isValmaTelma()) {
+                    validointi.virhe("oma-koulutuksen-osa-ei-sisaltoa", nimi);
+                } else {
+                    validointi.virhe("oma-tutkinnon-osa-ei-sisaltoa", nimi);
+                }
             } else {
                 if (oma.getKoodi() == null || oma.getKoodi().isEmpty()) {
-                    validointi.virhe("oma-tutkinnon-osa-ei-koodia", nimi);
+                    if (KoulutusTyyppi.of(koulutustyppi).isValmaTelma()) {
+                        validointi.virhe("oma-koulutuksen-osa-ei-koodia", nimi);
+                    } else {
+                        validointi.virhe("oma-tutkinnon-osa-koodi-jo-kaytossa", nimi);
+                    }
                 }
 
                 long paikalliset = svRepository.findAllPaikallisetTutkinnonOsatByKoodi(ops.getKoulutustoimija(), oma.getKoodi()).stream()
                         .filter(sv -> sv.getOwner().getTila() == Tila.JULKAISTU || sv.getOwner().getId().equals(ops.getId()))
                         .count();
                 if (paikalliset > 1) {
-                    validointi.virhe("oma-tutkinnon-osa-koodi-jo-kaytossa", nimi);
+                    if (KoulutusTyyppi.of(koulutustyppi).isValmaTelma()) {
+                        validointi.virhe("oma-koulutuksen-osa-koodi-jo-kaytossa", nimi);
+                    } else {
+                        validointi.virhe("oma-tutkinnon-osa-koodi-jo-kaytossa", nimi);
+                    }
                 }
 
                 // TODO: Tutkinnon osan sisällön tarkastus (Tehdään jos laatijat tekevät virheitä)
