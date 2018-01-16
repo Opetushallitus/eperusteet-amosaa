@@ -55,4 +55,5 @@ public class TutkinnonOsaKaikkiDto extends PerusteenOsaDto implements AuditLogga
     private String koodiArvo;
     private List<OsaAlueKokonaanDto> osaAlueet;
     private TutkinnonOsaTyyppi tyyppi;
+    private ValmaTelmaSisaltoDto valmaTelmaSisalto;
 }

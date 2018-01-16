@@ -13,35 +13,26 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * European Union Public Licence for more details.
  */
-
 package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
-import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
-import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 /**
- * @author harrik
+ *
+ * @author nkala
  */
 @Getter
 @Setter
-public class OsaAlueDto implements AuditLoggableDto {
-    @Override
-    public void auditLog(LogMessage.LogMessageBuilder msg) {
-    }
-
+@JsonTypeName("osaamistavoite")
+public class OsaamisenTavoiteDto {
     private Long id;
+    private LokalisoituTekstiDto kohde;
     private LokalisoituTekstiDto nimi;
-    private LokalisoituTekstiDto kuvaus;
-    private KoodiDto koodi;
-    private String koodiUri;
-    private String koodiArvo;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Kieli kieli;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private ValmaTelmaSisaltoDto valmaTelmaSisalto;
+    private LokalisoituTekstiDto selite;
+    private List<LokalisoituTekstiDto> tavoitteet;
 }

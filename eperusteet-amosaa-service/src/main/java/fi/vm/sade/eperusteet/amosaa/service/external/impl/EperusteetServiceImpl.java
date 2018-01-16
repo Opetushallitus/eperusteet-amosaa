@@ -249,6 +249,8 @@ public class EperusteetServiceImpl implements EperusteetService {
         koulutustyypit.add(KoulutusTyyppi.AMMATTITUTKINTO);
         koulutustyypit.add(KoulutusTyyppi.ERIKOISAMMATTITUTKINTO);
         koulutustyypit.add(KoulutusTyyppi.PERUSTUTKINTO);
+        koulutustyypit.add(KoulutusTyyppi.VALMA);
+        koulutustyypit.add(KoulutusTyyppi.TELMA);
         return findPerusteet(koulutustyypit);
     }
 
