@@ -1,5 +1,5 @@
 angular.module("app")
-    .service("opsSiirtoModalService", ($rootScope, $uibModal, $q, Varmistusdialogi, Api, Kaanna) => {
+    .service("opsSiirtoModalService", ($rootScope, $uibModal, $q, Varmistusdialogi, Api) => {
         return {
             siirra(koulutustoimija, ops) {
                 return $uibModal.open({
@@ -18,7 +18,7 @@ angular.module("app")
                             Varmistusdialogi.dialogi({
                                 otsikko: "varmista-siirto",
                                 data: {
-                                    nimi: Kaanna.kaanna(org.nimi)
+                                    nimi: KaannaService.kaanna(org.nimi)
                                 },
                                 teksti: "haluatko-varmasti-siirtaa-opetussuunnitelman-organisaatiolle"
                             })(() => {
