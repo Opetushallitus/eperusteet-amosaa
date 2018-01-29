@@ -27,13 +27,13 @@ import java.util.List;
 
 public interface TermistoService {
 
-    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
+    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'ESITYS')")
     List<TermiDto> getTermit(@P("ktId") Long ktId);
 
-    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
+    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'ESITYS')")
     TermiDto getTermi(@P("ktId") Long ktId, Long id);
 
-    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
+    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'ESITYS')")
     TermiDto getTermiByAvain(@P("ktId") Long ktId, String avain);
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'MUOKKAUS')")
