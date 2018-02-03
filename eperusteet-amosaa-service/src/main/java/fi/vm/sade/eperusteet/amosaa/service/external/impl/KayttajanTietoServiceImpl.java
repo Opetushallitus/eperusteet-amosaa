@@ -21,6 +21,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.Kayttaja;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.KoulutustoimijaKayttaja;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
+import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
@@ -37,14 +38,12 @@ import static fi.vm.sade.eperusteet.amosaa.service.external.impl.KayttajanTietoP
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.RolePermission;
+import fi.vm.sade.eperusteet.amosaa.service.security.PermissionManager;
 import fi.vm.sade.eperusteet.amosaa.service.util.RestClientFactory;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 import fi.vm.sade.generic.rest.CachingRestClient;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
@@ -53,6 +52,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,6 +64,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class KayttajanTietoServiceImpl implements KayttajanTietoService {
+
     @Autowired
     private KayttajaClient client;
 
@@ -87,6 +89,9 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
     @Autowired
     private DtoMapper mapper;
 
+    @Autowired
+    private PermissionManager permissionManager;
+
     @Override
     public KayttajaDto haeKayttajanTiedot() {
         Kayttaja kayttaja = getKayttaja();
@@ -94,7 +99,7 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void removeSuosikki(Long opsId) {
         Kayttaja kayttaja = getKayttaja();
         Opetussuunnitelma ops = opsRepository.findOne(opsId);
@@ -105,7 +110,7 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void addSuosikki(Long opsId) {
         Kayttaja kayttaja = getKayttaja();
         Opetussuunnitelma ops = opsRepository.findOne(opsId);
@@ -133,13 +138,18 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
 
     @Component
     public static class KayttajaClient {
-        @Autowired
-        private RestClientFactory restClientFactory;
+
+        @Value("${cas.service.kayttooikeus-service:''}")
+        private String koServiceUrl;
 
         @Value("${cas.service.oppijanumerorekisteri-service:''}")
         private String onrServiceUrl;
 
+        @Autowired
+        private RestClientFactory restClientFactory;
+
         private static final String HENKILO_API = "/henkilo/";
+        private static final String KAYTTOOIKEUSRYHMA_API = "/kayttooikeusryhma/";
         private final ObjectMapper mapper = new ObjectMapper();
 
         @Cacheable("kayttajat")
@@ -153,6 +163,41 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
                 KayttajanTietoDto result = new KayttajanTietoDto();
                 result.setOidHenkilo(oid);
                 return result;
+            }
+        }
+
+        public List<KayttajanTietoDto> haeByOrganisaatio(String... orgOids) {
+            try {
+                CachingRestClient onrCrc = restClientFactory.get(onrServiceUrl);
+
+                StringBuilder urlBuilder = new StringBuilder();
+                urlBuilder.append(onrServiceUrl).append(HENKILO_API).append("?");
+                for (String orgOid : orgOids) {
+                    urlBuilder.append("organisaatioOids=").append(orgOid).append("&");
+                }
+
+                /*CachingRestClient koCrc = restClientFactory.get(koServiceUrl);
+
+                String url = onrServiceUrl + KAYTTOOIKEUSRYHMA_API;
+                JsonNode kayttoOikeusRyhmat = mapper.readTree(koCrc.getAsString(url));
+
+                for(String kayttoOikeusRyhmaNimi : kayttoOikeusRyhmaNimet) {
+                    urlBuilder.append("organisaatioOids=").append(kayttoOikeusRyhmaNimi).append("&");
+                }*/
+                urlBuilder.append("passivoitu=false&duplikaatti=false&count=10000"); // Todo: Make paging
+
+                JsonNode json = mapper.readTree(onrCrc.getAsString(urlBuilder.toString()));
+                JsonNode results = json.get("results");
+
+                ArrayList<KayttajanTietoDto> kayttajienTiedot = new ArrayList<>();
+                for (JsonNode element : results) {
+                    KayttajanTietoDto kayttajanTietoDto = parsiKayttaja(element);
+                    kayttajienTiedot.add(kayttajanTietoDto);
+                }
+
+                return kayttajienTiedot;
+            } catch (Exception e) {
+                return new ArrayList<>();
             }
         }
     }
@@ -203,7 +248,7 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
 
         return koulutustoimijaService.getKoulutustoimijat(getUserOrganizations()).stream()
                 .filter(ktDto -> ktDto != null && ktDto.getId() != null)
-                .map(ktDto -> {
+                .peek(ktDto -> {
                     Koulutustoimija kt = koulutustoimijaRepository.findOne(ktDto.getId());
                     if (ktkayttajaRepository.findOneByKoulutustoimijaAndKayttaja(kt, kayttaja) == null) {
                         KoulutustoimijaKayttaja ktk = new KoulutustoimijaKayttaja();
@@ -211,7 +256,6 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
                         ktk.setKoulutustoimija(kt);
                         ktkayttajaRepository.save(ktk);
                     }
-                    return ktDto;
                 })
                 .collect(Collectors.toList());
     }
@@ -220,10 +264,7 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
         return ktkayttajaRepository.findAllByKoulutustoimija(kt).stream()
                 .map(kayttaja -> kayttajaRepository.findOneByOid(kayttaja.getKayttaja().getOid()))
                 .map(kayttaja -> mapper.map(kayttaja, KayttajaDto.class))
-                .map(kayttaja -> {
-                    kayttaja.setKoulutustoimija(kt.getId());
-                    return kayttaja;
-                })
+                .peek(kayttaja -> kayttaja.setKoulutustoimija(kt.getId()))
                 .collect(Collectors.toList());
     }
 
@@ -237,20 +278,44 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
     public List<KayttajaDto> getKaikkiKayttajat(Long kOid) {
         List<KayttajaDto> result = new ArrayList<>();
         Koulutustoimija self = koulutustoimijaRepository.findOne(kOid);
+
+        // Rekisteröimättömät
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean onOikeudet = permissionManager.hasPermission(authentication, self.getId(),
+                PermissionManager.TargetType.KOULUTUSTOIMIJA, PermissionManager.Permission.HALLINTA);
+        if (onOikeudet) {
+            List<KayttajaDto> kayttajat = new ArrayList<>();
+            List<KayttajanTietoDto> kayttajanTiedot = client.haeByOrganisaatio(self.getOrganisaatio());
+            kayttajanTiedot.forEach(kayttajanTieto -> {
+                String oid = kayttajanTieto.getOidHenkilo();
+                Kayttaja kayttaja = kayttajaRepository.findOneByOid(oid);
+                // Luodaan käyttäjät rekisteröimättömille
+                if (kayttaja == null) {
+                    Kayttaja uusi = new Kayttaja();
+                    uusi.setOid(oid);
+                    kayttaja = kayttajaRepository.save(uusi);
+                }
+                kayttajat.add(mapper.map(kayttaja, KayttajaDto.class));
+            });
+
+            // Lisätään kaikki rekisteröimättömät myös listaukseen
+            result.addAll(kayttajat);
+        }
+
         result.addAll(self.getYstavat().stream()
                 .filter(kaveri -> kaveri.isSalliystavat() && kaveri.getYstavat().contains(self))
-                .map(kt -> getKayttajat(kt))
-                .flatMap(x -> x.stream())
+                .map(this::getKayttajat)
+                .flatMap(Collection::stream)
                 .collect(Collectors.toList()));
+
         result.addAll(getKayttajat(kOid));
 
-        return result.stream()
+        return new ArrayList<>(result.stream()
                 .collect(Collectors.toMap(
-                        kayttaja -> kayttaja.getId(),
+                        KayttajaBaseDto::getId,
                         kayttaja -> kayttaja,
                         (a, b) -> kOid.equals(b.getKoulutustoimija()) ? b : a))
-                .values().stream()
-                .collect(Collectors.toList());
+                .values());
     }
 
     @Override

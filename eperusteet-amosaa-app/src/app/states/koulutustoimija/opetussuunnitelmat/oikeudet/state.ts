@@ -9,11 +9,8 @@ angular.module("app").config($stateProvider =>
         views: {
             "": {
                 controller: ($scope, ops, oikeudet, kayttaja, ktKayttajat, nimiLataaja, koulutustoimija, ystavat) => {
-                    const kayttajatByKt = _.groupBy(ktKayttajat, "koulutustoimija");
-
                     $scope.koulutustoimijat = _.groupBy(ystavat, "id");
                     $scope.koulutustoimijat[koulutustoimija.id] = [koulutustoimija];
-
                     $scope.kayttajat = ktKayttajat;
                     $scope.vaihtoehdot = Kayttaja.oikeusVaihtoehdot();
                     $scope.suodata = item => _.matchStrings($scope.search, item.$$nimi);

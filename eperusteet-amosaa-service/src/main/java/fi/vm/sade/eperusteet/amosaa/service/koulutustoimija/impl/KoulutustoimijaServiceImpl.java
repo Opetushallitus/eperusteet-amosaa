@@ -26,9 +26,11 @@ import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaJulkinenD
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaQueryDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaYstavaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.YstavaStatus;
+import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
+import fi.vm.sade.eperusteet.amosaa.service.external.impl.KayttajanTietoServiceImpl;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 
@@ -64,6 +66,12 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
 
     @Autowired
     private SisaltoviiteRepository sisaltoviiteRepository;
+
+    @Autowired
+    private KayttajanTietoServiceImpl.KayttajaClient kayttajaClient;
+
+    @Autowired
+    private KayttajaRepository kayttajaRepository;
 
     @Autowired
     private DtoMapper mapper;
