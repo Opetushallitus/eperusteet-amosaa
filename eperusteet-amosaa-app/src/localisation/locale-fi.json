@@ -50,6 +50,7 @@
     "dokumentti": "Dokumentti",
     "dokumentti-ei-ole": "Dokumentti ei ole olemassa.",
     "dokumentti-epaonnistui": "Dokumentin luominen epäonnistui.",
+    "perusteen-parsinta-epaonnistui": "Perusteen parsinta epäonnistui",
     "ei-kuvia": "Ei kuvia",
     "ei-oikeutta-suorittaa": "Ei riittäviä käyttöoikeuksia",
     "ei-validi-paikallinen-koodi": "Paikallinen koodi on virheellinen",

@@ -166,7 +166,7 @@ public class EperusteetServiceImpl implements EperusteetService {
             T peruste = mapper.treeToValue(node, type);
             return peruste;
         } catch (IOException ex) {
-            logger.debug("Perusteen parsinta epäonnistui", ex);
+            logger.error("Perusteen parsinta epäonnistui", ex);
             throw new BusinessRuleViolationException("perusteen-parsinta-epaonnistui");
         }
     }
