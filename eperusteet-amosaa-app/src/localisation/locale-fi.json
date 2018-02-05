@@ -298,6 +298,7 @@
     "poistotyyppi-koulutuksenosa": "Koulutuksen osa",
     "poistotyyppi-tutkinnonosaryhma": "Moduuli",
     "opetussuunnitelman-siirto-ohje": "Tällä toiminnolla voit siirtää opetussuunnitelman toisen organisaation omistukseen. <b>Palautus on mahdollinen ainoastaan koulutuksen järjestäjän näkymästä mille opetussuunnitelma on lisätty.</b>",
+    "yhteistyo-ohje": "Tällä toiminnolla voit sallia yhteistyön toisen organisaation kanssa. Toisen organisaation pitää yhteistyön muodostos.",
     "siirra": "Siirrä",
     "suodata": "Suodata",
     "rajaa-sisaltoa": "Rajaa sisältöä",
@@ -443,5 +444,10 @@
     "yhteistyo": "Yhteistyö",
     "ylatunniste": "Ylätunniste",
     "varmista-siirto": "Varmista siirto",
-    "src/app/states/koulutustoimija/tiedot/organisaatio.jade": "Haluatko varmasti siirtää opetussuunnitelman organisaatiolle: {{ nimi }}"
+    "src/app/states/koulutustoimija/tiedot/organisaatio.jade": "Haluatko varmasti siirtää opetussuunnitelman organisaatiolle: {{ nimi }}",
+    "oma-organisaatio": "Oma organisaatio",
+    "yhteistyo-organisaation-kanssa": "Yhteistyö organisaation kanssa",
+    "yhteistyo-odottaa-hyvaksymista": "Yhteistyö odottaa hyväksymistä",
+    "yhteistyo-kysytty": "Yhteistyö kysytty organisaatiolta",
+    "haluatko-varmasti-siirtaa-opetussuunnitelman-organisaatiolle": "Haluatko varmasti siirtää opetussuunnitelman organisaatiolle?"
 }

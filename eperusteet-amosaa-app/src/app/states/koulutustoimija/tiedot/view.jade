@@ -8,30 +8,64 @@ mixin ystavaOrganisaatio()
 
 mixin hierarkiaOrganisaatio()
   div.org-laatikko
-    div.org-vari(ng-class="{ 'org-vari-oma': org.isOma, 'org-vari-kysytty': org.status === 'odotetaan', 'org-vari-odottaa': org.status === 'odottaa', 'org-vari-yhteistyo': org.status === 'yhteistyo' }")
+    div.org-vari(ng-class="{ 'org-vari-oma': org.isOma, 'org-vari-kysytty': org.status === 'odotetaan' && !org.isOma, 'org-vari-odottaa': org.status === 'odottaa' && !org.isOma, 'org-vari-yhteistyo': org.status === 'yhteistyo' && !org.isOma }")
     span.nimi(ng-bind="org.nimi | kaanna")
 
 
 mixin hierarkia()
   h3(kaanna="'organisaatiohierarkia'")
-  div.hierarkia-keskitaso(ng-repeat="org in hierarkia" ng-style="{ 'margin-left': (org.depth * 40) + 'px' }")
-    div.org
-      +hierarkiaOrganisaatio()
+
+  div.org-info
+    div.org-vari-info
+      div.org-vari-oma
+      span(ng-bind="'oma-organisaatio' | kaanna")
+
+    div.org-vari-info
+      div.org-vari-kysytty
+      span(ng-bind="'yhteistyo-kysytty' | kaanna")
+
+    div.org-vari-info
+      div.org-vari-odottaa
+      span(ng-bind="'yhteistyo-odottaa-hyvaksymista' | kaanna")
+
+    div.org-vari-info
+      div.org-vari-yhteistyo
+      span(ng-bind="'yhteistyo-organisaation-kanssa' | kaanna")
+
+  .organisaatio-hierarkia
+    div.hierarkia-keskitaso(ng-repeat="org in hierarkia" ng-style="{ 'margin-left': (org.depth * 40) + 'px' }")
+      div.org
+        +hierarkiaOrganisaatio()
+
 
 
 mixin muutOrganisaatiot()
   h3(kaanna="'muut-organisaatiot'")
-  div(style="margin-bottom: 15px;")
+
+  div.org-info
+    div.org-vari-info
+      div.org-vari-kysytty
+      span(ng-bind="'yhteistyo-kysytty' | kaanna")
+
+    div.org-vari-info
+      div.org-vari-odottaa
+      span(ng-bind="'yhteistyo-odottaa-hyvaksymista' | kaanna")
+
+    div.org-vari-info
+      div.org-vari-yhteistyo
+      span(ng-bind="'yhteistyo-organisaation-kanssa' | kaanna")
+
+  div
     div(ng-hide="$$ekEditing")
-      div.form-group
-      label.checkbox-inline
-        span(ng-bind="'salli-yhteistyo' | kaanna")
-        input.form-control(type="checkbox" ng-model="koulutustoimija.salliystavat" disabled)
+      .checkbox
+        label.no-action
+          input(type="checkbox" ng-model="koulutustoimija.salliystavat" disabled)
+          span(ng-bind="'salli-yhteistyo' | kaanna")
     div(ng-show="$$ekEditing")
-      div.form-group
-      label.checkbox-inline
-        span(ng-bind="'salli-yhteistyo' | kaanna")
-        input.form-control(type="checkbox" ng-model="koulutustoimija.salliystavat")
+      .checkbox
+        label
+          input(type="checkbox" ng-model="koulutustoimija.salliystavat")
+          span(ng-bind="'salli-yhteistyo' | kaanna")
 
   div.ystavalista(ng-show="kaverit.length > 0")
     div.org(ng-repeat="org in kaverit" ng-show="!hierarkiaMap[org.organisaatio]")
@@ -46,7 +80,7 @@ mixin muutOrganisaatiot()
 h2.otsikko
   span(ng-bind="'tiedot' | kaanna")
   button.btn.btn-primary.pull-right(ng-hide="$$ekEditing" ng-click="edit()" ng-bind="'muokkaa' | kaanna" oikeustarkastelu="hallinta")
-  button.btn.btn-warning.pull-right(style="margin-left: 5px" ng-show="$$ekEditing" ng-click="cancel()" ng-bind="'peruuta' | kaanna")
+  button.btn.btn-default.pull-right(style="margin-left: 5px" ng-show="$$ekEditing" ng-click="cancel()" ng-bind="'peruuta' | kaanna")
   button.btn.btn-primary.pull-right(ng-show="$$ekEditing" ng-click="save()" ng-bind="'tallenna' | kaanna")
 
 div(style="margin-top: 15px")

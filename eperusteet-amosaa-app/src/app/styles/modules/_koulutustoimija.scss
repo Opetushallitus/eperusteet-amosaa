@@ -133,11 +133,15 @@
 }
 
 .yhteistyot {
+    .no-action {
+        cursor: not-allowed;
+    }
     h3 {
         margin-top: 16px;
     }
 
     .organisaatio-hierarkia {
+        clear: both;
 
         .hierarkia-keskitaso {
             margin-left: 40px;
@@ -167,6 +171,7 @@
 
     .ystavalista {
         margin-top: 25px;
+        clear: both;
     }
 
     .org-vari {
@@ -181,11 +186,26 @@
     }
 
     .org-vari-oma {
-        background: #202020;
+        background: #e879c3;
     }
 
     .org-vari-yhteistyo {
         background: #99d740;
+    }
+
+    .org-info {
+        float: right;
+        .org-vari-info {
+            display: inline-block;
+            margin: 5px;
+
+            div {
+                display: inline-block;
+                width: 12px;
+                height: 12px;
+                margin-right: 5px;
+            }
+        }
     }
 
     .org-vari-odottaa {
