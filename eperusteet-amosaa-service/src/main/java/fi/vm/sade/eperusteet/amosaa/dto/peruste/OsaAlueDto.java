@@ -40,7 +40,6 @@ public class OsaAlueDto implements AuditLoggableDto {
     private KoodiDto koodi;
     private String koodiUri;
     private String koodiArvo;
-    private KoodiDto koodi;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Kieli kieli;
     @JsonInclude(JsonInclude.Include.NON_NULL)
