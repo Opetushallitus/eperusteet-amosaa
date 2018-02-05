@@ -11,9 +11,10 @@ angular.module("app").config($stateProvider =>
 );
 
 namespace TiedotImpl {
-    export const controller = ($q, $scope, $state, koulutustoimija, ops, historia, versioId, versio, nimiLataaja, opsSiirtoModalService) => {
+    export const controller = ($q, $scope, $state, koulutustoimija, ops, historia, versioId, versio, nimiLataaja, opsSiirtoModalService, peruste) => {
         $scope.versio = versio;
         $scope.koulutustoimija = koulutustoimija;
+        $scope.peruste = peruste;
         [$scope.uusin, $scope.historia] = Revisions.parseAll(historia);
         nimiLataaja($scope.uusin.muokkaaja).then(nimi => {
             $scope.uusin = $scope.uusin || {};
