@@ -18,12 +18,15 @@ package fi.vm.sade.eperusteet.amosaa.service.external.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import fi.vm.sade.eperusteet.amosaa.dto.OrganisaatioHierarkia;
 import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
 import fi.vm.sade.eperusteet.amosaa.service.util.RestClientFactory;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 import fi.vm.sade.generic.rest.CachingRestClient;
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,6 +95,29 @@ public class OrganisaatioServiceImpl implements OrganisaatioService {
         return client.getOrganisaatio(organisaatioOid);
     }
 
+    private void removeUnwanteds(ArrayNode parent) {
+        Iterator<JsonNode> iterator = parent.iterator();
+        while (iterator.hasNext()) {
+            JsonNode child = iterator.next();
+
+            if (child.hasNonNull("oppilaitostyyppi")) {
+                String oppilaitostyyppi = child.get("oppilaitostyyppi").asText();
+                // Poistetaan jos ei ole sallittu oppilaitostyyppi (ks. oppilaitostyyppi koodistopalvelusta)
+                if(Stream.of(21, 22, 23, 24, 29, 93)
+                        .map(olt -> "oppilaitostyyppi_" + olt)
+                        .noneMatch(oppilaitostyyppi::startsWith)) {
+                    iterator.remove();
+                }
+            }
+
+            if (child.hasNonNull("children")) {
+                ArrayNode children = (ArrayNode) child.get("children");
+                removeUnwanteds(children);
+            }
+        }
+
+    }
+
     @Override
     public OrganisaatioHierarkia getOrganisaatioPuu(String organisaatioOid) {
         JsonNode puu = client.getOrganisaatioPuu(organisaatioOid);
@@ -99,7 +125,13 @@ public class OrganisaatioServiceImpl implements OrganisaatioService {
             if (puu.get("organisaatiot").size() == 0 || SecurityUtil.OPH_OID.equals(organisaatioOid)) {
                 return null;
             }
-            return mapper.treeToValue(puu.get("organisaatiot").get(0), OrganisaatioHierarkia.class);
+            JsonNode organisaatiot = puu.get("organisaatiot").get(0);
+
+            if (organisaatiot.hasNonNull("children")) {
+                removeUnwanteds((ArrayNode) organisaatiot.get("children"));
+            }
+
+            return mapper.treeToValue(organisaatiot, OrganisaatioHierarkia.class);
         } catch (JsonProcessingException ex) {
             return null;
         }
