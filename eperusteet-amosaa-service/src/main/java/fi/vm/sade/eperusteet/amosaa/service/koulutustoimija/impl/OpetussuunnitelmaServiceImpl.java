@@ -16,7 +16,10 @@
 
 package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.impl;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.Kayttaja;
@@ -37,10 +40,11 @@ import fi.vm.sade.eperusteet.amosaa.dto.PoistettuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.*;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKaikkiDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.Suoritustapakoodi;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonOsaKaikkiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.*;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaJulkinenDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaQueryDto;
 import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaoikeusRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
@@ -48,7 +52,10 @@ import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.Opetussuunnitelma
 import fi.vm.sade.eperusteet.amosaa.repository.peruste.CachedPerusteRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.TekstiKappaleRepository;
+import fi.vm.sade.eperusteet.amosaa.resource.config.AbstractRakenneOsaDeserializer;
+import fi.vm.sade.eperusteet.amosaa.resource.config.MappingModule;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiService;
+import fi.vm.sade.eperusteet.amosaa.service.dokumentti.LocalizedMessagesService;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
@@ -61,10 +68,11 @@ import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.ValidointiService;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -76,6 +84,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.PostConstruct;
 
 /**
  * @author nkala
@@ -136,6 +146,20 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
     public KoulutustoimijaService getKoulutustoimijaService() {
         return this.koulutustoimijaService;
+    }
+
+    @Autowired
+    private LocalizedMessagesService messages;
+
+    private ObjectMapper objMapper;
+
+    @PostConstruct
+    protected void init() {
+        objMapper = new ObjectMapper();
+        MappingModule module = new MappingModule();
+        module.addDeserializer(AbstractRakenneOsaDto.class, new AbstractRakenneOsaDeserializer());
+        objMapper.registerModule(module);
+        objMapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
     }
 
     @Override
@@ -211,7 +235,30 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         {
             SisaltoViite tosat = new SisaltoViite();
             TekstiKappale tk = new TekstiKappale();
-            tk.setNimi(LokalisoituTeksti.of(Kieli.FI, "Tutkinnon osat"));
+
+
+            // Haetaan perusteen koulutustyyppi
+            CachedPeruste cperuste = ops.getPeruste();
+            String koulutustyppi;
+            try {
+                JsonNode node = objMapper.readTree(cperuste.getPeruste());
+                JsonNode koulutustyyppi = node.get("koulutustyyppi");
+                koulutustyppi = koulutustyyppi.asText();
+            } catch (IOException ex) {
+                throw new BusinessRuleViolationException("perusteen-parsinta-epaonnistui");
+            }
+
+            // Luodaan tutkinnon osat tekstikappale
+            Map<Kieli, String> tutkinnonOsatTekstikappale = new HashMap<>();
+            for (Kieli kieli : Kieli.values()) {
+                if (KoulutusTyyppi.of(koulutustyppi).isValmaTelma()) {
+                    tutkinnonOsatTekstikappale.put(kieli, messages.translate("koulutuksen-osat", kieli));
+                } else {
+                    tutkinnonOsatTekstikappale.put(kieli, messages.translate("tutkinnon-osat", kieli));
+                }
+            }
+            tk.setNimi(LokalisoituTeksti.of(tutkinnonOsatTekstikappale));
+
             tk.setValmis(true);
             tosat.setTekstiKappale(tkRepository.save(tk));
             tosat.setLiikkumaton(false);
@@ -226,7 +273,11 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         if (ops.getTyyppi() == OpsTyyppi.OPS) {
             SisaltoViite suorituspolut = new SisaltoViite();
             TekstiKappale tk = new TekstiKappale();
-            tk.setNimi(LokalisoituTeksti.of(Kieli.FI, "Suorituspolut"));
+            Map<Kieli, String> suorituspolutTekstikappale = new HashMap<>();
+            for (Kieli kieli : Kieli.values()) {
+                suorituspolutTekstikappale.put(kieli, messages.translate("suorituspolut", kieli));
+            }
+            tk.setNimi(LokalisoituTeksti.of(suorituspolutTekstikappale));
             tk.setValmis(true);
             suorituspolut.setTekstiKappale(tkRepository.save(tk));
             suorituspolut.setPakollinen(true);
@@ -373,6 +424,9 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     @Override
     public KoulutustoimijaJulkinenDto getKoulutustoimijaId(Long opsId) {
         Opetussuunnitelma ops = repository.findOne(opsId);
+        if (ops == null) {
+            throw new BusinessRuleViolationException("opetussuunnitelmaa-ei-loydy");
+        }
         return mapper.map(ops.getKoulutustoimija(), KoulutustoimijaJulkinenDto.class);
     }
 

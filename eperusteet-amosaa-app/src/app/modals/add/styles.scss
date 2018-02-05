@@ -132,6 +132,7 @@ $sisalto-item-link-hover-color: #125572;
                 color: white;
                 background: $sisalto-item-color;
                 height: $sisalto-item-height - 2 * $sisalto-item-border;
+                width: $sisalto-item-height - 2 * $sisalto-item-border;
                 padding: $sisalto-item-icon-padding;
                 font-size: $sisalto-item-icon-size;
             }

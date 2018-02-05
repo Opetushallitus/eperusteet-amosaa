@@ -22,7 +22,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.AbstractRakenneOsaDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.ArviointiasteikkoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonOsaSuoritustapaDto;
 import fi.vm.sade.eperusteet.amosaa.repository.peruste.CachedPerusteRepository;
@@ -35,17 +34,14 @@ import fi.vm.sade.eperusteet.amosaa.service.util.RestClientFactory;
 import fi.vm.sade.generic.rest.CachingRestClient;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.*;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -181,6 +177,8 @@ public class EperusteetServiceImpl implements EperusteetService {
         koulutustyypit.add(KoulutusTyyppi.AMMATTITUTKINTO);
         koulutustyypit.add(KoulutusTyyppi.ERIKOISAMMATTITUTKINTO);
         koulutustyypit.add(KoulutusTyyppi.PERUSTUTKINTO);
+        koulutustyypit.add(KoulutusTyyppi.VALMA);
+        koulutustyypit.add(KoulutusTyyppi.TELMA);
         return eperusteetServiceClient.findPerusteet(koulutustyypit);
     }
 }

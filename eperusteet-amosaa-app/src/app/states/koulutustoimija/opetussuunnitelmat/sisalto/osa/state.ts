@@ -4,7 +4,7 @@ namespace SuoritustapaRyhmat {
         i = inject($injector, ["$rootScope", "$uibModal", "$q"]);
     };
 
-    export const editoi = (spRivit, node, tutkinnonosat, koodisto, paikalliset) =>
+    export const editoi = (spRivit, node, tutkinnonosat, koodisto, paikalliset, peruste) =>
         i.$uibModal.open({
             resolve: {},
             templateUrl: "modals/suoritustaparyhma.jade",
@@ -23,6 +23,7 @@ namespace SuoritustapaRyhmat {
                 $scope.editable = _.find(spRivit, (rivi: any) => rivi.rakennemoduuli === node.tunniste) || {
                     rakennemoduuli: node.tunniste
                 };
+                $scope.$$isValmaTelma = _.includes(Amosaa.valmaTelmaKoulutustyypit(), peruste.koulutustyyppi);
 
                 const valitutKoodit = _.indexBy($scope.editable.koodit || [], _.identity);
                 let koodit = [];
@@ -194,6 +195,9 @@ angular
                         );
 
                         $scope.pTosa = pTosa;
+                        if (pTosa) {
+                            $scope.pTosa.$$isTutke2 = Osat.isTutke2(pTosa);
+                        }
                         nimiLataaja(osa.tekstiKappale.muokkaaja).then(_.cset(osa, "$$nimi"));
 
                         // Item handling
@@ -324,8 +328,7 @@ angular
                         peruste,
                         arviointiAsteikot,
                         koodisto,
-                        koulutustoimija,
-                        $timeout
+                        koulutustoimija
                     ) => {
                         const isPaikallinen = _.property("tosa.tyyppi")($scope.osa) === "oma",
                             osaamisalaKoodit = peruste.osaamisalat,
@@ -430,6 +433,7 @@ angular
                                 tolerance: "pointer",
                                 placeholder: "vapaa-placeholder"
                             };
+                            $scope.$$isValmaTelma = _.includes(Amosaa.valmaTelmaKoulutustyypit(), peruste.koulutustyyppi);
 
                             paivitaKoodistoTiedot();
                         }
@@ -587,7 +591,7 @@ angular
                         pTosat,
                         koodisto,
                         paikallisetTutkinnonosatEP,
-                        koulutustoimija
+                        koulutustoimija,
                     ) => {
                         const suoritustapa = Perusteet.getSuoritustapa(ops, pSuoritustavat),
                             tosat = _.indexBy(pTosat, "id"),
@@ -704,7 +708,8 @@ angular
                                         node,
                                         tosaViitteet,
                                         koodisto,
-                                        paikallisetTutkinnonosatEP
+                                        paikallisetTutkinnonosatEP,
+                                        peruste
                                     ).then(res => {
                                         $scope.osa.suorituspolku.rivit = _.compact(_.values(res));
                                         update();

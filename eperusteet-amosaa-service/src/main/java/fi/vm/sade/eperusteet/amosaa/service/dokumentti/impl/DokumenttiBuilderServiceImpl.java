@@ -41,6 +41,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.koodisto.KoodistoKoodiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koodisto.KoodistoMetadataDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.TermiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.*;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.AmmattitaitovaatimusKohdealueetDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.repository.dokumentti.DokumenttiRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
@@ -86,6 +87,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -181,7 +183,6 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
 
         // Sisältöelementit
         addTekstit(docBase);
-
 
         // Alaviitteet
         buildFootnotes(docBase);
@@ -727,7 +728,9 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
     private void addArvioinninKohdealue(DokumenttiBase docBase, ArvioinninKohdealue arvioinninKohdealue) {
         DokumenttiTaulukko arviointiTaulukko = new DokumenttiTaulukko();
 
-        arviointiTaulukko.addOtsikkoSarake(getTextString(docBase, arvioinninKohdealue.getOtsikko()));
+        if (!getTextString(docBase, arvioinninKohdealue.getOtsikko()).equals("automaattinen")) {
+            arviointiTaulukko.addOtsikkoSarake(getTextString(docBase, arvioinninKohdealue.getOtsikko()));
+        }
         addArvioinninKohteet(docBase, arvioinninKohdealue.getArvioinninKohteet(), arviointiTaulukko);
 
         arviointiTaulukko.addToDokumentti(docBase);
@@ -801,75 +804,201 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
         if (optPerusteenTutkinnonosa.isPresent()) {
             TutkinnonOsaKaikkiDto perusteenTutkinnonosa = optPerusteenTutkinnonosa.get();
 
-            // Tavoitteet
-            if (perusteenTutkinnonosa.getTavoitteet() != null) {
-                addTeksti(docBase, messages.translate("docgen.tavoitteet", docBase.getKieli()), "h5");
-                addLokalisoituteksti(docBase, perusteenTutkinnonosa.getTavoitteet(), "div");
-            }
+            if (perusteenTutkinnonosa.getTyyppi().equals(TutkinnonOsaTyyppi.NORMAALI)) {
+
+                // Tavoitteet
+                if (perusteenTutkinnonosa.getTavoitteet() != null) {
+                    addTeksti(docBase, messages.translate("docgen.tavoitteet", docBase.getKieli()), "h5");
+                    addLokalisoituteksti(docBase, perusteenTutkinnonosa.getTavoitteet(), "div");
+                }
 
 
-            // Ammattitaitovaatimukset
-            if (perusteenTutkinnonosa.getAmmattitaitovaatimuksetLista() != null) {
-                addTeksti(docBase, messages.translate("docgen.ammattitaitovaatimukset", docBase.getKieli()), "h5");
-                perusteenTutkinnonosa.getAmmattitaitovaatimuksetLista().forEach(dto -> {
-                    AmmattitaitovaatimuksenKohdealue ammattitaitovaatimuksenKohdealue = mapper.map(dto,
-                            AmmattitaitovaatimuksenKohdealue.class);
-                    addAmmattitaitovaatimuksenKohdealue(docBase, ammattitaitovaatimuksenKohdealue);
-                });
-            } else if (perusteenTutkinnonosa.getAmmattitaitovaatimukset() != null) {
-                addTeksti(docBase, messages.translate("docgen.ammattitaitovaatimukset", docBase.getKieli()), "h5");
-                addLokalisoituteksti(docBase, perusteenTutkinnonosa.getAmmattitaitovaatimukset(), "div");
-            }
+                // Ammattitaitovaatimukset
+                if (perusteenTutkinnonosa.getAmmattitaitovaatimuksetLista() != null) {
+                    addTeksti(docBase, messages.translate("docgen.ammattitaitovaatimukset", docBase.getKieli()), "h5");
+                    perusteenTutkinnonosa.getAmmattitaitovaatimuksetLista().forEach(dto -> {
+                        AmmattitaitovaatimuksenKohdealue ammattitaitovaatimuksenKohdealue = mapper.map(dto,
+                                AmmattitaitovaatimuksenKohdealue.class);
+                        addAmmattitaitovaatimuksenKohdealue(docBase, ammattitaitovaatimuksenKohdealue);
+                    });
+                } else if (perusteenTutkinnonosa.getAmmattitaitovaatimukset() != null) {
+                    addTeksti(docBase, messages.translate("docgen.ammattitaitovaatimukset", docBase.getKieli()), "h5");
+                    addLokalisoituteksti(docBase, perusteenTutkinnonosa.getAmmattitaitovaatimukset(), "div");
+                }
 
-            // Arviointi
-            if (perusteenTutkinnonosa.getArviointi() != null) {
-                addTeksti(docBase, messages.translate("docgen.arviointi", docBase.getKieli()), "h5");
-                ArviointiDto arviointiDto = perusteenTutkinnonosa.getArviointi();
+                // Arviointi
+                if (perusteenTutkinnonosa.getArviointi() != null) {
+                    addTeksti(docBase, messages.translate("docgen.arviointi", docBase.getKieli()), "h5");
+                    ArviointiDto arviointiDto = perusteenTutkinnonosa.getArviointi();
 
-                arviointiDto.getArvioinninKohdealueet().forEach(arvioinninKohdealueDto -> {
-                    ArvioinninKohdealue arvioinninKohdealue = mapper.map(arvioinninKohdealueDto, ArvioinninKohdealue.class);
+                    arviointiDto.getArvioinninKohdealueet().forEach(arvioinninKohdealueDto -> {
+                        ArvioinninKohdealue arvioinninKohdealue = mapper.map(arvioinninKohdealueDto, ArvioinninKohdealue.class);
 
-                    for (int i = 0; i < arvioinninKohdealue.getArvioinninKohteet().size(); i++) {
-                        ArvioinninKohde arvioinninKohde = arvioinninKohdealue.getArvioinninKohteet().get(i);
-                        ArvioinninKohdeDto arvioinninKohdeDto = arvioinninKohdealueDto.getArvioinninKohteet().get(i);
-                        Reference arviointiasteikkoRef = arvioinninKohdeDto.getArviointiasteikko();
-                        if (arviointiasteikkoRef != null) {
-                            Long arviointiasteikkoId = arviointiasteikkoRef.getIdLong();
-                            ArviointiasteikkoDto dto = arviointiasteikkoService.get(arviointiasteikkoId);
-                            Arviointiasteikko arviointiasteikko = mapper.map(dto, Arviointiasteikko.class);
+                        for (int i = 0; i < arvioinninKohdealue.getArvioinninKohteet().size(); i++) {
+                            ArvioinninKohde arvioinninKohde = arvioinninKohdealue.getArvioinninKohteet().get(i);
+                            ArvioinninKohdeDto arvioinninKohdeDto = arvioinninKohdealueDto.getArvioinninKohteet().get(i);
+                            Reference arviointiasteikkoRef = arvioinninKohdeDto.getArviointiasteikko();
+                            if (arviointiasteikkoRef != null) {
+                                Long arviointiasteikkoId = arviointiasteikkoRef.getIdLong();
+                                ArviointiasteikkoDto dto = arviointiasteikkoService.get(arviointiasteikkoId);
+                                Arviointiasteikko arviointiasteikko = mapper.map(dto, Arviointiasteikko.class);
 
-                            arvioinninKohde.setArviointiasteikko(arviointiasteikko);
+                                arvioinninKohde.setArviointiasteikko(arviointiasteikko);
 
-                            Set<OsaamistasonKriteeri> osaamistasonKriteerit = arvioinninKohdeDto.getOsaamistasonKriteerit().stream()
-                                    .sorted(Comparator.comparing(osaamistasonKriteeriDto -> osaamistasonKriteeriDto.getOsaamistaso().getIdLong()))
-                                    .map(osaamistasonKriteeriDto -> {
-                                        Optional<Osaamistaso> optOsaamistaso = arviointiasteikko.getOsaamistasot().stream()
-                                                .filter(o -> o.getId().equals(osaamistasonKriteeriDto.getOsaamistaso().getIdLong()))
-                                                .findFirst();
+                                Set<OsaamistasonKriteeri> osaamistasonKriteerit = arvioinninKohdeDto.getOsaamistasonKriteerit().stream()
+                                        .sorted(Comparator.comparing(osaamistasonKriteeriDto -> osaamistasonKriteeriDto.getOsaamistaso().getIdLong()))
+                                        .map(osaamistasonKriteeriDto -> {
+                                            Optional<Osaamistaso> optOsaamistaso = arviointiasteikko.getOsaamistasot().stream()
+                                                    .filter(o -> o.getId().equals(osaamistasonKriteeriDto.getOsaamistaso().getIdLong()))
+                                                    .findFirst();
 
-                                        OsaamistasonKriteeri osaamistasonKriteeri = mapper.map(osaamistasonKriteeriDto, OsaamistasonKriteeri.class);
+                                            OsaamistasonKriteeri osaamistasonKriteeri = mapper.map(osaamistasonKriteeriDto, OsaamistasonKriteeri.class);
 
-                                        if (optOsaamistaso.isPresent()) {
-                                            Osaamistaso osaamistaso = optOsaamistaso.get();
-                                            osaamistasonKriteeri.setOsaamistaso(osaamistaso);
-                                        }
+                                            if (optOsaamistaso.isPresent()) {
+                                                Osaamistaso osaamistaso = optOsaamistaso.get();
+                                                osaamistasonKriteeri.setOsaamistaso(osaamistaso);
+                                            }
 
-                                        return osaamistasonKriteeri;
-                                    })
-                                    .collect(Collectors.toSet());
+                                            return osaamistasonKriteeri;
+                                        })
+                                        .collect(Collectors.toSet());
 
-                            arvioinninKohde.setOsaamistasonKriteerit(osaamistasonKriteerit);
+                                arvioinninKohde.setOsaamistasonKriteerit(osaamistasonKriteerit);
+                            }
                         }
-                    }
 
-                    addArvioinninKohdealue(docBase, arvioinninKohdealue);
-                });
+                        addArvioinninKohdealue(docBase, arvioinninKohdealue);
+                    });
+                }
+
+                // Ammattitaidon osoittamistavat
+                if (perusteenTutkinnonosa.getAmmattitaidonOsoittamistavat() != null) {
+                    addTeksti(docBase, messages.translate("docgen.ammattitaidon-osoittamistavat", docBase.getKieli()), "h5");
+                    addLokalisoituteksti(docBase, perusteenTutkinnonosa.getAmmattitaidonOsoittamistavat(), "div");
+                }
+
+                // Valma/Telma-sisältö
+                if (perusteenTutkinnonosa.getValmaTelmaSisalto() != null) {
+                    addValmatelmaSisalto(docBase, perusteenTutkinnonosa.getValmaTelmaSisalto());
+                }
+
+            } else if (TutkinnonOsaTyyppi.isTutke(perusteenTutkinnonosa.getTyyppi())) {
+                if (!ObjectUtils.isEmpty(perusteenTutkinnonosa.getOsaAlueet())) {
+                    perusteenTutkinnonosa.getOsaAlueet().stream()
+                            .filter(osaAlue -> osaAlue.getNimi() != null)
+                            .forEach(osaAlue -> {
+
+                        // Nimi
+                        addTeksti(docBase, getTextString(docBase, osaAlue.getNimi()), "h5");
+
+                        // Kuvaus
+                        if (osaAlue.getKuvaus() != null) {
+                            addTeksti(docBase, getTextString(docBase, osaAlue.getKuvaus()), "div");
+                        }
+
+                        // Osaamistavoitteet
+                        if (!ObjectUtils.isEmpty(osaAlue.getOsaamistavoitteet())) {
+                            osaAlue.getOsaamistavoitteet().forEach(osaamistavoite -> {
+
+                                addTeksti(docBase, getTextString(docBase, osaamistavoite.getNimi()), "h5");
+
+                                String otsikkoAvain = osaamistavoite.isPakollinen() ? "docgen.tutke2.pakolliset_osaamistavoitteet.title"
+                                        : "docgen.tutke2.valinnaiset_osaamistavoitteet.title";
+                                String otsikko = messages.translate(otsikkoAvain, docBase.getKieli());
+                                addTeksti(docBase, otsikko, "h5");
+
+                                addTeksti(docBase, getTextString(docBase, osaamistavoite.getTavoitteet()), "div");
+
+                                // Arviointi
+                                addTeksti(docBase, messages.translate("docgen.tutke2.arvioinnin_kohteet.title", docBase.getKieli()), "h6");
+                                ArviointiDto arviointi = osaamistavoite.getArviointi();
+                                arviointi.getArvioinninKohdealueet().forEach(dto -> addArvioinninKohdealue(docBase,
+                                        mapper.map(dto, ArvioinninKohdealue.class)));
+
+                                // Tunnustaminen
+                                addTeksti(docBase, messages.translate("docgen.tutke2.tunnustaminen.title", docBase.getKieli()), "h6");
+                                addTeksti(docBase, getTextString(docBase, osaamistavoite.getTunnustaminen()), "div");
+
+                                // Ammattitaitovaatimukset
+                                List<AmmattitaitovaatimusKohdealueetDto> ammattitaitovaatimukset = osaamistavoite.getAmmattitaitovaatimuksetLista();
+                                ammattitaitovaatimukset.forEach(dto-> addAmmattitaitovaatimuksenKohdealue(docBase,
+                                        mapper.map(dto, AmmattitaitovaatimuksenKohdealue.class)));
+                            });
+                        }
+
+                        if (osaAlue.getValmaTelmaSisalto() != null) {
+                            addValmatelmaSisalto(docBase, osaAlue.getValmaTelmaSisalto());
+                        }
+                    });
+                }
+            }
+        }
+    }
+
+    private void addValmatelmaSisalto(DokumenttiBase docBase, ValmaTelmaSisaltoDto valmaTelmaSisalto) {
+        addValmaOsaamistavoitteet(docBase, valmaTelmaSisalto.getOsaamistavoite());
+        addValmaArviointi(docBase, valmaTelmaSisalto);
+    }
+
+    private void addValmaOsaamistavoitteet(DokumenttiBase docBase, List<OsaamisenTavoiteDto> OsaamisenTavoiteet) {
+        if (ObjectUtils.isEmpty(OsaamisenTavoiteet)) {
+            return;
+        }
+
+        addTeksti(docBase, messages.translate("docgen.valma.osaamistavoitteet.title", docBase.getKieli()), "h5");
+
+        for (OsaamisenTavoiteDto osaamisenTavoite : OsaamisenTavoiteet) {
+            if (osaamisenTavoite.getNimi() != null) {
+                addTeksti(docBase, getTextString(docBase, osaamisenTavoite.getNimi()), "h6");
             }
 
-            // Ammattitaidon osoittamistavat
-            if (perusteenTutkinnonosa.getAmmattitaidonOsoittamistavat() != null) {
-                addTeksti(docBase, messages.translate("docgen.ammattitaidon-osoittamistavat", docBase.getKieli()), "h5");
-                addLokalisoituteksti(docBase, perusteenTutkinnonosa.getAmmattitaidonOsoittamistavat(), "div");
+            if (osaamisenTavoite.getKohde() != null) {
+                addTeksti(docBase, getTextString(docBase, osaamisenTavoite.getKohde()), "div");
+            }
+
+            Element lista = docBase.getDocument().createElement("ul");
+            docBase.getBodyElement().appendChild(lista);
+            osaamisenTavoite.getTavoitteet().forEach(tavoite -> {
+                Element alkio = docBase.getDocument().createElement("li");
+                alkio.setTextContent(getTextString(docBase, tavoite));
+                lista.appendChild(alkio);
+            });
+
+            if (osaamisenTavoite.getSelite() != null) {
+                addTeksti(docBase, getTextString(docBase, osaamisenTavoite.getSelite()), "div");
+            }
+        }
+    }
+
+    private void addValmaArviointi(DokumenttiBase docBase, ValmaTelmaSisaltoDto valmaTelmaSisalto) {
+        if (valmaTelmaSisalto.getOsaamisenarviointi() != null
+                || valmaTelmaSisalto.getOsaamisenarviointiTekstina() != null) {
+
+            addTeksti(docBase, messages.translate("docgen.valma.osaamisenarviointi.title", docBase.getKieli()), "h5");
+
+            if (valmaTelmaSisalto.getOsaamisenarviointi() != null) {
+                if (valmaTelmaSisalto.getOsaamisenarviointi().getKohde() != null) {
+                    addTeksti(docBase,
+                            getTextString(docBase, valmaTelmaSisalto.getOsaamisenarviointi().getKohde()),
+                            "div");
+                }
+
+                if (!ObjectUtils.isEmpty(valmaTelmaSisalto.getOsaamisenarviointi().getTavoitteet())) {
+                    Element lista = docBase.getDocument().createElement("ul");
+                    docBase.getBodyElement().appendChild(lista);
+
+                    valmaTelmaSisalto.getOsaamisenarviointi().getTavoitteet().forEach(tavoite -> {
+                        Element alkio = docBase.getDocument().createElement("li");
+                        alkio.setTextContent(getTextString(docBase, tavoite));
+                        lista.appendChild(alkio);
+                    });
+                }
+            }
+
+            if (valmaTelmaSisalto.getOsaamisenarviointiTekstina() != null) {
+                addTeksti(docBase,
+                        valmaTelmaSisalto.getOsaamisenarviointiTekstina().getTeksti().get(docBase.getKieli()),
+                        "div");
             }
         }
     }

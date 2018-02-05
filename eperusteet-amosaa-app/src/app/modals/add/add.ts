@@ -94,7 +94,7 @@ namespace ModalAdd {
                 const amosaaPerusteet = _(perusteet)
                     .filter(peruste => _.includes(Amosaa.tuetutKoulutustyypit(), peruste.koulutustyyppi))
                     .reject(Perusteet.isVanhentunut)
-                    .map(peruste => {
+                    .map((peruste: any) => {
                         peruste.$$tuleva = Perusteet.isTuleva(peruste);
                         peruste.$$siirtymalla = Perusteet.isSiirtymalla(peruste);
                         return peruste;
@@ -141,7 +141,7 @@ namespace ModalAdd {
             }
         }).result;
 
-    export const sisaltoAdder = (koulutustoimija, sallitut = ["tekstikappale"]) =>
+    export const sisaltoAdder = (koulutustoimija, sallitut = ["tekstikappale"], peruste) =>
         i.$uibModal.open({
             resolve: {},
             templateUrl: "modals/add/sisalto.jade",
@@ -155,6 +155,9 @@ namespace ModalAdd {
                     sallittu => sallittu === "sisaltotuonti" || sallittu === "tutkinnonosatuonti"
                 );
                 $scope.valittu = undefined;
+                $scope.koulutustyyppi = peruste.koulutustyyppi;
+                $scope.$$isValmaTelma = _.includes(Amosaa.valmaTelmaKoulutustyypit(), peruste.koulutustyyppi);
+
 
                 {
                     // Opetussuunnitelmat

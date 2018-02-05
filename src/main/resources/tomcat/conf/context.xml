@@ -35,4 +35,3 @@
     url="jdbc:postgresql://{{host_postgresql_eperusteet_amosaa}}:{{port_postgresql}}/{{host_postgresql_eperusteet_amosaa_database | default('eperusteet-amosaa') }}" />
 
 </Context>
-
