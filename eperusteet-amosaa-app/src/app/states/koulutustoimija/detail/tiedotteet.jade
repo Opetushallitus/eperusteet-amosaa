@@ -38,13 +38,13 @@ div(ng-show="$$showTiedotteet" style="margin-bottom: 30px")
             .form-control.ckeditor(ckeditor ng-model="tiedote.teksti" layout="normal")
           .tiedote-sisalto(ng-show="tiedote.$$isOpen" ng-if="!$$ekEditing || $$ekEditingIndex != $index" ng-bind-html="tiedote.teksti | unsafe")
           .tiedote-sisalto.checkbox.abc-checkbox(ng-if="$$ekEditing && $$ekEditingIndex === $index")
-            input.styled(type="checkbox" checked="true" ng-model="tiedote.tarkea")
-            label
+            input.styled(type="checkbox" checked="true" ng-model="tiedote.tarkea" id="tarkea-cb")
+            label(for="tarkea-cb")
               strong(ng-bind="'tarkea' | kaanna")
             span.julkinen-btn-margin-left
-              input.styled(type="checkbox" checked="true" ng-model="tiedote.julkinen")
-              label
-                strong(ng-bind="julkinen | kaanna")
+              input.styled(type="checkbox" checked="true" ng-model="tiedote.julkinen" id="julkinen-cb")
+              label(for="julkinen-cb")
+                strong(ng-bind="'julkinen' | kaanna")
 
           .expand(ng-if="!$$ekEditing || $$ekEditingIndex != $index" ng-click="tiedote.$$isOpen = !tiedote.$$isOpen")
             a(href="")
