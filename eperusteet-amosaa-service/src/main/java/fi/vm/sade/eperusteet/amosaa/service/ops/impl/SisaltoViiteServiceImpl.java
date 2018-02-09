@@ -174,7 +174,6 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
         viiteDto.setTekstiKappale(tekstiKappaleService.add(uusiViite, viiteDto.getTekstiKappale()));
         uusiViite.setVanhempi(parentViite);
         parentViite.getLapset().add(0, uusiViite);
-        uusiViite = repository.save(uusiViite);
 
         switch (uusiViite.getTyyppi()) {
             case TOSARYHMA:
