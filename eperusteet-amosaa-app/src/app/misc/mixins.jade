@@ -113,7 +113,7 @@ mixin ekeditor(model, layout)
   div(ng-if="$$ekEditing")
     div(ckeditor slocalized ng-model=model layout=layout)
   div(ng-if="!$$ekEditing")
-    p(ng-bind-html=model + "| kaanna")
+    p(termisto-viitteet=model ng-bind-html=model + "| kaanna | kuvalinkit | unsafe")
 
 
 mixin formfieldDense(label)

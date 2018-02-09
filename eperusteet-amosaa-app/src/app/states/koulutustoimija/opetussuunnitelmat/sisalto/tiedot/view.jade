@@ -43,7 +43,7 @@ mixin esikatselu()
           +esikatselu
 
         +formfield("'tiivistelma'")
-          +ekeditor("ops.kuvaus", "simplified")
+          +ekeditor("ops.kuvaus", "normal")
 
         span(ng-show="ops.tyyppi !== 'pohja'")
           +formfield("'paatosnumero'")
