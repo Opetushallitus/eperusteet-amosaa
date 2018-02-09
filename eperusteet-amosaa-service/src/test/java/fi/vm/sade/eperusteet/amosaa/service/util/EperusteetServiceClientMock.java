@@ -15,6 +15,7 @@
  */
 package fi.vm.sade.eperusteet.amosaa.service.util;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
@@ -59,6 +60,7 @@ public class EperusteetServiceClientMock implements EperusteetServiceClient {
         MappingModule module = new MappingModule();
         module.addDeserializer(AbstractRakenneOsaDto.class, new AbstractRakenneOsaDeserializer());
         objectMapper.registerModule(module);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
     }
 
     public static final String DIAARINUMERO = "mock-diaarinumero";
