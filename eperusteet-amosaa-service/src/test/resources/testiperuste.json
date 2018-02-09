@@ -1,0 +1,967 @@
+{
+  "id" : 515491,
+  "globalVersion" : {
+    "aikaleima" : 1486716649651
+  },
+  "nimi" : {
+    "fi" : "Automaatioyliasentajan erikoisammattitutkinto",
+    "sv" : "Specialyrkesexamen för automationsövermontör",
+    "_id" : "1152221"
+  },
+  "koulutustyyppi" : "koulutustyyppi_12",
+  "koulutukset" : [ {
+    "nimi" : {
+      "fi" : "Automaatioyliasentajan erikoisammattitutkinto",
+      "sv" : "Specialyrkesexamen för automationsövermontör",
+      "en" : "Automation Assembler, SQ",
+      "_id" : "1152220"
+    },
+    "koulutuskoodiArvo" : "357401",
+    "koulutuskoodiUri" : "koulutus_357401",
+    "koulutusalakoodi" : "koulutusalaoph2002_5",
+    "opintoalakoodi" : "opintoalaoph2002_503"
+  } ],
+  "kielet" : [ "sv", "fi" ],
+  "kuvaus" : {
+    "_tunniste" : "9941f8d3-a44d-4b09-9a4e-fd13ea965811",
+    "fi" : "",
+    "sv" : "",
+    "_id" : "2336178"
+  },
+  "maarayskirje" : {
+    "id" : 1424268,
+    "url" : { }
+  },
+  "muutosmaaraykset" : [ ],
+  "diaarinumero" : "9/011/2008",
+  "voimassaoloAlkaa" : 1209589200000,
+  "siirtymaPaattyy" : null,
+  "voimassaoloLoppuu" : null,
+  "paatospvm" : 1205791200000,
+  "luotu" : 1423769958520,
+  "muokattu" : 1486716649651,
+  "tila" : "valmis",
+  "tyyppi" : "normaali",
+  "koulutusvienti" : false,
+  "korvattavatDiaarinumerot" : [ "34/011/1994" ],
+  "osaamisalat" : [ ],
+  "tyotehtavatJoissaVoiToimia" : null,
+  "suorittaneenOsaaminen" : null,
+  "suoritustavat" : [ {
+    "suoritustapakoodi" : "naytto",
+    "rakenne" : {
+      "kuvaus" : {
+        "_tunniste" : "0886b911-d471-43b8-8c29-d528294ef81c",
+        "fi" : "",
+        "sv" : "",
+        "_id" : "2335090"
+      },
+      "vieras" : null,
+      "tunniste" : "16a37d87-cb5f-41a1-94f1-27fb1fa6d191",
+      "pakollinen" : null,
+      "nimi" : null,
+      "rooli" : null,
+      "muodostumisSaanto" : null,
+      "osaamisala" : null,
+      "osat" : [ {
+        "kuvaus" : null,
+        "vieras" : null,
+        "tunniste" : "d35fb695-f181-4e49-b4b9-c64a85819d0a",
+        "pakollinen" : null,
+        "nimi" : {
+          "_tunniste" : "382bd26f-cdca-4945-9cb0-9d3f4d09e032",
+          "fi" : "Pakolliset tutkinnon osat",
+          "sv" : "Obligatoriska examensdelar",
+          "_id" : "2335091"
+        },
+        "rooli" : "määritelty",
+        "muodostumisSaanto" : {
+          "laajuus" : null,
+          "koko" : {
+            "minimi" : 3,
+            "maksimi" : 3
+          }
+        },
+        "osaamisala" : null,
+        "osat" : [ {
+          "kuvaus" : null,
+          "vieras" : null,
+          "tunniste" : "0b9aad4c-8025-4149-8e73-27394a5adc50",
+          "pakollinen" : true,
+          "erikoisuus" : null,
+          "_tutkinnonOsaViite" : "576065"
+        }, {
+          "kuvaus" : null,
+          "vieras" : null,
+          "tunniste" : "2f91a972-c52f-4db4-83be-3e16d668cb46",
+          "pakollinen" : true,
+          "erikoisuus" : null,
+          "_tutkinnonOsaViite" : "576066"
+        }, {
+          "kuvaus" : null,
+          "vieras" : null,
+          "tunniste" : "c3583e86-7b47-4216-ab31-9fc14e44c25f",
+          "pakollinen" : true,
+          "erikoisuus" : null,
+          "_tutkinnonOsaViite" : "576067"
+        } ],
+        "versioId" : null
+      }, {
+        "kuvaus" : {
+          "fi" : "Valitaan osista toinen.",
+          "_id" : "1153690"
+        },
+        "vieras" : null,
+        "tunniste" : "76044b5b-1f4b-4587-b30d-23b7d3c2608d",
+        "pakollinen" : null,
+        "nimi" : {
+          "_tunniste" : "db10fc42-08c0-4524-9a52-8c0e00ae43ee",
+          "fi" : "Valinnaiset tutkinnon osat",
+          "sv" : "Valfria examensdelar",
+          "_id" : "2335092"
+        },
+        "rooli" : "määritelty",
+        "muodostumisSaanto" : {
+          "laajuus" : null,
+          "koko" : {
+            "minimi" : 1,
+            "maksimi" : 1
+          }
+        },
+        "osaamisala" : null,
+        "osat" : [ {
+          "kuvaus" : null,
+          "vieras" : null,
+          "tunniste" : "c4a3c67e-4f1e-4db8-8ee8-a8dc03d7749f",
+          "pakollinen" : false,
+          "erikoisuus" : null,
+          "_tutkinnonOsaViite" : "576068"
+        }, {
+          "kuvaus" : null,
+          "vieras" : null,
+          "tunniste" : "e274c79e-8d39-45e1-ace0-1cd2a4127f29",
+          "pakollinen" : false,
+          "erikoisuus" : null,
+          "_tutkinnonOsaViite" : "576069"
+        } ],
+        "versioId" : null
+      }, {
+        "kuvaus" : {
+          "fi" : "Valitaan yksi osa.",
+          "_id" : "1153691"
+        },
+        "vieras" : null,
+        "tunniste" : "428e7f22-0a69-43c5-baa5-520296f71169",
+        "pakollinen" : null,
+        "nimi" : {
+          "_tunniste" : "931cb714-69af-4a3d-b5cd-bc75daff1115",
+          "fi" : "Valinnaiset tutkinnon osat",
+          "sv" : "Valfria examensdelar",
+          "_id" : "2335093"
+        },
+        "rooli" : "määritelty",
+        "muodostumisSaanto" : {
+          "laajuus" : null,
+          "koko" : {
+            "minimi" : 1,
+            "maksimi" : 1
+          }
+        },
+        "osaamisala" : null,
+        "osat" : [ {
+          "kuvaus" : null,
+          "vieras" : null,
+          "tunniste" : "6e17d79d-6da9-41c6-8237-9facceba24ad",
+          "pakollinen" : false,
+          "erikoisuus" : null,
+          "_tutkinnonOsaViite" : "578150"
+        }, {
+          "kuvaus" : null,
+          "vieras" : null,
+          "tunniste" : "c5d355fe-c9d3-438f-b342-533ea81130c3",
+          "pakollinen" : false,
+          "erikoisuus" : null,
+          "_tutkinnonOsaViite" : "578151"
+        }, {
+          "kuvaus" : null,
+          "vieras" : null,
+          "tunniste" : "bb5e2e60-60d8-4b56-a901-6403c3d9a9cd",
+          "pakollinen" : false,
+          "erikoisuus" : null,
+          "_tutkinnonOsaViite" : "578152"
+        }, {
+          "kuvaus" : null,
+          "vieras" : null,
+          "tunniste" : "45661ce6-50e7-444c-a8b6-280ca7b91cc5",
+          "pakollinen" : false,
+          "erikoisuus" : null,
+          "_tutkinnonOsaViite" : "578153"
+        } ],
+        "versioId" : null
+      }, {
+        "kuvaus" : {
+          "fi" : "Lisäksi tutkinnon suorittaja voi suorittaa osan Yrittäjyys.",
+          "_id" : "1205530"
+        },
+        "vieras" : null,
+        "tunniste" : "ab3ea166-2ea6-4a6e-82f6-ab8d26abb92a",
+        "pakollinen" : null,
+        "nimi" : {
+          "_tunniste" : "49c79989-bd21-45ff-a5ee-6855993fd244",
+          "fi" : "Vapaasti valittavat tutkinnon osat",
+          "sv" : "Valfri examensdel",
+          "_id" : "2335094"
+        },
+        "rooli" : "määritelty",
+        "muodostumisSaanto" : {
+          "laajuus" : null,
+          "koko" : {
+            "minimi" : 0,
+            "maksimi" : 1
+          }
+        },
+        "osaamisala" : null,
+        "osat" : [ {
+          "kuvaus" : null,
+          "vieras" : null,
+          "tunniste" : "2d787bd9-2bc2-481b-8013-f202723e96aa",
+          "pakollinen" : false,
+          "erikoisuus" : null,
+          "_tutkinnonOsaViite" : "578154"
+        } ],
+        "versioId" : null
+      } ],
+      "versioId" : null
+    },
+    "sisalto" : {
+      "id" : 515464,
+      "lapset" : [ {
+        "id" : 515465,
+        "perusteenOsa" : {
+          "id" : 515406,
+          "luotu" : 1423769958520,
+          "muokattu" : 1486651326084,
+          "muokkaaja" : "1.2.246.562.24.79470804498",
+          "nimi" : {
+            "_tunniste" : "3d3cc50d-c09f-410e-87ac-79228ca5784d",
+            "fi" : "Tutkinnon muodostuminen",
+            "sv" : "Uppbyggnaden av examen",
+            "_id" : "2335095"
+          },
+          "tila" : "valmis",
+          "tunniste" : "rakenne",
+          "valmis" : false,
+          "kaannettava" : false,
+          "teksti" : null,
+          "osaamisala" : null,
+          "osanTyyppi" : "tekstikappale"
+        },
+        "lapset" : [ ],
+        "_perusteenOsa" : "515406"
+      }, {
+        "id" : 576991,
+        "perusteenOsa" : {
+          "id" : 577012,
+          "luotu" : 1424454010340,
+          "muokattu" : 1486650974770,
+          "muokkaaja" : "1.2.246.562.24.79470804498",
+          "nimi" : {
+            "_tunniste" : "58300f48-efef-42e8-8e2c-4f6c7a931fd1",
+            "fi" : "Näyttötutkinnot",
+            "sv" : "Fristående examina",
+            "_id" : "2334945"
+          },
+          "tila" : "valmis",
+          "valmis" : false,
+          "kaannettava" : false,
+          "teksti" : null,
+          "osaamisala" : null,
+          "osanTyyppi" : "tekstikappale"
+        },
+        "lapset" : [ {
+          "id" : 576992,
+          "perusteenOsa" : {
+            "id" : 577013,
+            "luotu" : 1424454017868,
+            "muokattu" : 1486651005183,
+            "muokkaaja" : "1.2.246.562.24.79470804498",
+            "nimi" : {
+              "_tunniste" : "a5da9678-69ce-47b7-927b-64387c080ce9",
+              "fi" : "Näyttötutkintojen järjestäminen",
+              "sv" : "Anordnande av fristående examina",
+              "_id" : "2334946"
+            },
+            "tila" : "valmis",
+            "valmis" : false,
+            "kaannettava" : false,
+            "teksti" : {
+              "_tunniste" : "e1ba8d48-2352-4334-8ef4-d222fff52768",
+              "fi" : "",
+              "sv" : "",
+              "_id" : "2334947"
+            },
+            "osaamisala" : null,
+            "osanTyyppi" : "tekstikappale"
+          },
+          "lapset" : [ ],
+          "_perusteenOsa" : "577013"
+        }, {
+          "id" : 576993,
+          "perusteenOsa" : {
+            "id" : 577014,
+            "luotu" : 1424454037690,
+            "muokattu" : 1486651027824,
+            "muokkaaja" : "1.2.246.562.24.79470804498",
+            "nimi" : {
+              "_tunniste" : "0facc09f-f1a7-4e4f-aff8-96b75e42a68f",
+              "fi" : "Näyttötutkinnon suorittaminen",
+              "sv" : "Avläggande av fristående examen",
+              "_id" : "2334948"
+            },
+            "tila" : "valmis",
+            "valmis" : false,
+            "kaannettava" : false,
+            "teksti" : {
+              "_tunniste" : "1f3aa54a-caa0-4035-b662-be4c6edb2e79",
+              "fi" : "",
+              "sv" : "",
+              "_id" : "2334949"
+            },
+            "osaamisala" : null,
+            "osanTyyppi" : "tekstikappale"
+          },
+          "lapset" : [ ],
+          "_perusteenOsa" : "577014"
+        }, {
+          "id" : 576994,
+          "perusteenOsa" : {
+            "id" : 577015,
+            "luotu" : 1424454064247,
+            "muokattu" : 1486651069056,
+            "muokkaaja" : "1.2.246.562.24.79470804498",
+            "nimi" : {
+              "_tunniste" : "1f4ae50a-ed0d-45eb-9198-7c8ba11820cd",
+              "fi" : "Näyttötutkinnon perusteet",
+              "sv" : "Grunderna för fristående examen",
+              "_id" : "2335030"
+            },
+            "tila" : "valmis",
+            "valmis" : false,
+            "kaannettava" : false,
+            "teksti" : {
+              "_tunniste" : "5fa85544-5ad9-46fc-81ea-a3d00655a364",
+              "fi" : "",
+              "sv" : "",
+              "_id" : "2335031"
+            },
+            "osaamisala" : null,
+            "osanTyyppi" : "tekstikappale"
+          },
+          "lapset" : [ ],
+          "_perusteenOsa" : "577015"
+        }, {
+          "id" : 576995,
+          "perusteenOsa" : {
+            "id" : 577016,
+            "luotu" : 1424454409825,
+            "muokattu" : 1486651102384,
+            "muokkaaja" : "1.2.246.562.24.79470804498",
+            "nimi" : {
+              "_tunniste" : "6633de1f-f289-48ce-b6fc-ffad7d9d5b46",
+              "fi" : "Henkilökohtaistaminen näyttötutkinnossa",
+              "sv" : "Personlig tillämpning i fristående examen",
+              "_id" : "2335032"
+            },
+            "tila" : "valmis",
+            "valmis" : false,
+            "kaannettava" : false,
+            "teksti" : {
+              "_tunniste" : "e7ffb3e7-fe02-48f3-b787-de424099bdfb",
+              "fi" : "",
+              "sv" : "",
+              "_id" : "2335033"
+            },
+            "osaamisala" : null,
+            "osanTyyppi" : "tekstikappale"
+          },
+          "lapset" : [ ],
+          "_perusteenOsa" : "577016"
+        }, {
+          "id" : 576996,
+          "perusteenOsa" : {
+            "id" : 577017,
+            "luotu" : 1424454421758,
+            "muokattu" : 1486651128246,
+            "muokkaaja" : "1.2.246.562.24.79470804498",
+            "nimi" : {
+              "_tunniste" : "889439c6-fef9-4586-bc05-6f34b3f70bfb",
+              "fi" : "Ammattitaidon arviointi näyttötutkinnossa",
+              "sv" : "Bedömning av yrkesskicklighet i fristående examen",
+              "_id" : "2335034"
+            },
+            "tila" : "valmis",
+            "valmis" : false,
+            "kaannettava" : false,
+            "teksti" : {
+              "_tunniste" : "6c7eed6d-4212-4df1-972a-55ecbeec5846",
+              "fi" : "",
+              "sv" : "",
+              "_id" : "2335035"
+            },
+            "osaamisala" : null,
+            "osanTyyppi" : "tekstikappale"
+          },
+          "lapset" : [ ],
+          "_perusteenOsa" : "577017"
+        }, {
+          "id" : 576997,
+          "perusteenOsa" : {
+            "id" : 577018,
+            "luotu" : 1424454435582,
+            "muokattu" : 1486651151565,
+            "muokkaaja" : "1.2.246.562.24.79470804498",
+            "nimi" : {
+              "_tunniste" : "736148aa-0c84-42b2-8625-fa3e27bcb158",
+              "fi" : "Todistukset",
+              "sv" : "Betyg",
+              "_id" : "2335036"
+            },
+            "tila" : "valmis",
+            "valmis" : false,
+            "kaannettava" : false,
+            "teksti" : {
+              "_tunniste" : "1ac1973c-0241-4581-ad56-33ccc16564c0",
+              "fi" : "",
+              "sv" : "",
+              "_id" : "2335037"
+            },
+            "osaamisala" : null,
+            "osanTyyppi" : "tekstikappale"
+          },
+          "lapset" : [ ],
+          "_perusteenOsa" : "577018"
+        }, {
+          "id" : 576998,
+          "perusteenOsa" : {
+            "id" : 577019,
+            "luotu" : 1424454446727,
+            "muokattu" : 1486651234975,
+            "muokkaaja" : "1.2.246.562.24.79470804498",
+            "nimi" : {
+              "_tunniste" : "9da0cf63-b646-4059-8309-af15335d5ffa",
+              "fi" : "Näyttötutkintoon valmistava koulutus",
+              "sv" : "Utbildning som förbereder för fristående examen",
+              "_id" : "2335038"
+            },
+            "tila" : "valmis",
+            "valmis" : false,
+            "kaannettava" : false,
+            "teksti" : {
+              "_tunniste" : "9977322a-7ba2-4145-a179-3dcb14ca649e",
+              "fi" : "",
+              "sv" : "",
+              "_id" : "2335039"
+            },
+            "osaamisala" : null,
+            "osanTyyppi" : "tekstikappale"
+          },
+          "lapset" : [ ],
+          "_perusteenOsa" : "577019"
+        } ],
+        "_perusteenOsa" : "577012"
+      } ]
+    },
+    "tutkinnonOsaViitteet" : [ {
+      "id" : 576067,
+      "jarjestys" : 3,
+      "_tutkinnonOsa" : "577943"
+    }, {
+      "id" : 576068,
+      "jarjestys" : 4,
+      "_tutkinnonOsa" : "577944"
+    }, {
+      "id" : 578154,
+      "jarjestys" : 10,
+      "_tutkinnonOsa" : "578250"
+    }, {
+      "id" : 576066,
+      "jarjestys" : 2,
+      "_tutkinnonOsa" : "577942"
+    }, {
+      "id" : 578152,
+      "jarjestys" : 8,
+      "_tutkinnonOsa" : "577948"
+    }, {
+      "id" : 578150,
+      "jarjestys" : 6,
+      "_tutkinnonOsa" : "577946"
+    }, {
+      "id" : 576069,
+      "jarjestys" : 5,
+      "_tutkinnonOsa" : "577945"
+    }, {
+      "id" : 578153,
+      "jarjestys" : 9,
+      "_tutkinnonOsa" : "577949"
+    }, {
+      "id" : 576065,
+      "jarjestys" : 1,
+      "_tutkinnonOsa" : "577941"
+    }, {
+      "id" : 578151,
+      "jarjestys" : 7,
+      "_tutkinnonOsa" : "577947"
+    } ]
+  } ],
+  "tutkinnonOsat" : [ {
+    "id" : 577941,
+    "luotu" : 1424454673621,
+    "muokattu" : 1486652624104,
+    "muokkaaja" : "1.2.246.562.24.79470804498",
+    "nimi" : {
+      "_tunniste" : "dd834d80-d963-4f48-a120-b960aef99e6e",
+      "fi" : "Automaatioyliasentajan yleistaidot",
+      "sv" : "Automationsövermontörens allmänna färdigheter",
+      "_id" : "2335096"
+    },
+    "tila" : "valmis",
+    "valmis" : false,
+    "kaannettava" : false,
+    "osanTyyppi" : "tutkinnonosa",
+    "arviointi" : {
+      "id" : 579832,
+      "lisatiedot" : {
+        "_tunniste" : "92eedaa3-d496-43b5-8b87-0dc6d5e83c0d",
+        "fi" : "",
+        "sv" : "",
+        "_id" : "2335098"
+      },
+      "arvioinninKohdealueet" : [ ]
+    },
+    "ammattitaitovaatimukset" : {
+      "_tunniste" : "1edf0c50-5fad-4624-81d7-2b2f1e167183",
+      "fi" : "",
+      "sv" : "",
+      "_id" : "2335211"
+    },
+    "ammattitaidonOsoittamistavat" : {
+      "_tunniste" : "fcfb28ac-0a2b-4613-acf0-8a3749596c35",
+      "fi" : "",
+      "sv" : "",
+      "_id" : "2335099"
+    },
+    "kuvaus" : null,
+    "opintoluokitus" : null,
+    "koodi" : null,
+    "koodiUri" : "tutkinnonosat_104071",
+    "koodiArvo" : "104071",
+    "osaAlueet" : [ ],
+    "tyyppi" : "normaali",
+    "valmaTelmaSisalto" : null
+  }, {
+    "id" : 577942,
+    "luotu" : 1424454711596,
+    "muokattu" : 1486652290808,
+    "muokkaaja" : "1.2.246.562.24.79470804498",
+    "nimi" : {
+      "_tunniste" : "c2044903-8908-4dc5-9fec-0b75b3370691",
+      "fi" : "Turvallisuus ja riskien hallinta",
+      "sv" : "Säkerhet och riskhantering",
+      "_id" : "2335160"
+    },
+    "tila" : "valmis",
+    "valmis" : false,
+    "kaannettava" : false,
+    "osanTyyppi" : "tutkinnonosa",
+    "arviointi" : {
+      "id" : 579833,
+      "lisatiedot" : {
+        "_tunniste" : "f0f78fec-6448-4da5-9a52-da828642b4c8",
+        "fi" : "",
+        "sv" : "",
+        "_id" : "2335163"
+      },
+      "arvioinninKohdealueet" : [ ]
+    },
+    "ammattitaitovaatimukset" : {
+      "_tunniste" : "ce49c021-262f-4e37-834d-29ed1850bf82",
+      "fi" : "",
+      "sv" : "",
+      "_id" : "2335210"
+    },
+    "ammattitaidonOsoittamistavat" : {
+      "_tunniste" : "0127f59f-e7c9-4cca-9bab-61316ec51fc3",
+      "fi" : "",
+      "sv" : "",
+      "_id" : "2335161"
+    },
+    "kuvaus" : null,
+    "opintoluokitus" : null,
+    "koodi" : null,
+    "koodiUri" : "tutkinnonosat_104072",
+    "koodiArvo" : "104072",
+    "osaAlueet" : [ ],
+    "tyyppi" : "normaali",
+    "valmaTelmaSisalto" : null
+  }, {
+    "id" : 577943,
+    "luotu" : 1424454772825,
+    "muokattu" : 1486652233469,
+    "muokkaaja" : "1.2.246.562.24.79470804498",
+    "nimi" : {
+      "_tunniste" : "86fda6de-8149-4418-a791-9efdba392e7c",
+      "fi" : "Automaatioyliasentajan ammatilliset perustaidot",
+      "sv" : "Automationsövermontörens grundläggande kompetens",
+      "_id" : "2335164"
+    },
+    "tila" : "valmis",
+    "valmis" : false,
+    "kaannettava" : false,
+    "osanTyyppi" : "tutkinnonosa",
+    "arviointi" : {
+      "id" : 962499,
+      "lisatiedot" : {
+        "_tunniste" : "6b0b0fd9-2a2b-4e20-9512-8470fdead04c",
+        "fi" : "",
+        "sv" : "",
+        "_id" : "2335169"
+      },
+      "arvioinninKohdealueet" : [ ]
+    },
+    "ammattitaitovaatimukset" : {
+      "_tunniste" : "485ce44d-1dfb-40be-b2bf-70e2f3813e68",
+      "fi" : "",
+      "sv" : "",
+      "_id" : "2335168"
+    },
+    "ammattitaidonOsoittamistavat" : {
+      "_tunniste" : "cd0256c7-c224-4c61-a729-fe0d2fea1527",
+      "fi" : "",
+      "sv" : "",
+      "_id" : "2335166"
+    },
+    "kuvaus" : null,
+    "opintoluokitus" : null,
+    "koodi" : null,
+    "koodiUri" : "tutkinnonosat_104073",
+    "koodiArvo" : "104073",
+    "osaAlueet" : [ ],
+    "tyyppi" : "normaali",
+    "valmaTelmaSisalto" : null
+  }, {
+    "id" : 577944,
+    "luotu" : 1424454802651,
+    "muokattu" : 1486714384365,
+    "muokkaaja" : "1.2.246.562.24.79470804498",
+    "nimi" : {
+      "_tunniste" : "b7e272a5-e372-4845-aa28-ee1fb3c01f8e",
+      "fi" : "Käyttöönotot ja huoltotoiminta",
+      "sv" : "Idrifttagning och underhåll",
+      "_id" : "2335788"
+    },
+    "tila" : "valmis",
+    "valmis" : false,
+    "kaannettava" : false,
+    "osanTyyppi" : "tutkinnonosa",
+    "arviointi" : {
+      "id" : 579835,
+      "lisatiedot" : {
+        "_tunniste" : "71e8ea8a-07e9-4ff2-9fbd-959ae4cfef16",
+        "fi" : "",
+        "sv" : "",
+        "_id" : "2335903"
+      },
+      "arvioinninKohdealueet" : [ ]
+    },
+    "ammattitaitovaatimukset" : {
+      "_tunniste" : "36fd8efc-94dc-4238-8b3c-ad8a3d2191e4",
+      "fi" : "",
+      "sv" : "",
+      "_id" : "2335789"
+    },
+    "ammattitaidonOsoittamistavat" : {
+      "_tunniste" : "2f525f3e-828a-438a-93fc-7a3099dc9948",
+      "fi" : "",
+      "sv" : "",
+      "_id" : "2335901"
+    },
+    "kuvaus" : null,
+    "opintoluokitus" : null,
+    "koodi" : null,
+    "koodiUri" : "tutkinnonosat_104074",
+    "koodiArvo" : "104074",
+    "osaAlueet" : [ ],
+    "tyyppi" : "normaali",
+    "valmaTelmaSisalto" : null
+  }, {
+    "id" : 577945,
+    "luotu" : 1424454823276,
+    "muokattu" : 1486716649616,
+    "muokkaaja" : "1.2.246.562.24.79470804498",
+    "nimi" : {
+      "_tunniste" : "299aef7b-099d-4214-bd63-281147993549",
+      "fi" : "Työnjohtotaidot",
+      "sv" : "Förmåga att leda arbete",
+      "_id" : "2335904"
+    },
+    "tila" : "valmis",
+    "valmis" : false,
+    "kaannettava" : false,
+    "osanTyyppi" : "tutkinnonosa",
+    "arviointi" : {
+      "id" : 579836,
+      "lisatiedot" : {
+        "_tunniste" : "b6be4718-380b-4f0a-a9a9-a4c3644820f0",
+        "fi" : "",
+        "sv" : "",
+        "_id" : "2335907"
+      },
+      "arvioinninKohdealueet" : [ ]
+    },
+    "ammattitaitovaatimukset" : {
+      "_tunniste" : "58b83621-0066-4489-b127-9cb9b2b0e030",
+      "fi" : "",
+      "sv" : "",
+      "_id" : "2336179"
+    },
+    "ammattitaidonOsoittamistavat" : {
+      "_tunniste" : "79969483-e124-4228-bb71-e1e3c5bf0955",
+      "fi" : "",
+      "sv" : "",
+      "_id" : "2335906"
+    },
+    "kuvaus" : null,
+    "opintoluokitus" : null,
+    "koodi" : null,
+    "koodiUri" : "tutkinnonosat_104075",
+    "koodiArvo" : "104075",
+    "osaAlueet" : [ ],
+    "tyyppi" : "normaali",
+    "valmaTelmaSisalto" : null
+  }, {
+    "id" : 577946,
+    "luotu" : 1424454847579,
+    "muokattu" : 1486714981813,
+    "muokkaaja" : "1.2.246.562.24.79470804498",
+    "nimi" : {
+      "_tunniste" : "ae566405-bf3a-46bc-8487-bd797c80902f",
+      "fi" : "Kappaletavara-automaatio",
+      "sv" : "Styckegodsautomation",
+      "_id" : "2335908"
+    },
+    "tila" : "valmis",
+    "valmis" : false,
+    "kaannettava" : false,
+    "osanTyyppi" : "tutkinnonosa",
+    "arviointi" : {
+      "id" : 579837,
+      "lisatiedot" : {
+        "_tunniste" : "f576a559-5fed-45ce-974b-975d686ebc1a",
+        "fi" : "",
+        "sv" : "",
+        "_id" : "2335970"
+      },
+      "arvioinninKohdealueet" : [ ]
+    },
+    "ammattitaitovaatimukset" : {
+      "_tunniste" : "4457238f-a4de-4c96-abbd-8160ba31731e",
+      "fi" : "",
+      "sv" : "",
+      "_id" : "2335909"
+    },
+    "ammattitaidonOsoittamistavat" : {
+      "_tunniste" : "467fb7d3-8a2c-4dbf-bad4-d5350e2e24a0",
+      "fi" : "",
+      "sv" : "",
+      "_id" : "2335971"
+    },
+    "kuvaus" : null,
+    "opintoluokitus" : null,
+    "koodi" : null,
+    "koodiUri" : "tutkinnonosat_104076",
+    "koodiArvo" : "104076",
+    "osaAlueet" : [ ],
+    "tyyppi" : "normaali",
+    "valmaTelmaSisalto" : null
+  }, {
+    "id" : 577947,
+    "luotu" : 1424454931689,
+    "muokattu" : 1486715348198,
+    "muokkaaja" : "1.2.246.562.24.79470804498",
+    "nimi" : {
+      "_tunniste" : "d3463abc-0080-4465-8ffc-831ff131d542",
+      "fi" : "Prosessiautomaatio",
+      "sv" : "Processautomation",
+      "_id" : "2335972"
+    },
+    "tila" : "valmis",
+    "valmis" : false,
+    "kaannettava" : false,
+    "osanTyyppi" : "tutkinnonosa",
+    "arviointi" : {
+      "id" : 579838,
+      "lisatiedot" : {
+        "_tunniste" : "8d1d917a-ede3-409d-a167-d306a0e723f5",
+        "fi" : "",
+        "sv" : "",
+        "_id" : "2335976"
+      },
+      "arvioinninKohdealueet" : [ ]
+    },
+    "ammattitaitovaatimukset" : {
+      "_tunniste" : "3ded70ea-0f5c-4c26-9a06-bae3d0db0bca",
+      "fi" : "",
+      "sv" : "",
+      "_id" : "2335973"
+    },
+    "ammattitaidonOsoittamistavat" : {
+      "_tunniste" : "07df09d7-edfc-4115-92ed-f8c14534b871",
+      "fi" : "",
+      "sv" : "",
+      "_id" : "2335974"
+    },
+    "kuvaus" : null,
+    "opintoluokitus" : null,
+    "koodi" : null,
+    "koodiUri" : "tutkinnonosat_104077",
+    "koodiArvo" : "104077",
+    "osaAlueet" : [ ],
+    "tyyppi" : "normaali",
+    "valmaTelmaSisalto" : null
+  }, {
+    "id" : 577948,
+    "luotu" : 1424454955627,
+    "muokattu" : 1486715773372,
+    "muokkaaja" : "1.2.246.562.24.79470804498",
+    "nimi" : {
+      "_tunniste" : "ba8473cc-e852-4012-a830-0a3fc0a852f0",
+      "fi" : "Rakennusautomaatio",
+      "sv" : "Byggnadsautomation",
+      "_id" : "2336085"
+    },
+    "tila" : "valmis",
+    "valmis" : false,
+    "kaannettava" : false,
+    "osanTyyppi" : "tutkinnonosa",
+    "arviointi" : {
+      "id" : 580200,
+      "lisatiedot" : {
+        "_tunniste" : "4dcc0522-e0d7-47b5-ba1b-410dec22314e",
+        "fi" : "",
+        "sv" : "",
+        "_id" : "2336087"
+      },
+      "arvioinninKohdealueet" : [ ]
+    },
+    "ammattitaitovaatimukset" : {
+      "_tunniste" : "a00e95b4-a338-427e-800c-9e8a296e955a",
+      "fi" : "",
+      "sv" : "",
+      "_id" : "2336086"
+    },
+    "ammattitaidonOsoittamistavat" : {
+      "_tunniste" : "67c4cead-a82a-4774-accd-83183746bb5b",
+      "fi" : "",
+      "sv" : "",
+      "_id" : "2336088"
+    },
+    "kuvaus" : null,
+    "opintoluokitus" : null,
+    "koodi" : null,
+    "koodiUri" : "tutkinnonosat_104078",
+    "koodiArvo" : "104078",
+    "osaAlueet" : [ ],
+    "tyyppi" : "normaali",
+    "valmaTelmaSisalto" : null
+  }, {
+    "id" : 577949,
+    "luotu" : 1424454986206,
+    "muokattu" : 1486716115272,
+    "muokkaaja" : "1.2.246.562.24.79470804498",
+    "nimi" : {
+      "_tunniste" : "77db5bd9-52ac-44bb-ba0b-f6cd690ed82d",
+      "fi" : "CNC-tekniikka",
+      "sv" : "CNC-teknik",
+      "_id" : "2336089"
+    },
+    "tila" : "valmis",
+    "valmis" : false,
+    "kaannettava" : false,
+    "osanTyyppi" : "tutkinnonosa",
+    "arviointi" : {
+      "id" : 580201,
+      "lisatiedot" : {
+        "_tunniste" : "8278d43e-3706-492e-9c86-41c1650b1e53",
+        "fi" : "",
+        "sv" : "",
+        "_id" : "2336171"
+      },
+      "arvioinninKohdealueet" : [ ]
+    },
+    "ammattitaitovaatimukset" : {
+      "_tunniste" : "ba4b2f91-b467-4e60-a561-e3533d910a8a",
+      "fi" : "",
+      "sv" : "",
+      "_id" : "2336170"
+    },
+    "ammattitaidonOsoittamistavat" : {
+      "_tunniste" : "a6586210-8f38-42d4-a765-6b88b81eb222",
+      "fi" : "",
+      "sv" : "",
+      "_id" : "2336172"
+    },
+    "kuvaus" : null,
+    "opintoluokitus" : null,
+    "koodi" : null,
+    "koodiUri" : "tutkinnonosat_104079",
+    "koodiArvo" : "104079",
+    "osaAlueet" : [ ],
+    "tyyppi" : "normaali",
+    "valmaTelmaSisalto" : null
+  }, {
+    "id" : 578250,
+    "luotu" : 1424455017474,
+    "muokattu" : 1486716336928,
+    "muokkaaja" : "1.2.246.562.24.79470804498",
+    "nimi" : {
+      "_tunniste" : "eeeaeaef-bfa5-4f13-a182-193a23ba5335",
+      "fi" : "Yrittäjyys",
+      "sv" : "Företagsamhet",
+      "_id" : "2336173"
+    },
+    "tila" : "valmis",
+    "valmis" : false,
+    "kaannettava" : false,
+    "osanTyyppi" : "tutkinnonosa",
+    "arviointi" : {
+      "id" : 580202,
+      "lisatiedot" : {
+        "_tunniste" : "d1ac0812-48da-4b3b-b402-b6c112d21176",
+        "fi" : "",
+        "sv" : "",
+        "_id" : "2336177"
+      },
+      "arvioinninKohdealueet" : [ ]
+    },
+    "ammattitaitovaatimukset" : {
+      "_tunniste" : "86d172f1-ab17-459d-a14e-bfd34b86948e",
+      "fi" : "",
+      "sv" : "",
+      "_id" : "2336174"
+    },
+    "ammattitaidonOsoittamistavat" : {
+      "_tunniste" : "9761f6d8-1a51-4169-a70d-27e8ac795ac4",
+      "fi" : "",
+      "sv" : "",
+      "_id" : "2336176"
+    },
+    "kuvaus" : null,
+    "opintoluokitus" : null,
+    "koodi" : null,
+    "koodiUri" : "tutkinnonosat_104080",
+    "koodiArvo" : "104080",
+    "osaAlueet" : [ ],
+    "tyyppi" : "normaali",
+    "valmaTelmaSisalto" : null
+  } ]
+}

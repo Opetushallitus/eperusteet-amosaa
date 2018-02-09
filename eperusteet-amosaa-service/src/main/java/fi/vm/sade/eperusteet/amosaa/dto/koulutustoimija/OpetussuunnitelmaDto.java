@@ -40,7 +40,6 @@ public class OpetussuunnitelmaDto extends OpetussuunnitelmaBaseDto implements Au
 
     private String kommentti;
     private Set<Kieli> julkaisukielet;
-    private KoulutustoimijaBaseDto koulutustoimija;
     private Set<LiiteDto> liitteet;
     private Date paatospaivamaara;
     private Date voimaantulo;

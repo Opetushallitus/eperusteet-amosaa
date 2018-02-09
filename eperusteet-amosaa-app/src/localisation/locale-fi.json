@@ -3,6 +3,7 @@
     "OSAAMISPISTE": "osp",
     "osan-historia": "Osan muutoshistoria",
     "lisaa-vapaa-teksti": "Tekstikappale",
+    "siirra-opetussuunnitelma": "Siirrä opetussuunnitelma ystäväorganisaatiolle",
     "vanhaa-versiota-ei-loytynyt": "Osalle ei löytynyt vanhaa versiosta",
     "ei-hakutuloksia": "Ei hakutuloksia",
     "vanhaa-versiota-ei-loytynyt-selite":
@@ -217,6 +218,7 @@
     "perusteen-sisalto": "Perusteen sisältö",
     "perusteen-parsinta-epaonnistui": "Perusteen haku epäonnistui",
     "perusteen-sisalto-tooltip": "Tällä asetuksella voidaan lisätä perusteen sisältö generoitavaan dokumenttiin",
+    "perusteen-tiedot": "Perusteen tiedot",
     "nimi": "Nimi",
     "ohje-editointi-on-paalla": "Tallenna tai peruuta muutoksesi ennen siirtymistä",
     "ohjeistus": "Ohjeistus",
@@ -295,6 +297,10 @@
     "poistotyyppi-tutkinnonosa": "Tutkinnon osa",
     "poistotyyppi-koulutuksenosa": "Koulutuksen osa",
     "poistotyyppi-tutkinnonosaryhma": "Moduuli",
+    "opetussuunnitelman-siirto-ohje": "Tällä toiminnolla voit siirtää opetussuunnitelman toisen organisaation omistukseen. <b>Palautus on mahdollinen ainoastaan koulutuksen järjestäjän näkymästä mille opetussuunnitelma on lisätty.</b>",
+    "yhteistyo-ohje": "Tällä toiminnolla voit sallia yhteistyön toisen organisaation kanssa. Toisen organisaation pitää yhteistyön muodostos.",
+    "siirra": "Siirrä",
+    "suodata": "Suodata",
     "rajaa-sisaltoa": "Rajaa sisältöä",
     "ru": "venäjä",
     "salli-yhteistyo": "Salli yhteistyöpyynnöt muilta organisaatioilta",
@@ -362,6 +368,8 @@
     "tilastot-opetussuunnitelmia": "Opetussuunnitelmia",
     "tyyppi": "Tyyppi",
     "tutkinnon-diaarinumero": "Tutkinnon diaarinumero",
+    "organisaatiohierarkia": "Organisaatiohierarkia",
+    "muut-organisaatiot": "Muut organisaatiot",
     "toggle-ohjeteksti": "Näytä ohje",
     "toggle-perusteteksti": "Näytä tukiteksti",
     "pyynnot-muilta-organisaatioilta": "Pyynnöt muilta organisaatioilta",
@@ -434,5 +442,11 @@
     "yhteisien-osien-pohjia-ei-viela-luotu": "Yhteisien osien pohjia ei luotu",
     "tuo-sisaltoa-muista-opseista": "Tuo sisältöä muista opseista",
     "yhteistyo": "Yhteistyö",
-    "ylatunniste": "Ylätunniste"
+    "ylatunniste": "Ylätunniste",
+    "varmista-siirto": "Varmista siirto",
+    "oma-organisaatio": "Oma organisaatio",
+    "yhteistyo-organisaation-kanssa": "Yhteistyö organisaation kanssa",
+    "yhteistyo-odottaa-hyvaksymista": "Yhteistyö odottaa hyväksymistä",
+    "yhteistyo-kysytty": "Yhteistyö kysytty organisaatiolta",
+    "haluatko-varmasti-siirtaa-opetussuunnitelman-organisaatiolle": "Haluatko varmasti siirtää toteutussuunnitelman organisaatiolle?"
 }

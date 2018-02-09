@@ -41,6 +41,7 @@ public class OpetussuunnitelmaBaseDto implements AuditLoggableDto {
     private Tila tila;
     private OpsTyyppi tyyppi;
     private LokalisoituTekstiDto kuvaus;
+    private KoulutustoimijaBaseDto koulutustoimija;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Reference pohja;

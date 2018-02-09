@@ -97,7 +97,7 @@
 
     <jpa:repositories base-package="fi.vm.sade.eperusteet.amosaa.repository" factory-class="fi.vm.sade.eperusteet.amosaa.repository.version.JpaWithVersioningRepositoryFactoryBean" />
 
-    <bean id="testPermissionEvaluator" class="fi.vm.sade.eperusteet.amosaa.service.mocks.TestPermissionEvaluator"/>
+    <bean id="testPermissionEvaluator" class="fi.vm.sade.eperusteet.amosaa.service.util.TestPermissionEvaluator"/>
 
     <bean id="expressionHandler" class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler">
         <property name="permissionEvaluator" ref="testPermissionEvaluator"/>

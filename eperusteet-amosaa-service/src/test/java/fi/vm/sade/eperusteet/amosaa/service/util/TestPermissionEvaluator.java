@@ -13,19 +13,24 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * European Union Public Licence for more details.
  */
-package fi.vm.sade.eperusteet.amosaa.service.mocks;
+package fi.vm.sade.eperusteet.amosaa.service.util;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
-import org.springframework.stereotype.Service;
+import org.springframework.security.core.Authentication;
+
+import java.io.Serializable;
 
 /**
  * @author mikkom
  */
-@Service
-public class OrganisaatioServiceMock implements OrganisaatioService {
+public class TestPermissionEvaluator implements org.springframework.security.access.PermissionEvaluator {
+
     @Override
-    public JsonNode getOrganisaatio(String organisaatioOid) {
-        return null;
+    public boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permission) {
+        return authentication.isAuthenticated();
+    }
+
+    @Override
+    public boolean hasPermission(Authentication authentication, Serializable targetId, String targetType, Object permission) {
+        return authentication.isAuthenticated();
     }
 }

@@ -133,23 +133,79 @@
 }
 
 .yhteistyot {
+    .no-action {
+        cursor: not-allowed;
+    }
+    h3 {
+        margin-top: 16px;
+    }
+
+    .organisaatio-hierarkia {
+        clear: both;
+
+        .hierarkia-keskitaso {
+            margin-left: 40px;
+        }
+
+        .hierarkia-toimipiste {
+            margin-left: 40px;
+        }
+
+        .organisaatio {
+            border: 1px solid #555;
+
+            .org-nimi {
+            }
+            .org-vari {
+                content: "";
+                width: 4px;
+                height: 58px;
+                border-right: 1px solid #aeaeae;
+                position: relative;
+                float: left;
+                top: -8px;
+                left: -12px;
+            }
+        }
+    }
+
     .ystavalista {
         margin-top: 25px;
+        clear: both;
     }
 
     .org-vari {
         content: "";
-        width: 4px;
-        height: 50px;
+        width: 8px;
+        height: 38px;
         border-right: 1px solid #aeaeae;
         position: relative;
         float: left;
-        top: -8px;
+        top: -4px;
         left: -12px;
+    }
+
+    .org-vari-oma {
+        background: #e879c3;
     }
 
     .org-vari-yhteistyo {
         background: #99d740;
+    }
+
+    .org-info {
+        float: right;
+        .org-vari-info {
+            display: inline-block;
+            margin: 5px;
+
+            div {
+                display: inline-block;
+                width: 12px;
+                height: 12px;
+                margin-right: 5px;
+            }
+        }
     }
 
     .org-vari-odottaa {
@@ -162,11 +218,16 @@
 
     .org {
         margin-bottom: 10px;
-        padding: 8px 8px 8px 12px;
+        padding: 4px 4px 4px 12px;
         border: 1px solid #aeaeae;
 
+        .org-laatikko {
+            height: 30px;
+        }
+
         .nimi {
-            font-size: 24px;
+            margin-top: 8px;
+            font-size: 18px;
         }
 
         .kuvaus {

@@ -29,11 +29,9 @@ import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.RolePer
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.RolePrefix;
 import fi.vm.sade.eperusteet.amosaa.service.util.Pair;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
-
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -128,6 +126,12 @@ public class PermissionManager {
 
         if (perm == Permission.HALLINTA && targetId == null && target == TargetType.TARKASTELU &&
                 hasRole(authentication, RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA, RolePermission.CRUD, Organization.OPH)) {
+            return true;
+        }
+
+        // Käyttäjän luonti mahdollista vain jos käyttäjällä on AMOSAA-rooli
+        if (perm == Permission.LUKU && targetId == null && target == TargetType.KOULUTUSTOIMIJA &&
+                hasAmosaaRole(authentication)) {
             return true;
         }
 
@@ -280,6 +284,15 @@ public class PermissionManager {
                                       Set<RolePermission> permission, Organization org) {
         return authentication.getAuthorities().stream()
                 .anyMatch(a -> permission.stream().anyMatch(p -> roleEquals(a.getAuthority(), prefix, p, org)));
+    }
+
+    private static boolean hasAmosaaRole(Authentication authentication) {
+//        RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA
+        return authentication.getAuthorities().stream()
+                .anyMatch(a -> {
+                    String authority = a.getAuthority();
+                    return authority.startsWith(RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA.toString());
+                });
     }
 
     private static boolean roleEquals(String authority, RolePrefix prefix,

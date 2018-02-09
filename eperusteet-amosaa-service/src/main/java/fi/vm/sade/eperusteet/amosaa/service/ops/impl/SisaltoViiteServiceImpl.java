@@ -50,6 +50,7 @@ import fi.vm.sade.eperusteet.amosaa.resource.locks.contexts.SisaltoViiteCtx;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.exception.LockingException;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
+import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetServiceClient;
 import fi.vm.sade.eperusteet.amosaa.service.locking.AbstractLockService;
 import fi.vm.sade.eperusteet.amosaa.service.locking.LockManager;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
@@ -109,6 +110,9 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
     EperusteetService eperusteetService;
 
     @Autowired
+    EperusteetServiceClient eperusteetServiceClient;
+
+    @Autowired
     private LockManager lockMgr;
 
     private ObjectMapper objMapper;
@@ -140,7 +144,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
             result.setNimi(LokalisoituTeksti.of(peruste.getNimi().getTekstit()));
             result.setDiaarinumero(peruste.getDiaarinumero());
             result.setLuotu(peruste.getGlobalVersion().getAikaleima());
-            result.setPeruste(eperusteetService.getPerusteData(peruste.getId()));
+            result.setPeruste(eperusteetServiceClient.getPerusteData(peruste.getId()));
             result = cachedPerusteRepository.save(result);
         }
         return result;
@@ -198,7 +202,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
                     tosa.setTyyppi(TutkinnonosaTyyppi.VIERAS);
                     VierasTutkinnonosa vt = tosa.getVierastutkinnonosa();
                     VierasTutkinnonosaDto vtDto = viiteDto.getTosa().getVierastutkinnonosa();
-                    PerusteDto peruste = eperusteetService.getPeruste(vtDto.getPerusteId(), PerusteDto.class);
+                    PerusteDto peruste = eperusteetServiceClient.getPeruste(vtDto.getPerusteId(), PerusteDto.class);
 
                     CachedPeruste cperuste = addCachedPeruste(peruste);
                     PerusteKaikkiDto perusteSisalto = eperusteetService.getPerusteSisalto(cperuste, PerusteKaikkiDto.class);

@@ -15,10 +15,10 @@
  */
 package fi.vm.sade.eperusteet.amosaa.domain.teksti;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
-
 import java.io.Serializable;
 import java.text.Normalizer;
 import java.util.*;
@@ -32,7 +32,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
 import lombok.Getter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -63,6 +62,11 @@ public class LokalisoituTeksti implements Serializable {
     private Set<Teksti> teksti;
 
     protected LokalisoituTeksti() {
+    }
+
+    private LokalisoituTeksti(Set<Teksti> tekstit) {
+        this.teksti = tekstit;
+        this.tunniste = UUID.randomUUID();
     }
 
     private LokalisoituTeksti(Set<Teksti> tekstit, UUID tunniste) {
@@ -133,6 +137,24 @@ public class LokalisoituTeksti implements Serializable {
             return null;
         }
         return of(tekstiDto.getTekstit());
+    }
+
+    public static LokalisoituTeksti of(JsonNode node) {
+        if (node == null) {
+            return null;
+        }
+
+        Map<Kieli, String> nimet = new HashMap<>();
+        if (node.has("fi")) {
+            nimet.put(Kieli.FI, node.get("fi").asText());
+        }
+        if (node.has("en")) {
+            nimet.put(Kieli.EN, node.get("en").asText());
+        }
+        if (node.has("sv")) {
+            nimet.put(Kieli.SV, node.get("sv").asText());
+        }
+        return of(nimet);
     }
 
     public static LokalisoituTeksti of(Kieli kieli, String teksti) {

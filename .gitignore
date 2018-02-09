@@ -11,6 +11,7 @@
 /eperusteet-amosaa-app/src/app/**/*.map
 target/**
 **/target/**
+**/oldtests/**
 
 *.iml
 .idea/

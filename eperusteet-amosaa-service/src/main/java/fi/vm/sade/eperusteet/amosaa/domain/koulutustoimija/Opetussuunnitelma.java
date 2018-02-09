@@ -105,7 +105,6 @@ public class Opetussuunnitelma extends AbstractAuditedEntity implements Serializ
 
     @ManyToOne(fetch = FetchType.LAZY)
     @Getter
-    @Setter
     @NotNull
     private Koulutustoimija koulutustoimija;
 
@@ -155,6 +154,14 @@ public class Opetussuunnitelma extends AbstractAuditedEntity implements Serializ
     })
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     private Set<Liite> liitteet = new HashSet<>();
+
+    public void changeKoulutustoimija(Koulutustoimija kt) {
+        this.koulutustoimija = kt;
+    }
+
+    public void setKoulutustoimija(Koulutustoimija koulutustoimija) {
+        // Noop
+    }
 
     public void attachLiite(Liite liite) {
         liitteet.add(liite);

@@ -13,33 +13,33 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * European Union Public Licence for more details.
  */
-
 package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
-import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaJulkinenDto;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaQueryDto;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaYstavaDto;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.YstavaStatus;
+import fi.vm.sade.eperusteet.amosaa.dto.OrganisaatioHierarkia;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.*;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
+import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
+import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
+import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
-
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +54,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
+
     private static final Logger LOG = LoggerFactory.getLogger(KoulutustoimijaServiceImpl.class);
 
     @Autowired
@@ -84,9 +85,8 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
             return null;
         }
 
-        LokalisoituTeksti nimi = LokalisoituTeksti.of(Kieli.FI, organisaatio.get("nimi").get("fi").asText());
         koulutustoimija = new Koulutustoimija();
-        koulutustoimija.setNimi(nimi);
+        koulutustoimija.setNimi(LokalisoituTeksti.of(organisaatio.get("nimi")));
         koulutustoimija.setOrganisaatio(kOid);
         koulutustoimija = repository.save(koulutustoimija);
         return koulutustoimija;
@@ -168,20 +168,66 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
         return mapper.mapAsList(sisaltoviiteRepository.findAllPaikallisetTutkinnonOsat(kt), tyyppi);
     }
 
+    public List<KoulutustoimijaYstavaDto> getOrganisaatioHierarkiaYstavat(Long ktId) {
+        Koulutustoimija kt = repository.findOne(ktId);
+        OrganisaatioHierarkia root = getOrganisaatioHierarkia(ktId);
+
+        if (root == null) {
+            return new ArrayList<>();
+        }
+        else {
+            HashMap<String, OrganisaatioHierarkia> organisaatioMap = new HashMap<>();
+            organisaatioMap.put(root.getOid(), root);
+
+            for (OrganisaatioHierarkia valitaso : root.getChildren()) {
+                organisaatioMap.put(valitaso.getOid(), valitaso);
+                for (OrganisaatioHierarkia toimija : valitaso.getChildren()) {
+                    organisaatioMap.put(toimija.getOid(), toimija);
+                }
+            }
+
+            OrganisaatioHierarkia self = organisaatioMap.get(kt.getOrganisaatio());
+            // todo: Korjaa jos self on null
+            String[] path = self.getParentOidPath().split("/");
+
+            Stream<String> parents = IntStream.range(1, path.length - 1).boxed()
+                    .map(idx -> path[idx]);
+
+            List<KoulutustoimijaYstavaDto> result = Stream.concat(parents,
+                        self.getAll().map(OrganisaatioHierarkia::getOid))
+                    .distinct()
+                    .map((String oid) -> repository.findOneByOrganisaatio(oid))
+                    .filter(Objects::nonNull)
+                    .map(ykt -> {
+                        KoulutustoimijaYstavaDto x = mapper.map(ykt, KoulutustoimijaYstavaDto.class);
+                        return x;
+                    })
+                    .collect(Collectors.toList());
+
+            return result;
+        }
+    }
+
     @Override
     public List<KoulutustoimijaYstavaDto> getOmatYstavat(Long ktId) {
         Koulutustoimija kt = repository.findOne(ktId);
-        List<KoulutustoimijaYstavaDto> result = kt.getYstavat().stream()
+        List<KoulutustoimijaYstavaDto> result = Stream.concat(getOrganisaatioHierarkiaYstavat(ktId).stream(), kt.getYstavat().stream()
                 .map(ystava -> {
                     KoulutustoimijaYstavaDto ystavaDto = mapper.map(ystava, KoulutustoimijaYstavaDto.class);
                     ystavaDto.setStatus(ystava.getYstavat() != null && ystava.getYstavat().contains(kt)
                             ? YstavaStatus.YHTEISTYO
                             : YstavaStatus.ODOTETAAN);
                     return ystavaDto;
-                })
+                }))
+                .distinct()
                 .collect(Collectors.toList());
-
         return result;
+    }
+
+    @Override
+    public OrganisaatioHierarkia getOrganisaatioHierarkia(Long ktId) {
+        Koulutustoimija kt = repository.findOne(ktId);
+        return organisaatioService.getOrganisaatioPuu(kt.getOrganisaatio());
     }
 
     @Override

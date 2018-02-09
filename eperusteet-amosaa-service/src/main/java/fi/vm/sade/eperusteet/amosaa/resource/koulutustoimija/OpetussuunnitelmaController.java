@@ -18,9 +18,12 @@ package fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.revision.Revision;
 import fi.vm.sade.eperusteet.amosaa.dto.PoistettuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaYstavaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
@@ -35,6 +38,7 @@ import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperati
 import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.TILA_MUOKKAUS;
 
 import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
+import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.util.PoistettuService;
@@ -57,6 +61,9 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
 
     @Autowired
     private OpetussuunnitelmaService service;
+
+    @Autowired
+    private KoulutustoimijaService koulutustoimijaService;
 
     @Autowired
     private PoistettuService poistetutService;
@@ -243,5 +250,18 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
     ) {
         return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, TILA_MUOKKAUS),
                 (Void) -> service.updateTila(ktId, opsId, tila));
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
+    @RequestMapping(value = "/{opsId}/siirra", method = RequestMethod.POST)
+    public OpetussuunnitelmaDto updateKoulutustoimija(
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @PathVariable final Long opsId,
+            @RequestBody(required = false) KoulutustoimijaBaseDto body
+    ) {
+        return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, TILA_MUOKKAUS),
+                (Void) -> service.updateKoulutustoimija(ktId, opsId, body));
     }
 }
