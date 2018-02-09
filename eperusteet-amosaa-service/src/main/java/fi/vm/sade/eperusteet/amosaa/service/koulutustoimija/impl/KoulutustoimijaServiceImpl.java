@@ -187,6 +187,7 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
             }
 
             OrganisaatioHierarkia self = organisaatioMap.get(kt.getOrganisaatio());
+            // todo: Korjaa jos self on null
             String[] path = self.getParentOidPath().split("/");
 
             Stream<String> parents = IntStream.range(1, path.length - 1).boxed()

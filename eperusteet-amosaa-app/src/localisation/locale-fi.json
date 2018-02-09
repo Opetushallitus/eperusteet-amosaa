@@ -444,10 +444,9 @@
     "yhteistyo": "Yhteistyö",
     "ylatunniste": "Ylätunniste",
     "varmista-siirto": "Varmista siirto",
-    "src/app/states/koulutustoimija/tiedot/organisaatio.jade": "Haluatko varmasti siirtää opetussuunnitelman organisaatiolle: {{ nimi }}",
     "oma-organisaatio": "Oma organisaatio",
     "yhteistyo-organisaation-kanssa": "Yhteistyö organisaation kanssa",
     "yhteistyo-odottaa-hyvaksymista": "Yhteistyö odottaa hyväksymistä",
     "yhteistyo-kysytty": "Yhteistyö kysytty organisaatiolta",
-    "haluatko-varmasti-siirtaa-opetussuunnitelman-organisaatiolle": "Haluatko varmasti siirtää opetussuunnitelman organisaatiolle?"
+    "haluatko-varmasti-siirtaa-opetussuunnitelman-organisaatiolle": "Haluatko varmasti siirtää toteutussuunnitelman organisaatiolle?"
 }
