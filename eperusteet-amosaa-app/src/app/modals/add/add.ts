@@ -224,7 +224,7 @@ namespace ModalAdd {
                     $scope.valitsePeruste = async peruste => {
                         $scope.currentStage = "perusteentutkinnonosat";
                         const perusteKaikki = await Api.all("perusteet")
-                            .one(peruste.id + "/kaikki")
+                            .one(peruste.id + "/perusteesta")
                             .get();
                         valittuPeruste = perusteKaikki;
                         $scope.tosap = PaginationV2.addPagination(

@@ -96,6 +96,11 @@ public class PerusteController {
         return opetussuunnitelmaService.getPerusteenOpetussuunnitelmat(diaarinumero, OpetussuunnitelmaBaseDto.class);
     }
 
+    @RequestMapping(value = "{perusteId}/perusteesta", method = RequestMethod.GET)
+    public JsonNode getPerusteByPerusteId(@PathVariable Long perusteId) {
+        return service.getPerusteSisaltoByPerusteId(perusteId, JsonNode.class);
+    }
+
 //    @RequestMapping(value = "/{perusteId}/tutkintonimikekoodit", method = GET)
 //    @InternalApi
 //    public ResponseEntity<List<CombinedDto<TutkintonimikeKoodiDto, HashMap<String, KoodistoKoodiDto>>>> getTutkintonimikekoodit(@PathVariable("perusteId") final long id) {

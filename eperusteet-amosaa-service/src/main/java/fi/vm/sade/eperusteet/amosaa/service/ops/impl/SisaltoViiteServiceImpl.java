@@ -61,6 +61,7 @@ import fi.vm.sade.eperusteet.amosaa.service.util.PoistettuService;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
@@ -145,6 +146,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
             result.setDiaarinumero(peruste.getDiaarinumero());
             result.setLuotu(peruste.getGlobalVersion().getAikaleima());
             result.setPeruste(eperusteetServiceClient.getPerusteData(peruste.getId()));
+            result.setPerusteId(peruste.getId());
             result = cachedPerusteRepository.save(result);
         }
         return result;

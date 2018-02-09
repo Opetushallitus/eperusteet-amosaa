@@ -16,16 +16,13 @@
 package fi.vm.sade.eperusteet.amosaa.service.external;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.ArviointiasteikkoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonOsaSuoritustapaDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author nkala
@@ -48,6 +45,9 @@ public interface EperusteetService {
     <T> T getPerusteSisalto(CachedPeruste cperuste, Class<T> type);
 
     List<PerusteDto> findPerusteet();
+
+    <T> T getPerusteSisaltoByPerusteId(Long perusteId, Class<T> type);
+
 //    <T> T getPeruste(String diaariNumero, Class<T> type);
 //
 //    PerusteDto getYleinenPohja();

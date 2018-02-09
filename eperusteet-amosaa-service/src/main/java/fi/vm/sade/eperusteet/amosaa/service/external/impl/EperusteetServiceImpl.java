@@ -181,4 +181,16 @@ public class EperusteetServiceImpl implements EperusteetService {
         koulutustyypit.add(KoulutusTyyppi.TELMA);
         return eperusteetServiceClient.findPerusteet(koulutustyypit);
     }
+
+    @Override
+    public <T> T getPerusteSisaltoByPerusteId(Long perusteId, Class<T> type) {
+        try {
+            String perusteData = eperusteetServiceClient.getPerusteData(perusteId);
+            JsonNode node = mapper.readTree(perusteData);
+            return mapper.treeToValue(node, type);
+        } catch (IOException ex) {
+            logger.error("Perusteen parsinta epäonnistui", ex);
+            throw new BusinessRuleViolationException("perusteen-parsinta-epaonnistui");
+        }
+    }
 }
