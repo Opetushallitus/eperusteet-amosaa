@@ -31,7 +31,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -48,38 +47,32 @@ public class PerusteController {
     private EperusteetService service;
 
     @RequestMapping(method = RequestMethod.GET)
-    @ResponseBody
     public List<PerusteDto> getPerusteet() {
         return service.findPerusteet();
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    @ResponseBody
     public PerusteDto getPeruste(@PathVariable Long id) {
         return service.getPerusteSisalto(id, PerusteDto.class);
     }
 
     @RequestMapping(value = "/{id}/kaikki", method = RequestMethod.GET)
-    @ResponseBody
     public JsonNode getPerusteAll(@PathVariable Long id) {
         return service.getPerusteSisalto(id, JsonNode.class);
     }
 
     @RequestMapping(value = "/{id}/tutkinnonosat", method = RequestMethod.GET)
-    @ResponseBody
     public JsonNode getPerusteTutkinnonOsat(@PathVariable Long id) {
         return service.getTutkinnonOsat(id);
     }
 
     @RequestMapping(value = "/{id}/suorituspolkuosat", method = RequestMethod.GET)
-    @ResponseBody
     public List<TutkinnonOsaSuoritustapaDto> getPerusteTutkinnonOsatKevyt(@PathVariable Long id) {
         List<TutkinnonOsaSuoritustapaDto> tosat = service.convertTutkinnonOsat(service.getTutkinnonOsat(id));
         return tosat;
     }
 
     @RequestMapping(value = "/{id}/tutkinnonosat/{tosaId}", method = RequestMethod.GET)
-    @ResponseBody
     public JsonNode getPerusteTutkinnonOsa(
             @PathVariable Long id,
             @PathVariable Long tosaId) {
@@ -87,13 +80,11 @@ public class PerusteController {
     }
 
     @RequestMapping(value = "/{id}/suoritustavat", method = RequestMethod.GET)
-    @ResponseBody
     public JsonNode getPerusteRakenne(@PathVariable Long id) {
         return service.getSuoritustavat(id);
     }
 
     @RequestMapping(value = "/{id}/suoritustavat/{suoritustapa}", method = RequestMethod.GET)
-    @ResponseBody
     public JsonNode getPerusteRakenne(
             @PathVariable Long id,
             @PathVariable String st) {
@@ -101,13 +92,11 @@ public class PerusteController {
     }
 
     @RequestMapping(value = "opetussuunnitelmat", method = RequestMethod.GET)
-    @ResponseBody
     public List<OpetussuunnitelmaBaseDto> getOpetussuunnitelmat(@RequestParam String diaarinumero) {
         return opetussuunnitelmaService.getPerusteenOpetussuunnitelmat(diaarinumero, OpetussuunnitelmaBaseDto.class);
     }
 
 //    @RequestMapping(value = "/{perusteId}/tutkintonimikekoodit", method = GET)
-//    @ResponseBody
 //    @InternalApi
 //    public ResponseEntity<List<CombinedDto<TutkintonimikeKoodiDto, HashMap<String, KoodistoKoodiDto>>>> getTutkintonimikekoodit(@PathVariable("perusteId") final long id) {
 //        List<TutkintonimikeKoodiDto> tutkintonimikeKoodit = service.getTutkintonimikeKoodit(id);
