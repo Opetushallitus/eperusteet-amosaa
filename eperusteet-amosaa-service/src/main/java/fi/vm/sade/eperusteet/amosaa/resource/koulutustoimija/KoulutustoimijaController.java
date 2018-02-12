@@ -70,7 +70,6 @@ public class KoulutustoimijaController extends KoulutustoimijaIdGetterAbstractCo
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(value = "/{ktId}", method = RequestMethod.GET)
-    @ResponseBody
     public KoulutustoimijaDto get(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId
     ) {
@@ -81,7 +80,6 @@ public class KoulutustoimijaController extends KoulutustoimijaIdGetterAbstractCo
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(value = "/{ktId}", method = RequestMethod.PUT)
-    @ResponseBody
     public KoulutustoimijaDto update(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @RequestBody final KoulutustoimijaDto kt

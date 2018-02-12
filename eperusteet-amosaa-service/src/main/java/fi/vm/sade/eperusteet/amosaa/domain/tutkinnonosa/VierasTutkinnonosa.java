@@ -21,14 +21,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 
 import java.io.Serializable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 import lombok.Getter;
@@ -49,11 +42,11 @@ public class VierasTutkinnonosa extends AbstractAuditedEntity implements Seriali
     @Setter
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
     @Getter
     @Setter
     @NotNull
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private CachedPeruste cperuste;
 
     @Getter

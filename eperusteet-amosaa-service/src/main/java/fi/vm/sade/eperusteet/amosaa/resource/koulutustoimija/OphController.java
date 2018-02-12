@@ -40,7 +40,6 @@ public class OphController {
 
 
     @RequestMapping(value = "/pohjat", method = RequestMethod.GET)
-    @ResponseBody
     public List<OpetussuunnitelmaBaseDto> getPohjat() {
         return service.getPohjat();
     }
