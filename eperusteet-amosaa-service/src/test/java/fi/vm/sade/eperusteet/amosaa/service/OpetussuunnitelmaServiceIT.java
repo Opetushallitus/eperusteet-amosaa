@@ -17,6 +17,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
@@ -244,6 +245,8 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
         useProfileTmpr();
         opsit = opetussuunnitelmaService.getOtherOpetussuunnitelmat(getKoulutustoimijaId());
         assertThat(opsit).hasSize(1);
+        ystavaops = opetussuunnitelmaService.getOpetussuunnitelma(getKoulutustoimijaId(), ops.getId());
+        assertThat(ystavaops).hasFieldOrPropertyWithValue("id", ops.getId());
 
         // Estetään käyttäjältä oikeus
         useProfileKP2();
@@ -254,6 +257,10 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
         opsit = opetussuunnitelmaService.getOtherOpetussuunnitelmat(getKoulutustoimijaId());
         assertThat(opsit).isEmpty();
 
+        assertThat(catchThrowable(() -> {
+            opetussuunnitelmaService.getOpetussuunnitelma(getKoulutustoimijaId(), ops.getId());
+        }))
+        .isInstanceOf(AccessDeniedException.class);
     }
 
 
