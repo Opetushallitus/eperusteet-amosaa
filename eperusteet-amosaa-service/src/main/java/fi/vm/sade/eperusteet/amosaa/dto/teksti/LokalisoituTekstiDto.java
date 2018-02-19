@@ -59,6 +59,18 @@ public class LokalisoituTekstiDto implements AuditLoggableDto {
         this.tekstit = values == null ? null : new EnumMap<>(values);
     }
 
+    static public LokalisoituTekstiDto of(String teksti) {
+        return new LokalisoituTekstiDto(null, new HashMap<Kieli, String>() {{
+            put(Kieli.FI, teksti);
+        }});
+    }
+
+    static public LokalisoituTekstiDto of(Kieli kieli, String teksti) {
+        return new LokalisoituTekstiDto(null, new HashMap<Kieli, String>() {{
+            put(kieli, teksti);
+        }});
+    }
+
     @JsonCreator
     public LokalisoituTekstiDto(Map<String, String> values) {
         Long tmpId = null;

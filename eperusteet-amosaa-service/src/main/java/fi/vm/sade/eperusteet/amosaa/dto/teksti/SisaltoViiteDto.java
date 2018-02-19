@@ -27,7 +27,7 @@ import lombok.Setter;
 import java.util.List;
 
 /**
- * @author mikkom
+ * @author nkala
  */
 @Getter
 @Setter

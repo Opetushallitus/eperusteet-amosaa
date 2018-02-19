@@ -36,6 +36,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonOsaKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteRakenneDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.TekstiKappaleDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.VierasTutkinnonosaDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
@@ -128,6 +129,21 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
     public <T> List<T> getSisaltoViitteet(Long ktId, Long opsId, Class<T> t) {
         List<SisaltoViite> tkvs = repository.findAllByOwnerId(opsId);
         return mapper.mapAsList(tkvs, t);
+    }
+
+    @Override
+    public <T> T getSisaltoRoot(Long ktId, Long opsId, Class<T> t) {
+        Opetussuunnitelma ops = opsRepository.findOne(opsId);
+        SisaltoViite root = repository.findOneRoot(ops);
+        return mapper.map(root, t);
+    }
+
+    @Override
+    public SisaltoViiteRakenneDto getRakenne(Long ktId, Long opsId) {
+        Opetussuunnitelma ops = opsRepository.findOne(opsId);
+        SisaltoViite root = repository.findOneRoot(ops);
+        SisaltoViiteRakenneDto rakenne = mapper.map(root, SisaltoViiteRakenneDto.class);
+        return rakenne;
     }
 
     @Override

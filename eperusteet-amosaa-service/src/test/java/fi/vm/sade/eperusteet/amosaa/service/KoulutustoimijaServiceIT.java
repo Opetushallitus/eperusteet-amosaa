@@ -3,11 +3,17 @@ package fi.vm.sade.eperusteet.amosaa.service;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.dto.OrganisaatioHierarkia;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaJulkinenDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaQueryDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaYstavaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonOsaKaikkiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
@@ -111,6 +117,28 @@ public class KoulutustoimijaServiceIT extends AbstractIntegrationTest {
         Long id = koulutustoimijat.get(0).getId();
         List<KoulutustoimijaYstavaDto> ystavat = koulutustoimijaService.getOmatYstavat(id);
         assertThat(ystavat).hasSize(0);
+    }
+
+    @Test
+    @Rollback
+    public void testKoulutustoimijaYstavaPyynnot() {
+        assertThat(koulutustoimijaService.getPyynnot(getKoulutustoimijaId())).isEmpty();
+    }
+
+    @Test
+    @Rollback
+    public void testKoulutustoimijaHaku() {
+        PageRequest p = new PageRequest(0, 10);
+        KoulutustoimijaQueryDto pquery = new KoulutustoimijaQueryDto();
+        Page<KoulutustoimijaJulkinenDto> julkisetToimijat = koulutustoimijaService.findKoulutustoimijat(p, pquery);
+        assertThat(julkisetToimijat).isEmpty();
+
+        assertThat(koulutustoimijaService.getKoulutustoimijaJulkinen(getKoulutustoimijaId()))
+                .hasFieldOrPropertyWithValue("id", getKoulutustoimijaId());
+        assertThat(koulutustoimijaService.getKoulutustoimijaJulkinen(getKoulutustoimija().getOrganisaatio()))
+                .hasFieldOrPropertyWithValue("id", getKoulutustoimijaId());
+        assertThat(koulutustoimijaService.getPaikallisetTutkinnonOsat(getKoulutustoimijaId(), SisaltoViiteDto.class))
+                .isEmpty();
     }
 
 }

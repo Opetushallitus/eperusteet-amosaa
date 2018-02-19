@@ -42,7 +42,10 @@ public class TekstiKappaleServiceImpl implements TekstiKappaleService {
     private TekstiKappaleRepository repository;
 
     @Override
-    public TekstiKappaleDto add(SisaltoViite viite, TekstiKappaleDto tekstiKappaleDto) {
+    public TekstiKappaleDto add(SisaltoViite viite, TekstiKappaleDto tekstiKappaleInDto) {
+        TekstiKappaleDto tekstiKappaleDto = tekstiKappaleInDto != null
+                ? tekstiKappaleInDto
+                : new TekstiKappaleDto();
         TekstiKappale tekstiKappale = mapper.map(tekstiKappaleDto, TekstiKappale.class);
         tekstiKappale.setTila(Tila.LUONNOS);
         viite.setTekstiKappale(tekstiKappale);

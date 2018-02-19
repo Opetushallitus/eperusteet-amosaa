@@ -15,14 +15,21 @@
  */
 package fi.vm.sade.eperusteet.amosaa.test;
 
+import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.Kayttaja;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.KayttajaoikeusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
@@ -37,7 +44,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author mikkom
@@ -82,6 +92,52 @@ public class AbstractIntegrationTest {
         result.setOikeus(oikeus);
         result.setKayttaja(Reference.of(user.getId()));
         result = opetussuunnitelmaService.updateOikeus(getKoulutustoimijaId(), opsId, user.getId(), result);
+        return result;
+    }
+
+
+    protected OpetussuunnitelmaBaseDto createOpetussuunnitelma() {
+        return createOpetussuunnitelma((ops) -> {});
+    }
+
+    protected OpetussuunnitelmaBaseDto createOpetussuunnitelma(Consumer<OpetussuunnitelmaDto> opsfn) {
+        OpetussuunnitelmaDto ops = new OpetussuunnitelmaDto();
+        ops.setKoulutustoimija(getKoulutustoimija());
+        ops.setPerusteDiaarinumero("9/011/2008");
+        ops.setSuoritustapa("naytto");
+        ops.setTyyppi(OpsTyyppi.OPS);
+        HashMap<String, String> nimi = new HashMap<>();
+        nimi.put("fi", "auto");
+        ops.setNimi(new LokalisoituTekstiDto(nimi));
+        opsfn.accept(ops);
+        return opetussuunnitelmaService.addOpetussuunnitelma(getKoulutustoimijaId(), ops);
+    }
+
+    protected OpetussuunnitelmaBaseDto createPohja() {
+        return createPohja((ops) -> {});
+    }
+
+    protected OpetussuunnitelmaBaseDto createPohja(Consumer<OpetussuunnitelmaDto> opsfn) {
+        OpetussuunnitelmaDto ops = new OpetussuunnitelmaDto();
+        ops.setKoulutustoimija(getKoulutustoimija());
+        ops.setTyyppi(OpsTyyppi.POHJA);
+        HashMap<String, String> nimi = new HashMap<>();
+        nimi.put("fi", "auto");
+        ops.setNimi(new LokalisoituTekstiDto(nimi));
+        ops.setJulkaisukielet(new HashSet<Kieli>() {{ add(Kieli.FI); }});
+        opsfn.accept(ops);
+        OpetussuunnitelmaBaseDto pohja = opetussuunnitelmaService.addOpetussuunnitelma(getKoulutustoimijaId(), ops);
+        return pohja;
+    }
+
+    protected SisaltoViiteDto.Matala createSisalto() {
+        return createSisalto((ops) -> {});
+    }
+
+    protected SisaltoViiteDto.Matala createSisalto(Consumer<SisaltoViiteDto> sisaltoFn) {
+        SisaltoViiteDto.Matala result = new SisaltoViiteDto.Matala();
+        result.setTyyppi(SisaltoTyyppi.TEKSTIKAPPALE);
+        sisaltoFn.accept(result);
         return result;
     }
 

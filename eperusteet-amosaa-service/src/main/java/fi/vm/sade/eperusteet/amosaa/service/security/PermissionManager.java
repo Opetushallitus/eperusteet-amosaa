@@ -189,8 +189,10 @@ public class PermissionManager {
                     return false;
                 }
 
-                // Optiomoi
                 ops = opsRepository.findOne(targetId);
+                if (ops == null) {
+                    return false;
+                }
                 koulutustoimija = ops.getKoulutustoimija();
                 organisaatioOid = koulutustoimija.getOrganisaatio();
                 break;
