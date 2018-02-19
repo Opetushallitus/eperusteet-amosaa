@@ -47,11 +47,73 @@ mixin opsTable(repetition, forFriends)
 div.otsikkotaso.kaikki-opetussuunnitelmat
   div(ng-hide="isEmpty(suosikit)")
     h3(ng-bind="'suosikki-opetussuunnitelmat' | kaanna")
-    +opsTable("(opsId, ops) in suosikit", "false")
+    table.table.boxtable
+      thead
+        tr
+          th(width="6%" ng-bind="'tila' | kaanna")
+          th(width="40%" ng-bind="'nimi' | kaanna")
+          th(width="50%")
+          th(width="3%")
+          th
+      tbody
+        tr(ng-hide="ops.$$hidden" ng-repeat="(opsId, ops) in suosikit")
+          td
+            div
+              div(class="{{ 'tilavari-' + ops.tila }}")
+              div
+                a(href="" ng-click="toggleSuosikki(ops)")
+                  span.glyphicon.glyphicon-star(ng-class="{ 'suosikki-ops': !!suosikit[ops.id] }")
+          td
+            div
+              a(href="" ui-sref="root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot({ opsId: ops.id })")
+                span.ellipsis(ng-bind="ops.nimi | kaanna")
+          td
+            div
+              span.ellipsis(ng-bind="ops.koulutustoimija.nimi | kaanna")
+          td
+            div
+              div(style="text-align: center;")
+                .fa.fa-pencil-square-o(ng-show="ops.$$oikeus")
+          td
+            div
+              a(href="" ui-sref="root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot({ opsId: ops.id })")
+                div
+                  span.glyphicon.glyphicon-chevron-right
 
   div(ng-show="ystavaOpsit.length > 0")
     h3(ng-bind="'muiden-organisaatioiden-opsit' | kaanna")
-    +opsTable("(opsId, ops) in ystavaOpsit", "true")
+    table.table.boxtable
+      thead
+        tr
+          th(width="6%" ng-bind="'tila' | kaanna")
+          th(width="40%" ng-bind="'nimi' | kaanna")
+          th(width="50%")
+          th(width="3%")
+          th
+      tbody
+        tr(ng-hide="ops.$$hidden" ng-repeat="(opsId, ops) in ystavaOpsit")
+          td
+            div
+              div(class="{{ 'tilavari-' + ops.tila }}")
+              div
+                a(href="" ng-click="toggleSuosikki(ops)")
+                  span.glyphicon.glyphicon-star(ng-class="{ 'suosikki-ops': !!suosikit[ops.id] }")
+          td
+            div
+              a(href="" ui-sref="root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot({ opsId: ops.id })")
+                span.ellipsis(ng-bind="ops.nimi | kaanna")
+          td
+            div
+              span.ellipsis(ng-bind="ops.koulutustoimija.nimi | kaanna")
+          td
+            div
+              div(style="text-align: center;")
+                .fa.fa-pencil-square-o(ng-show="ops.$$oikeus")
+          td
+            div
+              a(href="" ui-sref="root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot({ opsId: ops.id })")
+                div
+                  span.glyphicon.glyphicon-chevron-right
 
   div(ng-if="!isOph")
     h3(ng-bind="'kaikki-opetussuunnitelmat' | kaanna")
@@ -95,7 +157,38 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
               span=" "
               span(ng-bind="'lisaa-opetussuunnitelma' | kaanna")
 
-      +opsTable("ops in opsPaginated", "false")
+      div.alert.alert-info(ng-if="opsPaginated.length === 0")
+        span(ng-bind="'ei-hakutuloksia' | kaanna")
+      div(ng-if="opsPaginated.length > 0")
+        table.table.boxtable
+          thead
+            tr
+              th(width="6%" ng-bind="'tila' | kaanna")
+              th(width="89%" ng-bind="'nimi' | kaanna")
+              th(width="2%")
+              th
+          tbody
+            tr(ng-hide="ops.$$hidden" ng-repeat="ops in opsPaginated")
+              td
+                div
+                  div(class="{{ 'tilavari-' + ops.tila }}")
+                  div
+                    a(href="" ng-click="toggleSuosikki(ops)")
+                      span.glyphicon.glyphicon-star(ng-class="{ 'suosikki-ops': !!suosikit[ops.id] }")
+              td
+                div
+                  a(href="" ui-sref="root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot({ opsId: ops.id })")
+                    span.ellipsis(ng-bind="ops.nimi | kaanna")
+              td
+                div
+                  div(style="text-align: center;")
+                    .fa.fa-pencil-square-o(ng-show="ops.$$oikeus")
+              td
+                div
+                  a(href="" ui-sref="root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot({ opsId: ops.id })")
+                    div
+                      span.glyphicon.glyphicon-chevron-right
+
       nav.text-center
         ul.pagination
           li(ng-class="{ 'active': page === $$opsPaginatedPage.current }" ng-repeat=("page in $$opsPaginatedPage.pages"))

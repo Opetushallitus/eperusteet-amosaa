@@ -87,4 +87,6 @@ mixin esikatselu()
             p(ng-bind-html="peruste.kuvaus | kaanna | unsafe")
 
       div(ng-show="ops.tyyppi !== 'pohja'")
-        +oikeussiirto()
+        +contentToggler("$$showToiminnot", "'toiminnot'")
+          +oikeussiirto()
+

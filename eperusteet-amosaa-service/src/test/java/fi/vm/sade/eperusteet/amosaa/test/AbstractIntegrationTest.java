@@ -16,10 +16,16 @@
 package fi.vm.sade.eperusteet.amosaa.test;
 
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.Kayttaja;
+import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.KayttajaoikeusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
+import fi.vm.sade.eperusteet.amosaa.dto.Reference;
+import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
+import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +46,14 @@ import java.util.List;
 @ContextConfiguration("/it-test-context.xml")
 @ActiveProfiles(profiles = "test")
 public class AbstractIntegrationTest {
+    static public String oidOph = "1.2.246.562.10.00000000001";
+    static public String oidKp1 = "1.2.246.562.10.54645809036";
+    static public String oidKp2 = "1.2.246.562.10.2013120512391252668625";
+    static public String oidKp3 = "1.2.246.562.10.2013120513110198396408";
+    static public String oidTmpr = "1.2.246.562.10.79499343246";
+
+    @Autowired
+    protected OpetussuunnitelmaService opetussuunnitelmaService;
 
     @Autowired
     protected KoulutustoimijaService koulutustoimijaService;
@@ -48,6 +62,7 @@ public class AbstractIntegrationTest {
     protected KayttajanTietoService kayttajanTietoService;
 
     protected List<KoulutustoimijaBaseDto> koulutustoimijat = new ArrayList<>();
+    protected KoulutustoimijaBaseDto toimija = null;
     protected Kayttaja kayttaja = null;
 
     protected Long getKoulutustoimijaId() {
@@ -55,34 +70,66 @@ public class AbstractIntegrationTest {
     }
 
     protected KoulutustoimijaBaseDto getKoulutustoimija() {
-        return koulutustoimijat.get(0);
+        return toimija;
     }
 
-    protected void useProfileTest1() {
-        SecurityContext ctx = SecurityContextHolder.createEmptyContext();
-        ctx.setAuthentication(new UsernamePasswordAuthenticationToken("test1", "test"));
-        SecurityContextHolder.setContext(ctx);
-        kayttajanTietoService.updateKoulutustoimijat();
-        this.koulutustoimijat = kayttajanTietoService.koulutustoimijat();
-        kayttaja = kayttajanTietoService.getKayttaja();
-    }
-
-    protected void useProfileTest2() {
-        SecurityContext ctx = SecurityContextHolder.createEmptyContext();
-        ctx.setAuthentication(new UsernamePasswordAuthenticationToken("test2", "test"));
-        SecurityContextHolder.setContext(ctx);
-        kayttajanTietoService.updateKoulutustoimijat();
-        this.koulutustoimijat = kayttajanTietoService.koulutustoimijat();
-        kayttaja = kayttajanTietoService.getKayttaja();
+    protected KayttajaoikeusDto updateUserOikeus(Long ktId, Long opsId, KayttajaoikeusTyyppi oikeus, String kayttajaOid) {
+        KayttajaDto user = kayttajanTietoService.getKaikkiKayttajat(getKoulutustoimijaId()).stream()
+                .filter(kayttaja -> kayttaja.getOid().equals(kayttajaOid))
+                .findFirst()
+                .get();
+        KayttajaoikeusDto result = new KayttajaoikeusDto();
+        result.setOikeus(oikeus);
+        result.setKayttaja(Reference.of(user.getId()));
+        result = opetussuunnitelmaService.updateOikeus(getKoulutustoimijaId(), opsId, user.getId(), result);
+        return result;
     }
 
     @Before
     public void useProfileTest() {
+        useProfileKP2();
+    }
+
+    private void updateProfile(String username) {
         SecurityContext ctx = SecurityContextHolder.createEmptyContext();
-        ctx.setAuthentication(new UsernamePasswordAuthenticationToken("test", "test"));
+        ctx.setAuthentication(new UsernamePasswordAuthenticationToken(username, "test"));
         SecurityContextHolder.setContext(ctx);
         kayttajanTietoService.updateKoulutustoimijat();
         this.koulutustoimijat = kayttajanTietoService.koulutustoimijat();
+        this.toimija = this.koulutustoimijat.get(0);
         kayttaja = kayttajanTietoService.getKayttaja();
+    }
+
+    protected void useProfileKP1() {
+        updateProfile("kp1");
+    }
+
+    protected void useProfileKP2() {
+        updateProfile("kp2");
+    }
+
+    protected void useProfileKP2user2() {
+        updateProfile("kp2user2");
+    }
+
+    protected void useProfileKP3() {
+        updateProfile("kp3");
+    }
+
+    protected void useProfileOPH() {
+        updateProfile("oph");
+    }
+
+    protected void useProfileTmpr() {
+        updateProfile("tmpr");
+    }
+
+    protected void regAllProfiles() {
+        useProfileOPH();
+        useProfileKP1();
+        useProfileKP2();
+        useProfileKP2user2();
+        useProfileKP3();
+        useProfileTmpr();
     }
 }

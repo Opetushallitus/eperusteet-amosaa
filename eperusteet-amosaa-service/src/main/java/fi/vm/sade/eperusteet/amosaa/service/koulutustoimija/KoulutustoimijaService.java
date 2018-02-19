@@ -57,6 +57,9 @@ public interface KoulutustoimijaService {
     List<KoulutustoimijaBaseDto> getYhteistyoKoulutustoimijat(@P("ktId") Long ktId);
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
+    List<KoulutustoimijaYstavaDto> getOrganisaatioHierarkiaYstavat(Long ktId);
+
+    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
     List<KoulutustoimijaYstavaDto> getOmatYstavat(Long ktId);
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")

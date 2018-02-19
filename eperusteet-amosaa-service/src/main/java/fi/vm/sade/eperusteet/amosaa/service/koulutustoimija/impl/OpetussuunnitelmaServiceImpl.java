@@ -69,10 +69,7 @@ import fi.vm.sade.eperusteet.amosaa.service.ops.ValidointiService;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -551,12 +548,12 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     @Override
     public OpetussuunnitelmaDto updateKoulutustoimija(Long ktId, Long opsId, KoulutustoimijaBaseDto body) {
         Opetussuunnitelma ops = findOps(ktId, opsId);
-        if (ops.getKoulutustoimija().getId() != ktId) {
+        if (!ops.getKoulutustoimija().getId().equals(ktId)) {
             throw new BusinessRuleViolationException("vain-oman-opetussuunnitelman-voi-siirtaa");
         }
 
         if (koulutustoimijaService.getOmatYstavat(ktId).stream()
-                .noneMatch(ystava -> ystava.getId() == body.getId())) {
+                .noneMatch(ystava -> ystava.getId().equals(body.getId()))) {
             throw new BusinessRuleViolationException("siirto-mahdollinen-vain-ystavaorganisaatiolle");
         }
 

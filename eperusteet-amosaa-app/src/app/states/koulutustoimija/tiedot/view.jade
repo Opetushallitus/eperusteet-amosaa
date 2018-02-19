@@ -42,19 +42,6 @@ mixin hierarkia()
 mixin muutOrganisaatiot()
   h3(kaanna="'muut-organisaatiot'")
 
-  div.org-info
-    div.org-vari-info
-      div.org-vari-kysytty
-      span(ng-bind="'yhteistyo-kysytty' | kaanna")
-
-    div.org-vari-info
-      div.org-vari-odottaa
-      span(ng-bind="'yhteistyo-odottaa-hyvaksymista' | kaanna")
-
-    div.org-vari-info
-      div.org-vari-yhteistyo
-      span(ng-bind="'yhteistyo-organisaation-kanssa' | kaanna")
-
   div
     div(ng-hide="$$ekEditing")
       .checkbox
@@ -67,8 +54,20 @@ mixin muutOrganisaatiot()
           input(type="checkbox" ng-model="koulutustoimija.salliystavat")
           span(ng-bind="'salli-yhteistyo' | kaanna")
 
+  div(ng-show="kaveritHierarkianUlkopuolella.length > 0 || pyynnot.length > 0")
+    div.org-info
+      div.org-vari-info
+        div.org-vari-kysytty
+        span(ng-bind="'yhteistyo-kysytty' | kaanna")
+      div.org-vari-info
+        div.org-vari-odottaa
+        span(ng-bind="'yhteistyo-odottaa-hyvaksymista' | kaanna")
+      div.org-vari-info
+        div.org-vari-yhteistyo
+        span(ng-bind="'yhteistyo-organisaation-kanssa' | kaanna")
+
   div.ystavalista(ng-show="kaverit.length > 0")
-    div.org(ng-repeat="org in kaverit" ng-show="!hierarkiaMap[org.organisaatio]")
+    div.org(ng-repeat="org in kaveritHierarkianUlkopuolella" ng-show="!hierarkiaMap[org.organisaatio]")
       +ystavaOrganisaatio()
 
   div.ystavalista(ng-show="pyynnot.length > 0")

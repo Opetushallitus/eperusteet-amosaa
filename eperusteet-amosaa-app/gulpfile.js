@@ -162,8 +162,8 @@ gulp
         port: 9030,
         middleware: function (connect, opt) {
             return [
-                createProxy('https://testi.virkailija.opintopolku.fi/eperusteet-service', '/eperusteet-service'),
-                createProxy('http://localhost:8080/eperusteet-amosaa-service/', '/eperusteet-amosaa-service')
+                createProxy('https://virkailija.testivirkailija.opintopolku.fi/eperusteet-service', '/eperusteet-service'),
+                createProxy('http://localhost:8090/eperusteet-amosaa-service/', '/eperusteet-amosaa-service')
             ];
         }
     });

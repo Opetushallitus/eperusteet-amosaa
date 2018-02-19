@@ -45,7 +45,6 @@ public class EperusteetServiceClientImpl implements EperusteetServiceClient {
 
     private ObjectMapper mapper;
 
-
     @PostConstruct
     protected void init() {
         client = restClientFactory.get(eperusteetServiceUrl, false);
@@ -58,7 +57,8 @@ public class EperusteetServiceClientImpl implements EperusteetServiceClient {
 
     private <T> T commonGet(String endpoint, Class<T> type) {
         try {
-            InputStream stream = client.get(eperusteetServiceUrl + endpoint);
+            String url = eperusteetServiceUrl + endpoint;
+            InputStream stream = client.get(url);
             T node = mapper.readValue(stream, type);
             return node;
         } catch (IOException ex) {

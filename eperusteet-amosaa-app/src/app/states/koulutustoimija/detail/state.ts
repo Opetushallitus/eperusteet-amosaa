@@ -93,12 +93,14 @@ angular.module("app").config($stateProvider =>
                     ystavaOpsit
                 ) => {
                     const suosikkiApi = kayttaja.all("suosikki");
-                    const opetussuunnitelmaMap = _.indexBy(opetussuunnitelmat, "id");
+                    const opetussuunnitelmaMap = _.merge(_.indexBy(opetussuunnitelmat, "id"), _.indexBy(ystavaOpsit, "id"));
 
                     $scope.ystavaOpsit = ystavaOpsit;
                     $scope.suosikit = _.indexBy(
-                        _.map(kayttajanTiedot.suosikit, (suosikki: string) => opetussuunnitelmaMap[suosikki]),
-                        "id"
+                        _(kayttajanTiedot.suosikit)
+                            .map((suosikki: string) => opetussuunnitelmaMap[suosikki])
+                            .filter(_.isObject)
+                            .value(), "id"
                     );
                     $scope.opetussuunnitelmat = _(opetussuunnitelmat)
                         .reject((ops: any) => ops.tyyppi === "yhteinen")

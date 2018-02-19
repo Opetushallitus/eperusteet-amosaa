@@ -16,6 +16,7 @@
 package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.sun.java.swing.plaf.windows.WindowsTreeUI;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
@@ -29,12 +30,10 @@ import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+
+import java.util.*;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -168,6 +167,12 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
         return mapper.mapAsList(sisaltoviiteRepository.findAllPaikallisetTutkinnonOsat(kt), tyyppi);
     }
 
+    private <T> Predicate<T> distinctBy(Function<T, ?> identity) {
+        Set<Object> filter = new HashSet<>();
+        return v -> filter.add(identity.apply(v));
+    }
+
+    @Override
     public List<KoulutustoimijaYstavaDto> getOrganisaatioHierarkiaYstavat(Long ktId) {
         Koulutustoimija kt = repository.findOne(ktId);
         OrganisaatioHierarkia root = getOrganisaatioHierarkia(ktId);
@@ -176,50 +181,42 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
             return new ArrayList<>();
         }
         else {
-            HashMap<String, OrganisaatioHierarkia> organisaatioMap = new HashMap<>();
-            organisaatioMap.put(root.getOid(), root);
-
-            for (OrganisaatioHierarkia valitaso : root.getChildren()) {
-                organisaatioMap.put(valitaso.getOid(), valitaso);
-                for (OrganisaatioHierarkia toimija : valitaso.getChildren()) {
-                    organisaatioMap.put(toimija.getOid(), toimija);
-                }
-            }
-
-            OrganisaatioHierarkia self = organisaatioMap.get(kt.getOrganisaatio());
-            // todo: Korjaa jos self on null
-            String[] path = self.getParentOidPath().split("/");
-
-            Stream<String> parents = IntStream.range(1, path.length - 1).boxed()
-                    .map(idx -> path[idx]);
-
-            List<KoulutustoimijaYstavaDto> result = Stream.concat(parents,
-                        self.getAll().map(OrganisaatioHierarkia::getOid))
-                    .distinct()
-                    .map((String oid) -> repository.findOneByOrganisaatio(oid))
-                    .filter(Objects::nonNull)
-                    .map(ykt -> {
-                        KoulutustoimijaYstavaDto x = mapper.map(ykt, KoulutustoimijaYstavaDto.class);
-                        return x;
-                    })
-                    .collect(Collectors.toList());
-
-            return result;
+            return root.getAll()
+                    .filter(oh -> oh.getOid().equals(kt.getOrganisaatio()))
+                    .findFirst()
+                    .map(self -> Stream.concat(
+                        self.getAll().map(OrganisaatioHierarkia::getOid),
+                        self.getParentOidPath() == null
+                                ? Stream.empty()
+                                : Arrays.stream(self.getParentOidPath().split("/")))
+                        .distinct()
+                        .filter(org -> !org.equals(kt.getOrganisaatio()))
+                        .map(repository::findOneByOrganisaatio)
+                        .filter(Objects::nonNull)
+                        .map(ykt -> mapper.map(ykt, KoulutustoimijaYstavaDto.class))
+                        .collect(Collectors.toList()))
+                    .orElse(new ArrayList<>());
         }
     }
 
     @Override
     public List<KoulutustoimijaYstavaDto> getOmatYstavat(Long ktId) {
         Koulutustoimija kt = repository.findOne(ktId);
-        List<KoulutustoimijaYstavaDto> result = Stream.concat(getOrganisaatioHierarkiaYstavat(ktId).stream(), kt.getYstavat().stream()
-                .map(ystava -> {
-                    KoulutustoimijaYstavaDto ystavaDto = mapper.map(ystava, KoulutustoimijaYstavaDto.class);
-                    ystavaDto.setStatus(ystava.getYstavat() != null && ystava.getYstavat().contains(kt)
-                            ? YstavaStatus.YHTEISTYO
-                            : YstavaStatus.ODOTETAAN);
-                    return ystavaDto;
-                }))
-                .distinct()
+        Stream<KoulutustoimijaYstavaDto> hierarkiaYstavat = getOrganisaatioHierarkiaYstavat(ktId).stream()
+                    .peek(ystava -> ystava.setStatus(YstavaStatus.YHTEISTYO));
+        Stream<KoulutustoimijaYstavaDto> lisatytYstavat = kt.getYstavat().stream()
+                    .map(ystava -> {
+                        KoulutustoimijaYstavaDto ystavaDto = mapper.map(ystava, KoulutustoimijaYstavaDto.class);
+                        ystavaDto.setStatus(ystava.getYstavat() != null && ystava.getYstavat().contains(kt)
+                                ? YstavaStatus.YHTEISTYO
+                                : YstavaStatus.ODOTETAAN);
+                        return ystavaDto;
+                    });
+
+        HashSet<Long> filterHelper = new HashSet<>();
+        filterHelper.add(ktId);
+        List<KoulutustoimijaYstavaDto> result = Stream.concat(hierarkiaYstavat, lisatytYstavat)
+                .filter(org -> filterHelper.add(org.getId()))
                 .collect(Collectors.toList());
         return result;
     }

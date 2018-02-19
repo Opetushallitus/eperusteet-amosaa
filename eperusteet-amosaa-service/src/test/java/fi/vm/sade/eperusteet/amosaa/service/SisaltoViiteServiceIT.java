@@ -40,7 +40,7 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
     @Test
     @Rollback
     public void testVierasOsaPerusteesta() {
-        useProfileTest1();
+        useProfileKP3();
 
         // Ops
         OpetussuunnitelmaDto ops = new OpetussuunnitelmaDto();

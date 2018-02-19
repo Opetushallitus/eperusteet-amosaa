@@ -23,6 +23,7 @@ angular.module("app")
                 const kaveritMap = _($scope.kaverit).indexBy("organisaatio").value();
                 $scope.hierarkia = _.flatten(updateHierarkia(hierarkia), true);
                 $scope.hierarkiaMap = _($scope.hierarkia).indexBy("oid").value();
+                $scope.kaveritHierarkianUlkopuolella = _.filter($scope.kaverit, (k: any) => !$scope.hierarkiaMap[k.organisaatio]);
 
                 function updateHierarkia(org, depth = 0) {
                     const lapsiorganisaatiot = _.map(org.children, (corg) => updateHierarkia(corg, depth + 1));

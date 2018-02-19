@@ -27,7 +27,7 @@ angular.module("app").config($stateProvider =>
                                 opso = Oikeudet.opsOikeus(ops);
                             return kto && Oikeudet.onVahintaan(opso, kto) ? kto : opso;
                         } else {
-                            return $scope.oikeudet[kayttaja.id] ? $scope.oikeudet[kayttaja.id].oikeus : "luku";
+                            return $scope.oikeudet[kayttaja.id] ? $scope.oikeudet[kayttaja.id].oikeus : "estetty";
                         }
                     };
 
@@ -35,7 +35,7 @@ angular.module("app").config($stateProvider =>
                         nimiLataaja(kayttaja.oid)
                             .then(res => {
                                 kayttaja.$$nimi = res;
-                                $scope.oikeudet[kayttaja.id] = $scope.oikeudet[kayttaja.id] || { oikeus: "luku" };
+                                $scope.oikeudet[kayttaja.id] = $scope.oikeudet[kayttaja.id] || { oikeus: "estetty" };
                             })
                             .catch(() => (kayttaja.$$nimi = kayttaja.oid))
                     );
