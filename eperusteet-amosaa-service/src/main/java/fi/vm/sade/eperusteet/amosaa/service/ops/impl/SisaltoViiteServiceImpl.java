@@ -545,7 +545,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
         }
     }
 
-    private void haeViitteet(SisaltoViiteDto.Puu puu, Reference parent, Set<SisaltoViiteDto> result) {
+    private void haeViitteet(SisaltoViiteRakenneDto puu, Reference parent, Set<SisaltoViiteDto> result) {
         Optional<SisaltoViite> viiteOpt = Optional.ofNullable(repository.findOne(puu.getId()));
 
         if (!viiteOpt.isPresent()) {
@@ -559,12 +559,12 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
         }
         result.add(viiteDto);
 
-        for (SisaltoViiteDto.Puu sv : puu.getLapset()) {
+        for (SisaltoViiteRakenneDto sv : puu.getLapset()) {
             haeViitteet(sv, new Reference(puu.getId()), result);
         }
     }
 
-    private void validateRakenne(SisaltoViite root, SisaltoViiteDto.Puu uusi, Opetussuunnitelma ops) {
+    private void validateRakenne(SisaltoViite root, SisaltoViiteRakenneDto uusi, Opetussuunnitelma ops) {
         Set<SisaltoViite> vanhatViitteet = new HashSet<>();
         haeViitteet(root, vanhatViitteet);
 
@@ -636,7 +636,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
     }
 
     @Transactional
-    private SisaltoViite updateViitteet(SisaltoViite parent, SisaltoViiteDto.Puu uusi, Set<SisaltoViite> viitteet) {
+    private SisaltoViite updateViitteet(SisaltoViite parent, SisaltoViiteRakenneDto uusi, Set<SisaltoViite> viitteet) {
         SisaltoViite viite = repository.findOne(uusi.getId());
 
         if (viite == null || !viitteet.remove(viite)) {
@@ -659,7 +659,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
 
     @Override
     @Transactional
-    public void reorderSubTree(Long ktId, Long opsId, Long rootViiteId, SisaltoViiteDto.Puu uusi) {
+    public void reorderSubTree(Long ktId, Long opsId, Long rootViiteId, SisaltoViiteRakenneDto uusi) {
         Koulutustoimija kt = koulutustoimijaRepository.findOne(ktId);
         Opetussuunnitelma ops = opsRepository.findOne(opsId);
         SisaltoViite root = findViite(opsId, rootViiteId);

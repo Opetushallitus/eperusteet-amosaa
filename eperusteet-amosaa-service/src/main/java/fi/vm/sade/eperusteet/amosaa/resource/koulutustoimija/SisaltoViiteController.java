@@ -19,6 +19,7 @@ package fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.dto.RevisionDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteKevytDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteRakenneDto;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaAudit;
 import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
@@ -151,10 +152,10 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long svId,
-            @RequestBody final SisaltoViiteDto.Puu tekstiKappaleViiteDto
+            @RequestBody final SisaltoViiteRakenneDto rakenneDto
     ) {
-        audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, RAKENNE_MUOKKAUS, tekstiKappaleViiteDto), (Void) -> {
-            service.reorderSubTree(ktId, opsId, svId, tekstiKappaleViiteDto);
+        audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, RAKENNE_MUOKKAUS, rakenneDto), (Void) -> {
+            service.reorderSubTree(ktId, opsId, svId, rakenneDto);
             return null;
         });
     }

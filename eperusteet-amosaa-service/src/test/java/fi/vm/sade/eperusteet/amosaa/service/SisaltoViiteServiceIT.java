@@ -142,10 +142,18 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
         OpetussuunnitelmaBaseDto ops = createOpetussuunnitelma();
         SisaltoViiteDto.Matala root = sisaltoViiteService.getSisaltoRoot(getKoulutustoimijaId(), ops.getId());
         SisaltoViiteDto.Matala added = sisaltoViiteService.addSisaltoViite(getKoulutustoimijaId(), ops.getId(), root.getId(), createSisalto());
-//        List<SisaltoViiteKevytDto> rakenne = service.getSisaltoViitteet(getKoulutustoimijaId(), ops.getId(), SisaltoViiteKevytDto.class);
-//        assertThat(rakenne.get(rakenne.size() - 1)).hasFieldOrPropertyWithValue("id", added.getId());
         SisaltoViiteRakenneDto rakenne = sisaltoViiteService.getRakenne(getKoulutustoimijaId(), ops.getId());
-        assertThat(rakenne).isNotNull();
+        assertThat(rakenne.getLapset().get(0)).hasFieldOrPropertyWithValue("id", added.getId());
+
+        int lastIdx = rakenne.getLapset().size() - 1;
+        SisaltoViiteRakenneDto a = rakenne.getLapset().get(0);
+        SisaltoViiteRakenneDto b = rakenne.getLapset().get(lastIdx);
+        rakenne.getLapset().set(0, b);
+        rakenne.getLapset().set(lastIdx, a);
+        sisaltoViiteService.reorderSubTree(getKoulutustoimijaId(), ops.getId(), root.getId(), rakenne);
+        rakenne = sisaltoViiteService.getRakenne(getKoulutustoimijaId(), ops.getId());
+        assertThat(rakenne.getLapset().get(0)).hasFieldOrPropertyWithValue("id", b.getId());
+        assertThat(rakenne.getLapset().get(lastIdx)).hasFieldOrPropertyWithValue("id", added.getId());
     }
 
 }

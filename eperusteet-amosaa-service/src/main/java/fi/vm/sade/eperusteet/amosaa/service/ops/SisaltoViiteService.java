@@ -66,7 +66,7 @@ public interface SisaltoViiteService extends LockService<SisaltoViiteCtx> {
     SisaltoViiteDto.Puu kloonaaTekstiKappale(@P("ktId") Long ktId, @P("opsId") Long opsId, Long viiteId);
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
-    void reorderSubTree(@P("ktId") Long ktId, @P("opsId") Long opsId, Long rootViiteId, SisaltoViiteDto.Puu uusi);
+    void reorderSubTree(@P("ktId") Long ktId, @P("opsId") Long opsId, Long rootViiteId, SisaltoViiteRakenneDto uusi);
 
     SisaltoViite kopioiHierarkia(SisaltoViite original, Opetussuunnitelma owner);
 
