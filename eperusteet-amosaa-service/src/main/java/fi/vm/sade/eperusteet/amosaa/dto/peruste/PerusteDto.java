@@ -35,6 +35,5 @@ public class PerusteDto extends PerusteBaseDto implements AuditLoggableDto {
     public void auditLog(LogMessage.LogMessageBuilder msg) {
     }
 
-    private PerusteVersionDto globalVersion;
     Set<SuoritustapaDto> suoritustavat;
 }

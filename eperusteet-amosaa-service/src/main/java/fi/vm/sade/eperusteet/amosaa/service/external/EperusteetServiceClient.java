@@ -17,6 +17,8 @@ public interface EperusteetServiceClient {
 
     <T> T getPeruste(Long id, Class<T> type);
 
+    <T> T getPerusteOrNull(Long id, Class<T> type);
+
     <T> T getPeruste(String diaariNumero, Class<T> type);
 
     PerusteDto getYleinenPohja();
