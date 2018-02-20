@@ -136,4 +136,8 @@ public class EperusteetServiceClientMock implements EperusteetServiceClient {
         }
     }
 
+    @Override
+    public <T> T getPerusteOrNull(Long id, Class<T> type) {
+        return null;
+    }
 }
