@@ -71,6 +71,8 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     @PersistenceContext
     private EntityManager em;
 
+    static private String OPH = "1.2.246.562.10.00000000001";
+
     @Transactional
     private Koulutustoimija initialize(String kOid) {
         Koulutustoimija koulutustoimija = repository.findOneByOrganisaatio(kOid);
@@ -190,6 +192,7 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
                                 ? Stream.empty()
                                 : Arrays.stream(self.getParentOidPath().split("/")))
                         .distinct()
+                        .filter(org -> !org.equals(OPH))
                         .filter(org -> !org.equals(kt.getOrganisaatio()))
                         .map(repository::findOneByOrganisaatio)
                         .filter(Objects::nonNull)

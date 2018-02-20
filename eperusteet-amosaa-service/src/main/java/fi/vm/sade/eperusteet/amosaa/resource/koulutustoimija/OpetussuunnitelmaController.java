@@ -26,6 +26,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaYstavaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.ops.VanhentunutPohjaperusteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaAudit;
@@ -83,6 +84,27 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
             @RequestParam(name = "peruste", required = false) Long perusteId
     ) {
         return service.getOpetussuunnitelmat(ktId, perusteId);
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
+    @RequestMapping(value = "/vanhentuneet", method = RequestMethod.GET)
+    public List<VanhentunutPohjaperusteDto> getPaivitettavat(
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId
+    ) {
+        return service.haePaivitystaVaativatPerusteet(ktId);
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
+    @RequestMapping(value = "/{opsId}/paivita", method = RequestMethod.POST)
+    public void paivitaOpetussuunnitelmanPeruste(
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @PathVariable final Long opsId
+    ) {
+        service.paivitaPeruste(ktId, opsId);
     }
 
     @ApiImplicitParams({

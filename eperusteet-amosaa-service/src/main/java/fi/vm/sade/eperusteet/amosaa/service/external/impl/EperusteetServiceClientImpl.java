@@ -61,7 +61,8 @@ public class EperusteetServiceClientImpl implements EperusteetServiceClient {
             InputStream stream = client.get(url);
             T node = mapper.readValue(stream, type);
             return node;
-        } catch (IOException ex) {
+        }
+        catch (IOException ex) {
             throw new BusinessRuleViolationException("haku-epaonnistui");
         }
     }
@@ -83,6 +84,17 @@ public class EperusteetServiceClientImpl implements EperusteetServiceClient {
     public <T> T getPeruste(Long id, Class<T> type) {
         T peruste = commonGet("/api/perusteet/" + id.toString() + "", type);
         return peruste;
+    }
+
+    @Override
+    public <T> T getPerusteOrNull(Long id, Class<T> type) {
+        try {
+            T peruste = commonGet("/api/perusteet/" + id.toString() + "", type);
+            return peruste;
+        }
+        catch (BusinessRuleViolationException ex) {
+            return null;
+        }
     }
 
     @Override

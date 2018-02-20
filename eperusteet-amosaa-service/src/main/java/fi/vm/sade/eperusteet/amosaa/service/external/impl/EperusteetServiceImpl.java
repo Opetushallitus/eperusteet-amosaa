@@ -20,8 +20,11 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.AbstractRakenneOsaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonOsaSuoritustapaDto;
 import fi.vm.sade.eperusteet.amosaa.repository.peruste.CachedPerusteRepository;
@@ -30,6 +33,7 @@ import fi.vm.sade.eperusteet.amosaa.resource.config.MappingModule;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetServiceClient;
+import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.util.RestClientFactory;
 import fi.vm.sade.generic.rest.CachingRestClient;
 
@@ -71,6 +75,8 @@ public class EperusteetServiceImpl implements EperusteetService {
 
     private ObjectMapper mapper;
 
+    @Autowired
+    private DtoMapper dtoMapper;
 
     @PostConstruct
     protected void init() {
@@ -80,6 +86,24 @@ public class EperusteetServiceImpl implements EperusteetService {
         module.addDeserializer(AbstractRakenneOsaDto.class, new AbstractRakenneOsaDeserializer());
         mapper.registerModule(module);
         mapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
+    }
+
+    @Override
+    public CachedPerusteBaseDto getCachedPeruste(PerusteDto peruste) {
+        CachedPeruste cperuste = cachedPerusteRepository.findOneByPerusteIdAndLuotu(peruste.getId(), peruste.getGlobalVersion().getAikaleima());
+        if (cperuste == null) {
+            cperuste = new CachedPeruste();
+            if (peruste.getNimi() != null) {
+                cperuste.setNimi(LokalisoituTeksti.of(peruste.getNimi().getTekstit()));
+            }
+
+            cperuste.setDiaarinumero(peruste.getDiaarinumero());
+            cperuste.setPerusteId(peruste.getId());
+            cperuste.setLuotu(peruste.getGlobalVersion().getAikaleima());
+            cperuste.setPeruste(eperusteetServiceClient.getPerusteData(peruste.getId()));
+            cperuste = cachedPerusteRepository.save(cperuste);
+        }
+        return dtoMapper.map(cperuste, CachedPerusteBaseDto.class);
     }
 
     @Override

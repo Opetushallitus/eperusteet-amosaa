@@ -40,6 +40,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.PoistettuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.*;
+import fi.vm.sade.eperusteet.amosaa.dto.ops.VanhentunutPohjaperusteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.*;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaJulkinenDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
@@ -91,6 +92,7 @@ import javax.annotation.PostConstruct;
 @Transactional
 public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     static private final Logger LOG = LoggerFactory.getLogger(OpetussuunnitelmaServiceImpl.class);
+
 
     @Autowired
     private DtoMapper mapper;
@@ -322,6 +324,11 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         alustaOpetussuunnitelma(ops, rootTkv);
 
         PerusteKaikkiDto perusteSisalto = eperusteetService.getPerusteSisalto(cperuste, PerusteKaikkiDto.class);
+
+        if (perusteSisalto.getTutkinnonOsat() == null) {
+            perusteSisalto.setTutkinnonOsat(new ArrayList<>());
+        }
+
         Map<Long, TutkinnonOsaKaikkiDto> idToTosaMap = perusteSisalto.getTutkinnonOsat().stream()
                 .collect(Collectors.toMap(TutkinnonOsaKaikkiDto::getId, Function.identity()));
 
@@ -364,6 +371,38 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
             uusiTosa.setKoodi(tosa.getKoodiUri());
             tkvRepository.save(uusi);
         }
+    }
+
+    @Override
+    public List<VanhentunutPohjaperusteDto> haePaivitystaVaativatPerusteet(Long ktId) {
+        Koulutustoimija kt = koulutustoimijaRepository.findOne(ktId);
+        List<VanhentunutPohjaperusteDto> result = new ArrayList<>();
+        List<Opetussuunnitelma> opsit = repository.findAllByKoulutustoimijaAndTyyppi(kt, OpsTyyppi.OPS);
+        for (Opetussuunnitelma ops : opsit) {
+            PerusteDto perusteDto = eperusteetServiceClient.getPerusteOrNull(ops.getPeruste().getPerusteId(), PerusteDto.class);
+            if (perusteDto == null) {
+                continue;
+            }
+            CachedPeruste cperuste = ops.getPeruste();
+            if (perusteDto.getGlobalVersion().getAikaleima().getTime() > cperuste.getLuotu().getTime()) {
+                VanhentunutPohjaperusteDto vpp = new VanhentunutPohjaperusteDto();
+                PerusteDto perusteVanha = eperusteetService.getPerusteSisalto(cperuste.getId(), PerusteDto.class);
+                vpp.setOpetussuunnitelma(mapper.map(ops, OpetussuunnitelmaBaseDto.class));
+                vpp.setPerusteVanha(perusteVanha);
+                vpp.setPerusteUusi(perusteDto);
+                result.add(vpp);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public void paivitaPeruste(Long ktId, Long opsId) {
+        Opetussuunnitelma ops = repository.getOne(opsId);
+        PerusteDto perusteDto = eperusteetServiceClient.getPeruste(ops.getPeruste().getPerusteId(), PerusteDto.class);
+        CachedPerusteBaseDto cp = eperusteetService.getCachedPeruste(perusteDto);
+        CachedPeruste newCachedPeruste = cachedPerusteRepository.findOne(cp.getId());
+        ops.setPeruste(newCachedPeruste);
     }
 
     @Override

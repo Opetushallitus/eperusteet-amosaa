@@ -17,6 +17,7 @@ package fi.vm.sade.eperusteet.amosaa.service.external;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonOsaSuoritustapaDto;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,6 +31,9 @@ import java.util.List;
 @Service
 @PreAuthorize("permitAll()") // OK, koska mäppääntyy julkisiin rajapintoihin
 public interface EperusteetService {
+    @PreAuthorize("isAuthenticated()")
+    CachedPerusteBaseDto getCachedPeruste(PerusteDto peruste);
+
     JsonNode getTutkinnonOsat(Long id);
 
     List<TutkinnonOsaSuoritustapaDto> convertTutkinnonOsat(JsonNode tutkinnonosat);
