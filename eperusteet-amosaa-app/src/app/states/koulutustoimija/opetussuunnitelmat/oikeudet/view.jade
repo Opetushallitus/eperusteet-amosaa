@@ -15,10 +15,11 @@ mixin listKayttajat(klista)
         ng-repeat="kayttaja in " + klista
         ng-init="isSelf = (me.oidHenkilo === kayttaja.oid)")
         td
-          span(ng-show="kayttaja.$$nimi" ng-bind="kayttaja.$$nimi")
-          span(ng-hide="kayttaja.$$nimi") ...
-          span.special(ng-if="isSelf")
-            +icon("user")
+          a(ng-href="{{ '/henkilo-ui/admin/' + kayttaja.oid }}")
+            span(ng-show="kayttaja.$$nimi" ng-bind="kayttaja.$$nimi")
+            span(ng-hide="kayttaja.$$nimi") ...
+            span.special(ng-if="isSelf")
+              +icon("user")
         td
           span(ng-bind="koulutustoimijat[kayttaja.koulutustoimija][0].nimi | kaanna")
         td
