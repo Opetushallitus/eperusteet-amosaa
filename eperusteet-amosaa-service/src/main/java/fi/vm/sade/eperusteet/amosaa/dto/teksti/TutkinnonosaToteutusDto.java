@@ -18,6 +18,7 @@ package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import java.util.List;
 import java.util.Set;
 
 import lombok.Getter;
@@ -41,4 +42,5 @@ public class TutkinnonosaToteutusDto implements AuditLoggableDto {
     private TekstiosaDto tavatjaymparisto;
     private TekstiosaDto arvioinnista;
     private Set<String> koodit;
+    private List<VapaaTekstiDto> vapaat;
 }
