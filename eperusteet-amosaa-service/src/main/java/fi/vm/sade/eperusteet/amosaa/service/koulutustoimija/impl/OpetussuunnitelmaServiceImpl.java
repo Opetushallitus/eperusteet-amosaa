@@ -36,6 +36,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Tutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
+import fi.vm.sade.eperusteet.amosaa.dto.OpsHakuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.PoistettuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
@@ -172,6 +173,18 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     }
 
     @Override
+    @Transactional
+    public void mapKoulutustyyppi() {
+        List<CachedPeruste> cperusteet = cachedPerusteRepository.findAll();
+        for (CachedPeruste cperuste : cperusteet) {
+            if (cperuste.getKoulutustyyppi() == null) {
+                JsonNode peruste = eperusteetService.getPerusteSisalto(cperuste, JsonNode.class);
+                cperuste.setKoulutustyyppi(KoulutusTyyppi.of(peruste.get("koulutustyyppi").asText()));
+            }
+        }
+    }
+
+    @Override
     public List<OpetussuunnitelmaDto> getJulkisetOpetussuunnitelmat(Long ktId) {
         Koulutustoimija koulutustoimija = koulutustoimijaRepository.findOne(ktId);
         List<Opetussuunnitelma> opsit = repository.findAllByKoulutustoimijaAndTila(koulutustoimija, Tila.JULKAISTU);
@@ -184,11 +197,18 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     }
 
     @Override
-    public List<OpetussuunnitelmaBaseDto> getOpetussuunnitelmat(Long ktId, Long perusteId) {
+    public List<OpetussuunnitelmaBaseDto> getOpetussuunnitelmat(Long ktId, OpsHakuDto opsHakuDto) {
         Koulutustoimija koulutustoimija = koulutustoimijaRepository.findOne(ktId);
-        List<Opetussuunnitelma> opsit = (perusteId != null)
-                ? repository.findAllByKoulutustoimijaAndPerusteId(koulutustoimija, perusteId)
-                : repository.findAllByKoulutustoimija(koulutustoimija);
+
+        List<Opetussuunnitelma> opsit;
+        if (opsHakuDto != null && opsHakuDto.getPeruste() != null) {
+            opsit = repository.findAllByKoulutustoimijaAndPerusteId(koulutustoimija, opsHakuDto.getPeruste());
+        } else if (opsHakuDto != null && opsHakuDto.getKoulutustyyppi() != null) {
+            opsit = repository
+                    .findAllByKoulutustoimijaAndKoulutustyyppi(koulutustoimija, opsHakuDto.getKoulutustyyppi());
+        } else {
+            opsit = repository.findAllByKoulutustoimija(koulutustoimija);
+        }
         return mapper.mapAsList(opsit, OpetussuunnitelmaBaseDto.class);
     }
 

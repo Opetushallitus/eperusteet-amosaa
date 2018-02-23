@@ -18,12 +18,11 @@ package fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
-import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.revision.Revision;
+import fi.vm.sade.eperusteet.amosaa.dto.OpsHakuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.PoistettuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaYstavaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.VanhentunutPohjaperusteDto;
@@ -81,9 +80,9 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
     @RequestMapping(method = RequestMethod.GET)
     public List<OpetussuunnitelmaBaseDto> getAll(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
-            @RequestParam(name = "peruste", required = false) Long perusteId
-    ) {
-        return service.getOpetussuunnitelmat(ktId, perusteId);
+            @ApiIgnore OpsHakuDto opsHakuDto
+        ) {
+        return service.getOpetussuunnitelmat(ktId, opsHakuDto);
     }
 
     @ApiImplicitParams({

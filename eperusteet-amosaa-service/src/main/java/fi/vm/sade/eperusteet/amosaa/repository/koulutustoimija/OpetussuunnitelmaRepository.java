@@ -16,6 +16,7 @@
 
 package fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija;
 
+import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.Tyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
@@ -36,6 +37,9 @@ import org.springframework.stereotype.Repository;
 public interface OpetussuunnitelmaRepository extends JpaWithVersioningRepository<Opetussuunnitelma, Long>, OpetussuunnitelmaCustomRepository {
     @Query("SELECT o FROM Opetussuunnitelma o WHERE o.koulutustoimija = ?1 AND o.peruste.perusteId = ?2")
     List<Opetussuunnitelma> findAllByKoulutustoimijaAndPerusteId(Koulutustoimija koulutustoimija, Long perusteId);
+
+    @Query("SELECT o FROM Opetussuunnitelma o WHERE o.koulutustoimija = ?1 AND o.peruste.koulutustyyppi = ?2")
+    List<Opetussuunnitelma> findAllByKoulutustoimijaAndKoulutustyyppi(Koulutustoimija koulutustoimija, KoulutusTyyppi koulutusTyyppi);
 
     List<Opetussuunnitelma> findAllByKoulutustoimija(Koulutustoimija koulutustoimija);
 
