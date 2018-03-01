@@ -22,11 +22,13 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ConstraintViolationException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.assertj.core.api.Assertions.tuple;
 
 @DirtiesContext
 @Transactional
@@ -89,6 +91,45 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
 
         SisaltoViiteDto.Matala uusiViite = sisaltoViiteService.addSisaltoViite(ktId, opsId, tutkinnonOsat.getId(), viiteDto);
         assertThat(uusiViite).isNotNull();
+    }
+    @Test
+    @Rollback
+    public void testTutkinnonOsanToteutuksenVapaitaTeksteja() {
+        useProfileKP3();
+
+        OpetussuunnitelmaBaseDto ops = createOpetussuunnitelma();
+
+        SisaltoViiteDto.Matala root = sisaltoViiteService.getSisaltoRoot(getKoulutustoimijaId(), ops.getId());
+        SisaltoViiteDto.Matala added = sisaltoViiteService.addSisaltoViite(getKoulutustoimijaId(), ops.getId(), root.getId(), createSisalto());
+
+        added.getTekstiKappale().setNimi(LokalisoituTekstiDto.of("uusi nimi"));
+        added.getTekstiKappale().setTeksti(LokalisoituTekstiDto.of("uusi teksti"));
+
+        TutkinnonosaDto tutkinnonosaDto = new TutkinnonosaDto();
+        added.setTosa(tutkinnonosaDto);
+
+        List<TutkinnonosaToteutusDto> toteutukset = new ArrayList<>();
+        TutkinnonosaToteutusDto toteutus = new TutkinnonosaToteutusDto();
+        toteutukset.add(toteutus);
+        tutkinnonosaDto.setToteutukset(toteutukset);
+
+        List<VapaaTekstiDto> tekstit = new ArrayList<>();
+        VapaaTekstiDto teskti = new VapaaTekstiDto();
+        teskti.setNimi(LokalisoituTekstiDto.of("Toteutuksen vapaan tesktikappaleen nimi"));
+        teskti.setTeksti(LokalisoituTekstiDto.of("Toteutuksen vapaan tesktikappaleen teksti"));
+        tekstit.add(teskti);
+        toteutus.setVapaat(tekstit);
+
+        sisaltoViiteService.updateSisaltoViite(getKoulutustoimijaId(), ops.getId(), added.getId(), added);
+
+        assertThat(added)
+                .extracting("tosa.toteutukset")
+                .containsExactly(toteutukset);
+
+        assertThat(added.getTosa().getToteutukset().get(0).getVapaat())
+                .extracting(vapaa -> vapaa.getNimi().get(Kieli.FI), vapaa -> vapaa.getTeksti().get(Kieli.FI))
+                .containsExactly(tuple("Toteutuksen vapaan tesktikappaleen nimi", "Toteutuksen vapaan tesktikappaleen teksti"));
+
     }
 
     @Test
