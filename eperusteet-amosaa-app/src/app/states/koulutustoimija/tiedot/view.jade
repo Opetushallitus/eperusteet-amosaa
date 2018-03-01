@@ -75,6 +75,8 @@ mixin muutOrganisaatiot()
     div.org(ng-repeat="org in pyynnot")
       +ystavaOrganisaatio()
 
+  button.btn.btn-primary(ng-show="$$ekEditing" ng-click="lisaa()" ng-bind="'laheta-kaveripyynto' | kaanna")
+
 
 mixin paivitystaVaativatOpetussuunnitelmat()
   h2
@@ -124,4 +126,3 @@ div.yhteistyot
   div(ng-if="!isOph")
     +paivitystaVaativatOpetussuunnitelmat()
 
-button.btn.btn-primary(ng-show="$$ekEditing" ng-click="lisaa()" ng-bind="'laheta-kaveripyynto' | kaanna")

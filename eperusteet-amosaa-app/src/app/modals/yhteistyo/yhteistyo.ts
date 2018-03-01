@@ -13,7 +13,7 @@ namespace Yhteistyo {
             },
             controller: ($uibModalInstance, $scope, yhteistyo) => {
                 $scope.koulutustoimija = koulutustoimija;
-                $scope.organisaatiot = yhteistyo;
+                $scope.organisaatiot = Algoritmit.doSortByNimi(yhteistyo);
                 $scope.ok = org => $uibModalInstance.close(org);
                 $scope.cancel = $uibModalInstance.dismiss;
 

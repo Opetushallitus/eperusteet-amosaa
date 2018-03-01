@@ -110,6 +110,7 @@ angular.module("app")
                             status: data.status || "odotetaan"
                         };
                         $scope.kaverit.push(kaveri);
+                        $scope.kaverit = Algoritmit.doSortByNimi($scope.kaverit);
                         kaveritMap[data.oid] = kaveri;
                         paivitaKaverit();
                     }

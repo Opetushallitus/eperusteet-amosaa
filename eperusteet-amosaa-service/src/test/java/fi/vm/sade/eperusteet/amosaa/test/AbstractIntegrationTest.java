@@ -55,7 +55,7 @@ import java.util.function.Consumer;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/it-test-context.xml")
 @ActiveProfiles(profiles = "test")
-public class AbstractIntegrationTest {
+public abstract class AbstractIntegrationTest {
     static public String oidOph = "1.2.246.562.10.00000000001";
     static public String oidKp1 = "1.2.246.562.10.54645809036";
     static public String oidKp2 = "1.2.246.562.10.2013120512391252668625";
