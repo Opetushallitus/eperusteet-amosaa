@@ -183,7 +183,9 @@ namespace ModalAdd {
 
                     $scope.tuoSisaltoa = async () => {
                         $scope.currentStage = "opetussuunnitelma";
-                        const opsit = await koulutustoimija.all("opetussuunnitelmat").getList();
+                        const opsit = await koulutustoimija.all("opetussuunnitelmat").customGETLIST('', {
+                            koulutustyyppi: $scope.koulutustyyppi
+                        });
                         $scope.opsp = PaginationV2.addPagination(
                             opsit,
                             (search: string, ops: any): boolean =>

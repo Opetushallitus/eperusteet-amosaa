@@ -27,9 +27,10 @@ public enum KoulutusTyyppi {
     TELMA("koulutustyyppi_5"),
     VALMA("koulutustyyppi_18");
 
+
     private final String tyyppi;
 
-    private KoulutusTyyppi(String tyyppi) {
+    KoulutusTyyppi(String tyyppi) {
         this.tyyppi = tyyppi;
     }
 
@@ -48,7 +49,7 @@ public enum KoulutusTyyppi {
         throw new IllegalArgumentException(tila + " ei ole kelvollinen tila");
     }
 
-    public boolean isOneOf(KoulutusTyyppi[] tyypit) {
+    public boolean isOneOf(KoulutusTyyppi... tyypit) {
         for (KoulutusTyyppi toinen : tyypit) {
             if (toinen.toString().equals(this.tyyppi)) {
                 return true;
@@ -57,11 +58,12 @@ public enum KoulutusTyyppi {
         return false;
     }
 
-    public boolean isAmmatillinen() {
-        return tyyppi != null && (tyyppi.equals(AMMATTITUTKINTO.toString()) || tyyppi.equals(ERIKOISAMMATTITUTKINTO.toString()));
+    public boolean isValmaTelma() {
+        return isOneOf(VALMA, TELMA);
     }
 
-    public boolean isValmaTelma() {
-        return tyyppi != null && (tyyppi.equals(TELMA.toString()) || tyyppi.equals(VALMA.toString()));
+    public boolean isAmmatillinen() {
+        return isOneOf(AMMATTITUTKINTO, ERIKOISAMMATTITUTKINTO, PERUSTUTKINTO);
     }
+
 }

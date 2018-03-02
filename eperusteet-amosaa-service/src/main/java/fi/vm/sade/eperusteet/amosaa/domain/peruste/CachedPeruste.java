@@ -16,22 +16,14 @@
 
 package fi.vm.sade.eperusteet.amosaa.domain.peruste;
 
+import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -72,4 +64,9 @@ public class CachedPeruste implements Serializable, ReferenceableEntity {
     @Setter
     @Temporal(TemporalType.TIMESTAMP)
     private Date luotu;
+
+    @Getter
+    @Setter
+    @Enumerated(EnumType.STRING)
+    private KoulutusTyyppi koulutustyyppi;
 }
