@@ -223,7 +223,8 @@ angular
                             done: () => {
                                 LocalStorage.clearVanhaOsa();
                                 lukko.remove();
-                            }
+                            },
+                            cancel: () => Promise.resolve()
                         });
 
                         $scope.remove = () => {
@@ -234,14 +235,11 @@ angular
                                 osa.remove().then(() => {
                                     NotifikaatioService.onnistui("poisto-tekstikappale-onnistui");
                                     EditointikontrollitService.cancel().then(() => {
-                                        $timeout(() => {
-                                            $state.reload("root");
-                                            $state.go(
-                                                "root.koulutustoimija.opetussuunnitelmat.poistetut",
-                                                $stateParams,
-                                                { reload: true }
-                                            );
-                                        });
+                                        $state.go(
+                                            "root.koulutustoimija.opetussuunnitelmat.poistetut",
+                                            $stateParams,
+                                            { reload: true }
+                                        );
                                     });
                                 });
                             });
