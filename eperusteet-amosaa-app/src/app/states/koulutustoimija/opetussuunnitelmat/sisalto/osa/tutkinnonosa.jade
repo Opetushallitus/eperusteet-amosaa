@@ -303,9 +303,27 @@ mixin tosaToteutus()
                 div(ckeditor slocalized ng-model="toteutus.tavatjaymparisto.teksti" layout="normal")
               +contentToggler("$$showArvioinnista", "'osaamisen-arvioinnista'")
                 div(ckeditor slocalized ng-model="toteutus.arvioinnista.teksti" layout="normal")
+              +contentToggler("$$showVapaat", "'tekstikappaleet'")
+                .toteutus-lisaa-tekstikappale
+                  button.btn.btn-primary(ng-click="addToteutusVapaaTeksti(toteutus.id)")
+                    +icon("plus")
+                    span(style="margin-left: 8px" ng-bind="'lisaa-vapaa-teksti' | kaanna")
+                div(ui-sortable="vapaatTekstitSortableOptions" ng-model="toteutus.vapaat")
+                  div(ng-repeat="vapaa in toteutus.vapaat" style="margin-bottom: 16px")
+                    .input-group(style="margin-bottom: 4px")
+                      span.input-group-addon.pointable(ng-click="vapaa.$$nayta = !vapaa.$$nayta")
+                        +turboChevron("!vapaa.$$nayta")
+                      input.form-control(slocalized ng-model="vapaa.nimi")
+                      span.input-group-addon.vapaa-handle.pointable
+                        +gicon("sort")
+                    div(ng-show="vapaa.$$nayta")
+                      div(ckeditor slocalized ng-model="vapaa.teksti" layout="normal")
+                      button.btn.btn-danger(style="margin-top: 6px" ng-click="removeToteutusVapaa(toteutus.id, vapaa)")
+                        +itext("remove", 'poista')
+
               div.toolbar-bottom
                 button.btn.btn-danger(ng-click="removeToteutus(toteutus)")
-                  +itext("remove", 'poista')
+                  +itext("remove", 'poista-toteutus')
 
     div(ng-if="!$$ekEditing")
       div(ng-if="pTosa && pTosa.$$isTutke2")
@@ -342,6 +360,9 @@ mixin tosaToteutus()
               +teksti("toteutus.tavatjaymparisto.teksti")
             +contentToggler("$$showArvioinnista", "'osaamisen-arvioinnista'")
               +teksti("toteutus.arvioinnista.teksti")
+            div(ng-repeat="vapaa in toteutus.vapaat")
+              +contentToggler("vapaa.$$show", "vapaa.nimi")
+                +teksti("vapaa.teksti")
 
 
 mixin omaTosaSisalto()
