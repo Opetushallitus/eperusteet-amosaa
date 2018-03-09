@@ -17,14 +17,18 @@
 package fi.vm.sade.eperusteet.amosaa.resource.peruste;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.gson.JsonObject;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteQueryDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonOsaSuoritustapaDto;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
+import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetClient;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import io.swagger.annotations.Api;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,6 +49,14 @@ public class PerusteController {
 
     @Autowired
     private EperusteetService service;
+
+    @Autowired
+    private EperusteetClient eperusteet;
+
+    @RequestMapping(value = "/haku", method = RequestMethod.GET)
+    public JsonNode haePerusteista(@RequestParam  Map<String, String> params) {
+        return eperusteet.findFromPerusteet(params);
+    }
 
     @RequestMapping(method = RequestMethod.GET)
     public List<PerusteDto> getPerusteet() {

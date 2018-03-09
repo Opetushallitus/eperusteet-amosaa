@@ -6,37 +6,45 @@ div.modal-header
 
 div.modal-body
   div.content-spacing.tutkintohaku
-    .form-group.has-feedback.has-feedback-left
-      input.form-control(
-        type="text"
-        placeholder="{{ 'hae-peruste' | kaanna }}"
-        ng-model="input"
-        ng-model-options="{ debounce: 300 }"
-        ng-change="update(input)")
-      i.form-control-feedback.glyphicon.glyphicon-search(style="color: gray;")
+    div(ng-hide="peruste")
+      .form-group.has-feedback.has-feedback-left
+        input.form-control(
+          type="text"
+          placeholder="{{ 'hae-peruste' | kaanna }}"
+          ng-model="nimi"
+          ng-model-options="{ debounce: 300 }"
+          ng-change="update(nimi, sivu)")
+        i.form-control-feedback.glyphicon.glyphicon-search(ng-if="!ladataan" style="color: gray;")
+        i.form-control-feedback(ng-if="ladataan")
+          small-spinner
 
-    div.listaus(ng-show="input.length > 0")
-      div.tutkinto(ng-show="perusteet.length > 0" ng-repeat="peruste in perusteet | filter:{ $$haettu: true }" ng-click="valitsePeruste(peruste)" ng-cloak)
-        div.nimi
-          span(ng-bind="peruste.nimi | kaanna")
+      div(ng-if="perusteet !== null && perusteet.length > 0")
+        table.table.table-striped
+          thead
+            tr
+              th(kaanna="'nimi'")
+              th(kaanna="'diaarinumero'")
+              th(kaanna="'voimaantulo'")
+          tbody
+            tr(ng-repeat="peruste in perusteet" ng-click="valitsePeruste(peruste)")
+              td
+                a(href="" kaanna="peruste.nimi" ng-click="valitsePeruste(peruste)")
+              td(ng-bind="peruste.diaarinumero")
+              td(ng-bind="peruste.voimassaoloAlkaa | aikaleima:'date'")
 
-          span(ng-show="peruste.$$siirtymalla")
-            span=" ("
-            span(ng-bind="'siirtyma-aika-loppuu' | kaanna")
-            span=": "
-            span(ng-bind="peruste.siirtymaPaattyy | aikaleima:'date'")
-            span=")"
+        ul(uib-pagination total-items="total"
+          ng-model="sivu"
+          ng-change="update(nimi, sivu)"
+          max-size="10"
+          class="pagination-sm"
+          boundary-links="true"
+          previous-text="‹"
+          next-text="›"
+          first-text="«"
+          last-text="»"
+          num-pages="sivuja")
 
-          span(ng-show="peruste.$$tuleva")
-            span=" ("
-            span(ng-bind="'tulee-voimaan' | kaanna")
-            span=": "
-            span(ng-bind="peruste.voimassaoloAlkaa | aikaleima:'date'")
-            span=")"
-
-        div.diaari(ng-bind="peruste.diaarinumero")
-        div.koulutustyyppi(ng-bind="peruste.koulutustyyppi | kaanna")
-      div(ng-show="perusteet.length === 0")
+      div(ng-show="!ladataan && perusteet.length === 0")
         div.ei-tuloksia(ng-bind="'ei-hakutuloksia' | kaanna")
 
     div.peruste(ng-show="peruste")
@@ -51,7 +59,7 @@ div.modal-body
         span=": "
         span(ng-bind="peruste.voimassaoloAlkaa | aikaleima:'date'")
       div(ng-if="peruste.voimassaoloLoppuu")
-        span(ng-bind="'voimassa-olo-paattyy' | kaanna")
+        span.content(ng-bind="'voimassa-olo-paattyy' | kaanna")
         span=": "
         span(ng-bind="peruste.voimassaoloLoppuu | aikaleima:'date'")
 

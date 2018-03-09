@@ -61,7 +61,7 @@ import fi.vm.sade.eperusteet.amosaa.service.dokumentti.LocalizedMessagesService;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
-import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetServiceClient;
+import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetClient;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
@@ -108,7 +108,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     private EperusteetService eperusteetService;
 
     @Autowired
-    private EperusteetServiceClient eperusteetServiceClient;
+    private EperusteetClient eperusteetClient;
 
     @Autowired
     private KayttajaoikeusRepository kayttajaoikeusRepository;
@@ -335,8 +335,8 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
             cperuste.setPerusteId(peruste.getId());
             cperuste.setLuotu(peruste.getGlobalVersion().getAikaleima());
             cperuste.setPeruste(ops.getTyyppi() == OpsTyyppi.YLEINEN
-                    ? eperusteetServiceClient.getYleinenPohjaSisalto()
-                    : eperusteetServiceClient.getPerusteData(peruste.getId()));
+                    ? eperusteetClient.getYleinenPohjaSisalto()
+                    : eperusteetClient.getPerusteData(peruste.getId()));
             cperuste = cachedPerusteRepository.save(cperuste);
         }
 
@@ -399,7 +399,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         List<VanhentunutPohjaperusteDto> result = new ArrayList<>();
         List<Opetussuunnitelma> opsit = repository.findAllByKoulutustoimijaAndTyyppi(kt, OpsTyyppi.OPS);
         for (Opetussuunnitelma ops : opsit) {
-            PerusteDto perusteDto = eperusteetServiceClient.getPerusteOrNull(ops.getPeruste().getPerusteId(), PerusteDto.class);
+            PerusteDto perusteDto = eperusteetClient.getPerusteOrNull(ops.getPeruste().getPerusteId(), PerusteDto.class);
             if (perusteDto == null) {
                 continue;
             }
@@ -419,7 +419,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     @Override
     public void paivitaPeruste(Long ktId, Long opsId) {
         Opetussuunnitelma ops = repository.getOne(opsId);
-        PerusteDto perusteDto = eperusteetServiceClient.getPeruste(ops.getPeruste().getPerusteId(), PerusteDto.class);
+        PerusteDto perusteDto = eperusteetClient.getPeruste(ops.getPeruste().getPerusteId(), PerusteDto.class);
         CachedPerusteBaseDto cp = eperusteetService.getCachedPeruste(perusteDto);
         CachedPeruste newCachedPeruste = cachedPerusteRepository.findOne(cp.getId());
         ops.setPeruste(newCachedPeruste);
@@ -447,11 +447,11 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         } else {
             switch (opsDto.getTyyppi()) {
                 case OPS:
-                    PerusteDto peruste = eperusteetServiceClient.getPeruste(opsDto.getPerusteId(), PerusteDto.class);
+                    PerusteDto peruste = eperusteetClient.getPeruste(opsDto.getPerusteId(), PerusteDto.class);
                     setOpsCommon(ops, peruste, rootTkv);
                     break;
                 case YLEINEN:
-                    PerusteDto yleinen = eperusteetServiceClient.getYleinenPohja();
+                    PerusteDto yleinen = eperusteetClient.getYleinenPohja();
                     setOpsCommon(ops, yleinen, rootTkv);
                     opsDto.setSuoritustapa("yleinen");
                     break;

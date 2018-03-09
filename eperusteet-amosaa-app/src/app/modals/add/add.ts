@@ -85,38 +85,50 @@ namespace ModalAdd {
 
     export const opetussuunnitelma = () =>
         i.$uibModal.open({
+            size: "lg",
             resolve: {
-                perusteet: Api => Api.all("perusteet").getList()
+                perusteetApi: Api => Api.one("perusteet")
             },
             templateUrl: "modals/add/opetussuunnitelma.jade",
-            controller: ($scope, $state, $stateParams, $uibModalInstance, perusteet) => {
-                // perusteet: Api => Api.all("perusteet")
-                const amosaaPerusteet = _(perusteet)
-                    .filter(peruste => _.includes(Amosaa.tuetutKoulutustyypit(), peruste.koulutustyyppi))
-                    .reject(Perusteet.isVanhentunut)
-                    .map((peruste: any) => {
-                        peruste.$$tuleva = Perusteet.isTuleva(peruste);
-                        peruste.$$siirtymalla = Perusteet.isSiirtymalla(peruste);
-                        return peruste;
-                    })
-                    .value();
+            controller: ($timeout, $scope, $state, $stateParams, $uibModalInstance, perusteetApi) => {
+                // const amosaaPerusteet = _(perusteet)
+                //     .filter(peruste => _.includes(Amosaa.tuetutKoulutustyypit(), peruste.koulutustyyppi))
+                //     .reject(Perusteet.isVanhentunut)
+                //     .map((peruste: any) => {
+                //         peruste.$$tuleva = Perusteet.isTuleva(peruste);
+                //         peruste.$$siirtymalla = Perusteet.isSiirtymalla(peruste);
+                //         return peruste;
+                //     })
+                //     .value();
 
-                $scope.perusteet = amosaaPerusteet;
+                $scope.nimi = "";
+                $scope.sivu = 1;
+                $scope.sivuja = 1;
+                $scope.total = 0;
+                $scope.perusteet = null;
+                $scope.ladataan = true;
+
+                $scope.update = function(nimi = "", sivu = 1) {
+                    $scope.ladataan = true;
+                    $timeout(async () => {
+                        const res = await perusteetApi.customGET("haku", {
+                            nimi,
+                            sivu: sivu - 1,
+                            sivukoko: 10,
+                            kieli: "fi"
+                        });
+                        $scope.ladataan = false;
+                        const { data, ...params } = res;
+                        $scope.perusteet = data;
+                        $scope.sivuja = params.sivuja;
+                        $scope.total = params.kokonaismäärä;
+                    });
+                }
+                $scope.update();
+
                 $scope.peruste = undefined;
                 $scope.ok = $uibModalInstance.close;
                 $scope.peruuta = $uibModalInstance.dismiss;
-
-                $scope.update = input => {
-                    if (!_.isEmpty(input)) {
-                        $scope.perusteet = filterPerusteet(amosaaPerusteet, input);
-                        for (let peruste of $scope.perusteet) {
-                            peruste.$$haettu = KaannaService.hae(peruste.nimi, input);
-                        }
-                    } else {
-                        $scope.perusteet = [];
-                        $scope.peruste = undefined;
-                    }
-                };
 
                 $scope.valitsePeruste = peruste => {
                     $scope.input = "";
