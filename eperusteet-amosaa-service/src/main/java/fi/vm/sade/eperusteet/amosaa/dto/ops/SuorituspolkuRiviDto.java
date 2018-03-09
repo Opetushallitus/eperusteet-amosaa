@@ -16,6 +16,7 @@
 
 package fi.vm.sade.eperusteet.amosaa.dto.ops;
 
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 
 import java.util.Set;
@@ -31,15 +32,25 @@ import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
  */
 @Getter
 @Setter
-public class SuorituspolkuRiviDto implements AuditLoggableDto {
+public class SuorituspolkuRiviDto extends SuorituspolkuRiviJulkinenDto {
     @Override
     public void auditLog(LogMessage.LogMessageBuilder msg) {
     }
 
-    private Long id;
     private UUID rakennemoduuli;
     private Long jrno;
     private Boolean piilotettu;
-    private LokalisoituTekstiDto kuvaus;
-    private Set<String> koodit;
+
+    static public SuorituspolkuRiviDto of(UUID moduuli, Boolean piilotettu, LokalisoituTekstiDto kuvaus) {
+        SuorituspolkuRiviDto result = new SuorituspolkuRiviDto();
+        result.setRakennemoduuli(moduuli);
+        result.setPiilotettu(piilotettu);
+        result.setKuvaus(kuvaus);
+        return result;
+    }
+
+    static public SuorituspolkuRiviDto of(String moduuli, Boolean piilotettu, LokalisoituTekstiDto kuvaus) {
+        return of(UUID.fromString(moduuli), piilotettu, kuvaus);
+    }
+
 }

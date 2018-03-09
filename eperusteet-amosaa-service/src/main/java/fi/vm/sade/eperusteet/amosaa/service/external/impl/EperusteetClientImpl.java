@@ -3,16 +3,22 @@ package fi.vm.sade.eperusteet.amosaa.service.external.impl;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.gson.JsonObject;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.AbstractRakenneOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.ArviointiasteikkoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteQueryDto;
 import fi.vm.sade.eperusteet.amosaa.resource.config.AbstractRakenneOsaDeserializer;
 import fi.vm.sade.eperusteet.amosaa.resource.config.MappingModule;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
-import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetServiceClient;
+import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetClient;
 import fi.vm.sade.eperusteet.amosaa.service.util.RestClientFactory;
 import fi.vm.sade.generic.rest.CachingRestClient;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,16 +30,16 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.nio.charset.Charset;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 @Profile("default")
 @Transactional
-public class EperusteetServiceClientImpl implements EperusteetServiceClient {
-    private static final Logger logger = LoggerFactory.getLogger(EperusteetServiceClientImpl.class);
+public class EperusteetClientImpl implements EperusteetClient {
+    private static final Logger logger = LoggerFactory.getLogger(EperusteetClientImpl.class);
 
     @Value("${fi.vm.sade.eperusteet.amosaa.eperusteet-service: ''}")
     private String eperusteetServiceUrl;
@@ -67,6 +73,29 @@ public class EperusteetServiceClientImpl implements EperusteetServiceClient {
         }
     }
 
+    @Override
+    public JsonNode findFromPerusteet(Map<String, String> queryDto) {
+        try {
+            queryDto.put("tuleva", "true");
+            queryDto.put("siirtyma", "false");
+            queryDto.put("voimassaolo", "true");
+            queryDto.put("poistunut", "false");
+            String ktparams = Arrays.stream(KoulutusTyyppi.values())
+                    .map(kt -> "koulutustyyppi=" + kt.toString())
+                    .collect(Collectors.joining("&"));
+
+            String paramstr = URLEncodedUtils.format(queryDto.entrySet().stream()
+                    .map(entry -> new BasicNameValuePair(entry.getKey(), entry.getValue()))
+                    .collect(Collectors.toList()), Charset.defaultCharset());
+            String url = eperusteetServiceUrl + "/api/perusteet" + "?" + ktparams + "&" + paramstr;
+            InputStream stream = client.get(url);
+            JsonNode node = mapper.readTree(stream);
+            return node;
+        }
+        catch (IOException ex) {
+            throw new BusinessRuleViolationException("haku-epaonnistui");
+        }
+    }
 
     @Override
     public String getPerusteData(Long id) {

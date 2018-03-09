@@ -20,6 +20,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.dto.RevisionDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteRakenneDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.SuorituspolkuRakenneDto;
 import fi.vm.sade.eperusteet.amosaa.resource.locks.contexts.SisaltoViiteCtx;
 import fi.vm.sade.eperusteet.amosaa.service.locking.LockService;
 import java.util.List;
@@ -99,5 +100,8 @@ public interface SisaltoViiteService extends LockService<SisaltoViiteCtx> {
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'ESITYS')")
     <T> List<T> getSuorituspolut(@P("ktId") Long ktId, @P("opsId") Long opsId, Class<T> aClass);
+
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'ESITYS')")
+    List<SuorituspolkuRakenneDto> getSuorituspolkurakenne(@P("ktId") Long ktId, @P("opsId") Long opsId);
 }
 

@@ -18,6 +18,7 @@ package fi.vm.sade.eperusteet.amosaa.service.util;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonObject;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.AbstractRakenneOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.ArviointiasteikkoDto;
@@ -25,7 +26,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
 import fi.vm.sade.eperusteet.amosaa.resource.config.AbstractRakenneOsaDeserializer;
 import fi.vm.sade.eperusteet.amosaa.resource.config.MappingModule;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
-import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetServiceClient;
+import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetClient;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -47,7 +48,7 @@ import java.util.Set;
 @Profile("test")
 @SuppressWarnings("TransactionalAnnotations")
 @Transactional
-public class EperusteetServiceClientMock implements EperusteetServiceClient {
+public class EperusteetClientMock implements EperusteetClient {
 
     private ObjectMapper objectMapper;
 
@@ -64,6 +65,11 @@ public class EperusteetServiceClientMock implements EperusteetServiceClient {
     }
 
     public static final String DIAARINUMERO = "mock-diaarinumero";
+
+    @Override
+    public JsonNode findFromPerusteet(JsonObject query) {
+        return null;
+    }
 
     @Override
     public ArviointiasteikkoDto getArviointiasteikko(Long id) {

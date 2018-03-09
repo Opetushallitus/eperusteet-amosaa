@@ -32,13 +32,10 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.VapaaTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.*;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import fi.vm.sade.eperusteet.amosaa.dto.RevisionDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKaikkiDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonOsaKaikkiDto;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteRakenneDto;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.TekstiKappaleDto;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.VierasTutkinnonosaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.ops.SuorituspolkuOsaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.ops.SuorituspolkuRiviDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.*;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.*;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.PoistettuRepository;
@@ -51,7 +48,7 @@ import fi.vm.sade.eperusteet.amosaa.resource.locks.contexts.SisaltoViiteCtx;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.exception.LockingException;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
-import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetServiceClient;
+import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetClient;
 import fi.vm.sade.eperusteet.amosaa.service.locking.AbstractLockService;
 import fi.vm.sade.eperusteet.amosaa.service.locking.LockManager;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
@@ -112,7 +109,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
     EperusteetService eperusteetService;
 
     @Autowired
-    EperusteetServiceClient eperusteetServiceClient;
+    EperusteetClient eperusteetClient;
 
     @Autowired
     private LockManager lockMgr;
@@ -161,7 +158,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
             result.setNimi(LokalisoituTeksti.of(peruste.getNimi().getTekstit()));
             result.setDiaarinumero(peruste.getDiaarinumero());
             result.setLuotu(peruste.getGlobalVersion().getAikaleima());
-            result.setPeruste(eperusteetServiceClient.getPerusteData(peruste.getId()));
+            result.setPeruste(eperusteetClient.getPerusteData(peruste.getId()));
             result.setPerusteId(peruste.getId());
             result = cachedPerusteRepository.save(result);
         }
@@ -219,7 +216,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
                     tosa.setTyyppi(TutkinnonosaTyyppi.VIERAS);
                     VierasTutkinnonosa vt = tosa.getVierastutkinnonosa();
                     VierasTutkinnonosaDto vtDto = viiteDto.getTosa().getVierastutkinnonosa();
-                    PerusteDto peruste = eperusteetServiceClient.getPeruste(vtDto.getPerusteId(), PerusteDto.class);
+                    PerusteDto peruste = eperusteetClient.getPeruste(vtDto.getPerusteId(), PerusteDto.class);
 
                     CachedPeruste cperuste = addCachedPeruste(peruste);
                     PerusteKaikkiDto perusteSisalto = eperusteetService.getPerusteSisalto(cperuste, PerusteKaikkiDto.class);
@@ -792,6 +789,48 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
     @Override
     protected int latestRevision(SisaltoViiteCtx ctx) {
         return repository.getLatestRevisionId(ctx.getSvId());
+    }
+
+    @Override
+    public List<SuorituspolkuRakenneDto> getSuorituspolkurakenne(Long ktId, Long opsId) {
+        Opetussuunnitelma ops = opsRepository.findOne(opsId);
+        CachedPeruste cperuste = ops.getPeruste();
+        PerusteKaikkiDto peruste = eperusteetService.getPerusteSisalto(cperuste, PerusteKaikkiDto.class);
+        SuoritustapaLaajaDto suoritustapa = peruste.getSuoritustavat().stream().filter(st -> st.getSuoritustapakoodi().toString()
+                .equals(ops.getSuoritustapa())).findFirst().get();
+        List<SuorituspolkuRakenneDto> result = new ArrayList<>();
+        List<SisaltoViiteDto> polut = getSuorituspolut(ktId, opsId, SisaltoViiteDto.class);
+        for (SisaltoViiteDto viite : polut) {
+            SuorituspolkuRakenneDto rakenne = new SuorituspolkuRakenneDto();
+            SuorituspolkuDto polku = viite.getSuorituspolku();
+            Map<UUID, SuorituspolkuRiviDto> polkuMap = polku.getRivit().stream().collect(Collectors.toMap(SuorituspolkuRiviDto::getRakennemoduuli, Function.identity()));
+            result.add(luoSuorituspolkuRakenne(suoritustapa.getRakenne(), polkuMap));
+        }
+        return result;
+    }
+
+    private SuorituspolkuRakenneDto luoSuorituspolkuRakenne(RakenneModuuliDto rakenne, Map<UUID, SuorituspolkuRiviDto> polkuMap) {
+        SuorituspolkuRakenneDto result = new SuorituspolkuRakenneDto();
+        mapper.map(rakenne, result);
+        result.setPaikallinenKuvaus(polkuMap.get(rakenne.getTunniste()));
+        result.setOsat(rakenne.getOsat().stream()
+                .filter(osa -> {
+                    SuorituspolkuRiviDto paikallinen = polkuMap.get(osa.getTunniste());
+                    boolean isValid = paikallinen == null || paikallinen.getPiilotettu() == null || !paikallinen.getPiilotettu();
+                    return isValid;
+                })
+                .map(osa -> {
+                    if (osa instanceof RakenneModuuliDto) {
+                        return luoSuorituspolkuRakenne((RakenneModuuliDto) osa, polkuMap);
+                    }
+                    else {
+                        SuorituspolkuOsaDto polunRakenneOsa = mapper.map(osa, SuorituspolkuOsaDto.class);
+                        polunRakenneOsa.setPaikallinenKuvaus(polkuMap.get(osa.getTunniste()));
+                        return polunRakenneOsa;
+                    }
+                })
+                .collect(Collectors.toList()));
+        return result;
     }
 
     @Override

@@ -16,6 +16,7 @@
 package fi.vm.sade.eperusteet.amosaa.service.external;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.gson.JsonObject;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;

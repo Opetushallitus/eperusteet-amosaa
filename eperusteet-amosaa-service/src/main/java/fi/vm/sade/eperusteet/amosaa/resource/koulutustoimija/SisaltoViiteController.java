@@ -20,6 +20,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.RevisionDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteKevytDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteRakenneDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.SuorituspolkuRakenneDto;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaAudit;
 import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
@@ -214,5 +215,16 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
             @PathVariable final Integer revId
     ) {
         return service.getData(ktId, opsId, svId, revId);
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
+    @RequestMapping(value = "/polut", method = RequestMethod.GET)
+    List<SuorituspolkuRakenneDto> getSuorituspolutRakenteella(
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @PathVariable final Long opsId
+    ) {
+        return service.getSuorituspolkurakenne(ktId, opsId);
     }
 }

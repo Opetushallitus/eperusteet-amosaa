@@ -19,8 +19,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonObject;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
-import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.AbstractRakenneOsaDto;
@@ -32,7 +32,7 @@ import fi.vm.sade.eperusteet.amosaa.resource.config.AbstractRakenneOsaDeserializ
 import fi.vm.sade.eperusteet.amosaa.resource.config.MappingModule;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
-import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetServiceClient;
+import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetClient;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.util.RestClientFactory;
 import fi.vm.sade.generic.rest.CachingRestClient;
@@ -69,7 +69,7 @@ public class EperusteetServiceImpl implements EperusteetService {
     RestClientFactory restClientFactory;
 
     @Autowired
-    EperusteetServiceClient eperusteetServiceClient;
+    EperusteetClient eperusteetClient;
 
     private CachingRestClient client;
 
@@ -100,7 +100,7 @@ public class EperusteetServiceImpl implements EperusteetService {
             cperuste.setDiaarinumero(peruste.getDiaarinumero());
             cperuste.setPerusteId(peruste.getId());
             cperuste.setLuotu(peruste.getGlobalVersion().getAikaleima());
-            cperuste.setPeruste(eperusteetServiceClient.getPerusteData(peruste.getId()));
+            cperuste.setPeruste(eperusteetClient.getPerusteData(peruste.getId()));
             cperuste = cachedPerusteRepository.save(cperuste);
         }
         return dtoMapper.map(cperuste, CachedPerusteBaseDto.class);
@@ -203,13 +203,13 @@ public class EperusteetServiceImpl implements EperusteetService {
         koulutustyypit.add(KoulutusTyyppi.PERUSTUTKINTO);
         koulutustyypit.add(KoulutusTyyppi.VALMA);
         koulutustyypit.add(KoulutusTyyppi.TELMA);
-        return eperusteetServiceClient.findPerusteet(koulutustyypit);
+        return eperusteetClient.findPerusteet(koulutustyypit);
     }
 
     @Override
     public <T> T getPerusteSisaltoByPerusteId(Long perusteId, Class<T> type) {
         try {
-            String perusteData = eperusteetServiceClient.getPerusteData(perusteId);
+            String perusteData = eperusteetClient.getPerusteData(perusteId);
             JsonNode node = mapper.readTree(perusteData);
             return mapper.treeToValue(node, type);
         } catch (IOException ex) {

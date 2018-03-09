@@ -16,7 +16,11 @@
 package fi.vm.sade.eperusteet.amosaa.service.mapping;
 
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
+import fi.vm.sade.eperusteet.amosaa.dto.ops.SuorituspolkuOsaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.SuorituspolkuRakenneDto;
 import ma.glasnost.orika.converter.builtin.PassThroughConverter;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
 import org.springframework.context.annotation.Bean;
@@ -37,6 +41,15 @@ public class DtoMapperConfig {
             KoodistoKoodiConverter koodistoKoodiConverter) {
         DefaultMapperFactory factory = new DefaultMapperFactory.Builder()
                 .build();
+
+        factory.classMap(RakenneOsaDto.class, SuorituspolkuOsaDto.class)
+            .byDefault()
+            .register();
+
+        factory.classMap(RakenneModuuliDto.class, SuorituspolkuRakenneDto.class)
+                .exclude("osat")
+                .byDefault()
+                .register();
 
         factory.getConverterFactory().registerConverter(referenceableEntityConverter);
         factory.getConverterFactory().registerConverter(lokalisoituTekstiConverter);
