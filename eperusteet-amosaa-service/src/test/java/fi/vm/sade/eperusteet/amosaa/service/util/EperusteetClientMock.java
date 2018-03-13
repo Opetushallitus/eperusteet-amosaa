@@ -39,6 +39,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -65,11 +66,6 @@ public class EperusteetClientMock implements EperusteetClient {
     }
 
     public static final String DIAARINUMERO = "mock-diaarinumero";
-
-    @Override
-    public JsonNode findFromPerusteet(JsonObject query) {
-        return null;
-    }
 
     @Override
     public ArviointiasteikkoDto getArviointiasteikko(Long id) {
@@ -140,6 +136,11 @@ public class EperusteetClientMock implements EperusteetClient {
             e.printStackTrace();
             throw new BusinessRuleViolationException("tiedostoa ei löytynyt");
         }
+    }
+
+    @Override
+    public JsonNode findFromPerusteet(Map<String, String> query) {
+        return null;
     }
 
     @Override

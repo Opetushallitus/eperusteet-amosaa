@@ -103,12 +103,12 @@ public class PerusteController {
         return service.getSuoritustapa(id, st);
     }
 
-    @RequestMapping(value = "opetussuunnitelmat", method = RequestMethod.GET)
+    @RequestMapping(value = "/opetussuunnitelmat", method = RequestMethod.GET)
     public List<OpetussuunnitelmaBaseDto> getOpetussuunnitelmat(@RequestParam String diaarinumero) {
         return opetussuunnitelmaService.getPerusteenOpetussuunnitelmat(diaarinumero, OpetussuunnitelmaBaseDto.class);
     }
 
-    @RequestMapping(value = "{perusteId}/perusteesta", method = RequestMethod.GET)
+    @RequestMapping(value = "/{perusteId}/perusteesta", method = RequestMethod.GET)
     public JsonNode getPerusteByPerusteId(@PathVariable Long perusteId) {
         return service.getPerusteSisaltoByPerusteId(perusteId, JsonNode.class);
     }

@@ -198,7 +198,9 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
                 if (parentViite.getTyyppi() != SisaltoTyyppi.SUORITUSPOLUT) {
                     throw new BusinessRuleViolationException("suorituspolun-voi-liittaa-ainoastaan-suorituspolkuihin");
                 }
-                uusiViite.setSuorituspolku(new Suorituspolku());
+                if (uusiViite.getSuorituspolku() == null) {
+                    uusiViite.setSuorituspolku(new Suorituspolku());
+                }
                 break;
             case TUTKINNONOSA:
                 if (parentViite.getTyyppi() != SisaltoTyyppi.TUTKINNONOSAT

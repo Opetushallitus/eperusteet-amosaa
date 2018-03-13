@@ -244,15 +244,17 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
 
         assertThat(added.getSuorituspolku().getRivit())
                 .extracting("rakennemoduuli")
-                .containsExactlyInAnyOrder("76044b5b-1f4b-4587-b30d-23b7d3c2608d", "428e7f22-0a69-43c5-baa5-520296f71169");
+                .containsExactlyInAnyOrder(
+                        UUID.fromString("76044b5b-1f4b-4587-b30d-23b7d3c2608d"),
+                        UUID.fromString("428e7f22-0a69-43c5-baa5-520296f71169"));
         List<SuorituspolkuRakenneDto> rakenne = sisaltoViiteService.getSuorituspolkurakenne(getKoulutustoimijaId(), ops.getId());
+        assertThat(rakenne).isNotNull();
 
         assertThat(rakenne).hasSize(1);
         SuorituspolkuRakenneDto polku = rakenne.get(0);
         assertThat(polku)
                 .hasFieldOrPropertyWithValue("tunniste", UUID.fromString("16a37d87-cb5f-41a1-94f1-27fb1fa6d191"))
                 .hasFieldOrPropertyWithValue("paikallinenKuvaus", null);
-        assertThat(polku.getOsat()).hasSize(4);
         assertThat(polku.getOsat())
                 .extracting("tunniste")
                 .containsExactly(
