@@ -491,7 +491,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
     }
 
     private void addSuorituspolunTutkinnonOsa(DokumenttiBase docBase,
-                                              TutkinnonOsaKaikkiDto tutkinnonOsaKaikkiDto,
+                                              TutkinnonosaKaikkiDto tutkinnonOsaKaikkiDto,
                                               TutkinnonOsaViiteSuppeaDto tutkinnonOsaViiteSuppeaDto,
                                               Element tbody,
                                               int depth) {
@@ -797,12 +797,12 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
             return;
         }
 
-        Optional<TutkinnonOsaKaikkiDto> optPerusteenTutkinnonosa = peruste.getTutkinnonOsat().stream()
+        Optional<TutkinnonosaKaikkiDto> optPerusteenTutkinnonosa = peruste.getTutkinnonOsat().stream()
                 .filter(dto -> dto.getId().equals(perusteenTutkinnonosaId))
                 .findFirst();
 
         if (optPerusteenTutkinnonosa.isPresent()) {
-            TutkinnonOsaKaikkiDto perusteenTutkinnonosa = optPerusteenTutkinnonosa.get();
+            TutkinnonosaKaikkiDto perusteenTutkinnonosa = optPerusteenTutkinnonosa.get();
 
             if (perusteenTutkinnonosa.getTyyppi().equals(TutkinnonOsaTyyppi.NORMAALI)) {
 

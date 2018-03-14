@@ -34,7 +34,7 @@ import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class TutkinnonOsaKaikkiDto extends PerusteenOsaDto implements AuditLoggableDto {
+public class TutkinnonosaKaikkiDto extends PerusteenOsaDto implements AuditLoggableDto {
     @Override
     public void auditLog(LogMessage.LogMessageBuilder msg) {
     }

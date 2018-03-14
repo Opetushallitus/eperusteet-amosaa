@@ -16,11 +16,7 @@
 
 package fi.vm.sade.eperusteet.amosaa.resource.julkinen;
 
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaJulkinenDto;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaQueryDto;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaJulkinenDto;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaQueryDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.*;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.SisaltoViiteSijaintiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.TiedoteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
@@ -36,6 +32,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Description;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
@@ -63,21 +60,25 @@ public class JulkinenController {
     private TiedoteService tiedoteService;
 
     @RequestMapping(value = "/tutkinnonosat/{koodi}", method = RequestMethod.GET)
+    @ApiIgnore
     public SisaltoViiteDto getTutkinnonOsa(@PathVariable final String koodi) {
         throw new UnsupportedOperationException("ei-toteutettu-viela");
     }
 
     @RequestMapping(value = "/opetussuunnitelmat/{opsId}/koulutustoimija", method = RequestMethod.GET)
+    @Description("Opetussuunnitelman omistavan toimijan tiedot.")
     public KoulutustoimijaJulkinenDto getOpetussuunnitelmanToimija(@PathVariable final Long opsId) {
         return opsService.getKoulutustoimijaId(opsId);
     }
 
     @RequestMapping(value = "/koulutustoimijat/org/{ktOid}", method = RequestMethod.GET)
+    @Description("Koulutuksen järjestäjän tiedot organisaation oidin perusteella.")
     public KoulutustoimijaJulkinenDto getKoulutustoimija(@PathVariable final String ktOid) {
         return ktService.getKoulutustoimijaJulkinen(ktOid);
     }
 
     @RequestMapping(value = "/koulutustoimijat/{ktId}", method = RequestMethod.GET)
+    @Description("Koulutuksen järjestäjän tiedot.")
     public KoulutustoimijaJulkinenDto getKoulutustoimija(@PathVariable("ktId") final Long ktId) {
         return ktService.getKoulutustoimijaJulkinen(ktId);
     }
@@ -91,6 +92,7 @@ public class JulkinenController {
             @ApiImplicitParam(name = "nimi", dataType = "string", paramType = "query"),
     })
     @RequestMapping(value = "/opetussuunnitelmat", method = RequestMethod.GET)
+    @Description("Opetussuunnitelmien parametrihaku.")
     public Page<OpetussuunnitelmaDto> findOpetussuunnitelmat(
             @ApiIgnore OpetussuunnitelmaQueryDto pquery
     ) {
@@ -100,6 +102,7 @@ public class JulkinenController {
     }
 
     @RequestMapping(value = "/perusteenopetussuunnitelmat", method = RequestMethod.GET)
+    @Description("")
     public List<OpetussuunnitelmaJulkinenDto> getPerusteenOpetussuunnitelmat(
             @RequestParam final String perusteenDiaarinumero
     ) {
@@ -165,6 +168,17 @@ public class JulkinenController {
             @PathVariable final Long opsId
     ) {
         return opsService.getOpetussuunnitelma(ktId, opsId);
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
+    @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/kaikki", method = RequestMethod.GET)
+    public OpetussuunnitelmaKaikkiDto getKaikki(
+            @ApiIgnore @ModelAttribute("ktId") final Long ktId,
+            @PathVariable final Long opsId
+    ) {
+        return opsService.getOpetussuunnitelmaKaikki(ktId, opsId);
     }
 
     @ApiImplicitParams({

@@ -27,6 +27,7 @@ import java.util.Optional;
 import java.util.concurrent.Callable;
 import javax.servlet.ServletContext;
 
+import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,7 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger1.annotations.EnableSwagger;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
+import static springfox.documentation.builders.PathSelectors.*;
 
 /**
  * @author isaul
@@ -57,24 +59,42 @@ public class SwaggerConfig {
     private TypeResolver typeResolver;
 
     @Bean
-    public Docket swagger2Api(ServletContext ctx) {
-        LOG.debug("Starting Swagger v2");
+    public Docket swaggerInternalApi(ServletContext ctx) {
+        LOG.debug("Starting Swagger internal api");
 
-        return new Docket(DocumentationType.SWAGGER_2)
-                .groupName("v2")
+        return new Docket(DocumentationType.SWAGGER_12)
+                .groupName("internal")
                 .apiInfo(apiInfo())
                 .directModelSubstitute(JsonNode.class, Object.class)
-                .select()
-                .apis(not(RequestHandlerSelectors.withClassAnnotation(InternalApi.class)))
-                .build()
                 .genericModelSubstitutes(ResponseEntity.class, Optional.class)
                 .alternateTypeRules(
                         springfox.documentation.schema.AlternateTypeRules.newRule(
                                 typeResolver.resolve(new GenericType<Callable<ResponseEntity<Object>>>() {
                                 }),
-                                typeResolver.resolve(Object.class)
-                        )
-                );
+                                typeResolver.resolve(Object.class)))
+                .select()
+                .apis(RequestHandlerSelectors.withClassAnnotation(Api.class))
+                .build();
+    }
+
+    @Bean
+    public Docket swagger2Api(ServletContext ctx) {
+        LOG.debug("Starting Swagger v2");
+
+        return new Docket(DocumentationType.SWAGGER_2)
+                .apiInfo(apiInfo())
+                .directModelSubstitute(JsonNode.class, Object.class)
+                .genericModelSubstitutes(ResponseEntity.class, Optional.class)
+                .select()
+                .apis(not(RequestHandlerSelectors.withClassAnnotation(InternalApi.class)))
+                .build()//                .paths(regex("/internal*"))
+
+                .alternateTypeRules(
+                        springfox.documentation.schema.AlternateTypeRules.newRule(
+                                typeResolver.resolve(new GenericType<Callable<ResponseEntity<Object>>>() {
+                                }),
+                                typeResolver.resolve(Object.class)))
+                .groupName("v2");
     }
 
     @Bean
@@ -85,6 +105,9 @@ public class SwaggerConfig {
                 .apiInfo(apiInfo())
                 .directModelSubstitute(JsonNode.class, Object.class)
                 .genericModelSubstitutes(ResponseEntity.class, Optional.class)
+                .select()
+                .apis(not(RequestHandlerSelectors.withClassAnnotation(InternalApi.class)))
+                .build()
                 .alternateTypeRules(
                         springfox.documentation.schema.AlternateTypeRules.newRule(
                                 typeResolver.resolve(new GenericType<Callable<ResponseEntity<Object>>>() {
@@ -109,7 +132,6 @@ public class SwaggerConfig {
                 "EUPL 1.1",
                 "http://ec.europa.eu/idabc/eupl",
                 vendorExtensions);
-
     }
 }
 

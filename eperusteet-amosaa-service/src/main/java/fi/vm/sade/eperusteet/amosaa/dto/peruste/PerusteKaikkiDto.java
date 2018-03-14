@@ -40,5 +40,5 @@ public class PerusteKaikkiDto extends PerusteBaseDto implements AuditLoggableDto
     }
 
     Set<SuoritustapaLaajaDto> suoritustavat;
-    List<TutkinnonOsaKaikkiDto> tutkinnonOsat;
+    List<TutkinnonosaKaikkiDto> tutkinnonOsat;
 }

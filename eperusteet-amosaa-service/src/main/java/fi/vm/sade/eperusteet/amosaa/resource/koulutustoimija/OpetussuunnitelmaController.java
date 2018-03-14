@@ -57,6 +57,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @RestController
 @RequestMapping("/koulutustoimijat/{ktId}/opetussuunnitelmat")
 @Api(value = "opetussuunnitelmat")
+@InternalApi
 public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstractController {
 
     @Autowired

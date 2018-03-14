@@ -75,7 +75,7 @@ public interface EperusteetService {
 //
 //    <T> T getPerusteSisalto(CachedPeruste cperuste, Class<T> type);
 //
-//    JsonNode getTutkinnonOsat(Long id);
+//    JsonNode getTutkinnonOsaViitteet(Long id);
 //
 //    JsonNode getSuoritustavat(Long id);
 //

@@ -222,11 +222,11 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
 
                     CachedPeruste cperuste = addCachedPeruste(peruste);
                     PerusteKaikkiDto perusteSisalto = eperusteetService.getPerusteSisalto(cperuste, PerusteKaikkiDto.class);
-                    Optional<TutkinnonOsaKaikkiDto> perusteenTosaOpt = perusteSisalto.getTutkinnonOsat().stream()
+                    Optional<TutkinnonosaKaikkiDto> perusteenTosaOpt = perusteSisalto.getTutkinnonOsat().stream()
                             .filter(osa -> vtDto.getTosaId().equals(osa.getId()))
                             .findFirst();
                     if (perusteenTosaOpt.isPresent()) {
-                        TutkinnonOsaKaikkiDto perusteenTosa = perusteenTosaOpt.get();
+                        TutkinnonosaKaikkiDto perusteenTosa = perusteenTosaOpt.get();
                         uusiViite.getTekstiKappale().setNimi(LokalisoituTeksti.of(perusteenTosa.getNimi()));
                     } else {
                         throw new BusinessRuleViolationException("perusteella-ei-valittua-tutkinnon-osaa");
@@ -843,10 +843,19 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
     }
 
     @Override
-    public <T> List<T> getTutkinnonOsat(Long ktId, Long opsId, Class<T> aClass) {
+    public <T> List<T> getTutkinnonOsaViitteet(Long ktId, Long opsId, Class<T> aClass) {
         Opetussuunnitelma ops = opsRepository.findOne(opsId);
         List<SisaltoViite> tosat = repository.findTutkinnonosat(ops);
         return mapper.mapAsList(tosat, aClass);
+    }
+
+    @Override
+    public <T> List<T> getTutkinnonOsat(Long ktId, Long opsId, Class<T> aClass) {
+        Opetussuunnitelma ops = opsRepository.findOne(opsId);
+        return repository.findTutkinnonosat(ops).stream()
+                .map(SisaltoViite::getTosa)
+                .map(tosa -> mapper.map(tosa, aClass))
+                .collect(Collectors.toList());
     }
 
     @Override

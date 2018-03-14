@@ -1,6 +1,7 @@
 package fi.vm.sade.eperusteet.amosaa.resource.ops;
 
 import fi.vm.sade.eperusteet.amosaa.dto.ops.TiedoteDto;
+import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija.KoulutustoimijaIdGetterAbstractController;
 import fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaAudit;
 
@@ -41,6 +42,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @RestController
 @RequestMapping("/koulutustoimijat/{ktId}")
 @Api(value = "Tiedotteet", description = "Tiedotteiden hallinta")
+@InternalApi
 public class TiedoteController extends KoulutustoimijaIdGetterAbstractController {
 
     @Autowired

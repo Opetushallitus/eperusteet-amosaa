@@ -46,6 +46,7 @@ import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperati
 @RestController
 @RequestMapping("/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}")
 @Api(value = "sisältö")
+@InternalApi
 public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractController {
     @Autowired
     private SisaltoViiteService service;
@@ -95,7 +96,7 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId
     ) {
-        return service.getTutkinnonOsat(ktId, opsId, SisaltoViiteDto.class);
+        return service.getTutkinnonOsaViitteet(ktId, opsId, SisaltoViiteDto.class);
     }
 
     @ApiImplicitParams({
