@@ -305,7 +305,7 @@ mixin tosaToteutus()
                 div(ckeditor slocalized ng-model="toteutus.arvioinnista.teksti" layout="normal")
               +contentToggler("$$showVapaat", "'tekstikappaleet'")
                 .toteutus-lisaa-tekstikappale
-                  button.btn.btn-primary(ng-click="addToteutusVapaaTeksti(toteutus.id)")
+                  button.btn.btn-primary(ng-click="addToteutusVapaaTeksti(toteutus)")
                     +icon("plus")
                     span(style="margin-left: 8px" ng-bind="'lisaa-vapaa-teksti' | kaanna")
                 div(ui-sortable="vapaatTekstitSortableOptions" ng-model="toteutus.vapaat")

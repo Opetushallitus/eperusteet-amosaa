@@ -379,19 +379,6 @@ angular
                             });
                         };
 
-                        $scope.addToteutusVapaaTeksti = (id) => {
-                            const toteutus = _.find($scope.osa.tosa.toteutukset, {
-                                id
-                            });
-                            if (!_.isArray(toteutus.vapaat)) {
-                                toteutus.vapaat = [];
-                            }
-                            toteutus.vapaat.push({
-                                nimi: {},
-                                teksti: {}
-                            });
-                        };
-
                         $scope.paikallinenKoodiUpdate = pkoodi => {
                             $scope.$$koodiFormaattiVaara = false;
                             if (!_.isString(pkoodi) || !pkoodi.match(/^1\d\d\d$/)) {
@@ -464,10 +451,7 @@ angular
                         $scope.removeToteutus = toteutus => _.remove($scope.osa.tosa.toteutukset, toteutus);
                         $scope.removeVapaa = item => _.remove($scope.osa.tosa.vapaat, item);
 
-                        $scope.addToteutusVapaaTeksti = (id) => {
-                            const toteutus = _.find($scope.osa.tosa.toteutukset, {
-                                id
-                            });
+                        $scope.addToteutusVapaaTeksti = (toteutus) => {
                             if (!_.isArray(toteutus.vapaat)) {
                                 toteutus.vapaat = [];
                             }
