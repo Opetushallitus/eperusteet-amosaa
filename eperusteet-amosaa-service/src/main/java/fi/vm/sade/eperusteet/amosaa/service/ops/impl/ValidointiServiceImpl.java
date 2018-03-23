@@ -113,6 +113,12 @@ public class ValidointiServiceImpl implements ValidointiService {
             } else {
                 validointi.varoitus("tutkinnon-osalla-ei-toteutuksia", nimi);
             }
+        } else {
+            tosa.getToteutukset().forEach(toteutus -> {
+                if (toteutus.getOtsikko() == null) {
+                    validointi.virhe("toteutuksen-otsikko-ei-maaritelty", nimi);
+                }
+            });
         }
 
         if (tosa.getTyyppi() == TutkinnonosaTyyppi.OMA) {
