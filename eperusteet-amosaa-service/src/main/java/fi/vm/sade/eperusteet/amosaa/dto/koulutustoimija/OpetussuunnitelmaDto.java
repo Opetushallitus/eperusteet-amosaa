@@ -46,6 +46,5 @@ public class OpetussuunnitelmaDto extends OpetussuunnitelmaBaseDto implements Au
     private String hyvaksyja;
     private String paatosnumero;
     private String suoritustapa;
-    private CachedPerusteBaseDto peruste;
     private boolean esikatseltavissa;
 }

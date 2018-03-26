@@ -94,7 +94,6 @@ import javax.annotation.PostConstruct;
 public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     static private final Logger LOG = LoggerFactory.getLogger(OpetussuunnitelmaServiceImpl.class);
 
-
     @Autowired
     private DtoMapper mapper;
 
@@ -167,8 +166,14 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     public void mapPerusteIds() {
         List<CachedPeruste> cperusteet = cachedPerusteRepository.findAll();
         for (CachedPeruste cperuste : cperusteet) {
-            JsonNode peruste = eperusteetService.getPerusteSisalto(cperuste, JsonNode.class);
-            cperuste.setPerusteId(peruste.get("id").asLong());
+            if (cperuste.getPerusteId() == null) {
+                try {
+                    JsonNode peruste = eperusteetService.getPerusteSisalto(cperuste, JsonNode.class);
+                    cperuste.setPerusteId(peruste.get("id").asLong());
+                } catch (Exception ex) {
+                    LOG.error(ex.getLocalizedMessage());
+                }
+            }
         }
     }
 
@@ -178,8 +183,28 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         List<CachedPeruste> cperusteet = cachedPerusteRepository.findAll();
         for (CachedPeruste cperuste : cperusteet) {
             if (cperuste.getKoulutustyyppi() == null) {
-                JsonNode peruste = eperusteetService.getPerusteSisalto(cperuste, JsonNode.class);
-                cperuste.setKoulutustyyppi(KoulutusTyyppi.of(peruste.get("koulutustyyppi").asText()));
+                try {
+                    JsonNode peruste = eperusteetService.getPerusteSisalto(cperuste, JsonNode.class);
+                    cperuste.setKoulutustyyppi(KoulutusTyyppi.of(peruste.get("koulutustyyppi").asText()));
+                } catch (Exception ex) {
+                    LOG.error(ex.getLocalizedMessage());
+                }
+            }
+        }
+    }
+
+    public void mapKoulutukset() {
+        List<CachedPeruste> cperusteet = cachedPerusteRepository.findAll();
+        for (CachedPeruste cperuste : cperusteet) {
+            if (cperuste.getKoulutukset() == null) {
+                try {
+                    JsonNode peruste = eperusteetService.getPerusteSisalto(cperuste, JsonNode.class);
+                    Set<KoulutusDto> koulutukset = objMapper.readValue(peruste.get("koulutukset").toString(),
+                            objMapper.getTypeFactory().constructCollectionType(Set.class, KoulutusDto.class));
+                    cperuste.setKoulutukset(koulutukset);
+                } catch (Exception ex) {
+                    LOG.error(ex.getLocalizedMessage());
+                }
             }
         }
     }
@@ -337,6 +362,8 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
             cperuste.setPeruste(ops.getTyyppi() == OpsTyyppi.YLEINEN
                     ? eperusteetClient.getYleinenPohjaSisalto()
                     : eperusteetClient.getPerusteData(peruste.getId()));
+            cperuste.setKoulutustyyppi(peruste.getKoulutustyyppi());
+            cperuste.setKoulutukset(peruste.getKoulutukset());
             cperuste = cachedPerusteRepository.save(cperuste);
         }
 

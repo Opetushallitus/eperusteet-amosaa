@@ -55,6 +55,13 @@ table.boxtable {
                         overflow: hidden !important;
                         text-overflow: ellipsis;
                     }
+                    .small-ellipsis {
+                        display: block;
+                        width: 135px;
+                        white-space: nowrap;
+                        overflow: hidden !important;
+                        text-overflow: ellipsis;
+                    }
                 }
                 // First column
                 &:first-child {

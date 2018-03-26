@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import lombok.Getter;
 import lombok.Setter;
@@ -51,4 +52,6 @@ public class OpetussuunnitelmaBaseDto implements AuditLoggableDto {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String perusteDiaarinumero;
+
+    private CachedPerusteBaseDto peruste;
 }

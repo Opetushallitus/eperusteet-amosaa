@@ -23,50 +23,45 @@ import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 import javax.persistence.*;
 
+import fi.vm.sade.eperusteet.amosaa.dto.KoulutuksetConverter;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.KoulutusDto;
 import lombok.Getter;
 import lombok.Setter;
 
 /**
  * @author nkala
  */
+@Getter
+@Setter
 @Entity
 @Table(name = "peruste_cache")
 public class CachedPeruste implements Serializable, ReferenceableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Getter
-    @Setter
     private Long id;
 
     @ValidHtml(whitelist = ValidHtml.WhitelistType.NONE)
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @Getter
-    @Setter
     private LokalisoituTeksti nimi;
 
-    @Getter
-    @Setter
     private String diaarinumero;
 
-    @Getter
-    @Setter
     @Column(columnDefinition = "text")
     private String peruste;
 
-    @Getter
-    @Setter
     @Column(name = "peruste_id")
     private Long perusteId;
 
-    @Getter
-    @Setter
     @Temporal(TemporalType.TIMESTAMP)
     private Date luotu;
 
-    @Getter
-    @Setter
     @Enumerated(EnumType.STRING)
     private KoulutusTyyppi koulutustyyppi;
+
+    @Column(columnDefinition = "text")
+    @Convert(converter = KoulutuksetConverter.class)
+    private Set<KoulutusDto> koulutukset;
 }
