@@ -18,6 +18,7 @@ package fi.vm.sade.eperusteet.amosaa.dto.ops;
 
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.TekstiKappaleNimiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.TutkinnonOsaSuorituspolkuDto;
 import lombok.Getter;
 import lombok.Setter;
 import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
@@ -36,4 +37,6 @@ public class SisaltoViiteSijaintiDto implements AuditLoggableDto {
     private Long id;
     private TekstiKappaleNimiDto tekstiKappale;
     private OpetussuunnitelmaBaseDto owner;
+    private TutkinnonOsaSuorituspolkuDto tosa;
 }
+
