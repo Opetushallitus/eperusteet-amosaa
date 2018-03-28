@@ -41,4 +41,14 @@ angular
 
             return name;
         };
+    })
+    .filter("formatArray", () => {
+        return (list, name, separator = ", ") => {
+
+            const elements = _.map(list, el => {
+                return el[name];
+            });
+
+            return elements.join(separator)
+        }
     });

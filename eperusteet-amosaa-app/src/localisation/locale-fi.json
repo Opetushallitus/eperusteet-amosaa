@@ -137,6 +137,7 @@
     "koodisto-tutkintonimikkeet": "Tutkintonimikkeet",
     "koodiston-hakeminen-epaonnistui": "Koodiston lataaminen epäonnistui",
     "koulutukset": "Koulutukset",
+    "koulutuskoodi": "Koulutuskoodi",
     "koulutustoimija": "Koulutustoimija",
     "koulutustoimija-yhteinen-osat": "Koulutustoimijan yhteinen osuus",
     "koulutustoimija-yhteiset-osat": "Koulutustoimijan yhteiset osat",
@@ -401,6 +402,7 @@
         "Koulutuksen järjestäjällä ei löydy toteutusta tutkinnon osalle",
     "koulutuksen-osalle-ei-toteutusta-koulutustoimijalla":
         "Koulutuksen järjestäjällä ei löydy toteutusta koulutuksen osalle",
+    "toteutuksen-otsikko-ei-maaritelty": "Toteutuksen otsikko ei ole määritelty",
     "tutkinnon-osat": "Tutkinnon osat",
     "koulutuksen-osat": "Koulutuksen osat",
     "tutkinnon-tyyppi": "Tutkinnon tyyppi",
