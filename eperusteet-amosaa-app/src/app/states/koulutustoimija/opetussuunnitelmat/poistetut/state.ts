@@ -6,7 +6,7 @@ angular.module("app").config($stateProvider =>
         },
         views: {
             "": {
-                controller: ($scope, $state, $timeout, poistetut, peruste) => {
+                controller: ($scope, $state, $timeout, poistetut, peruste, nimiLataaja) => {
                     $scope.$$isValmaTelma = _.includes(Amosaa.valmaTelmaKoulutustyypit(), peruste.koulutustyyppi);
                     $scope.vaihdaJarjestys = Taulukot.bindSivutus($scope, "poistoAika", poistetut);
                     $scope.suodata = item => KaannaService.hae(item.nimi, $scope.search);
@@ -33,6 +33,9 @@ angular.module("app").config($stateProvider =>
                             );
                         });
                     };
+                    _.each(poistetut, poistettu => {
+                        nimiLataaja(poistettu.muokkaajaOid).then(_.cset(poistettu, "$$nimi"));
+                    });
                 }
             }
         }
