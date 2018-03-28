@@ -659,6 +659,10 @@ angular
                                                 opsId: koodi[0].owner.id,
                                                 osaId: koodi[0].id
                                             });
+                                            if (_.has(koodi[0], 'tosa.omatutkinnonosa.laajuus')) {
+                                                $scope.misc.koodinimet[koodi.route].laajuus
+                                                    = koodi[0].tosa.omatutkinnonosa.laajuus;
+                                            }
                                         } else if (_.size(koodi) > 1) {
                                             const opskohtaiset = _.filter(
                                                 koodi,
@@ -676,6 +680,10 @@ angular
                                                         osaId: opskohtaiset[0].id
                                                     }
                                                 );
+                                                if (_.has(opskohtaiset[0], 'tosa.omatutkinnonosa.laajuus')) {
+                                                    $scope.misc.koodinimet[koodi.route].laajuus
+                                                        = opskohtaiset[0].tosa.omatutkinnonosa.laajuus;
+                                                }
                                             } else {
                                                 $scope.misc.koodinimet[koodi.route].nimi =
                                                     "koodilla-liian-monta-toteutusta";

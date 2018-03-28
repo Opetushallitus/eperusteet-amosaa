@@ -37,3 +37,4 @@ public class SisaltoViiteSijaintiDto implements AuditLoggableDto {
     private TekstiKappaleNimiDto tekstiKappale;
     private OpetussuunnitelmaBaseDto owner;
 }
+

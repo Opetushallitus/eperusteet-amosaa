@@ -29,6 +29,10 @@ mixin tosaKoodiOsa(osa)
       .sp-nimi
         a(href="" ng-click="misc.siirry(misc.koodinimet[" + osa + "].uri)" ng-bind="misc.koodinimet[" + osa + "].nimi | kaanna")
         b.sp-osaamisala(ng-bind="misc.koodinimet[" + osa + "].arvo")
+      .sp-toolbar
+        span.laajuus(ng-show="misc.koodinimet[" + osa + "].laajuus")
+          span(ng-bind="misc.koodinimet[" + osa + "].laajuus")
+          span(style="margin-left: 2px" ng-bind="misc.suoritustapa.laajuusYksikko | kaanna")
 
 
 mixin muodostuminen()
