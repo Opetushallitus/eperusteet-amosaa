@@ -14,21 +14,17 @@
  * European Union Public Licence for more details.
  */
 
-package fi.vm.sade.eperusteet.amosaa.dto.ops;
+package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.TekstiKappaleNimiDto;
-import lombok.Getter;
-import lombok.Setter;
 import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
 import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
+import lombok.Getter;
+import lombok.Setter;
 
-/**
- * @author nkala
- */
 @Getter
 @Setter
-public class SisaltoViiteSijaintiDto implements AuditLoggableDto {
+public class SisaltoViiteSuorituspolkuDto implements AuditLoggableDto {
     @Override
     public void auditLog(LogMessage.LogMessageBuilder msg) {
     }
@@ -36,5 +32,5 @@ public class SisaltoViiteSijaintiDto implements AuditLoggableDto {
     private Long id;
     private TekstiKappaleNimiDto tekstiKappale;
     private OpetussuunnitelmaBaseDto owner;
+    private TutkinnonOsaSuorituspolkuDto tosa;
 }
-
