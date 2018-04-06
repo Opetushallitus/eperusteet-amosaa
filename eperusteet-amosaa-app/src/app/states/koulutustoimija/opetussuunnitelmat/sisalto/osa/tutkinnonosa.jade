@@ -182,7 +182,7 @@ mixin arviointiAsteikko()
 mixin arviointi()
   .box-panel
     .box-panel-title
-      h3(ng-if="!$$ekEditing && arvioinninKohdealue.otsikko.fi !== 'automaattinen'")
+      h3(ng-if="!$$ekEditing && arvioinninKohdealue.otsikko.fi !== 'automaattinen' && arvioinninKohdealue.otsikko.fi !== 'Nimetön'")
         span(ng-if="arvioinninKohdealue.otsikko" ng-bind="arvioinninKohdealue.otsikko | kaanna")
 
       .input-group(ng-if="$$ekEditing")
