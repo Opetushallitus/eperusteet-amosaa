@@ -232,12 +232,11 @@ mixin tosaToteutus()
   div.toteutukset
     div(ng-if="$$ekEditing")
       div
-        h1
-          span(ng-bind="'toteutus' | kaanna")
-          .pull-right
-            button.btn.btn-primary(ng-click="addVapaaTeksti()")
-              +icon("plus")
-              span(style="margin-left: 8px" ng-bind="'lisaa-vapaa-teksti' | kaanna")
+        p.pull-right
+          button.btn.btn-primary(ng-click="addVapaaTeksti()")
+            +icon("plus")
+            span(style="margin-left: 8px" ng-bind="'lisaa-vapaa-teksti' | kaanna")
+        .clearfix
 
         div(ng-if="pTosa && pTosa.$$isTutke2")
           h2(ng-bind="'osaamisen-osoittaminen' | kaanna")
@@ -333,6 +332,10 @@ mixin tosaToteutus()
       div(ng-repeat="vapaa in osa.tosa.vapaat")
         +contentToggler("vapaa.$$show", "vapaa.nimi")
           +teksti("vapaa.teksti")
+
+      div
+        h2
+          span(ng-bind="'toteutukset' | kaanna")
 
       div(ng-hide="osa.tosa.toteutukset.length > 0")
         div.alert.alert-info
