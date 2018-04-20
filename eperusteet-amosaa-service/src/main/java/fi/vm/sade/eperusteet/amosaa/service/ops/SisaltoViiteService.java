@@ -96,6 +96,9 @@ public interface SisaltoViiteService extends LockService<SisaltoViiteCtx> {
     void copySisaltoViiteet(@P("ktId") Long ktId, @P("opsId") Long opsId, List<Long> viitteet);
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'ESITYS')")
+    <T> List<T> getTutkinnonOsaViitteet(@P("ktId") Long ktId, @P("opsId") Long opsId, Class<T> aClass);
+
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'ESITYS')")
     <T> List<T> getTutkinnonOsat(@P("ktId") Long ktId, @P("opsId") Long opsId, Class<T> aClass);
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'ESITYS')")

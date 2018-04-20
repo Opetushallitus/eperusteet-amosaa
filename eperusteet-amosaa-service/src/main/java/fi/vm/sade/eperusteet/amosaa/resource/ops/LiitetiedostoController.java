@@ -16,6 +16,7 @@
 package fi.vm.sade.eperusteet.amosaa.resource.ops;
 
 import fi.vm.sade.eperusteet.amosaa.dto.liite.LiiteDto;
+import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija.KoulutustoimijaIdGetterAbstractController;
 import fi.vm.sade.eperusteet.amosaa.resource.util.CacheControl;
 
@@ -56,6 +57,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @RestController
 @RequestMapping("/koulutustoimijat")
 @Api("liitetiedostot")
+@InternalApi
 public class LiitetiedostoController extends KoulutustoimijaIdGetterAbstractController {
     private static final Logger LOG = LoggerFactory.getLogger(LiitetiedostoController.class);
 

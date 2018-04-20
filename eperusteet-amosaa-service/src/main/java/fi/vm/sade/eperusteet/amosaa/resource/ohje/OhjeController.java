@@ -16,6 +16,7 @@
 package fi.vm.sade.eperusteet.amosaa.resource.ohje;
 
 import fi.vm.sade.eperusteet.amosaa.dto.ohje.OhjeDto;
+import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaAudit;
 
 import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaMessageFields.OPH;
@@ -51,7 +52,7 @@ import springfox.documentation.annotations.ApiIgnore;
  */
 @RestController
 @RequestMapping("/ohjeet")
-@ApiIgnore
+@InternalApi
 public class OhjeController {
 
     @Autowired

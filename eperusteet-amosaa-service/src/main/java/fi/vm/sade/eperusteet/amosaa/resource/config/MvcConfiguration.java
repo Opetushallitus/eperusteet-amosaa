@@ -57,6 +57,7 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/index.html").addResourceLocations("/index.html");
+        registry.addResourceHandler("/internal.html").addResourceLocations("/internal.html");
         super.addResourceHandlers(registry);
     }
 

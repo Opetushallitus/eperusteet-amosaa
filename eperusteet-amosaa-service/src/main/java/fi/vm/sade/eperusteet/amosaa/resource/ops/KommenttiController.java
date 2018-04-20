@@ -16,6 +16,7 @@
 package fi.vm.sade.eperusteet.amosaa.resource.ops;
 
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.KommenttiDto;
+import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija.KoulutustoimijaIdGetterAbstractController;
 import fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaAudit;
 
@@ -44,7 +45,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
  */
 @RestController
 @RequestMapping("/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tekstit/{tkvId}/kommentit")
-@ApiIgnore
+@InternalApi
 public class KommenttiController extends KoulutustoimijaIdGetterAbstractController {
 
     @Autowired

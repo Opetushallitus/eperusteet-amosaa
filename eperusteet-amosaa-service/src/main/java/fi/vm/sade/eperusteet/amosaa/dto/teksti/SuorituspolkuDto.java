@@ -33,12 +33,7 @@ import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class SuorituspolkuDto implements AuditLoggableDto {
-    @Override
-    public void auditLog(LogMessage.LogMessageBuilder msg) {
-    }
-
-    private Long id;
+public class SuorituspolkuDto extends SuorituspolkuBaseDto {
     private Boolean naytaKuvausJulkisesti;
     private Set<SuorituspolkuRiviDto> rivit = new HashSet<>();
 }

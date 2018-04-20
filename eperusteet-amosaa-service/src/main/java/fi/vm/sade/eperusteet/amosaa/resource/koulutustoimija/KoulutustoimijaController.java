@@ -23,6 +23,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaYstavaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViitePaikallinenIntegrationDto;
+import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteSuorituspolkuDto;
 import fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaAudit;
 import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaMessageFields.KOULUTUSTOIMIJA;
@@ -52,6 +53,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @RestController
 @RequestMapping("/koulutustoimijat")
 @Api(value = "koulutustoimijat")
+@InternalApi
 public class KoulutustoimijaController extends KoulutustoimijaIdGetterAbstractController {
     @Autowired
     private KoulutustoimijaService koulutustoimijaService;

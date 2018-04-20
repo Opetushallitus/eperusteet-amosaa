@@ -32,6 +32,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * @author nkala
@@ -39,6 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/koodisto")
 @InternalApi
+@ApiIgnore
 public class KoodistoController {
     @Autowired
     KoodistoClient service;

@@ -47,6 +47,8 @@ import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaJulkinenD
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaQueryDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteExportDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.SuorituspolkuRakenneDto;
 import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaoikeusRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
@@ -376,10 +378,10 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
             perusteSisalto.setTutkinnonOsat(new ArrayList<>());
         }
 
-        Map<Long, TutkinnonOsaKaikkiDto> idToTosaMap = perusteSisalto.getTutkinnonOsat().stream()
-                .collect(Collectors.toMap(TutkinnonOsaKaikkiDto::getId, Function.identity()));
+        Map<Long, TutkinnonosaKaikkiDto> idToTosaMap = perusteSisalto.getTutkinnonOsat().stream()
+                .collect(Collectors.toMap(TutkinnonosaKaikkiDto::getId, Function.identity()));
 
-        List<TutkinnonOsaKaikkiDto> tutkinnonOsat;
+        List<TutkinnonosaKaikkiDto> tutkinnonOsat;
 
         if (ops.getTyyppi() == OpsTyyppi.YLEINEN) {
             tutkinnonOsat = perusteSisalto.getTutkinnonOsat();
@@ -408,7 +410,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         }
 
         SisaltoViite tosat = rootTkv.getLapset().get(0);
-        for (TutkinnonOsaKaikkiDto tosa : tutkinnonOsat) {
+        for (TutkinnonosaKaikkiDto tosa : tutkinnonOsat) {
             SisaltoViite uusi = SisaltoViite.createTutkinnonOsa(tosat);
             uusi.setPakollinen(false);
             uusi.getTekstiKappale().setNimi(LokalisoituTeksti.of(tosa.getNimi()));
@@ -517,6 +519,19 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     public OpetussuunnitelmaDto getOpetussuunnitelma(Long ktId, Long opsId) {
         Opetussuunnitelma ops = repository.findOne(opsId);
         return mapper.map(ops, OpetussuunnitelmaDto.class);
+    }
+
+    @Override
+    public OpetussuunnitelmaKaikkiDto getOpetussuunnitelmaKaikki(Long ktId, Long opsId) {
+        Opetussuunnitelma ops = repository.findOne(opsId);
+        SisaltoViiteExportDto sisalto = tkvService.getSisaltoRoot(ktId, opsId, SisaltoViiteExportDto.class);
+        List<SuorituspolkuRakenneDto> suorituspolut = tkvService.getSuorituspolkurakenne(ktId, opsId);
+        List<TutkinnonosaExportDto> tutkinnonOsat = tkvService.getTutkinnonOsaViitteet(ktId, opsId, TutkinnonosaExportDto.class);
+        OpetussuunnitelmaKaikkiDto result = mapper.map(ops, OpetussuunnitelmaKaikkiDto.class);
+        result.setSisalto(sisalto);
+        result.setSuorituspolut(suorituspolut);
+        result.setTutkinnonOsat(tutkinnonOsat);
+        return result;
     }
 
     @Override

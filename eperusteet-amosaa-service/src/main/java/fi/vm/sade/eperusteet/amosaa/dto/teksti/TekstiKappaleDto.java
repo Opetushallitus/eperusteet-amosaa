@@ -49,7 +49,6 @@ public class TekstiKappaleDto implements AuditLoggableDto {
     private UUID tunniste;
     private Boolean pakollinen;
     private Boolean valmis;
-    private SisaltoTyyppi tyyppi;
 
     public TekstiKappaleDto() {
     }

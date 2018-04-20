@@ -36,6 +36,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import org.springframework.web.bind.annotation.ResponseStatus;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * @param <T>
