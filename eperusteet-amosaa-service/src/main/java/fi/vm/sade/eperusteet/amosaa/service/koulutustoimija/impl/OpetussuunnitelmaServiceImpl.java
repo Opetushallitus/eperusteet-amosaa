@@ -349,7 +349,15 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
             throw new BusinessRuleViolationException("perustetta-ei-loytynyt");
         }
 
-        CachedPeruste cperuste = cachedPerusteRepository.findOneByDiaarinumeroAndLuotu(peruste.getDiaarinumero(), peruste.getGlobalVersion().getAikaleima());
+        CachedPeruste cperuste;
+        if (ops.getTyyppi() == OpsTyyppi.YLEINEN) {
+            // EP-1392
+            // Yhteinen pohja
+            cperuste = cachedPerusteRepository.findOneByPerusteIdAndLuotu(peruste.getId(), peruste.getGlobalVersion().getAikaleima());
+        } else {
+            cperuste = cachedPerusteRepository.findOneByDiaarinumeroAndLuotu(peruste.getDiaarinumero(), peruste.getGlobalVersion().getAikaleima());
+        }
+
         if (cperuste == null) {
             cperuste = new CachedPeruste();
             if (peruste.getNimi() != null) {

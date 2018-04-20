@@ -1,0 +1,1 @@
+ALTER TABLE peruste_cache ALTER COLUMN diaarinumero DROP NOT NULL;
