@@ -164,8 +164,9 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
           thead
             tr
               th(width="6%" ng-bind="'tila' | kaanna")
-              th(width="80%" ng-bind="'nimi' | kaanna")
+              th(width="78%" ng-bind="'nimi' | kaanna")
               th(width="12%" ng-bind="'koulutuskoodi' | kaanna")
+              th(width="2%")
               th(width="2%")
               th
           tbody
@@ -189,9 +190,13 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
                     span(ng-repeat="koulutus in ops.peruste.koulutukset") {{koulutus.koulutuskoodiArvo ? koulutus.koulutuskoodiArvo : '-'}}{{{false: ', ', true: ''}[$last]}}
                 div(ng-if="!ops.peruste.koulutukset") -
               td
-                div
-                  div(style="text-align: center;")
-                    .fa.fa-pencil-square-o(ng-show="ops.$$oikeus")
+                div(style="text-align: center;")
+                  .fa.fa-fax(ng-show="ops.tyyppi === 'yleinen'"
+                      uib-tooltip="{{'jaettu-osa-info' | kaanna}}")
+              td
+                div(style="text-align: center;")
+                  .fa.fa-pencil-square-o(ng-show="ops.$$oikeus"
+                      uib-tooltip="{{'muokkaus-oikeus-info' | kaanna}}")
               td
                 div
                   a(href="" ui-sref="root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot({ opsId: ops.id })")
