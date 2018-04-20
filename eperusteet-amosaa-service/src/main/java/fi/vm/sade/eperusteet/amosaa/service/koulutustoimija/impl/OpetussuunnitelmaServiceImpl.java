@@ -233,6 +233,8 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         } else if (opsHakuDto != null && opsHakuDto.getKoulutustyyppi() != null) {
             opsit = repository
                     .findAllByKoulutustoimijaAndKoulutustyyppi(koulutustoimija, opsHakuDto.getKoulutustyyppi());
+            // EP-1392
+            opsit.addAll(repository.findAllByKoulutustoimijaAndPerusteNull(koulutustoimija));
         } else {
             opsit = repository.findAllByKoulutustoimija(koulutustoimija);
         }

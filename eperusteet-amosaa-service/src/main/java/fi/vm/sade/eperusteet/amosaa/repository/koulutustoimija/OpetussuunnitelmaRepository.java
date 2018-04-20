@@ -41,6 +41,8 @@ public interface OpetussuunnitelmaRepository extends JpaWithVersioningRepository
     @Query("SELECT o FROM Opetussuunnitelma o WHERE o.koulutustoimija = ?1 AND o.peruste.koulutustyyppi = ?2")
     List<Opetussuunnitelma> findAllByKoulutustoimijaAndKoulutustyyppi(Koulutustoimija koulutustoimija, KoulutusTyyppi koulutusTyyppi);
 
+    List<Opetussuunnitelma> findAllByKoulutustoimijaAndPerusteNull(Koulutustoimija koulutustoimija);
+
     List<Opetussuunnitelma> findAllByKoulutustoimija(Koulutustoimija koulutustoimija);
 
     long countByKoulutustoimija(Koulutustoimija koulutustoimija);
