@@ -224,7 +224,11 @@ angular
                                 LocalStorage.clearVanhaOsa();
                                 lukko.remove();
                             },
-                            cancel: () => Promise.resolve()
+                            cancel: () => {
+                                return Promise.resolve(osa.get()).then(res => {
+                                    $scope.osa = res;
+                                });
+                            }
                         });
 
                         $scope.remove = () => {
