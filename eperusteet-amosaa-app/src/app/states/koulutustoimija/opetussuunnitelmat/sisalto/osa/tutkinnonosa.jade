@@ -182,7 +182,7 @@ mixin arviointiAsteikko()
 mixin arviointi()
   .box-panel
     .box-panel-title
-      h3(ng-if="!$$ekEditing && arvioinninKohdealue.otsikko.fi !== 'automaattinen'")
+      h3(ng-if="!$$ekEditing && arvioinninKohdealue.otsikko.fi !== 'automaattinen' && arvioinninKohdealue.otsikko.fi !== 'Nimetön'")
         span(ng-if="arvioinninKohdealue.otsikko" ng-bind="arvioinninKohdealue.otsikko | kaanna")
 
       .input-group(ng-if="$$ekEditing")
@@ -232,12 +232,11 @@ mixin tosaToteutus()
   div.toteutukset
     div(ng-if="$$ekEditing")
       div
-        h1
-          span(ng-bind="'toteutus' | kaanna")
-          .pull-right
-            button.btn.btn-primary(ng-click="addVapaaTeksti()")
-              +icon("plus")
-              span(style="margin-left: 8px" ng-bind="'lisaa-vapaa-teksti' | kaanna")
+        p.pull-right
+          button.btn.btn-primary(ng-click="addVapaaTeksti()")
+            +icon("plus")
+            span(style="margin-left: 8px" ng-bind="'lisaa-vapaa-teksti' | kaanna")
+        .clearfix
 
         div(ng-if="pTosa && pTosa.$$isTutke2")
           h2(ng-bind="'osaamisen-osoittaminen' | kaanna")
@@ -305,7 +304,7 @@ mixin tosaToteutus()
                 div(ckeditor slocalized ng-model="toteutus.arvioinnista.teksti" layout="normal")
               +contentToggler("$$showVapaat", "'tekstikappaleet'")
                 .toteutus-lisaa-tekstikappale
-                  button.btn.btn-primary(ng-click="addToteutusVapaaTeksti(toteutus.id)")
+                  button.btn.btn-primary(ng-click="addToteutusVapaaTeksti(toteutus)")
                     +icon("plus")
                     span(style="margin-left: 8px" ng-bind="'lisaa-vapaa-teksti' | kaanna")
                 div(ui-sortable="vapaatTekstitSortableOptions" ng-model="toteutus.vapaat")
@@ -333,6 +332,10 @@ mixin tosaToteutus()
       div(ng-repeat="vapaa in osa.tosa.vapaat")
         +contentToggler("vapaa.$$show", "vapaa.nimi")
           +teksti("vapaa.teksti")
+
+      div
+        h2
+          span(ng-bind="'toteutukset' | kaanna")
 
       div(ng-hide="osa.tosa.toteutukset.length > 0")
         div.alert.alert-info

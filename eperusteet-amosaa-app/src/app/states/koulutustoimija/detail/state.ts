@@ -33,6 +33,10 @@ angular.module("app").config($stateProvider =>
                         _.each(opsit, ops => {
                             ops.$$hidden = !_.isEmpty(search) && !Algoritmit.match(search, ops.nimi);
                         });
+                    $scope.checks = {
+                        poistetut: false,
+                        kaikki: true
+                    };
                 }
             },
             tilastot: {
@@ -57,7 +61,7 @@ angular.module("app").config($stateProvider =>
                                 ]
                             },
                             options: {
-                                responsive: false,
+                                responsive: true,
                                 maintainAspectRatio: true,
                                 scales: {
                                     yAxes: [
@@ -115,10 +119,6 @@ angular.module("app").config($stateProvider =>
                         .value();
 
                     $scope.opsitById = _.indexBy(opetussuunnitelmat, "id");
-                    $scope.checks = {
-                        poistetut: false,
-                        kaikki: true
-                    };
 
                     Pagination.addPagination(
                         $scope,

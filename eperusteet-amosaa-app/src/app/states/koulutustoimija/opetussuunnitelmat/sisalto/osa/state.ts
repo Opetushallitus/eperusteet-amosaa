@@ -224,7 +224,11 @@ angular
                                 LocalStorage.clearVanhaOsa();
                                 lukko.remove();
                             },
-                            cancel: () => Promise.resolve()
+                            cancel: () => {
+                                return Promise.resolve(osa.get()).then(res => {
+                                    $scope.osa = res;
+                                });
+                            }
                         });
 
                         $scope.remove = () => {
@@ -379,19 +383,6 @@ angular
                             });
                         };
 
-                        $scope.addToteutusVapaaTeksti = (id) => {
-                            const toteutus = _.find($scope.osa.tosa.toteutukset, {
-                                id
-                            });
-                            if (!_.isArray(toteutus.vapaat)) {
-                                toteutus.vapaat = [];
-                            }
-                            toteutus.vapaat.push({
-                                nimi: {},
-                                teksti: {}
-                            });
-                        };
-
                         $scope.paikallinenKoodiUpdate = pkoodi => {
                             $scope.$$koodiFormaattiVaara = false;
                             if (!_.isString(pkoodi) || !pkoodi.match(/^1\d\d\d$/)) {
@@ -464,10 +455,7 @@ angular
                         $scope.removeToteutus = toteutus => _.remove($scope.osa.tosa.toteutukset, toteutus);
                         $scope.removeVapaa = item => _.remove($scope.osa.tosa.vapaat, item);
 
-                        $scope.addToteutusVapaaTeksti = (id) => {
-                            const toteutus = _.find($scope.osa.tosa.toteutukset, {
-                                id
-                            });
+                        $scope.addToteutusVapaaTeksti = (toteutus) => {
                             if (!_.isArray(toteutus.vapaat)) {
                                 toteutus.vapaat = [];
                             }
@@ -675,6 +663,10 @@ angular
                                                 opsId: koodi[0].owner.id,
                                                 osaId: koodi[0].id
                                             });
+                                            if (_.has(koodi[0], 'tosa.omatutkinnonosa.laajuus')) {
+                                                $scope.misc.koodinimet[koodi.route].laajuus
+                                                    = koodi[0].tosa.omatutkinnonosa.laajuus;
+                                            }
                                         } else if (_.size(koodi) > 1) {
                                             const opskohtaiset = _.filter(
                                                 koodi,
@@ -692,6 +684,10 @@ angular
                                                         osaId: opskohtaiset[0].id
                                                     }
                                                 );
+                                                if (_.has(opskohtaiset[0], 'tosa.omatutkinnonosa.laajuus')) {
+                                                    $scope.misc.koodinimet[koodi.route].laajuus
+                                                        = opskohtaiset[0].tosa.omatutkinnonosa.laajuus;
+                                                }
                                             } else {
                                                 $scope.misc.koodinimet[koodi.route].nimi =
                                                     "koodilla-liian-monta-toteutusta";

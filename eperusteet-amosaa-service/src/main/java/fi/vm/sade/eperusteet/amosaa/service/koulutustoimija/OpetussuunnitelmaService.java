@@ -47,6 +47,9 @@ public interface OpetussuunnitelmaService extends RevisionService {
     @PreAuthorize("isAuthenticated()")
     void mapKoulutustyyppi();
 
+    @PreAuthorize("isAuthenticated()")
+    void mapKoulutukset();
+
     @PreAuthorize("permitAll()")
     List<OpetussuunnitelmaDto> getJulkisetOpetussuunnitelmat(Long ktId);
 

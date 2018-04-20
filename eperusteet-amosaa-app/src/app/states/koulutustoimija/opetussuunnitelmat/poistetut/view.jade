@@ -51,7 +51,7 @@ div.poistetut.subtle-transition
             td(ng-bind="'poistotyyppi-' + poistettu.tyyppi | kaanna" ng-if="!$$isValmaTelma")
             td(ng-bind="'poistotyyppi-' + poistettu.tyyppi | kaanna" ng-if="$$isValmaTelma && poistettu.tyyppi !== 'tutkinnonosa'")
             td(ng-bind="'poistotyyppi-koulutuksenosa' | kaanna" ng-if="$$isValmaTelma && poistettu.tyyppi == 'tutkinnonosa'")
-            td(ng-bind="poistettu.muokkaajaOid")
+            td(ng-bind="poistettu.$$nimi || poistettu.muokkaajaOid")
             td(ng-bind="poistettu.pvm | aikaleima")
             td
               .btn-group(style="display: flex;")

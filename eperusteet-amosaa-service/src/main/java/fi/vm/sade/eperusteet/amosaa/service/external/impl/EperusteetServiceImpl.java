@@ -19,7 +19,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.JsonObject;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
@@ -101,6 +100,8 @@ public class EperusteetServiceImpl implements EperusteetService {
             cperuste.setPerusteId(peruste.getId());
             cperuste.setLuotu(peruste.getGlobalVersion().getAikaleima());
             cperuste.setPeruste(eperusteetClient.getPerusteData(peruste.getId()));
+            cperuste.setKoulutustyyppi(peruste.getKoulutustyyppi());
+            cperuste.setKoulutukset(peruste.getKoulutukset());
             cperuste = cachedPerusteRepository.save(cperuste);
         }
         return dtoMapper.map(cperuste, CachedPerusteBaseDto.class);
