@@ -91,16 +91,6 @@ namespace ModalAdd {
             },
             templateUrl: "modals/add/opetussuunnitelma.jade",
             controller: ($timeout, $scope, $state, $stateParams, $uibModalInstance, perusteetApi) => {
-                // const amosaaPerusteet = _(perusteet)
-                //     .filter(peruste => _.includes(Amosaa.tuetutKoulutustyypit(), peruste.koulutustyyppi))
-                //     .reject(Perusteet.isVanhentunut)
-                //     .map((peruste: any) => {
-                //         peruste.$$tuleva = Perusteet.isTuleva(peruste);
-                //         peruste.$$siirtymalla = Perusteet.isSiirtymalla(peruste);
-                //         return peruste;
-                //     })
-                //     .value();
-
                 $scope.nimi = "";
                 $scope.sivu = 1;
                 $scope.sivuja = 1;
@@ -115,7 +105,7 @@ namespace ModalAdd {
                             nimi,
                             sivu: sivu - 1,
                             sivukoko: 10,
-                            kieli: "fi"
+                            kieli: KieliService.getSisaltokieli()
                         });
                         $scope.ladataan = false;
                         const { data, ...params } = res;
@@ -123,7 +113,7 @@ namespace ModalAdd {
                         $scope.sivuja = params.sivuja;
                         $scope.total = params.kokonaismäärä;
                     });
-                }
+                };
                 $scope.update();
 
                 $scope.peruste = undefined;
@@ -149,15 +139,19 @@ namespace ModalAdd {
                 $scope.selectLang = lang => {
                     $scope.currentLang = lang;
                     KieliService.setSisaltokieli(lang);
+                    $scope.perusteet = null;
+                    $scope.update();
                 };
             }
         }).result;
 
     export const sisaltoAdder = (koulutustoimija, sallitut = ["tekstikappale"], peruste) =>
         i.$uibModal.open({
-            resolve: {},
+            resolve: {
+                perusteetApi: Api => Api.one("perusteet")
+            },
             templateUrl: "modals/add/sisalto.jade",
-            controller: ($uibModalInstance, $scope, $stateParams, Api) => {
+            controller: ($uibModalInstance, $scope, $stateParams, Api, perusteetApi, $timeout) => {
                 $scope.currentStage = "sisaltotyyppi";
                 $scope.$$tutkinnonosatuonti = _.indexOf(sallitut, "tutkinnonosatuonti") !== -1;
                 $scope.$$sisaltotuonti = _.indexOf(sallitut, "sisaltotuonti") !== -1;
@@ -248,15 +242,34 @@ namespace ModalAdd {
                         );
                     };
 
+                    $scope.nimi = "";
+                    $scope.sivu = 1;
+                    $scope.sivuja = 1;
+                    $scope.total = 0;
+                    $scope.perusteet = null;
+                    $scope.ladataan = true;
+
                     $scope.tuoTutkinnonosa = async () => {
                         $scope.currentStage = "perusteet";
-                        const perusteet = await Api.one("perusteet").get();
-                        $scope.perustep = PaginationV2.addPagination(
-                            Algoritmit.doSortByNimi(perusteet),
-                            (search: string, peruste: any): boolean =>
-                                ($scope.poistetut || peruste.tila !== "poistettu") &&
-                                (!search || _.isEmpty(search) || Algoritmit.match(search, peruste.nimi))
-                        );
+
+
+                        $scope.update = function(nimi = "", sivu = 1) {
+                            $scope.ladataan = true;
+                            $timeout(async () => {
+                                const res = await perusteetApi.customGET("haku", {
+                                    nimi,
+                                    sivu: sivu - 1,
+                                    sivukoko: 10,
+                                    kieli: KieliService.getSisaltokieli()
+                                });
+                                $scope.ladataan = false;
+                                const { data, ...params } = res;
+                                $scope.perusteet = data;
+                                $scope.sivuja = params.sivuja;
+                                $scope.total = params.kokonaismäärä;
+                            });
+                        };
+                        $scope.update();
                     };
                 }
 
@@ -278,6 +291,8 @@ namespace ModalAdd {
                 $scope.selectLang = lang => {
                     $scope.currentLang = lang;
                     KieliService.setSisaltokieli(lang);
+                    $scope.perusteet = null;
+                    $scope.update();
                 };
             }
         }).result;
