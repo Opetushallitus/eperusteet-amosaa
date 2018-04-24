@@ -54,15 +54,39 @@ div.modal-body.modal-sisalto
           td(ng-bind="tosa.koodiArvo")
 
   div(ng-show="currentStage === 'perusteet'")
-    +completePagination("perustep")
-      table.table.table-striped
+    .form-group.has-feedback.has-feedback-left
+      input.form-control(
+        type="text"
+        placeholder="{{ 'hae-peruste' | kaanna }}"
+        ng-model="nimi"
+        ng-model-options="{ debounce: 300 }"
+        ng-change="update(nimi, sivu)")
+      i.form-control-feedback.glyphicon.glyphicon-search(ng-if="!ladataan" style="color: gray;")
+      i.form-control-feedback(ng-if="ladataan")
+        small-spinner
+
+    table.table.table-striped
+      thead
         tr
           th(ng-bind="'nimi' | kaanna")
           th(ng-bind="'tutkinnon-diaarinumero' | kaanna")
-        tr(ng-repeat="peruste in perustep.items")
+      tbody
+        tr(ng-repeat="peruste in perusteet" ng-click="valitsePeruste(peruste)")
           td
-            a(href="" ng-click="valitsePeruste(peruste)" ng-bind="peruste.nimi | kaanna")
+            a(href="" kaanna="peruste.nimi" ng-click="valitsePeruste(peruste)")
           td(ng-bind="peruste.diaarinumero")
+
+    ul(uib-pagination total-items="total"
+      ng-model="sivu"
+      ng-change="update(nimi, sivu)"
+      max-size="10"
+      class="pagination-sm"
+      boundary-links="true"
+      previous-text="‹"
+      next-text="›"
+      first-text="«"
+      last-text="»"
+      num-pages="sivuja")
 
   div(ng-show="currentStage === 'opetussuunnitelma'")
     +completePagination("opsp")
