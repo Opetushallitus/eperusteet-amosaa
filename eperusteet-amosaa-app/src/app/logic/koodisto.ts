@@ -9,7 +9,8 @@ namespace Koodisto {
                 nimi: _.zipObject(
                     _.map(koodi.metadata, (meta: any) => meta.kieli.toLowerCase()),
                     _.map(koodi.metadata, "nimi")
-                )
+                ),
+                voimassaAlkuPvm: koodi.voimassaAlkuPvm
             }))
             .value();
 

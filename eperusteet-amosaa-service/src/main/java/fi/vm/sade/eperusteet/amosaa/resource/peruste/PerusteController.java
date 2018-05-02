@@ -116,23 +116,4 @@ public class PerusteController {
         return service.getPerusteSisaltoByPerusteId(perusteId, JsonNode.class);
     }
 
-//    @RequestMapping(value = "/{perusteId}/tutkintonimikekoodit", method = GET)
-//    @InternalApi
-//    public ResponseEntity<List<CombinedDto<TutkintonimikeKoodiDto, HashMap<String, KoodistoKoodiDto>>>> getTutkintonimikekoodit(@PathVariable("perusteId") final long id) {
-//        List<TutkintonimikeKoodiDto> tutkintonimikeKoodit = service.getTutkintonimikeKoodit(id);
-//        List<CombinedDto<TutkintonimikeKoodiDto, HashMap<String, KoodistoKoodiDto>>> response = new ArrayList<>();
-//
-//        for (TutkintonimikeKoodiDto tkd : tutkintonimikeKoodit) {
-//            HashMap<String, KoodistoKoodiDto> nimet = new HashMap<>();
-//            if (tkd.getOsaamisalaUri() != null) {
-//                nimet.put(tkd.getOsaamisalaArvo(), koodistoService.get("osaamisala", tkd.getOsaamisalaUri()));
-//            }
-//            nimet.put(tkd.getTutkintonimikeArvo(), koodistoService.get("tutkintonimikkeet", tkd.getTutkintonimikeUri()));
-//            if (tkd.getTutkinnonOsaUri() != null) {
-//                nimet.put(tkd.getTutkinnonOsaArvo(), koodistoService.get("tutkinnonosat", tkd.getTutkinnonOsaUri()));
-//            }
-//            response.add(new CombinedDto<>(tkd, nimet));
-//        }
-//        return new ResponseEntity<>(response, HttpStatus.OK);
-//    }
 }

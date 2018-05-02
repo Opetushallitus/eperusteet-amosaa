@@ -4,7 +4,7 @@ namespace SuoritustapaRyhmat {
         i = inject($injector, ["$rootScope", "$uibModal", "$q"]);
     };
 
-    export const editoi = (spRivit, node, tutkinnonosat, koodisto, paikalliset, peruste) =>
+    export const editoi = (spRivit, node, tutkinnonosat, koodisto, paikalliset, peruste, perusteetApi) =>
         i.$uibModal.open({
             resolve: {},
             templateUrl: "modals/suoritustaparyhma.jade",
@@ -50,6 +50,7 @@ namespace SuoritustapaRyhmat {
                             })
                             .sortBy(koodi => KaannaService.kaanna(koodi.nimi))
                             .value();
+
                     })
                     .catch(err => {
                         NotifikaatioService.varoitus("koodiston-hakeminen-epaonnistui");
@@ -77,6 +78,22 @@ namespace SuoritustapaRyhmat {
                 };
 
                 $scope.peruuta = $uibModalInstance.dismiss;
+
+                $scope.haePerusteKoodilla = async koodi => {
+                    if (!koodi.$$nayta) {
+                        koodi.$$nayta = true;
+                        koodi.$$ladataan = true;
+                        const res = await perusteetApi.customGET("haku", {
+                            nimi: koodi.uri.split("_")[1],
+                            tutkinnonosat: true,
+                            kieli: KieliService.getSisaltokieli()
+                        });
+                        koodi.$$ladataan = false;
+                        koodi.$$perusteet = res.data;
+                    } else {
+                        koodi.$$nayta = false;
+                    }
+                }
             }
         }).result;
 }
@@ -117,7 +134,8 @@ angular
                 },
                 pSuoritustavat: (Api, osa, ops) =>
                     osa.tyyppi === "suorituspolku" && Api.one("perusteet/" + ops.peruste.id + "/suoritustavat").get(),
-                arviointiAsteikot: Api => Api.all("arviointiasteikot").getList()
+                arviointiAsteikot: Api => Api.all("arviointiasteikot").getList(),
+                perusteetApi: Api => Api.one("perusteet")
             },
             onEnter: (osa, $state, $stateParams) => {
                 Murupolku.register("root.koulutustoimija.opetussuunnitelmat.sisalto.osa", osa.tekstiKappale.nimi);
@@ -604,6 +622,7 @@ angular
                         koodisto,
                         paikallisetTutkinnonosatEP,
                         koulutustoimija,
+                        perusteetApi
                     ) => {
                         const suoritustapa = Perusteet.getSuoritustapa(ops, pSuoritustavat),
                             tosat = _.indexBy(pTosat, "id"),
@@ -729,7 +748,8 @@ angular
                                         tosaViitteet,
                                         koodisto,
                                         paikallisetTutkinnonosatEP,
-                                        peruste
+                                        peruste,
+                                        perusteetApi
                                     ).then(res => {
                                         $scope.osa.suorituspolku.rivit = _.compact(_.values(res));
                                         update();
