@@ -16,7 +16,9 @@ namespace SuoritustapaRyhmat {
 
                 $scope.alkioitaSivulla = 10;
                 $scope.sivu = 1;
-                $scope.tosaRajaus = {};
+                $scope.tosaRajaus = {
+                    valitut: true
+                };
                 $scope.spRivit = spRivit;
                 $scope.tosat = tutkinnonosat;
                 $scope.node = node;
@@ -50,7 +52,7 @@ namespace SuoritustapaRyhmat {
                             })
                             .sortBy(koodi => KaannaService.kaanna(koodi.nimi))
                             .value();
-
+                        $scope.suodata();
                     })
                     .catch(err => {
                         NotifikaatioService.varoitus("koodiston-hakeminen-epaonnistui");
