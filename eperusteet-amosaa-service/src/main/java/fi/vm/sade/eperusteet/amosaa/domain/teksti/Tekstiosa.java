@@ -17,6 +17,7 @@ package fi.vm.sade.eperusteet.amosaa.domain.teksti;
 
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
+import fi.vm.sade.eperusteet.amosaa.service.util.Copyable;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 
 import java.io.Serializable;
@@ -40,7 +41,7 @@ import org.hibernate.envers.RelationTargetAuditMode;
 @Audited
 @Table(name = "tekstiosa")
 @Entity
-public class Tekstiosa implements Serializable {
+public class Tekstiosa implements Serializable, Copyable<Tekstiosa> {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Getter
@@ -90,5 +91,10 @@ public class Tekstiosa implements Serializable {
 
     public static void validoiTeksti(Validointi validointi, Tekstiosa osa, Opetussuunnitelma ops, LokalisoituTeksti parent) {
         LokalisoituTeksti.validoi(validointi, ops, osa.getTeksti(), parent);
+    }
+
+    @Override
+    public Tekstiosa copy(boolean deep) {
+        return copyOf(this);
     }
 }

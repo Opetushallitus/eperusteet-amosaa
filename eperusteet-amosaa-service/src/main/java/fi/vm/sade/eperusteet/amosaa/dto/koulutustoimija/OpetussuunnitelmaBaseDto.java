@@ -27,6 +27,8 @@ import lombok.Setter;
 import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
 import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
+import java.util.Date;
+
 /**
  * @author nkala
  */
@@ -43,6 +45,7 @@ public class OpetussuunnitelmaBaseDto implements AuditLoggableDto {
     private OpsTyyppi tyyppi;
     private LokalisoituTekstiDto kuvaus;
     private KoulutustoimijaBaseDto koulutustoimija;
+    private Date luotu;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Reference pohja;

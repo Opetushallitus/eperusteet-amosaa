@@ -83,20 +83,29 @@ namespace ModalAdd {
             }
         }).result;
 
-    export const opetussuunnitelma = () =>
+    export const opetussuunnitelma = (koulutustoimija) =>
         i.$uibModal.open({
             size: "lg",
             resolve: {
-                perusteetApi: Api => Api.one("perusteet")
+                perusteetApi: Api => Api.one("perusteet"),
+                opetussuunnitelmatApi: Api => Api.one("koulutustoimijat", koulutustoimija).all("opetussuunnitelmat"),
             },
             templateUrl: "modals/add/opetussuunnitelma.jade",
-            controller: ($timeout, $scope, $state, $stateParams, $uibModalInstance, perusteetApi) => {
+            controller: ($timeout, $scope, $state, $stateParams, $uibModalInstance, perusteetApi, opetussuunnitelmatApi) => {
                 $scope.nimi = "";
                 $scope.sivu = 1;
                 $scope.sivuja = 1;
                 $scope.total = 0;
                 $scope.perusteet = null;
                 $scope.ladataan = true;
+                $scope.valittuTyyppi = null;
+                $scope.valitseTyyppi = (tyyppi) => {
+                    $scope.valittuTyyppi = tyyppi;
+                };
+
+                opetussuunnitelmatApi.getList().then(res => {
+                    $scope.opetussuunnitelmat = res;
+                });
 
                 $scope.update = function(nimi = "", sivu = 1) {
                     $scope.ladataan = true;
@@ -119,6 +128,16 @@ namespace ModalAdd {
                 $scope.peruste = undefined;
                 $scope.ok = $uibModalInstance.close;
                 $scope.peruuta = $uibModalInstance.dismiss;
+
+                $scope.valitseOpetussuunnitelma = ops => {
+                    $scope.input = "";
+                    $scope.peruste = ops;
+                    $scope.ops = {
+                        perusteId: ops.peruste.id,
+                        perusteDiaarinumero: ops.peruste.diaarinumero,
+                        opsId: ops.id
+                    };
+                };
 
                 $scope.valitsePeruste = peruste => {
                     $scope.input = "";
@@ -163,7 +182,6 @@ namespace ModalAdd {
                 $scope.valittu = undefined;
                 $scope.koulutustyyppi = peruste.koulutustyyppi;
                 $scope.$$isValmaTelma = _.includes(Amosaa.valmaTelmaKoulutustyypit(), peruste.koulutustyyppi);
-
 
                 {
                     // Opetussuunnitelmat

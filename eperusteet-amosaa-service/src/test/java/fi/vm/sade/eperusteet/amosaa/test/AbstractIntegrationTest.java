@@ -28,6 +28,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaLuontiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
@@ -101,7 +102,7 @@ public abstract class AbstractIntegrationTest {
     }
 
     protected OpetussuunnitelmaBaseDto createOpetussuunnitelma(Consumer<OpetussuunnitelmaDto> opsfn) {
-        OpetussuunnitelmaDto ops = new OpetussuunnitelmaDto();
+        OpetussuunnitelmaLuontiDto ops = new OpetussuunnitelmaLuontiDto();
         ops.setKoulutustoimija(getKoulutustoimija());
         ops.setPerusteDiaarinumero("9/011/2008");
         ops.setSuoritustapa("naytto");
@@ -118,7 +119,7 @@ public abstract class AbstractIntegrationTest {
     }
 
     protected OpetussuunnitelmaBaseDto createPohja(Consumer<OpetussuunnitelmaDto> opsfn) {
-        OpetussuunnitelmaDto ops = new OpetussuunnitelmaDto();
+        OpetussuunnitelmaLuontiDto ops = new OpetussuunnitelmaLuontiDto();
         ops.setKoulutustoimija(getKoulutustoimija());
         ops.setTyyppi(OpsTyyppi.POHJA);
         HashMap<String, String> nimi = new HashMap<>();

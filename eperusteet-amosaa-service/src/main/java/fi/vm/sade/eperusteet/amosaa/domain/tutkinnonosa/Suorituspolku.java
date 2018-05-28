@@ -32,6 +32,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import fi.vm.sade.eperusteet.amosaa.service.util.Copyable;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
@@ -44,7 +45,7 @@ import org.hibernate.envers.Audited;
 @Entity
 @Audited
 @Table(name = "suorituspolku")
-public class Suorituspolku extends AbstractAuditedEntity implements Serializable, ReferenceableEntity {
+public class Suorituspolku extends AbstractAuditedEntity implements Serializable, ReferenceableEntity, Copyable<Suorituspolku> {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Getter
@@ -59,15 +60,25 @@ public class Suorituspolku extends AbstractAuditedEntity implements Serializable
     @Setter
     private Boolean naytaKuvausJulkisesti;
 
-    public static Suorituspolku copy(Suorituspolku suorituspolku) {
-        if (suorituspolku != null) {
-            suorituspolku.setId(null);
+    @Override
+    public Suorituspolku copy(boolean deep) {
+        return copy(this);
+    }
 
-            for (SuorituspolkuRivi rivi : suorituspolku.getRivit()) {
-                rivi.setSuorituspolku(suorituspolku);
-                rivi.setId(null);
+    public static Suorituspolku copy(Suorituspolku original) {
+        if (original != null) {
+            Suorituspolku result = new Suorituspolku();
+            result.setNaytaKuvausJulkisesti(original.getNaytaKuvausJulkisesti());
+
+            for (SuorituspolkuRivi rivi : original.getRivit()) {
+                SuorituspolkuRivi copy = rivi.copy();
+                copy.setSuorituspolku(result);
+                result.getRivit().add(copy);
             }
+            return result;
         }
-        return suorituspolku;
+        else {
+            return null;
+        }
     }
 }

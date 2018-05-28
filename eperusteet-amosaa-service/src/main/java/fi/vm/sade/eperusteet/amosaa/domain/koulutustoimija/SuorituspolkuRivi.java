@@ -21,6 +21,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Suorituspolku;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import javax.persistence.CascadeType;
@@ -34,6 +35,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import fi.vm.sade.eperusteet.amosaa.service.util.Copyable;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
@@ -45,7 +47,7 @@ import org.hibernate.envers.RelationTargetAuditMode;
 @Entity
 @Audited
 @Table(name = "suorituspolku_rivi")
-public class SuorituspolkuRivi implements Serializable, ReferenceableEntity {
+public class SuorituspolkuRivi implements Serializable, ReferenceableEntity, Copyable<SuorituspolkuRivi> {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Getter
@@ -80,4 +82,15 @@ public class SuorituspolkuRivi implements Serializable, ReferenceableEntity {
     @Setter
     @ElementCollection
     private Set<String> koodit;
+
+    @Override
+    public SuorituspolkuRivi copy(boolean deep) {
+        SuorituspolkuRivi result = new SuorituspolkuRivi();
+        result.setRakennemoduuli(this.getRakennemoduuli());
+        result.setPiilotettu(this.getPiilotettu());
+        result.setJrno(this.getJrno());
+        result.setKuvaus(this.getKuvaus());
+        result.setKoodit(new HashSet<>(this.koodit));
+        return result;
+    }
 }

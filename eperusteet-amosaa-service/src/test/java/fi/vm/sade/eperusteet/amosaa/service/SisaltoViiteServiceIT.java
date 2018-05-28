@@ -9,6 +9,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaLuontiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.SuorituspolkuRiviDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.AbstractRakenneOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.*;
@@ -56,7 +57,7 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
         useProfileKP3();
 
         // Ops
-        OpetussuunnitelmaDto ops = new OpetussuunnitelmaDto();
+        OpetussuunnitelmaLuontiDto ops = new OpetussuunnitelmaLuontiDto();
         ops.setKoulutustoimija(getKoulutustoimija());
         ops.setPerusteDiaarinumero("OPH-12345-2018");
         ops.setSuoritustapa("naytto");
@@ -225,6 +226,20 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
         assertThat(polku.getOsat().get(0))
                 .hasFieldOrPropertyWithValue("tunniste", UUID.fromString("d35fb695-f181-4e49-b4b9-c64a85819d0a"))
                 .hasFieldOrPropertyWithValue("paikallinenKuvaus", null);
+    }
+
+    @Test
+    @Rollback
+    public void testSisaltoHierarkianKopiointi() {
+        useProfileKP2();
+        OpetussuunnitelmaBaseDto ops = createOpetussuunnitelma();
+        SisaltoViiteDto.Matala root = sisaltoViiteService.getSisaltoRoot(getKoulutustoimijaId(), ops.getId());
+        SisaltoViiteDto.Matala added = sisaltoViiteService.addSisaltoViite(getKoulutustoimijaId(), ops.getId(), root.getId(), createSisalto(sisaltoViiteDto -> {
+            sisaltoViiteDto.setTyyppi(SisaltoTyyppi.TUTKINNONOSA);
+        }));
+//        SisaltoViiteRakenneDto rakenne = sisaltoViiteService.getRakenne(getKoulutustoimijaId(), ops.getId());
+
+//        sisaltoViiteService.kopioiHierarkia()
     }
 
     @Test

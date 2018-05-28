@@ -39,6 +39,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
+import fi.vm.sade.eperusteet.amosaa.service.util.Copyable;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.BatchSize;
@@ -51,7 +52,7 @@ import org.hibernate.envers.RelationTargetAuditMode;
 @Entity
 @Audited
 @Table(name = "sisaltoviite")
-public class SisaltoViite implements ReferenceableEntity, Serializable {
+public class SisaltoViite implements ReferenceableEntity, Serializable, Copyable<SisaltoViite> {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Getter
@@ -140,28 +141,38 @@ public class SisaltoViite implements ReferenceableEntity, Serializable {
         return root;
     }
 
+    @Override
+    public SisaltoViite copy(boolean deep) {
+        return copy(this, deep);
+    }
+
     public static SisaltoViite copy(SisaltoViite kopioitava) {
         return copy(kopioitava, true);
     }
 
-    public static SisaltoViite copy(SisaltoViite kopioitava, boolean copyChildren) {
-        if (kopioitava != null) {
-            kopioitava.setId(null);
-            kopioitava.setVanhempi(null);
-
-            kopioitava.setTekstiKappale(TekstiKappale.copy(kopioitava.getTekstiKappale()));
-            kopioitava.setTosa(Tutkinnonosa.copy(kopioitava.getTosa()));
-            kopioitava.setSuorituspolku(Suorituspolku.copy(kopioitava.getSuorituspolku()));
+    public static SisaltoViite copy(SisaltoViite original, boolean copyChildren) {
+        if (original != null) {
+            SisaltoViite result = new SisaltoViite();
+            result.setLiikkumaton(original.isLiikkumaton());
+            result.setPakollinen(original.isPakollinen());
+            result.setOhjeteksti(original.getOhjeteksti());
+            result.setTyyppi(original.getTyyppi());
+            result.setPerusteteksti(original.getPerusteteksti());
+            result.setTekstiKappale(TekstiKappale.copy(original.getTekstiKappale()));
+            result.setTosa(Tutkinnonosa.copy(original.getTosa()));
+            result.setSuorituspolku(Suorituspolku.copy(original.getSuorituspolku()));
 
             if (copyChildren) {
-                List<SisaltoViite> lapset = kopioitava.getLapset();
-                kopioitava.setLapset(new ArrayList<>());
-                for (SisaltoViite lapsi : lapset) {
-                    kopioitava.getLapset().add(copy(lapsi));
+                result.setLapset(new ArrayList<>());
+                for (SisaltoViite lapsi : original.getLapset()) {
+                    result.getLapset().add(copy(lapsi));
                 }
             }
+            return result;
         }
-        return kopioitava;
+        else {
+            return null;
+        }
     }
 
     static private SisaltoViite createCommon(SisaltoViite parent) {
