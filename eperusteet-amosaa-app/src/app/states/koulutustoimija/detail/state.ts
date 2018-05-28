@@ -134,7 +134,7 @@ angular.module("app").config($stateProvider =>
                     );
 
                     const add = tyyppi =>
-                        ModalAdd[tyyppi]()
+                        ModalAdd[tyyppi](koulutustoimija.id)
                             .then(opsSaver)
                             .then(res => $scope.opetussuunnitelmat.push(res));
 

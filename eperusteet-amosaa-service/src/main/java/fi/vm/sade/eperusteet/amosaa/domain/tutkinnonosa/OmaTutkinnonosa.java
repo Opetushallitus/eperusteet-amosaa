@@ -29,6 +29,7 @@ import java.util.Objects;
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
 
+import fi.vm.sade.eperusteet.amosaa.service.util.Copyable;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
@@ -99,10 +100,15 @@ public class OmaTutkinnonosa extends AbstractAuditedEntity implements Serializab
         }
     }
 
-    static OmaTutkinnonosa copy(OmaTutkinnonosa omatutkinnonosa) {
-        if (omatutkinnonosa != null) {
-            omatutkinnonosa.setId(null);
+    static OmaTutkinnonosa copy(OmaTutkinnonosa original) {
+        if (original != null) {
+            OmaTutkinnonosa result = new OmaTutkinnonosa();
+            result.setKoodiPrefix(original.getKoodiPrefix());
+            result.setKoodi(original.getKoodi());
+            return result;
         }
-        return omatutkinnonosa;
+        else {
+            return null;
+        }
     }
 }

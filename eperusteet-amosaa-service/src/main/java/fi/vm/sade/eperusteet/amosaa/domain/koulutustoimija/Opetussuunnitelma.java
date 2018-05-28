@@ -47,6 +47,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
+import fi.vm.sade.eperusteet.amosaa.service.util.Copyable;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
@@ -59,7 +60,7 @@ import org.hibernate.envers.RelationTargetAuditMode;
 @Entity
 @Audited
 @Table(name = "opetussuunnitelma")
-public class Opetussuunnitelma extends AbstractAuditedEntity implements Serializable, ReferenceableEntity {
+public class Opetussuunnitelma extends AbstractAuditedEntity implements Serializable, ReferenceableEntity, Copyable<Opetussuunnitelma> {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Getter
@@ -170,4 +171,20 @@ public class Opetussuunnitelma extends AbstractAuditedEntity implements Serializ
     public void removeLiite(Liite liite) {
         liitteet.remove(liite);
     }
+
+    @Override
+    public Opetussuunnitelma copy(boolean deep) {
+        Opetussuunnitelma result = new Opetussuunnitelma();
+        result.setPeruste(this.getPeruste());
+        result.setTyyppi(this.getTyyppi());
+        result.setPerusteDiaarinumero(this.getPerusteDiaarinumero());
+        result.setNimi(this.getNimi());
+        result.setKuvaus(this.getKuvaus());
+        result.changeKoulutustoimija(this.getKoulutustoimija());
+        result.setSuoritustapa(this.getSuoritustapa());
+        result.setPohja(this.getPohja());
+        result.setTila(Tila.LUONNOS);
+        return result;
+    }
+
 }

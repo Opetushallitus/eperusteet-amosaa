@@ -466,53 +466,74 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
     @Override
     @Transactional
-    public OpetussuunnitelmaBaseDto addOpetussuunnitelma(Long ktId, OpetussuunnitelmaDto opsDto) {
+    public OpetussuunnitelmaBaseDto addOpetussuunnitelma(Long ktId, OpetussuunnitelmaLuontiDto opsDto) {
         Koulutustoimija kt = koulutustoimijaRepository.findOne(ktId);
-        Opetussuunnitelma ops = mapper.map(opsDto, Opetussuunnitelma.class);
-        ops.changeKoulutustoimija(kt);
-        ops.setTila(Tila.LUONNOS);
-        ops = repository.save(ops);
+        Opetussuunnitelma ops = null;
 
-        SisaltoViite rootTkv = null;
-        if (opsDto.getTyyppi() != OpsTyyppi.YHTEINEN) {
-            rootTkv = new SisaltoViite();
-            rootTkv.setOwner(ops);
-            rootTkv = tkvRepository.save(rootTkv);
+        if (opsDto.getOpsId() != null) {
+            Opetussuunnitelma pohja = repository.findOne(opsDto.getOpsId());
+
+            if (pohja == null || !Objects.equals(pohja.getKoulutustoimija().getId(), ktId)) {
+                throw new BusinessRuleViolationException("ei-oikeutta-opetussuunnitelmaan");
+            }
+
+            SisaltoViite sisaltoRoot = tkvRepository.findOneRoot(pohja);
+            ops = pohja.copy();
+            if (opsDto.getNimi() != null) {
+                ops.setNimi(mapper.map(opsDto.getNimi(), LokalisoituTeksti.class));
+            }
+            ops = repository.save(ops);
+            tkvRepository.save(tkvService.kopioiHierarkia(sisaltoRoot, ops));
         }
+        else {
+            ops = mapper.map(opsDto, Opetussuunnitelma.class);
+            ops.changeKoulutustoimija(kt);
+            ops.setTila(Tila.LUONNOS);
+            ops = repository.save(ops);
 
-        if (kt.isOph()) {
-            opsDto.setTyyppi(OpsTyyppi.POHJA);
-            opsDto.setSuoritustapa("pohja");
-        } else {
-            switch (opsDto.getTyyppi()) {
-                case OPS:
-                    PerusteDto peruste = eperusteetClient.getPeruste(opsDto.getPerusteId(), PerusteDto.class);
-                    setOpsCommon(ops, peruste, rootTkv);
-                    break;
-                case YLEINEN:
-                    PerusteDto yleinen = eperusteetClient.getYleinenPohja();
-                    setOpsCommon(ops, yleinen, rootTkv);
-                    opsDto.setSuoritustapa("yleinen");
-                    break;
-                case YHTEINEN:
-                    Opetussuunnitelma pohja = repository.findOne(opsDto.getPohja().getIdLong());
-                    if (pohja == null) {
-                        throw new BusinessRuleViolationException("pohjaa-ei-loytynyt");
-                    } else if (pohja.getTila() != Tila.JULKAISTU) {
-                        throw new BusinessRuleViolationException("vain-julkaistua-pohjaa-voi-kayttaa");
-                    }
+            SisaltoViite rootTkv = null;
+            if (opsDto.getTyyppi() != OpsTyyppi.YHTEINEN) {
+                rootTkv = new SisaltoViite();
+                rootTkv.setOwner(ops);
+                rootTkv = tkvRepository.save(rootTkv);
+            }
 
-                    opsDto.setSuoritustapa("yhteinen");
-                    SisaltoViite pohjatkv = tkvRepository.findOneRoot(pohja);
-                    tkvRepository.save(tkvService.kopioiHierarkia(pohjatkv, ops));
-                    ops.setPohja(pohja);
-                    break;
-                case POHJA:
-                    throw new BusinessRuleViolationException("ainoastaan-oph-voi-tehda-pohjia");
-                default:
-                    throw new BusinessRuleViolationException("opstyypille-ei-toteutusta");
+            if (kt.isOph()) {
+                opsDto.setTyyppi(OpsTyyppi.POHJA);
+                opsDto.setSuoritustapa("pohja");
+            }
+            else {
+                switch (opsDto.getTyyppi()) {
+                    case OPS:
+                        PerusteDto peruste = eperusteetClient.getPeruste(opsDto.getPerusteId(), PerusteDto.class);
+                        setOpsCommon(ops, peruste, rootTkv);
+                        break;
+                    case YLEINEN:
+                        PerusteDto yleinen = eperusteetClient.getYleinenPohja();
+                        setOpsCommon(ops, yleinen, rootTkv);
+                        opsDto.setSuoritustapa("yleinen");
+                        break;
+                    case YHTEINEN:
+                        Opetussuunnitelma pohja = repository.findOne(opsDto.getPohja().getIdLong());
+                        if (pohja == null) {
+                            throw new BusinessRuleViolationException("pohjaa-ei-loytynyt");
+                        } else if (pohja.getTila() != Tila.JULKAISTU) {
+                            throw new BusinessRuleViolationException("vain-julkaistua-pohjaa-voi-kayttaa");
+                        }
+
+                        opsDto.setSuoritustapa("yhteinen");
+                        SisaltoViite pohjatkv = tkvRepository.findOneRoot(pohja);
+                        tkvRepository.save(tkvService.kopioiHierarkia(pohjatkv, ops));
+                        ops.setPohja(pohja);
+                        break;
+                    case POHJA:
+                        throw new BusinessRuleViolationException("ainoastaan-oph-voi-tehda-pohjia");
+                    default:
+                        throw new BusinessRuleViolationException("opstyypille-ei-toteutusta");
+                }
             }
         }
+
         return mapper.map(ops, OpetussuunnitelmaBaseDto.class);
     }
 

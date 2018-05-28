@@ -24,6 +24,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+import fi.vm.sade.eperusteet.amosaa.service.util.Copyable;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
@@ -35,7 +36,7 @@ import org.hibernate.envers.RelationTargetAuditMode;
 @Entity
 @Audited
 @Table(name = "vierastutkinnonosa")
-public class VierasTutkinnonosa extends AbstractAuditedEntity implements Serializable, ReferenceableEntity {
+public class VierasTutkinnonosa extends AbstractAuditedEntity implements Serializable, ReferenceableEntity, Copyable<VierasTutkinnonosa> {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Getter
@@ -60,4 +61,22 @@ public class VierasTutkinnonosa extends AbstractAuditedEntity implements Seriali
     @NotNull
     @Column(name = "tosa_id")
     private Long tosaId;
+
+    @Override
+    public VierasTutkinnonosa copy(boolean deep) {
+        return copy(this);
+    }
+
+    public static VierasTutkinnonosa copy(VierasTutkinnonosa original) {
+        if (original != null) {
+            VierasTutkinnonosa result = new VierasTutkinnonosa();
+            result.setCperuste(original.getCperuste());
+            result.setPerusteId(original.getPerusteId());
+            result.setTosaId(original.getTosaId());
+            return result;
+        }
+        else {
+            return null;
+        }
+    }
 }

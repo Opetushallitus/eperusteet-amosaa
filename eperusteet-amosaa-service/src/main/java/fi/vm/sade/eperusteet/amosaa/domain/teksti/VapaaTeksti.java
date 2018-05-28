@@ -30,6 +30,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import fi.vm.sade.eperusteet.amosaa.service.util.Copyable;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
@@ -41,7 +42,7 @@ import org.hibernate.envers.RelationTargetAuditMode;
 @Entity
 @Table(name = "vapaa_teksti")
 @Audited
-public class VapaaTeksti extends AbstractAuditedEntity implements Serializable, ReferenceableEntity {
+public class VapaaTeksti extends AbstractAuditedEntity implements Serializable, ReferenceableEntity, Copyable<VapaaTeksti> {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Getter
@@ -61,4 +62,12 @@ public class VapaaTeksti extends AbstractAuditedEntity implements Serializable, 
     @Getter
     @Setter
     private LokalisoituTeksti teksti;
+
+    @Override
+    public VapaaTeksti copy(boolean deep) {
+        VapaaTeksti result = new VapaaTeksti();
+        result.setNimi(this.getNimi());
+        result.setTeksti(this.getTeksti());
+        return result;
+    }
 }

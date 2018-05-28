@@ -511,14 +511,8 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
     @Override
     @Transactional
     public SisaltoViite kopioiHierarkia(SisaltoViite original, Opetussuunnitelma owner) {
-        SisaltoViite result = new SisaltoViite();
-        TekstiKappale originalTk = original.getTekstiKappale();
-        result.setTekstiKappale(originalTk != null ? tekstiKappaleRepository.save(originalTk.copy()) : null);
+        SisaltoViite result = original.copy(false);
         result.setOwner(owner);
-        result.setLiikkumaton(original.isLiikkumaton());
-        result.setPakollinen(original.isPakollinen());
-        result.setOhjeteksti(original.getOhjeteksti());
-        result.setPerusteteksti(original.getPerusteteksti());
         List<SisaltoViite> lapset = original.getLapset();
 
         if (lapset != null) {
@@ -528,6 +522,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
                 result.getLapset().add(uusiLapsi);
             }
         }
+
         return repository.save(result);
     }
 

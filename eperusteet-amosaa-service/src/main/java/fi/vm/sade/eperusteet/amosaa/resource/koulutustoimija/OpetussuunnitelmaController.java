@@ -25,6 +25,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaLuontiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.VanhentunutPohjaperusteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
@@ -123,7 +124,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
     @RequestMapping(method = RequestMethod.POST)
     public OpetussuunnitelmaBaseDto add(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
-            @RequestBody OpetussuunnitelmaDto opsDto
+            @RequestBody OpetussuunnitelmaLuontiDto opsDto
     ) {
         return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, OPETUSSUUNNITELMA_LISAYS, opsDto),
                 (Void) -> service.addOpetussuunnitelma(ktId, opsDto));

@@ -4,8 +4,38 @@ div.modal-header
     +kielivalitsin
   .clearfix
 
-div.modal-body
-  div.content-spacing.tutkintohaku
+mixin tyyppivalinta(nimi, kaannos)
+  div.sisalto-valinta(ng-if="!valittuTyyppi")
+    div.sisalto-item
+      .pull-right.sisalto-valinta
+        button.btn.btn-primary(ng-bind="'valitse' | kaanna" ng-click="valitseTyyppi('" + nimi + "')")
+      span.sisalto-icon
+        +icon("file-text-o")
+      div.sisalto-text
+        span(kaanna=kaannos)
+
+div.modal-body.modal-sisalto
+  +tyyppivalinta('uusi', 'uusi-opetussuunnitelma')
+  +tyyppivalinta('kopio', 'kopioi-opetussuunnitelma-pohjaksi')
+
+  div.content-spacing.tutkintohaku(ng-if="valittuTyyppi === 'kopio' && !ops")
+    table.table.table-striped
+      thead
+        tr
+          th(kaanna="'nimi'")
+          th(kaanna="'peruste'")
+          th(kaanna="'diaarinumero'")
+      tbody
+        tr(ng-repeat="opetussuunnitelma in opetussuunnitelmat" ng-click="valitseOpetussuunnitelma(opetussuunnitelma)")
+          td
+            a(href="" ng-bind="opetussuunnitelma.nimi | kaanna" ng-click="valitseOpetussuunnitelma(opetussuunnitelma)")
+          td(kaanna="opetussuunnitelma.peruste.nimi")
+          td(ng-bind="opetussuunnitelma.peruste.diaarinumero")
+    div(ng-show="!ladataan && opetussuunnitelmat.length === 0")
+      div.ei-tuloksia(ng-bind="'ei-hakutuloksia' | kaanna")
+    
+
+  div.content-spacing.tutkintohaku(ng-if="valittuTyyppi === 'uusi'")
     div(ng-hide="peruste")
       .form-group.has-feedback.has-feedback-left
         input.form-control(
@@ -82,7 +112,7 @@ div.modal-body
           h4(ng-bind="'kuvaus' | kaanna")
           p.content(ng-bind-html="peruste.kuvaus | kaanna")
 
-  .content-spacing(ng-show="peruste")
+  .content-spacing(ng-show="ops")
     h3(ng-bind="'anna-nimi' | kaanna")
     input.form-control(slocalized ng-model="ops.nimi" type="text" required="true")
     div(ng-show="peruste.suoritustavat.length > 1")

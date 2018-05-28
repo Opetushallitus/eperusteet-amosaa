@@ -102,23 +102,33 @@ public class Tutkinnonosa extends AbstractAuditedEntity implements Serializable,
     @OrderColumn(name = "jnro")
     private List<VapaaTeksti> vapaat = new ArrayList<>();
 
-    public static Tutkinnonosa copy(Tutkinnonosa tosa) {
-        if (tosa != null) {
-            tosa.setId(null);
-            tosa.setOmatutkinnonosa(OmaTutkinnonosa.copy(tosa.getOmatutkinnonosa()));
+    public static Tutkinnonosa copy(Tutkinnonosa original) {
+        if (original != null) {
+            Tutkinnonosa result = new Tutkinnonosa();
+            result.setTyyppi(original.getTyyppi());
+            result.setKoodi(original.getKoodi());
+            result.setOsaamisenOsoittaminen(original.getOsaamisenOsoittaminen());
+            result.setOmatutkinnonosa(OmaTutkinnonosa.copy(original.getOmatutkinnonosa()));
+            result.setPerusteentutkinnonosa(original.getPerusteentutkinnonosa());
+            result.setVierastutkinnonosa(VierasTutkinnonosa.copy(original.getVierastutkinnonosa()));
 
-            if (tosa.getToteutukset() != null) {
-                for (TutkinnonosaToteutus toteutus : tosa.getToteutukset()) {
-                    toteutus.setId(null);
+            if (original.getToteutukset() != null) {
+                result.setToteutukset(new ArrayList<>());
+                for (TutkinnonosaToteutus toteutus : original.getToteutukset()) {
+                    result.getToteutukset().add(toteutus.copy());
                 }
             }
 
-            if (tosa.getToteutukset() != null) {
-                for (VapaaTeksti vapaa : tosa.getVapaat()) {
-                    vapaa.setId(null);
+            if (original.getToteutukset() != null) {
+                for (VapaaTeksti vapaa : original.getVapaat()) {
+                    result.getVapaat().add(vapaa.copy());
                 }
             }
+
+            return result;
         }
-        return tosa;
+        else {
+            return null;
+        }
     }
 }

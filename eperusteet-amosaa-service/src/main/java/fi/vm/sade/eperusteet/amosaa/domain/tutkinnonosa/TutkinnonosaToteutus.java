@@ -25,10 +25,12 @@ import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.persistence.*;
 
+import fi.vm.sade.eperusteet.amosaa.service.util.Copyable;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
@@ -40,7 +42,7 @@ import org.hibernate.envers.RelationTargetAuditMode;
 @Entity
 @Audited
 @Table(name = "tutkinnonosa_toteutus")
-public class TutkinnonosaToteutus extends AbstractAuditedEntity implements Serializable, ReferenceableEntity {
+public class TutkinnonosaToteutus extends AbstractAuditedEntity implements Serializable, ReferenceableEntity, Copyable<TutkinnonosaToteutus> {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Getter
@@ -79,4 +81,19 @@ public class TutkinnonosaToteutus extends AbstractAuditedEntity implements Seria
     @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @OrderColumn(name = "jnro")
     private List<VapaaTeksti> vapaat = new ArrayList<>();
+
+    @Override
+    public TutkinnonosaToteutus copy(boolean deep) {
+        TutkinnonosaToteutus result = new TutkinnonosaToteutus();
+        result.setOtsikko(this.getOtsikko());
+        result.setTavatjaymparisto(this.getTavatjaymparisto());
+        result.setArvioinnista(this.getArvioinnista());
+        result.setKoodit(new HashSet<>(this.getKoodit()));
+        if (this.getVapaat() != null) {
+            for (VapaaTeksti vt : this.getVapaat()) {
+                this.getVapaat().add(vt.copy());
+            }
+        }
+        return result;
+    }
 }
