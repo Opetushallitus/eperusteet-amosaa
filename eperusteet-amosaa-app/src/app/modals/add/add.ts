@@ -92,7 +92,6 @@ namespace ModalAdd {
             },
             templateUrl: "modals/add/opetussuunnitelma.jade",
             controller: ($timeout, $scope, $state, $stateParams, $uibModalInstance, perusteetApi, opetussuunnitelmatApi) => {
-                console.log(opetussuunnitelmatApi);
                 $scope.nimi = "";
                 $scope.sivu = 1;
                 $scope.sivuja = 1;
@@ -106,7 +105,6 @@ namespace ModalAdd {
 
                 opetussuunnitelmatApi.getList().then(res => {
                     $scope.opetussuunnitelmat = res;
-                    console.log(res.plain());
                 });
 
                 $scope.update = function(nimi = "", sivu = 1) {
