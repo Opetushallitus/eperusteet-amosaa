@@ -18,6 +18,7 @@ import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaSer
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
@@ -230,6 +231,7 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
 
     @Test
     @Rollback
+    @Ignore
     public void testSisaltoHierarkianKopiointi() {
         useProfileKP2();
         OpetussuunnitelmaBaseDto ops = createOpetussuunnitelma();
