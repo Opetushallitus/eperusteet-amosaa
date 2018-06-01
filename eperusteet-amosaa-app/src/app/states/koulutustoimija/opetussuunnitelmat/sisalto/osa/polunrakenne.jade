@@ -63,7 +63,8 @@ mixin polkuRyhmaToolbar()
     +muodostuminen
     span
       // Jos ryhmä on osaamisala, voidaan se silti poistaa
-      .sp-edit(ng-show="misc.root.$$ekEditing && (!ngModel.pakollinen || ngModel.osaamisala) && (ngModel.osaamisala || ngModel.rooli === 'määrittelemätön' || ngModel.vieras || ngModel.rooli === 'vieras')")
+      // .sp-edit(ng-show="misc.root.$$ekEditing && !ngModel.pakollinen && (ngModel.tutkintonimike || ngModel.osaamisala || ngModel.rooli === 'määrittelemätön' || ngModel.vieras || ngModel.rooli === 'vieras')")
+      .sp-edit
         +poistoToggler
       .sp-edit(ng-show="misc.root.$$ekEditing && !ngModel.$$poistettu")
         a(href="" ng-click="misc.editNode(ngModel)")
@@ -79,11 +80,12 @@ mixin polkuRyhmaChevron()
 
 mixin polkuRyhma()
   .sp-ryhma(ng-show="ngModel.rooli" ng-init="isVieras = ngModel.rooli === 'määrittelemätön' || ngModel.vieras; ")
-    .sp-sisalto(ng-class="{ 'sp-sisalto-vieras': isVieras, 'sp-sisalto-osaamisala': !isVieras && ngModel.osaamisala, 'sp-sisalto-ryhma': !isVieras && !ngModel.osaamisala, 'sp-sisalto-poistettu': ngModel.$$poistettu }")
+    .sp-sisalto(ng-class="{ 'sp-sisalto-tutkintonimike': ngModel.tutkintonimike, 'sp-sisalto-vieras': isVieras, 'sp-sisalto-osaamisala': !isVieras && ngModel.osaamisala, 'sp-sisalto-ryhma': !isVieras && !ngModel.tutkintonimike && !ngModel.osaamisala, 'sp-sisalto-poistettu': ngModel.$$poistettu }")
       +polkuRyhmaChevron
       .sp-nimi
         span(ng-bind="ngModel.nimi | kaanna")
         span.sp-osaamisala(ng-show="ngModel.osaamisala" ng-bind="ngModel.osaamisala.osaamisalakoodiArvo")
+        span.sp-osaamisala(ng-show="ngModel.tutkintonimike" ng-bind="ngModel.tutkintonimike.arvo")
       +polkuRyhmaToolbar
     .sp-kuvaus
       div(ng-if="ngModel.kuvaus || (misc.spRivit[ngModel.tunniste] && misc.spRivit[ngModel.tunniste].kuvaus)")

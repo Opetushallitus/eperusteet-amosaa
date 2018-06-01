@@ -47,6 +47,13 @@
             }
         }
 
+        .sp-sisalto-tutkintonimike {
+            background-color: #edfad9;
+            .sp-toggler {
+                @include sp-toggler(#cdeab9, #000);
+            }
+        }
+
         .sp-sisalto-vieras {
             background-color: #f1f2f3;
             .sp-toggler {
@@ -58,7 +65,7 @@
             font-weight: bold;
             background-color: #f3fafd;
             .sp-toggler {
-                @include sp-toggler(#F3FAFD, #000);
+                @include sp-toggler(#f3fafd, #000);
             }
         }
 
