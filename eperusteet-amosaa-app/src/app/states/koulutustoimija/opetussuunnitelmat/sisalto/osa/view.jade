@@ -17,7 +17,7 @@ mixin valinnat()
     "listRevisions()",
     "restoreRevision()",
     "restoreNew()")
-    button.btn.btn-danger.muokkaa(ng-show="$$ekEditing && !osa.pakollinen" ng-click="remove()" oikeustarkastelu="muokkaus")
+    button.btn.btn-danger.muokkaa(ng-show="$$ekEditing && !osa.pakollinen" ng-click="remove()" oikeustarkastelu="poisto")
       +itext("remove", 'poista')
 
   div

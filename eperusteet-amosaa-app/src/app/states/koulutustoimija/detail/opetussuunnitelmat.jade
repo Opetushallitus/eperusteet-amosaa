@@ -122,11 +122,11 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
       div.alert.alert-info
         div(ng-bind="'koulutustoimijalla-ei-ole-opetussuunnitelmia' | kaanna")
         div.pull-right(style="position: relative; top: -26px")
-          button.btn.btn-primary(style="margin-right: 16px" ng-click="addOpetussuunnitelma()" oikeustarkastelu="muokkaus")
+          button.btn.btn-primary(style="margin-right: 16px" ng-click="addOpetussuunnitelma()" oikeustarkastelu="lisays")
             +gicon("plus")
             span=" "
             span(ng-bind="'lisaa-opetussuunnitelma' | kaanna")
-          button.btn.btn-primary.pull-right(ng-click="addYleinen()" oikeustarkastelu="muokkaus")
+          button.btn.btn-primary.pull-right(ng-click="addYleinen()" oikeustarkastelu="lisays")
             +gicon("plus")
             span=" "
             span(ng-bind="'lisaa-yleinen' | kaanna")
@@ -148,11 +148,11 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
               +checkbox("checks.poistetut", "opsPaginatedUpdate(opsSearch)", "'nayta-arkistoidut' | kaanna")
         div.col-xs-5
           div.pull-right
-            button.btn.btn-default.pull-right(ng-click="addYleinen()" oikeustarkastelu="muokkaus")
+            button.btn.btn-default.pull-right(ng-click="addYleinen()" oikeustarkastelu="lisays")
               +gicon("plus")
               span=" "
               span(ng-bind="'lisaa-yleinen' | kaanna")
-            button.btn.btn-default.pull-right(style="margin-right: 16px" ng-click="addOpetussuunnitelma()" oikeustarkastelu="muokkaus")
+            button.btn.btn-default.pull-right(style="margin-right: 16px" ng-click="addOpetussuunnitelma()" oikeustarkastelu="lisays")
               +gicon("plus")
               span=" "
               span(ng-bind="'lisaa-opetussuunnitelma' | kaanna")

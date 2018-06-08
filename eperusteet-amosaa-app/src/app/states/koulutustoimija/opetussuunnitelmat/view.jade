@@ -2,9 +2,10 @@
   .row
     .col-xs-12
       .ylatunniste
-        a.pull-left(href="" ng-click="muutaTila()")
-          .muokkaa(class="{{ 'tilavari-' + ops.tila }}")
-            i.fa.fa-pencil
+        button(ng-click="muutaTila()"
+               oikeustarkastelu="hallinta"
+               class="btn muokkaa fa fa-pencil pull-left {{'tilavari-' + ops.tila}}")
+
         .pull-left
           h2(ng-bind="ops.nimi | kaanna")
           .peruste-toimija
@@ -34,7 +35,7 @@
             a(ui-sref=".sisalto" ng-bind="'sisalto' | kaanna")
           li(ui-sref-active="active")
             a(ui-sref=".kasitteet" ng-bind="'kasitteet' | kaanna")
-          li(ui-sref-active="active")
+          li(ui-sref-active="active" oikeustarkastelu="poisto")
             a(ui-sref=".poistetut" ng-bind="'poistetut' | kaanna")
           li(ui-sref-active="active")
             a(ui-sref=".oikeudet" ng-bind="'oikeudet' | kaanna" ng-if="ops.tyyppi !== 'pohja'")

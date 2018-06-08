@@ -1,9 +1,8 @@
 mixin tilalaatikko(tila, kuvake)
-  div(ng-if="tila === '" + tila + "'" ng-click="valitseTila(tila)")
-    div.tilakuvake(class="tilavari-" + tila)
-      i.fa.fa-pencil
+  .tila(ng-if="tila === '" + tila + "'" ng-click="valitseTila(tila)")
+    button(class="btn tilakuvake fa fa-pencil tilavari-" + tila)
     div.tilakuvaus
-      label(kaanna="'tila-" + tila + "'")
+      h4(kaanna="'tila-" + tila + "'")
       p(kaanna="'tilakuvaus-" + tila + "'")
 
 
@@ -15,7 +14,7 @@ div.modal-body
     div.nykyinen-tila
     div.muut-tilat
       .clearfix
-      div.tila(ng-repeat="tila in sallitutTilat[ops.tila]")
+      div.tila-laatikko(ng-repeat="tila in sallitutTilat[ops.tila]")
         +tilalaatikko("luonnos", "pencil")
         +tilalaatikko("valmis", "pencil")
         +tilalaatikko("julkaistu", "pencil")

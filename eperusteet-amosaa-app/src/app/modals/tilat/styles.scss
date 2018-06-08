@@ -18,43 +18,49 @@ $status-color-poistettu: #c44;
     background-color: $status-color-poistettu;
 }
 
+$tila-border-size: 1px;
+$tila-min-size: 72px;
+$tila-gap: 10px;
+$tilakuvake-margin: 2px;
+$tilakuvake-size: $tila-min-size - 2 * $tilakuvake-margin - 2 * $tila-border-size;
+$tilakuvake-ikoni-height: 30px;
+$tilakuvaus-left: 10px;
+
 .tilat {
     .nykyinen-tila {
     }
     .muut-tilat {
-        .tila {
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
+        .tila-laatikko {
+            margin-bottom: $tila-gap;
+            border: $tila-border-size solid #ddd;
             cursor: pointer;
+            min-height: $tila-min-size;
 
             &:hover {
-                border: 1px solid #eee;
+                border: 1px solid #ccc;
             }
 
-            .tilakuvake {
-                user-select: none;
-                float: left;
-                height: 48px;
-                width: 48px;
-                margin: 2px;
-                color: #fff;
+            .tila {
+                display: flex;
 
-                i {
-                    font-size: 28px;
-                    position: relative;
-                    top: 10px;
-                    left: 12px;
+                .tilakuvake {
+                    height: $tilakuvake-size;
+                    width: $tilakuvake-size;
+                    margin: $tilakuvake-margin;
+                    border: 0;
+
+                    // Icon
+                    text-align: center;
+                    font-size: $tilakuvake-ikoni-height;
+                    color: white;
                 }
-            }
-            .tilakuvaus {
-                position: relative;
-                top: 3px;
-                left: 5px;
-
-                label {
-                }
-
-                p {
+                .tilakuvaus {
+                    h4 {
+                        margin-top: 2px;
+                        margin-bottom: 4px;
+                    }
+                    padding-left: $tilakuvaus-left;
+                    flex: 1;
                 }
             }
         }
