@@ -733,8 +733,6 @@ angular
                                 });
                             };
 
-                        console.log(suoritustapa);
-
                         _.merge($scope, {
                             collapsed_dirty: false,
                             perusteRakenne: _.cloneDeep(Perusteet.getRakenne(suoritustapa)),
