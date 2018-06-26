@@ -381,7 +381,7 @@ angular
 
                                 haeKoodiTiedot(toteutuksienKoodit).then(koodit => {
                                     _.each(koodit, koodi => {
-                                        $scope.koodistoTiedot[koodi.umisc.suoritustapari] = koodi;
+                                        $scope.koodistoTiedot[koodi.uri] = koodi;
                                     });
                                 });
                             },
