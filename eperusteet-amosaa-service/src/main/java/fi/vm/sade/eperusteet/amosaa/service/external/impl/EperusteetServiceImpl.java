@@ -22,10 +22,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.AbstractRakenneOsaDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteBaseDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonOsaSuoritustapaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.*;
 import fi.vm.sade.eperusteet.amosaa.repository.peruste.CachedPerusteRepository;
 import fi.vm.sade.eperusteet.amosaa.resource.config.AbstractRakenneOsaDeserializer;
 import fi.vm.sade.eperusteet.amosaa.resource.config.MappingModule;
@@ -176,6 +173,27 @@ public class EperusteetServiceImpl implements EperusteetService {
         }
 
         throw new BusinessRuleViolationException("suoritustapaa-ei-loytynyt");
+    }
+
+    @Override
+    public JsonNode getTutkinnonOsaViite(Long id, String tyyppi, Long tosaId) {
+        CachedPeruste cperuste = cachedPerusteRepository.findOne(id);
+        try {
+            JsonNode node = mapper.readTree(cperuste.getPeruste());
+            for (JsonNode suoritustapa : node.get("suoritustavat")) {
+                if (suoritustapa.get("suoritustapakoodi").asText().equals(tyyppi)) {
+                    for (JsonNode viite : suoritustapa.get("tutkinnonOsaViitteet")) {
+                        if (tosaId.equals(viite.get("_tutkinnonOsa").asLong())) {
+                            return viite;
+                        }
+                    }
+                }
+            }
+        } catch (IOException ex) {
+            throw new BusinessRuleViolationException("perusteen-parsinta-epaonnistui");
+        }
+
+        throw new BusinessRuleViolationException("tutkinnon-osa-viite-ei-loytynyt");
     }
 
     @Override

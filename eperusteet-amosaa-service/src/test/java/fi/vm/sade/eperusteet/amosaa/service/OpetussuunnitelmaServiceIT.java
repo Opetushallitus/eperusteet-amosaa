@@ -3,13 +3,10 @@ package fi.vm.sade.eperusteet.amosaa.service;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.KayttajaoikeusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
-import fi.vm.sade.eperusteet.amosaa.domain.revision.Revision;
-import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.*;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KayttajaoikeusService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
@@ -18,7 +15,6 @@ import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator;
 import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -27,7 +23,6 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.*;
 

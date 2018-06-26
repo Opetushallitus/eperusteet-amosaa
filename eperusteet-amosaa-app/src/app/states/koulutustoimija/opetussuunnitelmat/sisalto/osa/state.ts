@@ -115,6 +115,23 @@ angular
                         return Api.one("perusteet/" + perusteId + "/tutkinnonosat/" + tosaId).get();
                     }
                 },
+                pTosaViite: (Api, osa, ops) => {
+                    if (osa.tyyppi === "tutkinnonosa") {
+                        let perusteId = null;
+                        let tosaId = null;
+                        if (osa.tosa.tyyppi === "perusteesta") {
+                            perusteId = ops.peruste.id;
+                            tosaId = osa.tosa.perusteentutkinnonosa;
+                        } else if (osa.tosa.tyyppi === "vieras") {
+                            perusteId = osa.tosa.vierastutkinnonosa._cperuste;
+                            tosaId = osa.tosa.vierastutkinnonosa.tosaId;
+                        } else {
+                            return;
+                        }
+                        return Api.one("perusteet/" + ops.peruste.id + "/suoritustavat/" + ops.suoritustapa
+                            + "/tutkinnonosat/" + tosaId).get();
+                    }
+                },
                 pSuoritustavat: (Api, osa, ops) =>
                     osa.tyyppi === "suorituspolku" && Api.one("perusteet/" + ops.peruste.id + "/suoritustavat").get(),
                 arviointiAsteikot: Api => Api.all("arviointiasteikot").getList()
@@ -330,8 +347,11 @@ angular
                         peruste,
                         arviointiAsteikot,
                         koodisto,
-                        koulutustoimija
+                        koulutustoimija,
+                        pTosaViite
                     ) => {
+                        $scope.pTosaViite = pTosaViite;
+                        $scope.st = _.find(peruste.suoritustavat, st => st.suoritustapakoodi === ops.suoritustapa);
                         const isPaikallinen = _.property("tosa.tyyppi")($scope.osa) === "oma",
                             osaamisalaKoodit = peruste.osaamisalat,
                             paikallisetKoodit = koulutustoimija.all("koodi"),
@@ -361,7 +381,7 @@ angular
 
                                 haeKoodiTiedot(toteutuksienKoodit).then(koodit => {
                                     _.each(koodit, koodi => {
-                                        $scope.koodistoTiedot[koodi.uri] = koodi;
+                                        $scope.koodistoTiedot[koodi.umisc.suoritustapari] = koodi;
                                     });
                                 });
                             },

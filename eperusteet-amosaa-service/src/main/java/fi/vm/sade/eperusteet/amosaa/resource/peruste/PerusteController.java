@@ -21,6 +21,7 @@ import com.google.gson.JsonObject;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteQueryDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.Suoritustapakoodi;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonOsaSuoritustapaDto;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
@@ -99,11 +100,20 @@ public class PerusteController {
         return service.getSuoritustavat(id);
     }
 
-    @RequestMapping(value = "/{id}/suoritustavat/{suoritustapa}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}/suoritustavat/{st}", method = RequestMethod.GET)
     public JsonNode getPerusteRakenne(
             @PathVariable Long id,
             @PathVariable String st) {
         return service.getSuoritustapa(id, st);
+    }
+
+    @RequestMapping(value = "/{id}/suoritustavat/{st}/tutkinnonosat/{tosaId}", method = RequestMethod.GET)
+    public JsonNode getTutkinnonOsaViite(
+            @PathVariable Long id,
+            @PathVariable String st,
+            @PathVariable Long tosaId
+    ) {
+        return service.getTutkinnonOsaViite(id, st, tosaId);
     }
 
     @RequestMapping(value = "/opetussuunnitelmat", method = RequestMethod.GET)

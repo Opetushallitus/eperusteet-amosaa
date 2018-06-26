@@ -20,6 +20,7 @@ import com.google.gson.JsonObject;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.Suoritustapakoodi;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonOsaSuoritustapaDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -44,6 +45,8 @@ public interface EperusteetService {
     JsonNode getTutkinnonOsa(Long id, Long tosaId);
 
     JsonNode getSuoritustapa(Long id, String tyyppi);
+
+    JsonNode getTutkinnonOsaViite(Long id, String tyyppi, Long tosaId);
 
     <T> T getPerusteSisalto(Long cperusteId, Class<T> type);
 
