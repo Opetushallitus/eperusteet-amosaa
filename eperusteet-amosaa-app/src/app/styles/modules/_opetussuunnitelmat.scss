@@ -49,16 +49,12 @@ $ops-top-vertical-margin: 10px;
         .muokkaa {
             width: $ops-muokkaa-height;
             height: $ops-muokkaa-height;
+            border: none;
 
-            i {
-                width: $ops-muokkaa-height;
-                height: $ops-muokkaa-height;
-                text-align: center;
-                padding-top: ($ops-muokkaa-height - $ops-muokkaa-ikoni-height) / 2;
-                font-size: $ops-muokkaa-ikoni-height;
-                text-decoration: none;
-                color: white;
-            }
+            // Icon
+            text-align: center;
+            font-size: $ops-muokkaa-ikoni-height;
+            color: white;
         }
 
         h2 {

@@ -1,7 +1,5 @@
 mixin oikeussiirto()
-  div(oikeustarkastelu="hallinta")
-    // h2(kaanna="opetussuunnitelman-siirto")
-    button.btn.btn-danger(ng-click="siirraOpetussuunnitelma()" ng-bind="'siirra-opetussuunnitelma' | kaanna")
+  button.btn.btn-danger(ng-click="siirraOpetussuunnitelma()" ng-bind="'siirra-opetussuunnitelma' | kaanna" oikeustarkastelu="hallinta")
 
 
 mixin kielivalinta(kieli)
