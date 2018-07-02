@@ -51,6 +51,7 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -59,6 +60,7 @@ import javax.annotation.PostConstruct;
 /**
  * @author nkala
  */
+@Slf4j
 @Service
 public class ValidointiServiceImpl implements ValidointiService {
     @Autowired
@@ -104,6 +106,8 @@ public class ValidointiServiceImpl implements ValidointiService {
             JsonNode koulutustyyppi = node.get("koulutustyyppi");
             koulutustyppi = koulutustyyppi.asText();
         } catch (IOException ex) {
+            log.error("perusteen-parsinta-epaonnistui" + cperuste.getId().toString());
+            log.error("perusteen-parsinta-epaonnistui" + ex.getMessage());
             throw new BusinessRuleViolationException("perusteen-parsinta-epaonnistui");
         }
 
