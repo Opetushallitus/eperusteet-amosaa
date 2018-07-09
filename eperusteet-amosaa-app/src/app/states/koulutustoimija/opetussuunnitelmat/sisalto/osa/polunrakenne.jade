@@ -13,8 +13,11 @@ mixin polkuTutkinnonosa()
         a(href="" ng-click="misc.siirry(tosa)" ng-bind="tosa.$$tosa.nimi | kaanna")
         b.sp-osaamisala(ng-bind="tosa.$$tosa.koodiArvo")
       .sp-toolbar
-        span.laajuus(ng-show="tosa.laajuus")
-          span(ng-bind="tosa.laajuus")
+        span.laajuus(ng-show="tosa.laajuus || tosa.laajuusMaksimi")
+          {{ tosa.laajuus }}
+          span(ng-show="tosa.laajuusMaksimi && tosa.laajuus < tosa.laajuusMaksimi")
+            =" - "
+            span {{ tosa.laajuusMaksimi }}
           span(style="margin-left: 2px" ng-bind="misc.suoritustapa.laajuusYksikko | kaanna")
         .sp-edit(ng-show="misc.root.$$ekEditing")
           +poistoToggler

@@ -32,7 +32,8 @@ namespace Suorituspolku {
                         .reduce(sum);
                 }
             } else {
-                return tosat[node._tutkinnonOsaViite].laajuus || 0;
+                const tosa = tosat[node._tutkinnonOsaViite];
+                return tosa.laajuusMaksimi || tosa.laajuus || 0;
             }
         };
 
@@ -64,10 +65,14 @@ namespace Suorituspolku {
                 const laajuus: any = _.property("muodostumisSaanto.laajuus")(node);
                 const koko: any = _.property("muodostumisSaanto.koko")(node);
 
-                const laajuusValidi = () => !laajuus || !laajuus.minimi || node.$$laskettuLaajuus >= laajuus.minimi;
-                const kokoValidi = () => !koko || !koko.minimi || node.$$laskettuKoko >= koko.minimi;
+                const laajuusValidi = !laajuus || !laajuus.minimi || node.$$laskettuLaajuus >= laajuus.minimi;
+                const kokoValidi = !koko || !koko.minimi || node.$$laskettuKoko >= koko.minimi;
 
-                node.$$valid = laajuusValidi() && kokoValidi() && osatValidit;
+                if (!laajuusValidi) {
+                    console.log(node.$$laskettuLaajuus, "vs", laajuus.minimi);
+                }
+
+                node.$$valid = laajuusValidi && kokoValidi && osatValidit;
 
                 return node.$$valid || !shouldCount(node);
             } else {

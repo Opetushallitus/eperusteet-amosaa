@@ -206,12 +206,18 @@ public class ValidointiServiceImpl implements ValidointiService {
                 Pair<Integer, BigDecimal> ryhmanSisallonMuodostuminen = sisallonLaajuusJaKoko(ctx, (RakenneModuuliDto) osa);
                 return ryhmanSisallonMuodostuminen;
             }
-        } else if (osa instanceof RakenneOsaDto) {
+        }
+        else if (osa instanceof RakenneOsaDto) {
             Long tovId = ((RakenneOsaDto) osa).getTutkinnonOsaViite();
             if (tovId != null) {
                 TutkinnonOsaViiteSuppeaDto tov = ctx.tov.get(tovId);
                 if (tov != null) {
-                    return Pair.of(1, tov.getLaajuus());
+                    if (tov.getLaajuusMaksimi() != null && tov.getLaajuus().compareTo(tov.getLaajuusMaksimi()) <= 0) {
+                        return Pair.of(1, tov.getLaajuusMaksimi());
+                    }
+                    else {
+                        return Pair.of(1, tov.getLaajuus());
+                    }
                 }
             }
         }
