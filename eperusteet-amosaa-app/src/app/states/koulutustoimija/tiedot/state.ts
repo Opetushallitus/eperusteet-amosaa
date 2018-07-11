@@ -67,9 +67,9 @@ angular.module("app")
 
                 $scope.vanhentuneet = null;
                 $scope.haetaanVanhentuneita = false;
-                $scope.haeVanhentuneet = () => {
+                $scope.haeVanhentuneet = async () => {
                     $scope.haetaanVanhentuneita = true;
-                    opetussuunnitelmatApi.all("vanhentuneet").getList()
+                    return opetussuunnitelmatApi.all("vanhentuneet").getList()
                         .then((vanhentuneet) => {
                             $scope.vanhentuneet = vanhentuneet;
                         })
@@ -79,10 +79,12 @@ angular.module("app")
                 };
                 $scope.haeVanhentuneet();
                 $scope.paivitaVanhentunut = (opsId) => {
+                    $scope.paivittaa = true;
                     opetussuunnitelmatApi.all(opsId).customPOST({}, "paivita")
                         .then(_.noop)
-                        .finally(() => {
-                            $scope.haeVanhentuneet();
+                        .finally(async () => {
+                            await $scope.haeVanhentuneet();
+                            $scope.paivittaa = false;
                         });
                 };
 

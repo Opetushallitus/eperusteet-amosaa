@@ -105,7 +105,7 @@ mixin paivitystaVaativatOpetussuunnitelmat()
             td(ng-bind="vanha.perusteVanha.globalVersion.aikaleima | aikaleima")
             td(ng-bind="vanha.perusteUusi.globalVersion.aikaleima | aikaleima")
             td
-              button.btn.btn-xs.btn-danger(kaanna="'paivita'" ng-click="paivitaVanhentunut(vanha.opetussuunnitelma.id)")
+              button.btn.btn-xs.btn-danger(kaanna="'paivita'" ng-disabled="paivittaa" ng-click="paivitaVanhentunut(vanha.opetussuunnitelma.id)")
 
 
 

@@ -32,11 +32,7 @@ import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaAudit;
 
 import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaMessageFields.OPETUSSUUNNITELMA;
-import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.OIKEUS_MUOKKAUS;
-import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.OPETUSSUUNNITELMA_LISAYS;
-import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.OPETUSSUUNNITELMA_MUOKKAUS;
-import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.SISALTO_PALAUTUS;
-import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.TILA_MUOKKAUS;
+import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.*;
 
 import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
@@ -105,7 +101,11 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId
     ) {
-        service.paivitaPeruste(ktId, opsId);
+        audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, SISALTO_MUOKKAUS),
+                (Void) -> {
+                    service.paivitaPeruste(ktId, opsId);
+                    return null;
+                });
     }
 
     @ApiImplicitParams({

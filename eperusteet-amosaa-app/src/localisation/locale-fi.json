@@ -465,5 +465,6 @@
     "kopioi-opetussuunnitelma-pohjaksi": "Ota vanha toteutussuunnitelma pohjaksi",
     "haluatko-varmasti-siirtaa-opetussuunnitelman-organisaatiolle": "Haluatko varmasti siirtää toteutussuunnitelman organisaatiolle?",
     "muokkaus-oikeus-info": "Sinulla on oikeus muokata tätä toteutussuunnitelmaa",
-    "jaettu-osa-info": "Tämä on jaettu osa"
+    "jaettu-osa-info": "Tämä on jaettu osa",
+    "ei-voi-synkronoida": "Perustetta ei voi synkronoida"
 }

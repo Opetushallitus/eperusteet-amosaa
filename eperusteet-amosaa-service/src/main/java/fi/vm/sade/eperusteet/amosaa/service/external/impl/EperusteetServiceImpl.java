@@ -175,6 +175,23 @@ public class EperusteetServiceImpl implements EperusteetService {
         throw new BusinessRuleViolationException("suoritustapaa-ei-loytynyt");
     }
 
+    private void collectTunnisteet(JsonNode node, Set<UUID> tunnisteet) {
+        tunnisteet.add(UUID.fromString(node.get("tunniste").asText()));
+        if (node.has("osat")) {
+            for (JsonNode osa : node.get("osat")) {
+                collectTunnisteet(osa, tunnisteet);
+            }
+        }
+    }
+
+    @Override
+    public Set<UUID> getRakenneTunnisteet(Long id, String suoritustapa) {
+        JsonNode st = getSuoritustapa(id, suoritustapa);
+        HashSet<UUID> uuids = new HashSet<>();
+        collectTunnisteet(st.get("rakenne"), uuids);
+        return uuids;
+    }
+
     @Override
     public JsonNode getTutkinnonOsaViite(Long id, String tyyppi, Long tosaId) {
         CachedPeruste cperuste = cachedPerusteRepository.findOne(id);

@@ -78,6 +78,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,6 +93,7 @@ import javax.annotation.PostConstruct;
  * @author nkala
  */
 @Service
+@Slf4j
 @Transactional
 public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     static private final Logger LOG = LoggerFactory.getLogger(OpetussuunnitelmaServiceImpl.class);
@@ -439,7 +441,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         List<Opetussuunnitelma> opsit = repository.findAllByKoulutustoimijaAndTyyppi(kt, OpsTyyppi.OPS);
         for (Opetussuunnitelma ops : opsit) {
             PerusteDto perusteDto = eperusteetClient.getPerusteOrNull(ops.getPeruste().getPerusteId(), PerusteDto.class);
-            if (perusteDto == null) {
+            if (perusteDto == null || ops.getTila() != Tila.LUONNOS) {
                 continue;
             }
             CachedPeruste cperuste = ops.getPeruste();
@@ -461,6 +463,21 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         PerusteDto perusteDto = eperusteetClient.getPeruste(ops.getPeruste().getPerusteId(), PerusteDto.class);
         CachedPerusteBaseDto cp = eperusteetService.getCachedPeruste(perusteDto);
         CachedPeruste newCachedPeruste = cachedPerusteRepository.findOne(cp.getId());
+        JsonNode st = eperusteetService.getSuoritustapa(newCachedPeruste.getId(), ops.getSuoritustapa());
+        Set<UUID> tunnisteet = eperusteetService.getRakenneTunnisteet(newCachedPeruste.getId(), ops.getSuoritustapa());
+        Set<UUID> kaytetytTunnisteet = tkvService.getSuorituspolkurakenne(ktId, opsId).stream()
+                .map(AbstractRakenneOsaDto::getTunniste)
+                .collect(Collectors.toSet());
+
+        if (!tunnisteet.containsAll(kaytetytTunnisteet)) {
+            log.error("Opetussuunnitelman perusteen synkronointi epäonnistui",
+                    "\n  ops:", ops.getId(),
+                    "\n  peruste:", perusteDto.getId(),
+                    "\n  old:", ops.getPeruste().getLuotu(),
+                    "\n  new:", newCachedPeruste.getLuotu());
+            throw new BusinessRuleViolationException("ei-voi-synkronoida");
+        }
+
         ops.setPeruste(newCachedPeruste);
     }
 
