@@ -116,7 +116,7 @@ angular
                     }
                 },
                 pTosaViite: (Api, osa, ops) => {
-                    if (osa.tyyppi === "tutkinnonosa") {
+                    if (osa.tyyppi === "tutkinnonosa" && ops.tyyppi === "ops") {
                         let perusteId = null;
                         let tosaId = null;
                         if (osa.tosa.tyyppi === "perusteesta") {
