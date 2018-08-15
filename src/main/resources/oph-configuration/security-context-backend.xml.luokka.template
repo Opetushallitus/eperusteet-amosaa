@@ -39,30 +39,24 @@
         <intercept-url pattern="/**" access="isAuthenticated()"/>
         <custom-filter before="CAS_FILTER" ref="urlRewriteFilter" />
         <custom-filter position="CAS_FILTER" ref="casFilter" />
-        <csrf disabled="true"/>
     </http>
 
     <http entry-point-ref="forbiddenEntryPoint" use-expressions="true" request-matcher="regex" pattern="/buildversion.txt|/healthcheck">
         <intercept-url pattern="/**" access="permitAll"/>
-        <csrf disabled="true"/>
     </http>
 
     <!-- wsdl/xsd resources must be public -->
     <http entry-point-ref="forbiddenEntryPoint" use-expressions="true" request-matcher="regex" pattern="[\w/]*[.?]wsdl">
         <intercept-url pattern="/**" access="permitAll"/>
-        <csrf disabled="true"/>
     </http>
-
     <http entry-point-ref="forbiddenEntryPoint" use-expressions="true" request-matcher="regex" pattern="[\w/]*\?xsd=[\w/]*\.xsd">
         <intercept-url pattern="/**" access="permitAll"/>
-        <csrf disabled="true"/>
     </http>
 
     <http entry-point-ref="casEntryPoint" use-expressions="true" request-matcher="regex" pattern="/user/postLogin.*">
         <intercept-url pattern="/user/postLogin.*" access="isAuthenticated()"/> <!-- todo: -->
         <custom-filter before="CAS_FILTER" ref="urlRewriteFilter" />
         <custom-filter position="CAS_FILTER" ref="casFilter" />
-        <csrf disabled="true"/>
     </http>
 
     <!-- own config for single logout, because: xTODO: singleLogoutFilter aiheuttaa POSTeissa formin tyhjenemisen, consuumaa formin mystisesti, ilmeni haku-projektin yhteydessa -->
@@ -74,7 +68,6 @@
         <custom-filter ref="singleLogoutFilter" before="CAS_FILTER" />
         <custom-filter ref="casFilter" position="CAS_FILTER"/>
         <logout logout-success-url="/user/logout"/> <!-- huom! vain haku tarvitsee tata? -->
-        <csrf disabled="true"/>
     </http>
     <!--
         Workaround viestintapalvelun suojaamiseksi kunnes Guice-konteksti vaihdetaan Springiin ja tietoturva voidaan hoitaa samoin kuin muissa palveluissa!
@@ -82,12 +75,10 @@
     <http entry-point-ref="casEntryPoint" use-expressions="true" request-matcher="regex" pattern="/api/v1/download">
         <intercept-url pattern="/**" access="hasAnyRole('ROLE_APP_VALINTAPERUSTEET_CRUD_1.2.246.562.10.00000000001')"/>
         <custom-filter ref="casFilter" position="CAS_FILTER"/>
-        <csrf disabled="true"/>
     </http>
     <http entry-point-ref="casEntryPoint" use-expressions="true" request-matcher="regex" pattern="/api/v1/download/">
         <intercept-url pattern="/**" access="hasAnyRole('ROLE_APP_VALINTAPERUSTEET_CRUD_1.2.246.562.10.00000000001')"/>
         <custom-filter ref="casFilter" position="CAS_FILTER"/>
-        <csrf disabled="true"/>
     </http>
     <!--
         Workaround loppuu!
@@ -118,7 +109,7 @@
     <!-- urlRewriteFilter is needed only for auth.mode=dev !!! -->
     <beans:bean id="urlRewriteFilter" class="fi.vm.sade.security.UrlRewriteFilter"/>
 
-    <beans:bean id="casFilter" class="fi.vm.sade.security.OpintopolkuCasAuthenticationFilter">
+    <beans:bean id="casFilter" class="fi.vm.sade.security.CustomCasAuthenticationFilter">
         <beans:property name="authenticationManager" ref="authenticationManager"/>
         <beans:property name="serviceProperties" ref="casServiceProperties"/>
         <beans:property name="proxyGrantingTicketStorage" ref="pgtStorage"/>
@@ -228,11 +219,11 @@
 
     <beans:bean id="accessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
         <beans:property name="allowIfAllAbstainDecisions" value="true"/>
-        <beans:constructor-arg>
+        <beans:property name="decisionVoters">
             <beans:list>
                 <beans:bean class="org.springframework.security.access.vote.RoleVoter"/>
             </beans:list>
-        </beans:constructor-arg>
+        </beans:property>
     </beans:bean>
 
 </beans:beans>
