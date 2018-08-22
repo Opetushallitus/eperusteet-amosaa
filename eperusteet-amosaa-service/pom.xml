@@ -308,11 +308,6 @@
             <version>6.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>fi.vm.sade.java-utils</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
             <groupId>fi.vm.sade.generic</groupId>
             <version>9.6-SNAPSHOT</version>
             <artifactId>generic-common</artifactId>
