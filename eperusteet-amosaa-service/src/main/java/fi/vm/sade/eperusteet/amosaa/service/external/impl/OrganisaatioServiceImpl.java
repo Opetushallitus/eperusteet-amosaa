@@ -23,19 +23,20 @@ import fi.vm.sade.eperusteet.amosaa.dto.OrganisaatioHierarkia;
 import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
 import fi.vm.sade.eperusteet.amosaa.service.util.RestClientFactory;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
-import fi.vm.sade.generic.rest.CachingRestClient;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.stream.Stream;
-import javax.annotation.PostConstruct;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import fi.vm.sade.javautils.http.OphHttpClient;
+import fi.vm.sade.javautils.http.OphHttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+
+import static javax.servlet.http.HttpServletResponse.SC_OK;
 
 /**
  * @author mikkom
@@ -54,39 +55,52 @@ public class OrganisaatioServiceImpl implements OrganisaatioService {
     @Component
     public static class Client {
         @Autowired
-        RestClientFactory restClientFactory;
+        private RestClientFactory restClientFactory;
 
         @Value("${cas.service.organisaatio-service:''}")
         private String serviceUrl;
 
-        private static final Logger LOG = LoggerFactory.getLogger(Client.class);
-
         private final ObjectMapper mapper = new ObjectMapper();
-
-        @PostConstruct
-        public void init() {
-        }
 
         @Cacheable("organisaatiot")
         public JsonNode getOrganisaatio(String organisaatioOid) {
-            CachingRestClient crc = restClientFactory.getWithoutCas(serviceUrl);
+            OphHttpClient client = restClientFactory.get(serviceUrl, false);
             String url = serviceUrl + ORGANISAATIOT + organisaatioOid;
-            try {
-                return mapper.readTree(crc.getAsString(url));
-            } catch (IOException ex) {
-                return null;
-            }
+
+            OphHttpRequest request = OphHttpRequest.Builder
+                    .get(url)
+                    .build();
+
+            return client.<JsonNode>execute(request)
+                    .expectedStatus(SC_OK)
+                    .mapWith(text -> {
+                        try {
+                            return mapper.readTree(text);
+                        } catch (IOException e) {
+                            return null;
+                        }
+                    })
+                    .orElse(null);
         }
 
-//        @Cacheable("organisaatiohierarkia")
         public JsonNode getOrganisaatioPuu(String organisaatioOid) {
-            CachingRestClient crc = restClientFactory.getWithoutCas(serviceUrl);
+            OphHttpClient client = restClientFactory.get(serviceUrl, false);
             String url = serviceUrl + ORGANISAATIOT + "v2/hierarkia/hae?aktiiviset=true&suunnitellut=true&lakkautetut=false&oid=" + organisaatioOid;
-            try {
-                return mapper.readTree(crc.getAsString(url));
-            } catch (IOException ex) {
-                return null;
-            }
+
+            OphHttpRequest request = OphHttpRequest.Builder
+                    .get(url)
+                    .build();
+
+            return client.<JsonNode>execute(request)
+                    .expectedStatus(SC_OK)
+                    .mapWith(text -> {
+                        try {
+                            return mapper.readTree(text);
+                        } catch (IOException e) {
+                            return null;
+                        }
+                    })
+                    .orElse(null);
         }
     }
 

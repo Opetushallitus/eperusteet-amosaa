@@ -15,11 +15,12 @@
  */
 package fi.vm.sade.eperusteet.amosaa.service.util;
 
-import fi.vm.sade.generic.rest.CachingRestClient;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import fi.vm.sade.javautils.http.OphHttpClient;
+import fi.vm.sade.javautils.http.auth.CasAuthenticator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -39,28 +40,31 @@ public class RestClientFactory {
     @Value("${web.url.cas:''}")
     private String casUrl;
 
-    private final ConcurrentMap<String, CachingRestClient> cache = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, OphHttpClient> cache = new ConcurrentHashMap<>();
 
-    public CachingRestClient get(String service) {
-        return get(service, true);
-    }
+    public OphHttpClient get(String service, boolean requireCas) {
 
-    public CachingRestClient getWithoutCas(String service) {
-        return get(service, false);
-    }
-
-    public CachingRestClient get(String service, boolean requireCas) {
         if (cache.containsKey(service)) {
             return cache.get(service);
         } else {
-            CachingRestClient crc = new CachingRestClient(TIMEOUT);
+            OphHttpClient client;
             if (requireCas) {
-                crc.setUsername(username);
-                crc.setPassword(password);
-                crc.setWebCasUrl(casUrl);
-                crc.setCasService(service + "/j_spring_cas_security_check");
+                CasAuthenticator casAuthenticator = new CasAuthenticator.Builder()
+                        .username(username)
+                        .password(password)
+                        .webCasUrl(casUrl)
+                        .casServiceUrl(service + "/j_spring_cas_security_check")
+                        .build();
+
+                client = new OphHttpClient.Builder(service)
+                        .authenticator(casAuthenticator)
+                        .build();
+            } else {
+                client = new OphHttpClient.Builder(service)
+                        .build();
             }
-            cache.putIfAbsent(service, crc);
+
+            cache.putIfAbsent(service, client);
             return cache.get(service);
         }
     }

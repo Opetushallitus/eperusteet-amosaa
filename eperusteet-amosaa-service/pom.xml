@@ -174,11 +174,6 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>fi.vm.sade.java-utils</groupId>
-            <artifactId>opintopolku-user-details-service</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
             <groupId>com.ryantenney.metrics</groupId>
             <artifactId>metrics-spring</artifactId>
             <version>3.1.3</version>
@@ -293,6 +288,16 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>fi.vm.sade.eperusteet</groupId>
+            <artifactId>eperusteet-backend-utils</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>fi.vm.sade.java-utils</groupId>
+            <artifactId>opintopolku-user-details-service</artifactId>
+            <version>0.1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>fi.vm.sade.java-utils</groupId>
             <artifactId>java-properties</artifactId>
             <version>0.1.0-SNAPSHOT</version>
@@ -303,14 +308,14 @@
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
+            <groupId>fi.vm.sade.java-utils</groupId>
+            <artifactId>java-http</artifactId>
+            <version>0.1.3-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>fi.vm.sade</groupId>
             <artifactId>auditlogger</artifactId>
             <version>6.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>fi.vm.sade.generic</groupId>
-            <version>9.6-SNAPSHOT</version>
-            <artifactId>generic-common</artifactId>
         </dependency>
         <dependency>
             <groupId>commons-httpclient</groupId>
@@ -394,11 +399,6 @@
             <groupId>org.apache.tika</groupId>
             <artifactId>tika-core</artifactId>
             <version>1.12</version>
-        </dependency>
-        <dependency>
-            <groupId>fi.vm.sade.eperusteet</groupId>
-            <artifactId>eperusteet-backend-utils</artifactId>
-            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
     <build>

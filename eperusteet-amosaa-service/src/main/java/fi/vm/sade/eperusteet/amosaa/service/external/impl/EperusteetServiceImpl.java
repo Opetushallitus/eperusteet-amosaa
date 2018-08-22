@@ -30,8 +30,6 @@ import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationExcep
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetClient;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
-import fi.vm.sade.eperusteet.amosaa.service.util.RestClientFactory;
-import fi.vm.sade.generic.rest.CachingRestClient;
 
 import java.io.IOException;
 import java.util.*;
@@ -47,8 +45,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author nkala
- * <p>
- * FIXME: Refaktoroi turhat pois
  */
 @Service
 @Transactional
@@ -62,12 +58,7 @@ public class EperusteetServiceImpl implements EperusteetService {
     CachedPerusteRepository cachedPerusteRepository;
 
     @Autowired
-    RestClientFactory restClientFactory;
-
-    @Autowired
     EperusteetClient eperusteetClient;
-
-    private CachingRestClient client;
 
     private ObjectMapper mapper;
 
@@ -76,7 +67,6 @@ public class EperusteetServiceImpl implements EperusteetService {
 
     @PostConstruct
     protected void init() {
-        client = restClientFactory.get(eperusteetServiceUrl, false);
         mapper = new ObjectMapper();
         MappingModule module = new MappingModule();
         module.addDeserializer(AbstractRakenneOsaDto.class, new AbstractRakenneOsaDeserializer());

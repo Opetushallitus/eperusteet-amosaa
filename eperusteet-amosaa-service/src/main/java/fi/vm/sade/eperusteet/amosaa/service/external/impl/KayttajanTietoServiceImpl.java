@@ -34,16 +34,22 @@ import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.Opetussuunnitelma
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import static fi.vm.sade.eperusteet.amosaa.service.external.impl.KayttajanTietoParser.parsiKayttaja;
+import static javax.servlet.http.HttpServletResponse.SC_OK;
+
+
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.RolePermission;
 import fi.vm.sade.eperusteet.amosaa.service.util.RestClientFactory;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
-import fi.vm.sade.generic.rest.CachingRestClient;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
+
+import fi.vm.sade.javautils.http.OphHttpClient;
+import fi.vm.sade.javautils.http.OphHttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
@@ -140,16 +146,26 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
 
         @Cacheable("kayttajat")
         public KayttajanTietoDto hae(String oid) {
-            try {
-                CachingRestClient crc = restClientFactory.get(onrServiceUrl);
-                String url = onrServiceUrl + HENKILO_API + oid;
-                JsonNode json = mapper.readTree(crc.getAsString(url));
-                return parsiKayttaja(json);
-            } catch (Exception e) {
-                KayttajanTietoDto result = new KayttajanTietoDto();
-                result.setOidHenkilo(oid);
-                return result;
-            }
+            OphHttpClient client = restClientFactory.get(onrServiceUrl, true);
+            String url = onrServiceUrl + HENKILO_API + oid;
+
+            OphHttpRequest request = OphHttpRequest.Builder
+                    .get(url)
+                    .build();
+
+            return client.<KayttajanTietoDto>execute(request)
+                    .expectedStatus(SC_OK)
+                    .mapWith(text -> {
+                        try {
+                            JsonNode json = mapper.readTree(text);
+                            return parsiKayttaja(json);
+                        } catch (IOException e) {
+                            KayttajanTietoDto result = new KayttajanTietoDto();
+                            result.setOidHenkilo(oid);
+                            return result;
+                        }
+                    })
+                    .orElse(null);
         }
     }
 

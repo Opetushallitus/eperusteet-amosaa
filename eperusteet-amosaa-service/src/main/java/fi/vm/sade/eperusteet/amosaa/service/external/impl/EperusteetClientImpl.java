@@ -12,7 +12,8 @@ import fi.vm.sade.eperusteet.amosaa.resource.config.MappingModule;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetClient;
 import fi.vm.sade.eperusteet.amosaa.service.util.RestClientFactory;
-import fi.vm.sade.generic.rest.CachingRestClient;
+import fi.vm.sade.javautils.http.OphHttpClient;
+import fi.vm.sade.javautils.http.OphHttpRequest;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
@@ -25,10 +26,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static javax.servlet.http.HttpServletResponse.SC_OK;
 
 @Service
 @Profile("default")
@@ -42,7 +44,7 @@ public class EperusteetClientImpl implements EperusteetClient {
     @Autowired
     RestClientFactory restClientFactory;
 
-    private CachingRestClient client;
+    private OphHttpClient client;
 
     private ObjectMapper mapper;
 
@@ -57,39 +59,54 @@ public class EperusteetClientImpl implements EperusteetClient {
     }
 
     private <T> T commonGet(String endpoint, Class<T> type) {
-        try {
-            String url = eperusteetServiceUrl + endpoint;
-            InputStream stream = client.get(url);
-            T node = mapper.readValue(stream, type);
-            return node;
-        }
-        catch (IOException ex) {
-            throw new BusinessRuleViolationException("haku-epaonnistui");
-        }
+
+        String url = eperusteetServiceUrl + endpoint;
+
+        OphHttpRequest request = OphHttpRequest.Builder
+                .get(url)
+                .build();
+
+        return client.<T>execute(request)
+                .expectedStatus(SC_OK)
+                .mapWith(text -> {
+                    try {
+                        return mapper.readValue(text, type);
+                    } catch (IOException e) {
+                        throw new BusinessRuleViolationException("haku-epaonnistui");
+                    }
+                })
+                .orElse(null);
     }
 
     @Override
     public JsonNode findFromPerusteet(Map<String, String> queryDto) {
-        try {
-            queryDto.put("tuleva", "true");
-            queryDto.put("siirtyma", "false");
-            queryDto.put("voimassaolo", "true");
-            queryDto.put("poistunut", "false");
-            String ktparams = Arrays.stream(KoulutusTyyppi.values())
-                    .map(kt -> "koulutustyyppi=" + kt.toString())
-                    .collect(Collectors.joining("&"));
+        queryDto.put("tuleva", "true");
+        queryDto.put("siirtyma", "false");
+        queryDto.put("voimassaolo", "true");
+        queryDto.put("poistunut", "false");
+        String ktparams = Arrays.stream(KoulutusTyyppi.values())
+                .map(kt -> "koulutustyyppi=" + kt.toString())
+                .collect(Collectors.joining("&"));
 
-            String paramstr = URLEncodedUtils.format(queryDto.entrySet().stream()
-                    .map(entry -> new BasicNameValuePair(entry.getKey(), entry.getValue()))
-                    .collect(Collectors.toList()), Charset.defaultCharset());
-            String url = eperusteetServiceUrl + "/api/perusteet" + "?" + ktparams + "&" + paramstr;
-            InputStream stream = client.get(url);
-            JsonNode node = mapper.readTree(stream);
-            return node;
-        }
-        catch (IOException ex) {
-            throw new BusinessRuleViolationException("haku-epaonnistui");
-        }
+        String paramstr = URLEncodedUtils.format(queryDto.entrySet().stream()
+                .map(entry -> new BasicNameValuePair(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList()), Charset.defaultCharset());
+        String url = eperusteetServiceUrl + "/api/perusteet" + "?" + ktparams + "&" + paramstr;
+
+        OphHttpRequest request = OphHttpRequest.Builder
+                .get(url)
+                .build();
+
+        return client.<JsonNode>execute(request)
+                .expectedStatus(SC_OK)
+                .mapWith(text -> {
+                    try {
+                        return mapper.readTree(text);
+                    } catch (IOException e) {
+                        throw new BusinessRuleViolationException("haku-epaonnistui");
+                    }
+                })
+                .orElse(null);
     }
 
     @Override
