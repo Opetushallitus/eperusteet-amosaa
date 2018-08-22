@@ -477,9 +477,6 @@
                         <ittestdb.password>${eperusteet-amosaa.ittestdb.password}</ittestdb.password>
                         <ittestdb.jdbcurl>${eperusteet-amosaa.ittestdb.jdbcurl}</ittestdb.jdbcurl>
                     </systemPropertyVariables>
-                    <!--<excludes>-->
-                        <!--<exclude>**/service/test/**.java</exclude>-->
-                    <!--</excludes>-->
                 </configuration>
             </plugin>
             <plugin>
