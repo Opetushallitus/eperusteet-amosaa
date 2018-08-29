@@ -466,5 +466,6 @@
     "haluatko-varmasti-siirtaa-opetussuunnitelman-organisaatiolle": "Haluatko varmasti siirtää toteutussuunnitelman organisaatiolle?",
     "muokkaus-oikeus-info": "Sinulla on oikeus muokata tätä toteutussuunnitelmaa",
     "jaettu-osa-info": "Tämä on jaettu osa",
-    "ei-voi-synkronoida": "Perustetta ei voi synkronoida"
+    "ei-voi-synkronoida": "Perustetta ei voi synkronoida",
+    "tuntematon-kayttaja": "Tuntematon käyttäjä"
 }
