@@ -11,6 +11,14 @@ html(lang="fi" ng-app="app")
     script.
       var CKEDITOR_BASEPATH = window.location.origin + window.location.pathname + "/ckeditor/";
     script(src="amosaa-dependencies.js")
+    script.
+      // FIXME: Bug in SignalR 2.2.0 not supporting jQuery 3.x.x
+      jQuery.fn.extend({
+        load: function(fn) {
+          return this.on("load", fn);
+        }
+      });
+
     script(src="amosaa-app.js")
 
     title="ePerusteet AMOSAA"
@@ -22,3 +30,9 @@ html(lang="fi" ng-app="app")
       div.ui-view.raamit-amosaa-gap
       div.editointi-wrapper
         editointikontrollit
+    script(id="oc-start-up"
+           data-oc-service="0e8747a9-e9c5-4988-bdfb-f52371da5eea-160-A9C96659716C0DC43761C4D9B31CCEDAB5E5D7E0"
+           data-oc-language="fi_FI"
+           data-oc-skip-presurvey="true"
+           data-main="https://occhat.elisa.fi/ChatServer/Scripts/oc-chat"
+           src="https://occhat.elisa.fi/ChatServer/Scripts/require.js")
