@@ -135,6 +135,7 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
 
     @Component
     public static class KayttajaClient {
+
         @Autowired
         private RestClientFactory restClientFactory;
 
@@ -160,12 +161,10 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
                             JsonNode json = mapper.readTree(text);
                             return parsiKayttaja(json);
                         } catch (IOException e) {
-                            KayttajanTietoDto result = new KayttajanTietoDto();
-                            result.setOidHenkilo(oid);
-                            return result;
+                            return new KayttajanTietoDto(oid);
                         }
                     })
-                    .orElse(null);
+                    .orElse(new KayttajanTietoDto(oid));
         }
     }
 
@@ -196,9 +195,9 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
     @Override
     public KayttajanTietoDto haeKirjautaunutKayttaja() {
         KayttajanTietoDto kayttajatieto = hae(getUserOid());
-        if (kayttajatieto == null) { //"fallback" jos integraatio on rikki eikä löydä käyttäjän tietoja
-            kayttajatieto = new KayttajanTietoDto();
-            kayttajatieto.setOidHenkilo(getUserOid());
+        if (kayttajatieto == null) {
+            // "fallback" jos integraatio on rikki eikä löydä käyttäjän tietoja
+            kayttajatieto = new KayttajanTietoDto(getUserOid());
         }
         return kayttajatieto;
     }
