@@ -35,6 +35,7 @@ import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationExcep
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import static fi.vm.sade.eperusteet.amosaa.service.external.impl.KayttajanTietoParser.parsiKayttaja;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
+import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 
 
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
@@ -155,6 +156,8 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
                     .build();
 
             return client.<KayttajanTietoDto>execute(request)
+                    .handleErrorStatus(SC_UNAUTHORIZED)
+                    .with((res) -> Optional.of(new KayttajanTietoDto(oid)))
                     .expectedStatus(SC_OK)
                     .mapWith(text -> {
                         try {

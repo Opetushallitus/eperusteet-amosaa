@@ -53,7 +53,7 @@ public class RestClientFactory {
                         .username(username)
                         .password(password)
                         .webCasUrl(casUrl)
-                        .casServiceUrl(service + "/j_spring_cas_security_check")
+                        .casServiceUrl(service)
                         .build();
 
                 client = new OphHttpClient.Builder(service)
