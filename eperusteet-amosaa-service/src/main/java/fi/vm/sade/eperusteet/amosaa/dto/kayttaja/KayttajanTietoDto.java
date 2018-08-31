@@ -17,6 +17,7 @@ package fi.vm.sade.eperusteet.amosaa.dto.kayttaja;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
 import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
@@ -26,7 +27,13 @@ import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
  */
 @Getter
 @Setter
+@NoArgsConstructor
 public class KayttajanTietoDto implements AuditLoggableDto {
+
+    public KayttajanTietoDto(String oidHenkilo) {
+        this.oidHenkilo = oidHenkilo;
+    }
+
     @Override
     public void auditLog(LogMessage.LogMessageBuilder msg) {
     }
