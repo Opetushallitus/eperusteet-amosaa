@@ -91,7 +91,7 @@ public class TutkinnonosaToteutus extends AbstractAuditedEntity implements Seria
         result.setKoodit(new HashSet<>(this.getKoodit()));
         if (this.getVapaat() != null) {
             for (VapaaTeksti vt : this.getVapaat()) {
-                this.getVapaat().add(vt.copy());
+                result.getVapaat().add(vt.copy());
             }
         }
         return result;

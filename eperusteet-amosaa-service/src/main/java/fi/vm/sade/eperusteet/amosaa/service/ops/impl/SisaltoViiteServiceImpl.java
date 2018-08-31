@@ -64,6 +64,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 /**
  * @author mikkom
@@ -863,6 +864,10 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
                 .map(viiteId -> repository.findOne(viiteId))
                 .filter(Objects::nonNull)
                 .filter(viite -> SisaltoTyyppi.isCopyable(viite.getTyyppi()))
+                .filter(viite -> {
+                    // Tutkinnon osia ei voi tuoda kuin jaettuihin osiin
+                    return ops.getTyyppi().equals(OpsTyyppi.YLEINEN) || ObjectUtils.isEmpty(viite.getTosa());
+                })
                 .map(viite -> mapper.map(viite, SisaltoViiteDto.class))
                 .map(viiteDto -> mapper.map(viiteDto, SisaltoViite.class))
                 .map(viite -> SisaltoViite.copy(viite, false))

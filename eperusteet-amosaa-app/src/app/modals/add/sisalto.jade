@@ -103,9 +103,10 @@ div.modal-body.modal-sisalto
 
   .opslista(ng-show="currentStage === 'opssisalto'")
     .osa(ng-repeat="node in rakenne" style="margin-left: {{ node.$$depth * 20 }}px")
-      label.checkbox-inline
+      label.checkbox-inline(ng-hide="node.$$obj.tosa")
         span.nimi(ng-bind="node.$$obj.tekstiKappale.nimi | kaanna")
         input.form-control(type="checkbox" ng-model="node.$$valittu")
+      span.nimi(ng-bind="node.$$obj.tekstiKappale.nimi | kaanna" style="text-decoration: line-through;" ng-show="node.$$obj.tosa")
 
 div.modal-footer
   button.btn.btn-default(ng-click="ok()")
