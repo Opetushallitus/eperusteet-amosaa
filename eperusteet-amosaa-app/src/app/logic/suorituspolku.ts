@@ -1,7 +1,7 @@
 namespace Suorituspolku {
     export const pakollinen = _.memoize(osa => !osa.tutkintonimike && !osa.osaamisala && (osa.pakollinen || _.some(osa.osat, pakollinen)));
 
-    export const calculateRealAmount = (ops, tree, tosat, poistetut) => {
+    export const calculateRealAmount = (ops, tree, tosat, poistetut, osasuorituspolku) => {
         const shouldCount = node => !poistetut[node.tunniste] || !poistetut[node.tunniste].piilotettu;
         const isRyhma = node => !node._tutkinnonOsaViite;
 
@@ -68,11 +68,10 @@ namespace Suorituspolku {
                 const laajuusValidi = !laajuus || !laajuus.minimi || node.$$laskettuLaajuus >= laajuus.minimi;
                 const kokoValidi = !koko || !koko.minimi || node.$$laskettuKoko >= koko.minimi;
 
-                if (!laajuusValidi) {
-                    console.log(node.$$laskettuLaajuus, "vs", laajuus.minimi);
-                }
-
                 node.$$valid = laajuusValidi && kokoValidi && osatValidit;
+                if (osasuorituspolku) {
+                    node.$$valid = true;
+                }
 
                 return node.$$valid || !shouldCount(node);
             } else {

@@ -16,7 +16,7 @@
 
 package fi.vm.sade.eperusteet.amosaa.repository.ops;
 
-import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.SuorituspolkuRivi;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.SuorituspolkuRivi;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Suorituspolku;
 
 import java.util.Set;

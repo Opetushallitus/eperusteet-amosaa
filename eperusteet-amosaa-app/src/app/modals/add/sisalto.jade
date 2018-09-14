@@ -40,7 +40,12 @@ div.modal-body.modal-sisalto
 
   div.sisalto-tekstikappale(ng-show="currentStage === 'nimenvalinta'")
     h3(ng-bind="'anna-nimi' | kaanna")
-    input.form-control(slocalized ng-model="obj.tekstiKappale.nimi" type="text" required="true")
+    .form-group
+      input.form-control(slocalized ng-model="obj.tekstiKappale.nimi" type="text" required="true")
+    .checkbox(ng-show="obj.tyyppi === 'suorituspolku'")
+      label
+        input(type="checkbox" ng-model="obj.suorituspolku.osasuorituspolku" checked="false")
+        span(kaanna="'osasuorituspolku'")
   
   div(ng-show="currentStage === 'perusteentutkinnonosat'")
     +completePagination("tosap")

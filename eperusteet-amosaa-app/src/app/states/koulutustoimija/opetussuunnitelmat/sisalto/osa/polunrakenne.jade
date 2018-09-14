@@ -13,8 +13,7 @@ mixin polkuTutkinnonosa()
         a(href="" ng-click="misc.siirry(tosa)" ng-bind="tosa.$$tosa.nimi | kaanna")
         b.sp-osaamisala(ng-bind="tosa.$$tosa.koodiArvo")
       .sp-toolbar
-        span.laajuus(ng-show="tosa.laajuus || tosa.laajuusMaksimi")
-          {{ tosa.laajuus }}
+        span.laajuus(ng-show="tosa.laajuus || tosa.laajuusMaksimi") {{ tosa.laajuus }}
           span(ng-show="tosa.laajuusMaksimi && tosa.laajuus < tosa.laajuusMaksimi")
             =" - "
             span {{ tosa.laajuusMaksimi }}
@@ -39,7 +38,7 @@ mixin tosaKoodiOsa(osa)
 
 
 mixin muodostuminen()
-  .sp-muodostuminen(ng-show="ngModel.muodostumisSaanto"
+  .sp-muodostuminen(ng-show="ngModel.muodostumisSaanto && !misc.osa.suorituspolku.osasuorituspolku"
     ng-class="{ 'muodostuminen-valid': ngModel.$$valid, 'muodostuminen-invalid': !ngModel.$$valid && ngModel.rooli !== 'määrittelemätön' }")
     span(ng-if="ngModel.muodostumisSaanto.koko"
       ng-init="koko = ngModel.muodostumisSaanto.koko; koko = ngModel.muodostumisSaanto.koko; kokoSama = koko.minimi === koko.maksimi")

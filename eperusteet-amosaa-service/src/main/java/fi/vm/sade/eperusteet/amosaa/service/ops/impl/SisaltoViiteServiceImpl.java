@@ -22,7 +22,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
-import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.SuorituspolkuRivi;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.SuorituspolkuRivi;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.domain.revision.Revision;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
@@ -296,6 +296,10 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
         Suorituspolku sp = mapper.map(uusi.getSuorituspolku(), Suorituspolku.class);
         for (SuorituspolkuRivi rivi : sp.getRivit()) {
             rivi.setSuorituspolku(sp);
+        }
+        // Poistetaan laajuus, jos ei käytössä muutenkaan
+        if (sp.getOsasuorituspolku() != null && !sp.getOsasuorituspolku()) {
+            sp.setOsasuorituspolkuLaajuus(null);
         }
         viite.setSuorituspolku(sp);
     }

@@ -18,19 +18,12 @@ package fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa;
 
 import fi.vm.sade.eperusteet.amosaa.domain.AbstractAuditedEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
-import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.SuorituspolkuRivi;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import fi.vm.sade.eperusteet.amosaa.service.util.Copyable;
 import lombok.Getter;
@@ -39,7 +32,6 @@ import org.hibernate.envers.Audited;
 
 /**
  * @author nkala
- * <p>
  * Suorituspolku on erikoistettu versio muodostumissäännöstöstä.
  */
 @Entity
@@ -59,6 +51,15 @@ public class Suorituspolku extends AbstractAuditedEntity implements Serializable
     @Getter
     @Setter
     private Boolean naytaKuvausJulkisesti;
+
+    @Getter
+    @Setter
+    private Boolean osasuorituspolku;
+
+    @Getter
+    @Setter
+    @Column(precision = 10, scale = 2, name = "osasuorituspolku_laajuus")
+    private BigDecimal osasuorituspolkuLaajuus;
 
     @Override
     public Suorituspolku copy(boolean deep) {

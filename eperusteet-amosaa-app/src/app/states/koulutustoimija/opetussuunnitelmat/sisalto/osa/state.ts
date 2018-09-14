@@ -642,7 +642,8 @@ angular
                                     ops,
                                     $scope.perusteRakenne,
                                     $scope.misc.tosat,
-                                    spRivit
+                                    spRivit,
+                                    _.get($scope.misc, "osa.suorituspolku.osasuorituspolku", false)
                                 );
                                 $scope.misc.spRivit = spRivit;
 
@@ -732,7 +733,7 @@ angular
                                     });
                                 });
                             };
-
+                        
                         _.merge($scope, {
                             collapsed_dirty: false,
                             perusteRakenne: _.cloneDeep(Perusteet.getRakenne(suoritustapa)),
@@ -801,6 +802,10 @@ angular
                                         $scope.osa.suorituspolku.rivit.push(rivi);
                                     }
                                     rivi.piilotettu = !rivi.piilotettu;
+                                    update();
+                                },
+                                update: () => {
+                                    $scope.misc.osa.suorituspolku.osasuorituspolku = $scope.osa.suorituspolku.osasuorituspolku;
                                     update();
                                 }
                             },

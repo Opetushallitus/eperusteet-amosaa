@@ -238,6 +238,7 @@
     "oma-tutkinnon-osa-ei-koodia": "Paikalliselta tutkinnon osalta puuttuu koodi",
     "oma-tutkinnon-osa-ei-sisaltoa": "Paikallisesta tutkinnon osasta puuttuu sisältö",
     "oma-tutkinnon-osa-koodi-jo-kaytossa": "Paikallisen tutkinnon osan koodi on jo käytössä",
+    "oma-tutkinnon-osa-koodi-ei-asetettu": "Paikallisen tutkinnon osan koodi ei ole asetettu",
     "ops-validointivirheita":
         "Toteutussuunnitelma ei mene validoinnista läpi. Tarkista virheet validoimalla toteutussuunnitelma.",
     "osa-alueet": "Osa-alueet",
@@ -467,5 +468,7 @@
     "muokkaus-oikeus-info": "Sinulla on oikeus muokata tätä toteutussuunnitelmaa",
     "jaettu-osa-info": "Tämä on jaettu osa",
     "ei-voi-synkronoida": "Perustetta ei voi synkronoida",
-    "tuntematon-kayttaja": "Tuntematon käyttäjä"
+    "tuntematon-kayttaja": "Tuntematon käyttäjä",
+    "osasuorituspolku": "Osasuorituspolku",
+    "osasuorituspolku-laajuus": "Osasuorituspolun kokonaislaajuus"
 }
