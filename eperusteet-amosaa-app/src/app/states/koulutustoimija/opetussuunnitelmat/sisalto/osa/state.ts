@@ -733,7 +733,7 @@ angular
                                     });
                                 });
                             };
-                        
+
                         _.merge($scope, {
                             collapsed_dirty: false,
                             perusteRakenne: _.cloneDeep(Perusteet.getRakenne(suoritustapa)),

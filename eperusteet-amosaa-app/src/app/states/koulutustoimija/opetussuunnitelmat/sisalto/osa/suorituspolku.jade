@@ -11,6 +11,7 @@ div
           numberinput(type="float" model="osa.suorituspolku.osasuorituspolkuLaajuus" step="0.5")
         div(ng-if="!$$ekEditing")
           span(ng-bind="osa.suorituspolku.osasuorituspolkuLaajuus")
+          span(style='margin-left: 2px', ng-show='misc.suoritustapa.laajuusYksikko', ng-bind='misc.suoritustapa.laajuusYksikko | kaanna')
 
   .suorituspolku-otsikko(ng-hide="osa.suorituspolku.osasuorituspolku")
     h2
