@@ -65,7 +65,7 @@ mixin polkuRyhmaToolbar()
     +muodostuminen
     span
       // Jos ryhmä on osaamisala tai tutkintonimike, voidaan se silti poistaa
-      .sp-edit(ng-show="misc.root.$$ekEditing && !ngModel.pakollinen && (ngModel.tutkintonimike || ngModel.osaamisala || ngModel.rooli === 'määrittelemätön' || ngModel.vieras || ngModel.rooli === 'vieras')")
+      .sp-edit(ng-show="misc.root.$$ekEditing && (!ngModel.pakollinen && ((ngModel.tutkintonimike || ngModel.osaamisala || ngModel.rooli === 'määrittelemätön' || ngModel.vieras || ngModel.rooli === 'vieras')) || misc.osa.suorituspolku.osasuorituspolku)")
         +poistoToggler
       .sp-edit(ng-show="misc.root.$$ekEditing && !ngModel.$$poistettu")
         a(href="" ng-click="misc.editNode(ngModel)")
