@@ -75,8 +75,13 @@ public class LogMessage extends AbstractLogMessage {
         }
 
         public LogMessageBuilder afterRevision(Number rev) {
-            add("rev", rev.toString());
-            return add("rev_old_value", beforeRev.toString());
+            if (beforeRev != null) {
+                add("rev", rev.toString());
+                return add("rev_old_value", beforeRev.toString());
+            }
+            else {
+                return add("rev", rev.toString());
+            }
         }
     }
 
