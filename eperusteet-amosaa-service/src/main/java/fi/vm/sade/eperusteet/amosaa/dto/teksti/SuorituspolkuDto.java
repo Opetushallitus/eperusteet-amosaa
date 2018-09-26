@@ -34,6 +34,5 @@ import java.util.Set;
 public class SuorituspolkuDto extends SuorituspolkuBaseDto {
     private Boolean naytaKuvausJulkisesti;
     private Set<SuorituspolkuRiviDto> rivit = new HashSet<>();
-    private Boolean osasuorituspolku;
     private BigDecimal osasuorituspolkuLaajuus;
 }

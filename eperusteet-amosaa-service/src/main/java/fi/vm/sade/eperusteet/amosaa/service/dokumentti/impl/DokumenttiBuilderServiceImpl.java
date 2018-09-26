@@ -335,6 +335,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
             }
 
             switch (lapsi.getTyyppi()) {
+                case OSASUORITUSPOLKU:
                 case SUORITUSPOLKU:
                     addSuorituspolku(docBase, lapsi, otsikkoBuilder.toString());
                     break;

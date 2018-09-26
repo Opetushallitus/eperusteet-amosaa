@@ -38,7 +38,7 @@ mixin tosaKoodiOsa(osa)
 
 
 mixin muodostuminen()
-  .sp-muodostuminen(ng-show="ngModel.muodostumisSaanto && !misc.osa.suorituspolku.osasuorituspolku"
+  .sp-muodostuminen(ng-show="ngModel.muodostumisSaanto && misc.osa.tyyppi === 'suorituspolku'"
     ng-class="{ 'muodostuminen-valid': ngModel.$$valid, 'muodostuminen-invalid': !ngModel.$$valid && ngModel.rooli !== 'määrittelemätön' }")
     span(ng-if="ngModel.muodostumisSaanto.koko"
       ng-init="koko = ngModel.muodostumisSaanto.koko; koko = ngModel.muodostumisSaanto.koko; kokoSama = koko.minimi === koko.maksimi")
@@ -65,7 +65,7 @@ mixin polkuRyhmaToolbar()
     +muodostuminen
     span
       // Jos ryhmä on osaamisala tai tutkintonimike, voidaan se silti poistaa
-      .sp-edit(ng-show="misc.root.$$ekEditing && (!ngModel.pakollinen && ((ngModel.tutkintonimike || ngModel.osaamisala || ngModel.rooli === 'määrittelemätön' || ngModel.vieras || ngModel.rooli === 'vieras')) || misc.osa.suorituspolku.osasuorituspolku)")
+      .sp-edit(ng-show="misc.root.$$ekEditing && (!ngModel.pakollinen && ((ngModel.tutkintonimike || ngModel.osaamisala || ngModel.rooli === 'määrittelemätön' || ngModel.vieras || ngModel.rooli === 'vieras')) || misc.osa.tyyppi === 'osasuorituspolku')")
         +poistoToggler
       .sp-edit(ng-show="misc.root.$$ekEditing && !ngModel.$$poistettu")
         a(href="" ng-click="misc.editNode(ngModel)")

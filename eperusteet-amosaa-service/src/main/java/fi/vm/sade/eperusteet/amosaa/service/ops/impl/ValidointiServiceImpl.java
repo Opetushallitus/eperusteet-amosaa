@@ -289,16 +289,14 @@ public class ValidointiServiceImpl implements ValidointiService {
                 }
             }
 
-            if (sp.getOsasuorituspolku() != null && !sp.getOsasuorituspolku()) {
-                CachedPeruste perusteInfo = ops.getPeruste();
-                SuoritustapaLaajaDto suoritustapa = perusteCacheService.getSuoritustapa(ops, perusteInfo.getId());
-                Map<UUID, SuorituspolkuRivi> rivit = sp.getRivit().stream()
-                        .collect(Collectors.toMap(SuorituspolkuRivi::getRakennemoduuli, Function.identity()));
-                Map<Long, TutkinnonOsaViiteSuppeaDto> tov = suoritustapa.getTutkinnonOsat().stream()
-                        .collect(Collectors.toMap(TutkinnonOsaViiteSuppeaDto::getId, Function.identity()));
-                ValidointiHelper ctx = new ValidointiHelper(validointi, ops, suoritustapa, sp, rivit, tov);
-                validoiSpRakenne(ctx, suoritustapa.getRakenne());
-            }
+            CachedPeruste perusteInfo = ops.getPeruste();
+            SuoritustapaLaajaDto suoritustapa = perusteCacheService.getSuoritustapa(ops, perusteInfo.getId());
+            Map<UUID, SuorituspolkuRivi> rivit = sp.getRivit().stream()
+                    .collect(Collectors.toMap(SuorituspolkuRivi::getRakennemoduuli, Function.identity()));
+            Map<Long, TutkinnonOsaViiteSuppeaDto> tov = suoritustapa.getTutkinnonOsat().stream()
+                    .collect(Collectors.toMap(TutkinnonOsaViiteSuppeaDto::getId, Function.identity()));
+            ValidointiHelper ctx = new ValidointiHelper(validointi, ops, suoritustapa, sp, rivit, tov);
+            validoiSpRakenne(ctx, suoritustapa.getRakenne());
         }
     }
 
@@ -313,6 +311,7 @@ public class ValidointiServiceImpl implements ValidointiService {
         switch (viite.getTyyppi()) {
             case TUTKINNONOSA:
                 validoiTutkinnonOsa(validointi, viite, ops);
+            //case OSASUORITUSPOLKU: Osasuorituspolkua ei validoida
             case SUORITUSPOLKU:
                 validoiSuorituspolku(validointi, viite, ops);
             default:

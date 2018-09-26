@@ -126,7 +126,7 @@ angular.module("app").config($stateProvider =>
 
                                 if (uusi.tyyppi === "tutkinnonosa") {
                                     parentNode.id = Tekstikappaleet.tutkinnonosat(otsikot).id;
-                                } else if (uusi.tyyppi === "suorituspolku") {
+                                } else if (uusi.tyyppi === "suorituspolku" || uusi.tyyppi === "osasuorituspolku") {
                                     parentNode.id = Tekstikappaleet.suorituspolut(otsikot).id;
                                 }
 

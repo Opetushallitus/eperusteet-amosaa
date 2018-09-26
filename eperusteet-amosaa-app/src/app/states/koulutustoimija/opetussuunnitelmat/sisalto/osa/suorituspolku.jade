@@ -1,10 +1,11 @@
 div
+
   .suorituspolku-valinnat(ng-show="$$ekEditing")
-    +checkbox("osa.suorituspolku.osasuorituspolku", "misc.update()", "'osasuorituspolku' | kaanna")
-    div(ng-hide="osa.suorituspolku.osasuorituspolku")
+    +checkbox("osa.$$osasuorituspolku", "misc.update()", "'osasuorituspolku' | kaanna")
+    div(ng-hide="osa.tyyppi === 'osasuorituspolku'")
       +checkbox("osa.suorituspolku.naytaKuvausJulkisesti", "", "'nayta-kuvaus-julkisesti' | kaanna")
 
-  .suorituspolku-laajuus(ng-show="osa.suorituspolku.osasuorituspolku")
+  .suorituspolku-laajuus(ng-show="osa.tyyppi === 'osasuorituspolku'")
     div(ng-if="osa.suorituspolku.osasuorituspolkuLaajuus || $$ekEditing")
       +contentToggler("osa.suorituspolku.$$naytaLaajuus", "'osasuorituspolku-laajuus'")
         div(ng-if="$$ekEditing")
@@ -13,7 +14,7 @@ div
           span(ng-bind="osa.suorituspolku.osasuorituspolkuLaajuus")
           span(style='margin-left: 2px', ng-show='misc.suoritustapa.laajuusYksikko', ng-bind='misc.suoritustapa.laajuusYksikko | kaanna')
 
-  .suorituspolku-otsikko(ng-hide="osa.suorituspolku.osasuorituspolku")
+  .suorituspolku-otsikko(ng-hide="osa.tyyppi === 'osasuorituspolku'")
     h2
       span(ng-bind="perusteenNimi | kaanna")
       span.suorituspolku-laajuus(ng-show="perusteRakenne.muodostumisSaanto.laajuus.minimi || perusteRakenne.muodostumisSaanto.laajuus.maksimi")

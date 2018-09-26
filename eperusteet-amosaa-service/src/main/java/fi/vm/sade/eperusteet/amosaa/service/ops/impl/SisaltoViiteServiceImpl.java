@@ -194,9 +194,10 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
                     throw new BusinessRuleViolationException("ryhman-voi-liittaa-ainoastaan-tutkinnonosiin");
                 }
                 break;
+            case OSASUORITUSPOLKU:
             case SUORITUSPOLKU:
                 if (parentViite.getTyyppi() != SisaltoTyyppi.SUORITUSPOLUT) {
-                    throw new BusinessRuleViolationException("suorituspolun-voi-liittaa-ainoastaan-suorituspolkuihin");
+                    throw new BusinessRuleViolationException("suorituspolun-voi-liittaei-sallittu-tyyppia-ainoastaan-suorituspolkuihin");
                 }
                 if (uusiViite.getSuorituspolku() == null) {
                     uusiViite.setSuorituspolku(new Suorituspolku());
@@ -269,6 +270,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
             case TUTKINNONOSA:
                 parentViite = repository.findTutkinnonosatRoot(ops);
                 break;
+            case OSASUORITUSPOLKU:
             case SUORITUSPOLKU:
                 parentViite = repository.findSuorituspolutRoot(ops);
                 break;
@@ -298,9 +300,14 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
             rivi.setSuorituspolku(sp);
         }
         // Poistetaan laajuus, jos ei käytössä muutenkaan
-        if (sp.getOsasuorituspolku() != null && !sp.getOsasuorituspolku()) {
+        if (!SisaltoTyyppi.OSASUORITUSPOLKU.equals(uusi.getTyyppi())) {
             sp.setOsasuorituspolkuLaajuus(null);
         }
+        // Tyyppi voidaan muuttaa jälkikäteen
+        if (SisaltoTyyppi.isSuorituspolku(uusi.getTyyppi())) {
+            viite.setTyyppi(uusi.getTyyppi());
+        }
+
         viite.setSuorituspolku(sp);
     }
 
@@ -398,6 +405,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
             case TUTKINNONOSA:
                 updateTutkinnonOsa(ops, viite, uusi);
                 break;
+            case OSASUORITUSPOLKU:
             case SUORITUSPOLKU:
                 updateSuorituspolku(viite, uusi);
                 break;

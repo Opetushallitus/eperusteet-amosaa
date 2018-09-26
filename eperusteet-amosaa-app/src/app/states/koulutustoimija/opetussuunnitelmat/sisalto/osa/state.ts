@@ -97,8 +97,8 @@ angular
                 versio: (versioId, historia) => versioId && historia.get(versioId),
                 kommentit: osa => osa.all("kommentit").getList(),
                 pTosat: (Api, osa, ops) =>
-                    osa.tyyppi === "suorituspolku" &&
-                    Api.all("perusteet/" + ops.peruste.id + "/suorituspolkuosat").getList(),
+                    (osa.tyyppi === "suorituspolku" || osa.tyyppi === "osasuorituspolku")
+                    && Api.all("perusteet/" + ops.peruste.id + "/suorituspolkuosat").getList(),
                 pTosa: (Api, osa, ops) => {
                     if (osa.tyyppi === "tutkinnonosa") {
                         let perusteId = null;
@@ -133,7 +133,8 @@ angular
                     }
                 },
                 pSuoritustavat: (Api, osa, ops) =>
-                    osa.tyyppi === "suorituspolku" && Api.one("perusteet/" + ops.peruste.id + "/suoritustavat").get(),
+                    (osa.tyyppi === "suorituspolku" || osa.tyyppi === "osasuorituspolku")
+                    && Api.one("perusteet/" + ops.peruste.id + "/suoritustavat").get(),
                 arviointiAsteikot: Api => Api.all("arviointiasteikot").getList()
             },
             onEnter: (osa, $state, $stateParams) => {
@@ -643,7 +644,7 @@ angular
                                     $scope.perusteRakenne,
                                     $scope.misc.tosat,
                                     spRivit,
-                                    _.get($scope.misc, "osa.suorituspolku.osasuorituspolku", false)
+                                    osa.tyyppi === "osasuorituspolku"
                                 );
                                 $scope.misc.spRivit = spRivit;
 
@@ -805,8 +806,13 @@ angular
                                     update();
                                 },
                                 update: () => {
-                                    $scope.misc.osa.suorituspolku.osasuorituspolku = $scope.osa.suorituspolku.osasuorituspolku;
+                                    if ($scope.osa.tyyppi === "suorituspolku") {
+                                        $scope.osa.tyyppi = "osasuorituspolku";
+                                    } else if ($scope.osa.tyyppi === "osasuorituspolku") {
+                                        $scope.osa.tyyppi = "suorituspolku";
+                                    }
                                     update();
+                                    osa.$$osasuorituspolku = $scope.osa.tyyppi === "osasuorituspolku";
                                 }
                             },
                             togglePoistetut: () => ($scope.misc.collapsed_removed = !$scope.misc.collapsed_removed),
@@ -846,6 +852,7 @@ angular
                                 node.pakollinen = Suorituspolku.pakollinen(node);
                             });
                             $scope.toggleAll();
+                            osa.$$osasuorituspolku = $scope.osa.tyyppi === "osasuorituspolku";
                         }
                     }
                 },
