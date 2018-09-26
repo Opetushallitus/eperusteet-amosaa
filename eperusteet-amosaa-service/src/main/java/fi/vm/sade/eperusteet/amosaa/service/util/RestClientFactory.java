@@ -16,13 +16,13 @@
 package fi.vm.sade.eperusteet.amosaa.service.util;
 
 
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-
 import fi.vm.sade.javautils.http.OphHttpClient;
 import fi.vm.sade.javautils.http.auth.CasAuthenticator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author mikkom
@@ -58,9 +58,11 @@ public class RestClientFactory {
 
                 client = new OphHttpClient.Builder(service)
                         .authenticator(casAuthenticator)
+                        .timeoutMs(TIMEOUT)
                         .build();
             } else {
                 client = new OphHttpClient.Builder(service)
+                        .timeoutMs(TIMEOUT)
                         .build();
             }
 

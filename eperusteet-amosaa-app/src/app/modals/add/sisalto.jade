@@ -3,6 +3,7 @@ div.modal-header
   h2.pull-left(ng-show="obj.tyyppi === 'tutkinnonosa' && $$isValmaTelma" kaanna="'otsikko-koulutuksenosa'")
   h2.pull-left(ng-show="obj.tyyppi === 'tutkinnonosaryhma'" kaanna="'otsikko-tutkinnonosaryhma'")
   h2.pull-left(ng-show="obj.tyyppi === 'suorituspolku'" kaanna="'otsikko-suorituspolku'")
+  h2.pull-left(ng-show="obj.tyyppi === 'osasuorituspolku'" kaanna="'otsikko-osasuorituspolku'")
   h2.pull-left(ng-show="obj.tyyppi === 'tekstikappale'" kaanna="'otsikko-tekstikappale'")
   h2.pull-left(ng-show="!obj.tyyppi" kaanna="'lisaa-sisaltoa'")
   .pull-right
@@ -40,7 +41,8 @@ div.modal-body.modal-sisalto
 
   div.sisalto-tekstikappale(ng-show="currentStage === 'nimenvalinta'")
     h3(ng-bind="'anna-nimi' | kaanna")
-    input.form-control(slocalized ng-model="obj.tekstiKappale.nimi" type="text" required="true")
+    .form-group
+      input.form-control(slocalized ng-model="obj.tekstiKappale.nimi" type="text" required="true")
   
   div(ng-show="currentStage === 'perusteentutkinnonosat'")
     +completePagination("tosap")

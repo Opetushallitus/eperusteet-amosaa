@@ -23,7 +23,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
-import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.SuorituspolkuRivi;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.SuorituspolkuRivi;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
@@ -54,6 +54,7 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import javax.annotation.PostConstruct;
 
@@ -89,7 +90,7 @@ public class ValidointiServiceImpl implements ValidointiService {
     @Override
     public Validointi validoi(Opetussuunnitelma ops) {
         Validointi validointi = new Validointi();
-        validoi(validointi, ops);
+        validoiTiedot(validointi, ops);
         SisaltoViite root = svRepository.findOneRoot(ops);
         validoi(validointi, root, ops);
         return validointi;
@@ -134,11 +135,11 @@ public class ValidointiServiceImpl implements ValidointiService {
                     validointi.virhe("oma-tutkinnon-osa-ei-sisaltoa", nimi);
                 }
             } else {
-                if (oma.getKoodi() == null || oma.getKoodi().isEmpty()) {
+                if (ObjectUtils.isEmpty(oma.getKoodi())) {
                     if (KoulutusTyyppi.of(koulutustyppi).isValmaTelma()) {
                         validointi.virhe("oma-koulutuksen-osa-ei-koodia", nimi);
                     } else {
-                        validointi.virhe("oma-tutkinnon-osa-koodi-jo-kaytossa", nimi);
+                        validointi.virhe("oma-tutkinnon-osa-koodi-ei-asetettu", nimi);
                     }
                 }
 
@@ -228,10 +229,10 @@ public class ValidointiServiceImpl implements ValidointiService {
         return moduuli.getOsat().stream()
                 .filter(osa -> isUsedRakenneOsa(ctx, osa))
                 .map(osa -> laskettuLaajuusJaKoko(ctx, osa))
-                .reduce(Pair.of(0, new BigDecimal(0)), (acc, next) -> laajuusJaKokoReducer(acc, next));
+                .reduce(Pair.of(0, new BigDecimal(0)), this::laajuusJaKokoReducer);
     }
 
-    /// Yksittäisen ryhmän tarkastus
+    // Yksittäisen ryhmän tarkastus
     private void validoiSpRyhma(ValidointiHelper ctx, RakenneModuuliDto moduuli) {
 
         Pair<Integer, BigDecimal> sisallonKokoJaLaajuus = sisallonLaajuusJaKoko(ctx, moduuli);
@@ -247,7 +248,7 @@ public class ValidointiServiceImpl implements ValidointiService {
 
             try {
                 BigDecimal minimi = new BigDecimal(moduuli.getMuodostumisSaanto().getLaajuus().getMinimi());
-                if (sisallonKokoJaLaajuus.getSecond().compareTo(minimi) == -1) {
+                if (sisallonKokoJaLaajuus.getSecond().compareTo(minimi) < 0) {
                     ctx.validointi.virhe("virheellinen-rakenteen-osa", moduuli.getNimi());
                 }
             } catch (NullPointerException ex) {
@@ -255,7 +256,7 @@ public class ValidointiServiceImpl implements ValidointiService {
         }
     }
 
-    /// Suorituspolun validointi perusteen rakennepuuta vasten
+    // Suorituspolun validointi perusteen rakennepuuta vasten
     private void validoiSpRakenne(ValidointiHelper ctx, RakenneModuuliDto moduuli) {
         SuorituspolkuRivi rivi = ctx.rivit.get(moduuli.getTunniste());
         // Jos ryhmä on piilotettu, sitä ei huomioida
@@ -269,12 +270,10 @@ public class ValidointiServiceImpl implements ValidointiService {
                 .filter(osa -> osa instanceof RakenneModuuliDto)
                 .map(osa -> (RakenneModuuliDto) osa)
                 .filter(osa -> osa.getRooli() == RakenneModuuliRooli.NORMAALI || osa.getRooli() == RakenneModuuliRooli.OSAAMISALA)
-                .forEach(osa -> {
-                    validoiSpRakenne(ctx, osa);
-                });
+                .forEach(osa -> validoiSpRakenne(ctx, osa));
     }
 
-    /// Suorituspolun validointi
+    // Suorituspolun validointi
     private void validoiSuorituspolku(Validointi validointi, SisaltoViite viite, Opetussuunnitelma ops) {
         Suorituspolku sp = viite.getSuorituspolku();
         LokalisoituTeksti nimi = viite.getTekstiKappale() != null ? viite.getTekstiKappale().getNimi() : null;
@@ -301,7 +300,7 @@ public class ValidointiServiceImpl implements ValidointiService {
         }
     }
 
-    /// Validoidaan sisältöviite
+    // Validoidaan sisältöviite
     private void validoi(Validointi validointi, SisaltoViite viite, Opetussuunnitelma ops) {
         if (viite == null || viite.getLapset() == null) {
             return;
@@ -312,6 +311,7 @@ public class ValidointiServiceImpl implements ValidointiService {
         switch (viite.getTyyppi()) {
             case TUTKINNONOSA:
                 validoiTutkinnonOsa(validointi, viite, ops);
+            //case OSASUORITUSPOLKU: Osasuorituspolkua ei validoida
             case SUORITUSPOLKU:
                 validoiSuorituspolku(validointi, viite, ops);
             default:
@@ -330,7 +330,7 @@ public class ValidointiServiceImpl implements ValidointiService {
         }
     }
 
-    static public void validoi(Validointi validointi, Opetussuunnitelma ops) {
+    static public void validoiTiedot(Validointi validointi, Opetussuunnitelma ops) {
         LokalisoituTeksti.validoi(validointi, ops, ops.getNimi());
         LokalisoituTeksti.validoi(validointi, ops, ops.getKuvaus());
 
@@ -339,15 +339,15 @@ public class ValidointiServiceImpl implements ValidointiService {
         }
 
         if (ops.getTyyppi() == OpsTyyppi.OPS || ops.getTyyppi() == OpsTyyppi.YLEINEN) {
-            if (ops.getHyvaksyja() == null || ops.getHyvaksyja().isEmpty()) {
+            if (ObjectUtils.isEmpty(ops.getHyvaksyja())) {
                 validointi.virhe("hyvaksyjaa-ei-maaritelty", ops.getNimi());
             }
 
-            if (ops.getPaatosnumero() == null || ops.getPaatosnumero().isEmpty()) {
+            if (ObjectUtils.isEmpty(ops.getPaatosnumero())) {
                 validointi.virhe("paatosnumeroa-ei-maaritelty", ops.getNimi());
             }
 
-            if (ops.getPaatosnumero() == null) {
+            if (ObjectUtils.isEmpty(ops.getPaatospaivamaara())) {
                 validointi.virhe("paatospaivamaaraa-ei-maaritelty", ops.getNimi());
             }
         }

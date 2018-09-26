@@ -51,10 +51,10 @@ mixin esikatselu()
             +ekstring("ops.hyvaksyja")
 
           +formfield("'paatospvm'")
-            +ekdate("ops.paatospaivamaara", "'paatospvm'")
+            +ekdate("ops.paatospaivamaara", "'paatospvm'", "'date'")
 
           +formfield("'voimaantulopvm'")
-            +ekdate("ops.voimaantulo", "'voimaantulopvm'")
+            +ekdate("ops.voimaantulo", "'voimaantulopvm'", "'date'")
 
       div(ng-if="peruste && peruste.nimi")
         +contentToggler("$$showPeruste", "'perusteen-tiedot'")

@@ -72,6 +72,7 @@ mixin valinnat()
   div(ng-if="osa.tyyppi === 'tutkinnonosaryhma'" ui-view="tutkinnonosaryhma")
   div(ng-if="osa.tyyppi === 'suorituspolut'"     ui-view="suorituspolut")
   div(ng-if="osa.tyyppi === 'suorituspolku'"     ui-view="suorituspolku")
+  div(ng-if="osa.tyyppi === 'osasuorituspolku'"  ui-view="suorituspolku")
 
   div(style="margin-top: 60px" ng-hide="$$ekEditing")
     hr

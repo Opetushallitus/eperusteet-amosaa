@@ -14,11 +14,10 @@
  * European Union Public Licence for more details.
  */
 
-package fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija;
+package fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa;
 
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
-import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Suorituspolku;
 
 import java.io.Serializable;
 import java.util.HashSet;

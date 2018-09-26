@@ -18,14 +18,12 @@ package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.SuorituspolkuRiviDto;
-
-import java.util.HashSet;
-import java.util.Set;
-
 import lombok.Getter;
 import lombok.Setter;
-import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
-import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
+
+import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author nkala
@@ -36,4 +34,5 @@ import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 public class SuorituspolkuDto extends SuorituspolkuBaseDto {
     private Boolean naytaKuvausJulkisesti;
     private Set<SuorituspolkuRiviDto> rivit = new HashSet<>();
+    private BigDecimal osasuorituspolkuLaajuus;
 }

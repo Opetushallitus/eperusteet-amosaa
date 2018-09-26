@@ -11,7 +11,7 @@ namespace Opetussuunnitelmat {
 
     export const sallitutSisaltoTyypit = ops => {
         if (ops.tyyppi === "ops" || ops.tyyppi === "kooste") {
-            return ["tekstikappale", "tutkinnonosa", "suorituspolku", "sisaltotuonti"]; // "tutkinnonosaryhma" ei tarvita toistaiseksi
+            return ["tekstikappale", "tutkinnonosa", "suorituspolku", "osasuorituspolku", "sisaltotuonti"]; // "tutkinnonosaryhma" ei tarvita toistaiseksi
         } else if (ops.tyyppi === "yleinen") {
             return ["tekstikappale", "tutkinnonosa", "tutkinnonosatuonti"];
         } else {

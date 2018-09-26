@@ -28,7 +28,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.arviointi.Arviointi;
 import fi.vm.sade.eperusteet.amosaa.domain.arviointi.Arviointiasteikko;
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.Dokumentti;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
-import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.SuorituspolkuRivi;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.SuorituspolkuRivi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
@@ -335,6 +335,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
             }
 
             switch (lapsi.getTyyppi()) {
+                case OSASUORITUSPOLKU:
                 case SUORITUSPOLKU:
                     addSuorituspolku(docBase, lapsi, otsikkoBuilder.toString());
                     break;

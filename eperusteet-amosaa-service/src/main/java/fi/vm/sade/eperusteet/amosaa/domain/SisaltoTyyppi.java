@@ -29,7 +29,8 @@ public enum SisaltoTyyppi {
     TUTKINNONOSA("tutkinnonosa"),
     TOSARYHMA("tutkinnonosaryhma"),
     SUORITUSPOLUT("suorituspolut"),
-    SUORITUSPOLKU("suorituspolku");
+    SUORITUSPOLKU("suorituspolku"),
+    OSASUORITUSPOLKU("osasuorituspolku");
 
     private final String tyyppi;
 
@@ -66,6 +67,10 @@ public enum SisaltoTyyppi {
     }
 
     public static boolean salliLuonti(SisaltoTyyppi tyyppi) {
-        return EnumSet.of(SUORITUSPOLKU, TUTKINNONOSA, TEKSTIKAPPALE).contains(tyyppi);
+        return EnumSet.of(SUORITUSPOLKU, OSASUORITUSPOLKU, TUTKINNONOSA, TEKSTIKAPPALE).contains(tyyppi);
+    }
+
+    public static boolean isSuorituspolku(SisaltoTyyppi tyyppi) {
+        return EnumSet.of(SUORITUSPOLKU, OSASUORITUSPOLKU).contains(tyyppi);
     }
 }

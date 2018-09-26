@@ -86,12 +86,11 @@ mixin historia(versio, uusinMuokkaaja, uusinMuokkaus, uusinRevisio, actionEdit, 
   .clearfix
 
 
-mixin ekdate(model, label)
+mixin ekdate(model, label, format)
   div(ng-if="$$ekEditing")
     datepick(type="date" label="{{ " + label + " | kaanna }}" model=model)
   div(ng-if="!$$ekEditing")
-    p(ng-bind=model + " | aikaleima")
-
+    p(ng-bind=model + " | aikaleima:" + format)
 
 mixin ekstring(model, required)
   - required = required || "false"
