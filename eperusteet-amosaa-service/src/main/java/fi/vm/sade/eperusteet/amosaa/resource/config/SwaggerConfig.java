@@ -72,6 +72,7 @@ public class SwaggerConfig {
                                 typeResolver.resolve(new GenericType<Callable<ResponseEntity<Object>>>() {
                                 }),
                                 typeResolver.resolve(Object.class)))
+                .forCodeGeneration(true)
                 .select()
                 .apis(RequestHandlerSelectors.withClassAnnotation(Api.class))
                 .build();
@@ -85,6 +86,7 @@ public class SwaggerConfig {
                 .apiInfo(apiInfo())
                 .directModelSubstitute(JsonNode.class, Object.class)
                 .genericModelSubstitutes(ResponseEntity.class, Optional.class)
+                .forCodeGeneration(true)
                 .select()
                 .apis(not(RequestHandlerSelectors.withClassAnnotation(InternalApi.class)))
                 .build()//                .paths(regex("/internal*"))
@@ -105,6 +107,7 @@ public class SwaggerConfig {
                 .apiInfo(apiInfo())
                 .directModelSubstitute(JsonNode.class, Object.class)
                 .genericModelSubstitutes(ResponseEntity.class, Optional.class)
+                .forCodeGeneration(true)
                 .select()
                 .apis(not(RequestHandlerSelectors.withClassAnnotation(InternalApi.class)))
                 .build()
