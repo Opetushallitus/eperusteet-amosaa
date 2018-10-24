@@ -36,6 +36,7 @@
     "node_modules/eperusteet-frontend-utils/components/charts/charts.ts",
     "node_modules/eperusteet-frontend-utils/components/localstorage/localstorage.ts",
     "node_modules/eperusteet-frontend-utils/components/history/history.ts",
+    "node_modules/eperusteet-frontend-utils/components/footer/footer.ts",
     "src/app/app.ts",
     "src/app/logic/osat.ts",
     "src/app/logic/kayttajatiedot.ts",
