@@ -33,7 +33,7 @@
     <logger name="org.springframework" level="warn"/>
     <logger name="fi.vm.sade" level="warn"/>
     <logger name="fi.vm.sade.eperusteet-amosaa" level="info"/>
-    <logger name="fi.vm.sade.eperusteet.amosaa.PROFILING" level="trace"/>
+    <!--<logger name="fi.vm.sade.eperusteet.amosaa.PROFILING" level="trace"/>-->
     <logger name="fi.vm.sade.eperusteet.service.dokumentti.impl.DokumenttiEventListener" level="info"/>
     <logger name="springfox.documentation" level="warn"/>
     <logger name="org.apache.fop.apps.FopConfParser" level="warn"/>
