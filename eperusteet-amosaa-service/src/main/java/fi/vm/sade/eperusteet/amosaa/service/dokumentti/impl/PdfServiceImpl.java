@@ -17,6 +17,7 @@
 package fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl;
 
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.PdfService;
+import fi.vm.sade.eperusteet.utils.dto.dokumentti.DokumenttiMetaDto;
 import org.apache.fop.apps.FOUserAgent;
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
@@ -54,11 +55,11 @@ public class PdfServiceImpl implements PdfService {
     Resource config;
 
     @Override
-    public byte[] xhtml2pdf(Document document) throws IOException, TransformerException, SAXException {
-        return convertOps2PDF(document, template.getFile());
+    public byte[] xhtml2pdf(Document document, DokumenttiMetaDto meta) throws IOException, TransformerException, SAXException {
+        return convertOps2PDF(document, template.getFile(), meta);
     }
 
-    private byte[] convertOps2PDF(Document doc, File xslt)
+    private byte[] convertOps2PDF(Document doc, File xslt, DokumenttiMetaDto meta)
             throws IOException, TransformerException, SAXException {
         // Alustetaan Streamit
         ByteArrayOutputStream xmlStream = new ByteArrayOutputStream();
@@ -74,7 +75,7 @@ public class PdfServiceImpl implements PdfService {
 
         // Muunnetaan saatu fo malli pdf:ksi
         InputStream foInputStream = new ByteArrayInputStream(foStream.toByteArray());
-        convertFO2PDF(doc, foInputStream, pdfStream);
+        convertFO2PDF(doc, foInputStream, pdfStream, meta);
 
         return pdfStream.toByteArray();
     }
@@ -106,7 +107,7 @@ public class PdfServiceImpl implements PdfService {
     }
 
     @SuppressWarnings("unchecked")
-    private void convertFO2PDF(Document doc, InputStream fo, OutputStream pdf)
+    private void convertFO2PDF(Document doc, InputStream fo, OutputStream pdf, DokumenttiMetaDto meta)
             throws IOException, SAXException, TransformerException {
 
         FopFactory fopFactory = FopFactory.newInstance(config.getFile());
@@ -115,6 +116,11 @@ public class PdfServiceImpl implements PdfService {
         foUserAgent.getRendererOptions().put("pdf-a-mode", "PDF/A-1b");
         foUserAgent.getEventBroadcaster().addEventListener(DokumenttiEventListener.getInstance());
 
+        if (meta != null && meta.getTitle() != null) {
+            foUserAgent.setTitle(meta.getTitle());
+        }
+
+        // Override with document title
         try {
             XPathFactory xPathfactory = XPathFactory.newInstance();
             XPath xpath = xPathfactory.newXPath();
@@ -129,6 +135,10 @@ public class PdfServiceImpl implements PdfService {
             }
         } catch (XPathExpressionException e) {
             LOG.error(e.getLocalizedMessage());
+        }
+
+        if (meta != null && meta.getSubject() != null) {
+            foUserAgent.setSubject(meta.getSubject());
         }
 
         Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, foUserAgent, pdf);

@@ -48,10 +48,7 @@ import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiBuilderService;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.LocalizedMessagesService;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.PdfService;
-import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.CharapterNumberGenerator;
-import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiBase;
-import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiRivi;
-import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiTaulukko;
+import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.*;
 
 import static fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils.*;
 
@@ -83,6 +80,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.*;
 
+import fi.vm.sade.eperusteet.utils.dto.dokumentti.DokumenttiMetaDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -199,9 +197,14 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
         buildYlatunniste(docBase);
         buildAlatunniste(docBase);
 
+        DokumenttiMetaDto meta = DokumenttiMetaDto.builder()
+                .title(DokumenttiUtils.getTextString(docBase, ops.getNimi()))
+                .subject(messages.translate("docgen.meta.subject.ops", kieli))
+                .build();
+
         // PDF luonti XHTML dokumentista
         LOG.info("Generate PDF (opsId=" + docBase.getOpetussuunnitelma().getId() + ")");
-        return pdfService.xhtml2pdf(doc);
+        return pdfService.xhtml2pdf(doc, meta);
     }
 
     private void addMetaPages(DokumenttiBase docBase) {
