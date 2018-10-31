@@ -11,6 +11,8 @@ services:
 cache:
   directories:
     - $HOME/.m2
+    - $HOME/.npm
+
 
 env:
   global:
