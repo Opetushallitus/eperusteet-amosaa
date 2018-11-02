@@ -431,15 +431,6 @@
                 <configuration>
                     <path>/eperusteet-amosaa-service</path>
                     <contextFile>${basedir}/src/test/config/context.xml</contextFile>
-                    <webapps>
-                        <webapp>
-                            <groupId>${project.groupId}</groupId>
-                            <artifactId>eperusteet-amosaa-app</artifactId>
-                            <version>${project.version}</version>
-                            <type>war</type>
-                            <asWebapp>true</asWebapp>
-                        </webapp>
-                    </webapps>
                 </configuration>
                 <dependencies>
                     <dependency>
