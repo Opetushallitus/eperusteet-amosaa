@@ -16,7 +16,6 @@
 package fi.vm.sade.eperusteet.amosaa.resource.config;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -25,11 +24,10 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.AbstractRakenneOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneOsaDto;
-
-import java.io.IOException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 public class AbstractRakenneOsaDeserializer extends StdDeserializer<AbstractRakenneOsaDto> {
 
@@ -51,7 +49,7 @@ public class AbstractRakenneOsaDeserializer extends StdDeserializer<AbstractRake
         if (osat != null) {
             return codec.treeToValue(tree, RakenneModuuliDto.class);
         }
-        throw new JsonMappingException("Tuntematon rakenneosan", jp.getCurrentLocation());
+        throw new JsonMappingException(jp, "Tuntematon rakenneosan", jp.getCurrentLocation());
     }
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractRakenneOsaDeserializer.class);
