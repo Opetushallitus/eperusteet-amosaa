@@ -389,9 +389,9 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
 
         useProfileOPH();
         OpetussuunnitelmaBaseDto pohja = createPohja();
-        opetussuunnitelmaService.updateTila(getKoulutustoimijaId(), pohja.getId(), Tila.VALMIS);
+        opetussuunnitelmaService.updateTila(getKoulutustoimijaId(), pohja.getId(), Tila.VALMIS, false);
         assertThat(opetussuunnitelmaService.getPohjat()).isEmpty();
-        opetussuunnitelmaService.updateTila(getKoulutustoimijaId(), pohja.getId(), Tila.JULKAISTU);
+        opetussuunnitelmaService.updateTila(getKoulutustoimijaId(), pohja.getId(), Tila.JULKAISTU, false);
         assertThat(opetussuunnitelmaService.getPohjat())
                 .extracting(OpetussuunnitelmaBaseDto::getId)
                 .contains(pohja.getId());

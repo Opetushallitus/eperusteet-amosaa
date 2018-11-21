@@ -30,23 +30,23 @@ import fi.vm.sade.eperusteet.amosaa.dto.ops.VanhentunutPohjaperusteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaAudit;
-
-import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaMessageFields.OPETUSSUUNNITELMA;
-import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.*;
-
 import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.util.PoistettuService;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
-import io.swagger.annotations.*;
-
-import java.util.List;
-
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+
+import java.util.List;
+
+import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaMessageFields.OPETUSSUUNNITELMA;
+import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.*;
 
 /**
  * @author nkala
@@ -272,7 +272,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
             @PathVariable final Tila tila
     ) {
         return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, TILA_MUOKKAUS),
-                (Void) -> service.updateTila(ktId, opsId, tila));
+                (Void) -> service.updateTila(ktId, opsId, tila, true));
     }
 
     @ApiImplicitParams({
