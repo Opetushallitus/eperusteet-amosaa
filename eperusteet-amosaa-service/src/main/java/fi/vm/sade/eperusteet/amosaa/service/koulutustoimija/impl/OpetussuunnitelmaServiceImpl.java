@@ -655,19 +655,21 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     }
 
     @Override
-    public OpetussuunnitelmaBaseDto updateTila(Long ktId, Long opsId, Tila tila) {
+    public OpetussuunnitelmaBaseDto updateTila(Long ktId, Long opsId, Tila tila, boolean generatePDF) {
         Opetussuunnitelma ops = findOps(ktId, opsId);
         Tila nykyinen = ops.getTila();
         if (nykyinen.mahdollisetSiirtymat().contains(tila)) {
             if (tila == Tila.JULKAISTU) {
                 validoi(ktId, opsId).tuomitse();
-                for (Kieli kieli : ops.getJulkaisukielet()) {
-                    try {
-                        DokumenttiDto dokumenttiDto = dokumenttiService.getDto(ktId, opsId, kieli);
-                        dokumenttiService.setStarted(ktId, opsId, dokumenttiDto);
-                        dokumenttiService.generateWithDto(ktId, opsId, dokumenttiDto);
-                    } catch (DokumenttiException e) {
-                        LOG.error(e.getLocalizedMessage(), e.getCause());
+                if (generatePDF) {
+                    for (Kieli kieli : ops.getJulkaisukielet()) {
+                        try {
+                            DokumenttiDto dokumenttiDto = dokumenttiService.getDto(ktId, opsId, kieli);
+                            dokumenttiService.setStarted(ktId, opsId, dokumenttiDto);
+                            dokumenttiService.generateWithDto(ktId, opsId, dokumenttiDto);
+                        } catch (DokumenttiException e) {
+                            LOG.error(e.getLocalizedMessage(), e.getCause());
+                        }
                     }
                 }
             }
