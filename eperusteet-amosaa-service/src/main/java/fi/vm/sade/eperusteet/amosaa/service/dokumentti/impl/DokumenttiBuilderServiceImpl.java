@@ -28,13 +28,13 @@ import fi.vm.sade.eperusteet.amosaa.domain.arviointi.Arviointi;
 import fi.vm.sade.eperusteet.amosaa.domain.arviointi.Arviointiasteikko;
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.Dokumentti;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
-import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.SuorituspolkuRivi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Tekstiosa;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaTutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Suorituspolku;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.SuorituspolkuRivi;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Tutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import fi.vm.sade.eperusteet.amosaa.dto.koodisto.KoodistoKoodiDto;
@@ -49,9 +49,6 @@ import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiBuilderService;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.LocalizedMessagesService;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.PdfService;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.*;
-
-import static fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils.*;
-
 import fi.vm.sade.eperusteet.amosaa.service.external.ArviointiasteikkoService;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
@@ -59,27 +56,6 @@ import fi.vm.sade.eperusteet.amosaa.service.ops.LiiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.TermistoService;
 import fi.vm.sade.eperusteet.amosaa.service.util.KoodistoClient;
-
-import java.awt.Color;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.stream.Collectors;
-import javax.imageio.IIOImage;
-import javax.imageio.ImageIO;
-import javax.imageio.ImageWriteParam;
-import javax.imageio.ImageWriter;
-import javax.imageio.stream.MemoryCacheImageOutputStream;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.xpath.*;
-
 import fi.vm.sade.eperusteet.utils.dto.dokumentti.DokumenttiMetaDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,6 +67,30 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.MemoryCacheImageOutputStream;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliRooli.VIRTUAALINEN;
+import static fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils.*;
 
 /**
  * @author iSaul
@@ -462,6 +462,20 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
                 }
             }
         });
+
+        // Lisätään tutkinnossa määritettävä rakenne osan aliosat
+        if (VIRTUAALINEN.equals(rakenneModuuliDto.getRooli())) {
+            if (suorituspolkuMap.containsKey(rakenneModuuliDto.getTunniste())) {
+                SuorituspolkuRivi rivi = suorituspolkuMap.get(rakenneModuuliDto.getTunniste());
+                Set<String> koodit = rivi.getKoodit();
+                if (koodit != null) {
+                    koodit.forEach(koodi -> {
+                        KoodistoKoodiDto koodistoKoodiDto = koodistoClient.getByUri(koodi);
+                        addSuorituspolunKoodiOsa(docBase, koodistoKoodiDto, tbody, depth + 1);
+                    });
+                }
+            }
+        }
     }
 
     private void addMuodostumisSaanto(DokumenttiBase docBase,
@@ -490,6 +504,38 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
                 builder.append(muodostumisSaantoDto.getLaajuus().getYksikko());
             } else {
                 builder.append(" ").append(messages.translate("docgen.laajuus.osp", docBase.getKieli()));
+            }
+        }
+    }
+
+    private void addSuorituspolunKoodiOsa(
+            DokumenttiBase docBase,
+            KoodistoKoodiDto koodistoKoodiDto,
+            Element tbody,
+            int depth
+    ) {
+        KoodistoMetadataDto[] metadata = koodistoKoodiDto.getMetadata();
+        for (KoodistoMetadataDto metadataDto : metadata) {
+
+            // Valitaan dokumentin kieli
+            if (metadataDto.getKieli().toLowerCase().equals(docBase.getKieli().toString())) {
+
+                Element tr = docBase.getDocument().createElement("tr");
+                tbody.appendChild(tr);
+                Element td = docBase.getDocument().createElement("td");
+                tr.appendChild(td);
+                td.setAttribute("class", "td" + String.valueOf(depth));
+
+                // Nimi
+                StringBuilder nimiBuilder = new StringBuilder();
+                nimiBuilder.append(metadataDto.getNimi());
+                if (koodistoKoodiDto.getKoodiArvo() != null) {
+                    nimiBuilder.append(" (");
+                    nimiBuilder.append(koodistoKoodiDto.getKoodiArvo());
+                    nimiBuilder.append(")");
+                }
+                addTeksti(docBase, nimiBuilder.toString(), "p", td);
+
             }
         }
     }
