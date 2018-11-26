@@ -37,6 +37,7 @@
     <logger name="fi.vm.sade.eperusteet.service.dokumentti.impl.DokumenttiEventListener" level="info"/>
     <logger name="springfox.documentation" level="warn"/>
     <logger name="org.apache.fop.apps.FopConfParser" level="warn"/>
+    <logger name="org.apache.http.client.protocol.ResponseProcessCookies" level="error"/>
     <root level="info">
         <appender-ref ref="console"/>
     </root>
