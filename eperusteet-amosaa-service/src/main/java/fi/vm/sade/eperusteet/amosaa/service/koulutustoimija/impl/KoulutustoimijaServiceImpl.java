@@ -16,26 +16,20 @@
 package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.sun.java.swing.plaf.windows.WindowsTreeUI;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
-import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
-import fi.vm.sade.eperusteet.amosaa.dto.OrganisaatioHierarkia;
+import fi.vm.sade.eperusteet.amosaa.dto.OrganisaatioHierarkiaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.*;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
-import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
-import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
-import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -177,7 +171,7 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     @Override
     public List<KoulutustoimijaYstavaDto> getOrganisaatioHierarkiaYstavat(Long ktId) {
         Koulutustoimija kt = repository.findOne(ktId);
-        OrganisaatioHierarkia root = getOrganisaatioHierarkia(ktId);
+        OrganisaatioHierarkiaDto root = getOrganisaatioHierarkia(ktId);
 
         if (root == null) {
             return new ArrayList<>();
@@ -187,7 +181,7 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
                     .filter(oh -> oh.getOid().equals(kt.getOrganisaatio()))
                     .findFirst()
                     .map(self -> Stream.concat(
-                        self.getAll().map(OrganisaatioHierarkia::getOid),
+                        self.getAll().map(OrganisaatioHierarkiaDto::getOid),
                         self.getParentOidPath() == null
                                 ? Stream.empty()
                                 : Arrays.stream(self.getParentOidPath().split("/")))
@@ -225,9 +219,10 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     }
 
     @Override
-    public OrganisaatioHierarkia getOrganisaatioHierarkia(Long ktId) {
+    public OrganisaatioHierarkiaDto getOrganisaatioHierarkia(Long ktId) {
         Koulutustoimija kt = repository.findOne(ktId);
-        return organisaatioService.getOrganisaatioPuu(kt.getOrganisaatio());
+        OrganisaatioHierarkiaDto result = organisaatioService.getOrganisaatioPuu(kt.getOrganisaatio());
+        return result;
     }
 
     @Override

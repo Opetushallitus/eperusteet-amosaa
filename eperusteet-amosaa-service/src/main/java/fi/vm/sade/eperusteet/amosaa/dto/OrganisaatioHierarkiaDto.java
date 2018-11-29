@@ -16,14 +16,18 @@
 
 package fi.vm.sade.eperusteet.amosaa.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.SQLInsert;
 
 /**
  *
@@ -31,22 +35,30 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class OrganisaatioHierarkia {
-    private Map<Kieli, String> nimi;
+public class OrganisaatioHierarkiaDto {
+    private Map<Kieli, String> nimi = new HashMap<>();
     private String oid;
     private String parentOid;
     private String parentOidPath;
     private String kotipaikkaUri;
-    private List<String> organisaatiotyypit;
-    private List<OrganisaatioHierarkia> children;
+    private List<String> organisaatiotyypit = new ArrayList<>();
+    private List<OrganisaatioHierarkiaDto> children = new ArrayList<>();
 
-    public Stream<OrganisaatioHierarkia> getAll() {
+    public List<OrganisaatioHierarkiaDto> getChildren() {
+        return children != null ? children : new ArrayList<>();
+    }
+
+    @JsonIgnore
+    public Stream<OrganisaatioHierarkiaDto> getAll() {
         return Stream.concat(
                 Stream.of(this),
                 getChildren().stream()
                         .distinct()
-                        .map(OrganisaatioHierarkia::getAll)
+                        .map(OrganisaatioHierarkiaDto::getAll)
                         .flatMap(x -> x));
     }
 }
