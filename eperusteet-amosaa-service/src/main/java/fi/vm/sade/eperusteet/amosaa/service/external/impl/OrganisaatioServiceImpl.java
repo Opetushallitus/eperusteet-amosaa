@@ -19,7 +19,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import fi.vm.sade.eperusteet.amosaa.dto.OrganisaatioHierarkia;
+import fi.vm.sade.eperusteet.amosaa.dto.OrganisaatioHierarkiaDto;
 import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
 import fi.vm.sade.eperusteet.amosaa.service.util.RestClientFactory;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
@@ -117,7 +117,7 @@ public class OrganisaatioServiceImpl implements OrganisaatioService {
             if (child.hasNonNull("oppilaitostyyppi")) {
                 String oppilaitostyyppi = child.get("oppilaitostyyppi").asText();
                 // Poistetaan jos ei ole sallittu oppilaitostyyppi (ks. oppilaitostyyppi koodistopalvelusta)
-                if(Stream.of(21, 22, 23, 24, 29, 93)
+                if (Stream.of(21, 22, 23, 24, 29, 93)
                         .map(olt -> "oppilaitostyyppi_" + olt)
                         .noneMatch(oppilaitostyyppi::startsWith)) {
                     iterator.remove();
@@ -133,7 +133,7 @@ public class OrganisaatioServiceImpl implements OrganisaatioService {
     }
 
     @Override
-    public OrganisaatioHierarkia getOrganisaatioPuu(String organisaatioOid) {
+    public OrganisaatioHierarkiaDto getOrganisaatioPuu(String organisaatioOid) {
         JsonNode puu = client.getOrganisaatioPuu(organisaatioOid);
         try {
             if (puu.get("organisaatiot").size() == 0 || SecurityUtil.OPH_OID.equals(organisaatioOid)) {
@@ -145,7 +145,8 @@ public class OrganisaatioServiceImpl implements OrganisaatioService {
                 removeUnwanteds((ArrayNode) organisaatiot.get("children"));
             }
 
-            return mapper.treeToValue(organisaatiot, OrganisaatioHierarkia.class);
+            OrganisaatioHierarkiaDto hierarkia = mapper.treeToValue(organisaatiot, OrganisaatioHierarkiaDto.class);
+            return hierarkia;
         } catch (JsonProcessingException ex) {
             return null;
         }

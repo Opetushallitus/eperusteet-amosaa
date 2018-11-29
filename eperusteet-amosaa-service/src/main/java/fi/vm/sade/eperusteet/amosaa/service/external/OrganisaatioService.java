@@ -16,7 +16,7 @@
 package fi.vm.sade.eperusteet.amosaa.service.external;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import fi.vm.sade.eperusteet.amosaa.dto.OrganisaatioHierarkia;
+import fi.vm.sade.eperusteet.amosaa.dto.OrganisaatioHierarkiaDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
@@ -28,5 +28,5 @@ public interface OrganisaatioService {
     JsonNode getOrganisaatio(String organisaatioOid);
 
     @PreAuthorize("isAuthenticated()")
-    OrganisaatioHierarkia getOrganisaatioPuu(String organisaatioOid);
+    OrganisaatioHierarkiaDto getOrganisaatioPuu(String organisaatioOid);
 }

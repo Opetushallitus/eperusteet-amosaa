@@ -16,9 +16,12 @@
 
 package fi.vm.sade.eperusteet.amosaa.service.audit;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * @author nkala
  */
 public interface AuditLoggableDto {
-    public void auditLog(LogMessage.LogMessageBuilder msg);
+    @JsonIgnore
+    void auditLog(LogMessage.LogMessageBuilder msg);
 }

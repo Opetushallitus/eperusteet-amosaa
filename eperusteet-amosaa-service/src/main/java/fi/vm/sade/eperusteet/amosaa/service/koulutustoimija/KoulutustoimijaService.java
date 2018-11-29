@@ -16,7 +16,7 @@
 
 package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija;
 
-import fi.vm.sade.eperusteet.amosaa.dto.OrganisaatioHierarkia;
+import fi.vm.sade.eperusteet.amosaa.dto.OrganisaatioHierarkiaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.*;
 
 import java.util.List;
@@ -68,7 +68,7 @@ public interface KoulutustoimijaService {
     Long getKoulutustoimija(String idTaiOid);
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
-    OrganisaatioHierarkia getOrganisaatioHierarkia(Long ktId);
+    OrganisaatioHierarkiaDto getOrganisaatioHierarkia(Long ktId);
 
     @PreAuthorize("permitAll()")
     Page<KoulutustoimijaJulkinenDto> findKoulutustoimijat(PageRequest page, KoulutustoimijaQueryDto query);
