@@ -17,11 +17,7 @@ package fi.vm.sade.eperusteet.amosaa.service.util;
 
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 
-import java.util.Collection;
-import java.util.function.Function;
 import java.util.function.Predicate;
-
-import static com.google.common.base.Optional.fromNullable;
 
 /**
  * @author jhyoty
@@ -52,14 +48,6 @@ public final class Util {
      */
     public static <T> Predicate<T> not(Predicate<T> p) {
         return p.negate();
-    }
-
-    public static <F, E, T extends Collection<E>> Predicate<F> empty(Function<F, T> src) {
-        return from -> fromNullable(src.apply(from)).transform(Collection::isEmpty).or(true);
-    }
-
-    public static <F> Predicate<F> emptyString(Function<F, String> src) {
-        return from -> fromNullable(src.apply(from)).transform(str -> str.trim().isEmpty()).or(true);
     }
 
     public static <T> Predicate<T> and(Predicate<T> a, Predicate<? super T> b) {
