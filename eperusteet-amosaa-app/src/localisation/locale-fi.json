@@ -472,5 +472,7 @@
     "ei-voi-synkronoida": "Perustetta ei voi synkronoida",
     "tuntematon-kayttaja": "Tuntematon käyttäjä",
     "osasuorituspolku": "Osasuorituspolku",
-    "osasuorituspolku-laajuus": "Osasuorituspolun kokonaislaajuus"
+    "osasuorituspolku-laajuus": "Osasuorituspolun kokonaislaajuus",
+    "edellinen": "Edellinen",
+    "seuraava": "Seuraava"
 }

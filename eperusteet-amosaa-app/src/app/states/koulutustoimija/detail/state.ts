@@ -33,10 +33,6 @@ angular.module("app").config($stateProvider =>
                         _.each(opsit, ops => {
                             ops.$$hidden = !_.isEmpty(search) && !Algoritmit.match(search, ops.nimi);
                         });
-                    $scope.checks = {
-                        poistetut: false,
-                        kaikki: true
-                    };
                 }
             },
             tilastot: {
@@ -91,52 +87,53 @@ angular.module("app").config($stateProvider =>
                     $scope,
                     koulutustoimija,
                     kayttajanTiedot,
-                    opetussuunnitelmat,
+                    opetussuunnitelmatSivu,
                     opsSaver,
                     kayttaja,
                     ystavaOpsit
                 ) => {
                     const suosikkiApi = kayttaja.all("suosikki");
-                    const opetussuunnitelmaMap = _.merge(_.indexBy(opetussuunnitelmat, "id"), _.indexBy(ystavaOpsit, "id"));
 
-                    $scope.ystavaOpsit = ystavaOpsit;
-                    $scope.suosikit = _.indexBy(
-                        _(kayttajanTiedot.suosikit)
-                            .map((suosikki: string) => opetussuunnitelmaMap[suosikki])
-                            .filter(_.isObject)
-                            .value(), "id"
-                    );
-                    $scope.opetussuunnitelmat = _(opetussuunnitelmat)
-                        .reject((ops: any) => ops.tyyppi === "yhteinen")
-                        .each(ops => {
-                            ops.$$oikeus =
-                                $scope.ktOikeus === "hallinta" ||
-                                Oikeudet.onVahintaan(
-                                    "muokkaus",
-                                    $scope.oikeusmap[ops.id] && $scope.oikeusmap[ops.id].oikeus
-                                );
-                        })
-                        .value();
+                    const updateOpetussuunnitelmat = opetussuunnitelmat => {
+                        const opetussuunnitelmaMap = _.merge(_.indexBy(opetussuunnitelmat.data, "id"),
+                            _.indexBy(ystavaOpsit, "id"));
 
-                    $scope.opsitById = _.indexBy(opetussuunnitelmat, "id");
+                        $scope.pagination.sivukoko = opetussuunnitelmat.sivukoko;
+                        $scope.pagination.kokonaismaara = opetussuunnitelmat.kokonaismäärä;
 
-                    Pagination.addPagination(
-                        $scope,
-                        (search: string, ops: any): boolean => {
-                            return (
-                                ($scope.checks.poistetut || ops.tila !== "poistettu") &&
-                                ($scope.checks.kaikki || ops.$$oikeus) &&
-                                (!search || _.isEmpty(search) || Algoritmit.match(search, ops.nimi))
-                            );
-                        },
-                        "opetussuunnitelmat",
-                        "ops"
-                    );
+                        $scope.suosikit = _.indexBy(
+                            _(kayttajanTiedot.suosikit)
+                                .map((suosikki: string) => opetussuunnitelmaMap[suosikki])
+                                .filter(_.isObject)
+                                .value(), "id"
+                        );
+
+                        $scope.opetussuunnitelmat = _(opetussuunnitelmat.data)
+                            .reject((ops: any) => ops.tyyppi === "yhteinen")
+                            .each(ops => {
+                                ops.$$oikeus =
+                                    $scope.ktOikeus === "hallinta" ||
+                                    Oikeudet.onVahintaan(
+                                        "muokkaus",
+                                        $scope.oikeusmap[ops.id] && $scope.oikeusmap[ops.id].oikeus
+                                    );
+                            })
+                            .value();
+
+                        $scope.opsitById = _.indexBy(opetussuunnitelmat.data, "id");
+                    };
 
                     const add = tyyppi =>
                         ModalAdd[tyyppi](koulutustoimija.id)
                             .then(opsSaver)
                             .then(res => $scope.opetussuunnitelmat.push(res));
+
+                    $scope.ystavaOpsit = ystavaOpsit;
+                    $scope.pagination = {
+                        sivu: 1,
+                        kokonaismaara: 0,
+                    };
+                    $scope.opsSearch = "";
 
                     $scope.addOpetussuunnitelma = () => add("opetussuunnitelma");
                     $scope.addYleinen = () => add("yleinen");
@@ -150,6 +147,24 @@ angular.module("app").config($stateProvider =>
                             $scope.suosikit[ops.id] = ops;
                         }
                     };
+                    $scope.valitseSivu = sivu => {
+                        opetussuunnitelmatSivu.customGET("", {
+                            sivu: sivu - 1,
+                            sivukoko: $scope.pagination.sivukoko
+                        }).then(res => updateOpetussuunnitelmat(res));
+                    };
+                    $scope.paivitaRajaus = opsSearch => {
+                        $scope.pagination.sivu = 1;
+                        opetussuunnitelmatSivu.customGET("", {
+                            sivu: $scope.pagination.sivu - 1,
+                            sivukoko: $scope.pagination.sivukoko,
+                            nimi: opsSearch
+                        }).then(res => {
+                            updateOpetussuunnitelmat(res)
+                        });
+                    };
+
+                    updateOpetussuunnitelmat(opetussuunnitelmatSivu);
                 }
             },
             yhteinen: {
