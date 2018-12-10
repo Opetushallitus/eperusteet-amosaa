@@ -1,7 +1,7 @@
 mixin opsTable(repetition, forFriends)
   div.alert.alert-info(ng-if="opsPaginated.length === 0")
     span(ng-bind="'ei-hakutuloksia' | kaanna")
-  div(ng-if="opsPaginated.length > 0")
+  div
     table.table.boxtable
       thead
         tr(ng-if=forFriends)
@@ -118,24 +118,11 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
   div(ng-if="!isOph")
     h3(ng-bind="'kaikki-opetussuunnitelmat' | kaanna")
 
-    div(ng-hide="opetussuunnitelmat.length > 0")
-      div.alert.alert-info
-        div(ng-bind="'koulutustoimijalla-ei-ole-opetussuunnitelmia' | kaanna")
-        div.pull-right(style="position: relative; top: -26px")
-          button.btn.btn-primary(style="margin-right: 16px" ng-click="addOpetussuunnitelma()" oikeustarkastelu="lisays")
-            +gicon("plus")
-            span=" "
-            span(ng-bind="'lisaa-opetussuunnitelma' | kaanna")
-          button.btn.btn-primary.pull-right(ng-click="addYleinen()" oikeustarkastelu="lisays")
-            +gicon("plus")
-            span=" "
-            span(ng-bind="'lisaa-yleinen' | kaanna")
-
-    div(ng-show="opetussuunnitelmat.length > 0")
+    div
       div.row
         div.col-xs-4
           div.form-group.has-feedback.has-feedback-left
-            input.form-control(ng-change="opsPaginatedUpdate(opsSearch)"
+            input.form-control(ng-change="paivitaRajaus(opsSearch)"
               type="text"
               ng-model="opsSearch"
               ng-model-options="{ debounce: 300 }"
@@ -144,8 +131,8 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
         div.col-xs-3
           .btn-group
             .pull-left
-              +checkbox("checks.kaikki", "opsPaginatedUpdate(opsSearch)", "'nayta-kaikki' | kaanna")
-              +checkbox("checks.poistetut", "opsPaginatedUpdate(opsSearch)", "'nayta-arkistoidut' | kaanna")
+              +checkbox("pagination.kaikki", "paivitaRajaus(opsSearch)", "'nayta-kaikki' | kaanna")
+              +checkbox("pagination.poistetut", "paivitaRajaus(opsSearch)", "'nayta-arkistoidut' | kaanna")
         div.col-xs-5
           div.pull-right
             button.btn.btn-default.pull-right(ng-click="addYleinen()" oikeustarkastelu="lisays")
@@ -157,9 +144,23 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
               span=" "
               span(ng-bind="'lisaa-opetussuunnitelma' | kaanna")
 
-      div.alert.alert-info(ng-if="opsPaginated.length === 0")
-        span(ng-bind="'ei-hakutuloksia' | kaanna")
-      div(ng-if="opsPaginated.length > 0")
+      div(ng-if="opetussuunnitelmat.length === 0")
+        div.alert.alert-info(ng-if="opsSearch !== ''")
+          span(ng-bind="'ei-hakutuloksia' | kaanna")
+
+        div.alert.alert-info(ng-if="opsSearch === ''")
+          div(ng-bind="'koulutustoimijalla-ei-ole-opetussuunnitelmia' | kaanna")
+          div.pull-right(style="position: relative; top: -26px")
+            button.btn.btn-primary(style="margin-right: 16px" ng-click="addOpetussuunnitelma()" oikeustarkastelu="lisays")
+              +gicon("plus")
+              span=" "
+              span(ng-bind="'lisaa-opetussuunnitelma' | kaanna")
+            button.btn.btn-primary.pull-right(ng-click="addYleinen()" oikeustarkastelu="lisays")
+              +gicon("plus")
+              span=" "
+              span(ng-bind="'lisaa-yleinen' | kaanna")
+
+      div(ng-if="opetussuunnitelmat.length > 0")
         table.table.boxtable
           thead
             tr
@@ -170,7 +171,7 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
               th(width="2%")
               th
           tbody
-            tr(ng-hide="ops.$$hidden" ng-repeat="ops in opsPaginated")
+            tr(ng-hide="ops.$$hidden" ng-repeat="ops in opetussuunnitelmat")
               td
                 div
                   div(class="{{ 'tilavari-' + ops.tila }}")
@@ -203,7 +204,11 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
                     div
                       span.glyphicon.glyphicon-chevron-right
 
-      nav.text-center
-        ul.pagination
-          li(ng-class="{ 'active': page === $$opsPaginatedPage.current }" ng-repeat=("page in $$opsPaginatedPage.pages"))
-            a(href="" ng-click="opsPaginatedSelect(page)") {{ page + 1 }}
+        nav.text-center
+          ul.pagination(uib-pagination
+                        total-items="pagination.kokonaismaara"
+                        items-per-page="pagination.sivukoko"
+                        ng-model="pagination.sivu"
+                        previous-text="{{'edellinen' | kaanna}}"
+                        next-text="{{'seuraava' | kaanna}}"
+                        ng-change="valitseSivu(pagination.sivu)")

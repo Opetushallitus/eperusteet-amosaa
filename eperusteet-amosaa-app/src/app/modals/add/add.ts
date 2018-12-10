@@ -88,7 +88,7 @@ namespace ModalAdd {
             size: "lg",
             resolve: {
                 perusteetApi: Api => Api.one("perusteet"),
-                opetussuunnitelmatApi: Api => Api.one("koulutustoimijat", koulutustoimija).all("opetussuunnitelmat"),
+                opetussuunnitelmatApi: Api => Api.one("koulutustoimijat", koulutustoimija).one("opetussuunnitelmat")
             },
             templateUrl: "modals/add/opetussuunnitelma.jade",
             controller: ($timeout, $scope, $state, $stateParams, $uibModalInstance, perusteetApi, opetussuunnitelmatApi) => {
@@ -103,8 +103,11 @@ namespace ModalAdd {
                     $scope.valittuTyyppi = tyyppi;
                 };
 
-                opetussuunnitelmatApi.getList().then(res => {
-                    $scope.opetussuunnitelmat = res;
+                opetussuunnitelmatApi.customGET("", {
+                    sivu: 0,
+                    sivukoko: 1
+                }).then(res => {
+                    $scope.opetussuunnitelmat = res.data;
                 });
 
                 $scope.update = function(nimi = "", sivu = 1) {

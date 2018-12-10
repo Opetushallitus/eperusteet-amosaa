@@ -13,7 +13,9 @@ angular.module("app").config($stateProvider =>
                         .then(res => resolve(Kayttajatiedot.parsiEsitysnimi(res)))
                         .catch(() => resolve(KaannaService.kaanna("muokkaajaa-ei-loytynyt") + " (" + kayttajaOid + ")"))
                 ),
-            opetussuunnitelmat: koulutustoimija => koulutustoimija.all("opetussuunnitelmat").getList(),
+            //opetussuunnitelmat: koulutustoimija => koulutustoimija.all("opetussuunnitelmat").getList(),
+            opetussuunnitelmatSivu: koulutustoimija => koulutustoimija.one("opetussuunnitelmat").get(),
+            opetussuunnitelmat: opetussuunnitelmatSivu => opetussuunnitelmatSivu.data,
             ystavaOpsit: koulutustoimija => koulutustoimija.all("opetussuunnitelmat/ystavien").getList(),
             yhteiset: opetussuunnitelmat => _.filter(opetussuunnitelmat, { tyyppi: "yhteinen" }),
             kayttajanTieto: koulutustoimija => kayttajaId => koulutustoimija.one("kayttajat", kayttajaId).get(),
