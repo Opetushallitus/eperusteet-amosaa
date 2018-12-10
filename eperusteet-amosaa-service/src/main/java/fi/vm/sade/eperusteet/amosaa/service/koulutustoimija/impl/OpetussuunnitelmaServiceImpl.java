@@ -75,6 +75,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -215,26 +216,17 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     }
 
     @Override
-    public List<OpetussuunnitelmaBaseDto> getOpetussuunnitelmat(Long ktId) {
-        return getOpetussuunnitelmat(ktId, null);
-    }
-
-    @Override
-    public List<OpetussuunnitelmaBaseDto> getOpetussuunnitelmat(Long ktId, OpsHakuDto opsHakuDto) {
+    public Page<OpetussuunnitelmaBaseDto> getOpetussuunnitelmat(
+            Long ktId,
+            PageRequest page,
+            OpsHakuDto query
+    ) {
         Koulutustoimija koulutustoimija = koulutustoimijaRepository.findOne(ktId);
-
-        List<Opetussuunnitelma> opsit;
-        if (opsHakuDto != null && opsHakuDto.getPeruste() != null) {
-            opsit = repository.findAllByKoulutustoimijaAndPerusteId(koulutustoimija, opsHakuDto.getPeruste());
-        } else if (opsHakuDto != null && opsHakuDto.getKoulutustyyppi() != null) {
-            opsit = repository
-                    .findAllByKoulutustoimijaAndKoulutustyyppi(koulutustoimija, opsHakuDto.getKoulutustyyppi());
-            // EP-1392
-            opsit.addAll(repository.findAllByKoulutustoimijaAndPerusteNull(koulutustoimija));
-        } else {
-            opsit = repository.findAllByKoulutustoimija(koulutustoimija);
+        if (!ObjectUtils.isEmpty(koulutustoimija)) {
+            query.setKoulutustoimija(koulutustoimija.getId());
         }
-        return mapper.mapAsList(opsit, OpetussuunnitelmaBaseDto.class);
+        return repository.findBy(page, query)
+                .map(ops -> mapper.map(ops, OpetussuunnitelmaBaseDto.class));
     }
 
     @Override

@@ -40,6 +40,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -76,11 +78,12 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(method = RequestMethod.GET)
-    public List<OpetussuunnitelmaBaseDto> getAll(
+    public Page<OpetussuunnitelmaBaseDto> getAll(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
-            @ApiIgnore OpsHakuDto opsHakuDto
-        ) {
-        return service.getOpetussuunnitelmat(ktId, opsHakuDto);
+            @ApiIgnore OpsHakuDto query
+    ) {
+        PageRequest pageRequest = new PageRequest(query.getSivu(), Math.min(query.getSivukoko(), 25));
+        return service.getOpetussuunnitelmat(ktId, pageRequest, query);
     }
 
     @ApiImplicitParams({
