@@ -50,9 +50,9 @@ public class KoulutustoimijaRepositoryImpl implements KoulutustoimijaCustomRepos
     private EntityManager em;
 
     @Override
-    public Page<Koulutustoimija> findBy(PageRequest page, KoulutustoimijaQueryDto pquery) {
-        TypedQuery<Long> countQuery = getCountQuery(pquery);
-        TypedQuery<Tuple> query = getQuery(pquery);
+    public Page<Koulutustoimija> findBy(PageRequest page, KoulutustoimijaQueryDto queryDto) {
+        TypedQuery<Long> countQuery = getCountQuery(queryDto);
+        TypedQuery<Tuple> query = getQuery(queryDto);
         if (page != null) {
             query.setFirstResult(page.getOffset());
             query.setMaxResults(page.getPageSize());
@@ -64,24 +64,24 @@ public class KoulutustoimijaRepositoryImpl implements KoulutustoimijaCustomRepos
                 countQuery.getSingleResult());
     }
 
-    private TypedQuery<Long> getCountQuery(KoulutustoimijaQueryDto pquery) {
+    private TypedQuery<Long> getCountQuery(KoulutustoimijaQueryDto queryDto) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Long> query = cb.createQuery(Long.class);
         Root<Opetussuunnitelma> root = query.from(Opetussuunnitelma.class);
         Join<Opetussuunnitelma, Koulutustoimija> koulutustoimija = root.join(Opetussuunnitelma_.koulutustoimija);
-        Predicate pred = buildPredicate(root, koulutustoimija, cb, pquery);
+        Predicate pred = buildPredicate(root, koulutustoimija, cb, queryDto);
         query.select(cb.countDistinct(root.get(Opetussuunnitelma_.koulutustoimija))).where(pred);
         return em.createQuery(query);
     }
 
-    private TypedQuery<Tuple> getQuery(KoulutustoimijaQueryDto pquery) {
+    private TypedQuery<Tuple> getQuery(KoulutustoimijaQueryDto queryDto) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Tuple> query = cb.createTupleQuery();
         Root<Opetussuunnitelma> root = query.from(Opetussuunnitelma.class);
         Join<Opetussuunnitelma, Koulutustoimija> koulutustoimija = root.join(Opetussuunnitelma_.koulutustoimija);
         SetJoin<LokalisoituTeksti, Teksti> ktNimi = koulutustoimija.join(Koulutustoimija_.nimi).join(LokalisoituTeksti_.teksti);
 
-        Predicate pred = buildPredicate(root, koulutustoimija, cb, pquery);
+        Predicate pred = buildPredicate(root, koulutustoimija, cb, queryDto);
         query.distinct(true);
         final Expression<String> n = cb.lower(ktNimi.get(Teksti_.teksti));
 
@@ -92,13 +92,18 @@ public class KoulutustoimijaRepositoryImpl implements KoulutustoimijaCustomRepos
         return em.createQuery(query);
     }
 
-    private Predicate buildPredicate(Root<Opetussuunnitelma> root, Join<Opetussuunnitelma, Koulutustoimija> koulutustoimija, CriteriaBuilder cb, KoulutustoimijaQueryDto pquery) {
+    private Predicate buildPredicate(
+            Root<Opetussuunnitelma> root,
+            Join<Opetussuunnitelma, Koulutustoimija> koulutustoimija,
+            CriteriaBuilder cb,
+            KoulutustoimijaQueryDto queryDto
+    ) {
         Predicate pred = cb.notEqual(koulutustoimija.get(Koulutustoimija_.organisaatio), SecurityUtil.OPH_OID);
         pred = cb.and(pred, cb.equal(root.get(Opetussuunnitelma_.tila), Tila.JULKAISTU));
 
-        if (pquery.getNimi() != null && !"".equals(pquery.getNimi())) {
+        if (queryDto.getNimi() != null && !"".equals(queryDto.getNimi())) {
             SetJoin<LokalisoituTeksti, Teksti> nimi = koulutustoimija.join(Koulutustoimija_.nimi).join(LokalisoituTeksti_.teksti);
-            Predicate nimessa = cb.like(cb.lower(nimi.get(Teksti_.teksti)), cb.literal(RepositoryUtil.kuten(pquery.getNimi())));
+            Predicate nimessa = cb.like(cb.lower(nimi.get(Teksti_.teksti)), cb.literal(RepositoryUtil.kuten(queryDto.getNimi())));
             pred = cb.and(pred, nimessa);
         }
 

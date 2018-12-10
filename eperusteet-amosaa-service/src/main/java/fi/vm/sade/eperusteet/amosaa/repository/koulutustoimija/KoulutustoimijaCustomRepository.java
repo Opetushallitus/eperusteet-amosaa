@@ -27,5 +27,5 @@ import org.springframework.data.repository.NoRepositoryBean;
  */
 @NoRepositoryBean
 public interface KoulutustoimijaCustomRepository {
-    Page<Koulutustoimija> findBy(PageRequest page, KoulutustoimijaQueryDto query);
+    Page<Koulutustoimija> findBy(PageRequest page, KoulutustoimijaQueryDto queryDto);
 }

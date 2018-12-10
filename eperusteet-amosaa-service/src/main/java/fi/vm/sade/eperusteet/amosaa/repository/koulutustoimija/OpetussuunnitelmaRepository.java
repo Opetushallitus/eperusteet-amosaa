@@ -24,11 +24,12 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.repository.version.JpaWithVersioningRepository;
 import fi.vm.sade.eperusteet.amosaa.service.util.Pair;
-
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * @author nkala
@@ -36,14 +37,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface OpetussuunnitelmaRepository extends JpaWithVersioningRepository<Opetussuunnitelma, Long>, OpetussuunnitelmaCustomRepository {
     @Query("SELECT o FROM Opetussuunnitelma o WHERE o.koulutustoimija = ?1 AND o.peruste.perusteId = ?2")
-    List<Opetussuunnitelma> findAllByKoulutustoimijaAndPerusteId(Koulutustoimija koulutustoimija, Long perusteId);
+    Page<Opetussuunnitelma> findAllByKoulutustoimijaAndPerusteId(Koulutustoimija koulutustoimija, Long perusteId, Pageable pageable);
 
-    @Query("SELECT o FROM Opetussuunnitelma o WHERE o.koulutustoimija = ?1 AND o.peruste.koulutustyyppi = ?2")
-    List<Opetussuunnitelma> findAllByKoulutustoimijaAndKoulutustyyppi(Koulutustoimija koulutustoimija, KoulutusTyyppi koulutusTyyppi);
+    @Query("SELECT o FROM Opetussuunnitelma o WHERE o.koulutustoimija = ?1 AND (o.peruste.koulutustyyppi = ?2 OR o.peruste IS NULL)")
+    Page<Opetussuunnitelma> findAllByKoulutustoimijaAndKoulutustyyppiOrPerusteNull(Koulutustoimija koulutustoimija, KoulutusTyyppi koulutusTyyppi, Pageable pageable);
 
-    List<Opetussuunnitelma> findAllByKoulutustoimijaAndPerusteNull(Koulutustoimija koulutustoimija);
-
-    List<Opetussuunnitelma> findAllByKoulutustoimija(Koulutustoimija koulutustoimija);
+    Page<Opetussuunnitelma> findAllByKoulutustoimija(Koulutustoimija koulutustoimija, Pageable pageable);
 
     long countByKoulutustoimija(Koulutustoimija koulutustoimija);
 

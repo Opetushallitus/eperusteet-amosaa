@@ -88,7 +88,9 @@ public class ExceptionHandlingConfig extends ResponseEntityExceptionHandler {
             NestedRuntimeException.class,
             NestedCheckedException.class,
             ServletException.class,
-            ValidationException.class})
+            ValidationException.class,
+            IllegalArgumentException.class
+    })
     public ResponseEntity<Object> handleAllExceptions(Exception e, WebRequest request) throws Exception {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         ResponseStatus rs = e.getClass().getAnnotation(ResponseStatus.class);
@@ -165,6 +167,9 @@ public class ExceptionHandlingConfig extends ResponseEntityExceptionHandler {
                 map.put("syy", ex.getLocalizedMessage());
                 map.put("avain", "client-abort-virhe");
             }
+        } else if (ex instanceof IllegalArgumentException) {
+            suppresstrace = true;
+            map.put("syy", ex.getLocalizedMessage());
         } else {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
             map.put("syy", "Sovelluspalvelimessa tapahtui odottamaton virhe");

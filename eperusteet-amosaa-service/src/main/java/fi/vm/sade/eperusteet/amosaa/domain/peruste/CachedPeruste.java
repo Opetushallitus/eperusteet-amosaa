@@ -20,16 +20,15 @@ import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
-
-import java.io.Serializable;
-import java.util.Date;
-import java.util.Set;
-import javax.persistence.*;
-
 import fi.vm.sade.eperusteet.amosaa.dto.KoulutuksetConverter;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.KoulutusDto;
 import lombok.Getter;
 import lombok.Setter;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Date;
+import java.util.Set;
 
 /**
  * @author nkala
@@ -61,6 +60,7 @@ public class CachedPeruste implements Serializable, ReferenceableEntity {
     @Enumerated(EnumType.STRING)
     private KoulutusTyyppi koulutustyyppi;
 
+    @Basic
     @Column(columnDefinition = "text")
     @Convert(converter = KoulutuksetConverter.class)
     private Set<KoulutusDto> koulutukset;

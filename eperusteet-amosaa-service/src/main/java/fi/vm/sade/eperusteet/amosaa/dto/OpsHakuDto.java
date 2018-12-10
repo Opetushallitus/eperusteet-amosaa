@@ -21,7 +21,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class OpsHakuDto {
+public class OpsHakuDto extends QueryDto {
+    Long koulutustoimija;
     Long peruste;
     KoulutusTyyppi koulutustyyppi;
 }
