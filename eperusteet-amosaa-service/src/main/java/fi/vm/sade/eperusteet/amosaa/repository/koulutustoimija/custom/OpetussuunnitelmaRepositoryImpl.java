@@ -135,6 +135,7 @@ public class OpetussuunnitelmaRepositoryImpl implements OpetussuunnitelmaCustomR
             query.setFirstResult(page.getOffset());
             query.setMaxResults(page.getPageSize());
         }
+
         return new PageImpl<>(query.getResultList().stream()
                 .map(t -> t.get(0, Opetussuunnitelma.class))
                 .collect(Collectors.toList()), page, countQuery.getSingleResult());
@@ -186,21 +187,27 @@ public class OpetussuunnitelmaRepositoryImpl implements OpetussuunnitelmaCustomR
         }
 
         Predicate oikeaKoulutustoimija = cb.equal(koulutustoimija.get(Koulutustoimija_.id), queryDto.getKoulutustoimija());
-        Join<Opetussuunnitelma, CachedPeruste> peruste = root.join(Opetussuunnitelma_.peruste);
 
         Predicate pred;
         if (!ObjectUtils.isEmpty(queryDto.getPeruste())) {
             // Rajataan koulutustoimijan ja  perusteen mukaan
+            Join<Opetussuunnitelma, CachedPeruste> peruste = root.join(Opetussuunnitelma_.peruste);
             Predicate oikeaPeruste = cb.equal(peruste.get(CachedPeruste_.id), queryDto.getPeruste());
             pred = cb.and(oikeaKoulutustoimija, oikeaPeruste);
         } else if (!ObjectUtils.isEmpty(queryDto.getKoulutustyyppi())) {
             // Rajataan koulutustoimijan ja koulutustyypin mukaan
+            Join<Opetussuunnitelma, CachedPeruste> peruste = root.join(Opetussuunnitelma_.peruste);
             Predicate oikeaKoulutustyyppi = cb.equal(peruste.get(CachedPeruste_.koulutustyyppi), queryDto.getKoulutustyyppi());
             Predicate koulutustyyppiTaiIlmanPerustetta = cb.or(oikeaKoulutustyyppi, cb.isNull(peruste));
             pred = cb.and(oikeaKoulutustoimija, koulutustyyppiTaiIlmanPerustetta);
         } else {
             // Rajataan koulutustoimijan mukaan
             pred = cb.and(oikeaKoulutustoimija);
+        }
+
+        // Rajataan tyypin mukaan
+        if (!ObjectUtils.isEmpty(queryDto.getTyyppi())) {
+            return cb.and(pred, root.get(Opetussuunnitelma_.tyyppi).in(queryDto.getTyyppi()));
         }
 
         // Rajataan nimen mukaan
