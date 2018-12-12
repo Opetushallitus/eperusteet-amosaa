@@ -122,17 +122,20 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
       div.row
         div.col-xs-4
           div.form-group.has-feedback.has-feedback-left
-            input.form-control(ng-change="paivitaRajaus(opsSearch)"
+            input.form-control(ng-change="paivitaRajaus()"
               type="text"
-              ng-model="opsSearch"
+              ng-model="rajain.nimi"
               ng-model-options="{ debounce: 300 }"
               placeholder="{{ 'hae' | kaanna }}")
             i.form-control-feedback.glyphicon.glyphicon-search(style="color: gray;")
         div.col-xs-3
           .btn-group
             .pull-left
-              +checkbox("pagination.kaikki", "paivitaRajaus(opsSearch)", "'nayta-kaikki' | kaanna")
-              +checkbox("pagination.poistetut", "paivitaRajaus(opsSearch)", "'nayta-arkistoidut' | kaanna")
+              select.form-control(title='tila'
+                                  ng-model='rajain.tila'
+                                  ng-options="tila as ('tila-'+tila) | kaanna for tila in tilat"
+                                  ng-change='paivitaRajaus()')
+                option(value='') {{'kaikki' | kaanna}}
         div.col-xs-5
           div.pull-right
             button.btn.btn-default.pull-right(ng-click="addYleinen()" oikeustarkastelu="lisays")
@@ -211,4 +214,4 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
                         ng-model="pagination.sivu"
                         previous-text="{{'edellinen' | kaanna}}"
                         next-text="{{'seuraava' | kaanna}}"
-                        ng-change="valitseSivu(pagination.sivu)")
+                        ng-change="paivitaRajaus(false)")

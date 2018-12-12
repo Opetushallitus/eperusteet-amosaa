@@ -13,11 +13,18 @@ angular.module("app").config($stateProvider =>
                         .then(res => resolve(Kayttajatiedot.parsiEsitysnimi(res)))
                         .catch(() => resolve(KaannaService.kaanna("muokkaajaa-ei-loytynyt") + " (" + kayttajaOid + ")"))
                 ),
-            //opetussuunnitelmat: koulutustoimija => koulutustoimija.all("opetussuunnitelmat").getList(),
-            opetussuunnitelmatSivu: koulutustoimija => koulutustoimija.one("opetussuunnitelmat").get(),
-            opetussuunnitelmat: opetussuunnitelmatSivu => opetussuunnitelmatSivu.data,
+            opsOletusRajaus: () => {
+                return {
+                    tila: _(Constants.tosTilat)
+                        .filter(tila => tila !== "poistettu")
+                        .value()
+                }
+            },
+            opetussuunnitelmatApi: (koulutustoimija) => koulutustoimija.all("opetussuunnitelmat"),
+            opetussuunnitelmatSivu: (koulutustoimija, opsOletusRajaus) =>
+                koulutustoimija.one("opetussuunnitelmat").customGET("", opsOletusRajaus),
             ystavaOpsit: koulutustoimija => koulutustoimija.all("opetussuunnitelmat/ystavien").getList(),
-            yhteiset: opetussuunnitelmat => _.filter(opetussuunnitelmat, { tyyppi: "yhteinen" }),
+            yhteiset: opetussuunnitelmatSivu => _.filter(opetussuunnitelmatSivu.data, { tyyppi: "yhteinen" }),
             kayttajanTieto: koulutustoimija => kayttajaId => koulutustoimija.one("kayttajat", kayttajaId).get(),
             paikallisetTutkinnonosatEP: koulutustoimija => koulutustoimija.all("tutkinnonosat")
         },

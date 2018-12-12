@@ -19,18 +19,36 @@ div.modal-body.modal-sisalto
   +tyyppivalinta('kopio', 'kopioi-opetussuunnitelma-pohjaksi')
 
   div.content-spacing.tutkintohaku(ng-if="valittuTyyppi === 'kopio' && !ops")
+    div.form-group.has-feedback.has-feedback-left
+      input.form-control(ng-change="paivitaRajaus()"
+      type="text"
+      ng-model="rajain.nimi"
+      ng-model-options="{ debounce: 300 }"
+      placeholder="{{ 'hae' | kaanna }}")
+      i.form-control-feedback.glyphicon.glyphicon-search(style="color: gray;")
+
     table.table.table-striped
       thead
         tr
-          th(kaanna="'nimi'")
-          th(kaanna="'peruste'")
-          th(kaanna="'diaarinumero'")
+          th(kaanna="'nimi'" style="width: 40%")
+          th(kaanna="'peruste'" style="width: 40%")
+          th(kaanna="'diaarinumero'" style="width: 20%")
       tbody
         tr(ng-repeat="opetussuunnitelma in opetussuunnitelmat" ng-click="valitseOpetussuunnitelma(opetussuunnitelma)")
-          td
+          td()
             a(href="" ng-bind="opetussuunnitelma.nimi | kaanna" ng-click="valitseOpetussuunnitelma(opetussuunnitelma)")
           td(kaanna="opetussuunnitelma.peruste.nimi")
           td(ng-bind="opetussuunnitelma.peruste.diaarinumero")
+
+    nav.text-center
+      ul.pagination(uib-pagination
+      total-items="pagination.kokonaismaara"
+      items-per-page="pagination.sivukoko"
+      ng-model="pagination.sivu"
+      previous-text="{{'edellinen' | kaanna}}"
+      next-text="{{'seuraava' | kaanna}}"
+      ng-change="paivitaRajaus()")
+
     div(ng-show="!ladataan && opetussuunnitelmat.length === 0")
       div.ei-tuloksia(ng-bind="'ei-hakutuloksia' | kaanna")
     

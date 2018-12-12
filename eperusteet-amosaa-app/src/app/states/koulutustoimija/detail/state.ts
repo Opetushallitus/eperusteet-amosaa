@@ -5,9 +5,10 @@ angular.module("app").config($stateProvider =>
             tiedotteet: koulutustoimija => koulutustoimija.all("tiedotteet").getList(),
             ohjeistus: Api => Api.all("ohjeistus"),
             tilastot: Api => Api.one("tilastot"),
-            opsSaver: ($state, opetussuunnitelmat) => async uusiOps => {
+            opsSaver: ($state, opetussuunnitelmatApi) => async uusiOps => {
+                console.log(uusiOps);
                 if (uusiOps) {
-                    const res = await opetussuunnitelmat.post(uusiOps);
+                    const res = await opetussuunnitelmatApi.post(uusiOps);
                     $state.go(
                         "root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot",
                         {
@@ -22,7 +23,7 @@ angular.module("app").config($stateProvider =>
         },
         views: {
             "": {
-                controller: ($scope, kayttajanKoulutustoimijat, koulutustoimija, oikeudet, tiedotteet) => {
+                controller: ($scope, kayttajanKoulutustoimijat, koulutustoimija, oikeudet) => {
                     $scope.isOph = Koulutustoimijat.isOpetushallitus(koulutustoimija);
                     $scope.koulutustoimijat = kayttajanKoulutustoimijat;
                     $scope.koulutustoimija = koulutustoimija;
@@ -74,12 +75,12 @@ angular.module("app").config($stateProvider =>
                 }
             },
             pohjat: {
-                controller: ($scope, koulutustoimija, opetussuunnitelmat, opsSaver) => {
-                    $scope.opetussuunnitelmat = opetussuunnitelmat;
+                controller: ($scope, koulutustoimija, opetussuunnitelmatSivu, opsSaver) => {
+                    $scope.opetussuunnitelmat = opetussuunnitelmatSivu.data;
+                    console.log($scope.opetussuunnitelmat);
                     $scope.addPohja = () =>
                         ModalAdd.pohja()
-                            .then(opsSaver)
-                            .then(res => $scope.opetussuunnitelmat.push(res));
+                            .then(opsSaver);
                 }
             },
             opetussuunnitelmat: {
@@ -87,6 +88,7 @@ angular.module("app").config($stateProvider =>
                     $scope,
                     koulutustoimija,
                     kayttajanTiedot,
+                    opsOletusRajaus,
                     opetussuunnitelmatSivu,
                     opsSaver,
                     kayttaja,
@@ -125,15 +127,18 @@ angular.module("app").config($stateProvider =>
 
                     const add = tyyppi =>
                         ModalAdd[tyyppi](koulutustoimija.id)
-                            .then(opsSaver)
-                            .then(res => $scope.opetussuunnitelmat.push(res));
+                            .then(opsSaver);
 
                     $scope.ystavaOpsit = ystavaOpsit;
+                    $scope.tilat = _.cloneDeep(Constants.tosTilat);
                     $scope.pagination = {
                         sivu: 1,
-                        kokonaismaara: 0,
+                        kokonaismaara: 0
                     };
-                    $scope.opsSearch = "";
+                    $scope.rajain =  _.assign(_.cloneDeep(opsOletusRajaus), {
+                        nimi: "",
+                        tila: null
+                    });
 
                     $scope.addOpetussuunnitelma = () => add("opetussuunnitelma");
                     $scope.addYleinen = () => add("yleinen");
@@ -147,28 +152,28 @@ angular.module("app").config($stateProvider =>
                             $scope.suosikit[ops.id] = ops;
                         }
                     };
-                    $scope.valitseSivu = sivu => {
-                        opetussuunnitelmatSivu.customGET("", {
-                            sivu: sivu - 1,
-                            sivukoko: $scope.pagination.sivukoko
-                        }).then(res => updateOpetussuunnitelmat(res));
-                    };
-                    $scope.paivitaRajaus = opsSearch => {
-                        $scope.pagination.sivu = 1;
+                    $scope.paivitaRajaus = (alkuun = true) => {
+                        // Aseta oletustilat
+                        if ($scope.rajain.tila == null) {
+                            $scope.rajain.tila = _.cloneDeep(opsOletusRajaus.tila);
+                        }
+                        // Jos rajaus muuttuu
+                        if (alkuun) {
+                            $scope.pagination.sivu = 1;
+                        }
                         opetussuunnitelmatSivu.customGET("", {
                             sivu: $scope.pagination.sivu - 1,
                             sivukoko: $scope.pagination.sivukoko,
-                            nimi: opsSearch
-                        }).then(res => {
-                            updateOpetussuunnitelmat(res)
-                        });
+                            tila: $scope.rajain.tila,
+                            nimi: $scope.rajain.nimi
+                        }).then(res => updateOpetussuunnitelmat(res));
                     };
 
                     updateOpetussuunnitelmat(opetussuunnitelmatSivu);
                 }
             },
             yhteinen: {
-                controller: ($scope, yhteiset, koulutustoimija, opetussuunnitelmat, opsSaver) => {
+                controller: ($scope, yhteiset, koulutustoimija, opsSaver) => {
                     $scope.yhteiset = yhteiset;
                     $scope.addYhteinen = () =>
                         ModalAdd.yhteinen()
