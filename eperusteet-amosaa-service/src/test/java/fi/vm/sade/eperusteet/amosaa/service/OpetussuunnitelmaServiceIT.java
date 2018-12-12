@@ -3,6 +3,7 @@ package fi.vm.sade.eperusteet.amosaa.service;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.KayttajaoikeusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
+import fi.vm.sade.eperusteet.amosaa.dto.OpsHakuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
@@ -96,8 +97,11 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
     @Test
     @Rollback
     public void opetussuunnitelmanSiirto() {
+        PageRequest pageRequest = new PageRequest(0, 25);
+
         useProfileKP3();
-        assertThat(opetussuunnitelmaService.getOpetussuunnitelmat(getKoulutustoimijaId())).hasSize(0);
+        assertThat(opetussuunnitelmaService
+                .getOpetussuunnitelmat(getKoulutustoimijaId(), pageRequest, new OpsHakuDto())).hasSize(0);
 
         useProfileTest();
         OpetussuunnitelmaBaseDto ops = createOpetussuunnitelma();
@@ -105,22 +109,27 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
                 .filter(ystava -> !Objects.equals(ystava.getId(), ops.getKoulutustoimija().getId()))
                 .findFirst();
         assertThat(toinen).isNotEmpty();
-        assertThat(opetussuunnitelmaService.getOpetussuunnitelmat(getKoulutustoimijaId())).hasSize(1);
+        assertThat(opetussuunnitelmaService
+                .getOpetussuunnitelmat(getKoulutustoimijaId(), pageRequest, new OpsHakuDto())).hasSize(1);
 
         OpetussuunnitelmaDto paivittynyt = opetussuunnitelmaService.updateKoulutustoimija(
                 ops.getKoulutustoimija().getId(),
                 ops.getId(),
                 toinen.get());
         assertThat(paivittynyt.getKoulutustoimija().getId()).isEqualTo(toinen.get().getId());
-        assertThat(opetussuunnitelmaService.getOpetussuunnitelmat(getKoulutustoimijaId())).hasSize(0);
+        assertThat(opetussuunnitelmaService
+                .getOpetussuunnitelmat(getKoulutustoimijaId(), pageRequest, new OpsHakuDto())).hasSize(0);
 
         useProfileKP3();
-        assertThat(opetussuunnitelmaService.getOpetussuunnitelmat(toinen.get().getId())).hasSize(1);
+        assertThat(opetussuunnitelmaService
+                .getOpetussuunnitelmat(toinen.get().getId(), pageRequest, new OpsHakuDto())).hasSize(1);
     }
 
     @Test
     @Rollback
     public void opetussuunnitelmanSiirtoVirheellisesti() {
+        PageRequest pageRequest = new PageRequest(0, 25);
+
         useProfileTmpr();
         Long toimija = koulutustoimijaService.getKoulutustoimija("1.2.246.562.10.79499343246");
         KoulutustoimijaDto toimijaDto = koulutustoimijaService.getKoulutustoimija(toimija);
@@ -128,7 +137,8 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
         assertThat(toimija).isNotNull().isGreaterThan(0);
 
         OpetussuunnitelmaBaseDto ops = createOpetussuunnitelma();
-        assertThat(opetussuunnitelmaService.getOpetussuunnitelmat(getKoulutustoimijaId())).hasSize(1);
+        assertThat(opetussuunnitelmaService
+                .getOpetussuunnitelmat(getKoulutustoimijaId(), pageRequest, new OpsHakuDto())).hasSize(1);
 
         assertThat(catchThrowable(() -> {
                 OpetussuunnitelmaDto paivittynyt = opetussuunnitelmaService.updateKoulutustoimija(
@@ -138,7 +148,8 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
             }))
             .isInstanceOf(BusinessRuleViolationException.class)
             .hasMessage("siirto-mahdollinen-vain-ystavaorganisaatiolle");
-        assertThat(opetussuunnitelmaService.getOpetussuunnitelmat(getKoulutustoimijaId())).hasSize(1);
+        assertThat(opetussuunnitelmaService
+                .getOpetussuunnitelmat(getKoulutustoimijaId(), pageRequest, new OpsHakuDto())).hasSize(1);
     }
 
     @Test
