@@ -103,12 +103,32 @@ namespace ModalAdd {
                     $scope.valittuTyyppi = tyyppi;
                 };
 
-                opetussuunnitelmatApi.customGET("", {
-                    sivu: 0,
-                    sivukoko: 1
-                }).then(res => {
-                    $scope.opetussuunnitelmat = res.data;
-                });
+                $scope.tilat = _.cloneDeep(Constants.tosTilat);
+                $scope.pagination = {
+                    sivu: 1,
+                    kokonaismaara: 0
+                };
+                $scope.rajain =  {
+                    nimi: "",
+                    tila: _.cloneDeep(Constants.tosTilat)
+                };
+
+                $scope.paivitaRajaus = () => {
+                    opetussuunnitelmatApi.customGET("", {
+                        sivu: $scope.pagination.sivu - 1,
+                        sivukoko: $scope.pagination.sivukoko,
+                        tila: $scope.rajain.tila,
+                        nimi: $scope.rajain.nimi,
+                        tyyppi: _(_.cloneDeep(Constants.tosTyypit))
+                            .filter(tila => tila === "ops")
+                            .value()
+                    }).then(opetussuunnitelmat => {
+                        $scope.opetussuunnitelmat = opetussuunnitelmat.data;
+                        $scope.pagination.sivukoko = opetussuunnitelmat.sivukoko;
+                        $scope.pagination.kokonaismaara = opetussuunnitelmat.kokonaismäärä;
+                    });
+                };
+                $scope.paivitaRajaus();
 
                 $scope.update = function(nimi = "", sivu = 1) {
                     $scope.ladataan = true;
