@@ -16,13 +16,29 @@
 package fi.vm.sade.eperusteet.amosaa.dto;
 
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
+import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
 public class OpsHakuDto extends QueryDto {
-    Long koulutustoimija;
-    Long peruste;
-    KoulutusTyyppi koulutustyyppi;
+    private Long koulutustoimija;
+    private Long peruste;
+    private KoulutusTyyppi koulutustyyppi;
+    private Set<Tila> tila;
+
+    public void setTila(Tila tila) {
+        if (this.tila == null) {
+            this.tila = new HashSet<>();
+        }
+        this.tila.add(tila);
+    }
+
+    public void setTila(Set<Tila> tila) {
+        this.tila = tila;
+    }
 }
