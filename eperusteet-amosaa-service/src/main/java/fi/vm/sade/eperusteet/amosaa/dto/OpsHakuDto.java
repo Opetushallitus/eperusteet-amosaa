@@ -17,6 +17,7 @@ package fi.vm.sade.eperusteet.amosaa.dto;
 
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,6 +31,7 @@ public class OpsHakuDto extends QueryDto {
     private Long peruste;
     private KoulutusTyyppi koulutustyyppi;
     private Set<Tila> tila;
+    private Set<OpsTyyppi> tyyppi;
 
     public void setTila(Tila tila) {
         if (this.tila == null) {
@@ -40,5 +42,16 @@ public class OpsHakuDto extends QueryDto {
 
     public void setTila(Set<Tila> tila) {
         this.tila = tila;
+    }
+
+    public void setTyyppi(OpsTyyppi tyyppi) {
+        if (this.tyyppi == null) {
+            this.tyyppi = new HashSet<>();
+        }
+        this.tyyppi.add(tyyppi);
+    }
+
+    public void setTyyppi(Set<OpsTyyppi> tyyppi) {
+        this.tyyppi = tyyppi;
     }
 }
