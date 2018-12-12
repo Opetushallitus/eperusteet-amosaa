@@ -190,18 +190,20 @@ public class OpetussuunnitelmaRepositoryImpl implements OpetussuunnitelmaCustomR
 
         Predicate pred;
         if (!ObjectUtils.isEmpty(queryDto.getPeruste())) {
+            // Rajataan koulutustoimijan ja  perusteen mukaan
             Predicate oikeaPeruste = cb.equal(peruste.get(CachedPeruste_.id), queryDto.getPeruste());
             pred = cb.and(oikeaKoulutustoimija, oikeaPeruste);
         } else if (!ObjectUtils.isEmpty(queryDto.getKoulutustyyppi())) {
+            // Rajataan koulutustoimijan ja koulutustyypin mukaan
             Predicate oikeaKoulutustyyppi = cb.equal(peruste.get(CachedPeruste_.koulutustyyppi), queryDto.getKoulutustyyppi());
             Predicate koulutustyyppiTaiIlmanPerustetta = cb.or(oikeaKoulutustyyppi, cb.isNull(peruste));
             pred = cb.and(oikeaKoulutustoimija, koulutustyyppiTaiIlmanPerustetta);
         } else {
+            // Rajataan koulutustoimijan mukaan
             pred = cb.and(oikeaKoulutustoimija);
         }
 
-        Predicate isJulkaistu = cb.equal(root.get(Opetussuunnitelma_.tila), Tila.JULKAISTU);
-
+        // Rajataan nimen mukaan
         if (!ObjectUtils.isEmpty(queryDto.getNimi())) {
             String nimi = RepositoryUtil.kuten(queryDto.getNimi());
             Predicate nimessa = cb.like(cb.lower(opsNimi.get(Teksti_.teksti)), cb.literal(nimi));
@@ -213,6 +215,11 @@ public class OpetussuunnitelmaRepositoryImpl implements OpetussuunnitelmaCustomR
 
 
             pred = cb.and(pred, cb.or(nimessa, diaarissa, ktNimessa));
+        }
+
+        // Rajataan tilojen mukaan
+        if (!ObjectUtils.isEmpty(queryDto.getTila())) {
+            return cb.and(pred, root.get(Opetussuunnitelma_.tila).in(queryDto.getTila()));
         }
 
         return pred;
