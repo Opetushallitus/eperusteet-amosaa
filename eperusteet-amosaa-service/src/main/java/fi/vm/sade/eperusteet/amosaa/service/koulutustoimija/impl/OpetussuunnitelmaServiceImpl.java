@@ -75,7 +75,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ObjectUtils;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -222,7 +221,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
             OpsHakuDto query
     ) {
         Koulutustoimija koulutustoimija = koulutustoimijaRepository.findOne(ktId);
-        if (!ObjectUtils.isEmpty(koulutustoimija)) {
+        if (koulutustoimija != null && query != null) {
             query.setKoulutustoimija(koulutustoimija.getId());
         }
         return repository.findBy(page, query)
