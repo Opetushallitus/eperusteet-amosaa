@@ -1,5 +1,5 @@
 namespace Suorituspolku {
-    export const pakollinen = _.memoize(osa => !osa.tutkintonimike && !osa.osaamisala && (osa.pakollinen || _.some(osa.osat, pakollinen)));
+    export const pakollinen = osa => !osa.tutkintonimike && !osa.osaamisala;
 
     export const calculateRealAmount = (ops, tree, tosat, poistetut, osasuorituspolku) => {
         const shouldCount = node => !poistetut[node.tunniste] || !poistetut[node.tunniste].piilotettu;
