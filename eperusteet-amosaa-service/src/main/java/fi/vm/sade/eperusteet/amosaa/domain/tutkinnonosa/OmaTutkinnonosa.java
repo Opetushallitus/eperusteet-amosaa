@@ -29,6 +29,7 @@ import java.util.Objects;
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
 
+import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidRange;
 import fi.vm.sade.eperusteet.amosaa.service.util.Copyable;
 import lombok.Getter;
 import lombok.Setter;
@@ -66,7 +67,8 @@ public class OmaTutkinnonosa extends AbstractAuditedEntity implements Serializab
 
     @Getter
     @Setter
-    @Pattern(message = "ei-validi-paikallinen-koodi", regexp = "^$|^1\\d\\d\\d$")
+//    @Pattern()
+    @ValidRange(low = 1000, high = 999999, message = "ei-validi-paikallinen-koodi")
     private String koodi;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})

@@ -4,14 +4,11 @@ import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
-import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaLuontiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.SuorituspolkuRiviDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.AbstractRakenneOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.*;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
@@ -25,16 +22,15 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.assertj.core.api.Assertions.tuple;
+import static org.assertj.core.api.Assertions.*;
 
 @DirtiesContext
 @Transactional
@@ -51,6 +47,9 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
 
     @Autowired
     private DtoMapper mapper;
+
+    @Autowired
+    private EntityManager em;
 
     @Test
     @Rollback
@@ -90,14 +89,16 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
         Long ktId = getKoulutustoimijaId();
         Long opsId = uusi.getId();
 
-        List<SisaltoViiteKevytDto> sisaltoViitteet = service.getSisaltoViitteet(ktId, opsId, SisaltoViiteKevytDto.class);
-        SisaltoViiteKevytDto tutkinnonOsat = sisaltoViitteet.stream()
-                .filter(sv -> sv.getTyyppi().equals(SisaltoTyyppi.TUTKINNONOSAT))
-                .findAny().get();
+//        List<SisaltoViiteKevytDto> sisaltoViitteet = service.getSisaltoViitteet(ktId, opsId, SisaltoViiteKevytDto.class);
+//        SisaltoViiteKevytDto tutkinnonOsat = sisaltoViitteet.stream()
+//                .filter(sv -> sv.getTyyppi().equals(SisaltoTyyppi.TUTKINNONOSAT))
+//                .findAny().get();
+        SisaltoViiteKevytDto tutkinnonOsat = getFirstOfType(ktId, opsId, SisaltoTyyppi.TUTKINNONOSAT);
 
         SisaltoViiteDto.Matala uusiViite = sisaltoViiteService.addSisaltoViite(ktId, opsId, tutkinnonOsat.getId(), viiteDto);
         assertThat(uusiViite).isNotNull();
     }
+
     @Test
     @Rollback
     public void testTutkinnonOsanToteutuksenVapaitaTeksteja() {
@@ -283,6 +284,47 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
         assertThat(osa.getPaikallinenKuvaus().getKuvaus().get(Kieli.FI))
                 .isEqualTo("foo");
     }
+    @Test
+    @Rollback
+    public void testPaikallisenTutkinnonOsanKoodi() {
+        useProfileKP2();
+        OpetussuunnitelmaBaseDto ops = createOpetussuunnitelma();
+        SisaltoViiteDto.Matala root = sisaltoViiteService.getSisaltoRoot(getKoulutustoimijaId(), ops.getId());
 
+        SisaltoViiteKevytDto tutkinnonosat = getFirstOfType(getKoulutustoimijaId(), ops.getId(), SisaltoTyyppi.TUTKINNONOSAT);
+
+        // Lisää toteutussuunnitelmaan paikallisen osan annetulla koodilla
+        Function<String, SisaltoViiteDto.Matala> addOsaWithKoodi = (String koodi) ->
+                sisaltoViiteService.addSisaltoViite(getKoulutustoimijaId(), ops.getId(), tutkinnonosat.getId(), createSisalto(osa -> {
+                    osa.setTyyppi(SisaltoTyyppi.TUTKINNONOSA);
+                    TutkinnonosaDto tosa = new TutkinnonosaDto();
+                    tosa.setTyyppi(TutkinnonosaTyyppi.OMA);
+                    OmaTutkinnonosaDto oma = new OmaTutkinnonosaDto();
+                    oma.setKoodi(koodi);
+                    tosa.setOmatutkinnonosa(oma);
+                    osa.setTosa(tosa);
+                }));
+
+        assertThatCode(() -> addOsaWithKoodi.apply("1000")).doesNotThrowAnyException();
+        assertThatCode(() -> addOsaWithKoodi.apply("999999")).doesNotThrowAnyException();
+
+        assertThatCode(() -> {
+            addOsaWithKoodi.apply("999");
+            em.flush();
+        }).isExactlyInstanceOf(ConstraintViolationException.class);
+
+        assertThatCode(() -> {
+            addOsaWithKoodi.apply("1000000");
+            em.flush();
+        }).isExactlyInstanceOf(ConstraintViolationException.class);
+
+    }
+
+    private SisaltoViiteKevytDto getFirstOfType(Long ktId, Long opsId, SisaltoTyyppi tyyppi) {
+        List<SisaltoViiteKevytDto> sisaltoViitteet = service.getSisaltoViitteet(ktId, opsId, SisaltoViiteKevytDto.class);
+        return sisaltoViitteet.stream()
+                .filter(sv -> sv.getTyyppi().equals(tyyppi))
+                .findAny().get();
+    }
 
 }

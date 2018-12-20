@@ -21,8 +21,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
 import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -32,6 +31,9 @@ import java.util.List;
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class SisaltoViiteDto implements AuditLoggableDto {
     @Override
     public void auditLog(LogMessage.LogMessageBuilder msg) {
@@ -53,9 +55,6 @@ public class SisaltoViiteDto implements AuditLoggableDto {
 
     @JsonProperty("_tekstiKappale")
     private Reference tekstiKappaleRef;
-
-    public SisaltoViiteDto() {
-    }
 
     public SisaltoViiteDto(TekstiKappaleDto tekstiKappale) {
         this.tekstiKappale = tekstiKappale;
