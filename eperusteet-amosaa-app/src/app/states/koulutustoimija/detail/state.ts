@@ -85,6 +85,7 @@ angular.module("app").config($stateProvider =>
             },
             opetussuunnitelmat: {
                 controller: (
+                    $q: angular.IQService,
                     $scope,
                     koulutustoimija,
                     kayttajanTiedot,
@@ -152,6 +153,8 @@ angular.module("app").config($stateProvider =>
                             $scope.suosikit[ops.id] = ops;
                         }
                     };
+
+                    let timeout: ng.IDeferred<void>;
                     $scope.paivitaRajaus = async (alkuun = true) => {
                         // Aseta oletustilat
                         if ($scope.rajain.tila == null) {
@@ -161,13 +164,25 @@ angular.module("app").config($stateProvider =>
                         if (alkuun) {
                             $scope.pagination.sivu = 1;
                         }
-                        const res = await opetussuunnitelmatSivu.customGET("", {
-                            sivu: $scope.pagination.sivu - 1,
-                            sivukoko: $scope.pagination.sivukoko,
-                            tila: $scope.rajain.tila,
-                            nimi: $scope.rajain.nimi
-                        })
-                        updateOpetussuunnitelmat(res);
+
+                        if (timeout) {
+                            timeout.resolve();
+                        }
+
+                        timeout = $q.defer();
+
+                        try {
+                            const res = await opetussuunnitelmatSivu.customGET("", {
+                                sivu: $scope.pagination.sivu - 1,
+                                sivukoko: $scope.pagination.sivukoko,
+                                tila: $scope.rajain.tila,
+                                nimi: $scope.rajain.nimi
+                            }, { timeout });
+                            $scope.$applyAsync(() => updateOpetussuunnitelmat(res));
+                        }
+                        finally {
+                            timeout = null;
+                        }
                     };
 
                     updateOpetussuunnitelmat(opetussuunnitelmatSivu);
