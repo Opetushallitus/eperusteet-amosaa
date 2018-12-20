@@ -152,7 +152,7 @@ angular.module("app").config($stateProvider =>
                             $scope.suosikit[ops.id] = ops;
                         }
                     };
-                    $scope.paivitaRajaus = (alkuun = true) => {
+                    $scope.paivitaRajaus = async (alkuun = true) => {
                         // Aseta oletustilat
                         if ($scope.rajain.tila == null) {
                             $scope.rajain.tila = _.cloneDeep(opsOletusRajaus.tila);
@@ -161,12 +161,13 @@ angular.module("app").config($stateProvider =>
                         if (alkuun) {
                             $scope.pagination.sivu = 1;
                         }
-                        opetussuunnitelmatSivu.customGET("", {
+                        const res = await opetussuunnitelmatSivu.customGET("", {
                             sivu: $scope.pagination.sivu - 1,
                             sivukoko: $scope.pagination.sivukoko,
                             tila: $scope.rajain.tila,
                             nimi: $scope.rajain.nimi
-                        }).then(res => updateOpetussuunnitelmat(res));
+                        })
+                        updateOpetussuunnitelmat(res);
                     };
 
                     updateOpetussuunnitelmat(opetussuunnitelmatSivu);

@@ -217,11 +217,7 @@ public class OpetussuunnitelmaRepositoryImpl implements OpetussuunnitelmaCustomR
 
             Predicate diaarissa = cb.like(cb.lower(root.get(Opetussuunnitelma_.perusteDiaarinumero)), cb.literal(nimi));
 
-            SetJoin<LokalisoituTeksti, Teksti> ktNimi = koulutustoimija.join(Koulutustoimija_.nimi).join(LokalisoituTeksti_.teksti);
-            Predicate ktNimessa = cb.like(cb.lower(ktNimi.get(Teksti_.teksti)), cb.literal(nimi));
-
-
-            pred = cb.and(pred, cb.or(nimessa, diaarissa, ktNimessa));
+            pred = cb.and(pred, cb.or(nimessa, diaarissa));
         }
 
         // Rajataan tilojen mukaan
