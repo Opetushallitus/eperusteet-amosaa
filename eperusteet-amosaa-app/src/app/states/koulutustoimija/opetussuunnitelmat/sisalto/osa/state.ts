@@ -404,13 +404,24 @@ angular
                             });
                         };
 
-                        $scope.paikallinenKoodiUpdate = pkoodi => {
-                            $scope.$$koodiFormaattiVaara = false;
-                            if (!_.isString(pkoodi) || !pkoodi.match(/^1\d\d\d$/)) {
-                                $scope.$$koodiFormaattiVaara = true;
+                        function isValidLocalCode(koodi: String): boolean {
+                            if (!_.isString(koodi) || !koodi) {
+                                return false;
                             }
 
-                            EditointikontrollitService.enableSaving(_.isEmpty(pkoodi) || pkoodi.match(/^1\d\d\d$/));
+                            try {
+                                const val = _.parseInt(koodi);
+                                return val >= 1000 && val <= 999999;
+                            }
+                            catch (err) {
+                                return false;
+                            }
+                        }
+
+                        $scope.paikallinenKoodiUpdate = pkoodi => {
+                            const valid = isValidLocalCode(pkoodi);
+                            $scope.$$koodiFormaattiVaara = !valid;
+                            EditointikontrollitService.enableSaving(valid);
 
                             if (pkoodi) {
                                 const fullKoodi = Koodisto.paikallinenToFull(koulutustoimija, pkoodi);

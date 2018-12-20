@@ -21,7 +21,9 @@ import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
 
 import java.util.List;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
@@ -31,6 +33,8 @@ import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@NoArgsConstructor
+@AllArgsConstructor
 public class TutkinnonosaDto extends TutkinnonosaBaseDto {
     @Override
     public void auditLog(LogMessage.LogMessageBuilder msg) {
