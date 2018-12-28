@@ -18,15 +18,6 @@ package fi.vm.sade.eperusteet.amosaa.resource.config;
 import com.fasterxml.classmate.GenericType;
 import com.fasterxml.classmate.TypeResolver;
 import com.fasterxml.jackson.databind.JsonNode;
-
-import static com.google.common.base.Predicates.not;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Optional;
-import java.util.concurrent.Callable;
-import javax.servlet.ServletContext;
-
 import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,13 +28,19 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.Contact;
 import springfox.documentation.service.VendorExtension;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger1.annotations.EnableSwagger;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
-import static springfox.documentation.builders.PathSelectors.*;
+
+import javax.servlet.ServletContext;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.concurrent.Callable;
+
+import static com.google.common.base.Predicates.not;
 
 /**
  * @author isaul
@@ -127,7 +124,7 @@ public class SwaggerConfig {
     private ApiInfo apiInfo() {
         Collection<VendorExtension> vendorExtensions = new ArrayList<>();
         return new ApiInfo(
-                "Oppijan verkkopalvelukokonaisuus / ePerusteet ammatillisen opetussuunnitelmat",
+                "Oppijan verkkopalvelukokonaisuus / ePerusteet-amosaa rajapinta",
                 "",
                 "Spring MVC API based on the swagger 2.0 and 1.2 specification",
                 "https://confluence.csc.fi/display/oppija/Rajapinnat+toisen+asteen+ja+perusasteen+toimijoille",
