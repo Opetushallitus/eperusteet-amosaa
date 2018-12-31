@@ -555,9 +555,11 @@
                     </fo:table-row>
                     <fo:table-row>
                         <fo:table-cell>
-                            <fo:block>
-                                <xsl:value-of select="@alt"/>
-                            </fo:block>
+                            <xsl:if test="not(@alt = 'undefined')">
+                                <fo:block>
+                                    <xsl:value-of select="@alt"/>
+                                </fo:block>
+                            </xsl:if>
                         </fo:table-cell>
                     </fo:table-row>
                 </fo:table-body>
