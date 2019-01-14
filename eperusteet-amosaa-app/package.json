@@ -37,7 +37,8 @@
     "prettier": "1.6.1",
     "proxy-middleware": "0.15.0",
     "pug-beautify": "0.1.1",
-    "typescript": "2.5.2"
+    "typescript": "2.5.2",
+    "node-sass": "^4.9.4"
   },
   "dependencies": {
     "angular": "1.4.7",
@@ -71,7 +72,6 @@
     "font-awesome": "4.5.0",
     "jquery-sticky": "1.0.3",
     "moment": "^2.22.2",
-    "node-sass": "^4.9.4",
     "restangular": "1.5.1",
     "spin.js": "2.3.2",
     "string": "3.3.3",
