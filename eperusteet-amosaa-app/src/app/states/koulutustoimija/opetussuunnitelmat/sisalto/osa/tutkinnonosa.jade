@@ -13,7 +13,7 @@ mixin paikallinenKoodi()
       div(ng-show="$$ekEditing")
         input.form-control(type="text"
           ng-model="osa.tosa.omatutkinnonosa.koodi"
-          ng-change="paikallinenKoodiUpdate(osa.tosa.omatutkinnonosa.koodi)"
+          ng-change="paikallinenKoodiUpdate(osa.tosa.omatutkinnonosa)"
           ng-model-options="{ debounce: 500 }")
       div(ng-hide="$$ekEditing || !osa.tosa.omatutkinnonosa.koodi")
         input.form-control(type="text"

@@ -418,27 +418,30 @@ angular
                             }
                         }
 
-                        $scope.paikallinenKoodiUpdate = pkoodi => {
-                            const valid = isValidLocalCode(pkoodi);
-                            $scope.$$koodiFormaattiVaara = !valid;
-                            EditointikontrollitService.enableSaving(valid);
+                        $scope.paikallinenKoodiUpdate = omatutkinnonosa => {
+                            if (omatutkinnonosa) {
+                                const pkoodi = omatutkinnonosa.koodi;
+                                const valid = isValidLocalCode(pkoodi);
+                                $scope.$$koodiFormaattiVaara = !valid;
+                                EditointikontrollitService.enableSaving(valid);
 
-                            if (pkoodi) {
-                                const fullKoodi = Koodisto.paikallinenToFull(koulutustoimija, pkoodi);
-                                paikallisetKoodit
-                                    .one(fullKoodi)
-                                    .getList()
-                                    .then(
-                                        res =>
-                                            ($scope.tormaavatKoodit = _.reject(
-                                                res,
-                                                (koodi: any) => koodi.id === $scope.osa.id
-                                            ))
-                                    );
+                                if (pkoodi) {
+                                    const fullKoodi = Koodisto.paikallinenToFull(koulutustoimija, pkoodi);
+                                    paikallisetKoodit
+                                        .one(fullKoodi)
+                                        .getList()
+                                        .then(
+                                            res =>
+                                                ($scope.tormaavatKoodit = _.reject(
+                                                    res,
+                                                    (koodi: any) => koodi.id === $scope.osa.id
+                                                ))
+                                        );
+                                }
                             }
                         };
 
-                        $scope.paikallinenKoodiUpdate(_.property("tosa.omatutkinnonosa.koodi")($scope.osa));
+                        $scope.paikallinenKoodiUpdate(_.property("tosa.omatutkinnonosa")($scope.osa));
 
                         {
                             // Init block
