@@ -4,6 +4,9 @@
   "main": "index.js",
   "description": "",
   "private": true,
+  "engines": {
+    "node": "10.15.0"
+  },
   "scripts": {
     "dev": "gulp",
     "build": "gulp build",
