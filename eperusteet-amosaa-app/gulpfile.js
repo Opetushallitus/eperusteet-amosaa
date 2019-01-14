@@ -73,7 +73,7 @@ gulp
 
             if (fpath !== 'index.jade') {
                 var prefix = 'script(type="text/ng-template" id="' + fpath + '")\n';
-                file.contents = new Buffer(prefix + '  ' + String(file.contents).replace(/\n/g, '\n  ') + '\n');
+                file.contents = Buffer.from(prefix + '  ' + String(file.contents).replace(/\n/g, '\n  ') + '\n');
             }
             cb(null, file);
         }))
