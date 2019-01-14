@@ -6,7 +6,6 @@ angular.module("app").config($stateProvider =>
             ohjeistus: Api => Api.all("ohjeistus"),
             tilastot: Api => Api.one("tilastot"),
             opsSaver: ($state, opetussuunnitelmatApi) => async uusiOps => {
-                console.log(uusiOps);
                 if (uusiOps) {
                     const res = await opetussuunnitelmatApi.post(uusiOps);
                     $state.go(
@@ -77,7 +76,6 @@ angular.module("app").config($stateProvider =>
             pohjat: {
                 controller: ($scope, koulutustoimija, opetussuunnitelmatSivu, opsSaver) => {
                     $scope.opetussuunnitelmat = opetussuunnitelmatSivu.data;
-                    console.log($scope.opetussuunnitelmat);
                     $scope.addPohja = () =>
                         ModalAdd.pohja()
                             .then(opsSaver);
