@@ -34,6 +34,7 @@ public class KoodistoKoodiDto implements AuditLoggableDto {
 
     private String koodiUri;
     private String koodiArvo;
+    private String voimassaAlkuPvm;
     private String voimassaLoppuPvm;
     private KoodistoMetadataDto[] metadata;
 }
