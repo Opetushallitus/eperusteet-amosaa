@@ -21,16 +21,14 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija_;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma_;
-import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
-import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti_;
-import fi.vm.sade.eperusteet.amosaa.domain.teksti.Teksti;
-import fi.vm.sade.eperusteet.amosaa.domain.teksti.Teksti_;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.*;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaQueryDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaCustomRepository;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.util.ObjectUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -101,7 +99,13 @@ public class KoulutustoimijaRepositoryImpl implements KoulutustoimijaCustomRepos
         Predicate pred = cb.notEqual(koulutustoimija.get(Koulutustoimija_.organisaatio), SecurityUtil.OPH_OID);
         pred = cb.and(pred, cb.equal(root.get(Opetussuunnitelma_.tila), Tila.JULKAISTU));
 
-        if (queryDto.getNimi() != null && !"".equals(queryDto.getNimi())) {
+        Kieli kieli = Kieli.of(queryDto.getKieli());
+        if (!kieli.equals(Kieli.FI)) {
+            SetJoin<Opetussuunnitelma, Kieli> kielet = root.join(Opetussuunnitelma_.julkaisukielet);
+            pred = cb.and(pred, kielet.in(kieli));
+        }
+
+        if (!ObjectUtils.isEmpty(queryDto.getNimi())) {
             SetJoin<LokalisoituTeksti, Teksti> nimi = koulutustoimija.join(Koulutustoimija_.nimi).join(LokalisoituTeksti_.teksti);
             Predicate nimessa = cb.like(cb.lower(nimi.get(Teksti_.teksti)), cb.literal(RepositoryUtil.kuten(queryDto.getNimi())));
             pred = cb.and(pred, nimessa);

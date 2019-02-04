@@ -1,9 +1,8 @@
 package fi.vm.sade.eperusteet.amosaa.service;
 
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaJulkinenDto;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaQueryDto;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaYstavaDto;
+import fi.vm.sade.eperusteet.amosaa.domain.Tila;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.*;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
@@ -15,8 +14,10 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -30,7 +31,7 @@ public class KoulutustoimijaServiceIT extends AbstractIntegrationTest {
     @Test
     @Rollback
     public void testKoulutustoimijoidenLuonti() {
-        boolean x = kayttajanTietoService.updateKoulutustoimijat();
+        kayttajanTietoService.updateKoulutustoimijat();
         assertThat(kayttaja).isNotNull();
         assertThat(koulutustoimijat).isNotEmpty();
     }
@@ -136,6 +137,41 @@ public class KoulutustoimijaServiceIT extends AbstractIntegrationTest {
                 .hasFieldOrPropertyWithValue("id", getKoulutustoimijaId());
         assertThat(koulutustoimijaService.getPaikallisetTutkinnonOsat(getKoulutustoimijaId(), SisaltoViiteDto.class))
                 .isEmpty();
+    }
+
+    @Test
+    @Rollback
+    public void testKoulutustoimijaHakuKielirajaus() {
+        kayttajanTietoService.updateKoulutustoimijat();
+
+        {
+            OpetussuunnitelmaBaseDto dto = createOpetussuunnitelma();
+
+            OpetussuunnitelmaDto ops = opetussuunnitelmaService.getOpetussuunnitelma(getKoulutustoimijaId(), dto.getId());
+
+            Set<Kieli> kielet = new HashSet<>();
+            kielet.add(Kieli.FI);
+            ops.setJulkaisukielet(kielet);
+
+            // Validointi vaatii
+            ops.setHyvaksyja("Hyvaksyja");
+            ops.setPaatosnumero("Paatosnumero");
+            ops.setPaatospaivamaara(new Date());
+
+            opetussuunnitelmaService.update(getKoulutustoimijaId(), ops.getId(), ops);
+            opetussuunnitelmaService.updateTila(getKoulutustoimijaId(), ops.getId(), Tila.VALMIS, false);
+            opetussuunnitelmaService.updateTila(getKoulutustoimijaId(), ops.getId(), Tila.JULKAISTU, false);
+        }
+
+        PageRequest p = new PageRequest(0, 10);
+        KoulutustoimijaQueryDto pquery = new KoulutustoimijaQueryDto();
+
+        Page<KoulutustoimijaJulkinenDto> julkisetToimijat = koulutustoimijaService.findKoulutustoimijat(p, pquery);
+        assertThat(julkisetToimijat).hasSize(1);
+
+        pquery.setKieli(Kieli.EN.toString());
+        julkisetToimijat = koulutustoimijaService.findKoulutustoimijat(p, pquery);
+        assertThat(julkisetToimijat).isEmpty();
     }
 
 }
