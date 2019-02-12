@@ -471,7 +471,9 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
                 if (koodit != null) {
                     koodit.forEach(koodi -> {
                         KoodistoKoodiDto koodistoKoodiDto = koodistoClient.getByUri(koodi);
-                        addSuorituspolunKoodiOsa(docBase, koodistoKoodiDto, tbody, depth + 1);
+                        if (koodistoKoodiDto != null) {
+                            addSuorituspolunKoodiOsa(docBase, koodistoKoodiDto, tbody, depth + 1);
+                        }
                     });
                 }
             }
@@ -514,28 +516,31 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
             Element tbody,
             int depth
     ) {
-        KoodistoMetadataDto[] metadata = koodistoKoodiDto.getMetadata();
-        for (KoodistoMetadataDto metadataDto : metadata) {
+        if (koodistoKoodiDto != null && koodistoKoodiDto.getMetadata() != null) {
+            KoodistoMetadataDto[] metadata = koodistoKoodiDto.getMetadata();
+            for (KoodistoMetadataDto metadataDto : metadata) {
 
-            // Valitaan dokumentin kieli
-            if (metadataDto.getKieli().toLowerCase().equals(docBase.getKieli().toString())) {
+                // Valitaan dokumentin kieli
+                if (docBase.getKieli().toString().equals(metadataDto.getKieli().toLowerCase())) {
 
-                Element tr = docBase.getDocument().createElement("tr");
-                tbody.appendChild(tr);
-                Element td = docBase.getDocument().createElement("td");
-                tr.appendChild(td);
-                td.setAttribute("class", "td" + String.valueOf(depth));
+                    Element tr = docBase.getDocument().createElement("tr");
+                    tbody.appendChild(tr);
+                    Element td = docBase.getDocument().createElement("td");
+                    tr.appendChild(td);
+                    td.setAttribute("class", "td" + depth);
 
-                // Nimi
-                StringBuilder nimiBuilder = new StringBuilder();
-                nimiBuilder.append(metadataDto.getNimi());
-                if (koodistoKoodiDto.getKoodiArvo() != null) {
-                    nimiBuilder.append(" (");
-                    nimiBuilder.append(koodistoKoodiDto.getKoodiArvo());
-                    nimiBuilder.append(")");
+                    // Nimi
+                    StringBuilder nimiBuilder = new StringBuilder();
+                    nimiBuilder.append(metadataDto.getNimi());
+                    if (koodistoKoodiDto.getKoodiArvo() != null) {
+                        nimiBuilder.append(" (");
+                        nimiBuilder.append(koodistoKoodiDto.getKoodiArvo());
+                        nimiBuilder.append(")");
+                    }
+
+                    addTeksti(docBase, nimiBuilder.toString(), "p", td);
+
                 }
-                addTeksti(docBase, nimiBuilder.toString(), "p", td);
-
             }
         }
     }
