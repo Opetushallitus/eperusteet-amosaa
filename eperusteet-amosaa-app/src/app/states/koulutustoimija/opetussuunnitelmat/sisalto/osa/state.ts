@@ -245,7 +245,7 @@ angular
                             cancel: () => {
                                 return Promise.resolve(osa.get()).then(res => {
                                     $scope.osa = res;
-                                });
+                                }).catch(() => {});
                             }
                         });
 
