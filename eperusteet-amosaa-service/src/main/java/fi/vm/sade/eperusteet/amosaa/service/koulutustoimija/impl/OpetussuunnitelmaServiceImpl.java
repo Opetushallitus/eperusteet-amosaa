@@ -75,6 +75,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -575,10 +576,13 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     @Override
     public OpetussuunnitelmaDto update(Long ktId, Long opsId, OpetussuunnitelmaDto body) {
         Opetussuunnitelma ops = repository.findOne(opsId);
-//        body.setPeruste(mapper.map(ops.getPeruste(), CachedPerusteBaseDto.class));
         body.setId(opsId);
         body.setTila(ops.getTila());
         repository.setRevisioKommentti(body.getKommentti());
+        String paatosnumero = body.getPaatosnumero();
+        if (!ObjectUtils.isEmpty(paatosnumero) && repository.countByPaatosnumero(paatosnumero) > 0) {
+            throw new BusinessRuleViolationException("paatosnumero-on-jo-kaytossa");
+        }
         Opetussuunnitelma updated = mapper.map(body, ops);
         return mapper.map(updated, OpetussuunnitelmaDto.class);
     }
