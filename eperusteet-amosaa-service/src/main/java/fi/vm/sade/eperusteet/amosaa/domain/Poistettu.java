@@ -16,7 +16,6 @@
 
 package fi.vm.sade.eperusteet.amosaa.domain;
 
-import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
@@ -57,11 +56,6 @@ public class Poistettu implements Serializable, ReferenceableEntity {
     @Setter
     @NotNull
     private LokalisoituTeksti nimi;
-
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @Getter
-    @Setter
-    private Koulutustoimija koulutustoimija;
 
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @Getter

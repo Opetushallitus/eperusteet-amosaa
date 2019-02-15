@@ -254,9 +254,8 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
     @Override
     @Transactional
     public SisaltoViiteDto restoreSisaltoViite(Long ktId, Long opsId, Long poistettuId) {
-        Koulutustoimija kt = koulutustoimijaRepository.findOne(ktId);
         Opetussuunnitelma ops = opsRepository.findOne(opsId);
-        Poistettu poistettu = poistetutRepository.findByKoulutustoimijaAndOpetussuunnitelmaAndId(kt, ops, poistettuId);
+        Poistettu poistettu = poistetutRepository.findByOpetussuunnitelmaAndId(ops, poistettuId);
         if (poistettu == null) {
             throw new BusinessRuleViolationException("palautettavaa-ei-olemassa");
         }
@@ -428,7 +427,6 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
     @Transactional
     public void removeSisaltoViite(Long ktId, Long opsId, Long viiteId) {
         SisaltoViite viite = findViite(opsId, viiteId);
-        Koulutustoimija koulutustoimija = koulutustoimijaRepository.findOne(ktId);
         Opetussuunnitelma ops = opsRepository.findOne(opsId);
 
         if (viite.getVanhempi() == null) {
@@ -448,8 +446,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
             throw new BusinessRuleViolationException("Pakollisia sisältöjä ei voi poistaa");
         }
 
-//        repository.lock(viite.getRoot());
-        poistetutService.lisaaPoistettu(koulutustoimija, ops, viite);
+        poistetutService.lisaaPoistettu(ktId, ops, viite);
 
         viite.getVanhempi().getLapset().remove(viite);
         repository.delete(viite);
@@ -498,7 +495,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
     @Transactional
     private void updatePoistetut(Koulutustoimija kt, Opetussuunnitelma ops, Set<SisaltoViite> viitteet) {
         for (SisaltoViite viite : viitteet) {
-            poistetutService.lisaaPoistettu(kt, ops, viite);
+            poistetutService.lisaaPoistettu(kt.getId(), ops, viite);
             repository.delete(viite);
         }
     }
