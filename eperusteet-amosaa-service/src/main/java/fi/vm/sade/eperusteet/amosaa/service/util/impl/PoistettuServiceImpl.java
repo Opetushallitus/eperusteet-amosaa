@@ -17,11 +17,9 @@
 package fi.vm.sade.eperusteet.amosaa.service.util.impl;
 
 import fi.vm.sade.eperusteet.amosaa.domain.Poistettu;
-import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.dto.PoistettuDto;
-import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.PoistettuRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
@@ -46,9 +44,6 @@ public class PoistettuServiceImpl implements PoistettuService {
     PoistettuRepository repository;
 
     @Autowired
-    KoulutustoimijaRepository koulutustoimijaRepository;
-
-    @Autowired
     OpetussuunnitelmaRepository opsRepository;
 
     @Autowired
@@ -56,13 +51,12 @@ public class PoistettuServiceImpl implements PoistettuService {
 
     @Override
     @Transactional
-    public PoistettuDto lisaaPoistettu(Koulutustoimija koulutustoimija, Opetussuunnitelma ops, SisaltoViite osa) {
+    public PoistettuDto lisaaPoistettu(Long koulutustoimija, Opetussuunnitelma ops, SisaltoViite osa) {
         if (osa == null || osa.getTekstiKappale() == null || osa.getTekstiKappale().getNimi() == null) {
             return null;
         }
         Poistettu poistettu = new Poistettu();
         poistettu.setMuokkaajaOid(SecurityUtil.getAuthenticatedPrincipal().getName());
-        poistettu.setKoulutustoimija(koulutustoimija);
         poistettu.setOpetussuunnitelma(ops);
         poistettu.setPoistettu(osa.getId());
         poistettu.setPvm(Calendar.getInstance().getTime());

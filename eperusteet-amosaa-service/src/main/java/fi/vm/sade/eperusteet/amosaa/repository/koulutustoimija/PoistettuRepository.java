@@ -18,7 +18,6 @@ package fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija;
 
 import fi.vm.sade.eperusteet.amosaa.domain.Poistettu;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
-import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 
 import java.util.List;
@@ -35,5 +34,5 @@ public interface PoistettuRepository extends JpaRepository<Poistettu, Long> {
 
     List<Poistettu> findAllByOpetussuunnitelmaAndTyyppi(Opetussuunnitelma ops, SisaltoTyyppi tyyppi);
 
-    Poistettu findByKoulutustoimijaAndOpetussuunnitelmaAndId(Koulutustoimija kt, Opetussuunnitelma ops, Long id);
+    Poistettu findByOpetussuunnitelmaAndId(Opetussuunnitelma ops, Long id);
 }
