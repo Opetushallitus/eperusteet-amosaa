@@ -111,6 +111,7 @@
     "guidance-useinkysyttya-sisalto": "Tässä näkymässä pystyt selaamaan usein kysyttyjä kysymyksiä.",
     "hae": "Hae",
     "hae-peruste": "Hae peruste",
+    "hae-toteutussuunnitelma": "Hae toteutussuunnitelma",
     "haku-nimi": "Hae nimistä",
     "haku-termista": "Hae termeistä",
     "hakutuloksia": "Hakutuloksia",
@@ -475,5 +476,6 @@
     "osasuorituspolku-laajuus": "Osasuorituspolun kokonaislaajuus",
     "edellinen": "Edellinen",
     "seuraava": "Seuraava",
-    "kaikki": "Kaikki"
+    "kaikki": "Kaikki",
+    "paatosnumero-on-jo-kaytossa": "Päätösnumero on jo käytössä"
 }

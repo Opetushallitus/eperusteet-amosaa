@@ -43,7 +43,7 @@ div.modal-body.modal-sisalto
     h3(ng-bind="'anna-nimi' | kaanna")
     .form-group
       input.form-control(slocalized ng-model="obj.tekstiKappale.nimi" type="text" required="true")
-  
+
   div(ng-show="currentStage === 'perusteentutkinnonosat'")
     +completePagination("tosap")
       table.table.table-striped
@@ -78,30 +78,56 @@ div.modal-body.modal-sisalto
             a(href="" kaanna="peruste.nimi" ng-click="valitsePeruste(peruste)")
           td(ng-bind="peruste.diaarinumero")
 
-    ul(uib-pagination total-items="total"
+    ul(uib-pagination
       ng-model="sivu"
-      ng-change="update(nimi, sivu)"
+      total-items="total"
+      items-per-page="sivukoko"
+      num-pages="sivuja"
       max-size="10"
+      ng-change="update(nimi, sivu)"
       class="pagination-sm"
       boundary-links="true"
       previous-text="‹"
       next-text="›"
       first-text="«"
-      last-text="»"
-      num-pages="sivuja")
+      last-text="»")
 
   div(ng-show="currentStage === 'opetussuunnitelma'")
-    +completePagination("opsp")
-      table.table.table-striped
-        tr
-          th(ng-bind="'nimi' | kaanna")
-          th(ng-bind="'tyyppi' | kaanna")
-          th(ng-bind="'tutkinnon-diaarinumero' | kaanna")
-        tr(ng-repeat="ops in opsp.items")
-          td
-            a(href="" ng-click="valitseOps(ops)" ng-bind="ops.nimi | kaanna")
-          td(ng-bind="'opstyyppi-' + ops.tyyppi | kaanna")
-          td(ng-bind="ops.perusteDiaarinumero")
+    .form-group.has-feedback.has-feedback-left
+      input.form-control(
+        type="text"
+        placeholder="{{ 'hae-toteutussuunnitelma' | kaanna }}"
+        ng-model="nimi"
+        ng-model-options="{ debounce: 300 }"
+        ng-change="update(nimi, sivu)")
+      i.form-control-feedback.glyphicon.glyphicon-search(ng-if="!ladataan" style="color: gray;")
+      i.form-control-feedback(ng-if="ladataan")
+        small-spinner
+
+    table.table.table-striped
+      tr
+        th(ng-bind="'nimi' | kaanna")
+        th(ng-bind="'tyyppi' | kaanna")
+        th(ng-bind="'tutkinnon-diaarinumero' | kaanna")
+      tr(ng-repeat="ops in opsit")
+        td
+          a(href="" ng-click="valitseOps(ops)" ng-bind="ops.nimi | kaanna")
+        td(ng-bind="'opstyyppi-' + ops.tyyppi | kaanna")
+        td(ng-bind="ops.perusteDiaarinumero")
+
+    ul(uib-pagination
+      ng-model="sivu"
+      total-items="total"
+      items-per-page="sivukoko"
+      num-pages="sivuja"
+      max-size="10"
+      ng-change="update(nimi, sivu)"
+      class="pagination-sm"
+      boundary-links="true"
+      previous-text="‹"
+      next-text="›"
+      first-text="«"
+      last-text="»")
 
   .opslista(ng-show="currentStage === 'opssisalto'")
     .osa(ng-repeat="node in rakenne" style="margin-left: {{ node.$$depth * 20 }}px")

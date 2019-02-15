@@ -96,6 +96,7 @@ namespace ModalAdd {
                 $scope.sivu = 1;
                 $scope.sivuja = 1;
                 $scope.total = 0;
+                $scope.sivukoko = 10;
                 $scope.perusteet = null;
                 $scope.ladataan = true;
                 $scope.valittuTyyppi = null;
@@ -190,10 +191,12 @@ namespace ModalAdd {
     export const sisaltoAdder = (koulutustoimija, sallitut = ["tekstikappale"], peruste) =>
         i.$uibModal.open({
             resolve: {
-                perusteetApi: Api => Api.one("perusteet")
+                perusteetApi: Api => Api.one("perusteet"),
+                opetussuunnitelmatApi: () => koulutustoimija.one("opetussuunnitelmat")
             },
             templateUrl: "modals/add/sisalto.jade",
-            controller: ($uibModalInstance, $scope, $stateParams, Api, perusteetApi, $timeout) => {
+            controller: ($uibModalInstance, $scope, $stateParams, $timeout,
+                         Api, perusteetApi, opetussuunnitelmatApi) => {
                 $scope.currentStage = "sisaltotyyppi";
                 $scope.$$tutkinnonosatuonti = _.indexOf(sallitut, "tutkinnonosatuonti") !== -1;
                 $scope.$$sisaltotuonti = _.indexOf(sallitut, "sisaltotuonti") !== -1;
@@ -205,13 +208,17 @@ namespace ModalAdd {
                 $scope.valittu = undefined;
                 $scope.koulutustyyppi = peruste.koulutustyyppi;
                 $scope.$$isValmaTelma = _.includes(Amosaa.valmaTelmaKoulutustyypit(), peruste.koulutustyyppi);
+                $scope.pagination = {
+                    sivu: 1,
+                    kokonaismaara: 0
+                };
 
                 {
                     // Opetussuunnitelmat
                     $scope.valitseOps = ops => {
                         $scope.currentStage = "opssisalto";
-                        ops
-                            .one("otsikot")
+                        opetussuunnitelmatApi
+                            .one(ops.id + "/otsikot")
                             .get()
                             .then(otsikot => {
                                 const root = Tekstikappaleet.root(otsikot);
@@ -228,17 +235,36 @@ namespace ModalAdd {
                             });
                     };
 
+                    $scope.nimi = "";
+                    $scope.sivu = 1;
+                    $scope.sivuja = 1;
+                    $scope.total = 0;
+                    $scope.opsit = null;
+                    $scope.ladataan = true;
+                    $scope.sivukoko = 10;
+
                     $scope.tuoSisaltoa = async () => {
                         $scope.currentStage = "opetussuunnitelma";
-                        const opsit = await koulutustoimija.all("opetussuunnitelmat").customGETLIST('', {
-                            koulutustyyppi: $scope.koulutustyyppi
-                        });
-                        $scope.opsp = PaginationV2.addPagination(
-                            opsit,
-                            (search: string, ops: any): boolean =>
-                                ($scope.poistetut || ops.tila !== "poistettu") &&
-                                (!search || _.isEmpty(search) || Algoritmit.match(search, ops.nimi))
-                        );
+
+                        $scope.update = function(nimi = "", sivu = 1) {
+                            $scope.ladataan = true;
+                            $timeout(async () => {
+                                const res = await opetussuunnitelmatApi.customGET("", {
+                                    nimi,
+                                    sivu: sivu - 1,
+                                    sivukoko: $scope.sivukoko,
+                                    kieli: KieliService.getSisaltokieli(),
+                                    tila: ["luonnos", "valmis", "julkaistu"],
+                                    koulutustyyppi: $scope.koulutustyyppi
+                                });
+                                $scope.ladataan = false;
+                                const { data, ...params } = res;
+                                $scope.opsit = data;
+                                $scope.sivuja = params.sivuja;
+                                $scope.total = params.kokonaismäärä;
+                            });
+                        };
+                        $scope.update();
                     };
 
                     $scope.lisaaOpsSisalto = () =>
