@@ -306,7 +306,7 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
                 }));
 
         assertThatCode(() -> addOsaWithKoodi.apply("1000")).doesNotThrowAnyException();
-        assertThatCode(() -> addOsaWithKoodi.apply("999999")).doesNotThrowAnyException();
+        assertThatCode(() -> addOsaWithKoodi.apply("99999999")).doesNotThrowAnyException();
 
         assertThatCode(() -> {
             addOsaWithKoodi.apply("999");
@@ -314,7 +314,7 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
         }).isExactlyInstanceOf(ConstraintViolationException.class);
 
         assertThatCode(() -> {
-            addOsaWithKoodi.apply("1000000");
+            addOsaWithKoodi.apply("100000000");
             em.flush();
         }).isExactlyInstanceOf(ConstraintViolationException.class);
 
