@@ -47,9 +47,9 @@ public class DokumenttiDto implements AuditLoggableDto {
     private Date valmistumisaika;
     private DokumenttiTila tila = DokumenttiTila.EI_OLE;
     private DokumenttiEdistyminen edistyminen = DokumenttiEdistyminen.TUNTEMATON;
+    private boolean kansikuva = false;
+    private boolean ylatunniste = false;
+    private boolean alatunniste = false;
     private String virhekoodi = "";
-    private byte[] kansikuva;
-    private byte[] ylatunniste;
-    private byte[] alatunniste;
     private boolean perusteenSisalto;
 }

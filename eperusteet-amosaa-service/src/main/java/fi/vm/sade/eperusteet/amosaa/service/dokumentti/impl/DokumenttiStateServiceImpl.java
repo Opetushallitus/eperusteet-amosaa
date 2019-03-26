@@ -41,9 +41,9 @@ public class DokumenttiStateServiceImpl implements DokumenttiStateService {
     private DtoMapper mapper;
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public DokumenttiDto save(DokumenttiDto dto) {
-        Dokumentti dokumentti = mapper.map(dto, Dokumentti.class);
-        dokumentti = dokumenttiRepository.save(dokumentti);
-        return mapper.map(dokumentti, DokumenttiDto.class);
+    public Dokumentti save(DokumenttiDto dto) {
+        Dokumentti dokumentti = dokumenttiRepository.findOne(dto.getId());
+        mapper.map(dto, dokumentti);
+        return dokumenttiRepository.save(dokumentti);
     }
 }

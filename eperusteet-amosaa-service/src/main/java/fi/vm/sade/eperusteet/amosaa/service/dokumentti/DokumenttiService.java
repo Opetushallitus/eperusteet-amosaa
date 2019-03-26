@@ -40,7 +40,7 @@ public interface DokumenttiService {
     DokumenttiDto createDtoFor(@P("ktId") Long ktId, @P("opsId") Long opsId, Kieli kieli);
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
-    DokumenttiDto setStarted(@P("ktId") Long ktId, @P("opsId") Long opsId, DokumenttiDto dto);
+    void setStarted(@P("ktId") Long ktId, @P("opsId") Long opsId, DokumenttiDto dto);
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
     void generateWithDto(@P("ktId") Long ktId, @P("opsId") Long opsId, DokumenttiDto dto) throws DokumenttiException;

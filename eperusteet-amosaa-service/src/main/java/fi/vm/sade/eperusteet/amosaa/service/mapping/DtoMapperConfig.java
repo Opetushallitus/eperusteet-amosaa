@@ -15,12 +15,17 @@
  */
 package fi.vm.sade.eperusteet.amosaa.service.mapping;
 
+import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.Dokumentti;
+import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.Dokumentti_;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
+import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.SuorituspolkuOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SuorituspolkuRakenneDto;
+import ma.glasnost.orika.CustomMapper;
+import ma.glasnost.orika.MappingContext;
 import ma.glasnost.orika.converter.builtin.PassThroughConverter;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
 import org.springframework.context.annotation.Bean;
@@ -60,6 +65,23 @@ public class DtoMapperConfig {
         factory.getConverterFactory().registerConverter(new OrganisaatioConverter());
         OptionalSupport.register(factory);
         factory.registerMapper(new ReferenceableCollectionMergeMapper());
+
+        factory.classMap(Dokumentti.class, DokumenttiDto.class)
+                .exclude(Dokumentti_.kansikuva.getName())
+                .exclude(Dokumentti_.ylatunniste.getName())
+                .exclude(Dokumentti_.alatunniste.getName())
+                .byDefault()
+                .favorExtension(true)
+                .customize(new CustomMapper<Dokumentti, DokumenttiDto>() {
+                    @Override
+                    public void mapAtoB(Dokumentti dokumentti, DokumenttiDto dokumenttiDto, MappingContext context) {
+                        super.mapAtoB(dokumentti, dokumenttiDto, context);
+                        dokumenttiDto.setKansikuva(dokumentti.getKansikuva() != null);
+                        dokumenttiDto.setYlatunniste(dokumentti.getYlatunniste() != null);
+                        dokumenttiDto.setAlatunniste(dokumentti.getAlatunniste() != null);
+                    }
+                })
+                .register();
 
         return new DtoMapperImpl(factory.getMapperFacade());
     }
