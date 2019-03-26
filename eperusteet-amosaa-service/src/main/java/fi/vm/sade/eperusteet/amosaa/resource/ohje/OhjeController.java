@@ -86,7 +86,7 @@ public class OhjeController {
     }
 
     @RequestMapping(value = "/{id}", method = DELETE)
-    public ResponseEntity editOhje(
+    public ResponseEntity removeOhje(
             @RequestParam Long id) {
         service.removeOhje(id);
         return audit.withAudit(LogMessage.builder(OPH, OHJE_POISTO), (Void) -> {

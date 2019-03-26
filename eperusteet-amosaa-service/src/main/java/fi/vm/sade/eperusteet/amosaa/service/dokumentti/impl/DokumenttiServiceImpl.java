@@ -131,12 +131,12 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     }
 
     @Override
-    public DokumenttiDto setStarted(Long ktId, Long opsId, DokumenttiDto dto) {
+    public void setStarted(Long ktId, Long opsId, DokumenttiDto dto) {
         // Asetetaan dokumentti luonti tilaan
         dto.setAloitusaika(new Date());
         dto.setLuoja(SecurityUtil.getAuthenticatedPrincipal().getName());
         dto.setTila(DokumenttiTila.JONOSSA);
-        return dokumenttiStateService.save(dto);
+        dokumenttiStateService.save(dto);
     }
 
     @Override
@@ -147,7 +147,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
         dokumenttiStateService.save(dto);
 
         try {
-            Dokumentti dokumentti = mapper.map(dto, Dokumentti.class);
+            Dokumentti dokumentti = dokumenttiRepository.findOne(dto.getId());
             Opetussuunnitelma ops = opsRepository.findOne(dokumentti.getOpsId());
             dokumentti.setTila(DokumenttiTila.VALMIS);
             dokumentti.setValmistumisaika(new Date());

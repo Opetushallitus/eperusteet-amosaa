@@ -70,14 +70,11 @@ public class DokumenttiController extends KoulutustoimijaIdGetterAbstractControl
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        HttpStatus status;
-
         // Aloitetaan luonti jos luonti ei ole jo päällä tai maksimi luontiaika ylitetty
         if (DokumenttiUtils.isTimePass(dto) || dto.getTila() != DokumenttiTila.LUODAAN) {
-            dto = service.setStarted(ktId, opsId, dto);
+            service.setStarted(ktId, opsId, dto);
             service.generateWithDto(ktId, opsId, dto);
-            status = HttpStatus.ACCEPTED;
-            return new ResponseEntity<>(dto, status);
+            return new ResponseEntity<>(dto, HttpStatus.ACCEPTED);
         } else {
             throw new BusinessRuleViolationException("Luonti on jo käynissä");
         }
