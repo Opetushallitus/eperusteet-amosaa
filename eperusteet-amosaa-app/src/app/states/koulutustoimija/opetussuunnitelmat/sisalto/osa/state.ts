@@ -405,8 +405,12 @@ angular
                         };
 
                         function isValidLocalCode(koodi: String): boolean {
-                            if (!_.isString(koodi) || !koodi) {
+                            if (!_.isString(koodi)) {
                                 return false;
+                            }
+
+                            if (_.isEmpty(koodi)) {
+                                return true;
                             }
 
                             try {

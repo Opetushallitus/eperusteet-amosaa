@@ -67,7 +67,6 @@ public class OmaTutkinnonosa extends AbstractAuditedEntity implements Serializab
 
     @Getter
     @Setter
-    @ValidRange(low = 1000, high = 99999999, message = "ei-validi-paikallinen-koodi")
     private String koodi;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
