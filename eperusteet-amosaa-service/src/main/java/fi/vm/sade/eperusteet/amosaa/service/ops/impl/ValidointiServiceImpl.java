@@ -33,6 +33,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Suorituspolku;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Tutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.*;
+import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.resource.config.AbstractRakenneOsaDeserializer;
 import fi.vm.sade.eperusteet.amosaa.resource.config.MappingModule;
@@ -46,6 +47,7 @@ import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
@@ -64,11 +66,15 @@ import javax.annotation.PostConstruct;
 @Slf4j
 @Service
 public class ValidointiServiceImpl implements ValidointiService {
-    @Autowired
-    private SisaltoviiteRepository svRepository;
 
     @Autowired
-    private SisaltoViiteService svService;
+    private OpetussuunnitelmaRepository opetussuunnitelmaRepository;
+
+    @Autowired
+    private SisaltoviiteRepository sisaltoviiteRepository;
+
+    @Autowired
+    private SisaltoViiteService sisaltoViiteService;
 
     @Autowired
     private PerusteCacheService perusteCacheService;
@@ -91,9 +97,22 @@ public class ValidointiServiceImpl implements ValidointiService {
     public Validointi validoi(Opetussuunnitelma ops) {
         Validointi validointi = new Validointi();
         validoiTiedot(validointi, ops);
-        SisaltoViite root = svRepository.findOneRoot(ops);
+        SisaltoViite root = sisaltoviiteRepository.findOneRoot(ops);
         validoi(validointi, root, ops);
         return validointi;
+    }
+
+    @Override
+    public List<String> tutkinnonOsanValidointivirheet(Long opsId, Long viiteId) {
+        Opetussuunnitelma ops = opetussuunnitelmaRepository.findOne(opsId);
+        SisaltoViite viite = sisaltoviiteRepository.findOne(viiteId);
+        if (ops == null || viite == null || !ops.equals(viite.getOwner())) {
+            throw new BusinessRuleViolationException("virhe");
+        }
+
+        Validointi validointi = new Validointi();
+        validoiTutkinnonOsa(validointi, viite, ops);
+        return validointi.getVirheet().stream().map(Validointi.Virhe::getSyy).collect(Collectors.toList());
     }
 
     private void validoiTutkinnonOsa(Validointi validointi, SisaltoViite viite, Opetussuunnitelma ops) {
@@ -145,7 +164,7 @@ public class ValidointiServiceImpl implements ValidointiService {
                     validointi.virhe("oma-tutkinnon-osa-virheellinen-koodi", nimi);
                 }
 
-                long paikalliset = svRepository.findAllPaikallisetTutkinnonOsatByKoodi(ops.getKoulutustoimija(), oma.getKoodi()).stream()
+                long paikalliset = sisaltoviiteRepository.findAllPaikallisetTutkinnonOsatByKoodi(ops.getKoulutustoimija(), oma.getKoodi()).stream()
                         .filter(sv -> sv.getOwner().getTila() == Tila.JULKAISTU || sv.getOwner().getId().equals(ops.getId()))
                         .count();
                 if (paikalliset > 1) {
@@ -284,7 +303,7 @@ public class ValidointiServiceImpl implements ValidointiService {
             for (SuorituspolkuRivi rivi : sp.getRivit()) {
                 LokalisoituTeksti.validoi(validointi, ops, rivi.getKuvaus());
                 for (String koodi : rivi.getKoodit()) {
-                    if (svService.getCountByKoodi(ops.getKoulutustoimija().getId(), koodi) == 0) {
+                    if (sisaltoViiteService.getCountByKoodi(ops.getKoulutustoimija().getId(), koodi) == 0) {
                         String[] koodiSplit = koodi.split("_");
                         validointi.varoitus("suorituspolku-koodi-ei-toteutusta", nimi, LokalisoituTeksti.of(Kieli.FI, koodiSplit.length > 0 ? koodiSplit[koodiSplit.length - 1] : koodi));
                     }

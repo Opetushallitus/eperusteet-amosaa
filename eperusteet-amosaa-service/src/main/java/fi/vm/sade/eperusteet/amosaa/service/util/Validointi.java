@@ -66,6 +66,9 @@ public class Validointi {
             if (arg != null) {
                 virheet.add(new Virhe(syy, arg));
             }
+            else {
+                virheet.add(new Virhe(syy));
+            }
         }
         return this;
     }
@@ -74,6 +77,9 @@ public class Validointi {
         for (LokalisoituTeksti arg : args) {
             if (arg != null) {
                 virheet.add(new Virhe(syy, arg));
+            }
+            else {
+                virheet.add(new Virhe(syy));
             }
         }
         return this;
@@ -88,6 +94,9 @@ public class Validointi {
         for (LokalisoituTeksti arg : args) {
             if (arg != null) {
                 varoitukset.add(new Virhe(syy, arg));
+            }
+            else {
+                virheet.add(new Virhe(syy));
             }
         }
         return this;
