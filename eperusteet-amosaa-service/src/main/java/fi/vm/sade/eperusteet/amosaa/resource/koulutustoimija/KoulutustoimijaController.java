@@ -22,9 +22,9 @@ import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaYstavaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.ops.SisaltoViiteSijaintiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViitePaikallinenIntegrationDto;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteSuorituspolkuDto;
 import fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaAudit;
 import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaMessageFields.KOULUTUSTOIMIJA;
 import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.KOULUTUSTOIMIJA_MUOKKAUS;
@@ -134,11 +134,11 @@ public class KoulutustoimijaController extends KoulutustoimijaIdGetterAbstractCo
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(value = "/{ktId}/koodi/{koodi}", method = RequestMethod.GET)
-    public ResponseEntity<List<SisaltoViiteSuorituspolkuDto>> getByKoodi(
+    public ResponseEntity<List<SisaltoViiteSijaintiDto>> getByKoodi(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final String koodi
     ) {
-        return new ResponseEntity<>(sisaltoViiteService.getByKoodi(ktId, koodi, SisaltoViiteSuorituspolkuDto.class), HttpStatus.OK);
+        return new ResponseEntity<>(sisaltoViiteService.getByKoodi(ktId, koodi, SisaltoViiteSijaintiDto.class), HttpStatus.OK);
     }
 
     @ApiImplicitParams({

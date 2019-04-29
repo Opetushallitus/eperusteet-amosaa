@@ -790,11 +790,12 @@ angular
                                                 return;
                                             }
 
-                                            const goToSisalto = osa =>
+                                            const goToSisalto = osa => {
                                                 $state.go("root.koulutustoimija.opetussuunnitelmat.sisalto.osa", {
                                                     opsId: osa.owner.id,
                                                     osaId: osa.id
                                                 });
+                                            }
 
                                             // TODO: Toteuta toteutuksen valitsin jos useampi toteutus
                                             const opskohtaiset = _.filter(

@@ -16,7 +16,6 @@
 
 package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
 import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 import lombok.Getter;
@@ -24,13 +23,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SisaltoViiteSuorituspolkuDto implements AuditLoggableDto {
-    @Override
-    public void auditLog(LogMessage.LogMessageBuilder msg) {
-    }
-
-    private Long id;
-    private TekstiKappaleNimiDto tekstiKappale;
-    private OpetussuunnitelmaBaseDto owner;
-    private TutkinnonOsaSuorituspolkuDto tosa;
+public class TutkinnonOsaSijaintiDto {
+    private OmaTutkinnonosaSuorituspolkuDto omatutkinnonosa;
 }
