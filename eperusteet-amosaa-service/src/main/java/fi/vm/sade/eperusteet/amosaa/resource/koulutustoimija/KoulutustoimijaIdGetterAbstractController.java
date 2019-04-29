@@ -32,7 +32,12 @@ public class KoulutustoimijaIdGetterAbstractController {
 
     // Käytetään, koska ktId voi oll joko ktId tai organisaatioId
     @ModelAttribute("solvedKtId")
-    protected Long getKtId(@PathVariable("ktId") String ktId) {
-        return ktService.getKoulutustoimija(ktId);
+    protected Long getKtId(@PathVariable(value = "ktId", required = false) String ktId) {
+        if (ktId != null) {
+            return ktService.getKoulutustoimija(ktId);
+        }
+        else {
+            return null;
+        }
     }
 }

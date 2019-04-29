@@ -21,6 +21,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.liite.LiiteDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.liite.LiiteRepository;
+import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.exception.NotExistsException;
 import fi.vm.sade.eperusteet.amosaa.service.exception.ServiceException;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
@@ -58,7 +59,7 @@ public class LiiteServiceImpl implements LiiteService {
 
     @Override
     @Transactional(readOnly = true)
-    public void export(Long ktId, Long opsId, UUID id, OutputStream os) {
+    public void export(Long opsId, UUID id, OutputStream os) {
         Liite liite = liiteRepository.findOne(id);
         if (liite == null) {
             throw new NotExistsException("ei ole");
@@ -70,10 +71,15 @@ public class LiiteServiceImpl implements LiiteService {
         }
     }
 
+
     @Override
     @Transactional(readOnly = true)
-    public LiiteDto get(Long ktId, Long opsId, UUID id) {
+    public LiiteDto get(Long opsId, UUID id) {
+        Opetussuunnitelma ops = opetussuunnitelmaRepository.findOne(opsId);
         Liite liite = liiteRepository.findOne(id);
+        if (ops == null || !liite.getOpetussuunnitelmat().contains(ops)) {
+            throw new BusinessRuleViolationException("ei-liitetta");
+        }
         return mapper.map(liite, LiiteDto.class);
     }
 
