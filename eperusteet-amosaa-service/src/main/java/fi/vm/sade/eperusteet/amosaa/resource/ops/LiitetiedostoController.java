@@ -55,7 +55,6 @@ import springfox.documentation.annotations.ApiIgnore;
  * @author jhyoty
  */
 @RestController
-@RequestMapping("/koulutustoimijat")
 @Api("liitetiedostot")
 @InternalApi
 public class LiitetiedostoController extends KoulutustoimijaIdGetterAbstractController {
@@ -77,7 +76,7 @@ public class LiitetiedostoController extends KoulutustoimijaIdGetterAbstractCont
     @ApiImplicitParams({
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
-    @RequestMapping(value = "/{ktId}/opetussuunnitelmat/{opsId}/kuvat", method = RequestMethod.POST)
+    @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/kuvat", method = RequestMethod.POST)
     public ResponseEntity<String> upload(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable Long opsId,
@@ -146,7 +145,7 @@ public class LiitetiedostoController extends KoulutustoimijaIdGetterAbstractCont
     @ApiImplicitParams({
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
-    @RequestMapping(value = "/{ktId}/opetussuunnitelmat/{opsId}/kuvat/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/kuvat/{id}", method = RequestMethod.GET)
     @CacheControl(age = CacheControl.ONE_YEAR)
     public void get(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
@@ -155,7 +154,18 @@ public class LiitetiedostoController extends KoulutustoimijaIdGetterAbstractCont
             @RequestHeader(value = "If-None-Match", required = false) String etag,
             HttpServletResponse response
     ) throws IOException {
-        LiiteDto dto = liitteet.get(ktId, opsId, id);
+        get(opsId, id, etag, response);
+    }
+
+    @RequestMapping(value = "/opetussuunnitelmat/{opsId}/kuvat/{id}", method = RequestMethod.GET)
+    @CacheControl(age = CacheControl.ONE_YEAR)
+    public void get(
+            @PathVariable Long opsId,
+            @PathVariable UUID id,
+            @RequestHeader(value = "If-None-Match", required = false) String etag,
+            HttpServletResponse response
+    ) throws IOException {
+        LiiteDto dto = liitteet.get(opsId, id);
         if (dto != null) {
             if (etag != null && dto.getId().toString().equals(etag)) {
                 response.setStatus(HttpStatus.NOT_MODIFIED.value());
@@ -163,7 +173,7 @@ public class LiitetiedostoController extends KoulutustoimijaIdGetterAbstractCont
                 response.setHeader("Content-Type", dto.getTyyppi());
                 response.setHeader("ETag", id.toString());
                 try (OutputStream os = response.getOutputStream()) {
-                    liitteet.export(ktId, opsId, id, os);
+                    liitteet.export(opsId, id, os);
                     os.flush();
                 }
             }
@@ -175,7 +185,7 @@ public class LiitetiedostoController extends KoulutustoimijaIdGetterAbstractCont
     @ApiImplicitParams({
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
-    @RequestMapping(value = "/{ktId}/opetussuunnitelmat/{opsId}/kuvat/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/kuvat/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
@@ -189,7 +199,7 @@ public class LiitetiedostoController extends KoulutustoimijaIdGetterAbstractCont
     @ApiImplicitParams({
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
-    @RequestMapping(value = "/{ktId}/opetussuunnitelmat/{opsId}/kuvat", method = RequestMethod.GET)
+    @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/kuvat", method = RequestMethod.GET)
     public List<LiiteDto> getAll(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable Long opsId

@@ -1112,7 +1112,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
 
                 // Ladataan kuvan data muistiin
                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                liiteService.export(docBase.getOpetussuunnitelma().getKoulutustoimija().getId(), docBase.getOpetussuunnitelma().getId(), uuid, byteArrayOutputStream);
+                liiteService.export(docBase.getOpetussuunnitelma().getId(), uuid, byteArrayOutputStream);
 
                 // Tehdään muistissa olevasta datasta kuva
                 InputStream in = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());

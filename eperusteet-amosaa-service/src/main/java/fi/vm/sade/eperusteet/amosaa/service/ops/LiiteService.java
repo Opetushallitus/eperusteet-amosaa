@@ -33,7 +33,7 @@ public interface LiiteService {
     UUID add(Long ktId, @P("opsId") Long opsId, String tyyppi, String nimi, long length, InputStream is);
 
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'ESITYS')")
-    LiiteDto get(@P("ktId") Long ktId, @P("opsId") Long opsId, UUID id);
+    LiiteDto get(@P("opsId") Long opsId, UUID id);
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
     List<LiiteDto> getAll(@P("ktId") Long ktId, @P("opsId") Long opsId);
@@ -42,5 +42,5 @@ public interface LiiteService {
     void delete(@P("opsId") Long ktId, @P("opsId") Long opsId, UUID id);
 
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'ESITYS')")
-    void export(@P("ktId") Long ktId, @P("opsId") Long opsId, UUID id, OutputStream os);
+    void export(@P("opsId") Long opsId, UUID id, OutputStream os);
 }
