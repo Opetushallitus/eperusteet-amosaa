@@ -135,12 +135,14 @@ public class ValidointiServiceImpl implements ValidointiService {
                     validointi.virhe("oma-tutkinnon-osa-ei-sisaltoa", nimi);
                 }
             } else {
-                if (ObjectUtils.isEmpty(oma.getKoodi())) {
-                    if (KoulutusTyyppi.of(koulutustyppi).isValmaTelma()) {
-                        validointi.virhe("oma-koulutuksen-osa-ei-koodia", nimi);
-                    } else {
-                        validointi.virhe("oma-tutkinnon-osa-koodi-ei-asetettu", nimi);
+                try {
+                    Integer arvo = Integer.valueOf(oma.getKoodi());
+                    if (arvo < 1000 || arvo > 99999999) {
+                        validointi.virhe("oma-tutkinnon-osa-virheellinen-koodi", nimi);
                     }
+                }
+                catch (NumberFormatException ex) {
+                    validointi.virhe("oma-tutkinnon-osa-virheellinen-koodi", nimi);
                 }
 
                 long paikalliset = svRepository.findAllPaikallisetTutkinnonOsatByKoodi(ops.getKoulutustoimija(), oma.getKoodi()).stream()

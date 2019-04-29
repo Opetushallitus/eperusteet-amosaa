@@ -402,8 +402,12 @@ angular
                         };
 
                         function isValidLocalCode(koodi: String): boolean {
-                            if (!_.isString(koodi) || !koodi) {
+                            if (!_.isString(koodi)) {
                                 return false;
+                            }
+
+                            if (_.isEmpty(koodi)) {
+                                return true;
                             }
 
                             try {
@@ -787,11 +791,12 @@ angular
                                                 return;
                                             }
 
-                                            const goToSisalto = osa =>
+                                            const goToSisalto = osa => {
                                                 $state.go("root.koulutustoimija.opetussuunnitelmat.sisalto.osa", {
                                                     opsId: osa.owner.id,
                                                     osaId: osa.id
                                                 });
+                                            }
 
                                             // TODO: Toteuta toteutuksen valitsin jos useampi toteutus
                                             const opskohtaiset = _.filter(

@@ -734,7 +734,8 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
             return repository.findAllPaikallisetTutkinnonOsatByKoodi(kt, osaKoodi);
         } else if (ktId != null && koodi.startsWith("tutkinnonosat_")) {
             Koulutustoimija kt = koulutustoimijaRepository.findOne(ktId);
-            return repository.findAllTutkinnonOsatByKoodi(kt, koodi);
+            List<SisaltoViite> tutkinnonOsaSisallot = repository.findAllTutkinnonOsatByKoodi(kt, koodi);
+            return tutkinnonOsaSisallot;
         }
 
         return new ArrayList<>();
