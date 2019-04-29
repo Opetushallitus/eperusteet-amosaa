@@ -253,17 +253,14 @@ angular
                             Varmistusdialogi.dialogi({
                                 otsikko: "haluatko-varmasti-poistaa-sisallon",
                                 teksti: "sisalto-poistetaa-mahdollinen-palauttaa"
-                            })(() => {
-                                osa.remove().then(() => {
-                                    NotifikaatioService.onnistui("poisto-tekstikappale-onnistui");
-                                    EditointikontrollitService.cancel().then(() => {
-                                        $state.go(
-                                            "root.koulutustoimija.opetussuunnitelmat.poistetut",
-                                            $stateParams,
-                                            { reload: true }
-                                        );
-                                    });
-                                });
+                            })(async () => {
+                                await osa.remove();
+                                await EditointikontrollitService.cancel(true);
+                                $state.go(
+                                    "root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot",
+                                    $stateParams,
+                                    { reload: true });
+                                NotifikaatioService.onnistui("poisto-tekstikappale-onnistui");
                             });
                         };
 
