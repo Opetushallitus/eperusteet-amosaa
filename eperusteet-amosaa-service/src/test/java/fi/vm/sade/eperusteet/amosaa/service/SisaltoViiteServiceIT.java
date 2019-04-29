@@ -4,16 +4,19 @@ import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaLuontiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.SuorituspolkuRiviDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.*;
+import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
+import fi.vm.sade.eperusteet.amosaa.service.ops.ValidointiService;
 import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -40,10 +43,16 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
     private SisaltoViiteService sisaltoViiteService;
 
     @Autowired
+    private SisaltoviiteRepository sisaltoviiteRepository;
+
+    @Autowired
     private OpetussuunnitelmaService opetussuunnitelmaService;
 
     @Autowired
     private SisaltoViiteService service;
+
+    @Autowired
+    private ValidointiService validointiService;
 
     @Autowired
     private DtoMapper mapper;
@@ -305,19 +314,19 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
                     osa.setTosa(tosa);
                 }));
 
-        assertThatCode(() -> addOsaWithKoodi.apply("1000")).doesNotThrowAnyException();
-        assertThatCode(() -> addOsaWithKoodi.apply("99999999")).doesNotThrowAnyException();
+        assertThatCode(() -> addOsaWithKoodi.apply("999")).doesNotThrowAnyException();
 
-        assertThatCode(() -> {
-            addOsaWithKoodi.apply("999");
-            em.flush();
-        }).isExactlyInstanceOf(ConstraintViolationException.class);
+        { // Validi
+            SisaltoViiteDto.Matala osa = addOsaWithKoodi.apply("99999999");
+            assertThat(validointiService.tutkinnonOsanValidointivirheet(ops.getId(), osa.getId()))
+                    .doesNotContain("oma-tutkinnon-osa-virheellinen-koodi");
+        }
 
-        assertThatCode(() -> {
-            addOsaWithKoodi.apply("100000000");
-            em.flush();
-        }).isExactlyInstanceOf(ConstraintViolationException.class);
-
+        { // Epävalidi
+            SisaltoViiteDto.Matala osa = addOsaWithKoodi.apply("999");
+            assertThat(validointiService.tutkinnonOsanValidointivirheet(ops.getId(), osa.getId()))
+                    .contains("oma-tutkinnon-osa-virheellinen-koodi");
+        }
     }
 
     private SisaltoViiteKevytDto getFirstOfType(Long ktId, Long opsId, SisaltoTyyppi tyyppi) {

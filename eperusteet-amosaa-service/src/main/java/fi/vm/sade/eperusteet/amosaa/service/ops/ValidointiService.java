@@ -18,10 +18,16 @@ package fi.vm.sade.eperusteet.amosaa.service.ops;
 
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
+import org.springframework.security.access.prepost.PreAuthorize;
+
+import java.util.List;
 
 /**
  * @author nkala
  */
 public interface ValidointiService {
     Validointi validoi(Opetussuunnitelma ops);
+
+    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
+    List<String> tutkinnonOsanValidointivirheet(Long opsId, Long viiteId);
 }
