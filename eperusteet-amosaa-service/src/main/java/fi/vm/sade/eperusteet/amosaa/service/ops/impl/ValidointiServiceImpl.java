@@ -23,6 +23,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.SuorituspolkuRivi;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
@@ -33,6 +34,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Suorituspolku;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Tutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.*;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.resource.config.AbstractRakenneOsaDeserializer;
@@ -49,6 +51,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -184,15 +187,23 @@ public class ValidointiServiceImpl implements ValidointiService {
         public Validointi validointi;
         public Opetussuunnitelma ops;
         public SuoritustapaLaajaDto suoritustapa;
-        public Suorituspolku sp;
+        public SisaltoViite viite;
         public Map<UUID, SuorituspolkuRivi> rivit;
         public Map<Long, TutkinnonOsaViiteSuppeaDto> tov;
 
-        public ValidointiHelper(Validointi validointi, Opetussuunnitelma ops, SuoritustapaLaajaDto suoritustapa, Suorituspolku sp, Map<UUID, SuorituspolkuRivi> rivit, Map<Long, TutkinnonOsaViiteSuppeaDto> tov) {
+        public LokalisoituTekstiDto getViiteNimi() {
+            return Optional.ofNullable(this.viite)
+                    .map(SisaltoViite::getTekstiKappale)
+                    .map(TekstiKappale::getNimi)
+                    .map(nimi -> mapper.map(nimi, LokalisoituTekstiDto.class))
+                    .orElse(null);
+        }
+
+        public ValidointiHelper(Validointi validointi, Opetussuunnitelma ops, SuoritustapaLaajaDto suoritustapa, SisaltoViite viite, Map<UUID, SuorituspolkuRivi> rivit, Map<Long, TutkinnonOsaViiteSuppeaDto> tov) {
             this.validointi = validointi;
             this.ops = ops;
             this.suoritustapa = suoritustapa;
-            this.sp = sp;
+            this.viite = viite;
             this.rivit = rivit;
             this.tov = tov;
         }
@@ -262,7 +273,7 @@ public class ValidointiServiceImpl implements ValidointiService {
             try {
                 Integer minimi = moduuli.getMuodostumisSaanto().getKoko().getMinimi();
                 if (sisallonKokoJaLaajuus.getFirst() < minimi) {
-                    ctx.validointi.virhe("virheellinen-rakenteen-osa", moduuli.getNimi());
+                    ctx.validointi.virhe("virheellinen-rakenteen-osa", ctx.getViiteNimi(), moduuli.getNimi());
                 }
             } catch (NullPointerException ex) {
             }
@@ -270,7 +281,7 @@ public class ValidointiServiceImpl implements ValidointiService {
             try {
                 BigDecimal minimi = new BigDecimal(moduuli.getMuodostumisSaanto().getLaajuus().getMinimi());
                 if (sisallonKokoJaLaajuus.getSecond().compareTo(minimi) < 0) {
-                    ctx.validointi.virhe("virheellinen-rakenteen-osa", moduuli.getNimi());
+                    ctx.validointi.virhe("virheellinen-rakenteen-osa", ctx.getViiteNimi(), moduuli.getNimi());
                 }
             } catch (NullPointerException ex) {
             }
@@ -316,7 +327,7 @@ public class ValidointiServiceImpl implements ValidointiService {
                     .collect(Collectors.toMap(SuorituspolkuRivi::getRakennemoduuli, Function.identity()));
             Map<Long, TutkinnonOsaViiteSuppeaDto> tov = suoritustapa.getTutkinnonOsat().stream()
                     .collect(Collectors.toMap(TutkinnonOsaViiteSuppeaDto::getId, Function.identity()));
-            ValidointiHelper ctx = new ValidointiHelper(validointi, ops, suoritustapa, sp, rivit, tov);
+            ValidointiHelper ctx = new ValidointiHelper(validointi, ops, suoritustapa, viite, rivit, tov);
             validoiSpRakenne(ctx, suoritustapa.getRakenne());
         }
     }
