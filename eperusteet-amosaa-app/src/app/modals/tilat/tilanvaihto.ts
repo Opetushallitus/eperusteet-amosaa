@@ -8,7 +8,7 @@ namespace TilanvaihtoModal {
         luonnos: ["valmis", "poistettu"],
         valmis: ["luonnos", "julkaistu", "poistettu"],
         poistettu: ["luonnos"],
-        julkaistu: ["luonnos", "poistettu"]
+        julkaistu: ["luonnos"]
     });
 
     export const vaihdaTila = ops =>
