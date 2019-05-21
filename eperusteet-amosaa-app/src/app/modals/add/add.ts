@@ -254,8 +254,7 @@ namespace ModalAdd {
                                     sivu: sivu - 1,
                                     sivukoko: $scope.sivukoko,
                                     kieli: KieliService.getSisaltokieli(),
-                                    tila: ["luonnos", "valmis", "julkaistu"],
-                                    koulutustyyppi: $scope.koulutustyyppi
+                                    tila: ["luonnos", "valmis", "julkaistu"]
                                 });
                                 $scope.ladataan = false;
                                 const { data, ...params } = res;
