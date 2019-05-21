@@ -93,6 +93,7 @@ div.modal-body.modal-sisalto
       last-text="»")
 
   div(ng-show="currentStage === 'opetussuunnitelma'")
+    pre sisaltotuonti opetussuunnitelma
     .form-group.has-feedback.has-feedback-left
       input.form-control(
         type="text"
@@ -130,11 +131,10 @@ div.modal-body.modal-sisalto
       last-text="»")
 
   .opslista(ng-show="currentStage === 'opssisalto'")
-    .osa(ng-hide="node.$$obj.tosa", ng-repeat="node in rakenne" style="margin-left: {{ node.$$depth * 20 }}px")
+    .osa(ng-repeat="node in rakenne" style="margin-left: {{ node.$$depth * 20 }}px")
       label.checkbox-inline
         span.nimi(ng-bind="node.$$obj.tekstiKappale.nimi | kaanna")
         input.form-control(type="checkbox" ng-model="node.$$valittu")
-      span.nimi(ng-bind="node.$$obj.tekstiKappale.nimi | kaanna" ng-show="node.$$obj.tosa")
 
 div.modal-footer
   button.btn.btn-default(ng-click="ok()")
