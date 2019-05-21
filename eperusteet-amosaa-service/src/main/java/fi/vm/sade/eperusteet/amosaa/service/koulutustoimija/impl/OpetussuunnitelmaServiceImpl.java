@@ -654,8 +654,13 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         Opetussuunnitelma ops = findOps(ktId, opsId);
         Tila nykyinen = ops.getTila();
         if (nykyinen.mahdollisetSiirtymat().contains(tila)) {
-            if (tila == Tila.JULKAISTU) {
+
+            // Julkaisun rutiinit
+            if (tila.equals(Tila.JULKAISTU)) {
+
                 validoi(ktId, opsId).tuomitse();
+
+                // Testeissä pois käytöstä
                 if (generatePDF) {
                     for (Kieli kieli : ops.getJulkaisukielet()) {
                         try {
@@ -667,9 +672,15 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                         }
                     }
                 }
+
             }
+
+            // Muutetaan tila
             ops.setTila(tila);
+        } else {
+            throw new IllegalArgumentException(tila + " ei ole kelvollinen tilasiirtymä");
         }
+
         return mapper.map(ops, OpetussuunnitelmaBaseDto.class);
     }
 
