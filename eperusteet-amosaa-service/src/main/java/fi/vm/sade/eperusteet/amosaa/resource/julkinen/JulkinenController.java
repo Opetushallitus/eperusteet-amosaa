@@ -16,11 +16,15 @@
 
 package fi.vm.sade.eperusteet.amosaa.resource.julkinen;
 
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
+import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.*;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.SisaltoViiteSijaintiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.TiedoteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteKevytDto;
+import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
@@ -32,6 +36,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -58,27 +64,38 @@ public class JulkinenController {
     @Autowired
     private TiedoteService tiedoteService;
 
+    @Autowired
+    DokumenttiService service;
+
     @RequestMapping(value = "/tutkinnonosat/{koodi}", method = RequestMethod.GET)
     @ApiIgnore
-    public SisaltoViiteDto getTutkinnonOsa(@PathVariable final String koodi) {
+    public SisaltoViiteDto getTutkinnonOsa(
+            @PathVariable final String koodi
+    ) {
         throw new UnsupportedOperationException("ei-toteutettu-viela");
     }
 
     @RequestMapping(value = "/opetussuunnitelmat/{opsId}/koulutustoimija", method = RequestMethod.GET)
     @Description("Opetussuunnitelman omistavan toimijan tiedot.")
-    public KoulutustoimijaJulkinenDto getOpetussuunnitelmanToimija(@PathVariable final Long opsId) {
+    public KoulutustoimijaJulkinenDto getOpetussuunnitelmanToimija(
+            @PathVariable final Long opsId
+    ) {
         return opsService.getKoulutustoimijaId(opsId);
     }
 
     @RequestMapping(value = "/koulutustoimijat/org/{ktOid}", method = RequestMethod.GET)
     @Description("Koulutuksen järjestäjän tiedot organisaation oidin perusteella.")
-    public KoulutustoimijaJulkinenDto getKoulutustoimija(@PathVariable final String ktOid) {
+    public KoulutustoimijaJulkinenDto getKoulutustoimija(
+            @PathVariable final String ktOid
+    ) {
         return ktService.getKoulutustoimijaJulkinen(ktOid);
     }
 
     @RequestMapping(value = "/koulutustoimijat/{ktId}", method = RequestMethod.GET)
     @Description("Koulutuksen järjestäjän tiedot.")
-    public KoulutustoimijaJulkinenDto getKoulutustoimija(@PathVariable("ktId") final Long ktId) {
+    public KoulutustoimijaJulkinenDto getKoulutustoimija(
+            @PathVariable final Long ktId
+    ) {
         return ktService.getKoulutustoimijaJulkinen(ktId);
     }
 
@@ -93,7 +110,7 @@ public class JulkinenController {
     @RequestMapping(value = "/opetussuunnitelmat", method = RequestMethod.GET)
     @Description("Opetussuunnitelmien parametrihaku.")
     public Page<OpetussuunnitelmaDto> findOpetussuunnitelmat(
-            @ApiIgnore OpetussuunnitelmaQueryDto pquery
+            @ApiIgnore final OpetussuunnitelmaQueryDto pquery
     ) {
         // Oletuksena älä palauta pohjia
         PageRequest p = new PageRequest(pquery.getSivu(), Math.min(pquery.getSivukoko(), 100));
@@ -115,7 +132,7 @@ public class JulkinenController {
     })
     @RequestMapping(value = "/koulutustoimijat", method = RequestMethod.GET)
     public Page<KoulutustoimijaJulkinenDto> findKoulutustoimijat(
-            @ApiIgnore KoulutustoimijaQueryDto pquery
+            @ApiIgnore final KoulutustoimijaQueryDto pquery
     ) {
         // Oletuksena älä palauta pohjia
         PageRequest p = new PageRequest(pquery.getSivu(), Math.min(pquery.getSivukoko(), 100));
@@ -123,7 +140,9 @@ public class JulkinenController {
     }
 
     @RequestMapping(value = "/koodi/{koodi}", method = RequestMethod.GET)
-    public ResponseEntity<List<SisaltoViiteSijaintiDto>> getByKoodi(@PathVariable final String koodi) {
+    public ResponseEntity<List<SisaltoViiteSijaintiDto>> getByKoodi(
+            @PathVariable final String koodi
+    ) {
         return ResponseEntity.ok(svService.getByKoodiJulkinen(null, koodi, SisaltoViiteSijaintiDto.class));
     }
 
@@ -167,6 +186,59 @@ public class JulkinenController {
             @PathVariable final Long opsId
     ) {
         return opsService.getOpetussuunnitelma(ktId, opsId);
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
+    @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/dokumentti", method = RequestMethod.GET)
+    public ResponseEntity<Object> getDokumentti(
+            @ApiIgnore @ModelAttribute("ktId") final Long ktId,
+            @PathVariable final Long opsId,
+            @RequestParam(defaultValue = "fi") final String kieli
+    ) {
+        byte[] pdfdata = service.get(ktId, opsId, Kieli.of(kieli));
+
+        if (pdfdata == null || pdfdata.length == 0) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+
+        LokalisoituTekstiDto nimiDto = opsService.getOpetussuunnitelma(ktId, opsId).getNimi();
+        String nimi = nimiDto.get(Kieli.of(kieli));
+        if (nimi != null) {
+            headers.set("Content-disposition", "inline; filename=\"" + nimi + ".pdf\"");
+        } else {
+            DokumenttiDto dokumenttiDto = service.getDto(ktId, opsId, Kieli.of(kieli));
+            headers.set("Content-disposition", "inline; filename=\"" + dokumenttiDto.getId() + ".pdf\"");
+        }
+
+        headers.setContentLength(pdfdata.length);
+
+        return new ResponseEntity<>(pdfdata, headers, HttpStatus.OK);
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path", required = true)
+    })
+    @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/dokumentti/tila", method = RequestMethod.GET)
+    public ResponseEntity<DokumenttiDto> queryDokumentti(
+            @ApiIgnore @ModelAttribute("ktId") final Long ktId,
+            @PathVariable Long opsId,
+            @RequestParam(defaultValue = "fi") String kieli
+    ) {
+        // Tehdään DokumenttiDto jos ei löydy jo valmiina
+        DokumenttiDto dokumenttiDto = service.getDto(ktId, opsId, Kieli.of(kieli));
+        if (dokumenttiDto == null) {
+            dokumenttiDto = service.createDtoFor(ktId, opsId, Kieli.of(kieli));
+        }
+
+        if (dokumenttiDto == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            return ResponseEntity.ok(dokumenttiDto);
+        }
     }
 
     @ApiImplicitParams({
