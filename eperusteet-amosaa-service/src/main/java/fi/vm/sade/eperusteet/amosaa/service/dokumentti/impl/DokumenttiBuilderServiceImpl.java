@@ -365,7 +365,11 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
         Map<UUID, SuorituspolkuRivi> suorituspolkuMap = new HashMap<>();
 
         if (suorituspolku != null) {
-            suorituspolku.getRivit().forEach(rivi -> suorituspolkuMap.put(rivi.getRakennemoduuli(), rivi));
+            suorituspolku.getRivit().forEach(rivi -> {
+                if (rivi.getPiilotettu() != null && rivi.getPiilotettu()) {
+                    suorituspolkuMap.put(rivi.getRakennemoduuli(), rivi);
+                }
+            });
         }
 
         PerusteKaikkiDto peruste = docBase.getPeruste();
@@ -389,6 +393,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
                         taulukko.appendChild(tbody);
 
                         suoritustapaLaajaDto.getRakenne().getOsat().stream()
+                                .filter(dto -> dto.getTunniste() != null && !suorituspolkuMap.containsKey(dto.getTunniste()))
                                 .filter(dto -> dto instanceof RakenneModuuliDto)
                                 .map(dto -> (RakenneModuuliDto) dto)
                                 .forEach(rakenneModuuliDto -> addSuorituspolkuOsa(
@@ -412,7 +417,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
         tbody.appendChild(tr);
         Element td = docBase.getDocument().createElement("td");
         tr.appendChild(td);
-        td.setAttribute("class", "td" + String.valueOf(depth));
+        td.setAttribute("class", "td" + depth);
 
         // Nimi
         StringBuilder nimiBuilder = new StringBuilder();
