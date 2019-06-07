@@ -30,7 +30,7 @@ import java.util.concurrent.ConcurrentMap;
 @Component
 public class RestClientFactory {
 
-    private static final String CLIENT_SUBSYSTEM_CODE = "eperusteet-amosaa";
+    private static final String CALLER_ID = "1.2.246.562.10.00000000001.eperusteet-amosaa";
 
     private static final int TIMEOUT = 60000;
 
@@ -59,12 +59,12 @@ public class RestClientFactory {
                         .casServiceUrl(service)
                         .build();
 
-                client = new OphHttpClient.Builder(CLIENT_SUBSYSTEM_CODE)
+                client = new OphHttpClient.Builder(CALLER_ID)
                         .authenticator(casAuthenticator)
                         .timeoutMs(TIMEOUT)
                         .build();
             } else {
-                client = new OphHttpClient.Builder(CLIENT_SUBSYSTEM_CODE)
+                client = new OphHttpClient.Builder(CALLER_ID)
                         .timeoutMs(TIMEOUT)
                         .build();
             }
