@@ -19,7 +19,7 @@ mixin paikallinenKoodi()
         input.form-control(type="text"
           ng-model="osa.tosa.omatutkinnonosa.koodi"
           disabled)
-      div.koodi-kaytossa.alert.alert-info(ng-show="$$ekEditing && $$koodiFormaattiVaara" style="margin-top: 10px")
+      div.koodi-kaytossa.alert.alert-danger(ng-show="$$ekEditing && $$koodiFormaattiVaara" style="margin-top: 10px")
         div(ng-bind="'paikallinen-koodi-info' | kaanna")
       div.koodi-kaytossa.alert(ng-show="tormaavatKoodit.length > 0")
         div(ng-bind="'paikallinen-koodi-jo-kaytossa' | kaanna")
@@ -317,7 +317,7 @@ mixin tosaToteutus()
                         +gicon("sort")
                     div(ng-show="vapaa.$$nayta")
                       div(ckeditor slocalized ng-model="vapaa.teksti" layout="normal")
-                      button.btn.btn-danger(style="margin-top: 6px" ng-click="removeToteutusVapaa(toteutus.id, vapaa)")
+                      button.btn.btn-danger(style="margin-top: 6px" ng-click="removeToteutusVapaa(toteutus.vapaat, vapaa)")
                         +itext("remove", 'poista')
 
               div.toolbar-bottom

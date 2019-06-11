@@ -44,6 +44,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
+import org.springframework.util.ObjectUtils;
 
 /**
  * @author nkala
@@ -66,6 +67,11 @@ public class Tutkinnonosa extends AbstractAuditedEntity implements Serializable,
     @Getter
     @Setter
     @Column(updatable = false)
+    private String koodi;
+
+    @Getter
+    @Setter
+    @Column(updatable = false)
     private Long perusteentutkinnonosa; // FIXME Käytä mahdollisesti tunnistetta
 
     @ValidHtml
@@ -74,11 +80,6 @@ public class Tutkinnonosa extends AbstractAuditedEntity implements Serializable,
     @Getter
     @Setter
     private LokalisoituTeksti osaamisenOsoittaminen;
-
-    @Getter
-    @Setter
-    @Column(updatable = false)
-    private String koodi;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @Getter
@@ -105,29 +106,34 @@ public class Tutkinnonosa extends AbstractAuditedEntity implements Serializable,
     public static Tutkinnonosa copy(Tutkinnonosa original) {
         if (original != null) {
             Tutkinnonosa result = new Tutkinnonosa();
+
             result.setTyyppi(original.getTyyppi());
             result.setKoodi(original.getKoodi());
+            result.setPerusteentutkinnonosa(original.getPerusteentutkinnonosa());
             result.setOsaamisenOsoittaminen(original.getOsaamisenOsoittaminen());
             result.setOmatutkinnonosa(OmaTutkinnonosa.copy(original.getOmatutkinnonosa()));
-            result.setPerusteentutkinnonosa(original.getPerusteentutkinnonosa());
             result.setVierastutkinnonosa(VierasTutkinnonosa.copy(original.getVierastutkinnonosa()));
 
-            if (original.getToteutukset() != null) {
+            List<TutkinnonosaToteutus> toteutukset = original.getToteutukset();
+            if (!ObjectUtils.isEmpty(toteutukset)) {
                 result.setToteutukset(new ArrayList<>());
-                for (TutkinnonosaToteutus toteutus : original.getToteutukset()) {
-                    result.getToteutukset().add(toteutus.copy());
+                for (TutkinnonosaToteutus toteutus : toteutukset) {
+                    TutkinnonosaToteutus copy = toteutus.copy();
+                    copy.setTutkinnonosa(result);
+                    result.getToteutukset().add(copy);
                 }
             }
 
-            if (original.getToteutukset() != null) {
-                for (VapaaTeksti vapaa : original.getVapaat()) {
+            List<VapaaTeksti> vapaat = original.getVapaat();
+            if (!ObjectUtils.isEmpty(vapaat)) {
+                result.setVapaat(new ArrayList<>());
+                for (VapaaTeksti vapaa : vapaat) {
                     result.getVapaat().add(vapaa.copy());
                 }
             }
 
             return result;
-        }
-        else {
+        } else {
             return null;
         }
     }

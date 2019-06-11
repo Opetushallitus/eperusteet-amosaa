@@ -20,17 +20,16 @@ import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaTutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import javax.persistence.*;
 
+import fi.vm.sade.eperusteet.amosaa.service.util.Copyable;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 import org.hibernate.envers.RelationTargetAuditMode;
+import org.springframework.util.ObjectUtils;
 
 /**
  * @author autio
@@ -38,7 +37,7 @@ import org.hibernate.envers.RelationTargetAuditMode;
 @Entity
 @Table(name = "ammattitaitovaatimuksenkohdealue")
 @Audited
-public class AmmattitaitovaatimuksenKohdealue implements Serializable {
+public class AmmattitaitovaatimuksenKohdealue implements Serializable, Copyable<AmmattitaitovaatimuksenKohdealue> {
 
     @Id
     @Getter
@@ -77,7 +76,7 @@ public class AmmattitaitovaatimuksenKohdealue implements Serializable {
 
         AmmattitaitovaatimuksenKohdealue that = (AmmattitaitovaatimuksenKohdealue) o;
 
-        return id != null ? id.equals(that.id) : that.id == null;
+        return Objects.equals(id, that.id);
 
     }
 
@@ -89,5 +88,26 @@ public class AmmattitaitovaatimuksenKohdealue implements Serializable {
                 ammattitaitovaatimus.setAmmattitaitovaatimuksenkohde(ammattitaitovaatimuksenKohde);
             }
         }
+    }
+
+    @Override
+    public AmmattitaitovaatimuksenKohdealue copy(boolean deep) {
+        AmmattitaitovaatimuksenKohdealue ammattitaitovaatimuksenKohdealue = new AmmattitaitovaatimuksenKohdealue();
+
+        // Todo: attribuutit
+        ammattitaitovaatimuksenKohdealue.setOtsikko(this.getOtsikko());
+
+        List<AmmattitaitovaatimuksenKohde> vaatimuksenKohteet = this.getVaatimuksenKohteet();
+        if (!ObjectUtils.isEmpty(vaatimuksenKohteet)) {
+            ammattitaitovaatimuksenKohdealue.setVaatimuksenKohteet(new ArrayList<>());
+
+            for (AmmattitaitovaatimuksenKohde kohde : vaatimuksenKohteet) {
+                AmmattitaitovaatimuksenKohde copy = kohde.copy();
+                copy.setAmmattitaitovaatimuksenkohdealue(ammattitaitovaatimuksenKohdealue);
+                ammattitaitovaatimuksenKohdealue.getVaatimuksenKohteet().add(copy);
+            }
+        }
+
+        return ammattitaitovaatimuksenKohdealue;
     }
 }

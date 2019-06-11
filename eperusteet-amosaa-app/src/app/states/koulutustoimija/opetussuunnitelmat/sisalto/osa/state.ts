@@ -128,7 +128,7 @@ angular
                         } else {
                             return;
                         }
-                        return Api.one("perusteet/" + ops.peruste.id + "/suoritustavat/" + ops.suoritustapa
+                        return Api.one("perusteet/" + perusteId + "/suoritustavat/" + ops.suoritustapa
                             + "/tutkinnonosat/" + tosaId).get();
                     }
                 },
@@ -420,11 +420,12 @@ angular
                         }
 
                         $scope.paikallinenKoodiUpdate = omatutkinnonosa => {
-                            if (omatutkinnonosa) {
+                            if (omatutkinnonosa && $stateParams.osio === 'sisalto') {
                                 const pkoodi = omatutkinnonosa.koodi;
                                 const valid = isValidLocalCode(pkoodi);
                                 $scope.$$koodiFormaattiVaara = !valid;
-                                EditointikontrollitService.enableSaving(valid);
+                                // FIXME: Toteutus puolen tallennus ei onnistu
+                                // EditointikontrollitService.enableSaving(valid);
 
                                 if (pkoodi) {
                                     const fullKoodi = Koodisto.paikallinenToFull(koulutustoimija, pkoodi);
@@ -501,6 +502,10 @@ angular
                             });
                         };
 
+                        $scope.removeToteutusVapaa = (vapaat, vapaa) => {
+                            _.remove(vapaat, vapaa);
+                        };
+
                         $scope.addKoodi = toteutus => {
                             getTutkintonimikekoodit().then(nimikkeet => {
                                 if ($scope.pTosa && $scope.pTosa.tyyppi === "tutke2") {
@@ -512,7 +517,7 @@ angular
                                                 _([])
                                                     .concat(nimikkeet)
                                                     .concat(Koodisto.parseRawKoodisto(yleissivistavat))
-                                                    .concat(osaAlueKoodit)
+                                                    .concat(osaAlueKoodit ? osaAlueKoodit : [])
                                                     .indexBy("uri")
                                                     .value(),
                                                 toteutus
@@ -522,7 +527,7 @@ angular
                                     addKoodi(
                                         _([])
                                             .concat(nimikkeet)
-                                            .concat(osaamisalaKoodit)
+                                            .concat(osaamisalaKoodit ? osaamisalaKoodit : [])
                                             .indexBy("uri")
                                             .value(),
                                         toteutus

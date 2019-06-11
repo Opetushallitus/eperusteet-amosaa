@@ -24,11 +24,13 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidOsaamistavoiteEsitieto;
+import fi.vm.sade.eperusteet.amosaa.service.util.Copyable;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 import org.hibernate.envers.RelationTargetAuditMode;
+import org.springframework.util.ObjectUtils;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -47,7 +49,7 @@ import static fi.vm.sade.eperusteet.amosaa.service.util.Util.refXnor;
 @Table(name = "osaamistavoite")
 @Audited
 @ValidOsaamistavoiteEsitieto
-public class Osaamistavoite implements Serializable, PartialMergeable<Osaamistavoite>, ReferenceableEntity {
+public class Osaamistavoite implements Serializable, PartialMergeable<Osaamistavoite>, ReferenceableEntity, Copyable<Osaamistavoite> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -212,4 +214,34 @@ public class Osaamistavoite implements Serializable, PartialMergeable<Osaamistav
         return result;
     }
 
+    @Override
+    public Osaamistavoite copy(boolean deep) {
+        Osaamistavoite osaamistavoite = new Osaamistavoite();
+
+        osaamistavoite.setNimi(this.getNimi());
+        osaamistavoite.setPakollinen(this.isPakollinen());
+        osaamistavoite.setLaajuus(this.getLaajuus());
+        osaamistavoite.setTavoitteet(this.getTavoitteet());
+        osaamistavoite.setTunnustaminen(this.getTunnustaminen());
+        Arviointi arviointi = this.getArviointi();
+        if (arviointi != null) {
+            osaamistavoite.setArviointi(arviointi.copy());
+        }
+
+        List<AmmattitaitovaatimuksenKohdealue> ammattitaitovaatimuksetLista = this.getAmmattitaitovaatimuksetLista();
+        if (!ObjectUtils.isEmpty(ammattitaitovaatimuksetLista)) {
+            osaamistavoite.setAmmattitaitovaatimuksetLista(new ArrayList<>());
+
+            for (AmmattitaitovaatimuksenKohdealue kohdealue: ammattitaitovaatimuksetLista) {
+                osaamistavoite.getAmmattitaitovaatimuksetLista().add(kohdealue.copy());
+            }
+        }
+
+        Osaamistavoite esitieto = this.getEsitieto();
+        if (esitieto != null) {
+            osaamistavoite.setEsitieto(esitieto.copy());
+        }
+
+        return osaamistavoite;
+    }
 }

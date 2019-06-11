@@ -23,10 +23,12 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
+import fi.vm.sade.eperusteet.amosaa.service.util.Copyable;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
+import org.springframework.util.ObjectUtils;
 
 /**
  * @author isaul
@@ -34,7 +36,7 @@ import org.hibernate.envers.RelationTargetAuditMode;
 @Entity
 @Table(name = "ammattitaitovaatimuksenkohde")
 @Audited
-public class AmmattitaitovaatimuksenKohde implements Serializable {
+public class AmmattitaitovaatimuksenKohde implements Serializable, Copyable<AmmattitaitovaatimuksenKohde> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -66,4 +68,24 @@ public class AmmattitaitovaatimuksenKohde implements Serializable {
     @Setter
     @OrderColumn(name = "jarjestys")
     private List<Ammattitaitovaatimus> vaatimukset = new ArrayList<>();
+
+    @Override
+    public AmmattitaitovaatimuksenKohde copy(boolean deep) {
+        AmmattitaitovaatimuksenKohde kohde = new AmmattitaitovaatimuksenKohde();
+
+        kohde.setOtsikko(this.getOtsikko());
+        kohde.setSelite(this.getSelite());
+        // ammattitaitovaatimuksenkohdealue parent asettaa
+
+        List<Ammattitaitovaatimus> vaatimukset = this.getVaatimukset();
+        if (!ObjectUtils.isEmpty(vaatimukset)) {
+            kohde.setVaatimukset(new ArrayList<>());
+
+            for (Ammattitaitovaatimus vaatimus : vaatimukset) {
+                kohde.getVaatimukset().add(vaatimus.copy());
+            }
+        }
+
+        return kohde;
+    }
 }

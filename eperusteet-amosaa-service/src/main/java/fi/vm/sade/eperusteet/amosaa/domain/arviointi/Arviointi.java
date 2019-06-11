@@ -18,11 +18,13 @@ package fi.vm.sade.eperusteet.amosaa.domain.arviointi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Osaamistavoite;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
+import fi.vm.sade.eperusteet.amosaa.service.util.Copyable;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 import org.hibernate.envers.RelationTargetAuditMode;
+import org.springframework.util.ObjectUtils;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -40,7 +42,7 @@ import static fi.vm.sade.eperusteet.amosaa.service.util.Util.refXnor;
 @Entity
 @Table(name = "arviointi")
 @Audited
-public class Arviointi implements Serializable {
+public class Arviointi implements Serializable, Copyable<Arviointi> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -148,4 +150,26 @@ public class Arviointi implements Serializable {
         }
     }
 
+    @Override
+    public Arviointi copy(boolean deep) {
+        Arviointi arviointi = new Arviointi();
+
+        arviointi.setLisatiedot(this.getLisatiedot());
+
+        List<ArvioinninKohdealue> arvioinninKohdealueet = this.getArvioinninKohdealueet();
+        if (!ObjectUtils.isEmpty(arvioinninKohdealueet)) {
+            arviointi.setArvioinninKohdealueet(new ArrayList<>());
+
+            for (ArvioinninKohdealue kohdealue : arvioinninKohdealueet) {
+                arviointi.getArvioinninKohdealueet().add(kohdealue.copy());
+            }
+        }
+
+        Osaamistavoite osaamistavoite = this.getOsaamistavoite();
+        if (osaamistavoite != null) {
+            arviointi.setOsaamistavoite(osaamistavoite.copy());
+        }
+
+        return arviointi;
+    }
 }
