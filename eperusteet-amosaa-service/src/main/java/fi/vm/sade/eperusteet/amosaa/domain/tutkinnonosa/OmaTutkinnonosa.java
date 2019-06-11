@@ -27,14 +27,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.*;
-import javax.validation.constraints.Pattern;
 
-import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidRange;
-import fi.vm.sade.eperusteet.amosaa.service.util.Copyable;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
+import org.springframework.util.ObjectUtils;
 
 /**
  * @author nkala
@@ -103,8 +101,28 @@ public class OmaTutkinnonosa extends AbstractAuditedEntity implements Serializab
     static OmaTutkinnonosa copy(OmaTutkinnonosa original) {
         if (original != null) {
             OmaTutkinnonosa result = new OmaTutkinnonosa();
+
+            result.setTavoitteet(original.getTavoitteet());
             result.setKoodiPrefix(original.getKoodiPrefix());
+            result.setLaajuus(original.getLaajuus());
             result.setKoodi(original.getKoodi());
+
+            List<AmmattitaitovaatimuksenKohdealue> ammattitaitovaatimuksetLista
+                    = original.getAmmattitaitovaatimuksetLista();
+            if (!ObjectUtils.isEmpty(ammattitaitovaatimuksetLista)) {
+                result.setAmmattitaitovaatimuksetLista(new ArrayList<>());
+                for (AmmattitaitovaatimuksenKohdealue ammattitaitovaatimus : ammattitaitovaatimuksetLista) {
+                    result.getAmmattitaitovaatimuksetLista().add(ammattitaitovaatimus.copy());
+                }
+            }
+
+            Arviointi arviointi = original.getArviointi();
+            if (arviointi != null) {
+                result.setArviointi(arviointi.copy());
+            }
+
+            result.setAmmattitaidonOsoittamistavat(original.getAmmattitaidonOsoittamistavat());
+
             return result;
         }
         else {

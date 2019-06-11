@@ -18,12 +18,14 @@ package fi.vm.sade.eperusteet.amosaa.domain;
 import fi.vm.sade.eperusteet.amosaa.domain.arviointi.ArvioinninKohde;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
+import fi.vm.sade.eperusteet.amosaa.service.util.Copyable;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 import org.hibernate.envers.RelationTargetAuditMode;
+import org.springframework.util.ObjectUtils;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -35,7 +37,7 @@ import java.util.*;
 @Entity
 @Table(name = "osaamistasonkriteeri")
 @Audited
-public class OsaamistasonKriteeri implements Serializable {
+public class OsaamistasonKriteeri implements Serializable, Copyable<OsaamistasonKriteeri> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -110,4 +112,20 @@ public class OsaamistasonKriteeri implements Serializable {
         return false;
     }
 
+    @Override
+    public OsaamistasonKriteeri copy(boolean deep) {
+        OsaamistasonKriteeri kriteeri = new OsaamistasonKriteeri();
+
+        kriteeri.setOsaamistaso(this.getOsaamistaso());
+
+        List<LokalisoituTeksti> kriteerit = this.getKriteerit();
+        if (!ObjectUtils.isEmpty(kriteerit)) {
+            kriteeri.setKriteerit(new ArrayList<>());
+            for (LokalisoituTeksti k : kriteerit) {
+                kriteeri.getKriteerit().add(k);
+            }
+        }
+
+        return kriteeri;
+    }
 }

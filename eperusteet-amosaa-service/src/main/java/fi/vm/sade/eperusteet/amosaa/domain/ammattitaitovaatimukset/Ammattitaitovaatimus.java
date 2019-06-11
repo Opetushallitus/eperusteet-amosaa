@@ -17,6 +17,7 @@ package fi.vm.sade.eperusteet.amosaa.domain.ammattitaitovaatimukset;
 
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
+import fi.vm.sade.eperusteet.amosaa.service.util.Copyable;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
@@ -31,7 +32,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "ammattitaitovaatimus")
 @Audited
-public class Ammattitaitovaatimus implements Serializable {
+public class Ammattitaitovaatimus implements Serializable, Copyable<Ammattitaitovaatimus> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -60,4 +61,19 @@ public class Ammattitaitovaatimus implements Serializable {
     @Setter
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     private AmmattitaitovaatimuksenKohde ammattitaitovaatimuksenkohde;
+
+    @Override
+    public Ammattitaitovaatimus copy(boolean deep) {
+        Ammattitaitovaatimus ammattitaitovaatimus = new Ammattitaitovaatimus();
+
+        ammattitaitovaatimus.setSelite(this.getSelite());
+        ammattitaitovaatimus.setAmmattitaitovaatimusKoodi(this.getAmmattitaitovaatimusKoodi());
+        ammattitaitovaatimus.setJarjestys(this.getJarjestys());
+        AmmattitaitovaatimuksenKohde ammattitaitovaatimuksenkohde = this.getAmmattitaitovaatimuksenkohde();
+        if (ammattitaitovaatimuksenkohde != null) {
+            ammattitaitovaatimus.setAmmattitaitovaatimuksenkohde(ammattitaitovaatimuksenkohde.copy());
+        }
+
+        return ammattitaitovaatimus;
+    }
 }

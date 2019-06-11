@@ -17,9 +17,11 @@ package fi.vm.sade.eperusteet.amosaa.domain.arviointi;
 
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
+import fi.vm.sade.eperusteet.amosaa.service.util.Copyable;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
+import org.springframework.util.ObjectUtils;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -36,7 +38,7 @@ import static fi.vm.sade.eperusteet.amosaa.service.util.Util.refXnor;
 @Entity
 @Table(name = "arvioinninkohdealue")
 @Audited
-public class ArvioinninKohdealue implements Serializable {
+public class ArvioinninKohdealue implements Serializable, Copyable<ArvioinninKohdealue> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -130,4 +132,21 @@ public class ArvioinninKohdealue implements Serializable {
         return result;
     }
 
+    @Override
+    public ArvioinninKohdealue copy(boolean deep) {
+        ArvioinninKohdealue kohdealue = new ArvioinninKohdealue();
+
+        kohdealue.setOtsikko(this.getOtsikko());
+
+        List<ArvioinninKohde> arvioinninKohteet = this.getArvioinninKohteet();
+        if (!ObjectUtils.isEmpty(arvioinninKohteet)) {
+            kohdealue.setArvioinninKohteet(new ArrayList<>());
+
+            for (ArvioinninKohde kohde : arvioinninKohteet) {
+                kohdealue.getArvioinninKohteet().add(kohde.copy());
+            }
+        }
+
+        return kohdealue;
+    }
 }

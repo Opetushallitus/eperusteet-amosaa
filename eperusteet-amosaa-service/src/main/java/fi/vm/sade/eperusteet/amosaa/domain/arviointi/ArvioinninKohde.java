@@ -19,12 +19,14 @@ import fi.vm.sade.eperusteet.amosaa.domain.OsaamistasonKriteeri;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidArvioinninKohde;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
+import fi.vm.sade.eperusteet.amosaa.service.util.Copyable;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 import org.hibernate.envers.RelationTargetAuditMode;
+import org.springframework.util.ObjectUtils;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -43,7 +45,7 @@ import static fi.vm.sade.eperusteet.amosaa.service.util.Util.refXnor;
 @Table(name = "arvioinninkohde")
 @ValidArvioinninKohde
 @Audited
-public class ArvioinninKohde implements Serializable {
+public class ArvioinninKohde implements Serializable, Copyable<ArvioinninKohde> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -143,4 +145,23 @@ public class ArvioinninKohde implements Serializable {
         return result;
     }
 
+    @Override
+    public ArvioinninKohde copy(boolean deep) {
+        ArvioinninKohde kohde = new ArvioinninKohde();
+
+        kohde.setOtsikko(this.getOtsikko());
+        kohde.setSelite(this.getSelite());
+        kohde.setArviointiasteikko(this.getArviointiasteikko());
+
+        Set<OsaamistasonKriteeri> kriteerit = this.getOsaamistasonKriteerit();
+        if (!ObjectUtils.isEmpty(kriteerit)) {
+            kohde.setOsaamistasonKriteerit(new HashSet<>());
+
+            for (OsaamistasonKriteeri k : kriteerit) {
+                kohde.getOsaamistasonKriteerit().add(k.copy());
+            }
+        }
+
+        return kohde;
+    }
 }
