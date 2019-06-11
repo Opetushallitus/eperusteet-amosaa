@@ -420,7 +420,7 @@ angular
                         }
 
                         $scope.paikallinenKoodiUpdate = omatutkinnonosa => {
-                            if (omatutkinnonosa && $stateParams.osio === 'sisalto') {
+                            if (omatutkinnonosa) {
                                 const pkoodi = omatutkinnonosa.koodi;
                                 const valid = isValidLocalCode(pkoodi);
                                 $scope.$$koodiFormaattiVaara = !valid;
