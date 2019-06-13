@@ -9,7 +9,7 @@ namespace ModalAdd {
             .filter(peruste => KaannaService.hae(peruste.nimi, query))
             .value();
 
-    export const yhteinen = () =>
+    export const yhteinen = (yhteiset) =>
         i.$uibModal.open({
             resolve: {
                 pohjat: Api =>
@@ -24,6 +24,14 @@ namespace ModalAdd {
                 $scope.peruuta = $uibModalInstance.dismiss;
                 $scope.yhteinen = {
                     tyyppi: "yhteinen"
+                };
+                $scope.valittuTyyppi = null;
+                $scope.yhteiset = _(yhteiset)
+                    .filter(ops => ops.tila === 'julkaistu')
+                    .value();
+
+                $scope.valitseTyyppi = (tyyppi) => {
+                    $scope.valittuTyyppi = tyyppi;
                 };
 
                 $scope.valitsePohja = pohja => {

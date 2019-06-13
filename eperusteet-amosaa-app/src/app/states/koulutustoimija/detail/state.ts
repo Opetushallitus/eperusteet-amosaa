@@ -190,7 +190,7 @@ angular.module("app").config($stateProvider =>
                 controller: ($scope, yhteiset, koulutustoimija, opsSaver) => {
                     $scope.yhteiset = yhteiset;
                     $scope.addYhteinen = () =>
-                        ModalAdd.yhteinen()
+                        ModalAdd.yhteinen($scope.yhteiset)
                             .then(opsSaver)
                             .then(res => $scope.yhteiset.push(res));
                 }

@@ -4,21 +4,54 @@ div.modal-header
     +kielivalitsin
   .clearfix
 
+mixin tyyppivalinta(nimi, kaannos)
+  div.sisalto-valinta(ng-if="!valittuTyyppi")
+    div.sisalto-item
+      .pull-right.sisalto-valinta
+        button.btn.btn-primary(ng-bind="'valitse' | kaanna" ng-click="valitseTyyppi('" + nimi + "')")
+      span.sisalto-icon
+        +icon("file-text-o")
+      div.sisalto-text
+        span(kaanna=kaannos)
+
 div.modal-body.modal-sisalto
-  div(ng-hide="pohjat.length > 0")
-    div.alert.alert-warning
-      div(ng-bind="'yhteisien-osien-pohjia-ei-viela-luotu' | kaanna")
+  +tyyppivalinta('uusi', 'uusi-suunnitelma')
+  +tyyppivalinta('kopio', 'kopioi-suunnitelma-pohjaksi')
 
-  .content-spacing(ng-show="pohjat.length > 1")
-    h3(ng-bind="'valitse-pohja' | kaanna")
-    div.select-list
-      div.select-item(ng-repeat="pohja in pohjat" ng-click="valitsePohja(pohja)" ng-init="valitsePohja(pohja)")
-        input.form-control(type="radio" ng-checked="valittuPohja === pohja")
-        div.select-label(ng-bind="pohja.nimi | kaanna")
+  div(ng-if="valittuTyyppi === 'uusi'")
+    div(ng-hide="pohjat.length > 0")
+      div.alert.alert-warning
+        div(ng-bind="'yhteisien-osien-pohjia-ei-viela-luotu' | kaanna")
 
-  .content-spacing(ng-show="valittuPohja")
-    h3(ng-bind="'anna-nimi' | kaanna")
-    input.form-control(slocalized ng-model="yhteinen.nimi" type="text" required="true")
+    .content-spacing(ng-show="pohjat.length > 1")
+      h3(ng-bind="'valitse-pohja' | kaanna")
+      div.select-list
+        div.select-item(ng-repeat="pohja in pohjat" ng-click="valitsePohja(pohja)" ng-init="valitsePohja(pohja)")
+          input.form-control(type="radio" ng-checked="valittuPohja === pohja")
+          div.select-label(ng-bind="pohja.nimi | kaanna")
+
+    .content-spacing(ng-show="valittuPohja")
+      h3(ng-bind="'anna-nimi' | kaanna")
+      input.form-control(slocalized ng-model="yhteinen.nimi" type="text" required="true")
+
+  div(ng-if="valittuTyyppi === 'kopio'")
+    div(ng-hide="yhteiset.length > 0")
+      div.alert.alert-warning
+        div(ng-bind="'yhteiset-osuudet-ei-ole' | kaanna")
+
+    div(ng-show="yhteiset.length > 0")
+      .content-spacing
+        h3(ng-bind="'valitse-pohja' | kaanna")
+        div.select-list
+          div.select-item(ng-repeat="pohja in yhteiset"
+                          ng-click="valitsePohja(pohja)"
+                          ng-init="valitsePohja(pohja)")
+            input.form-control(type="radio" ng-checked="valittuPohja === pohja")
+            div.select-label(ng-bind="pohja.nimi | kaanna")
+
+      .content-spacing(ng-show="valittuPohja")
+        h3(ng-bind="'anna-nimi' | kaanna")
+        input.form-control(slocalized ng-model="yhteinen.nimi" type="text" required="true")
 
 div.modal-footer
   button.btn.btn-default(ng-click="peruuta()")
