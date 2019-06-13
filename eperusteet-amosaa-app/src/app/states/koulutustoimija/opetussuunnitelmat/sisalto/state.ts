@@ -4,7 +4,7 @@ angular.module("app").config($stateProvider =>
         resolve: {},
         views: {
             "": {
-                controller: ($q, $scope, $timeout, $state, reresolver, otsikot, tekstit, sisaltoRoot) => {
+                controller: ($q, $scope, $timeout, $state, reresolver, otsikot, tekstit, sisaltoRoot, ops) => {
                     $scope.startSorting = () => {
                         $scope.rakenne = Tekstikappaleet.teeRakenne(Tekstikappaleet.uniikit(otsikot), sisaltoRoot.id);
 
@@ -56,7 +56,15 @@ angular.module("app").config($stateProvider =>
                                                 resolve();
                                                 NotifikaatioService.onnistui("tallennus-onnistui");
                                                 $timeout(() =>
-                                                    $state.reload("root.koulutustoimija.opetussuunnitelmat")
+                                                    $state.go(
+                                                        "root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot",
+                                                        {
+                                                            opsId: ops.id
+                                                        },
+                                                        {
+                                                            reload: true
+                                                        }
+                                                    )
                                                 );
                                             },
                                             () => {
