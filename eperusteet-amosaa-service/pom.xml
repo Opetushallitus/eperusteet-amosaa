@@ -18,7 +18,7 @@
         <spring.data.jpa.version>1.11.13.RELEASE</spring.data.jpa.version>
         <logback.version>1.2.0</logback.version>
         <postgresql.version>9.4.1211</postgresql.version>
-        <jackson.version>2.9.8</jackson.version>
+        <jackson.version>2.9.9.1</jackson.version>
         <eperusteet-amosaa.devdb.jdbcurl>jdbc:postgresql://localhost:5432/${eperusteet-amosaa.devdb.user}</eperusteet-amosaa.devdb.jdbcurl>
         <eperusteet-amosaa.ittestdb.jdbcurl>jdbc:postgresql://localhost:5432/${eperusteet-amosaa.ittestdb.user}</eperusteet-amosaa.ittestdb.jdbcurl>
         <buildhelper.skipAttach>true</buildhelper.skipAttach>
@@ -28,7 +28,7 @@
         <fop.version>2.3</fop.version>
         <pdfbox.version>2.0.12</pdfbox.version>
         <springfox.version>2.7.0</springfox.version>
-        <metrics.version>3.1.2</metrics.version>
+        <metrics.version>4.0.0</metrics.version>
         <aspectj.version>1.8.9</aspectj.version>
         <schema.file>${project.basedir}/target/schema.ddl</schema.file>
         <hibernate.export.type>CREATE</hibernate.export.type>
