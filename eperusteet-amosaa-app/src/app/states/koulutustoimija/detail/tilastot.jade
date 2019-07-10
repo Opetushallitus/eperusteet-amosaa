@@ -1,3 +1,24 @@
 h2(ng-bind="'tilastot' | kaanna")
-div(style="position: relative; width:500px")
-    charts(ng-if="tilastot" ng-model="tilastot")
+div
+    div(style="position: relative; width:500px")
+        charts(ng-if="tilastot" ng-model="tilastot")
+
+div
+    h2(ng-bind="'tilastot-toimijoittain' | kaanna")
+    div(ng-if="toimijoittain")
+        table.table.table-striped
+            tr
+                th(ng-bind="'koulutustoimija' | kaanna")
+                th(ng-bind="'luonnokset' | kaanna")
+                th(ng-bind="'valmiit' | kaanna")
+                th(ng-bind="'julkaistut' | kaanna")
+            tr(ng-repeat="tilasto in toimijoittain.toimijat | orderBy:'-valmis'")
+                td(ng-bind="tilasto.koulutustoimija.nimi | kaanna")
+                td(ng-bind="tilasto.luonnos")
+                td(ng-bind="tilasto.valmis")
+                td(ng-bind="tilasto.julkaistu")
+
+    button.btn.btn-primary(
+        ng-if="!toimijoittain",
+        ng-click="getToimijoittain()",
+        ng-bind="'hae-tilastot-toimijoittain' | kaanna")

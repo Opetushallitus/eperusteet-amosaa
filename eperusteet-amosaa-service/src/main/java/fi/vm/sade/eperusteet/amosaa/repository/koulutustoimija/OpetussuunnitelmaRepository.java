@@ -45,6 +45,7 @@ public interface OpetussuunnitelmaRepository extends JpaWithVersioningRepository
     Page<Opetussuunnitelma> findAllByKoulutustoimija(Koulutustoimija koulutustoimija, Pageable pageable);
 
     long countByKoulutustoimija(Koulutustoimija koulutustoimija);
+    long countByKoulutustoimijaAndTila(Koulutustoimija koulutustoimija, Tila tilau);
 
     long countByPaatosnumeroAndIdNot(String paatosnumero, Long opsId);
 

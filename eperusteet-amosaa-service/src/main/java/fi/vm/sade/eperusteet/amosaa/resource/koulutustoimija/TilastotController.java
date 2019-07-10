@@ -17,6 +17,7 @@
 package fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija;
 
 import fi.vm.sade.eperusteet.amosaa.dto.tilastot.TilastotDto;
+import fi.vm.sade.eperusteet.amosaa.dto.tilastot.ToimijaTilastotDto;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.service.tilastot.TilastotService;
 import io.swagger.annotations.Api;
@@ -24,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * @author nkala
@@ -40,5 +40,10 @@ public class TilastotController {
     @RequestMapping(method = RequestMethod.GET)
     TilastotDto get() {
         return service.getTilastot();
+    }
+
+    @RequestMapping(value = "/toimijat", method = RequestMethod.GET)
+    ToimijaTilastotDto getTilastotToimijakohtaisesti() {
+        return service.getTilastotToimijakohtaisesti();
     }
 }
