@@ -5,6 +5,7 @@ angular.module("app").config($stateProvider =>
             tiedotteet: koulutustoimija => koulutustoimija.all("tiedotteet").getList(),
             ohjeistus: Api => Api.all("ohjeistus"),
             tilastot: Api => Api.one("tilastot"),
+            toimijatilastot: tilastot => tilastot.one("toimijat"),
             opsSaver: ($state, opetussuunnitelmatApi) => async uusiOps => {
                 if (uusiOps) {
                     const res = await opetussuunnitelmatApi.post(uusiOps);
@@ -36,7 +37,15 @@ angular.module("app").config($stateProvider =>
                 }
             },
             tilastot: {
-                controller: ($scope, tilastot) => {
+                controller: ($scope, tilastot, toimijatilastot) => {
+                    $scope.toimijoittain = null;
+                    async function getToimijoittain() {
+                        const result = await toimijatilastot.get();
+                        $scope.toimijoittain = result;
+                    }
+
+                    $scope.getToimijoittain = getToimijoittain;
+
                     tilastot.get().then(res => {
                         $scope.tilastot = {
                             type: "bar",
