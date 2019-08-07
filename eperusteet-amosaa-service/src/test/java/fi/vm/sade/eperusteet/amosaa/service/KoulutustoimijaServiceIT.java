@@ -1,10 +1,13 @@
 package fi.vm.sade.eperusteet.amosaa.service;
 
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.*;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
+import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +17,14 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Sets;
+
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.*;
@@ -24,10 +32,7 @@ import static org.assertj.core.api.Assertions.*;
 @DirtiesContext
 @Transactional
 public class KoulutustoimijaServiceIT extends AbstractIntegrationTest {
-
-    @Autowired
-    private KoulutustoimijaRepository koulutustoimijaRepository;
-
+   
     @Test
     @Rollback
     public void testKoulutustoimijoidenLuonti() {
@@ -172,6 +177,45 @@ public class KoulutustoimijaServiceIT extends AbstractIntegrationTest {
         pquery.setKieli(Kieli.EN.toString());
         julkisetToimijat = koulutustoimijaService.findKoulutustoimijat(p, pquery);
         assertThat(julkisetToimijat).isEmpty();
+    }
+    
+    @Test
+    @Rollback
+    public void testKoulutustoimijaSorttaus() {
+    	
+    	useProfileKP2();
+    	Opetussuunnitelma opetussuunnitelma = createOpetussuunnitelmaJulkaistu();
+    	updateOpetussuunnitelmaJulkaisukielet(opetussuunnitelma, Sets.newHashSet(Kieli.FI, Kieli.EN));
+    	updateKoulutustoimijaLokalisointiNimet(ImmutableMap.of(Kieli.FI, "testijarjestys5", Kieli.EN, "test1"));
+    	
+    	useProfileKP1();
+    	opetussuunnitelma = createOpetussuunnitelmaJulkaistu();
+    	updateOpetussuunnitelmaJulkaisukielet(opetussuunnitelma, Sets.newHashSet(Kieli.FI, Kieli.EN));
+    	updateKoulutustoimijaLokalisointiNimet(ImmutableMap.of(Kieli.FI, "testijarjestys1", Kieli.EN, "test2"));
+    	
+    	useProfileKP3();
+    	createOpetussuunnitelmaJulkaistu();    	
+    	updateKoulutustoimijaLokalisointiNimet(ImmutableMap.of(Kieli.FI, "testijarjestys3"));
+    	
+    	PageRequest p = new PageRequest(0, 10);
+        KoulutustoimijaQueryDto pquery = new KoulutustoimijaQueryDto();
+        
+        Page<KoulutustoimijaJulkinenDto> julkisetToimijat = koulutustoimijaService.findKoulutustoimijat(p, pquery);
+        assertThat(julkisetToimijat).hasSize(3);
+        assertThat(julkisetToimijat.getContent().stream().map(k -> k.getNimi().get(Kieli.FI))).containsExactly("testijarjestys1", "testijarjestys3","testijarjestys5");
+        assertThat(julkisetToimijat.getContent().stream().map(k -> k.getNimi().get(Kieli.EN))).containsExactly("test2", null, "test1");
+        
+        pquery.setKieli(Kieli.EN.toString());
+
+        julkisetToimijat = koulutustoimijaService.findKoulutustoimijat(p, pquery);
+        assertThat(julkisetToimijat).hasSize(2);
+        assertThat(julkisetToimijat.getContent().stream()
+        		.map(k -> k.getNimi().get(Kieli.FI)))
+        		.containsExactly("testijarjestys5","testijarjestys1");
+        
+        assertThat(julkisetToimijat.getContent().stream()
+        		.map(k -> k.getNimi().get(Kieli.EN)))
+        		.containsExactly("test1", "test2");
     }
 
 }
