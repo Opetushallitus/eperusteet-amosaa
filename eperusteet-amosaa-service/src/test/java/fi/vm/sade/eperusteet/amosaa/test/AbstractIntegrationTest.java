@@ -16,21 +16,26 @@
 package fi.vm.sade.eperusteet.amosaa.test;
 
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
+import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.Kayttaja;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.KayttajaoikeusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaLuontiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
+import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
+import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
@@ -48,6 +53,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 
 /**
@@ -71,7 +78,13 @@ public abstract class AbstractIntegrationTest {
 
     @Autowired
     protected KayttajanTietoService kayttajanTietoService;
-
+    
+    @Autowired
+    private OpetussuunnitelmaRepository opetussuunnitelmaRepository;  
+    
+    @Autowired
+    private KoulutustoimijaRepository koulutustoimijaRepository;
+    
     protected List<KoulutustoimijaBaseDto> koulutustoimijat = new ArrayList<>();
     protected KoulutustoimijaBaseDto toimija = null;
     protected Kayttaja kayttaja = null;
@@ -100,7 +113,25 @@ public abstract class AbstractIntegrationTest {
     protected OpetussuunnitelmaBaseDto createOpetussuunnitelma() {
         return createOpetussuunnitelma((ops) -> {});
     }
-
+    
+    protected Opetussuunnitelma createOpetussuunnitelmaJulkaistu() {	
+    	OpetussuunnitelmaBaseDto dto = createOpetussuunnitelma();	
+    	Opetussuunnitelma ops = opetussuunnitelmaRepository.findOne(dto.getId());
+    	ops.setTila(Tila.JULKAISTU);
+    	return opetussuunnitelmaRepository.save(ops);
+    }
+    
+    protected Opetussuunnitelma updateOpetussuunnitelmaJulkaisukielet(Opetussuunnitelma opetussuunnitelma, Set<Kieli> kielet) {
+    	opetussuunnitelma.setJulkaisukielet(kielet);
+    	return opetussuunnitelmaRepository.save(opetussuunnitelma);
+    }
+        
+    protected void updateKoulutustoimijaLokalisointiNimet(Map<Kieli, String> tekstit) {
+    	Koulutustoimija koulutustoimija = koulutustoimijaRepository.findOne(toimija.getId());
+    	koulutustoimija.setNimi(LokalisoituTeksti.of(tekstit));
+    	koulutustoimijaRepository.save(koulutustoimija);
+    }
+    
     protected OpetussuunnitelmaBaseDto createOpetussuunnitelma(Consumer<OpetussuunnitelmaDto> opsfn) {
         OpetussuunnitelmaLuontiDto ops = new OpetussuunnitelmaLuontiDto();
         ops.setKoulutustoimija(getKoulutustoimija());
