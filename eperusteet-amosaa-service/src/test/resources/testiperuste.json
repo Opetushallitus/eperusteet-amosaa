@@ -230,7 +230,149 @@
           "_tutkinnonOsaViite" : "578154"
         } ],
         "versioId" : null
-      } ],
+      },{
+		"kuvaus": {
+			"fi": "Testicase - osaamisala / tutkintonimike piilotus",
+			"_id": "1205530"
+		},
+		"vieras": null,
+		"tunniste": "49c79989-bd21-45ff-a5ee-685599300001",
+		"pakollinen": null,
+		"nimi": {
+			"_tunniste": "49c79989-bd21-45ff-a5ee-685599309997",
+			"fi": "Vapaasti valittavat tutkinnon osat",
+			"sv": "Valfri examensdel",
+			"_id": "2335094"
+		},
+		"rooli": "määritelty",
+		"muodostumisSaanto": {
+			"laajuus": null,
+			"koko": {
+				"minimi": 0,
+				"maksimi": 1
+			}
+		},
+		"osaamisala": null,
+		"osat": [
+			{
+				"kuvaus": {
+					"fi": "osaamisala",
+					"_id": "1205530"
+				},
+				"vieras": null,
+				"tunniste": "49c79989-bd21-45ff-a5ee-685599300002",
+				"pakollinen": null,
+				"nimi": {
+					"_tunniste": "49c79989-bd21-45ff-a5ee-685599309998",
+					"fi": "Vapaasti valittavat tutkinnon osat",
+					"sv": "Valfri examensdel",
+					"_id": "2335094"
+				},
+				"rooli": "osaamisala",
+				"osaamisala": {
+					"osaamisalakoodiUri":"osaamisala-1"
+				},
+				"muodostumisSaanto": {
+					"laajuus": null,
+					"koko": {
+						"minimi": 0,
+						"maksimi": 1
+					}
+				},
+				"osat": [
+					{
+						"kuvaus": {
+							"fi": "osaamisala lapsi",
+							"_id": "1205530"
+						},
+						"vieras": null,
+						"tunniste": "49c79989-bd21-45ff-a5ee-685599300003",
+						"pakollinen": null,
+						"nimi": {
+							"_tunniste": "49c79989-bd21-45ff-a5ee-685599309999",
+							"fi": "Vapaasti valittavat tutkinnon osat",
+							"sv": "Valfri examensdel",
+							"_id": "2335094"
+						},
+						"rooli": "osaamisala",
+						"osaamisala": {
+							"osaamisalakoodiUri":"osaamisala-2"
+						},
+						"muodostumisSaanto": {
+							"laajuus": null,
+							"koko": {
+								"minimi": 0,
+								"maksimi": 1
+							}
+						},
+						"osat": [],
+						"versioId": null
+					}
+				],
+				"versioId": null
+			},
+			{
+				"kuvaus": {
+					"fi": "tutkintonimike",
+					"_id": "1205530"
+				},
+				"vieras": null,
+				"tunniste": "49c79989-bd21-45ff-a5ee-685599300004",
+				"pakollinen": null,
+				"nimi": {
+					"_tunniste": "49c79989-bd21-45ff-a5ee-6855993fd122",
+					"fi": "Vapaasti valittavat tutkinnon osat",
+					"sv": "Valfri examensdel",
+					"_id": "2335094"
+				},
+				"rooli": "tutkintonimike",
+				"tutkintonimike": {
+					"uri": "tutkintonimike-1"
+				},
+				"muodostumisSaanto": {
+					"laajuus": null,
+					"koko": {
+						"minimi": 0,
+						"maksimi": 1
+					}
+				},
+				"osaamisala": null,
+				"osat": [
+					{
+						"kuvaus": {
+							"fi": "tutkintonimike lapsi",
+							"_id": "1205530"
+						},
+						"vieras": null,
+						"tunniste": "49c79989-bd21-45ff-a5ee-685599300005",
+						"pakollinen": null,
+						"nimi": {
+							"_tunniste": "49c79989-bd21-45ff-a5ee-6855993fd123",
+							"fi": "Vapaasti valittavat tutkinnon osat",
+							"sv": "Valfri examensdel",
+							"_id": "2335094"
+						},
+						"rooli": "tutkintonimike",
+						"tutkintonimike": {
+							"uri": "tutkintonimike-2"
+						},
+						"muodostumisSaanto": {
+							"laajuus": null,
+							"koko": {
+								"minimi": 0,
+								"maksimi": 1
+							}
+						},
+						"osaamisala": null,
+						"osat": [],
+						"versioId": null
+					}
+				],
+				"versioId": null
+			}
+		],
+		"versioId": null
+	} ],
       "versioId" : null
     },
     "sisalto" : {

@@ -64,6 +64,7 @@ public class EperusteetClientImpl implements EperusteetClient {
 
         OphHttpRequest request = OphHttpRequest.Builder
                 .get(url)
+                .addHeader("Accept-Charset", "UTF-8")
                 .build();
 
         return client.<T>execute(request)

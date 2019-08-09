@@ -43,6 +43,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.*;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.VanhentunutPohjaperusteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.*;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteExportDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SuorituspolkuRakenneDto;
 import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaRepository;
@@ -136,6 +137,9 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     private DokumenttiService dokumenttiService;
 
     private KoulutustoimijaService koulutustoimijaService;
+    
+    @Autowired
+    private SisaltoviiteRepository sisaltoviiteRepository;
 
     @Autowired
     public void setKoulutustoimijaService(KoulutustoimijaService kts) {
@@ -712,5 +716,18 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         Koulutustoimija kt = koulutustoimijaRepository.findOne(body.getId());
         ops.changeKoulutustoimija(kt);
         return mapper.map(ops, OpetussuunnitelmaDto.class);
+    }
+
+    @Override
+    public void updateOpetussuunnitelmaSisaltoviitePiilotukset() {
+
+        List<Opetussuunnitelma> opetussuunnitelmat = repository.findAll();
+
+        opetussuunnitelmat.forEach(opetussuunnitelma -> {
+            List<SisaltoViite> polut = sisaltoviiteRepository.findSuorituspolut(opetussuunnitelma);
+            List<SisaltoViiteDto> sisaltoviitteet = mapper.mapAsList(polut, SisaltoViiteDto.class);
+            sisaltoviitteet.forEach(sisaltoviite -> tkvService
+                    .updateOpetussuunnitelmaPiilotetutSisaltoviitteet(sisaltoviite, opetussuunnitelma));
+        });
     }
 }

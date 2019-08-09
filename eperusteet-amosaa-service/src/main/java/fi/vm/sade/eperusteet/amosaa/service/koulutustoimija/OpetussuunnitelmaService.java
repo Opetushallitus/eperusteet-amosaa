@@ -108,5 +108,8 @@ public interface OpetussuunnitelmaService extends RevisionService {
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'ESITYS')")
     OpetussuunnitelmaKaikkiDto getOpetussuunnitelmaKaikki(@P("ktId") Long ktId, @P("opsId") Long opsId);
+    
+    @PreAuthorize("hasPermission(null, 'OPH','HALLINTA')")
+    void updateOpetussuunnitelmaSisaltoviitePiilotukset();
 }
 

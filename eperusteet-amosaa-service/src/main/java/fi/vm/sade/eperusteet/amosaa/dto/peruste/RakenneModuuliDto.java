@@ -15,12 +15,11 @@
  */
 package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
-
 import java.util.List;
-import java.util.Optional;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,6 +31,7 @@ public class RakenneModuuliDto extends AbstractRakenneOsaDto implements Versione
     private RakenneModuuliRooli rooli;
     private MuodostumisSaantoDto muodostumisSaanto;
     private OsaamisalaDto osaamisala;
+    private KoodiDto tutkintonimike;
     private List<AbstractRakenneOsaDto> osat;
     private Integer versioId;
 

@@ -15,27 +15,62 @@
  */
 package fi.vm.sade.eperusteet.amosaa.service.ops.impl;
 
+import static fi.vm.sade.eperusteet.amosaa.service.util.Nulls.assertExists;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.Stack;
+import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import fi.vm.sade.eperusteet.amosaa.domain.Poistettu;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
-import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.SuorituspolkuRivi;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.domain.revision.Revision;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.VapaaTeksti;
-import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.*;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaTutkinnonosa;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Suorituspolku;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.SuorituspolkuRivi;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Tutkinnonosa;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaToteutus;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.VierasTutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import fi.vm.sade.eperusteet.amosaa.dto.RevisionDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.SuorituspolkuOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.SuorituspolkuRiviDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.*;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.*;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKaikkiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliRooli;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.SuoritustapaLaajaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonosaKaikkiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteRakenneDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.SuorituspolkuDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.SuorituspolkuRakenneDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.TekstiKappaleDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.VierasTutkinnonosaDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.PoistettuRepository;
@@ -47,24 +82,15 @@ import fi.vm.sade.eperusteet.amosaa.repository.tutkinnonosa.VierastutkinnonosaRe
 import fi.vm.sade.eperusteet.amosaa.resource.locks.contexts.SisaltoViiteCtx;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.exception.LockingException;
-import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetClient;
+import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.amosaa.service.locking.AbstractLockService;
 import fi.vm.sade.eperusteet.amosaa.service.locking.LockManager;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
+import fi.vm.sade.eperusteet.amosaa.service.peruste.PerusteCacheService;
 import fi.vm.sade.eperusteet.amosaa.service.teksti.TekstiKappaleService;
-import static fi.vm.sade.eperusteet.amosaa.service.util.Nulls.assertExists;
 import fi.vm.sade.eperusteet.amosaa.service.util.PoistettuService;
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.method.P;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ObjectUtils;
 
 /**
  * @author mikkom
@@ -112,6 +138,9 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
     @Autowired
     EperusteetClient eperusteetClient;
 
+    @Autowired
+    PerusteCacheService perusteCacheService;
+    
     @Autowired
     private LockManager lockMgr;
 
@@ -385,6 +414,9 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
     public void updateSisaltoViite(Long ktId, Long opsId, Long viiteId, SisaltoViiteDto uusi) {
         SisaltoViite viite = findViite(opsId, viiteId);
         Opetussuunnitelma ops = opsRepository.findOne(opsId);
+        
+        updateOpetussuunnitelmaPiilotetutSisaltoviitteet(uusi, ops);
+        
         if (viite.getOwner() != ops) {
             throw new BusinessRuleViolationException("vain-oman-editointi-sallittu");
         }
@@ -421,6 +453,43 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
         viite.setValmis(uusi.isValmis());
         viite.setVersio((viite.getVersio() != null ? viite.getVersio() : 0) + 1);
         repository.save(viite);
+    }
+
+    @Override
+    @Transactional
+    public void updateOpetussuunnitelmaPiilotetutSisaltoviitteet(SisaltoViiteDto uusi, Opetussuunnitelma ops) {
+        SuoritustapaLaajaDto suoritustapa = perusteCacheService.getSuoritustapa(ops, ops.getPeruste().getId());
+        Set<UUID> piilotetutSisaltoriviUiids = uusi.getSuorituspolku().getRivit().stream()
+                .filter(SuorituspolkuRiviDto::getPiilotettu).map(SuorituspolkuRiviDto::getRakennemoduuli)
+                .collect(Collectors.toSet());
+
+        ops.getTutkintonimikkeet().clear();
+        ops.getOsaamisalat().clear();
+
+        Stack<RakenneModuuliDto> stack = new Stack<>();
+        stack.push(suoritustapa.getRakenne());
+
+        while (!stack.empty()) {
+            RakenneModuuliDto rakenne = stack.pop();
+
+            if (!piilotetutSisaltoriviUiids.contains(rakenne.getTunniste())) {
+
+                if (rakenne.getTutkintonimike() != null
+                        && RakenneModuuliRooli.TUTKINTONIMIKE.equals(rakenne.getRooli())) {
+                    ops.getTutkintonimikkeet().add(rakenne.getTutkintonimike().getUri());
+                }
+
+                if (rakenne.getOsaamisala() != null && RakenneModuuliRooli.OSAAMISALA.equals(rakenne.getRooli())) {
+                    ops.getOsaamisalat().add(rakenne.getOsaamisala().getOsaamisalakoodiUri());
+                }
+
+                if (rakenne.getOsat() != null) {
+                    rakenne.getOsat().stream().filter(e -> e instanceof RakenneModuuliDto)
+                            .forEach(e -> stack.push((RakenneModuuliDto) e));
+                }
+            }
+
+        }
     }
 
     @Override

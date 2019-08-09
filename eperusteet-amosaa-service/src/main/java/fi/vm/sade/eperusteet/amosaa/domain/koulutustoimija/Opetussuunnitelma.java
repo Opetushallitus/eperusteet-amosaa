@@ -155,6 +155,16 @@ public class Opetussuunnitelma extends AbstractAuditedEntity implements Serializ
     })
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     private Set<Liite> liitteet = new HashSet<>();
+    
+    @ElementCollection
+    @Getter
+    @Setter
+    private Set<String> tutkintonimikkeet = new HashSet<>();
+    
+    @ElementCollection
+    @Getter
+    @Setter
+    private Set<String> osaamisalat = new HashSet<>();
 
     public void changeKoulutustoimija(Koulutustoimija kt) {
         this.koulutustoimija = kt;
