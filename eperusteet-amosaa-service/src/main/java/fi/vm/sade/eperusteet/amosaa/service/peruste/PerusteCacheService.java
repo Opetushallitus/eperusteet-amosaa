@@ -34,4 +34,6 @@ public interface PerusteCacheService {
     SuoritustapaLaajaDto getSuoritustapa(Opetussuunnitelma ops, Long id);
 
     JsonNode getTutkinnonOsa(Long id, Long tosaId);
+    
+    SuoritustapaLaajaDto getSuoritustapa(Long opetussuunnitelmaId, Long perusteId);
 }

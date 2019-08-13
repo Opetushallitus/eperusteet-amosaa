@@ -22,7 +22,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
+import fi.vm.sade.eperusteet.amosaa.dto.ops.SuorituspolkuRiviDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.*;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.repository.peruste.CachedPerusteRepository;
 import fi.vm.sade.eperusteet.amosaa.resource.config.AbstractRakenneOsaDeserializer;
 import fi.vm.sade.eperusteet.amosaa.resource.config.MappingModule;
@@ -30,10 +32,15 @@ import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationExcep
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetClient;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
+import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
+import fi.vm.sade.eperusteet.amosaa.service.peruste.PerusteCacheService;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Function;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
+
 import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
@@ -65,6 +72,12 @@ public class EperusteetServiceImpl implements EperusteetService {
     @Autowired
     private DtoMapper dtoMapper;
 
+    @Autowired
+    private PerusteCacheService perusteCacheService;
+
+    @Autowired
+    private SisaltoViiteService sisaltoViiteService;
+
     @PostConstruct
     protected void init() {
         mapper = new ObjectMapper();
@@ -76,7 +89,8 @@ public class EperusteetServiceImpl implements EperusteetService {
 
     @Override
     public CachedPerusteBaseDto getCachedPeruste(PerusteDto peruste) {
-        CachedPeruste cperuste = cachedPerusteRepository.findOneByPerusteIdAndLuotu(peruste.getId(), peruste.getGlobalVersion().getAikaleima());
+        CachedPeruste cperuste = cachedPerusteRepository.findOneByPerusteIdAndLuotu(peruste.getId(),
+                peruste.getGlobalVersion().getAikaleima());
         if (cperuste == null) {
             cperuste = new CachedPeruste();
             if (peruste.getNimi() != null) {
@@ -128,6 +142,61 @@ public class EperusteetServiceImpl implements EperusteetService {
         } catch (IOException ex) {
             throw new BusinessRuleViolationException("perusteen-parsinta-epaonnistui");
         }
+    }
+
+    @Override
+    public List<RakenneModuuliTunnisteDto> getSuoritustavat(Long ktId, Long perusteId, Long opetussuunnitelmaId) {
+
+        List<SisaltoViiteDto> sisaltoviitteet = sisaltoViiteService.getSuorituspolut(ktId, opetussuunnitelmaId,
+                SisaltoViiteDto.class);
+        SuoritustapaLaajaDto suoritustapaLaajaDto = perusteCacheService.getSuoritustapa(opetussuunnitelmaId, perusteId);
+
+        return sisaltoviitteet.stream()
+                .map(sisaltoviite -> getYksittaisenRakenteenSuoritustavat(suoritustapaLaajaDto, sisaltoviite))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public RakenneModuuliTunnisteDto getYksittaisenRakenteenSuoritustavat(SuoritustapaLaajaDto suoritustapaLaajaDto,
+            SisaltoViiteDto sisaltoViite) {
+
+        Map<UUID, SuorituspolkuRiviDto> suorituspolkuRiviMap = sisaltoViite.getSuorituspolku().getRivit().stream()
+                .filter(suorituspolkuRivi -> !suorituspolkuRivi.getPiilotettu())
+                .collect(Collectors.toMap(SuorituspolkuRiviDto::getRakennemoduuli, Function.identity()));
+
+        Stack<RakenneModuuliDto> originStack = new Stack<>();
+        Stack<RakenneModuuliDto> filterStack = new Stack<>();
+        originStack.push(suoritustapaLaajaDto.getRakenne());
+
+        RakenneModuuliTunnisteDto masterRakenneModuuliTunnisteDto = RakenneModuuliTunnisteDto.of(
+                suoritustapaLaajaDto.getRakenne(),
+                suorituspolkuRiviMap.get(suoritustapaLaajaDto.getRakenne().getTunniste()));
+        filterStack.push(masterRakenneModuuliTunnisteDto);
+
+        while (!originStack.empty()) {
+            RakenneModuuliDto originRakenne = originStack.pop();
+            RakenneModuuliDto filterRakenne = filterStack.pop();
+
+            if (originRakenne.getOsat() != null) {
+                originRakenne.getOsat().stream()
+                        .filter(rakenneOsa -> suorituspolkuRiviMap.containsKey(rakenneOsa.getTunniste()))
+                        .forEach(rakenneOsa -> {
+
+                            SuorituspolkuRiviDto suoritusPolkuRiviDto = suorituspolkuRiviMap.get(rakenneOsa.getTunniste());
+                            RakenneModuuliTunnisteDto rakenneModuuliTunnisteDto = RakenneModuuliTunnisteDto.of(rakenneOsa, suoritusPolkuRiviDto);
+
+                            filterRakenne.getOsat().add(rakenneModuuliTunnisteDto);
+
+                            if (rakenneOsa instanceof RakenneModuuliDto) {
+                                originStack.push((RakenneModuuliDto) rakenneOsa);
+                                filterStack.push(rakenneModuuliTunnisteDto);
+                            }
+                        });
+            }
+
+        }
+
+        return masterRakenneModuuliTunnisteDto;
     }
 
     @Override

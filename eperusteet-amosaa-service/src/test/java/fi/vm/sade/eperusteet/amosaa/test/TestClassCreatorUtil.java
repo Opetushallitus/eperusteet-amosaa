@@ -2,10 +2,11 @@ package fi.vm.sade.eperusteet.amosaa.test;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
-import fi.vm.sade.eperusteet.amosaa.dto.ops.SuorituspolkuRiviDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.AbstractRakenneOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.KoodiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.OsaamisalaDto;
@@ -60,6 +61,18 @@ public class TestClassCreatorUtil {
             rakenneDto.setTutkintonimike(new KoodiDto());
             rakenneDto.getTutkintonimike().setUri(tutkimusnimikeUri.toString());
         }
+        
+        if (osat != null) {
+            rakenneDto.setOsat(osat);
+        }
+
+        return rakenneDto;
+    }
+        
+    public static RakenneModuuliDto rakenneModuuliDto(UUID tunniste, List<AbstractRakenneOsaDto> osat) {
+
+        RakenneModuuliDto rakenneDto = new RakenneModuuliDto();
+        rakenneDto.setTunniste(tunniste);
 
         if (osat != null) {
             rakenneDto.setOsat(osat);
@@ -84,4 +97,11 @@ public class TestClassCreatorUtil {
         return cachedPeruste;
     }
 
+
+    
+    public static List<UUID> randomUUIDList() {
+        return IntStream.range(0, 10).mapToObj(i -> UUID.randomUUID()).collect(Collectors.toList());
+    }
+
 }
+

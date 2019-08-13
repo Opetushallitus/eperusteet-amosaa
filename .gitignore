@@ -20,3 +20,11 @@ eperusteet-amosaa-app/tests/node_modules/
 eperusteet-amosaa-app/tests/typings/
 
 yarn.lock
+
+**/.project
+**/.gitignore
+**/.project
+**/.settings
+**/logs
+**/.classpath
+**/.factorypath

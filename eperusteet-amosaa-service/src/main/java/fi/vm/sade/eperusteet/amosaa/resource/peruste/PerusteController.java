@@ -16,20 +16,33 @@
 
 package fi.vm.sade.eperusteet.amosaa.resource.peruste;
 
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.fasterxml.jackson.databind.JsonNode;
+
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliTunnisteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.SuoritustapaLaajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonOsaSuoritustapaDto;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
+import fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija.KoulutustoimijaIdGetterAbstractController;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetClient;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import io.swagger.annotations.Api;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Map;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * @author nkala
@@ -38,7 +51,7 @@ import java.util.Map;
 @RequestMapping("/perusteet")
 @Api(value = "perusteet")
 @InternalApi
-public class PerusteController {
+public class PerusteController extends KoulutustoimijaIdGetterAbstractController {
     @Autowired
     private OpetussuunnitelmaService opetussuunnitelmaService;
 
@@ -115,6 +128,12 @@ public class PerusteController {
     @RequestMapping(value = "/{perusteId}/perusteesta", method = RequestMethod.GET)
     public JsonNode getPerusteByPerusteId(@PathVariable Long perusteId) {
         return service.getPerusteSisaltoByPerusteId(perusteId, JsonNode.class);
+    }
+    
+    @RequestMapping(value = "/{perusteId}/opetussuunnitelma/{opsId}/kt/{ktId}", method = RequestMethod.GET)
+    public List<RakenneModuuliTunnisteDto> getPerusteRakenneNakyvat(
+            @PathVariable Long perusteId, @PathVariable Long opsId, @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId) {
+        return service.getSuoritustavat(ktId, perusteId, opsId);
     }
 
 //    @RequestMapping(value = "/{perusteId}/tutkintonimikekoodit", method = GET)
