@@ -130,12 +130,6 @@ public class PerusteController extends KoulutustoimijaIdGetterAbstractController
         return service.getPerusteSisaltoByPerusteId(perusteId, JsonNode.class);
     }
     
-    @RequestMapping(value = "/{perusteId}/opetussuunnitelma/{opsId}/kt/{ktId}", method = RequestMethod.GET)
-    public List<RakenneModuuliTunnisteDto> getPerusteRakenneNakyvat(
-            @PathVariable Long perusteId, @PathVariable Long opsId, @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId) {
-        return service.getSuoritustavat(ktId, perusteId, opsId);
-    }
-
 //    @RequestMapping(value = "/{perusteId}/tutkintonimikekoodit", method = GET)
 //    @InternalApi
 //    public ResponseEntity<List<CombinedDto<TutkintonimikeKoodiDto, HashMap<String, KoodistoKoodiDto>>>> getTutkintonimikekoodit(@PathVariable("perusteId") final long id) {

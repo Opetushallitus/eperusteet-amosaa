@@ -27,10 +27,12 @@ import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaLuontiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.VanhentunutPohjaperusteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliTunnisteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaAudit;
 import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
+import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
@@ -73,6 +75,9 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
 
     @Autowired
     private EperusteetAmosaaAudit audit;
+    
+    @Autowired
+    private EperusteetService eperusteetService;
 
     @ApiImplicitParams({
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
@@ -289,5 +294,12 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
     ) {
         return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, TILA_MUOKKAUS),
                 (Void) -> service.updateKoulutustoimija(ktId, opsId, body));
+    }
+    
+    @RequestMapping(value = "/{opsId}/suorituspolku", method = RequestMethod.GET)
+    public List<RakenneModuuliTunnisteDto> getPerusteRakenneNakyvat(
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @PathVariable Long opsId) {
+        return eperusteetService.getSuoritustavat(ktId, opsId);
     }
 }

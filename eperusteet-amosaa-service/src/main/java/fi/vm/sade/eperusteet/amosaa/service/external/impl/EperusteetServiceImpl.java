@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.SuorituspolkuRiviDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.*;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
@@ -30,6 +31,7 @@ import fi.vm.sade.eperusteet.amosaa.resource.config.AbstractRakenneOsaDeserializ
 import fi.vm.sade.eperusteet.amosaa.resource.config.MappingModule;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
+import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetClient;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
@@ -77,6 +79,9 @@ public class EperusteetServiceImpl implements EperusteetService {
 
     @Autowired
     private SisaltoViiteService sisaltoViiteService;
+    
+    @Autowired
+    private OpetussuunnitelmaService opetussuunnitelmaService;
 
     @PostConstruct
     protected void init() {
@@ -145,11 +150,11 @@ public class EperusteetServiceImpl implements EperusteetService {
     }
 
     @Override
-    public List<RakenneModuuliTunnisteDto> getSuoritustavat(Long ktId, Long perusteId, Long opetussuunnitelmaId) {
-
+    public List<RakenneModuuliTunnisteDto> getSuoritustavat(Long ktId, Long opetussuunnitelmaId) {
+        OpetussuunnitelmaDto opetussuunnitelma = opetussuunnitelmaService.getOpetussuunnitelma(ktId, opetussuunnitelmaId);
         List<SisaltoViiteDto> sisaltoviitteet = sisaltoViiteService.getSuorituspolut(ktId, opetussuunnitelmaId,
                 SisaltoViiteDto.class);
-        SuoritustapaLaajaDto suoritustapaLaajaDto = perusteCacheService.getSuoritustapa(opetussuunnitelmaId, perusteId);
+        SuoritustapaLaajaDto suoritustapaLaajaDto = perusteCacheService.getSuoritustapa(opetussuunnitelmaId, opetussuunnitelma.getPeruste().getId());
 
         return sisaltoviitteet.stream()
                 .map(sisaltoviite -> getYksittaisenRakenteenSuoritustavat(suoritustapaLaajaDto, sisaltoviite))
@@ -163,6 +168,10 @@ public class EperusteetServiceImpl implements EperusteetService {
         Map<UUID, SuorituspolkuRiviDto> suorituspolkuRiviMap = sisaltoViite.getSuorituspolku().getRivit().stream()
                 .filter(suorituspolkuRivi -> !suorituspolkuRivi.getPiilotettu())
                 .collect(Collectors.toMap(SuorituspolkuRiviDto::getRakennemoduuli, Function.identity()));
+        Set<UUID> piilotetut = sisaltoViite.getSuorituspolku().getRivit().stream()
+                .filter(suorituspolkuRivi -> suorituspolkuRivi.getPiilotettu())
+                .map(SuorituspolkuRiviDto::getRakennemoduuli)
+                .collect(Collectors.toSet());
 
         Stack<RakenneModuuliDto> originStack = new Stack<>();
         Stack<RakenneModuuliDto> filterStack = new Stack<>();
@@ -179,7 +188,7 @@ public class EperusteetServiceImpl implements EperusteetService {
 
             if (originRakenne.getOsat() != null) {
                 originRakenne.getOsat().stream()
-                        .filter(rakenneOsa -> suorituspolkuRiviMap.containsKey(rakenneOsa.getTunniste()))
+                        .filter(rakenneOsa -> !piilotetut.contains(rakenneOsa.getTunniste()))
                         .forEach(rakenneOsa -> {
 
                             SuorituspolkuRiviDto suoritusPolkuRiviDto = suorituspolkuRiviMap.get(rakenneOsa.getTunniste());
