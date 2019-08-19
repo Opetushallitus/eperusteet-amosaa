@@ -1,23 +1,19 @@
 package fi.vm.sade.eperusteet.amosaa.service;
 
-import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
-import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
-import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
-import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
-import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
-import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
-import fi.vm.sade.eperusteet.amosaa.dto.Reference;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaLuontiDto;
-import fi.vm.sade.eperusteet.amosaa.dto.ops.SuorituspolkuRiviDto;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.*;
-import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
-import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
-import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
-import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
-import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
-import fi.vm.sade.eperusteet.amosaa.service.ops.ValidointiService;
-import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.assertj.core.api.Assertions.tuple;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
+import java.util.function.Function;
+
+import javax.persistence.EntityManager;
+import javax.validation.ConstraintViolationException;
+
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,15 +21,33 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.validation.ConstraintViolationException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
-import java.util.function.Function;
-
-import static org.assertj.core.api.Assertions.*;
+import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
+import fi.vm.sade.eperusteet.amosaa.dto.Reference;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaLuontiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.ops.SuorituspolkuRiviDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.OmaTutkinnonosaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteKevytDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteRakenneDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.SuorituspolkuDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.SuorituspolkuRakenneDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.TekstiKappaleDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.TutkinnonosaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.TutkinnonosaToteutusDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.VapaaTekstiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.VierasTutkinnonosaDto;
+import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
+import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
+import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
+import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
+import fi.vm.sade.eperusteet.amosaa.service.ops.ValidointiService;
+import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
 
 @DirtiesContext
 @Transactional
@@ -41,9 +55,6 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
 
     @Autowired
     private SisaltoViiteService sisaltoViiteService;
-
-    @Autowired
-    private SisaltoviiteRepository sisaltoviiteRepository;
 
     @Autowired
     private OpetussuunnitelmaService opetussuunnitelmaService;
@@ -116,7 +127,11 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
         OpetussuunnitelmaBaseDto ops = createOpetussuunnitelma();
 
         SisaltoViiteDto.Matala root = sisaltoViiteService.getSisaltoRoot(getKoulutustoimijaId(), ops.getId());
-        SisaltoViiteDto.Matala added = sisaltoViiteService.addSisaltoViite(getKoulutustoimijaId(), ops.getId(), root.getId(), createSisalto());
+        SisaltoViiteDto.Matala added = sisaltoViiteService.addSisaltoViite(getKoulutustoimijaId(), ops.getId(), root.getId(), createSisalto(sisaltoViiteDto -> {
+        	sisaltoViiteDto.setSuorituspolku(new SuorituspolkuDto());
+        	sisaltoViiteDto.getSuorituspolku().getRivit().add(SuorituspolkuRiviDto.of("76044b5b-1f4b-4587-b30d-23b7d3c2608d", true, null));
+        	sisaltoViiteDto.getSuorituspolku().getRivit().add(SuorituspolkuRiviDto.of("428e7f22-0a69-43c5-baa5-520296f71169", false, LokalisoituTekstiDto.of("foo")));
+        }));
 
         added.getTekstiKappale().setNimi(LokalisoituTekstiDto.of("uusi nimi"));
         added.getTekstiKappale().setTeksti(LokalisoituTekstiDto.of("uusi teksti"));
@@ -154,7 +169,11 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
         useProfileKP2();
         OpetussuunnitelmaBaseDto ops = createOpetussuunnitelma();
         SisaltoViiteDto.Matala root = sisaltoViiteService.getSisaltoRoot(getKoulutustoimijaId(), ops.getId());
-        SisaltoViiteDto.Matala added = sisaltoViiteService.addSisaltoViite(getKoulutustoimijaId(), ops.getId(), root.getId(), createSisalto());
+        SisaltoViiteDto.Matala added = sisaltoViiteService.addSisaltoViite(getKoulutustoimijaId(), ops.getId(), root.getId(), createSisalto(sisaltoViiteDto -> {
+        	sisaltoViiteDto.setSuorituspolku(new SuorituspolkuDto());
+        	sisaltoViiteDto.getSuorituspolku().getRivit().add(SuorituspolkuRiviDto.of("76044b5b-1f4b-4587-b30d-23b7d3c2608d", true, null));
+        	sisaltoViiteDto.getSuorituspolku().getRivit().add(SuorituspolkuRiviDto.of("428e7f22-0a69-43c5-baa5-520296f71169", false, LokalisoituTekstiDto.of("foo")));
+        }));
         SisaltoViiteDto.Matala alempi = sisaltoViiteService.addSisaltoViite(getKoulutustoimijaId(), ops.getId(), added.getId(), createSisalto());
         assertThat(added)
                 .extracting(SisaltoViiteDto::getOwner, SisaltoViiteDto::getVanhempi, SisaltoViiteDto::getTyyppi, SisaltoViiteDto::isPakollinen, SisaltoViiteDto::isValmis, SisaltoViiteDto::isLiikkumaton)
@@ -228,11 +247,12 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
         assertThat(polku)
                 .hasFieldOrPropertyWithValue("tunniste", UUID.fromString("16a37d87-cb5f-41a1-94f1-27fb1fa6d191"))
                 .hasFieldOrPropertyWithValue("paikallinenKuvaus", null);
-        assertThat(polku.getOsat()).hasSize(4);
+        assertThat(polku.getOsat()).hasSize(5);
         assertThat(((SuorituspolkuRakenneDto)(polku.getOsat().get(0))).getOsat()).hasSize(3);
         assertThat(((SuorituspolkuRakenneDto)(polku.getOsat().get(1))).getOsat()).hasSize(2);
         assertThat(((SuorituspolkuRakenneDto)(polku.getOsat().get(2))).getOsat()).hasSize(4);
         assertThat(((SuorituspolkuRakenneDto)(polku.getOsat().get(3))).getOsat()).hasSize(1);
+        assertThat(((SuorituspolkuRakenneDto)(polku.getOsat().get(4))).getOsat()).hasSize(2);
 
         assertThat(polku.getOsat().get(0))
                 .hasFieldOrPropertyWithValue("tunniste", UUID.fromString("d35fb695-f181-4e49-b4b9-c64a85819d0a"))
@@ -287,7 +307,8 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
                 .containsExactly(
                         UUID.fromString("d35fb695-f181-4e49-b4b9-c64a85819d0a"),
                         UUID.fromString("428e7f22-0a69-43c5-baa5-520296f71169"),
-                        UUID.fromString("ab3ea166-2ea6-4a6e-82f6-ab8d26abb92a"));
+                        UUID.fromString("ab3ea166-2ea6-4a6e-82f6-ab8d26abb92a"),
+                        UUID.fromString("49c79989-bd21-45ff-a5ee-685599300001"));
 
         SuorituspolkuRakenneDto osa = (SuorituspolkuRakenneDto)polku.getOsat().get(1);
         assertThat(osa.getPaikallinenKuvaus().getKuvaus().get(Kieli.FI))
@@ -334,6 +355,64 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
         return sisaltoViitteet.stream()
                 .filter(sv -> sv.getTyyppi().equals(tyyppi))
                 .findAny().get();
+    }
+    
+    @Test
+    @Rollback
+    public void testUpdateOpetussuunnitelmaPiilotetutSisaltoviitteet_ei_piilotuksia() {
+
+        useProfileKP2();
+        Opetussuunnitelma ops = createOpetussuunnitelmaJulkaistu();
+
+        SisaltoViiteDto.Matala root = sisaltoViiteService.getSisaltoRoot(getKoulutustoimijaId(), ops.getId());
+        SisaltoViiteDto.Matala added = sisaltoViiteService.addSisaltoViite(getKoulutustoimijaId(), ops.getId(),
+                root.getId(), createSisalto(sisaltoViiteDto -> {
+                    sisaltoViiteDto.setSuorituspolku(new SuorituspolkuDto());
+                }));
+
+        sisaltoViiteService.updateOpetussuunnitelmaPiilotetutSisaltoviitteet(added, ops);
+
+        Opetussuunnitelma opetussuunnitelma = opetussuunnitelmaRepository.findOne(ops.getId());
+
+        assertThat(opetussuunnitelma.getOsaamisalat()).hasSize(2);
+        assertThat(opetussuunnitelma.getOsaamisalat()).containsExactlyInAnyOrder("osaamisala-1", "osaamisala-2");
+
+        assertThat(opetussuunnitelma.getTutkintonimikkeet()).hasSize(2);
+        assertThat(opetussuunnitelma.getTutkintonimikkeet()).containsExactlyInAnyOrder("tutkintonimike-1",
+                "tutkintonimike-2");
+
+    }
+
+    @Test
+    @Rollback
+    public void testUpdateOpetussuunnitelmaPiilotetutSisaltoviitteet_piilotuksia() {
+
+        useProfileKP2();
+        Opetussuunnitelma ops = createOpetussuunnitelmaJulkaistu();
+
+        SisaltoViiteDto.Matala root = sisaltoViiteService.getSisaltoRoot(getKoulutustoimijaId(), ops.getId());
+        SisaltoViiteDto.Matala added = sisaltoViiteService.addSisaltoViite(getKoulutustoimijaId(), ops.getId(),
+                root.getId(), createSisalto(sisaltoViiteDto -> {
+                    sisaltoViiteDto.setSuorituspolku(new SuorituspolkuDto());
+                    sisaltoViiteDto.getSuorituspolku().getRivit()
+                            .add(SuorituspolkuRiviDto.of("49c79989-bd21-45ff-a5ee-685599300002", false, null));
+                    sisaltoViiteDto.getSuorituspolku().getRivit()
+                            .add(SuorituspolkuRiviDto.of("49c79989-bd21-45ff-a5ee-685599300003", true, null));
+                    sisaltoViiteDto.getSuorituspolku().getRivit()
+                            .add(SuorituspolkuRiviDto.of("49c79989-bd21-45ff-a5ee-685599300004", true, null));
+                    sisaltoViiteDto.getSuorituspolku().getRivit()
+                            .add(SuorituspolkuRiviDto.of("49c79989-bd21-45ff-a5ee-685599300005", false, null));
+                }));
+
+        sisaltoViiteService.updateOpetussuunnitelmaPiilotetutSisaltoviitteet(added, ops);
+
+        Opetussuunnitelma opetussuunnitelma = opetussuunnitelmaRepository.findOne(ops.getId());
+
+        assertThat(opetussuunnitelma.getOsaamisalat()).hasSize(1);
+        assertThat(opetussuunnitelma.getOsaamisalat()).containsExactly("osaamisala-1");
+
+        assertThat(opetussuunnitelma.getTutkintonimikkeet()).hasSize(0);
+
     }
 
 }
