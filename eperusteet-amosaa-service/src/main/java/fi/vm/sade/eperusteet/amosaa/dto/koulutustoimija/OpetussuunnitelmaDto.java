@@ -21,6 +21,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.liite.LiiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteBaseDto;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import lombok.Getter;
@@ -47,4 +48,6 @@ public class OpetussuunnitelmaDto extends OpetussuunnitelmaBaseDto implements Au
     private String paatosnumero;
     private String suoritustapa;
     private boolean esikatseltavissa;
+    private Set<String> tutkintonimikkeet = new HashSet<>();
+    private Set<String> osaamisalat = new HashSet<>();
 }

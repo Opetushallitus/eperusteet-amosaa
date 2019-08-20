@@ -29,6 +29,7 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
@@ -96,6 +97,7 @@ import fi.vm.sade.eperusteet.amosaa.service.util.PoistettuService;
  * @author mikkom
  */
 @Service
+@Slf4j
 @Transactional(readOnly = true)
 public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx> implements SisaltoViiteService {
 
@@ -460,7 +462,8 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
     public void updateOpetussuunnitelmaPiilotetutSisaltoviitteet(SisaltoViiteDto uusi, Opetussuunnitelma ops) {
         SuoritustapaLaajaDto suoritustapa = perusteCacheService.getSuoritustapa(ops, ops.getPeruste().getId());
         Set<UUID> piilotetutSisaltoriviUiids = uusi.getSuorituspolku().getRivit().stream()
-                .filter(SuorituspolkuRiviDto::getPiilotettu).map(SuorituspolkuRiviDto::getRakennemoduuli)
+                .filter(p -> Boolean.TRUE.equals(p.getPiilotettu()))
+                .map(SuorituspolkuRiviDto::getRakennemoduuli)
                 .collect(Collectors.toSet());
 
         ops.getTutkintonimikkeet().clear();

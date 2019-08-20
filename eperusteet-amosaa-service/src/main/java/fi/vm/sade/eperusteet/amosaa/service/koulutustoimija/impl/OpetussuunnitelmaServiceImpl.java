@@ -726,8 +726,15 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         opetussuunnitelmat.forEach(opetussuunnitelma -> {
             List<SisaltoViite> polut = sisaltoviiteRepository.findSuorituspolut(opetussuunnitelma);
             List<SisaltoViiteDto> sisaltoviitteet = mapper.mapAsList(polut, SisaltoViiteDto.class);
-            sisaltoviitteet.forEach(sisaltoviite -> tkvService
-                    .updateOpetussuunnitelmaPiilotetutSisaltoviitteet(sisaltoviite, opetussuunnitelma));
+            log.info("Päivitetään tutkintonimikkeet ja osaamisalat: {}", opetussuunnitelma.getId());
+            sisaltoviitteet.forEach(sisaltoviite -> {
+                try {
+                    tkvService.updateOpetussuunnitelmaPiilotetutSisaltoviitteet(sisaltoviite, opetussuunnitelma);
+                }
+                catch (BusinessRuleViolationException ex) {
+                    log.error(ex.getLocalizedMessage());
+                }
+            });
         });
     }
 }
