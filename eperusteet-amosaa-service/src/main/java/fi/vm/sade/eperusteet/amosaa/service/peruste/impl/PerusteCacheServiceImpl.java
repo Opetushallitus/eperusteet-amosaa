@@ -24,9 +24,11 @@ import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.SuoritustapaLaajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.Suoritustapakoodi;
+import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.peruste.CachedPerusteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
+import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.peruste.PerusteCacheService;
 
@@ -51,6 +53,9 @@ public class PerusteCacheServiceImpl implements PerusteCacheService {
 
     @Autowired
     EperusteetService eperusteetService;
+    
+    @Autowired
+    OpetussuunnitelmaRepository opetussuunnitelmaRepository;
 
     private JsonNode parsePeruste(Long id) {
         CachedPeruste peruste = repository.findOne(id);
@@ -88,6 +93,21 @@ public class PerusteCacheServiceImpl implements PerusteCacheService {
         PerusteKaikkiDto perusteSisalto = eperusteetService.getPerusteSisalto(id, PerusteKaikkiDto.class);
         for (SuoritustapaLaajaDto suoritustapa : perusteSisalto.getSuoritustavat()) {
             if (suoritustapa.getSuoritustapakoodi() == Suoritustapakoodi.of(ops.getSuoritustapa())) {
+                return suoritustapa;
+            }
+        }
+
+        throw new BusinessRuleViolationException("opetussuunnitelman-vaatimaa-suoritustapaa-ei-loytynyt");
+    }
+    
+    @Override
+    public SuoritustapaLaajaDto getSuoritustapa(Long opetussuunnitelmaId, Long perusteId) {
+        
+        Opetussuunnitelma opetussuunnitelma = opetussuunnitelmaRepository.findOne(opetussuunnitelmaId);
+        
+        PerusteKaikkiDto perusteSisalto = eperusteetService.getPerusteSisalto(perusteId, PerusteKaikkiDto.class);
+        for (SuoritustapaLaajaDto suoritustapa : perusteSisalto.getSuoritustavat()) {
+            if (suoritustapa.getSuoritustapakoodi() == Suoritustapakoodi.of(opetussuunnitelma.getSuoritustapa())) {
                 return suoritustapa;
             }
         }

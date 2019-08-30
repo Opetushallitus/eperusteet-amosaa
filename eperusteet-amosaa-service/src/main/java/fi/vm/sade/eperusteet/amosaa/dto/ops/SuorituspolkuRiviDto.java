@@ -52,5 +52,11 @@ public class SuorituspolkuRiviDto extends SuorituspolkuRiviJulkinenDto {
     static public SuorituspolkuRiviDto of(String moduuli, Boolean piilotettu, LokalisoituTekstiDto kuvaus) {
         return of(UUID.fromString(moduuli), piilotettu, kuvaus);
     }
+    
+    static public SuorituspolkuRiviDto of(UUID moduuli, Boolean piilotettu, LokalisoituTekstiDto kuvaus, Set<String> koodit) {
+        SuorituspolkuRiviDto suorituspolkuRiviDto = of(moduuli, piilotettu, kuvaus);
+        suorituspolkuRiviDto.setKoodit(koodit);
+        return suorituspolkuRiviDto;
+    }
 
 }

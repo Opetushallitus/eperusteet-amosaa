@@ -19,7 +19,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliTunnisteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.SuoritustapaLaajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonOsaSuoritustapaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +45,10 @@ public interface EperusteetService {
     List<TutkinnonOsaSuoritustapaDto> convertTutkinnonOsat(JsonNode tutkinnonosat);
 
     JsonNode getSuoritustavat(Long id);
+    
+    List<RakenneModuuliTunnisteDto> getSuoritustavat(Long ktId, Long perusteId, Long opetussuunnitelmaId);
+    
+    RakenneModuuliTunnisteDto getYksittaisenRakenteenSuoritustavat(SuoritustapaLaajaDto suoritustapaLaajaDto, SisaltoViiteDto sisaltoViite);
 
     JsonNode getTutkinnonOsa(Long id, Long tosaId);
 
