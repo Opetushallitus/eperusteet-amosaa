@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.dto.OrganisaatioHierarkiaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.OrganisaatioHistoriaLiitosDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.*;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
@@ -236,6 +237,12 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
         Set<Koulutustoimija> pyynnot = repository.findAllYstavaPyynnotForKoulutustoimija(kt);
         pyynnot.removeAll(kt.getYstavat());
         return mapper.mapAsList(pyynnot, KoulutustoimijaBaseDto.class);
+    }
+
+    @Override
+    public List<OrganisaatioHistoriaLiitosDto> getOrganisaatioHierarkiaHistoriaLiitokset(Long ktId) {
+        Koulutustoimija kt = repository.findOne(ktId);
+        return organisaatioService.getOrganisaationHistoriaLiitokset(kt.getOrganisaatio());
     }
 
 }

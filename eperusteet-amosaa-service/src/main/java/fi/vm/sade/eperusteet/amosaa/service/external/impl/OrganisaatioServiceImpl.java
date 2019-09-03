@@ -15,28 +15,39 @@
  */
 package fi.vm.sade.eperusteet.amosaa.service.external.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import fi.vm.sade.eperusteet.amosaa.dto.OrganisaatioHierarkiaDto;
-import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
-import fi.vm.sade.eperusteet.amosaa.service.util.RestClientFactory;
-import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
+import static javax.servlet.http.HttpServletResponse.SC_OK;
+
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
 import java.util.stream.Stream;
 
-import fi.vm.sade.javautils.http.OphHttpClient;
-import fi.vm.sade.javautils.http.OphHttpRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
-import static javax.servlet.http.HttpServletResponse.SC_OK;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+
+import fi.vm.sade.eperusteet.amosaa.dto.OrganisaatioHierarkiaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.OrganisaatioHistoriaLiitosDto;
+import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
+import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.impl.KoulutustoimijaServiceImpl;
+import fi.vm.sade.eperusteet.amosaa.service.util.RestClientFactory;
+import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
+import fi.vm.sade.javautils.http.OphHttpClient;
+import fi.vm.sade.javautils.http.OphHttpRequest;
 
 /**
  * @author mikkom
@@ -102,6 +113,30 @@ public class OrganisaatioServiceImpl implements OrganisaatioService {
                     })
                     .orElse(null);
         }
+        
+        public JsonNode getOrganisaationHistoriaLiitokset(String organisaatioOid) {
+            OphHttpClient client = restClientFactory.get(serviceUrl, false);
+   
+            UriComponents uri = UriComponentsBuilder.fromHttpUrl(serviceUrl)
+                    .path(ORGANISAATIOT)
+                    .path("v4/{organisaatioOid}/historia")
+                    .buildAndExpand(organisaatioOid);
+            
+            OphHttpRequest request = OphHttpRequest.Builder
+                    .get(uri.toString())
+                    .build();
+
+            return client.<JsonNode>execute(request)
+                    .expectedStatus(SC_OK)
+                    .mapWith(text -> {
+                        try {
+                            return mapper.readTree(text);
+                        } catch (IOException e) {
+                            return null;
+                        }
+                    })
+                    .orElse(null);
+        }
     }
 
     @Override
@@ -148,6 +183,22 @@ public class OrganisaatioServiceImpl implements OrganisaatioService {
             OrganisaatioHierarkiaDto hierarkia = mapper.treeToValue(organisaatiot, OrganisaatioHierarkiaDto.class);
             return hierarkia;
         } catch (JsonProcessingException ex) {
+            return null;
+        }
+    }
+
+    @Override
+    public List<OrganisaatioHistoriaLiitosDto> getOrganisaationHistoriaLiitokset(String organisaatioOid) {
+        JsonNode puu = client.getOrganisaationHistoriaLiitokset(organisaatioOid);
+        try {
+            if (puu.get("liitokset").size() == 0 || SecurityUtil.OPH_OID.equals(organisaatioOid)) {
+                return null;
+            }
+            JsonNode organisaatiot = puu.get("liitokset");
+                        
+            ObjectReader reader = mapper.readerFor(new TypeReference<List<OrganisaatioHistoriaLiitosDto>>() {});
+            return reader.readValue(organisaatiot);
+        } catch (IOException ex) {
             return null;
         }
     }

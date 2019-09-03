@@ -290,4 +290,27 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
         return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, TILA_MUOKKAUS),
                 (Void) -> service.updateKoulutustoimija(ktId, opsId, body));
     }
+    
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
+    @RequestMapping(value = "/{opsId}/siirraPassivoidusta", method = RequestMethod.POST)
+    public OpetussuunnitelmaDto updateKoulutustoimija(
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @PathVariable final Long opsId
+    ) {
+        return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, TILA_MUOKKAUS),
+                (Void) -> service.updateKoulutustoimijaPassivoidusta(ktId, opsId));
+    }
+    
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
+    @RequestMapping(value = "/organisaatio/{organisaatioid}", method = RequestMethod.GET)
+    public List<OpetussuunnitelmaDto> getOpetussuunnitelmatOrganisaatioista(
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @PathVariable final String organisaatioid
+    ) {
+        return service.getOpetussuunnitelmatOrganisaatioista(organisaatioid);
+    }
 }

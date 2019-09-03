@@ -17,6 +17,7 @@
 package fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija;
 
 import fi.vm.sade.eperusteet.amosaa.dto.OrganisaatioHierarkiaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.OrganisaatioHistoriaLiitosDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
@@ -179,6 +180,16 @@ public class KoulutustoimijaController extends KoulutustoimijaIdGetterAbstractCo
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId
     ) {
         return koulutustoimijaService.getPyynnot(ktId);
+    }
+    
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
+    @RequestMapping(value = "/{ktId}/historialiitokset", method = RequestMethod.GET)
+    public List<OrganisaatioHistoriaLiitosDto> getOrganisaatioHistoriaLiitokset(
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId
+    ) {
+        return koulutustoimijaService.getOrganisaatioHierarkiaHistoriaLiitokset(ktId);
     }
 
 }

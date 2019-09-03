@@ -47,6 +47,7 @@ public class OrganisaatioHierarkiaDto {
     private String kotipaikkaUri;
     private List<String> organisaatiotyypit = new ArrayList<>();
     private List<OrganisaatioHierarkiaDto> children = new ArrayList<>();
+    private String status;
 
     public List<OrganisaatioHierarkiaDto> getChildren() {
         return children != null ? children : new ArrayList<>();

@@ -4,7 +4,7 @@ mixin ktNimi()
     h2.otsikko(style="margin-bottom: 20px; margin-top: 10px;")
       span(ng-bind="koulutustoimija.nimi | kaanna")
       span
-        a(href="" ui-sref="root.koulutustoimija.tiedot")
+        a(href="" ui-sref="root.koulutustoimija.tiedot.yhteistyo")
           i.fa.fa-pencil.fa-fw
       .pull-right(ng-show="koulutustoimijat.length > 1")
         span.dropdown(uib-dropdown)

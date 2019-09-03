@@ -315,6 +315,7 @@
     "se": "saame",
     "seuraava": "Seuraava",
     "siirra": "Siirrä",
+    "siirra-kaikki": "Siirrä kaikki",
     "siirra-opetussuunnitelma": "Siirrä toteutussuunnitelma ystäväorganisaatiolle",
     "siirtyma-aika-loppuu": "Siirtymä päättyy",
     "sisalto": "Sisältö",
@@ -469,5 +470,9 @@
     "yhteistyo-organisaation-kanssa": "Yhteistyö organisaation kanssa",
     "yhteistyon-sallivat-koulutustoimijat": "Yhteistyön sallivat organisaatiot",
     "ylatunniste": "Ylätunniste",
-    "ystava-organisaatiot": "Ystäväorganisaatiot"
+    "ystava-organisaatiot": "Ystäväorganisaatiot",
+    "siirravanhat": "Siirrä vanhat toteutussuunnitelmat",
+    "ei-siirtoa-vaativia-toteutussuunnitelmia": "Yhtään vanhaa toteutussuunnitelmaa ei löytynyt.",
+    "haetaan-vanhentuneet-toteutussuunnitelmat": "Haetaan vanhentuneet toteutussuunnitelmat",
+    "haku-virhe": "Tietojen haussa tapahtui virhe."
 }
