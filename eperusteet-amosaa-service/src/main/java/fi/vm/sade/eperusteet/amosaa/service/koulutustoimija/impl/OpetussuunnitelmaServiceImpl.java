@@ -761,7 +761,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                 .getOrganisaationHistoriaLiitokset(kt.getOrganisaatio());
 
         if (historiaLiitosOrganisaatiot.stream()
-                .filter(historialiitos -> historialiitos.getOrganisaatio().getStatus().equals(OrganisaatioStatus.PASSIIVINEN.name())
+                .filter(historialiitos -> historialiitos.getOrganisaatio().getStatus().equals(OrganisaatioStatus.PASSIIVINEN)
                         && historialiitos.getOrganisaatio().getOid().equals(ops.getKoulutustoimija().getOrganisaatio()))
                 .collect(Collectors.toList()).isEmpty()) {
             throw new BusinessRuleViolationException("siirto-mahdollinen-aiemmin-passivoidulta-organisaatiolta");

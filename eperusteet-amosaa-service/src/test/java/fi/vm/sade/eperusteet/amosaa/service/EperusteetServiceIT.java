@@ -35,9 +35,6 @@ public class EperusteetServiceIT extends AbstractIntegrationTest {
     @Autowired
     private SisaltoViiteService sisaltoViiteService;
 
-    @Autowired
-    private CachedPerusteRepository cachedPerusteRepository;
-
     @Test
     public void getSuoritustavatTest() {
 
@@ -72,9 +69,7 @@ public class EperusteetServiceIT extends AbstractIntegrationTest {
                                                                                                                // --hidden
                 }));
 
-        Long perusteId = cachedPerusteRepository.findAll().get(0).getId();
-
-        List<RakenneModuuliTunnisteDto> suoritustavat = eperusteetService.getSuoritustavat(getKoulutustoimijaId(), perusteId, ops.getId());
+        List<RakenneModuuliTunnisteDto> suoritustavat = eperusteetService.getSuoritustavat(getKoulutustoimijaId(), ops.getId());
 
         assertThat(suoritustavat).hasSize(1);
 
