@@ -46,7 +46,7 @@ public interface EperusteetService {
 
     JsonNode getSuoritustavat(Long id);
     
-    List<RakenneModuuliTunnisteDto> getSuoritustavat(Long ktId, Long perusteId, Long opetussuunnitelmaId);
+    List<RakenneModuuliTunnisteDto> getSuoritustavat(Long ktId, Long opetussuunnitelmaId);
     
     RakenneModuuliTunnisteDto getYksittaisenRakenteenSuoritustavat(SuoritustapaLaajaDto suoritustapaLaajaDto, SisaltoViiteDto sisaltoViite);
 
