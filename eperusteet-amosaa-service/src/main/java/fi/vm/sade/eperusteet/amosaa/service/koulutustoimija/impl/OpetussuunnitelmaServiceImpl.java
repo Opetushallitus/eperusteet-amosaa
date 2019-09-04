@@ -21,7 +21,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
-import fi.vm.sade.eperusteet.amosaa.domain.Status;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.Kayttaja;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.Kayttajaoikeus;
@@ -38,12 +37,13 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Tutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.OpsHakuDto;
-import fi.vm.sade.eperusteet.amosaa.dto.OrganisaatioHistoriaLiitosDto;
 import fi.vm.sade.eperusteet.amosaa.dto.PoistettuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.*;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.VanhentunutPohjaperusteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHistoriaLiitosDto;
+import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioStatus;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.*;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteExportDto;
@@ -754,19 +754,19 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
     @Override
     public OpetussuunnitelmaDto updateKoulutustoimijaPassivoidusta(Long ktId, Long opsId) {
-        
+
         Koulutustoimija kt = koulutustoimijaRepository.findOne(ktId);
         Opetussuunnitelma ops = repository.findOne(opsId);
-        List<OrganisaatioHistoriaLiitosDto> historiaLiitosOrganisaatiot = organisaatioService.getOrganisaationHistoriaLiitokset(kt.getOrganisaatio());
-        
-        if(historiaLiitosOrganisaatiot.stream()
-                .filter(historialiitos -> historialiitos.getOrganisaatio().getStatus().equals(Status.PASSIIVINEN.name())
+        List<OrganisaatioHistoriaLiitosDto> historiaLiitosOrganisaatiot = organisaatioService
+                .getOrganisaationHistoriaLiitokset(kt.getOrganisaatio());
+
+        if (historiaLiitosOrganisaatiot.stream()
+                .filter(historialiitos -> historialiitos.getOrganisaatio().getStatus().equals(OrganisaatioStatus.PASSIIVINEN.name())
                         && historialiitos.getOrganisaatio().getOid().equals(ops.getKoulutustoimija().getOrganisaatio()))
-                .collect(Collectors.toList())
-                .isEmpty()) {
+                .collect(Collectors.toList()).isEmpty()) {
             throw new BusinessRuleViolationException("siirto-mahdollinen-aiemmin-passivoidulta-organisaatiolta");
         }
-        
+
         ops.changeKoulutustoimija(kt);
         return mapper.map(ops, OpetussuunnitelmaDto.class);
     }

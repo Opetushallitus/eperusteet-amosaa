@@ -29,7 +29,7 @@ angular.module("app").config($stateProvider =>
                         $scope.laskeOpetussuunnitelmat();
                         $scope.hakukesken = false;
                     } catch(e) {
-                        NotifikaatioService.varoitus("palvelin-virhetilanne");
+                        NotifikaatioService.fataali(e.message || 'palvelin-virhetilanne');
                     }
 
                 };

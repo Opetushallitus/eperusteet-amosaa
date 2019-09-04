@@ -40,8 +40,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
-import fi.vm.sade.eperusteet.amosaa.dto.OrganisaatioHierarkiaDto;
-import fi.vm.sade.eperusteet.amosaa.dto.OrganisaatioHistoriaLiitosDto;
+import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHierarkiaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHistoriaLiitosDto;
 import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.impl.KoulutustoimijaServiceImpl;
 import fi.vm.sade.eperusteet.amosaa.service.util.RestClientFactory;

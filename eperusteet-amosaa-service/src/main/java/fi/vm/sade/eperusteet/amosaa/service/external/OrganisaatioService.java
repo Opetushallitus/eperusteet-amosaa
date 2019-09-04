@@ -16,8 +16,9 @@
 package fi.vm.sade.eperusteet.amosaa.service.external;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import fi.vm.sade.eperusteet.amosaa.dto.OrganisaatioHierarkiaDto;
-import fi.vm.sade.eperusteet.amosaa.dto.OrganisaatioHistoriaLiitosDto;
+
+import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHierarkiaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHistoriaLiitosDto;
 
 import java.util.List;
 

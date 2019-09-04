@@ -1,7 +1,6 @@
 package fi.vm.sade.eperusteet.amosaa.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
@@ -22,9 +21,9 @@ import org.springframework.util.ResourceUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import fi.vm.sade.eperusteet.amosaa.domain.Status;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
-import fi.vm.sade.eperusteet.amosaa.dto.OrganisaatioHistoriaLiitosDto;
+import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHistoriaLiitosDto;
+import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioStatus;
 import fi.vm.sade.eperusteet.amosaa.service.external.impl.OrganisaatioServiceImpl;
 import fi.vm.sade.eperusteet.amosaa.service.external.impl.OrganisaatioServiceImpl.Client;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
@@ -55,7 +54,7 @@ public class OrganisaatioServiceImplTest {
         assertThat(liitokset.get(0).getOrganisaatio()).isNotNull();
         assertThat(liitokset.get(0).getOrganisaatio().getOid()).isEqualTo("1.2.246.562.10.67185886982");
         assertThat(liitokset.get(0).getOrganisaatio().getNimi()).isEqualTo(Maps.newHashMap(Kieli.FI, "Keskuspuiston ammattiopisto"));
-        assertThat(liitokset.get(0).getOrganisaatio().getStatus()).isEqualTo(Status.PASSIIVINEN.name());
+        assertThat(liitokset.get(0).getOrganisaatio().getStatus()).isEqualTo(OrganisaatioStatus.PASSIIVINEN);
         
     }
     

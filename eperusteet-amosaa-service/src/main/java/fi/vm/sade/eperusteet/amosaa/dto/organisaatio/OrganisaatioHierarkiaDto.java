@@ -14,10 +14,11 @@
  * European Union Public Licence for more details.
  */
 
-package fi.vm.sade.eperusteet.amosaa.dto;
+package fi.vm.sade.eperusteet.amosaa.dto.organisaatio;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 
 import java.util.ArrayList;
@@ -47,7 +48,7 @@ public class OrganisaatioHierarkiaDto {
     private String kotipaikkaUri;
     private List<String> organisaatiotyypit = new ArrayList<>();
     private List<OrganisaatioHierarkiaDto> children = new ArrayList<>();
-    private String status;
+    private OrganisaatioStatus status;
 
     public List<OrganisaatioHierarkiaDto> getChildren() {
         return children != null ? children : new ArrayList<>();

@@ -1,4 +1,4 @@
-package fi.vm.sade.eperusteet.amosaa.dto;
+package fi.vm.sade.eperusteet.amosaa.dto.organisaatio;
 
 import java.util.Date;
 

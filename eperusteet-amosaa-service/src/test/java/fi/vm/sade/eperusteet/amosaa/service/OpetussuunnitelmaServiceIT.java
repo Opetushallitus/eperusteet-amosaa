@@ -450,7 +450,8 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
         assertThat(opetussuunnitelma.getKoulutustoimija().getId()).isNotEqualTo(getKoulutustoimijaId());
         
         Assertions.assertThatThrownBy(() -> opetussuunnitelmaService.updateKoulutustoimijaPassivoidusta(getKoulutustoimijaId(), ops.getId()))
-            .isInstanceOf(BusinessRuleViolationException.class);
+            .isInstanceOf(BusinessRuleViolationException.class)
+            .hasMessage("siirto-mahdollinen-aiemmin-passivoidulta-organisaatiolta");
         
         opetussuunnitelma = opetussuunnitelmaRepository.findOne(ops.getId());
         assertThat(opetussuunnitelma.getKoulutustoimija().getId()).isNotEqualTo(getKoulutustoimijaId());

@@ -19,9 +19,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import fi.vm.sade.eperusteet.amosaa.domain.Status;
-import fi.vm.sade.eperusteet.amosaa.dto.OrganisaatioHierarkiaDto;
-import fi.vm.sade.eperusteet.amosaa.dto.OrganisaatioHistoriaLiitosDto;
+import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHierarkiaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHistoriaLiitosDto;
+import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioStatus;
 import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
 
 import org.springframework.context.annotation.Profile;
@@ -83,13 +83,13 @@ public class OrganisaatioServiceMock implements OrganisaatioService {
                 OrganisaatioHistoriaLiitosDto.builder()
                     .organisaatio(OrganisaatioHierarkiaDto.builder()
                                     .oid("1.2.246.562.10.54645809036")
-                                    .status(Status.PASSIIVINEN.name())
+                                    .status(OrganisaatioStatus.PASSIIVINEN)
                                     .build())
                     .build(),
                     OrganisaatioHistoriaLiitosDto.builder()
                         .organisaatio(OrganisaatioHierarkiaDto.builder()
                                     .oid("1.2.246.562.10.2013120512391252668625")
-                                    .status(Status.AKTIIVINEN.name())
+                                    .status(OrganisaatioStatus.AKTIIVINEN)
                                     .build())
                     .build()    
                 );
