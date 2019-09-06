@@ -64,6 +64,10 @@ import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaSer
 @ContextConfiguration("/it-test-context.xml")
 @ActiveProfiles(profiles = "test")
 public abstract class AbstractIntegrationTest {
+    
+    static public String KP1 = "kp1";
+    static public String KP2 = "kp2";
+    
     static public String oidOph = "1.2.246.562.10.00000000001";
     static public String oidKp1 = "1.2.246.562.10.54645809036";
     static public String oidKp2 = "1.2.246.562.10.2013120512391252668625";
