@@ -40,7 +40,7 @@ public class MetricsConfig extends MetricsConfigurerAdapter {
 
         registerReporter(ConsoleReporter
                 .forRegistry(metricRegistry)
-                .build()).start(1, TimeUnit.MINUTES);
+                .build()).start(1, TimeUnit.DAYS);
     }
 
 }
