@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import com.google.common.collect.ImmutableMap;
 
-import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttoikeusKayttajaDto;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttooikeusService;
 import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
 

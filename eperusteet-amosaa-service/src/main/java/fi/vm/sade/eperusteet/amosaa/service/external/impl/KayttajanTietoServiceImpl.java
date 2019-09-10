@@ -316,8 +316,7 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
                     .map(kayttajaDto -> {
                         kayttajaDto.setKoulutustoimija(organisaatioKtIdMap.get(organisaatioOid));
                         return kayttajaDto;
-                    })
-                    )
+                    }))
             .filter(kayttaja -> !oids.contains(kayttaja.getOid()))
             .collect(Collectors.toList());
 
