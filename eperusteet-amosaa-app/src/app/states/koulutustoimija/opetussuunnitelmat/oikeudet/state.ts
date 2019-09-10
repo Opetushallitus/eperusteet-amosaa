@@ -31,23 +31,40 @@ angular.module("app").config($stateProvider =>
                         }
                     };
 
-                    _.each($scope.kayttajat, kayttaja =>
-                        nimiLataaja(kayttaja.oid)
-                            .then(res => {
-                                kayttaja.$$nimi = res;
-                                $scope.oikeudet[kayttaja.id] = $scope.oikeudet[kayttaja.id] || { oikeus: "estetty" };
-                            })
-                            .catch(() => (kayttaja.$$nimi = kayttaja.oid))
-                    );
+                    _.each($scope.kayttajat, kayttaja => {
 
-                    $scope.valitse = (oikeus: string, kayttaja) => {
-                        const vaihtoehto = _.clone($scope.oikeudet[kayttaja.id]);
+                        if (kayttaja.sukunimi) {
+                            kayttaja.$$nimi = Kayttajatiedot.parsiEsitysnimi(kayttaja);
+                        } else {
+                            nimiLataaja(kayttaja.oid)
+                                .then(res => {
+                                    kayttaja.$$nimi = res;
+                                })
+                                .catch(() => (kayttaja.$$nimi = kayttaja.oid))
+                        }
+
+                        $scope.oikeudet[kayttaja.id] = $scope.oikeudet[kayttaja.id] || { oikeus: "estetty" };
+                    });
+
+                    $scope.valitse = async (oikeus: string, valittuKayttaja) => {
+                        const vaihtoehto = _.clone($scope.oikeudet[valittuKayttaja.id]);
                         vaihtoehto.oikeus = oikeus;
+
+                        if (!valittuKayttaja.id) {
+                            try {
+                                const uusiKayttaja = await kayttaja.one(valittuKayttaja.oid + '/' + valittuKayttaja.koulutustoimija).customPOST();
+                                valittuKayttaja.id = uusiKayttaja.id;
+                                $scope.oikeudet[valittuKayttaja.id] = { oikeus: "estetty" };
+                            } catch (error) {
+                                NotifikaatioService.serverCb;
+                            }
+                        }    
+
                         ops
-                            .one("oikeudet/" + kayttaja.id)
+                            .one("oikeudet/" + valittuKayttaja.id)
                             .customPOST(vaihtoehto)
                             .then(() => {
-                                $scope.oikeudet[kayttaja.id].oikeus = oikeus;
+                                $scope.oikeudet[valittuKayttaja.id].oikeus = oikeus;
                                 NotifikaatioService.onnistui("oikeus-paivitetty");
                             })
                             .catch(NotifikaatioService.serverCb);

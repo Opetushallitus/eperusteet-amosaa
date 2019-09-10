@@ -16,15 +16,16 @@
 
 package fi.vm.sade.eperusteet.amosaa.dto.kayttaja;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
+import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
+import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.beans.BeanUtils;
 
 import java.util.Date;
 import java.util.Set;
-
-import lombok.Getter;
-import lombok.Setter;
-import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
-import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
  * @author nkala
@@ -36,6 +37,19 @@ public class KayttajaDto extends KayttajaBaseDto implements AuditLoggableDto {
     public void auditLog(LogMessage.LogMessageBuilder msg) {
     }
 
+    private String etunimet;
+    private String kutsumanimi;
+    private String sukunimi;
     private Date tiedotekuittaus;
     private Set<Reference> suosikit;
+
+    public static KayttajaDto of(KayttooikeusKayttajaDto kayttooikeusKayttaja, Long koulutustoimijaId) {
+        KayttajaDto kayttajaDto = new KayttajaDto();
+        BeanUtils.copyProperties(kayttooikeusKayttaja, kayttajaDto);
+
+        kayttajaDto.setKoulutustoimija(koulutustoimijaId);
+
+        return kayttajaDto;
+    }
+
 }

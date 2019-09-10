@@ -33,6 +33,8 @@ import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRe
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
+import fi.vm.sade.eperusteet.amosaa.service.external.KayttooikeusService;
+
 import static fi.vm.sade.eperusteet.amosaa.service.external.impl.KayttajanTietoParser.parsiKayttaja;
 import static javax.servlet.http.HttpServletResponse.SC_FORBIDDEN;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
@@ -90,6 +92,9 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
 
     @Autowired
     private DtoMapper mapper;
+    
+    @Autowired
+    private KayttooikeusService kayttooikeusService;
 
     @Override
     public KayttajaDto haeKayttajanTiedot() {
@@ -195,6 +200,25 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
         }
         return kayttaja;
     }
+    
+    @Override
+    public KayttajaDto saveKayttajaToKoulutustoimija(String oid, Long koulutustoimijaId) {
+        Kayttaja kayttaja = kayttajaRepository.findOneByOid(oid);
+        if (kayttaja == null) {
+            Kayttaja uusi = new Kayttaja();
+            uusi.setOid(oid);
+            kayttaja = kayttajaRepository.save(uusi);
+            
+            Koulutustoimija kt = koulutustoimijaRepository.findOne(koulutustoimijaId);
+            if (ktkayttajaRepository.findOneByKoulutustoimijaAndKayttaja(kt, kayttaja) == null) {
+                KoulutustoimijaKayttaja ktk = new KoulutustoimijaKayttaja();
+                ktk.setKayttaja(kayttaja);
+                ktk.setKoulutustoimija(kt);
+                ktkayttajaRepository.save(ktk);
+            }
+        }
+        return mapper.map(kayttaja, KayttajaDto.class);
+    }
 
     @Override
     public KayttajanTietoDto haeKirjautaunutKayttaja() {
@@ -262,14 +286,41 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
                 .collect(Collectors.toList()));
         result.addAll(getKayttajat(kOid));
 
+        if (!self.isOph()) {
+            result.addAll(getOrganisaatioVirkailijatAsKayttajat(Collections.singletonList(self.getOrganisaatio()), result));
+            result.addAll(getOrganisaatioVirkailijatAsKayttajat(ystavaorganisaatiot.stream()
+                            .map(KoulutustoimijaYstavaDto::getOrganisaatio).collect(Collectors.toList()),
+                    result));
+        }
+
         return new ArrayList<>(result.stream()
                 .collect(Collectors.toMap(
-                        KayttajaBaseDto::getId,
+                        KayttajaBaseDto::getOid,
                         kayttaja -> kayttaja,
                         (a, b) -> kOid.equals(b.getKoulutustoimija()) ? b : a))
                 .values());
     }
+    
+    private List<KayttajaDto> getOrganisaatioVirkailijatAsKayttajat(List<String> organisaatioOids, List<KayttajaDto> result) {
 
+        if(organisaatioOids.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        List<String> oids = result.stream().map(KayttajaDto::getOid).collect(Collectors.toList());
+        Map<String, Long> organisaatioKtIdMap = koulutustoimijaRepository.findByOrganisaatioIn(organisaatioOids).stream().collect(
+                (Collectors.toMap(Koulutustoimija::getOrganisaatio, Koulutustoimija::getId)));
+
+        List<KayttajaDto> kayttajat = organisaatioOids.stream()
+            .flatMap(organisaatioOid -> kayttooikeusService.getOrganisaatioVirkailijat(organisaatioOid).stream()
+                    .map(kayttooikeusKayttajaDto -> KayttajaDto.of(kayttooikeusKayttajaDto, organisaatioKtIdMap.get(organisaatioOid))
+                    ))
+            .filter(kayttaja -> !oids.contains(kayttaja.getOid()))
+            .collect(Collectors.toList());
+
+        return kayttajat;
+    }
+    
     @Override
     public Set<String> getUserOrganizations() {
         return SecurityUtil.getOrganizations(EnumSet.allOf(RolePermission.class));

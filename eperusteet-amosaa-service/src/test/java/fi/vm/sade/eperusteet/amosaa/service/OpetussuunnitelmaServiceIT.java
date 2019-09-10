@@ -205,7 +205,7 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
         List<KayttajaDto> kaikki = kayttajanTietoService.getKaikkiKayttajat(getKoulutustoimijaId());
         assertThat(kaikki)
                 .extracting(KayttajaDto::getOid)
-                .containsExactlyInAnyOrder("kp2");
+                .containsExactlyInAnyOrder("kp2", "1.22.3.4.5.kp2", "1.2.3.4.5.kp1");
     }
 
     @Test
@@ -216,7 +216,7 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
         List<KayttajaDto> kaikki = kayttajanTietoService.getKaikkiKayttajat(getKoulutustoimijaId());
         assertThat(kaikki)
                 .extracting(KayttajaDto::getOid)
-                .containsExactlyInAnyOrder("kp1", "kp2", "kp2user2", "kp3");
+                .containsExactlyInAnyOrder("kp1", "kp2", "kp2user2", "kp3", "1.22.3.4.5.kp2", "1.2.3.4.5.kp1");
 
     }
 
@@ -229,7 +229,7 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
         List<KayttajaDto> kaikki = kayttajanTietoService.getKaikkiKayttajat(getKoulutustoimijaId());
         assertThat(kaikki)
                 .extracting(KayttajaDto::getOid)
-                .containsExactlyInAnyOrder("kp1", "kp2", "kp2user2", "kp3", "tmpr");
+                .containsExactlyInAnyOrder("kp1", "kp2", "kp2user2", "kp3", "tmpr", "1.22.3.4.5.kp2", "1.2.3.4.5.kp1", "1.22.3.4.5.TMPR");
     }
 
     @Test
