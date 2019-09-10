@@ -2,6 +2,7 @@ package fi.vm.sade.eperusteet.amosaa.service;
 
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.KayttajaoikeusTyyppi;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.OpsHakuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
@@ -14,6 +15,8 @@ import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaServi
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator;
 import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
+
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -414,6 +417,44 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
         });
 
         assertThat(yhteinen.getPohja().getIdLong()).isEqualTo(pohja.getId());
+    }
+    
+    @Test
+    @Rollback
+    public void testUpdateKoulutustoimijaPassivoidusta_historialiitos_passiivinen() {
+                 
+        useProfileKP1();
+        OpetussuunnitelmaBaseDto ops = createOpetussuunnitelma();
+        
+        useProfileKP2();
+        
+        Opetussuunnitelma opetussuunnitelma = opetussuunnitelmaRepository.findOne(ops.getId());
+        assertThat(opetussuunnitelma.getKoulutustoimija().getId()).isNotEqualTo(getKoulutustoimijaId());
+        
+        opetussuunnitelmaService.updateKoulutustoimijaPassivoidusta(getKoulutustoimijaId(), ops.getId());
+        
+        opetussuunnitelma = opetussuunnitelmaRepository.findOne(ops.getId());
+        assertThat(opetussuunnitelma.getKoulutustoimija().getId()).isEqualTo(getKoulutustoimijaId());
+    }
+    
+    @Test
+    @Rollback
+    public void testUpdateKoulutustoimijaPassivoidusta_historialiitos_aktiivinen() {
+                 
+        useProfileKP2();
+        OpetussuunnitelmaBaseDto ops = createOpetussuunnitelma();
+        
+        useProfileKP1();
+        
+        Opetussuunnitelma opetussuunnitelma = opetussuunnitelmaRepository.findOne(ops.getId());
+        assertThat(opetussuunnitelma.getKoulutustoimija().getId()).isNotEqualTo(getKoulutustoimijaId());
+        
+        Assertions.assertThatThrownBy(() -> opetussuunnitelmaService.updateKoulutustoimijaPassivoidusta(getKoulutustoimijaId(), ops.getId()))
+            .isInstanceOf(BusinessRuleViolationException.class)
+            .hasMessage("siirto-mahdollinen-aiemmin-passivoidulta-organisaatiolta");
+        
+        opetussuunnitelma = opetussuunnitelmaRepository.findOne(ops.getId());
+        assertThat(opetussuunnitelma.getKoulutustoimija().getId()).isNotEqualTo(getKoulutustoimijaId());
     }
 
 }

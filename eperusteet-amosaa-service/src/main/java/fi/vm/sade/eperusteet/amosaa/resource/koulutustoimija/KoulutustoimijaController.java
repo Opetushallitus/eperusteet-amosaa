@@ -16,13 +16,14 @@
 
 package fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija;
 
-import fi.vm.sade.eperusteet.amosaa.dto.OrganisaatioHierarkiaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaYstavaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.SisaltoViiteSijaintiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHierarkiaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHistoriaLiitosDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViitePaikallinenIntegrationDto;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaAudit;
@@ -179,6 +180,16 @@ public class KoulutustoimijaController extends KoulutustoimijaIdGetterAbstractCo
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId
     ) {
         return koulutustoimijaService.getPyynnot(ktId);
+    }
+    
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
+    @RequestMapping(value = "/{ktId}/historialiitokset", method = RequestMethod.GET)
+    public List<OrganisaatioHistoriaLiitosDto> getOrganisaatioHistoriaLiitokset(
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId
+    ) {
+        return koulutustoimijaService.getOrganisaatioHierarkiaHistoriaLiitokset(ktId);
     }
 
 }

@@ -1,0 +1,33 @@
+ 
+mixin paivitystaVaativatOpetussuunnitelmat()
+  h2
+    span(kaanna="'opetussuunnitelmat-joissa-vanhentunut-peruste'" ng-disabled="haetaanVanhentuneita")
+    button.btn.btn-default.pull-right(ng-click="haeVanhentuneet()")
+      +gicon("refresh")
+      span(style="margin-left: 4px" kaanna="'tarkista'")
+  div(style="margin-top: 20px")
+    div.alert.alert-info(ng-if="vanhentuneet === null" kaanna="'lataa-vanhentuneet-ensin'")
+    div.alert.alert-success(ng-if="vanhentuneet.length === 0" kaanna="'ei-paivitysta-vaativia-toteutussuunnitelmia'")
+    div(ng-if="vanhentuneet.length > 0")
+      table.table
+        thead
+          tr
+            td(kaanna="'opetussuunnitelma'")
+            td(kaanna="'peruste'")
+            td(kaanna="'vanhan-aikaleima'")
+            td(kaanna="'uuden-aikaleima'")
+            td
+        tbody
+          tr(ng-repeat="vanha in vanhentuneet")
+            td
+              a(href="" ui-sref="root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot({ opsId: vanha.opetussuunnitelma.id })" kaanna="vanha.opetussuunnitelma.nimi")
+            td
+              a(ng-href="https://eperusteet.opintopolku.fi/#/fi/kooste/{{ vanha.perusteUusi.id }}" kaanna="vanha.perusteUusi.nimi")
+            td(ng-bind="vanha.perusteVanha.globalVersion.aikaleima | aikaleima")
+            td(ng-bind="vanha.perusteUusi.globalVersion.aikaleima | aikaleima")
+            td
+              button.btn.btn-xs.btn-danger(kaanna="'paivita'" ng-disabled="paivittaa" ng-click="paivitaVanhentunut(vanha.opetussuunnitelma.id)")
+
+div.yhteistyot
+  div(ng-if="!isOph")
+    +paivitystaVaativatOpetussuunnitelmat()

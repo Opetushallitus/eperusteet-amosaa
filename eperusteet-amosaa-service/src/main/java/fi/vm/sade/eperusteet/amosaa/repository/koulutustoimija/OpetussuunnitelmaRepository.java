@@ -68,4 +68,6 @@ public interface OpetussuunnitelmaRepository extends JpaWithVersioningRepository
 
     @Query(value = "SELECT o FROM Opetussuunnitelma o WHERE o.perusteDiaarinumero = ?1 AND (o.tila = fi.vm.sade.eperusteet.amosaa.domain.Tila.JULKAISTU)")
     List<Opetussuunnitelma> findAllJulkaistutByPerusteDiaarinumero(String diaari);
+     
+    List<Opetussuunnitelma> findByKoulutustoimijaOrganisaatio(String organisaatioId);
 }
