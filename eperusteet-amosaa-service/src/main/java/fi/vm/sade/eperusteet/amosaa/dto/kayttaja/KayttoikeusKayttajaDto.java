@@ -15,7 +15,5 @@ public class KayttoikeusKayttajaDto {
     private String etunimet;
     private String kutsumanimi;
     private String sukunimi;
-    private String asiointikieli;
-    private String sahkoposti;
     
 }

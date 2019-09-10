@@ -1,14 +1,18 @@
 package fi.vm.sade.eperusteet.amosaa.service.external.impl;
 
-import static javax.servlet.http.HttpServletResponse.SC_OK;
-import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableMap;
+import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttoikeusKayttajaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttooikeusKyselyDto;
+import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
+import fi.vm.sade.eperusteet.amosaa.service.external.KayttooikeusService;
+import fi.vm.sade.eperusteet.amosaa.service.util.RestClientFactory;
+import fi.vm.sade.javautils.http.OphHttpClient;
+import fi.vm.sade.javautils.http.OphHttpEntity;
+import fi.vm.sade.javautils.http.OphHttpRequest;
 import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,19 +22,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.util.*;
 
-import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttoikeusKayttajaDto;
-import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
-import fi.vm.sade.eperusteet.amosaa.service.external.KayttooikeusService;
-import fi.vm.sade.eperusteet.amosaa.service.util.RestClientFactory;
-import fi.vm.sade.javautils.http.OphHttpClient;
-import fi.vm.sade.javautils.http.OphHttpEntity;
-import fi.vm.sade.javautils.http.OphHttpRequest;
+import static javax.servlet.http.HttpServletResponse.SC_OK;
+import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 
 @Service
 @Transactional
@@ -38,7 +34,9 @@ import fi.vm.sade.javautils.http.OphHttpRequest;
 public class KayttooikeusServiceImpl implements KayttooikeusService{
 
     private final String VIRKAILIJA_HAKU_PATH ="/virkailija/haku";
-    
+    private final String KAYTTOOIKEUS_EPERUSTEET_AMOSAA = "EPERUSTEET_AMOSAA";
+    private final List<String> ROLES = Arrays.asList("ADMIN","READ","CRUD","READ_UPDATE");
+
     @Value("${cas.service.kayttooikeus-service}")
     private String kayttooikeusServiceUrl;
     
@@ -48,7 +46,7 @@ public class KayttooikeusServiceImpl implements KayttooikeusService{
     private ObjectMapper omapper = new ObjectMapper();
 
     @Override
-    public List<KayttoikeusKayttajaDto> getOrganisaatioVirkailijat(String organisaatioOid) {
+    public List<KayttajaDto> getOrganisaatioVirkailijat(String organisaatioOid) {
 
         OphHttpClient client = restClientFactory.get(kayttooikeusServiceUrl, true);
         
@@ -56,21 +54,31 @@ public class KayttooikeusServiceImpl implements KayttooikeusService{
                 .path(VIRKAILIJA_HAKU_PATH)
                 .buildAndExpand(organisaatioOid);
 
-        OphHttpRequest request = OphHttpRequest.Builder
-                .post(uri.toString())
-                .setEntity(new OphHttpEntity.Builder()
-                        .content("{ \"organisaatioOids\": [\"" + organisaatioOid + "\"] }")
-                        .contentType(ContentType.APPLICATION_JSON)
-                        .build())
+        KayttooikeusKyselyDto kayttooikeusKyselyDto = KayttooikeusKyselyDto.builder()
+                .kayttooikeudet(ImmutableMap.of(KAYTTOOIKEUS_EPERUSTEET_AMOSAA, ROLES))
+                .organisaatioOids(Collections.singletonList(organisaatioOid))
                 .build();
 
-        return client.<List<KayttoikeusKayttajaDto>>execute(request)
+        OphHttpRequest request = null;
+        try {
+            request = OphHttpRequest.Builder
+                    .post(uri.toString())
+                    .setEntity(new OphHttpEntity.Builder()
+                            .content(omapper.writeValueAsString(kayttooikeusKyselyDto))
+                            .contentType(ContentType.APPLICATION_JSON)
+                            .build())
+                    .build();
+        } catch (JsonProcessingException e) {
+            throw new BusinessRuleViolationException("Käyttäjien tietojen hakeminen epäonnistui");
+        }
+
+        return client.<List<KayttajaDto>>execute(request)
                 .handleErrorStatus(SC_UNAUTHORIZED)
                 .with(res -> Optional.empty())
                 .expectedStatus(SC_OK)
                 .mapWith(res -> {
                     try {                      
-                        return omapper.readValue(res, new TypeReference<List<KayttoikeusKayttajaDto>>() {});
+                        return omapper.readValue(res, new TypeReference<List<KayttajaDto>>() {});
                     } catch (IOException ex) {
                         throw new BusinessRuleViolationException("Käyttäjien tietojen hakeminen epäonnistui");
                     }

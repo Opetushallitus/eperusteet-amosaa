@@ -285,10 +285,13 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList()));
         result.addAll(getKayttajat(kOid));
-        result.addAll(getOrganisaatioVirkailijatAsKayttajat(Collections.singletonList(self.getOrganisaatio()), result));
-        result.addAll(getOrganisaatioVirkailijatAsKayttajat(ystavaorganisaatiot.stream()
-                .map(KoulutustoimijaYstavaDto::getOrganisaatio).collect(Collectors.toList()), 
-                result));
+
+        if (!self.isOph()) {
+            result.addAll(getOrganisaatioVirkailijatAsKayttajat(Collections.singletonList(self.getOrganisaatio()), result));
+            result.addAll(getOrganisaatioVirkailijatAsKayttajat(ystavaorganisaatiot.stream()
+                            .map(KoulutustoimijaYstavaDto::getOrganisaatio).collect(Collectors.toList()),
+                    result));
+        }
 
         return new ArrayList<>(result.stream()
                 .collect(Collectors.toMap(
@@ -299,12 +302,21 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
     }
     
     private List<KayttajaDto> getOrganisaatioVirkailijatAsKayttajat(List<String> organisaatioOids, List<KayttajaDto> result) {
-        
+
+        if(organisaatioOids.isEmpty()) {
+            return Collections.emptyList();
+        }
+
         List<String> oids = result.stream().map(KayttajaDto::getOid).collect(Collectors.toList());
-        
+        Map<String, Long> organisaatioKtIdMap = koulutustoimijaRepository.findByOrganisaatioIn(organisaatioOids).stream().collect(
+                (Collectors.toMap(Koulutustoimija::getOrganisaatio, Koulutustoimija::getId)));
+
         List<KayttajaDto> kayttajat = organisaatioOids.stream()
             .flatMap(organisaatioOid -> kayttooikeusService.getOrganisaatioVirkailijat(organisaatioOid).stream()
-                    .map(kayttooikeusKayttaja -> KayttajaDto.of(kayttooikeusKayttaja, koulutustoimijaRepository.findOneByOrganisaatio(organisaatioOid).getId()))
+                    .map(kayttajaDto -> {
+                        kayttajaDto.setKoulutustoimija(organisaatioKtIdMap.get(organisaatioOid));
+                        return kayttajaDto;
+                    })
                     )
             .filter(kayttaja -> !oids.contains(kayttaja.getOid()))
             .collect(Collectors.toList());

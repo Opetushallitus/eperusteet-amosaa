@@ -45,4 +45,6 @@ public interface KoulutustoimijaRepository extends JpaWithVersioningRepository<K
 
     @Query("SELECT DISTINCT kt FROM Koulutustoimija kt JOIN kt.ystavat y WHERE ?1 = y")
     Set<Koulutustoimija> findAllYstavaPyynnotForKoulutustoimija(Koulutustoimija kt);
+
+    List<Koulutustoimija> findByOrganisaatioIn(List<String> organisaatio);
 }
