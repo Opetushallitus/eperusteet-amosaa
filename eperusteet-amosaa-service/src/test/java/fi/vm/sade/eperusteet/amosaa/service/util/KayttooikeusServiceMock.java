@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttooikeusKayttajaDto;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -22,29 +23,40 @@ public class KayttooikeusServiceMock implements KayttooikeusService{
     public static final String KP1_KAYTTAJA_OID = "1.2.3.4.5.kp1";
     public static final String KP2_KAYTTAJA_OID = "1.22.3.4.5.kp2";
     public static final String KPTMPR_KAYTTAJA_OID = "1.22.3.4.5.TMPR";
-    
+
     @Override
-    public List<KayttajaDto> getOrganisaatioVirkailijat(String organisaatioOid) {
+    public List<KayttooikeusKayttajaDto> getOrganisaatioVirkailijat(String organisaatioOid) {
         return Optional.ofNullable(KayttooikeusServiceMock.kayttoikeuskayttajaMap().get(organisaatioOid))
                 .orElseGet(Collections::emptyList);
     }
-    
-    private static Map<String, List<KayttajaDto>> kayttoikeuskayttajaMap() {
+
+    private static Map<String, List<KayttooikeusKayttajaDto>> kayttoikeuskayttajaMap() {
         return ImmutableMap.of(
-                AbstractIntegrationTest.oidKp1, Arrays.asList(kayttajadto(AbstractIntegrationTest.KP1,"kp1sukunimi"),
-                        kayttajadto(KP1_KAYTTAJA_OID,"kp1sukunimi")),
+                AbstractIntegrationTest.oidKp1, Arrays.asList(
+                        KayttooikeusKayttajaDto.builder()
+                                .oid(AbstractIntegrationTest.KP1)
+                                .sukunimi("kp1sukunimi")
+                                .build(),
+                        KayttooikeusKayttajaDto.builder()
+                                .oid(KP1_KAYTTAJA_OID)
+                                .sukunimi("kp1sukunimi")
+                                .build()),
                 AbstractIntegrationTest.oidKp2, Arrays.asList(
-                        kayttajadto(AbstractIntegrationTest.KP2,"kp2sukunimi"),
-                        kayttajadto(KP2_KAYTTAJA_OID,"kp2sukunimi"),
-                        kayttajadto(KP1_KAYTTAJA_OID,"kp1sukunimi")),
-                AbstractIntegrationTest.oidTmpr, Arrays.asList(kayttajadto(KPTMPR_KAYTTAJA_OID,"kpTmprsukunimi")));
-    }
-
-    private static KayttajaDto kayttajadto(String oid, String sukunimi) {
-        KayttajaDto dto = new KayttajaDto();
-        dto.setOid(oid);
-        dto.setSukunimi(sukunimi);
-
-        return dto;
+                        KayttooikeusKayttajaDto.builder()
+                                .oid(AbstractIntegrationTest.KP2)
+                                .sukunimi("kp2sukunimi")
+                                .build(),
+                        KayttooikeusKayttajaDto.builder()
+                                .oid(KP2_KAYTTAJA_OID)
+                                .sukunimi("kp2sukunimi")
+                                .build(),
+                        KayttooikeusKayttajaDto.builder()
+                                .oid(KP1_KAYTTAJA_OID)
+                                .sukunimi("kp1sukunimi")
+                                .build()),
+                AbstractIntegrationTest.oidTmpr, Arrays.asList(KayttooikeusKayttajaDto.builder()
+                        .oid(KPTMPR_KAYTTAJA_OID)
+                        .sukunimi("kpTmprsukunimi")
+                        .build()));
     }
 }

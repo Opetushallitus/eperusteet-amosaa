@@ -22,6 +22,7 @@ import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
 import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.BeanUtils;
 
 import java.util.Date;
 import java.util.Set;
@@ -31,7 +32,6 @@ import java.util.Set;
  */
 @Getter
 @Setter
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class KayttajaDto extends KayttajaBaseDto implements AuditLoggableDto {
     @Override
     public void auditLog(LogMessage.LogMessageBuilder msg) {
@@ -42,5 +42,14 @@ public class KayttajaDto extends KayttajaBaseDto implements AuditLoggableDto {
     private String sukunimi;
     private Date tiedotekuittaus;
     private Set<Reference> suosikit;
+
+    public static KayttajaDto of(KayttooikeusKayttajaDto kayttooikeusKayttaja, Long koulutustoimijaId) {
+        KayttajaDto kayttajaDto = new KayttajaDto();
+        BeanUtils.copyProperties(kayttooikeusKayttaja, kayttajaDto);
+
+        kayttajaDto.setKoulutustoimija(koulutustoimijaId);
+
+        return kayttajaDto;
+    }
 
 }

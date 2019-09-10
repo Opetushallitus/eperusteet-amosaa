@@ -313,10 +313,8 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
 
         List<KayttajaDto> kayttajat = organisaatioOids.stream()
             .flatMap(organisaatioOid -> kayttooikeusService.getOrganisaatioVirkailijat(organisaatioOid).stream()
-                    .map(kayttajaDto -> {
-                        kayttajaDto.setKoulutustoimija(organisaatioKtIdMap.get(organisaatioOid));
-                        return kayttajaDto;
-                    }))
+                    .map(kayttooikeusKayttajaDto -> KayttajaDto.of(kayttooikeusKayttajaDto, organisaatioKtIdMap.get(organisaatioOid))
+                    ))
             .filter(kayttaja -> !oids.contains(kayttaja.getOid()))
             .collect(Collectors.toList());
 

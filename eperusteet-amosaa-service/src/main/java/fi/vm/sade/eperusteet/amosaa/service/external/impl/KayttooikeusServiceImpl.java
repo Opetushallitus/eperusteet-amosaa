@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
-import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttooikeusKayttajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttooikeusKyselyDto;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttooikeusService;
@@ -45,7 +45,7 @@ public class KayttooikeusServiceImpl implements KayttooikeusService{
     private ObjectMapper omapper = new ObjectMapper();
 
     @Override
-    public List<KayttajaDto> getOrganisaatioVirkailijat(String organisaatioOid) {
+    public List<KayttooikeusKayttajaDto> getOrganisaatioVirkailijat(String organisaatioOid) {
 
         OphHttpClient client = restClientFactory.get(kayttooikeusServiceUrl, true);
         
@@ -71,13 +71,13 @@ public class KayttooikeusServiceImpl implements KayttooikeusService{
             throw new BusinessRuleViolationException("Käyttäjien tietojen hakeminen epäonnistui");
         }
 
-        return client.<List<KayttajaDto>>execute(request)
+        return client.<List<KayttooikeusKayttajaDto>>execute(request)
                 .handleErrorStatus(SC_UNAUTHORIZED)
                 .with(res -> Optional.empty())
                 .expectedStatus(SC_OK)
                 .mapWith(res -> {
-                    try {                      
-                        return omapper.readValue(res, new TypeReference<List<KayttajaDto>>() {});
+                    try {
+                        return omapper.readValue(res, new TypeReference<List<KayttooikeusKayttajaDto>>() {});
                     } catch (IOException ex) {
                         throw new BusinessRuleViolationException("Käyttäjien tietojen hakeminen epäonnistui");
                     }
