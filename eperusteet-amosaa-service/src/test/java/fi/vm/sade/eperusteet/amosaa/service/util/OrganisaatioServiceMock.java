@@ -18,18 +18,18 @@ package fi.vm.sade.eperusteet.amosaa.service.util;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
+import com.google.common.collect.ImmutableMap;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHierarkiaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHistoriaLiitosDto;
 import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioStatus;
 import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
-
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Service;
 
 /**
  * @author mikkom
@@ -93,6 +93,11 @@ public class OrganisaatioServiceMock implements OrganisaatioService {
                                     .build())
                     .build()    
                 );
+    }
+
+    @Override
+    public LokalisoituTeksti haeOrganisaatioNimi(String organisaatioOid) {
+        return LokalisoituTeksti.of(ImmutableMap.of(Kieli.FI, "faa", Kieli.SV, "bor"));
     }
 
 }

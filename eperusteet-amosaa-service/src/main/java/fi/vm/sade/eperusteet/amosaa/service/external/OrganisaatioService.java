@@ -16,12 +16,10 @@
 package fi.vm.sade.eperusteet.amosaa.service.external;
 
 import com.fasterxml.jackson.databind.JsonNode;
-
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHierarkiaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHistoriaLiitosDto;
-
 import java.util.List;
-
 import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
@@ -37,4 +35,7 @@ public interface OrganisaatioService {
     
     @PreAuthorize("isAuthenticated()")
     List<OrganisaatioHistoriaLiitosDto> getOrganisaationHistoriaLiitokset(String organisaatioOid);
+
+    @PreAuthorize("isAuthenticated()")
+    LokalisoituTeksti haeOrganisaatioNimi(String organisaatioOid);
 }

@@ -15,15 +15,24 @@
  */
 package fi.vm.sade.eperusteet.amosaa.service.external.impl;
 
-import static javax.servlet.http.HttpServletResponse.SC_OK;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
+import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHierarkiaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHistoriaLiitosDto;
+import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
+import fi.vm.sade.eperusteet.amosaa.service.util.RestClientFactory;
+import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
+import fi.vm.sade.javautils.http.OphHttpClient;
+import fi.vm.sade.javautils.http.OphHttpRequest;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
@@ -33,21 +42,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-
-import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHierarkiaDto;
-import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHistoriaLiitosDto;
-import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
-import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.impl.KoulutustoimijaServiceImpl;
-import fi.vm.sade.eperusteet.amosaa.service.util.RestClientFactory;
-import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
-import fi.vm.sade.javautils.http.OphHttpClient;
-import fi.vm.sade.javautils.http.OphHttpRequest;
+import static javax.servlet.http.HttpServletResponse.SC_OK;
 
 /**
  * @author mikkom
@@ -201,6 +196,12 @@ public class OrganisaatioServiceImpl implements OrganisaatioService {
         } catch (IOException ex) {
             return null;
         }
+    }
+
+    @Override
+    public LokalisoituTeksti haeOrganisaatioNimi(String organisaatioOid) {
+        JsonNode organisaatio = getOrganisaatio(organisaatioOid);
+        return LokalisoituTeksti.of(organisaatio.get("nimi"));
     }
 
 }

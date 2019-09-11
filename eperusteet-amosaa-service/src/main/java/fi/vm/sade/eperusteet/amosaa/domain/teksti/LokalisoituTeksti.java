@@ -21,7 +21,15 @@ import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 import java.io.Serializable;
 import java.text.Normalizer;
-import java.util.*;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 import javax.persistence.Cacheable;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -82,6 +90,14 @@ public class LokalisoituTeksti implements Serializable {
         EnumMap<Kieli, String> map = new EnumMap<>(Kieli.class);
         for (Teksti t : teksti) {
             map.put(t.getKieli(), t.getTeksti());
+        }
+        return map;
+    }
+
+    public Map<String, String> getTekstiAsStringMap() {
+        Map<String, String> map = new HashMap<>();
+        for (Teksti t : teksti) {
+            map.put(t.getKieli().toString(), t.getTeksti());
         }
         return map;
     }

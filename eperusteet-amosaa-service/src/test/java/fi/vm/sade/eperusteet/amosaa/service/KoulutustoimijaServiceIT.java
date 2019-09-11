@@ -1,33 +1,25 @@
 package fi.vm.sade.eperusteet.amosaa.service;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Sets;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.*;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
-import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
-import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Sets;
-
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DirtiesContext
 @Transactional
@@ -216,6 +208,17 @@ public class KoulutustoimijaServiceIT extends AbstractIntegrationTest {
         assertThat(julkisetToimijat.getContent().stream()
         		.map(k -> k.getNimi().get(Kieli.EN)))
         		.containsExactly("test1", "test2");
+    }
+
+    @Test
+    public void testHaeKoulutustoimija_nimi() {
+
+        useProfileKP2();
+        KoulutustoimijaDto koulutustoimijaDto = koulutustoimijaService.getKoulutustoimija(getKoulutustoimijaId());
+
+        assertThat(koulutustoimijaDto.getNimi().get(Kieli.FI)).isEqualTo("faa");
+        assertThat(koulutustoimijaDto.getNimi().get(Kieli.SV)).isEqualTo("bor");
+
     }
 
 }

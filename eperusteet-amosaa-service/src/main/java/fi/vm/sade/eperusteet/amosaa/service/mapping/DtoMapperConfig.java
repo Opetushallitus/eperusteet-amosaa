@@ -17,27 +17,39 @@ package fi.vm.sade.eperusteet.amosaa.service.mapping;
 
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.Dokumentti;
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.Dokumentti_;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.SuorituspolkuOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SuorituspolkuRakenneDto;
+import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
+import java.time.Instant;
 import ma.glasnost.orika.CustomMapper;
 import ma.glasnost.orika.MappingContext;
 import ma.glasnost.orika.converter.builtin.PassThroughConverter;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.time.Instant;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.client.RestClientException;
 
 /**
  * @author jhyoty
  */
 @Configuration
 public class DtoMapperConfig {
+
+    private static final Logger logger = LoggerFactory.getLogger(DtoMapperConfig.class);
+
+    @Autowired
+    OrganisaatioService organisaatioService;
 
     @Bean
     public DtoMapper dtoMapper(
@@ -79,6 +91,26 @@ public class DtoMapperConfig {
                         dokumenttiDto.setKansikuva(dokumentti.getKansikuva() != null);
                         dokumenttiDto.setYlatunniste(dokumentti.getYlatunniste() != null);
                         dokumenttiDto.setAlatunniste(dokumentti.getAlatunniste() != null);
+                    }
+                })
+                .register();
+
+        factory.classMap(Koulutustoimija.class, KoulutustoimijaDto.class)
+                .byDefault()
+                .favorExtension(true)
+                .customize(new CustomMapper<Koulutustoimija, KoulutustoimijaDto>() {
+                    @Override
+                    public void mapAtoB(Koulutustoimija source, KoulutustoimijaDto target, MappingContext context) {
+                        super.mapBtoA(target, source, context);
+
+                        try {
+                            LokalisoituTeksti lokalisoituTeksti = organisaatioService.haeOrganisaatioNimi(source.getOrganisaatio());
+                            LokalisoituTekstiDto lokalisoituTekstiDto = new LokalisoituTekstiDto(lokalisoituTeksti.getTekstiAsStringMap());
+
+                            target.setNimi(lokalisoituTekstiDto);
+                        } catch (RestClientException | AccessDeniedException ex) {
+                            logger.error(ex.getLocalizedMessage());
+                        }
                     }
                 })
                 .register();
