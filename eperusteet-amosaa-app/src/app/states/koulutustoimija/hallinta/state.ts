@@ -9,8 +9,8 @@ angular.module("app")
         }
     }))
     .config($stateProvider =>
-        $stateProvider.state("root.koulutustoimija.tiedot", {
-            url: "/tiedot",
+        $stateProvider.state("root.koulutustoimija.hallinta", {
+            url: "/hallinta",
             resolve: {
                 opetussuunnitelmatApi: koulutustoimija => koulutustoimija.one("opetussuunnitelmat"),
                 ystavat: koulutustoimija => koulutustoimija.all("ystavat").getList(),

@@ -1,0 +1,17 @@
+h2.otsikko
+    span(ng-bind="'organisaation-hallinta' | kaanna")
+
+.row
+    .col-xs-12
+      .tabit
+        ul.nav.nav-tabs
+          li(ui-sref-active="active")
+            a(ui-sref=".tiedot" ng-bind="'tiedot' | kaanna")
+          li(ui-sref-active="active")
+            a(ui-sref=".opspaivitettavat" ng-bind="'opetussuunnitelmat-joissa-vanhentunut-peruste' | kaanna")
+          li(ui-sref-active="active")
+            a(ui-sref=".siirravanhat" ng-bind="'siirravanhat' | kaanna")  
+
+.row
+    .col-xs-12
+      .ui-view
