@@ -1,5 +1,5 @@
 angular.module("app").config($stateProvider =>
-    $stateProvider.state("root.koulutustoimija.tiedot.siirravanhat", {
+    $stateProvider.state("root.koulutustoimija.hallinta.siirravanhat", {
         url: "/siirravanhat",
         resolve: {
             historialiitokset: koulutustoimija => koulutustoimija.all("historialiitokset").getList(),
