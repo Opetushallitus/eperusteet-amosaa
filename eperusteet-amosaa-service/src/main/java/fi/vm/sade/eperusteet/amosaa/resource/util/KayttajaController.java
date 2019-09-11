@@ -59,6 +59,11 @@ public class KayttajaController {
     public KayttajanTietoDto get() {
         return kayttajat.haeKirjautaunutKayttaja();
     }
+    
+    @RequestMapping(value = "/{oid}/{koulutustoimijaid}", method = RequestMethod.POST)
+    public KayttajaDto getOrSaveKayttaja(@PathVariable final String oid, @PathVariable final Long koulutustoimijaid) {
+        return kayttajat.saveKayttajaToKoulutustoimija(oid, koulutustoimijaid);
+    }
 
     @RequestMapping(value = "/tiedot", method = RequestMethod.GET)
     public KayttajaDto getKayttaja() {
