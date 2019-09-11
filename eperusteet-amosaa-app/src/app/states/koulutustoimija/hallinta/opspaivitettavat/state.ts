@@ -1,5 +1,5 @@
 angular.module("app").config($stateProvider =>
-        $stateProvider.state("root.koulutustoimija.tiedot.opspaivitettavat", {
+        $stateProvider.state("root.koulutustoimija.hallinta.opspaivitettavat", {
             url: "/opspaivitettavat"
         })
     );

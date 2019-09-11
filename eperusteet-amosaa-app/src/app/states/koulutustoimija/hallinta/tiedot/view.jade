@@ -40,7 +40,7 @@ mixin hierarkia()
 
 
 mixin muutOrganisaatiot()
-  h3(ng-if="!isOph" kaanna="'muut-organisaatiot'")
+  h4(ng-if="!isOph" kaanna="'muut-organisaatiot'")
 
   div
     div(ng-hide="$$ekEditing")
@@ -78,7 +78,20 @@ mixin muutOrganisaatiot()
   button.btn.btn-primary(ng-show="$$ekEditing" ng-click="lisaa()" ng-bind="'laheta-kaveripyynto' | kaanna")
 
 div.yhteistyot
-  h2.otsikko(ng-bind="'yhteistyo' | kaanna")
+
+  h3.otsikko
+    span(ng-bind="'koulutusjarjestaja-kuvaus' | kaanna")
+    button.btn.btn-primary.pull-right(ng-hide="$$ekEditing" ng-click="edit()" ng-bind="'muokkaa' | kaanna" oikeustarkastelu="hallinta")
+    button.btn.btn-default.pull-right(style="margin-left: 5px" ng-show="$$ekEditing" ng-click="cancel()" ng-bind="'peruuta' | kaanna")
+    button.btn.btn-primary.pull-right(ng-show="$$ekEditing" ng-click="save()" ng-bind="'tallenna' | kaanna")
+
+  div(style="margin-top: 15px; margin-bottom:40px")
+    div(ng-if="$$ekEditing")
+      div(ckeditor slocalized ng-model="koulutustoimija.kuvaus" layout="normal" classic)
+    div(ng-if="!$$ekEditing")
+      p(termisto-viitteet="koulutustoimija.kuvaus" ng-bind-html="koulutustoimija.kuvaus" + "| kaanna | kuvalinkit | unsafe")
+
+  h3.otsikko(ng-bind="'yhteistyo' | kaanna")
   div(ng-if="!isOph")
     +hierarkia()
   +muutOrganisaatiot()
