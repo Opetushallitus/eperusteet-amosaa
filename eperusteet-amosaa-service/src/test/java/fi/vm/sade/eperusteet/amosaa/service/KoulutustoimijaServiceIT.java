@@ -1,14 +1,19 @@
 package fi.vm.sade.eperusteet.amosaa.service;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Sets;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.*;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
-import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
-import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
+import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,22 +22,15 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Sets;
-
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DirtiesContext
 @Transactional
 public class KoulutustoimijaServiceIT extends AbstractIntegrationTest {
-   
+
+    @Autowired
+    private DtoMapper mapper;
+
     @Test
     @Rollback
     public void testKoulutustoimijoidenLuonti() {
@@ -202,20 +200,33 @@ public class KoulutustoimijaServiceIT extends AbstractIntegrationTest {
         
         Page<KoulutustoimijaJulkinenDto> julkisetToimijat = koulutustoimijaService.findKoulutustoimijat(p, pquery);
         assertThat(julkisetToimijat).hasSize(3);
-        assertThat(julkisetToimijat.getContent().stream().map(k -> k.getNimi().get(Kieli.FI))).containsExactly("testijarjestys1", "testijarjestys3","testijarjestys5");
-        assertThat(julkisetToimijat.getContent().stream().map(k -> k.getNimi().get(Kieli.EN))).containsExactly("test2", null, "test1");
-        
+        assertThat(julkisetToimijat.getContent().stream()
+                .map(KoulutustoimijaBaseDto::getOrganisaatio))
+                .containsExactly(oidKp1, oidKp3, oidKp2);
+
         pquery.setKieli(Kieli.EN.toString());
 
         julkisetToimijat = koulutustoimijaService.findKoulutustoimijat(p, pquery);
         assertThat(julkisetToimijat).hasSize(2);
         assertThat(julkisetToimijat.getContent().stream()
-        		.map(k -> k.getNimi().get(Kieli.FI)))
-        		.containsExactly("testijarjestys5","testijarjestys1");
+                .map(KoulutustoimijaBaseDto::getOrganisaatio))
+                .containsExactly(oidKp2, oidKp1);
         
-        assertThat(julkisetToimijat.getContent().stream()
-        		.map(k -> k.getNimi().get(Kieli.EN)))
-        		.containsExactly("test1", "test2");
+    }
+
+    @Test
+    public void testHaeKoulutustoimija_nimi() {
+
+        useProfileKP2();
+        KoulutustoimijaDto koulutustoimijaDto = koulutustoimijaService.getKoulutustoimija(getKoulutustoimijaId());
+
+        assertThat(koulutustoimijaDto.getNimi().get(Kieli.FI)).isEqualTo("faa");
+        assertThat(koulutustoimijaDto.getNimi().get(Kieli.SV)).isEqualTo("bor");
+
+        KoulutustoimijaBaseDto base = mapper.map(new Koulutustoimija(), KoulutustoimijaBaseDto.class);
+
+        assertThat(base.getNimi().get(Kieli.FI)).isEqualTo("faa");
+        assertThat(base.getNimi().get(Kieli.SV)).isEqualTo("bor");
     }
 
 }

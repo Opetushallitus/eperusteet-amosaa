@@ -19,7 +19,6 @@ package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.*;
 import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHierarkiaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHistoriaLiitosDto;
-
 import java.util.List;
 import java.util.Set;
 import org.springframework.data.domain.Page;
