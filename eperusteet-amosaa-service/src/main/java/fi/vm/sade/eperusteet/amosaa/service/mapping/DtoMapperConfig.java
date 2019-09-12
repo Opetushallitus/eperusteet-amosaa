@@ -101,7 +101,7 @@ public class DtoMapperConfig {
                 .customize(new CustomMapper<Koulutustoimija, KoulutustoimijaBaseDto>() {
                     @Override
                     public void mapAtoB(Koulutustoimija source, KoulutustoimijaBaseDto target, MappingContext context) {
-                        super.mapBtoA(target, source, context);
+                        super.mapAtoB(source, target, context);
 
                         try {
                             LokalisoituTeksti lokalisoituTeksti = organisaatioService.haeOrganisaatioNimi(source.getOrganisaatio());
@@ -113,6 +113,11 @@ public class DtoMapperConfig {
                         }
                     }
                 })
+                .register();
+
+        factory.classMap(Koulutustoimija.class, KoulutustoimijaDto.class)
+                .byDefault()
+                .use(Koulutustoimija.class, KoulutustoimijaBaseDto.class)
                 .register();
 
         return new DtoMapperImpl(factory.getMapperFacade());
