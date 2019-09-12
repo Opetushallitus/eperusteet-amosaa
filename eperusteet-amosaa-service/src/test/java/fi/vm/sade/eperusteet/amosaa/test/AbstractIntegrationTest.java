@@ -87,7 +87,7 @@ public abstract class AbstractIntegrationTest {
     protected OpetussuunnitelmaRepository opetussuunnitelmaRepository;  
     
     @Autowired
-    private KoulutustoimijaRepository koulutustoimijaRepository;
+    protected KoulutustoimijaRepository koulutustoimijaRepository;
     
     protected List<KoulutustoimijaBaseDto> koulutustoimijat = new ArrayList<>();
     protected KoulutustoimijaBaseDto toimija = null;

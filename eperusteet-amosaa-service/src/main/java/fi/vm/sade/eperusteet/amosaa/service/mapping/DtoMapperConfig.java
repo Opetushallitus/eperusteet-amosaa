@@ -20,6 +20,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.Dokumentti_;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.SuorituspolkuOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliDto;
@@ -95,12 +96,11 @@ public class DtoMapperConfig {
                 })
                 .register();
 
-        factory.classMap(Koulutustoimija.class, KoulutustoimijaDto.class)
+        factory.classMap(Koulutustoimija.class, KoulutustoimijaBaseDto.class)
                 .byDefault()
-                .favorExtension(true)
-                .customize(new CustomMapper<Koulutustoimija, KoulutustoimijaDto>() {
+                .customize(new CustomMapper<Koulutustoimija, KoulutustoimijaBaseDto>() {
                     @Override
-                    public void mapAtoB(Koulutustoimija source, KoulutustoimijaDto target, MappingContext context) {
+                    public void mapAtoB(Koulutustoimija source, KoulutustoimijaBaseDto target, MappingContext context) {
                         super.mapBtoA(target, source, context);
 
                         try {
