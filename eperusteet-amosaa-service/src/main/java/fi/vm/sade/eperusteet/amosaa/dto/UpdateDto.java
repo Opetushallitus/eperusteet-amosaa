@@ -18,16 +18,12 @@ package fi.vm.sade.eperusteet.amosaa.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
-import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
  * @author nkala
  */
 @Getter
 @Setter
-public class UpdateDto implements AuditLoggableDto {
-    @Override
-    public void auditLog(LogMessage.LogMessageBuilder msg) {
-    }
+public class UpdateDto {
+
 }

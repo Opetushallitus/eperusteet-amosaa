@@ -17,22 +17,15 @@ package fi.vm.sade.eperusteet.amosaa.dto.liite;
 
 import java.util.Date;
 import java.util.UUID;
-
 import lombok.Getter;
 import lombok.Setter;
-import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
-import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
  * @author jhyoty
  */
 @Getter
 @Setter
-public class LiiteDto implements AuditLoggableDto {
-    @Override
-    public void auditLog(LogMessage.LogMessageBuilder msg) {
-    }
-
+public class LiiteDto {
     private UUID id;
     private String tyyppi;
     private String nimi;

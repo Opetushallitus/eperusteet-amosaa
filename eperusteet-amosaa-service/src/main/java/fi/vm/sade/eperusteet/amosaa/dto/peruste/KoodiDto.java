@@ -15,8 +15,6 @@
  */
 package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 
-import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
-import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -28,11 +26,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @EqualsAndHashCode(of = {"koodisto", "uri", "versio"})
-public class KoodiDto implements AuditLoggableDto {
-    @Override
-    public void auditLog(LogMessage.LogMessageBuilder msg) {
-    }
-
+public class KoodiDto {
     Map<String, String> nimi;
     private String arvo;
     private String uri;

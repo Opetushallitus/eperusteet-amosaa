@@ -30,8 +30,6 @@ import fi.vm.sade.eperusteet.amosaa.dto.ops.VanhentunutPohjaperusteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliTunnisteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
-import fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaAudit;
-import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
@@ -41,16 +39,17 @@ import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
-
-import java.util.List;
-
-import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaMessageFields.OPETUSSUUNNITELMA;
-import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.*;
 
 /**
  * @author nkala
@@ -72,9 +71,6 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
 
     @Autowired
     private SisaltoViiteService sisaltoviiteService;
-
-    @Autowired
-    private EperusteetAmosaaAudit audit;
     
     @Autowired
     private EperusteetService eperusteetService;
@@ -109,11 +105,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId
     ) {
-        audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, SISALTO_MUOKKAUS),
-                (Void) -> {
-                    service.paivitaPeruste(ktId, opsId);
-                    return null;
-                });
+        service.paivitaPeruste(ktId, opsId);
     }
 
     @ApiImplicitParams({
@@ -134,8 +126,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @RequestBody OpetussuunnitelmaLuontiDto opsDto
     ) {
-        return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, OPETUSSUUNNITELMA_LISAYS, opsDto),
-                (Void) -> service.addOpetussuunnitelma(ktId, opsDto));
+        return service.addOpetussuunnitelma(ktId, opsDto);
     }
 
     @ApiImplicitParams({
@@ -168,8 +159,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
             @PathVariable final Long opsId,
             @RequestBody(required = false) OpetussuunnitelmaDto body
     ) {
-        return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, OPETUSSUUNNITELMA_MUOKKAUS, body),
-                (Void) -> service.update(ktId, opsId, body));
+        return service.update(ktId, opsId, body);
     }
 
     @ApiImplicitParams({
@@ -192,8 +182,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
             @PathVariable final Long opsId,
             @PathVariable final Long poistettuId
     ) {
-        return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, SISALTO_PALAUTUS),
-                (Void) -> sisaltoviiteService.restoreSisaltoViite(ktId, opsId, poistettuId));
+        return sisaltoviiteService.restoreSisaltoViite(ktId, opsId, poistettuId);
     }
 
     @ApiImplicitParams({
@@ -217,8 +206,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
             @PathVariable final Long kayttajaId,
             @RequestBody(required = false) KayttajaoikeusDto body
     ) {
-        return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, OIKEUS_MUOKKAUS),
-                (Void) -> service.updateOikeus(ktId, opsId, kayttajaId, body));
+        return service.updateOikeus(ktId, opsId, kayttajaId, body);
     }
 
     @ApiImplicitParams({
@@ -279,8 +267,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
             @PathVariable final Long opsId,
             @PathVariable final Tila tila
     ) {
-        return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, TILA_MUOKKAUS),
-                (Void) -> service.updateTila(ktId, opsId, tila, true));
+        return service.updateTila(ktId, opsId, tila, true);
     }
 
     @ApiImplicitParams({
@@ -292,8 +279,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
             @PathVariable final Long opsId,
             @RequestBody(required = false) KoulutustoimijaBaseDto body
     ) {
-        return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, TILA_MUOKKAUS),
-                (Void) -> service.updateKoulutustoimija(ktId, opsId, body));
+        return service.updateKoulutustoimija(ktId, opsId, body);
     }
     
 
@@ -305,8 +291,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId
     ) {
-        return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, TILA_MUOKKAUS),
-                (Void) -> service.updateKoulutustoimijaPassivoidusta(ktId, opsId));
+        return service.updateKoulutustoimijaPassivoidusta(ktId, opsId);
     }
     
     @ApiImplicitParams({

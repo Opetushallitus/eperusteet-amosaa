@@ -25,7 +25,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
  * @author nkala
@@ -36,10 +35,6 @@ import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TutkinnonosaDto extends TutkinnonosaBaseDto {
-    @Override
-    public void auditLog(LogMessage.LogMessageBuilder msg) {
-    }
-
     private OmaTutkinnonosaDto omatutkinnonosa;
     private VierasTutkinnonosaDto vierastutkinnonosa;
     private List<TutkinnonosaToteutusDto> toteutukset;

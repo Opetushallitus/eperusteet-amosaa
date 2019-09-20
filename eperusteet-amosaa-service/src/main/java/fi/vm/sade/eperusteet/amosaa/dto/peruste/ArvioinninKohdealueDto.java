@@ -23,8 +23,6 @@ import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
-import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
-import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
  * @author jhyoty
@@ -32,11 +30,7 @@ import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ArvioinninKohdealueDto implements AuditLoggableDto {
-    @Override
-    public void auditLog(LogMessage.LogMessageBuilder msg) {
-    }
-
+public class ArvioinninKohdealueDto {
     private LokalisoituTekstiDto otsikko;
     private List<ArvioinninKohdeDto> arvioinninKohteet;
 }

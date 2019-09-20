@@ -18,24 +18,16 @@ package fi.vm.sade.eperusteet.amosaa.dto;
 
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
-
 import java.util.Date;
-
 import lombok.Getter;
 import lombok.Setter;
-import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
-import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
  * @author nkala
  */
 @Getter
 @Setter
-public class PoistettuDto extends RevisionDto implements AuditLoggableDto {
-    @Override
-    public void auditLog(LogMessage.LogMessageBuilder msg) {
-    }
-
+public class PoistettuDto extends RevisionDto {
     private Long id;
     private LokalisoituTekstiDto nimi;
     private Reference koulutustoimija;

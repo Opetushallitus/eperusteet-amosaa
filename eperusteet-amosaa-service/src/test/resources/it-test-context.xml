@@ -151,5 +151,7 @@
                 </list>
             </constructor-arg>
         </bean>
+
+        <bean id="auditConfiguration" class="fi.vm.sade.eperusteet.amosaa.service.audit.AuditConfiguration"/>
     </beans>
 </beans>

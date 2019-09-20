@@ -122,4 +122,7 @@
     <bean id="defaultExecutor" class="org.springframework.security.task.DelegatingSecurityContextAsyncTaskExecutor">
         <constructor-arg ref="defaultThreadPool"/>
     </bean>
+
+    <bean id="auditConfiguration" class="fi.vm.sade.eperusteet.amosaa.service.audit.AuditConfiguration"/>
+
 </beans>

@@ -18,12 +18,8 @@ package fi.vm.sade.eperusteet.amosaa.dto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
-
 import java.util.UUID;
-
 import lombok.EqualsAndHashCode;
-import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
-import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
  * Kuvaa viitettä toiseen entiteettiin.
@@ -31,10 +27,7 @@ import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
  * @author jhyoty
  */
 @EqualsAndHashCode
-public class Reference implements AuditLoggableDto {
-    @Override
-    public void auditLog(LogMessage.LogMessageBuilder msg) {
-    }
+public class Reference {
 
     private final String id;
 
