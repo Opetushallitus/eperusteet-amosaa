@@ -17,21 +17,13 @@
 package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
-import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
+import java.math.BigDecimal;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.math.BigDecimal;
 
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class OmaTutkinnonosaSuorituspolkuDto implements AuditLoggableDto {
-    @Override
-    public void auditLog(LogMessage.LogMessageBuilder msg) {
-
-    }
-
+public class OmaTutkinnonosaSuorituspolkuDto {
     private BigDecimal laajuus;
 }

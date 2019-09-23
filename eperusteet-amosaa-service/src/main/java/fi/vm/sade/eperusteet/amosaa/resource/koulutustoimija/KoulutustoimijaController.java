@@ -26,10 +26,6 @@ import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHierarkiaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHistoriaLiitosDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViitePaikallinenIntegrationDto;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
-import fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaAudit;
-import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaMessageFields.KOULUTUSTOIMIJA;
-import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.KOULUTUSTOIMIJA_MUOKKAUS;
-import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
@@ -65,9 +61,6 @@ public class KoulutustoimijaController extends KoulutustoimijaIdGetterAbstractCo
     @Autowired
     private KayttajanTietoService kayttajaTietoService;
 
-    @Autowired
-    private EperusteetAmosaaAudit audit;
-
     @ApiImplicitParams({
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
@@ -86,8 +79,7 @@ public class KoulutustoimijaController extends KoulutustoimijaIdGetterAbstractCo
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @RequestBody final KoulutustoimijaDto kt
     ) {
-        return audit.withAudit(LogMessage.builder(KOULUTUSTOIMIJA, KOULUTUSTOIMIJA_MUOKKAUS, kt),
-                (Void) -> koulutustoimijaService.updateKoulutustoimija(ktId, kt));
+        return koulutustoimijaService.updateKoulutustoimija(ktId, kt);
     }
 
     @ApiImplicitParams({

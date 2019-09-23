@@ -16,12 +16,9 @@
 package fi.vm.sade.eperusteet.amosaa.dto.koodisto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import lombok.Getter;
 import lombok.Setter;
-import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
-import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
  * @author mikkom
@@ -29,11 +26,7 @@ import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class KoodistoDto implements AuditLoggableDto {
-    @Override
-    public void auditLog(LogMessage.LogMessageBuilder msg) {
-    }
-
+public class KoodistoDto {
     private Long id;
     private String koodiUri;
     private String koodiArvo;

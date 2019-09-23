@@ -24,8 +24,6 @@ import java.util.Date;
 
 import lombok.Getter;
 import lombok.Setter;
-import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
-import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
  * @author nkala
@@ -33,11 +31,7 @@ import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PerusteInfoDto implements AuditLoggableDto {
-    @Override
-    public void auditLog(LogMessage.LogMessageBuilder msg) {
-    }
-
+public class PerusteInfoDto {
     private Long id;
     private PerusteVersionDto globalVersion;
     private LokalisoituTekstiDto nimi;

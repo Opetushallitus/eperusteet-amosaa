@@ -18,19 +18,10 @@ package fi.vm.sade.eperusteet.amosaa.resource.ops;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.TermiDto;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija.KoulutustoimijaIdGetterAbstractController;
-import fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaAudit;
-
-import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaMessageFields.OPETUSSUUNNITELMA;
-import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.TERMI_MUOKKAUS;
-import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.TERMI_POISTO;
-
-import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 import fi.vm.sade.eperusteet.amosaa.service.ops.TermistoService;
-
-import java.util.List;
-
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,15 +29,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
-
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-import springfox.documentation.annotations.ApiIgnore;
 
 
 /**
@@ -56,9 +46,6 @@ import springfox.documentation.annotations.ApiIgnore;
 @RequestMapping("/koulutustoimijat/{ktId}")
 @InternalApi
 public class TermistoController extends KoulutustoimijaIdGetterAbstractController {
-
-    @Autowired
-    private EperusteetAmosaaAudit audit;
 
     @Autowired
     private TermistoService termistoService;
@@ -105,8 +92,7 @@ public class TermistoController extends KoulutustoimijaIdGetterAbstractControlle
             @RequestBody TermiDto dto
     ) {
         dto.setId(null);
-        return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, TERMI_POISTO),
-                (Void) -> ResponseEntity.ok(termistoService.addTermi(ktId, dto)));
+        return ResponseEntity.ok(termistoService.addTermi(ktId, dto));
     }
 
     @ApiImplicitParams({
@@ -119,8 +105,7 @@ public class TermistoController extends KoulutustoimijaIdGetterAbstractControlle
             @RequestBody TermiDto dto
     ) {
         dto.setId(termiId);
-        return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, TERMI_MUOKKAUS),
-                (Void) -> ResponseEntity.ok(termistoService.updateTermi(ktId, dto)));
+        return ResponseEntity.ok(termistoService.updateTermi(ktId, dto));
     }
 
     @ApiImplicitParams({
@@ -132,9 +117,6 @@ public class TermistoController extends KoulutustoimijaIdGetterAbstractControlle
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long termiId
     ) {
-        audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, TERMI_POISTO), (Void) -> {
-            termistoService.deleteTermi(ktId, termiId);
-            return null;
-        });
+        termistoService.deleteTermi(ktId, termiId);
     }
 }

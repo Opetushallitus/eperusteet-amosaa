@@ -20,19 +20,13 @@ import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.KayttajaoikeusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import lombok.Getter;
 import lombok.Setter;
-import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
-import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
  * @author nkala
  */
 @Getter
 @Setter
-public class KayttajaoikeusDto implements AuditLoggableDto {
-    @Override
-    public void auditLog(LogMessage.LogMessageBuilder msg) {
-    }
-
+public class KayttajaoikeusDto {
     private Long id;
     private Reference kayttaja;
     private Reference opetussuunnitelma;

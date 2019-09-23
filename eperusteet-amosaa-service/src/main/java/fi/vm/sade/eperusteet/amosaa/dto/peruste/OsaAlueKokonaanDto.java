@@ -19,18 +19,12 @@ import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
-import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
-import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
  * @author harrik
  */
 @Getter
 @Setter
-public class OsaAlueKokonaanDto extends OsaAlueDto implements AuditLoggableDto {
-    @Override
-    public void auditLog(LogMessage.LogMessageBuilder msg) {
-    }
-
+public class OsaAlueKokonaanDto extends OsaAlueDto {
     private List<OsaamistavoiteLaajaDto> osaamistavoitteet;
 }

@@ -20,19 +20,12 @@ import lombok.Setter;
 
 import java.util.List;
 
-import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
-import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
-
 /**
  * @author isaul
  */
 @Getter
 @Setter
-public class AmmattitaitovaatimusKohdeDto implements AuditLoggableDto {
-    @Override
-    public void auditLog(LogMessage.LogMessageBuilder msg) {
-    }
-
+public class AmmattitaitovaatimusKohdeDto {
     private Long id;
     private LokalisoituTekstiDto otsikko;
     private LokalisoituTekstiDto selite;

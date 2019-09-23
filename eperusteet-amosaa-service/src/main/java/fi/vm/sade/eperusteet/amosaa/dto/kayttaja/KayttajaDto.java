@@ -16,10 +16,7 @@
 
 package fi.vm.sade.eperusteet.amosaa.dto.kayttaja;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
-import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
-import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.BeanUtils;
@@ -32,11 +29,7 @@ import java.util.Set;
  */
 @Getter
 @Setter
-public class KayttajaDto extends KayttajaBaseDto implements AuditLoggableDto {
-    @Override
-    public void auditLog(LogMessage.LogMessageBuilder msg) {
-    }
-
+public class KayttajaDto extends KayttajaBaseDto {
     private String etunimet;
     private String kutsumanimi;
     private String sukunimi;

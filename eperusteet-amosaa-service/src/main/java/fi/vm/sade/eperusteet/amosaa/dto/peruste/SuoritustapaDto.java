@@ -20,8 +20,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
-import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
-import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
  * @author nkala
@@ -31,11 +29,7 @@ import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 @Setter
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SuoritustapaDto implements AuditLoggableDto {
-    @Override
-    public void auditLog(LogMessage.LogMessageBuilder msg) {
-    }
-
+public class SuoritustapaDto {
     private Suoritustapakoodi suoritustapakoodi;
     private LaajuusYksikko laajuusYksikko;
 

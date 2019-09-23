@@ -24,7 +24,6 @@ import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaMessage
 import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.KUVA_LISAYS;
 import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.KUVA_POISTO;
 
-import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 import fi.vm.sade.eperusteet.amosaa.service.ops.LiiteService;
 import io.swagger.annotations.Api;
 
@@ -86,7 +85,6 @@ public class LiitetiedostoController extends KoulutustoimijaIdGetterAbstractCont
             @RequestParam Integer height,
             UriComponentsBuilder ucb
     ) throws IOException, HttpMediaTypeNotSupportedException {
-        LogMessage.builder(OPETUSSUUNNITELMA, KUVA_LISAYS).log();
         final long koko = file.getSize();
         try (PushbackInputStream pis = new PushbackInputStream(file.getInputStream(), BUFSIZE)) {
             byte[] buf = new byte[koko < BUFSIZE ? (int) koko : BUFSIZE];
@@ -192,7 +190,6 @@ public class LiitetiedostoController extends KoulutustoimijaIdGetterAbstractCont
             @PathVariable Long opsId,
             @PathVariable UUID id
     ) {
-        LogMessage.builder(OPETUSSUUNNITELMA, KUVA_POISTO).log();
         liitteet.delete(ktId, opsId, id);
     }
 

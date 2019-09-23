@@ -22,22 +22,22 @@ import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteKevytDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteRakenneDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SuorituspolkuRakenneDto;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
-import fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaAudit;
-import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.ApiIgnore;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaMessageFields.OPETUSSUUNNITELMA;
-import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 
 /**
@@ -50,9 +50,6 @@ import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperati
 public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractController {
     @Autowired
     private SisaltoViiteService service;
-
-    @Autowired
-    private EperusteetAmosaaAudit audit;
 
     @ApiImplicitParams({
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
@@ -110,8 +107,7 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
             @RequestBody(required = false) SisaltoViiteDto.Matala tekstiKappaleViiteDto
     ) {
         tekstiKappaleViiteDto.setLapset(new ArrayList<>());
-        return audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, SISALTO_LISAYS, tekstiKappaleViiteDto),
-                (Void) -> service.addSisaltoViite(ktId, opsId, svId, tekstiKappaleViiteDto));
+        return service.addSisaltoViite(ktId, opsId, svId, tekstiKappaleViiteDto);
     }
 
     @ApiImplicitParams({
@@ -124,10 +120,7 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
             @PathVariable final Long opsId,
             @RequestBody List<Long> viitteet
     ) {
-        audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, SISALTO_KLOONAUS), (Void) -> {
-            service.copySisaltoViiteet(ktId, opsId, viitteet);
-            return null;
-        });
+        service.copySisaltoViiteet(ktId, opsId, viitteet);
     }
 
     @ApiImplicitParams({
@@ -140,10 +133,7 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
             @PathVariable final Long svId,
             @RequestBody final SisaltoViiteDto tekstiKappaleViiteDto
     ) {
-        audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, SISALTO_MUOKKAUS, tekstiKappaleViiteDto), (Void) -> {
-            service.updateSisaltoViite(ktId, opsId, svId, tekstiKappaleViiteDto);
-            return null;
-        });
+        service.updateSisaltoViite(ktId, opsId, svId, tekstiKappaleViiteDto);
     }
 
     @ApiImplicitParams({
@@ -156,10 +146,7 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
             @PathVariable final Long svId,
             @RequestBody final SisaltoViiteRakenneDto rakenneDto
     ) {
-        audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, RAKENNE_MUOKKAUS, rakenneDto), (Void) -> {
-            service.reorderSubTree(ktId, opsId, svId, rakenneDto);
-            return null;
-        });
+        service.reorderSubTree(ktId, opsId, svId, rakenneDto);
     }
 
     @ApiImplicitParams({
@@ -172,10 +159,7 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
             @PathVariable final Long opsId,
             @PathVariable final Long svId
     ) {
-        audit.withAudit(LogMessage.builder(OPETUSSUUNNITELMA, SISALTO_POISTO), (Void) -> {
-            service.removeSisaltoViite(ktId, opsId, svId);
-            return null;
-        });
+        service.removeSisaltoViite(ktId, opsId, svId);
     }
 
     @ApiImplicitParams({

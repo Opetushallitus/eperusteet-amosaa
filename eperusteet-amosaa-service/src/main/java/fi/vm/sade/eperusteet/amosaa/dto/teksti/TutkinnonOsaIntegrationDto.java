@@ -19,19 +19,13 @@ package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
 import lombok.Getter;
 import lombok.Setter;
-import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
-import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
  * @author nkala
  */
 @Getter
 @Setter
-public class TutkinnonOsaIntegrationDto implements AuditLoggableDto {
-    @Override
-    public void auditLog(LogMessage.LogMessageBuilder msg) {
-    }
-
+public class TutkinnonOsaIntegrationDto {
     private Long id;
     private TutkinnonosaTyyppi tyyppi;
     private OmaTutkinnonosaIntegrationDto omatutkinnonosa;

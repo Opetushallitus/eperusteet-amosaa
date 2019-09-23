@@ -19,19 +19,13 @@ package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import lombok.Getter;
 import lombok.Setter;
-import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
-import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
  * @author jhyoty
  */
 @Getter
 @Setter
-public class OsaamistasoDto implements AuditLoggableDto {
-    @Override
-    public void auditLog(LogMessage.LogMessageBuilder msg) {
-    }
-
+public class OsaamistasoDto {
     private Long id;
     private LokalisoituTekstiDto otsikko;
 }

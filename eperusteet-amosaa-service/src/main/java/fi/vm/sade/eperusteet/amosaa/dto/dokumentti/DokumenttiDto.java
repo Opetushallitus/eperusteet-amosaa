@@ -25,8 +25,6 @@ import java.util.Date;
 
 import lombok.Getter;
 import lombok.Setter;
-import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
-import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
  * @author iSaul
@@ -34,11 +32,7 @@ import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DokumenttiDto implements AuditLoggableDto {
-    @Override
-    public void auditLog(LogMessage.LogMessageBuilder msg) {
-    }
-
+public class DokumenttiDto {
     private Long id;
     private Long opsId;
     private String luoja;

@@ -20,8 +20,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import lombok.Getter;
 import lombok.Setter;
-import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
-import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
  * @author nkala
@@ -29,11 +27,7 @@ import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class VierasTutkinnonosaDto implements AuditLoggableDto {
-    @Override
-    public void auditLog(LogMessage.LogMessageBuilder msg) {
-    }
-
+public class VierasTutkinnonosaDto {
     private Long id;
     private Reference cperuste;
     private Long perusteId;

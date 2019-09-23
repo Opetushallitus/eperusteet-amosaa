@@ -21,8 +21,6 @@ import java.util.Set;
 
 import lombok.Getter;
 import lombok.Setter;
-import fi.vm.sade.eperusteet.amosaa.service.audit.AuditLoggableDto;
-import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 
 /**
  * @author nkala
@@ -30,10 +28,6 @@ import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PerusteDto extends PerusteBaseDto implements AuditLoggableDto {
-    @Override
-    public void auditLog(LogMessage.LogMessageBuilder msg) {
-    }
-
+public class PerusteDto extends PerusteBaseDto {
     Set<SuoritustapaDto> suoritustavat;
 }

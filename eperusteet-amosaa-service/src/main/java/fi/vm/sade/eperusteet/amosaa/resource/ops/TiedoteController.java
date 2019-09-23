@@ -3,22 +3,11 @@ package fi.vm.sade.eperusteet.amosaa.resource.ops;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.TiedoteDto;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija.KoulutustoimijaIdGetterAbstractController;
-import fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaAudit;
-
-import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaMessageFields.KAYTTAJA;
-import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaMessageFields.KOULUTUSTOIMIJA;
-import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.TIEDOTE_KUITTAUS;
-import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.TIEDOTE_MUOKKAUS;
-import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.TIEDOTE_POISTO;
-
-import fi.vm.sade.eperusteet.amosaa.service.audit.LogMessage;
 import fi.vm.sade.eperusteet.amosaa.service.ops.TiedoteService;
 import io.swagger.annotations.Api;
-
-import java.util.List;
-
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,15 +15,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
-
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * Created by richard.vancamp on 29/03/16.
@@ -44,9 +32,6 @@ import springfox.documentation.annotations.ApiIgnore;
 @Api(value = "Tiedotteet", description = "Tiedotteiden hallinta")
 @InternalApi
 public class TiedoteController extends KoulutustoimijaIdGetterAbstractController {
-
-    @Autowired
-    private EperusteetAmosaaAudit audit;
 
     @Autowired
     private TiedoteService tiedoteService;
@@ -81,9 +66,7 @@ public class TiedoteController extends KoulutustoimijaIdGetterAbstractController
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @RequestBody TiedoteDto tiedoteDto
     ) {
-        return audit.withAudit(LogMessage.builder(KOULUTUSTOIMIJA, TIEDOTE_POISTO), (Void) -> {
-            return ResponseEntity.ok(tiedoteService.addTiedote(ktId, tiedoteDto));
-        });
+        return ResponseEntity.ok(tiedoteService.addTiedote(ktId, tiedoteDto));
     }
 
     @ApiImplicitParams({
@@ -95,9 +78,7 @@ public class TiedoteController extends KoulutustoimijaIdGetterAbstractController
             @PathVariable final Long id,
             @RequestBody TiedoteDto tiedoteDto
     ) {
-        return audit.withAudit(LogMessage.builder(KOULUTUSTOIMIJA, TIEDOTE_MUOKKAUS), (Void) -> {
-            return ResponseEntity.ok(tiedoteService.updateTiedote(ktId, tiedoteDto));
-        });
+        return ResponseEntity.ok(tiedoteService.updateTiedote(ktId, tiedoteDto));
     }
 
     @ApiImplicitParams({
@@ -108,10 +89,7 @@ public class TiedoteController extends KoulutustoimijaIdGetterAbstractController
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long id
     ) {
-        audit.withAudit(LogMessage.builder(KAYTTAJA, TIEDOTE_KUITTAUS), (Void) -> {
-            tiedoteService.kuittaaLuetuksi(ktId, id);
-            return null;
-        });
+        tiedoteService.kuittaaLuetuksi(ktId, id);
     }
 
     @ApiImplicitParams({
@@ -123,9 +101,6 @@ public class TiedoteController extends KoulutustoimijaIdGetterAbstractController
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long id
     ) {
-        audit.withAudit(LogMessage.builder(KOULUTUSTOIMIJA, TIEDOTE_POISTO), (Void) -> {
-            tiedoteService.deleteTiedote(ktId, id);
-            return null;
-        });
+        tiedoteService.deleteTiedote(ktId, id);
     }
 }
