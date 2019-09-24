@@ -27,14 +27,14 @@ public class KayttajaTietoServiceIT extends AbstractIntegrationTest {
         useProfileKP1();        
 
         List<KayttajaDto> kaikkiKayttajat = kayttajanTietoService.getKaikkiKayttajat(getKoulutustoimijaId());
-        
-        assertThat(kaikkiKayttajat).hasSize(4);
+
+        assertThat(kaikkiKayttajat).hasSize(5);
         assertThat(kaikkiKayttajat)
-            .extracting("oid").contains("kp1", "kp2", KayttooikeusServiceMock.KP1_KAYTTAJA_OID, KayttooikeusServiceMock.KP2_KAYTTAJA_OID);
-        assertThat(kaikkiKayttajat.stream().filter(k -> k.getOid().equals("kp1")).findFirst().get().getId()).isNotNull();
-        assertThat(kaikkiKayttajat.stream().filter(k -> k.getOid().equals("kp2")).findFirst().get().getId()).isNotNull();
-        assertThat(kaikkiKayttajat.stream().filter(k -> k.getOid().equals(KayttooikeusServiceMock.KP1_KAYTTAJA_OID)).findFirst().get().getId()).isNull();
-        assertThat(kaikkiKayttajat.stream().filter(k -> k.getOid().equals(KayttooikeusServiceMock.KP2_KAYTTAJA_OID)).findFirst().get().getId()).isNull();
+                .extracting("oid").contains(KP1, KP2, KP7_KAYTTAJA_OID, KP8_KAYTTAJA_OID, TMPR);
+        assertThat(kaikkiKayttajat.stream().filter(k -> k.getOid().equals(KP1)).findFirst().get().getId()).isNotNull();
+        assertThat(kaikkiKayttajat.stream().filter(k -> k.getOid().equals(KP2)).findFirst().get().getId()).isNotNull();
+        assertThat(kaikkiKayttajat.stream().filter(k -> k.getOid().equals(KP7_KAYTTAJA_OID)).findFirst().get().getId()).isNull();
+        assertThat(kaikkiKayttajat.stream().filter(k -> k.getOid().equals(KP8_KAYTTAJA_OID)).findFirst().get().getId()).isNull();
         
     }
 

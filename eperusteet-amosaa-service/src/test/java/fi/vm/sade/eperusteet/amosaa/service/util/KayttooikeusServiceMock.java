@@ -20,10 +20,6 @@ import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
 @Profile("test")
 public class KayttooikeusServiceMock implements KayttooikeusService{
 
-    public static final String KP1_KAYTTAJA_OID = "1.2.3.4.5.kp1";
-    public static final String KP2_KAYTTAJA_OID = "1.22.3.4.5.kp2";
-    public static final String KPTMPR_KAYTTAJA_OID = "1.22.3.4.5.TMPR";
-
     @Override
     public List<KayttooikeusKayttajaDto> getOrganisaatioVirkailijat(String organisaatioOid) {
         return Optional.ofNullable(KayttooikeusServiceMock.kayttoikeuskayttajaMap().get(organisaatioOid))
@@ -38,8 +34,8 @@ public class KayttooikeusServiceMock implements KayttooikeusService{
                                 .sukunimi("kp1sukunimi")
                                 .build(),
                         KayttooikeusKayttajaDto.builder()
-                                .oid(KP1_KAYTTAJA_OID)
-                                .sukunimi("kp1sukunimi")
+                                .oid(AbstractIntegrationTest.KP7_KAYTTAJA_OID)
+                                .sukunimi("kp7sukunimi")
                                 .build()),
                 AbstractIntegrationTest.oidKp2, Arrays.asList(
                         KayttooikeusKayttajaDto.builder()
@@ -47,15 +43,19 @@ public class KayttooikeusServiceMock implements KayttooikeusService{
                                 .sukunimi("kp2sukunimi")
                                 .build(),
                         KayttooikeusKayttajaDto.builder()
-                                .oid(KP2_KAYTTAJA_OID)
-                                .sukunimi("kp2sukunimi")
+                                .oid(AbstractIntegrationTest.KP8_KAYTTAJA_OID)
+                                .sukunimi("kp8sukunimi")
                                 .build(),
                         KayttooikeusKayttajaDto.builder()
-                                .oid(KP1_KAYTTAJA_OID)
+                                .oid(AbstractIntegrationTest.KP7_KAYTTAJA_OID)
+                                .sukunimi("kp7sukunimi")
+                                .build(),
+                        KayttooikeusKayttajaDto.builder()
+                                .oid(AbstractIntegrationTest.TMPR)
                                 .sukunimi("kp1sukunimi")
                                 .build()),
                 AbstractIntegrationTest.oidTmpr, Arrays.asList(KayttooikeusKayttajaDto.builder()
-                        .oid(KPTMPR_KAYTTAJA_OID)
+                        .oid(AbstractIntegrationTest.KPTMPR_KAYTTAJA_OID)
                         .sukunimi("kpTmprsukunimi")
                         .build()));
     }
