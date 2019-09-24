@@ -275,50 +275,53 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
 
     @Override
     public List<KayttajaDto> getKaikkiKayttajat(Long kOid) {
-        List<KayttajaDto> result = new ArrayList<>();
+        Map<String, KayttajaDto> result = new HashMap<>();
         Koulutustoimija self = koulutustoimijaRepository.findOne(kOid);
         List<KoulutustoimijaYstavaDto> ystavaorganisaatiot = koulutustoimijaService.getOmatYstavat(self.getId());
-        result.addAll(ystavaorganisaatiot.stream()
+
+        if (!self.isOph()) {
+            result.putAll(getOrganisaatioVirkailijatAsKayttajat(Collections.singletonList(self.getOrganisaatio())));
+            result.putAll(getOrganisaatioVirkailijatAsKayttajat(ystavaorganisaatiot.stream()
+                    .map(KoulutustoimijaYstavaDto::getOrganisaatio).collect(Collectors.toList())));
+        }
+
+        List<String> oids = result.values().stream().map(KayttajaDto::getOid).collect(Collectors.toList());
+
+        result.putAll(ystavaorganisaatiot.stream()
                 .map(KoulutustoimijaYstavaDto::getId)
                 .map(koulutustoimijaRepository::getOne)
                 .map(this::getKayttajat)
                 .flatMap(Collection::stream)
-                .collect(Collectors.toList()));
-        result.addAll(getKayttajat(kOid));
+                .filter(kayttaja -> oids.contains(kayttaja.getOid()))
+                .collect(Collectors.toMap(KayttajaDto::getOid, kayttaja -> kayttaja)));
 
-        if (!self.isOph()) {
-            result.addAll(getOrganisaatioVirkailijatAsKayttajat(Collections.singletonList(self.getOrganisaatio()), result));
-            result.addAll(getOrganisaatioVirkailijatAsKayttajat(ystavaorganisaatiot.stream()
-                            .map(KoulutustoimijaYstavaDto::getOrganisaatio).collect(Collectors.toList()),
-                    result));
-        }
+        result.putAll(getKayttajat(kOid).stream()
+                .filter(kayttaja -> oids.contains(kayttaja.getOid()))
+                .collect(Collectors.toMap(KayttajaDto::getOid, kayttaja -> kayttaja))
+        );
 
-        return new ArrayList<>(result.stream()
+        return new ArrayList<>(result.values().stream()
                 .collect(Collectors.toMap(
                         KayttajaBaseDto::getOid,
                         kayttaja -> kayttaja,
                         (a, b) -> kOid.equals(b.getKoulutustoimija()) ? b : a))
                 .values());
     }
-    
-    private List<KayttajaDto> getOrganisaatioVirkailijatAsKayttajat(List<String> organisaatioOids, List<KayttajaDto> result) {
+
+    private Map<String, KayttajaDto> getOrganisaatioVirkailijatAsKayttajat(List<String> organisaatioOids) {
 
         if(organisaatioOids.isEmpty()) {
-            return Collections.emptyList();
+            return Collections.emptyMap();
         }
 
-        List<String> oids = result.stream().map(KayttajaDto::getOid).collect(Collectors.toList());
         Map<String, Long> organisaatioKtIdMap = koulutustoimijaRepository.findByOrganisaatioIn(organisaatioOids).stream().collect(
                 (Collectors.toMap(Koulutustoimija::getOrganisaatio, Koulutustoimija::getId)));
 
-        List<KayttajaDto> kayttajat = organisaatioOids.stream()
+        return organisaatioOids.stream()
             .flatMap(organisaatioOid -> kayttooikeusService.getOrganisaatioVirkailijat(organisaatioOid).stream()
                     .map(kayttooikeusKayttajaDto -> KayttajaDto.of(kayttooikeusKayttajaDto, organisaatioKtIdMap.get(organisaatioOid))
                     ))
-            .filter(kayttaja -> !oids.contains(kayttaja.getOid()))
-            .collect(Collectors.toList());
-
-        return kayttajat;
+                .collect(Collectors.toMap(KayttajaDto::getOid, kayttaja -> kayttaja));
     }
     
     @Override

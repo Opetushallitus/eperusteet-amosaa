@@ -67,12 +67,17 @@ public abstract class AbstractIntegrationTest {
     
     static public String KP1 = "kp1";
     static public String KP2 = "kp2";
+    static public String TMPR = "tmpr";
     
     static public String oidOph = "1.2.246.562.10.00000000001";
     static public String oidKp1 = "1.2.246.562.10.54645809036";
     static public String oidKp2 = "1.2.246.562.10.2013120512391252668625";
     static public String oidKp3 = "1.2.246.562.10.2013120513110198396408";
     static public String oidTmpr = "1.2.246.562.10.79499343246";
+
+    static public String KP7_KAYTTAJA_OID = "1.2.3.4.5.kp1";
+    static public String KP8_KAYTTAJA_OID = "1.22.3.4.5.kp2";
+    static public String KPTMPR_KAYTTAJA_OID = "1.22.3.4.5.TMPR";
 
     @Autowired
     protected OpetussuunnitelmaService opetussuunnitelmaService;
