@@ -208,15 +208,16 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
             Kayttaja uusi = new Kayttaja();
             uusi.setOid(oid);
             kayttaja = kayttajaRepository.save(uusi);
-            
-            Koulutustoimija kt = koulutustoimijaRepository.findOne(koulutustoimijaId);
-            if (ktkayttajaRepository.findOneByKoulutustoimijaAndKayttaja(kt, kayttaja) == null) {
-                KoulutustoimijaKayttaja ktk = new KoulutustoimijaKayttaja();
-                ktk.setKayttaja(kayttaja);
-                ktk.setKoulutustoimija(kt);
-                ktkayttajaRepository.save(ktk);
-            }
         }
+
+        Koulutustoimija kt = koulutustoimijaRepository.findOne(koulutustoimijaId);
+        if (ktkayttajaRepository.findOneByKoulutustoimijaAndKayttaja(kt, kayttaja) == null) {
+            KoulutustoimijaKayttaja ktk = new KoulutustoimijaKayttaja();
+            ktk.setKayttaja(kayttaja);
+            ktk.setKoulutustoimija(kt);
+            ktkayttajaRepository.save(ktk);
+        }
+
         return mapper.map(kayttaja, KayttajaDto.class);
     }
 
