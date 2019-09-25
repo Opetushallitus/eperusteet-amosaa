@@ -12,5 +12,6 @@ public class KayttooikeusKyselyDto {
 
     private Map<String, List<String>> kayttooikeudet;
     private List<String> organisaatioOids;
+    private boolean passivoitu = false;
 
 }
