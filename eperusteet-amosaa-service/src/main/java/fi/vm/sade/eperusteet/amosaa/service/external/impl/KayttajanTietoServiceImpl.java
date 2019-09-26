@@ -18,42 +18,37 @@ package fi.vm.sade.eperusteet.amosaa.service.external.impl;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.Kayttaja;
-import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.KoulutustoimijaKayttaja;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
-import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaYstavaDto;
 import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaoikeusRepository;
-import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KoulutustoimijaKayttajaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttooikeusService;
-
-import static fi.vm.sade.eperusteet.amosaa.service.external.impl.KayttajanTietoParser.parsiKayttaja;
-import static javax.servlet.http.HttpServletResponse.SC_FORBIDDEN;
-import static javax.servlet.http.HttpServletResponse.SC_OK;
-import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
-
-
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.RolePermission;
 import fi.vm.sade.eperusteet.amosaa.service.util.RestClientFactory;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
-
-import java.io.IOException;
-import java.util.*;
-import java.util.concurrent.Future;
-import java.util.stream.Collectors;
-
 import fi.vm.sade.javautils.http.OphHttpClient;
 import fi.vm.sade.javautils.http.OphHttpRequest;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
@@ -62,6 +57,11 @@ import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static fi.vm.sade.eperusteet.amosaa.service.external.impl.KayttajanTietoParser.parsiKayttaja;
+import static javax.servlet.http.HttpServletResponse.SC_FORBIDDEN;
+import static javax.servlet.http.HttpServletResponse.SC_OK;
+import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 
 /**
  * @author nkala
@@ -83,9 +83,6 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
 
     @Autowired
     private KoulutustoimijaRepository koulutustoimijaRepository;
-
-    @Autowired
-    private KoulutustoimijaKayttajaRepository ktkayttajaRepository;
 
     @Autowired
     private OpetussuunnitelmaRepository opsRepository;
@@ -202,20 +199,12 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
     }
     
     @Override
-    public KayttajaDto saveKayttajaToKoulutustoimija(String oid, Long koulutustoimijaId) {
+    public KayttajaDto saveKayttaja(String oid) {
         Kayttaja kayttaja = kayttajaRepository.findOneByOid(oid);
         if (kayttaja == null) {
             Kayttaja uusi = new Kayttaja();
             uusi.setOid(oid);
             kayttaja = kayttajaRepository.save(uusi);
-        }
-
-        Koulutustoimija kt = koulutustoimijaRepository.findOne(koulutustoimijaId);
-        if (ktkayttajaRepository.findOneByKoulutustoimijaAndKayttaja(kt, kayttaja) == null) {
-            KoulutustoimijaKayttaja ktk = new KoulutustoimijaKayttaja();
-            ktk.setKayttaja(kayttaja);
-            ktk.setKoulutustoimija(kt);
-            ktkayttajaRepository.save(ktk);
         }
 
         return mapper.map(kayttaja, KayttajaDto.class);
@@ -239,19 +228,8 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
 
     @Override
     public List<KoulutustoimijaBaseDto> koulutustoimijat() {
-        Kayttaja kayttaja = getKayttaja();
-
         return koulutustoimijaService.getKoulutustoimijat(getUserOrganizations()).stream()
                 .filter(ktDto -> ktDto != null && ktDto.getId() != null)
-                .peek(ktDto -> {
-                    Koulutustoimija kt = koulutustoimijaRepository.findOne(ktDto.getId());
-                    if (ktkayttajaRepository.findOneByKoulutustoimijaAndKayttaja(kt, kayttaja) == null) {
-                        KoulutustoimijaKayttaja ktk = new KoulutustoimijaKayttaja();
-                        ktk.setKayttaja(kayttaja);
-                        ktk.setKoulutustoimija(kt);
-                        ktkayttajaRepository.save(ktk);
-                    }
-                })
                 .collect(Collectors.toList());
     }
 
@@ -260,11 +238,8 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
             return new ArrayList<>();
         }
         else {
-            return ktkayttajaRepository.findAllByKoulutustoimija(kt).stream()
-                    .map(kayttaja -> kayttajaRepository.findOneByOid(kayttaja.getKayttaja().getOid()))
-                    .map(kayttaja -> mapper.map(kayttaja, KayttajaDto.class))
-                    .peek(kayttaja -> kayttaja.setKoulutustoimija(kt.getId()))
-                    .collect(Collectors.toList());
+            Koulutustoimija koulutustoimija = koulutustoimijaRepository.findOne(kt.getId());
+            return getOrganisaatioVirkailijatAsKayttajat(Collections.singletonList(koulutustoimija.getOrganisaatio()));
         }
     }
 
@@ -281,48 +256,38 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
         List<KoulutustoimijaYstavaDto> ystavaorganisaatiot = koulutustoimijaService.getOmatYstavat(self.getId());
 
         if (!self.isOph()) {
-            result.putAll(getOrganisaatioVirkailijatAsKayttajat(Collections.singletonList(self.getOrganisaatio())));
+            result.putAll(getOrganisaatioVirkailijatAsKayttajat(Collections.singletonList(self.getOrganisaatio())).stream()
+                    .collect(Collectors.toMap(KayttajaDto::getOid, kayttaja -> kayttaja)));
             result.putAll(getOrganisaatioVirkailijatAsKayttajat(ystavaorganisaatiot.stream()
-                    .map(KoulutustoimijaYstavaDto::getOrganisaatio).collect(Collectors.toList())));
+                    .map(KoulutustoimijaYstavaDto::getOrganisaatio).collect(Collectors.toList())).stream()
+                    .collect(Collectors.toMap(KayttajaDto::getOid, kayttaja -> kayttaja)));
         }
 
-        List<String> oids = result.values().stream().map(KayttajaDto::getOid).collect(Collectors.toList());
-
-        result.putAll(ystavaorganisaatiot.stream()
-                .map(KoulutustoimijaYstavaDto::getId)
-                .map(koulutustoimijaRepository::getOne)
-                .map(this::getKayttajat)
-                .flatMap(Collection::stream)
-                .filter(kayttaja -> oids.contains(kayttaja.getOid()))
-                .collect(Collectors.toMap(KayttajaDto::getOid, kayttaja -> kayttaja)));
-
-        result.putAll(getKayttajat(kOid).stream()
-                .filter(kayttaja -> oids.contains(kayttaja.getOid()))
-                .collect(Collectors.toMap(KayttajaDto::getOid, kayttaja -> kayttaja))
-        );
-
-        return new ArrayList<>(result.values().stream()
-                .collect(Collectors.toMap(
-                        KayttajaBaseDto::getOid,
-                        kayttaja -> kayttaja,
-                        (a, b) -> kOid.equals(b.getKoulutustoimija()) ? b : a))
-                .values());
+        return new ArrayList<>(result.values());
     }
 
-    private Map<String, KayttajaDto> getOrganisaatioVirkailijatAsKayttajat(List<String> organisaatioOids) {
+    private List<KayttajaDto> getOrganisaatioVirkailijatAsKayttajat(List<String> organisaatioOids) {
 
         if(organisaatioOids.isEmpty()) {
-            return Collections.emptyMap();
+            return Collections.emptyList();
         }
 
-        Map<String, Long> organisaatioKtIdMap = koulutustoimijaRepository.findByOrganisaatioIn(organisaatioOids).stream().collect(
-                (Collectors.toMap(Koulutustoimija::getOrganisaatio, Koulutustoimija::getId)));
-
-        return organisaatioOids.stream()
+        Map<String, KayttajaDto> kayttajaMap = organisaatioOids.stream()
             .flatMap(organisaatioOid -> kayttooikeusService.getOrganisaatioVirkailijat(organisaatioOid).stream()
-                    .map(kayttooikeusKayttajaDto -> KayttajaDto.of(kayttooikeusKayttajaDto, organisaatioKtIdMap.get(organisaatioOid))
+                    .map(kayttooikeusKayttajaDto -> KayttajaDto.of(kayttooikeusKayttajaDto)
                     ))
                 .collect(Collectors.toMap(KayttajaDto::getOid, kayttaja -> kayttaja));
+
+        if (!kayttajaMap.isEmpty()) {
+            kayttajaRepository.findByOidIn(kayttajaMap.keySet())
+                    .forEach(kayttaja -> {
+                        if (kayttajaMap.containsKey(kayttaja.getOid())) {
+                            kayttajaMap.get(kayttaja.getOid()).setId(kayttaja.getId());
+                        }
+                    });
+        }
+
+        return new ArrayList<>(kayttajaMap.values());
     }
     
     @Override

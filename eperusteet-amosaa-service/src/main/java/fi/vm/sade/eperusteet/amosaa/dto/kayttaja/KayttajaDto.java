@@ -36,11 +36,9 @@ public class KayttajaDto extends KayttajaBaseDto {
     private Date tiedotekuittaus;
     private Set<Reference> suosikit;
 
-    public static KayttajaDto of(KayttooikeusKayttajaDto kayttooikeusKayttaja, Long koulutustoimijaId) {
+    public static KayttajaDto of(KayttooikeusKayttajaDto kayttooikeusKayttaja) {
         KayttajaDto kayttajaDto = new KayttajaDto();
         BeanUtils.copyProperties(kayttooikeusKayttaja, kayttajaDto);
-
-        kayttajaDto.setKoulutustoimija(koulutustoimijaId);
 
         return kayttajaDto;
     }

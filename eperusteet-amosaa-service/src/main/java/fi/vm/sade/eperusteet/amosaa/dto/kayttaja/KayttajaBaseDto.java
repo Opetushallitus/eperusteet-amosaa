@@ -26,6 +26,5 @@ import lombok.Setter;
 @Setter
 public class KayttajaBaseDto {
     private Long id;
-    private Long koulutustoimija;
     private String oid;
 }
