@@ -32,17 +32,7 @@ angular.module("app").config($stateProvider =>
                     };
 
                     _.each($scope.kayttajat, kayttaja => {
-
-                        if (kayttaja.sukunimi) {
-                            kayttaja.$$nimi = Kayttajatiedot.parsiEsitysnimi(kayttaja);
-                        } else {
-                            nimiLataaja(kayttaja.oid)
-                                .then(res => {
-                                    kayttaja.$$nimi = res;
-                                })
-                                .catch(() => (kayttaja.$$nimi = kayttaja.oid))
-                        }
-
+                        kayttaja.$$nimi = Kayttajatiedot.parsiEsitysnimi(kayttaja);
                         $scope.oikeudet[kayttaja.id] = $scope.oikeudet[kayttaja.id] || { oikeus: "estetty" };
                     });
 
@@ -52,7 +42,7 @@ angular.module("app").config($stateProvider =>
 
                         if (!valittuKayttaja.id) {
                             try {
-                                const uusiKayttaja = await kayttaja.one(valittuKayttaja.oid + '/' + valittuKayttaja.koulutustoimija).customPOST();
+                                const uusiKayttaja = await kayttaja.one(valittuKayttaja.oid).customPOST();
                                 valittuKayttaja.id = uusiKayttaja.id;
                                 $scope.oikeudet[valittuKayttaja.id] = { oikeus: "estetty" };
                             } catch (error) {

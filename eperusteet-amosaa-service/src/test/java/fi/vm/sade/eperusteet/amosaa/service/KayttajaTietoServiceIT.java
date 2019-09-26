@@ -32,10 +32,36 @@ public class KayttajaTietoServiceIT extends AbstractIntegrationTest {
         assertThat(kaikkiKayttajat)
                 .extracting("oid").contains(KP1, KP2, KP7_KAYTTAJA_OID, KP8_KAYTTAJA_OID, TMPR);
         assertThat(kaikkiKayttajat.stream().filter(k -> k.getOid().equals(KP1)).findFirst().get().getId()).isNotNull();
+        assertThat(kaikkiKayttajat.stream().filter(k -> k.getOid().equals(KP1)).findFirst().get().getSukunimi()).isNotNull();
+
         assertThat(kaikkiKayttajat.stream().filter(k -> k.getOid().equals(KP2)).findFirst().get().getId()).isNotNull();
+        assertThat(kaikkiKayttajat.stream().filter(k -> k.getOid().equals(KP2)).findFirst().get().getSukunimi()).isNotNull();
+
         assertThat(kaikkiKayttajat.stream().filter(k -> k.getOid().equals(KP7_KAYTTAJA_OID)).findFirst().get().getId()).isNull();
+        assertThat(kaikkiKayttajat.stream().filter(k -> k.getOid().equals(KP7_KAYTTAJA_OID)).findFirst().get().getSukunimi()).isNotNull();
+
         assertThat(kaikkiKayttajat.stream().filter(k -> k.getOid().equals(KP8_KAYTTAJA_OID)).findFirst().get().getId()).isNull();
+        assertThat(kaikkiKayttajat.stream().filter(k -> k.getOid().equals(KP8_KAYTTAJA_OID)).findFirst().get().getSukunimi()).isNotNull();
+
+        assertThat(kaikkiKayttajat.stream().filter(k -> k.getOid().equals(TMPR)).findFirst().get().getId()).isNull();
+        assertThat(kaikkiKayttajat.stream().filter(k -> k.getOid().equals(TMPR)).findFirst().get().getSukunimi()).isNotNull();
         
+    }
+
+    @Test
+    public void testGetKaikkiKayttajat_kayttajaId_loytyy() {
+
+        useProfileKP1();
+
+        List<KayttajaDto> kaikkiKayttajat = kayttajanTietoService.getKaikkiKayttajat(getKoulutustoimijaId());
+        assertThat(kaikkiKayttajat.stream().filter(k -> k.getOid().equals(TMPR)).findFirst().get().getId()).isNull();
+
+        useProfileTmpr();
+        useProfileKP1();
+
+        kaikkiKayttajat = kayttajanTietoService.getKaikkiKayttajat(getKoulutustoimijaId());
+        assertThat(kaikkiKayttajat.stream().filter(k -> k.getOid().equals(TMPR)).findFirst().get().getId()).isNotNull();
+
     }
 
 }

@@ -88,5 +88,5 @@ public interface KayttajanTietoService {
     KayttajaDto haeKayttajanTiedot();
 
     @PreAuthorize("isAuthenticated()")
-    KayttajaDto saveKayttajaToKoulutustoimija(String oid, Long koulutustoimijaId);
+    KayttajaDto saveKayttaja(String oid);
 }
