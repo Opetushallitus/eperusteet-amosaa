@@ -22,6 +22,8 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaJulkinenDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaYstavaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.SuorituspolkuOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneOsaDto;
@@ -115,9 +117,16 @@ public class DtoMapperConfig {
                 })
                 .register();
 
+        factory.classMap(Koulutustoimija.class, KoulutustoimijaYstavaDto.class)
+                .byDefault()
+                .register();
+
+        factory.classMap(Koulutustoimija.class, KoulutustoimijaJulkinenDto.class)
+                .byDefault()
+                .register();
+
         factory.classMap(Koulutustoimija.class, KoulutustoimijaDto.class)
                 .byDefault()
-                .use(Koulutustoimija.class, KoulutustoimijaBaseDto.class)
                 .register();
 
         return new DtoMapperImpl(factory.getMapperFacade());
