@@ -24,7 +24,7 @@
         <csrf disabled="true"/>
     </http>
 	
-	<http use-expressions="true">
+	<http use-expressions="true" request-matcher="ant">
 		<intercept-url pattern="/api/**" access="isAuthenticated()" method="POST"/>
 		<intercept-url pattern="/api/**" access="isAuthenticated()" method="PUT"/>
 		<intercept-url pattern="/api/**" access="isAuthenticated()" method="DELETE"/>
