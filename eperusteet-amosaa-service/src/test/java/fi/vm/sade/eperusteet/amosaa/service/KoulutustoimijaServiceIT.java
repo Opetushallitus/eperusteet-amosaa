@@ -216,7 +216,6 @@ public class KoulutustoimijaServiceIT extends AbstractIntegrationTest {
 
     @Test
     public void testHaeKoulutustoimija_nimi() {
-
         useProfileKP2();
         KoulutustoimijaDto koulutustoimijaDto = koulutustoimijaService.getKoulutustoimija(getKoulutustoimijaId());
 
@@ -224,9 +223,15 @@ public class KoulutustoimijaServiceIT extends AbstractIntegrationTest {
         assertThat(koulutustoimijaDto.getNimi().get(Kieli.SV)).isEqualTo("bor");
 
         KoulutustoimijaBaseDto base = mapper.map(new Koulutustoimija(), KoulutustoimijaBaseDto.class);
+        KoulutustoimijaYstavaDto ystavaDto = mapper.map(new Koulutustoimija(), KoulutustoimijaYstavaDto.class);
+        KoulutustoimijaJulkinenDto julkinenDto = mapper.map(new Koulutustoimija(), KoulutustoimijaJulkinenDto.class);
 
         assertThat(base.getNimi().get(Kieli.FI)).isEqualTo("faa");
         assertThat(base.getNimi().get(Kieli.SV)).isEqualTo("bor");
+        assertThat(julkinenDto.getNimi().get(Kieli.FI)).isEqualTo("faa");
+        assertThat(julkinenDto.getNimi().get(Kieli.SV)).isEqualTo("bor");
+        assertThat(ystavaDto.getNimi().get(Kieli.FI)).isEqualTo("faa");
+        assertThat(ystavaDto.getNimi().get(Kieli.SV)).isEqualTo("bor");
     }
 
 }
