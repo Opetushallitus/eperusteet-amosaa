@@ -6,15 +6,15 @@
                     http://www.springframework.org/schema/security
                     http://www.springframework.org/schema/security/spring-security.xsd">
 
-    <http entry-point-ref="forbiddenEntryPoint" use-expressions="true" request-matcher="regex" pattern="/buildversion.txt">
-        <intercept-url pattern="/**" access="permitAll"/>
-    </http>
-
-	<http entry-point-ref="casEntryPoint" use-expressions="true" request-matcher="ant">
+    <http entry-point-ref="casEntryPoint" use-expressions="true" request-matcher="ant">
 		<intercept-url pattern="/api/**" access="isAuthenticated()" method="POST"/>
 		<intercept-url pattern="/api/**" access="isAuthenticated()" method="PUT"/>
 		<intercept-url pattern="/api/**" access="isAuthenticated()" method="DELETE"/>
 		<intercept-url pattern="/api/**" access="isAuthenticated()" method="PATCH"/>
+    </http>
+	
+	<http entry-point-ref="forbiddenEntryPoint" use-expressions="true" request-matcher="regex" pattern="/buildversion.txt">
+        <intercept-url pattern="/**" access="permitAll"/>
     </http>
 
     <http entry-point-ref="casEntryPoint" use-expressions="true" request-matcher="regex" pattern="/j_spring_cas_security_check.*">
