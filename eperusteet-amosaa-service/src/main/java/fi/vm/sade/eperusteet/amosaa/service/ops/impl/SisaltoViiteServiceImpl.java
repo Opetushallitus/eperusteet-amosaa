@@ -417,8 +417,6 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
         SisaltoViite viite = findViite(opsId, viiteId);
         Opetussuunnitelma ops = opsRepository.findOne(opsId);
         
-        updateOpetussuunnitelmaPiilotetutSisaltoviitteet(uusi, ops);
-        
         if (viite.getOwner() != ops) {
             throw new BusinessRuleViolationException("vain-oman-editointi-sallittu");
         }
@@ -442,6 +440,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
             case OSASUORITUSPOLKU:
             case SUORITUSPOLKU:
                 updateSuorituspolku(viite, uusi);
+                updateOpetussuunnitelmaPiilotetutSisaltoviitteet(uusi, ops);
                 break;
             case SUORITUSPOLUT:
             case TUTKINNONOSAT:
