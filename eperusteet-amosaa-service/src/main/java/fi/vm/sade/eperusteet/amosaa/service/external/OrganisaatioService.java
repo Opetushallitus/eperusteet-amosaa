@@ -36,6 +36,6 @@ public interface OrganisaatioService {
     @PreAuthorize("isAuthenticated()")
     List<OrganisaatioHistoriaLiitosDto> getOrganisaationHistoriaLiitokset(String organisaatioOid);
 
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("permitAll()")
     LokalisoituTeksti haeOrganisaatioNimi(String organisaatioOid);
 }

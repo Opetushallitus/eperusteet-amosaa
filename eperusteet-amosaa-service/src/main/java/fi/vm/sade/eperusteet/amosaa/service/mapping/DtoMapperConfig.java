@@ -15,6 +15,7 @@
  */
 package fi.vm.sade.eperusteet.amosaa.service.mapping;
 
+import com.google.common.base.Throwables;
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.Dokumentti;
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.Dokumentti_;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
@@ -111,7 +112,7 @@ public class DtoMapperConfig {
 
                             target.setNimi(lokalisoituTekstiDto);
                         } catch (RestClientException | AccessDeniedException ex) {
-                            logger.error(ex.getLocalizedMessage());
+                            logger.error(Throwables.getStackTraceAsString(ex));
                         }
                     }
                 })
