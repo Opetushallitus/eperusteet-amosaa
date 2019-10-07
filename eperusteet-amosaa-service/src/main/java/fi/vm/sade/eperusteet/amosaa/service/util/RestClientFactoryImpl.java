@@ -16,6 +16,7 @@
 package fi.vm.sade.eperusteet.amosaa.service.util;
 
 
+import fi.vm.sade.eperusteet.utils.client.RestClientFactory;
 import fi.vm.sade.javautils.http.OphHttpClient;
 import fi.vm.sade.javautils.http.auth.CasAuthenticator;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,7 +29,7 @@ import java.util.concurrent.ConcurrentMap;
  * @author mikkom
  */
 @Component
-public class RestClientFactory {
+public class RestClientFactoryImpl implements RestClientFactory {
 
     private static final String CALLER_ID = "1.2.246.562.10.00000000001.eperusteet-amosaa";
 
@@ -72,5 +73,10 @@ public class RestClientFactory {
             cache.putIfAbsent(service, client);
             return cache.get(service);
         }
+    }
+
+    @Override
+    public String getCallerId() {
+        return CALLER_ID;
     }
 }

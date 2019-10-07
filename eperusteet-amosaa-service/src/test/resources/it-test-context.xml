@@ -42,6 +42,7 @@
         <!--<context:exclude-filter type="regex" expression="fi.vm.sade.eperusteet.amosaa.service.external.*"/>-->
     </context:component-scan>
     <context:component-scan base-package="fi.vm.sade.eperusteet.amosaa.service.util"/>
+    <context:component-scan base-package="fi.vm.sade.eperusteet.utils"/>
     <tx:annotation-driven/>
     <aop:aspectj-autoproxy/>
 
@@ -152,6 +153,5 @@
             </constructor-arg>
         </bean>
 
-        <bean id="auditConfiguration" class="fi.vm.sade.eperusteet.amosaa.service.audit.AuditConfiguration"/>
     </beans>
 </beans>

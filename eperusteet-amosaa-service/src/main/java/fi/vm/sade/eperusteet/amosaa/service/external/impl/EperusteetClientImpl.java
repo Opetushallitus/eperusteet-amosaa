@@ -11,7 +11,7 @@ import fi.vm.sade.eperusteet.amosaa.resource.config.AbstractRakenneOsaDeserializ
 import fi.vm.sade.eperusteet.amosaa.resource.config.MappingModule;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetClient;
-import fi.vm.sade.eperusteet.amosaa.service.util.RestClientFactory;
+import fi.vm.sade.eperusteet.amosaa.service.util.RestClientFactoryImpl;
 import fi.vm.sade.javautils.http.OphHttpClient;
 import fi.vm.sade.javautils.http.OphHttpRequest;
 import org.apache.http.client.utils.URLEncodedUtils;
@@ -42,7 +42,7 @@ public class EperusteetClientImpl implements EperusteetClient {
     private String eperusteetServiceUrl;
 
     @Autowired
-    RestClientFactory restClientFactory;
+    RestClientFactoryImpl restClientFactory;
 
     private OphHttpClient client;
 
