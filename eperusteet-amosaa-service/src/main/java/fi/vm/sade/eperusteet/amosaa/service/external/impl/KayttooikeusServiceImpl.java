@@ -8,7 +8,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttooikeusKayttajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttooikeusKyselyDto;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttooikeusService;
-import fi.vm.sade.eperusteet.amosaa.service.util.RestClientFactory;
+import fi.vm.sade.eperusteet.amosaa.service.util.RestClientFactoryImpl;
 import fi.vm.sade.javautils.http.OphHttpClient;
 import fi.vm.sade.javautils.http.OphHttpEntity;
 import fi.vm.sade.javautils.http.OphHttpRequest;
@@ -40,7 +40,7 @@ public class KayttooikeusServiceImpl implements KayttooikeusService{
     private String kayttooikeusServiceUrl;
     
     @Autowired
-    private RestClientFactory restClientFactory;
+    private RestClientFactoryImpl restClientFactory;
 
     private ObjectMapper omapper = new ObjectMapper();
 

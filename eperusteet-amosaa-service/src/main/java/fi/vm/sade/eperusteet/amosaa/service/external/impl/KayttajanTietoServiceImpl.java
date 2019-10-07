@@ -34,7 +34,7 @@ import fi.vm.sade.eperusteet.amosaa.service.external.KayttooikeusService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.RolePermission;
-import fi.vm.sade.eperusteet.amosaa.service.util.RestClientFactory;
+import fi.vm.sade.eperusteet.amosaa.service.util.RestClientFactoryImpl;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 import fi.vm.sade.javautils.http.OphHttpClient;
 import fi.vm.sade.javautils.http.OphHttpRequest;
@@ -141,7 +141,7 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
     public static class KayttajaClient {
 
         @Autowired
-        private RestClientFactory restClientFactory;
+        private RestClientFactoryImpl restClientFactory;
 
         @Value("${cas.service.oppijanumerorekisteri-service:''}")
         private String onrServiceUrl;

@@ -17,11 +17,16 @@
 package fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl;
 
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.LokalisointiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koodisto.KoodistoKoodiDto;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.LokalisointiService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -40,6 +45,8 @@ public class LokalisointiServiceImpl implements LokalisointiService {
     @Value("${lokalisointi.service.category:eperusteet}")
     private String category;
 
+    @Autowired
+    private HttpEntity httpEntity;
 
     @Override
     @Cacheable("lokalisoinnit")
@@ -49,7 +56,8 @@ public class LokalisointiServiceImpl implements LokalisointiService {
         LOG.debug("get lokalisointi url: {}", url);
         LokalisointiDto[] re;
         try {
-            re = restTemplate.getForObject(url, LokalisointiDto[].class);
+            ResponseEntity<LokalisointiDto[]> response = restTemplate.exchange(url, HttpMethod.GET, httpEntity, LokalisointiDto[].class);
+            re = response.getBody();
         } catch (RestClientException ex) {
             LOG.error("Rest client error: {}", ex.getLocalizedMessage());
             re = new LokalisointiDto[]{};

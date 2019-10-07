@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -49,6 +50,9 @@ public class ArviointiasteikkoServiceImpl implements ArviointiasteikkoService {
     @Autowired
     private ArviointiasteikkoRepository repository;
 
+    @Autowired
+    private HttpEntity httpEntity;
+
     @Override
     @Transactional
     public List<ArviointiasteikkoDto> getAll() {
@@ -66,7 +70,7 @@ public class ArviointiasteikkoServiceImpl implements ArviointiasteikkoService {
     private List<Arviointiasteikko> getAllFromPeruste() {
         ResponseEntity<List<ArviointiasteikkoDto>> res = new RestTemplate()
                 .exchange(eperusteetServiceUrl + "/api/arviointiasteikot",
-                        HttpMethod.GET, null, new ParameterizedTypeReference<List<ArviointiasteikkoDto>>() {
+                        HttpMethod.GET, httpEntity, new ParameterizedTypeReference<List<ArviointiasteikkoDto>>() {
                         });
         List<Arviointiasteikko> arviointiasteikot = mapper.mapAsList(res.getBody(), Arviointiasteikko.class);
 
