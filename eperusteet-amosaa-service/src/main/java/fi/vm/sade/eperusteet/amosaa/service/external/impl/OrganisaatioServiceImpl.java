@@ -25,8 +25,8 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHierarkiaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHistoriaLiitosDto;
 import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
-import fi.vm.sade.eperusteet.amosaa.service.util.RestClientFactoryImpl;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
+import fi.vm.sade.eperusteet.utils.client.RestClientFactory;
 import fi.vm.sade.javautils.http.OphHttpClient;
 import fi.vm.sade.javautils.http.OphHttpRequest;
 import java.io.IOException;
@@ -61,7 +61,7 @@ public class OrganisaatioServiceImpl implements OrganisaatioService {
     @Component
     public static class Client {
         @Autowired
-        private RestClientFactoryImpl restClientFactory;
+        private RestClientFactory restClientFactory;
 
         @Value("${cas.service.organisaatio-service:''}")
         private String serviceUrl;

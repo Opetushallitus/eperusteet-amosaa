@@ -11,9 +11,18 @@ import fi.vm.sade.eperusteet.amosaa.resource.config.AbstractRakenneOsaDeserializ
 import fi.vm.sade.eperusteet.amosaa.resource.config.MappingModule;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetClient;
-import fi.vm.sade.eperusteet.amosaa.service.util.RestClientFactoryImpl;
+import fi.vm.sade.eperusteet.utils.client.RestClientFactory;
 import fi.vm.sade.javautils.http.OphHttpClient;
 import fi.vm.sade.javautils.http.OphHttpRequest;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
@@ -23,12 +32,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.annotation.PostConstruct;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.*;
-import java.util.stream.Collectors;
 
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 
@@ -42,7 +45,7 @@ public class EperusteetClientImpl implements EperusteetClient {
     private String eperusteetServiceUrl;
 
     @Autowired
-    RestClientFactoryImpl restClientFactory;
+    RestClientFactory restClientFactory;
 
     private OphHttpClient client;
 
