@@ -117,14 +117,7 @@ public class OsaamistasonKriteeri implements Serializable, Copyable<Osaamistason
         OsaamistasonKriteeri kriteeri = new OsaamistasonKriteeri();
 
         kriteeri.setOsaamistaso(this.getOsaamistaso());
-
-        List<LokalisoituTeksti> kriteerit = this.getKriteerit();
-        if (!ObjectUtils.isEmpty(kriteerit)) {
-            kriteeri.setKriteerit(new ArrayList<>());
-            for (LokalisoituTeksti k : kriteerit) {
-                kriteeri.getKriteerit().add(k);
-            }
-        }
+        kriteeri.setKriteerit(this.getKriteerit());
 
         return kriteeri;
     }
