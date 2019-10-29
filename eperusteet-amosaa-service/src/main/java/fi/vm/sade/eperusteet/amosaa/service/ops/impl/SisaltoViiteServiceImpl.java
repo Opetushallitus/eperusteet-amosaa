@@ -17,7 +17,9 @@ package fi.vm.sade.eperusteet.amosaa.service.ops.impl;
 
 import static fi.vm.sade.eperusteet.amosaa.service.util.Nulls.assertExists;
 
+import fi.vm.sade.eperusteet.amosaa.domain.liite.Liite;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +31,7 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
@@ -959,6 +962,16 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
                 .collect(Collectors.toList());
         root.getLapset().addAll(kopiot);
         repository.save(root);
+
+        viitteet.stream()
+                .map(viiteId -> repository.findOne(viiteId))
+                .filter(Objects::nonNull)
+                .filter(viite -> SisaltoTyyppi.isCopyable(viite.getTyyppi()))
+                .map(viite -> viite.getOwner().getLiitteet().stream())
+                .flatMap(liitteet -> liitteet)
+                .forEach(liite -> ops.attachLiite(liite));
+
+        opsRepository.save(ops);
     }
 
 }

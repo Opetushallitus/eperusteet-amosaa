@@ -5,7 +5,11 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.assertj.core.api.Assertions.tuple;
 
+import fi.vm.sade.eperusteet.amosaa.domain.liite.Liite;
+import fi.vm.sade.eperusteet.amosaa.service.ops.LiiteService;
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -70,6 +74,9 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
 
     @Autowired
     private EntityManager em;
+
+    @Autowired
+    private LiiteService liiteService;
 
     @Test
     @Rollback
@@ -413,6 +420,30 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
 
         assertThat(opetussuunnitelma.getTutkintonimikkeet()).hasSize(0);
 
+    }
+
+    @Test
+    @Rollback
+    public void testCopySisaltoViiteet() {
+
+        useProfileKP2();
+        Opetussuunnitelma ops = createOpetussuunnitelmaJulkaistu();
+        liiteService.add(getKoulutustoimijaId(), ops.getId(), "txt", "teksti.txt", 1l, new ByteArrayInputStream("tekstia".getBytes()));
+
+        SisaltoViiteDto.Matala root = sisaltoViiteService.getSisaltoRoot(getKoulutustoimijaId(), ops.getId());
+        SisaltoViiteDto.Matala added = sisaltoViiteService.addSisaltoViite(getKoulutustoimijaId(), ops.getId(), root.getLapset().get(1).getIdLong(), createSisalto(sisaltoViiteDto -> {
+            sisaltoViiteDto.setTyyppi(SisaltoTyyppi.TEKSTIKAPPALE);
+        }));
+
+        Opetussuunnitelma ops2 = createOpetussuunnitelmaJulkaistu();
+
+        assertThat(liiteService.getAll(getKoulutustoimijaId(), ops.getId())).hasSize(1);
+        assertThat(liiteService.getAll(getKoulutustoimijaId(), ops2.getId())).hasSize(0);
+
+        sisaltoViiteService.copySisaltoViiteet(getKoulutustoimijaId(), ops2.getId(), Collections.singletonList(added.getId()));
+
+        assertThat(liiteService.getAll(getKoulutustoimijaId(), ops.getId())).hasSize(1);
+        assertThat(liiteService.getAll(getKoulutustoimijaId(), ops2.getId())).hasSize(1);
     }
 
 }
