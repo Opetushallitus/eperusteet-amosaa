@@ -1,73 +1,75 @@
-ePerusteet-amosaa
-=================
+# ePerusteet-amosaa
 
 Ammatillisen koulutuksen paikallisten opetussuunnitelmien laadintatyökalu.
 
-Kehitysympäristön vaatimukset
------------------------------
+[![Build Status](https://travis-ci.org/Opetushallitus/eperusteet-amosaa.svg?branch=master)](https://travis-ci.org/Opetushallitus/eperusteet-amosaa)
 
-## Backend
+## Kehitysympäristön vaatimukset
+
 - JDK 8
-- Maven 3 > (3.1)
-- PostgreSQL 9.3 (luo tietokanta paikallista kehitystä varten)
-- Tomcat [7.0.42,8)
-
-## Frontend
+- Maven 3
+- [käyttäjäkohtaisien asetuksien pohjat - dev-settings](https://github.com/Opetushallitus/eperusteet/blob/master/dev-settings.md)
 - Asenna npm
-- Asenna riippupvuudet
+- Nodejs front-end-kehitystä varten
+  - <http://nodejs.org/download/>
+  - Asenna riippupvuudet, jos puuttuvat 
+    - npm -g install typescript
+    - npm -g install gulp
+    - npm -g install tslint
+    - npm -g install tsd
+    - npm -g install bower
 
-```sh
-npm -g install typescript
-npm -g install gulp
-npm -g install tslint
-npm -g install tsd
-```
 
 Riippuvuuksien takia käännösaikana tarvitaan pääsy sisäiseen pakettien hallintaan, koska osa paketeista (lähinnä build-parent) ei ole julkisissa repoissa.
 
 Ajoaikana riippuu mm. keskitetystä autentikaatiosta (CAS), käyttäjähallinnasta, organisaatiopalvelusta, koodistosta ja eperusteista joihin täytyy olla ajoympäristöstä pääsy.
 
+## Ajaminen paikallisesti
 
-Ajaminen paikallisesti
-----------------------
+### eperusteet-amosaa-service
 
-eperusteet-amosaa-app: 
+  #### &nbsp;&nbsp;Käynnistys
 
-```sh
-cd eperusteet-amosaa-app
-npm install
-tsd install
-gulp
-```
+  ```
+  cd eperusteet-amosaa-service
+  mvn tomcat7:run
+  ```
 
-eperusteet-amosaa-service: 
+  #### &nbsp;&nbsp;Testaus
 
-```sh
-mvn install
-cd eperusteet-amosaa-service
-# jos muisti loppuu: MAVEN_OPTS="-Xmx2048m"
-mvn tomcat7:run -Deperusteet-amosaa.devdb.user=<user> -Deperusteet-amosaa.devdb.password=<password> -Deperusteet-amosaa.devdb.jdbcurl=<jdbcurl>
-```
-    
-Sovelluksen voi myös kääntää kahdeksi eri war-paketiksi joita voi aja erillisessä Tomcatissa. 
+  ```
+  cd eperusteet-amosaa-service
+  mvn clean install -Poph
+  ```
 
-Konfiguraatioon tarvitaan seuraavat muutokset:
+### eperusteet-amosaa-app
 
-  - URIEncoding="UTF-8": 
-```
-    <Connector port="8080" protocol="HTTP/1.1" (...) URIEncoding="UTF-8"/>
-```
-  - PostgreSQL 9.3 JDBC-ajuri lib-hakemistoon
-  - Kehityskannan resurssi:    
-```
-    <GlobalNamingResources>
-    ...
-    <Resource name="jdbc/eperusteet-amosaa" auth="Container" type="javax.sql.DataSource"
-                 maxActive="100" maxIdle="30" maxWait="10000"
-                 username="..." password="..." driverClassName="org.postgresql.Driver"
-                 url="jdbc:postgresql://localhost:5432/..."/>
-    ...
-    </GlobalNamingResources>
-```
+  #### &nbsp;&nbsp;Käynnistys
 
-Web-sovelluksen (app) osalta maven käyttää yeoman-maven-plugin:ia joka tarvitsee nodejs:n ja yo:n toimiakseen.
+  ```
+  cd eperusteet-amosaa-app
+  npm install
+  npm run dev
+  ```
+
+### Tietokannat (vaihtoehtoinen)
+  
+  #### &nbsp;&nbsp;Käynnistys
+
+  docker-compose.yml tiedosto talteen ( [käyttäjäkohtaisien asetuksien pohjat - dev-settings](https://github.com/Opetushallitus/eperusteet/blob/master/dev-settings.md) )
+
+  ```
+  docker-compose up
+  ```
+
+## ePerusteet-projektit
+
+  Projekti | Build status | Maintainability | Test Coverage | Known Vulnerabilities
+  -------- | ------------ | --------------- | ------------- | ----------------------
+  [ePerusteet](https://github.com/Opetushallitus/eperusteet) | [![Build Status](https://travis-ci.org/Opetushallitus/eperusteet.svg?branch=master)](https://travis-ci.org/Opetushallitus/eperusteet)
+  [ePerusteet-amosaa](https://github.com/Opetushallitus/eperusteet-amosaa) | [![Build Status](https://travis-ci.org/Opetushallitus/eperusteet-amosaa.svg?branch=master)](https://travis-ci.org/Opetushallitus/eperusteet-amosaa)
+  [ePerusteet-ylops](https://github.com/Opetushallitus/eperusteet-ylops) | [![Build Status](https://travis-ci.org/Opetushallitus/eperusteet-ylops.svg?branch=master)](https://travis-ci.org/Opetushallitus/eperusteet-ylops)
+  [ePerusteet-ylops-lukio](https://github.com/Opetushallitus/eperusteet-ylops-lukio) | [![Build Status](https://travis-ci.org/Opetushallitus/eperusteet-ylops-lukio.svg?branch=master)](https://travis-ci.org/Opetushallitus/eperusteet-ylops-lukio) | [![Maintainability](https://api.codeclimate.com/v1/badges/eea9e59302df6e343d57/maintainability)](https://codeclimate.com/github/Opetushallitus/eperusteet-ylops-lukio/maintainability) | [![Test Coverage](https://api.codeclimate.com/v1/badges/eea9e59302df6e343d57/test_coverage)](https://codeclimate.com/github/Opetushallitus/eperusteet-ylops-lukio/test_coverage) | [![Known Vulnerabilities](https://snyk.io/test/github/Opetushallitus/eperusteet-ylops-lukio/badge.svg)](https://snyk.io/test/github/Opetushallitus/eperusteet-ylops-lukio)
+  [ePerusteet-opintopolku](https://github.com/Opetushallitus/eperusteet-opintopolku) | [![Build Status](https://travis-ci.org/Opetushallitus/eperusteet-opintopolku.svg?branch=master)](https://travis-ci.org/Opetushallitus/eperusteet-opintopolku) | [![Maintainability](https://api.codeclimate.com/v1/badges/24fc0c3e2b968b432319/maintainability)](https://codeclimate.com/github/Opetushallitus/eperusteet-opintopolku/maintainability) | [![Test Coverage](https://api.codeclimate.com/v1/badges/24fc0c3e2b968b432319/test_coverage)](https://codeclimate.com/github/Opetushallitus/eperusteet-opintopolku/test_coverage)
+  [ePerusteet-backend-utils](https://github.com/Opetushallitus/eperusteet-backend-utils) | [![Build Status](https://travis-ci.org/Opetushallitus/eperusteet-backend-utils.svg?branch=master)](https://travis-ci.org/Opetushallitus/eperusteet-backend-utils)
+  [ePerusteet-frontend-utils](https://github.com/Opetushallitus/eperusteet-frontend-utils) | [![Build Status](https://travis-ci.org/Opetushallitus/eperusteet-frontend-utils.svg?branch=master)](https://travis-ci.org/Opetushallitus/eperusteet-frontend-utils) | [![Maintainability](https://api.codeclimate.com/v1/badges/f782a4a50622ae34a2bd/maintainability)](https://codeclimate.com/github/Opetushallitus/eperusteet-frontend-utils/maintainability) | [![Test Coverage](https://api.codeclimate.com/v1/badges/f782a4a50622ae34a2bd/test_coverage)](https://codeclimate.com/github/Opetushallitus/eperusteet-frontend-utils/test_coverage)
