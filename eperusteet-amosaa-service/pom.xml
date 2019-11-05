@@ -418,7 +418,7 @@
         <dependency>
             <groupId>org.jasig.cas.client</groupId>
             <artifactId>cas-client-support-distributed-ehcache</artifactId>
-            <version>3.4.1</version>
+            <version>3.6.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>net.sf.ehcache</groupId>
