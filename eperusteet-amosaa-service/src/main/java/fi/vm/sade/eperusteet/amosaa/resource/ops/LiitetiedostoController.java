@@ -20,10 +20,6 @@ import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija.KoulutustoimijaIdGetterAbstractController;
 import fi.vm.sade.eperusteet.amosaa.resource.util.CacheControl;
 
-import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaMessageFields.OPETUSSUUNNITELMA;
-import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.KUVA_LISAYS;
-import static fi.vm.sade.eperusteet.amosaa.service.audit.EperusteetAmosaaOperation.KUVA_POISTO;
-
 import fi.vm.sade.eperusteet.amosaa.service.ops.LiiteService;
 import io.swagger.annotations.Api;
 
@@ -37,6 +33,7 @@ import javax.servlet.http.Part;
 
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.tika.Tika;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +42,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -143,29 +141,39 @@ public class LiitetiedostoController extends KoulutustoimijaIdGetterAbstractCont
     @ApiImplicitParams({
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
-    @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/kuvat/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/kuvat/{fileName}", method = RequestMethod.GET)
     @CacheControl(age = CacheControl.ONE_YEAR)
     public void get(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable Long opsId,
-            @PathVariable UUID id,
+            @PathVariable String fileName,
             @RequestHeader(value = "If-None-Match", required = false) String etag,
             HttpServletResponse response
     ) throws IOException {
-        get(opsId, id, etag, response);
+        get(opsId, fileName, etag, response);
     }
 
-    @RequestMapping(value = "/opetussuunnitelmat/{opsId}/kuvat/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/opetussuunnitelmat/{opsId}/kuvat/{fileName}", method = RequestMethod.GET)
     @CacheControl(age = CacheControl.ONE_YEAR)
     public void get(
             @PathVariable Long opsId,
-            @PathVariable UUID id,
+            @PathVariable String fileName,
             @RequestHeader(value = "If-None-Match", required = false) String etag,
             HttpServletResponse response
     ) throws IOException {
+        UUID id = UUID.fromString(FilenameUtils.removeExtension(fileName));
+        String extension = FilenameUtils.getExtension(fileName);
+
         LiiteDto dto = liitteet.get(opsId, id);
-        if (dto != null) {
-            if (etag != null && dto.getId().toString().equals(etag)) {
+
+        boolean isCorrectExtension = true;
+
+        if (!ObjectUtils.isEmpty(extension)) {
+            isCorrectExtension = Objects.equals(dto.getTyyppi(), "image/" + extension);
+        }
+
+        if (dto != null && isCorrectExtension) {
+            if (dto.getId().toString().equals(etag)) {
                 response.setStatus(HttpStatus.NOT_MODIFIED.value());
             } else {
                 response.setHeader("Content-Type", dto.getTyyppi());
