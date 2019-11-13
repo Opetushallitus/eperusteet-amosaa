@@ -22,6 +22,7 @@ import fi.vm.sade.eperusteet.amosaa.repository.teksti.LokalisoituTekstiRepositor
 
 import java.util.Map;
 
+import ma.glasnost.orika.MappingContext;
 import ma.glasnost.orika.converter.BidirectionalConverter;
 import ma.glasnost.orika.metadata.Type;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,12 +38,12 @@ public class LokalisoituTekstiConverter extends BidirectionalConverter<Lokalisoi
     private LokalisoituTekstiRepository repository;
 
     @Override
-    public LokalisoituTekstiDto convertTo(LokalisoituTeksti tekstiPalanen, Type<LokalisoituTekstiDto> type) {
+    public LokalisoituTekstiDto convertTo(LokalisoituTeksti tekstiPalanen, Type<LokalisoituTekstiDto> type, MappingContext mappingContext) {
         return new LokalisoituTekstiDto(tekstiPalanen.getId(), tekstiPalanen.getTunniste(), tekstiPalanen.getTeksti());
     }
 
     @Override
-    public LokalisoituTeksti convertFrom(LokalisoituTekstiDto dto, Type<LokalisoituTeksti> type) {
+    public LokalisoituTeksti convertFrom(LokalisoituTekstiDto dto, Type<LokalisoituTeksti> type, MappingContext mappingContext) {
         if (dto.getId() != null) {
             /*
             Jos id on mukana, yritä yhdistää olemassa olevaan tekstipalaseen
