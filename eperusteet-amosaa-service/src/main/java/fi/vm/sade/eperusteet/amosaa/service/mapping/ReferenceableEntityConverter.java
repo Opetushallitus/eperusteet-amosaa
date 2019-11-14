@@ -29,6 +29,7 @@ import javax.persistence.metamodel.IdentifiableType;
 import javax.persistence.metamodel.ManagedType;
 
 import ma.glasnost.orika.ConverterException;
+import ma.glasnost.orika.MappingContext;
 import ma.glasnost.orika.converter.BidirectionalConverter;
 import ma.glasnost.orika.metadata.Type;
 import org.springframework.stereotype.Component;
@@ -49,12 +50,12 @@ public class ReferenceableEntityConverter extends BidirectionalConverter<Referen
     }
 
     @Override
-    public Reference convertTo(ReferenceableEntity s, Type<Reference> type) {
+    public Reference convertTo(ReferenceableEntity s, Type<Reference> type, MappingContext mappingContext) {
         return new Reference(s.getId().toString());
     }
 
     @Override
-    public ReferenceableEntity convertFrom(Reference reference, Type<ReferenceableEntity> type) {
+    public ReferenceableEntity convertFrom(Reference reference, Type<ReferenceableEntity> type, MappingContext mappingContext) {
         ManagedType<ReferenceableEntity> managedType = em.getMetamodel().managedType(type.getRawType());
         if (managedType instanceof IdentifiableType) {
             final Class<?> idType = ((IdentifiableType<?>) managedType).getIdType().getJavaType();

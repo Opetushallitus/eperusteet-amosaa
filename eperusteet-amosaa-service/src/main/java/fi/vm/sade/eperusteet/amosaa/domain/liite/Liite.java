@@ -44,6 +44,7 @@ import lombok.Setter;
  * @author jhyoty
  */
 @Entity
+@Setter
 @Table(name = "liite")
 public class Liite implements Serializable {
 
@@ -75,7 +76,6 @@ public class Liite implements Serializable {
             joinColumns = @JoinColumn(name = "liite_id"),
             inverseJoinColumns = @JoinColumn(name = "opetussuunnitelma_id"))
     @Getter
-    @Setter
     private Set<Opetussuunnitelma> opetussuunnitelmat;
 
     protected Liite() {
