@@ -27,6 +27,7 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.*;
+import javax.activation.MimetypesFileTypeMap;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
@@ -169,7 +170,7 @@ public class LiitetiedostoController extends KoulutustoimijaIdGetterAbstractCont
         boolean isCorrectExtension = true;
 
         if (!ObjectUtils.isEmpty(extension)) {
-            isCorrectExtension = Objects.equals(dto.getTyyppi(), "image/" + extension);
+            isCorrectExtension = Objects.equals(dto.getTyyppi(), new MimetypesFileTypeMap().getContentType(fileName));
         }
 
         if (dto != null && isCorrectExtension) {
