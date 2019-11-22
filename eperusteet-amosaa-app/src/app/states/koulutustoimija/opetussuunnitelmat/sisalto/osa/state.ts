@@ -412,7 +412,7 @@ angular
 
                             try {
                                 const val = _.parseInt(koodi);
-                                return val >= 1000 && val <= 99999999;
+                                return val >= 1000 && val <= 999999999;
                             }
                             catch (err) {
                                 return false;
