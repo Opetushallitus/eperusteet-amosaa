@@ -159,7 +159,7 @@ public class ValidointiServiceImpl implements ValidointiService {
             } else {
                 try {
                     Integer arvo = Integer.valueOf(oma.getKoodi());
-                    if (arvo < 1000 || arvo > 99999999) {
+                    if (arvo < 1000 || arvo > 999999999) {
                         validointi.virhe("oma-tutkinnon-osa-virheellinen-koodi", nimi);
                     }
                 }
