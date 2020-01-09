@@ -5,7 +5,7 @@
   "description": "",
   "private": "true",
   "devDependencies": {
-    "angular": "1.4.7",
+    "angular": "1.7.9",
     "angular-animate": "1.4.8",
     "angular-cache": "4.4.2",
     "angular-elastic": "2.5.0",
