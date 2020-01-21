@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteBaseDto;
 import lombok.*;
 
 import java.util.List;
@@ -40,6 +41,7 @@ public class SisaltoViiteDto {
     private boolean liikkumaton;
     private Reference owner;
     private Reference vanhempi;
+    private CachedPerusteBaseDto peruste;
     private SisaltoTyyppi tyyppi;
     private LokalisoituTekstiDto ohjeteksti;
     private LokalisoituTekstiDto perusteteksti;

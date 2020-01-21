@@ -104,7 +104,12 @@ angular
                         let perusteId = null;
                         let tosaId = null;
                         if (osa.tosa.tyyppi === "perusteesta") {
-                            perusteId = ops.peruste.id;
+                            if (osa.peruste) {
+                                // Tuotu toisesta perusteesta
+                                perusteId = osa.peruste.id;
+                            } else {
+                                perusteId = ops.peruste.id;
+                            }
                             tosaId = osa.tosa.perusteentutkinnonosa;
                         } else if (osa.tosa.tyyppi === "vieras") {
                             perusteId = osa.tosa.vierastutkinnonosa._cperuste;
@@ -112,6 +117,7 @@ angular
                         } else {
                             return;
                         }
+
                         return Api.one("perusteet/" + perusteId + "/tutkinnonosat/" + tosaId).get();
                     }
                 },
@@ -120,7 +126,12 @@ angular
                         let perusteId = null;
                         let tosaId = null;
                         if (osa.tosa.tyyppi === "perusteesta") {
-                            perusteId = ops.peruste.id;
+                            if (osa.peruste) {
+                                // Tuotu toisesta perusteesta
+                                perusteId = osa.peruste.id;
+                            } else {
+                                perusteId = ops.peruste.id;
+                            }
                             tosaId = osa.tosa.perusteentutkinnonosa;
                         } else if (osa.tosa.tyyppi === "vieras") {
                             perusteId = osa.tosa.vierastutkinnonosa._cperuste;
@@ -128,8 +139,9 @@ angular
                         } else {
                             return;
                         }
+
                         return Api.one("perusteet/" + perusteId + "/suoritustavat/" + ops.suoritustapa
-                            + "/tutkinnonosat/" + tosaId).get();
+                          + "/tutkinnonosat/" + tosaId).get();
                     }
                 },
                 pSuoritustavat: (Api, osa, ops) =>

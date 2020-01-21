@@ -21,6 +21,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 
 import java.util.List;
 
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteBaseDto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -40,5 +41,6 @@ public class SisaltoViiteKevytDto {
     private boolean valmis;
     private boolean liikkumaton;
     private Reference vanhempi;
+    private CachedPerusteBaseDto peruste;
     private List<Reference> lapset;
 }
