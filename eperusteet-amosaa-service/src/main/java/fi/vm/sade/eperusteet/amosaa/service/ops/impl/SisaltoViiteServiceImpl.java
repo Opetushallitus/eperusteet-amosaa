@@ -941,6 +941,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
         List<SisaltoViite> kopiot = viitteet.stream()
                 .map(viiteId -> repository.findOne(viiteId))
                 .filter(Objects::nonNull)
+                .filter(viite -> SisaltoTyyppi.isCopyable(viite.getTyyppi()))
                 .peek(viite -> {
                     // Koitetaan hakea perusteen tiedot viitteestä
                     if (ObjectUtils.isEmpty(viite.getPeruste())
@@ -949,7 +950,6 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
                         viite.setPeruste(viite.getOwner().getPeruste());
                     }
                 })
-                .filter(viite -> SisaltoTyyppi.isCopyable(viite.getTyyppi()))
                 .map(viite -> mapper.map(viite, SisaltoViiteDto.class))
                 .map(viiteDto -> mapper.map(viiteDto, SisaltoViite.class))
                 .map(viite -> SisaltoViite.copy(viite, false))
