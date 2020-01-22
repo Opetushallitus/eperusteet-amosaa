@@ -464,7 +464,9 @@ mixin perusteenTosaSisalto()
   +formfieldDense("'koodi'")
     b(ng-bind="pTosa.koodiArvo")
   +formfieldDense("'laajuus'")
-    span {{pTosaViite.laajuus}} {{st.laajuusYksikko | kaanna}}
+    span {{pTosaViite.laajuus}}
+    span(ng-if="pTosaViite.laajuusMaksimi && pTosaViite.laajuus < pTosaViite.laajuusMaksimi")  - {{pTosaViite.laajuusMaksimi}}
+    span  {{st.laajuusYksikko | kaanna}}
   +formfieldDense("'luotu'")
     span(ng-bind="pTosa.luotu | aikaleima")
   +formfieldDense("'viimeksi-muokattu'")
