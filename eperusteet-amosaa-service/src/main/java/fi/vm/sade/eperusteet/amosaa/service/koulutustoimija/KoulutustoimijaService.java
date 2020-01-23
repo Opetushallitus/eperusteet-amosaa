@@ -57,24 +57,24 @@ public interface KoulutustoimijaService {
     List<KoulutustoimijaBaseDto> getYhteistyoKoulutustoimijat(@P("ktId") Long ktId);
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
-    List<KoulutustoimijaYstavaDto> getOrganisaatioHierarkiaYstavat(Long ktId);
+    List<KoulutustoimijaYstavaDto> getOrganisaatioHierarkiaYstavat(@P("ktId") Long ktId);
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
-    List<KoulutustoimijaYstavaDto> getOmatYstavat(Long ktId);
+    List<KoulutustoimijaYstavaDto> getOmatYstavat(@P("ktId") Long ktId);
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
-    List<KoulutustoimijaBaseDto> getPyynnot(Long ktId);
+    List<KoulutustoimijaBaseDto> getPyynnot(@P("ktId") Long ktId);
 
     Long getKoulutustoimija(String idTaiOid);
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
-    OrganisaatioHierarkiaDto getOrganisaatioHierarkia(Long ktId);
+    OrganisaatioHierarkiaDto getOrganisaatioHierarkia(@P("ktId") Long ktId);
 
     @PreAuthorize("permitAll()")
     Page<KoulutustoimijaJulkinenDto> findKoulutustoimijat(PageRequest page, KoulutustoimijaQueryDto query);
     
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
-    List<OrganisaatioHistoriaLiitosDto> getOrganisaatioHierarkiaHistoriaLiitokset(Long ktId);
+    List<OrganisaatioHistoriaLiitosDto> getOrganisaatioHierarkiaHistoriaLiitokset(@P("ktId") Long ktId);
 
 //    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'HALLINTA')")
 //    OpetussuunnitelmaBaseDto moveOpetussuunnitelma(Long ktId, Long opsId, KoulutustoimijaBaseDto body);

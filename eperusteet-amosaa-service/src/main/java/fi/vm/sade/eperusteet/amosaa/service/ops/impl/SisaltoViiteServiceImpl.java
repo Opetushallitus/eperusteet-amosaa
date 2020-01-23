@@ -152,7 +152,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
     private ObjectMapper objMapper;
 
     @Override
-    public <T> T getSisaltoViite(@P("ktId") Long ktId, Long opsId, Long viiteId, Class<T> t) {
+    public <T> T getSisaltoViite(Long ktId, Long opsId, Long viiteId, Class<T> t) {
         SisaltoViite viite = findViite(opsId, viiteId);
         return mapper.map(viite, t);
     }

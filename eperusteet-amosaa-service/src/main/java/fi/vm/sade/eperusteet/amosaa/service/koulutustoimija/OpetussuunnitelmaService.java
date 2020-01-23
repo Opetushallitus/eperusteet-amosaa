@@ -83,7 +83,7 @@ public interface OpetussuunnitelmaService extends RevisionService {
     OpetussuunnitelmaBaseDto addOpetussuunnitelma(@P("ktId") Long ktId, OpetussuunnitelmaLuontiDto opsDto);
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'HALLINTA')")
-    OpetussuunnitelmaBaseDto updateTila(@P("ktId") Long ktId, @P("opsId") Long opsId, @P("tila") Tila tila, boolean generatePdf);
+    OpetussuunnitelmaBaseDto updateTila(@P("ktId") Long ktId, @P("opsId") Long opsId, Tila tila, boolean generatePdf);
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
     Validointi validoi(@P("ktId") Long ktId, @P("opsId") Long opsId);
