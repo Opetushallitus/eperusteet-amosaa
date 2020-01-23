@@ -18,6 +18,7 @@ package fi.vm.sade.eperusteet.amosaa.domain.teksti;
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
+import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Suorituspolku;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Tutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
@@ -104,6 +105,14 @@ public class SisaltoViite implements ReferenceableEntity, Serializable, Copyable
     @Setter
     private LokalisoituTeksti perusteteksti;
 
+    // Jos tutkinnon osa on tuotu, opsilla ei ole muuten tietoa perusteen osasta
+    // Jos null, käytetään valittua opsia
+    @Getter
+    @Setter
+    @ManyToOne(fetch = FetchType.LAZY)
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    private CachedPeruste peruste;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @Getter
     @Setter
@@ -161,6 +170,7 @@ public class SisaltoViite implements ReferenceableEntity, Serializable, Copyable
             result.setTekstiKappale(TekstiKappale.copy(original.getTekstiKappale()));
             result.setTosa(Tutkinnonosa.copy(original.getTosa()));
             result.setSuorituspolku(Suorituspolku.copy(original.getSuorituspolku()));
+            result.setPeruste(original.getPeruste());
 
             if (copyChildren) {
                 result.setLapset(new ArrayList<>());

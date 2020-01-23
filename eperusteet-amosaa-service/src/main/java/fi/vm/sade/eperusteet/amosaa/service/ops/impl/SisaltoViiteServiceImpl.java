@@ -17,9 +17,7 @@ package fi.vm.sade.eperusteet.amosaa.service.ops.impl;
 
 import static fi.vm.sade.eperusteet.amosaa.service.util.Nulls.assertExists;
 
-import fi.vm.sade.eperusteet.amosaa.domain.liite.Liite;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +29,8 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import java.util.stream.Stream;
+
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
@@ -69,12 +68,6 @@ import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliRooli;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.SuoritustapaLaajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonosaKaikkiDto;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteRakenneDto;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.SuorituspolkuDto;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.SuorituspolkuRakenneDto;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.TekstiKappaleDto;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.VierasTutkinnonosaDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.PoistettuRepository;
@@ -95,6 +88,7 @@ import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.peruste.PerusteCacheService;
 import fi.vm.sade.eperusteet.amosaa.service.teksti.TekstiKappaleService;
 import fi.vm.sade.eperusteet.amosaa.service.util.PoistettuService;
+import org.springframework.util.ObjectUtils;
 
 /**
  * @author mikkom
@@ -948,6 +942,14 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
                 .map(viiteId -> repository.findOne(viiteId))
                 .filter(Objects::nonNull)
                 .filter(viite -> SisaltoTyyppi.isCopyable(viite.getTyyppi()))
+                .peek(viite -> {
+                    // Koitetaan hakea perusteen tiedot viitteestä
+                    if (ObjectUtils.isEmpty(viite.getPeruste())
+                            && !ObjectUtils.isEmpty(viite.getOwner())
+                            && !ObjectUtils.isEmpty(viite.getOwner().getPeruste())) {
+                        viite.setPeruste(viite.getOwner().getPeruste());
+                    }
+                })
                 .map(viite -> mapper.map(viite, SisaltoViiteDto.class))
                 .map(viiteDto -> mapper.map(viiteDto, SisaltoViite.class))
                 .map(viite -> SisaltoViite.copy(viite, false))
@@ -957,6 +959,10 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
                     viite.setLiikkumaton(false);
                     viite.setPakollinen(false);
                     viite.setOwner(ops);
+                    // Asetetaan oman opsin peruste jos ei tiedossa muita
+                    if (ObjectUtils.isEmpty(viite.getPeruste())) {
+                        viite.setPeruste(ops.getPeruste());
+                    }
                     return repository.save(viite);
                 })
                 .collect(Collectors.toList());
