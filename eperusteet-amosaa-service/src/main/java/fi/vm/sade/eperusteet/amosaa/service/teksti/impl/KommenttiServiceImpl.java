@@ -108,7 +108,7 @@ public class KommenttiServiceImpl implements KommenttiService {
 
     @Override
     @Transactional
-    public KommenttiDto add(Long ktId, @P("opsId") Long opsId, KommenttiDto kommenttiDto) {
+    public KommenttiDto add(Long ktId, Long opsId, KommenttiDto kommenttiDto) {
         Kommentti kommentti = mapper.map(kommenttiDto, Kommentti.class);
         kommentti.setSisalto(clip(kommenttiDto.getSisalto()));
         kommentti.setPoistettu(false);
