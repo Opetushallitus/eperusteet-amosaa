@@ -119,6 +119,12 @@ public class OpetussuunnitelmaRepositoryImpl implements OpetussuunnitelmaCustomR
             pred = cb.and(pred, matchDiaarinumero);
         }
 
+        if (queryDto.getPerusteId() != null) {
+            Join<Opetussuunnitelma, CachedPeruste> peruste = root.join(Opetussuunnitelma_.peruste);
+            Predicate matchPeruste = cb.equal(peruste.get(CachedPeruste_.perusteId), queryDto.getPerusteId());
+            pred = cb.and(pred, matchPeruste);
+        }
+
         if (queryDto.getOrganisaatio() != null && !"".equals(queryDto.getOrganisaatio())) {
             Predicate matchOrganisaatio = cb.equal(koulutustoimija.get(Koulutustoimija_.organisaatio), cb.literal(queryDto.getOrganisaatio()));
             pred = cb.and(pred, matchOrganisaatio);

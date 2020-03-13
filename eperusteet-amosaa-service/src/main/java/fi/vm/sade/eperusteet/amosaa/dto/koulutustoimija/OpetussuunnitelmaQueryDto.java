@@ -33,6 +33,7 @@ import lombok.Setter;
 @Setter
 public class OpetussuunnitelmaQueryDto extends QueryDto {
     private String perusteenDiaarinumero;
+    private Long perusteId;
     private String organisaatio;
     private List<String> tyyppi;
 

@@ -101,6 +101,7 @@ public class JulkinenController {
 
     @ApiImplicitParams({
             @ApiImplicitParam(name = "perusteenDiaarinumero", dataType = "string", paramType = "query"),
+            @ApiImplicitParam(name = "perusteId", dataType = "long", paramType = "query"),
             @ApiImplicitParam(name = "organisaatio", dataType = "string", paramType = "query"),
             @ApiImplicitParam(name = "tyyppi", dataType = "string", paramType = "query"),
             @ApiImplicitParam(name = "sivu", dataType = "long", paramType = "query"),
