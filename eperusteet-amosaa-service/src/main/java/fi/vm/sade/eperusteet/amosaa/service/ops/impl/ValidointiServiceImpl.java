@@ -167,16 +167,16 @@ public class ValidointiServiceImpl implements ValidointiService {
                     validointi.virhe("oma-tutkinnon-osa-virheellinen-koodi", nimi);
                 }
 
-                long paikalliset = sisaltoviiteRepository.findAllPaikallisetTutkinnonOsatByKoodi(ops.getKoulutustoimija(), oma.getKoodi()).stream()
-                        .filter(sv -> sv.getOwner().getTila() == Tila.JULKAISTU || sv.getOwner().getId().equals(ops.getId()))
-                        .count();
-                if (paikalliset > 1) {
-                    if (KoulutusTyyppi.of(koulutustyppi).isValmaTelma()) {
-                        validointi.virhe("oma-koulutuksen-osa-koodi-jo-kaytossa", nimi);
-                    } else {
-                        validointi.virhe("oma-tutkinnon-osa-koodi-jo-kaytossa", nimi);
-                    }
-                }
+//                long paikalliset = sisaltoviiteRepository.findAllPaikallisetTutkinnonOsatByKoodi(ops.getKoulutustoimija(), oma.getKoodi()).stream()
+//                        .filter(sv -> sv.getOwner().getTila() == Tila.JULKAISTU || sv.getOwner().getId().equals(ops.getId()))
+//                        .count();
+//                if (paikalliset > 1) {
+//                    if (KoulutusTyyppi.of(koulutustyppi).isValmaTelma()) {
+//                        validointi.virhe("oma-koulutuksen-osa-koodi-jo-kaytossa", nimi);
+//                    } else {
+//                        validointi.virhe("oma-tutkinnon-osa-koodi-jo-kaytossa", nimi);
+//                    }
+//                }
 
                 // TODO: Tutkinnon osan sisällön tarkastus (Tehdään jos laatijat tekevät virheitä)
             }
