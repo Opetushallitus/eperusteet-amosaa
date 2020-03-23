@@ -35,6 +35,8 @@
         <auditlog.api.version>5.0.0-SNAPSHOT</auditlog.api.version>
         <flyway.version>5.2.4</flyway.version>
         <apache.httpclient.version>4.5.3</apache.httpclient.version>
+        <eperusteet.amosaa.resources>fi.vm.sade.eperusteet.amosaa.resource</eperusteet.amosaa.resources>
+        <swagger-maven-plugin-version>3.1.7</swagger-maven-plugin-version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -670,6 +672,48 @@
                                     <dataFile>${project.build.directory}/jacoco.exec</dataFile>
                                     <outputDirectory>${project.reporting.outputDirectory}/jacoco</outputDirectory>
                                 </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>generate-openapi</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.github.kongchen</groupId>
+                        <artifactId>swagger-maven-plugin</artifactId>
+                        <version>${swagger-maven-plugin-version}</version>
+                        <configuration>
+                            <apiSources>
+                                <apiSource>
+                                    <springmvc>true</springmvc>
+                                    <schemes>
+                                        <scheme>http</scheme>
+                                        <scheme>https</scheme>
+                                    </schemes>
+                                    <basePath>/api</basePath>
+                                    <locations>
+                                        <location>${eperusteet.amosaa.resources}.julkinen.*</location>
+                                    </locations>
+                                    <modelSubstitute>/substitutes.map</modelSubstitute>
+                                    <info>
+                                        <title>ePerusteet amosaa api</title>
+                                        <version>v1</version>
+                                    </info>
+                                    <swaggerFileName>amosaa.spec</swaggerFileName>
+                                    <swaggerDirectory>target/openapi</swaggerDirectory>
+                                </apiSource>
+                            </apiSources>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>generate</goal>
+                                </goals>
                             </execution>
                         </executions>
                     </plugin>
