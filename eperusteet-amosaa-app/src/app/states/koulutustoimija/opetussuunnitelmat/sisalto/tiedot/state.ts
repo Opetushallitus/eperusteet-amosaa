@@ -11,7 +11,7 @@ angular.module("app").config($stateProvider =>
 );
 
 namespace TiedotImpl {
-    export const controller = ($q, $scope, $state, koulutustoimija, ops, historia, versioId, versio, nimiLataaja, opsSiirtoModalService, peruste) => {
+    export const controller = ($q, $scope, $state, koulutustoimija, ops, historia, versioId, versio, nimiLataaja, opsSiirtoModalService, peruste, Api, $stateParams) => {
         $scope.versio = versio;
         $scope.koulutustoimija = koulutustoimija;
         $scope.peruste = peruste;
@@ -22,6 +22,17 @@ namespace TiedotImpl {
         });
 
         $scope.edit = EditointikontrollitService.createRestangular($scope, "ops", ops, {
+            preSave: () => $q((resolve, reject) => {
+                const liitteet = Api.one("koulutustoimijat", $stateParams.ktId).one("opetussuunnitelmat", $stateParams.opsId);
+                return liitteet.getList("kuvat")
+                    .then((res) => {
+                        const preSaveObject = {
+                            liitteet: res,
+                        }
+                        return resolve(preSaveObject);
+                    })
+                    .catch(reject);
+            }),
             done: () =>
                 historia.get("uusin").then(res => {
                     $scope.uusin = Revisions.parseOne(res);
