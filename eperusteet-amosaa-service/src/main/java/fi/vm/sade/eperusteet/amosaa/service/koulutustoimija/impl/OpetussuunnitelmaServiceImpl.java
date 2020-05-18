@@ -36,6 +36,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Tutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
+import fi.vm.sade.eperusteet.amosaa.dto.NavigationNodeDto;
 import fi.vm.sade.eperusteet.amosaa.dto.OpsHakuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.PoistettuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
@@ -68,6 +69,8 @@ import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
+import fi.vm.sade.eperusteet.amosaa.service.ops.NavigationBuilder;
+import fi.vm.sade.eperusteet.amosaa.service.ops.OpetussuunnitelmaDispatcher;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.ValidointiService;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
@@ -146,7 +149,6 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     
     @Autowired
     private OrganisaatioService organisaatioService;
-    
 
     @Autowired
     public void setKoulutustoimijaService(KoulutustoimijaService kts) {
@@ -161,6 +163,9 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     private LocalizedMessagesService messages;
 
     private ObjectMapper objMapper;
+
+    @Autowired
+    private OpetussuunnitelmaDispatcher dispatcher;
 
     @PostConstruct
     protected void init() {
@@ -276,6 +281,12 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         return repository.findByKoulutustoimijaOrganisaatio(organisaatioId).stream()
                 .map(ops -> mapper.map(ops, OpetussuunnitelmaDto.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public NavigationNodeDto buildNavigation(Long ktId, Long opsId) {
+        return dispatcher.get(opsId, NavigationBuilder.class)
+                .buildNavigation(ktId, opsId);
     }
 
     @Override
