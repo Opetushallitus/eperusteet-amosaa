@@ -19,6 +19,7 @@ package fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija;
 import com.fasterxml.jackson.databind.JsonNode;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.revision.Revision;
+import fi.vm.sade.eperusteet.amosaa.dto.NavigationNodeDto;
 import fi.vm.sade.eperusteet.amosaa.dto.OpsHakuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.PoistettuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
@@ -50,6 +51,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
+
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 /**
  * @author nkala
@@ -310,5 +313,12 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable Long opsId) {
         return eperusteetService.getSuoritustavat(ktId, opsId);
+    }
+
+    @RequestMapping(value = "/{opsId}/navigaatio", method = GET)
+    public NavigationNodeDto getNavigation(
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @PathVariable final Long opsId) {
+        return service.buildNavigation(ktId, opsId);
     }
 }

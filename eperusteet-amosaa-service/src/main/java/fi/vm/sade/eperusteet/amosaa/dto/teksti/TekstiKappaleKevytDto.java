@@ -21,6 +21,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import java.util.Date;
 import java.util.UUID;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,6 +30,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@Builder
 public class TekstiKappaleKevytDto {
     private Long id;
     private Date luotu;

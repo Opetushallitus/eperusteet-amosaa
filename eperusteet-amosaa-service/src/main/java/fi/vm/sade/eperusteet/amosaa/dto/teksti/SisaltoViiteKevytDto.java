@@ -22,6 +22,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import java.util.List;
 
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteBaseDto;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,6 +31,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@Builder
 public class SisaltoViiteKevytDto {
     private Long id;
     @JsonProperty("_tekstiKappale")
