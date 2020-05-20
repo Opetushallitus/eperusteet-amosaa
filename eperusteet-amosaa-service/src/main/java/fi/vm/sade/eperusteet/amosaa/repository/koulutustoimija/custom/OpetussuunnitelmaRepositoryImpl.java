@@ -114,15 +114,25 @@ public class OpetussuunnitelmaRepositoryImpl implements OpetussuunnitelmaCustomR
             pred = cb.and(pred, tyyppiOn);
         }
 
-        if (queryDto.getPerusteenDiaarinumero() != null && !"".equals(queryDto.getPerusteenDiaarinumero())) {
-            Predicate matchDiaarinumero = cb.equal(root.get(Opetussuunnitelma_.perusteDiaarinumero), queryDto.getPerusteenDiaarinumero());
-            pred = cb.and(pred, matchDiaarinumero);
-        }
+        if (queryDto.getPerusteenDiaarinumero() != null && !"".equals(queryDto.getPerusteenDiaarinumero()) && queryDto.getPerusteId() != null) {
 
-        if (queryDto.getPerusteId() != null) {
+            Predicate matchDiaarinumero = cb.equal(root.get(Opetussuunnitelma_.perusteDiaarinumero), queryDto.getPerusteenDiaarinumero());
             Join<Opetussuunnitelma, CachedPeruste> peruste = root.join(Opetussuunnitelma_.peruste);
             Predicate matchPeruste = cb.equal(peruste.get(CachedPeruste_.perusteId), queryDto.getPerusteId());
-            pred = cb.and(pred, matchPeruste);
+
+            pred = cb.and(pred, cb.or(matchPeruste, matchDiaarinumero));
+
+        } else {
+            if (queryDto.getPerusteenDiaarinumero() != null && !"".equals(queryDto.getPerusteenDiaarinumero())) {
+                Predicate matchDiaarinumero = cb.equal(root.get(Opetussuunnitelma_.perusteDiaarinumero), queryDto.getPerusteenDiaarinumero());
+                pred = cb.and(pred, matchDiaarinumero);
+            }
+
+            if (queryDto.getPerusteId() != null) {
+                Join<Opetussuunnitelma, CachedPeruste> peruste = root.join(Opetussuunnitelma_.peruste);
+                Predicate matchPeruste = cb.equal(peruste.get(CachedPeruste_.perusteId), queryDto.getPerusteId());
+                pred = cb.and(pred, matchPeruste);
+            }
         }
 
         if (queryDto.getOrganisaatio() != null && !"".equals(queryDto.getOrganisaatio())) {
