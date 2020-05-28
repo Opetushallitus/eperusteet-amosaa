@@ -15,6 +15,8 @@
  */
 package fi.vm.sade.eperusteet.amosaa.dto.ohje;
 
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
+import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,4 +30,7 @@ public class OhjeDto {
     private Long id;
     private String kysymys;
     private String vastaus;
+    private LokalisoituTekstiDto lokalisoituKysymys;
+    private LokalisoituTekstiDto lokalisoituVastaus;
+    private Date muokattu;
 }
