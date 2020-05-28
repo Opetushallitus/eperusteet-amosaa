@@ -703,6 +703,7 @@
                                     <basePath>/api</basePath>
                                     <locations>
                                         <location>${eperusteet.amosaa.resources}.julkinen.*</location>
+                                        <location>${eperusteet.amosaa.resources}.ohje.OhjeController</location>
                                     </locations>
                                     <modelSubstitute>/substitutes.map</modelSubstitute>
                                     <info>

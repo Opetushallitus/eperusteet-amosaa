@@ -18,6 +18,7 @@ package fi.vm.sade.eperusteet.amosaa.resource.ohje;
 import fi.vm.sade.eperusteet.amosaa.dto.ohje.OhjeDto;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.service.ohje.OhjeService;
+import io.swagger.annotations.Api;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,6 +42,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 @RestController
 @RequestMapping("/ohjeet")
 @InternalApi
+@Api("Ohjeet")
 public class OhjeController {
 
     @Autowired
@@ -68,7 +70,7 @@ public class OhjeController {
 
     @RequestMapping(value = "/{id}", method = DELETE)
     public ResponseEntity removeOhje(
-            @RequestParam Long id) {
+            @PathVariable Long id) {
         service.removeOhje(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
