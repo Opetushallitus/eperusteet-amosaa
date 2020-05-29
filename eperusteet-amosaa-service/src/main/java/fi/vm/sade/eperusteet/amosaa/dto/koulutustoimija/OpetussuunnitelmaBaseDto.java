@@ -40,6 +40,7 @@ public class OpetussuunnitelmaBaseDto {
     private LokalisoituTekstiDto kuvaus;
     private KoulutustoimijaBaseDto koulutustoimija;
     private Date luotu;
+    private Date muokattu;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Reference pohja;

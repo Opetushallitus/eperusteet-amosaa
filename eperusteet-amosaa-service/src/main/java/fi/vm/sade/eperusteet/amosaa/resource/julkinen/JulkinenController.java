@@ -182,7 +182,7 @@ public class JulkinenController {
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path", required = true)
     })
     @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}", method = RequestMethod.GET)
-    public OpetussuunnitelmaDto getOpetussuunnitelma(
+    public OpetussuunnitelmaDto getOpetussuunnitelmaJulkinen(
             @ApiIgnore @ModelAttribute("ktId") final Long ktId,
             @PathVariable final Long opsId
     ) {

@@ -15,6 +15,7 @@
  */
 package fi.vm.sade.eperusteet.amosaa.domain;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.EnumSet;
 import java.util.Set;
 
@@ -64,5 +65,15 @@ public enum Tila {
 
     public Set<Tila> mahdollisetSiirtymat(boolean isPohja) {
         return EnumSet.noneOf(Tila.class);
+    }
+
+    @JsonCreator
+    public static Tila of(String tila) {
+        for (Tila s : values()) {
+            if (s.tila.equalsIgnoreCase(tila)) {
+                return s;
+            }
+        }
+        throw new IllegalArgumentException(tila + " ei ole kelvollinen Tila");
     }
 }
