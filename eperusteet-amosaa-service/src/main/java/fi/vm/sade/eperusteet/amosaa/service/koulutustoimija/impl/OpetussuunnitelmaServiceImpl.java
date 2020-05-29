@@ -232,17 +232,27 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     }
 
     @Override
-    public Page<OpetussuunnitelmaBaseDto> getOpetussuunnitelmat(
+    public <T> Page<T> getOpetussuunnitelmat(
             Long ktId,
             PageRequest page,
-            OpsHakuDto query
+            OpsHakuDto query,
+            Class<T> clazz
     ) {
         Koulutustoimija koulutustoimija = koulutustoimijaRepository.findOne(ktId);
         if (koulutustoimija != null && query != null) {
             query.setKoulutustoimija(koulutustoimija.getId());
         }
         return repository.findBy(page, query)
-                .map(ops -> mapper.map(ops, OpetussuunnitelmaBaseDto.class));
+                .map(ops -> mapper.map(ops, clazz));
+    }
+
+    @Override
+    public Page<OpetussuunnitelmaBaseDto> getOpetussuunnitelmat(
+            Long ktId,
+            PageRequest page,
+            OpsHakuDto query
+    ) {
+        return getOpetussuunnitelmat(ktId, page, query, OpetussuunnitelmaBaseDto.class);
     }
 
     @Override

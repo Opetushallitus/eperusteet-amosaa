@@ -704,6 +704,7 @@
                                     <locations>
                                         <location>${eperusteet.amosaa.resources}.julkinen.*</location>
                                         <location>${eperusteet.amosaa.resources}.ohje.OhjeController</location>
+                                        <location>${eperusteet.amosaa.resources}.koulutustoimija.OpetussuunnitelmaController</location>
                                     </locations>
                                     <modelSubstitute>/substitutes.map</modelSubstitute>
                                     <info>
