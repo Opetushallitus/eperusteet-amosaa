@@ -224,7 +224,7 @@ public class OpetussuunnitelmaRepositoryImpl implements OpetussuunnitelmaCustomR
 
         // Rajataan tyypin mukaan
         if (!ObjectUtils.isEmpty(queryDto.getTyyppi())) {
-            pred = cb.and(pred, root.get(Opetussuunnitelma_.tyyppi).in(queryDto.getTyyppi()));
+            return pred = cb.and(pred, root.get(Opetussuunnitelma_.tyyppi).in(queryDto.getTyyppi()));
         }
 
         // Rajataan nimen mukaan
@@ -239,24 +239,20 @@ public class OpetussuunnitelmaRepositoryImpl implements OpetussuunnitelmaCustomR
 
         // Rajataan tilojen mukaan
         if (!ObjectUtils.isEmpty(queryDto.getTila())) {
-            pred = cb.and(pred, root.get(Opetussuunnitelma_.tila).in(queryDto.getTila()));
+            return pred = cb.and(pred, root.get(Opetussuunnitelma_.tila).in(queryDto.getTila()));
         }
 
-        if (!(queryDto.isTuleva() && queryDto.isVoimassaolo() && !queryDto.isPoistunut())) {
+        if (!(queryDto.isTuleva() && queryDto.isVoimassaolo() && queryDto.isPoistunut())) {
             if (queryDto.isTuleva()) {
                 pred = cb.and(pred, cb.or(
                         root.get(Opetussuunnitelma_.voimaantulo).isNull(),
                         cb.greaterThan(root.get(Opetussuunnitelma_.voimaantulo), new Date())));
-            }
-
-            if (queryDto.isVoimassaolo()) {
+            } else if (queryDto.isVoimassaolo()) {
                 pred = cb.and(pred, cb.lessThanOrEqualTo(root.get(Opetussuunnitelma_.voimaantulo), new Date()));
                 pred = cb.and(pred, cb.or(
                         root.get(Opetussuunnitelma_.paatospaivamaara).isNull(),
                         cb.greaterThan(root.get(Opetussuunnitelma_.paatospaivamaara), new Date())));
-            }
-
-            if (queryDto.isPoistunut()) {
+            } else if (queryDto.isPoistunut()) {
                 pred = cb.and(pred, cb.lessThanOrEqualTo(root.get(Opetussuunnitelma_.paatospaivamaara), new Date()));
             }
         }
