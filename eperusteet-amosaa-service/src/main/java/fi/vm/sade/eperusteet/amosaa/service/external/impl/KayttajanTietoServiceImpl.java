@@ -17,9 +17,12 @@ package fi.vm.sade.eperusteet.amosaa.service.external.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.Kayttaja;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
+import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.EtusivuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
@@ -40,14 +43,7 @@ import fi.vm.sade.eperusteet.utils.client.RestClientFactory;
 import fi.vm.sade.javautils.http.OphHttpClient;
 import fi.vm.sade.javautils.http.OphHttpRequest;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +54,7 @@ import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import static fi.vm.sade.eperusteet.amosaa.service.external.impl.KayttajanTietoParser.parsiKayttaja;
 import static javax.servlet.http.HttpServletResponse.SC_FORBIDDEN;
@@ -322,6 +319,24 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
 //            throw new BusinessRuleViolationException("kayttajan-pitaa-kuulua-koulutustoimijaan");
 //        }
         return hae(id);
+    }
+
+    @Override
+    public EtusivuDto haeKayttajanEtusivu() {
+        EtusivuDto result = new EtusivuDto();
+        List<Koulutustoimija> koulutustoimijat = mapper.mapAsList(koulutustoimijat(), Koulutustoimija.class);
+        if (ObjectUtils.isEmpty(koulutustoimijat)) {
+            result.setToteutussuunnitelmatKeskeneraiset(0L);
+            result.setToteutussuunnitelmatJulkaistut(0L);
+            result.setKtYhteinenOsuusKeskeneraiset(0L);
+            result.setKtYhteinenOsuusJulkaistut(0L);
+        } else {
+            result.setToteutussuunnitelmatKeskeneraiset(opsRepository.countByTyyppi(OpsTyyppi.OPS, Collections.singleton(Tila.LUONNOS), koulutustoimijat));
+            result.setToteutussuunnitelmatJulkaistut(opsRepository.countByTyyppi(OpsTyyppi.OPS, Collections.singleton(Tila.JULKAISTU), koulutustoimijat));
+            result.setKtYhteinenOsuusKeskeneraiset(opsRepository.countByTyyppi(OpsTyyppi.YHTEINEN, Collections.singleton(Tila.LUONNOS), koulutustoimijat));
+            result.setKtYhteinenOsuusJulkaistut(opsRepository.countByTyyppi(OpsTyyppi.YHTEINEN, Collections.singleton(Tila.JULKAISTU), koulutustoimijat));
+        }
+        return result;
     }
 
     @Override

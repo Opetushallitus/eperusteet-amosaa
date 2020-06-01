@@ -703,17 +703,12 @@
                                     <basePath>/api</basePath>
                                     <locations>
                                         <location>${eperusteet.amosaa.resources}.julkinen.*</location>
+                                        <location>${eperusteet.amosaa.resources}.util.KayttajaController</location>
                                         <location>${eperusteet.amosaa.resources}.ohje.OhjeController</location>
                                         <location>${eperusteet.amosaa.resources}.koulutustoimija.OpetussuunnitelmaController</location>
-                                        <location>
-                                            ${eperusteet.amosaa.resources}.koulutustoimija.OpetussuunnitelmaAikatauluController
-                                        </location>
-                                        <location>
-                                            ${eperusteet.amosaa.resources}.koulutustoimija.SisaltoViiteController
-                                        </location>
-                                        <location>
-                                            ${eperusteet.amosaa.resources}.koulutustoimija.OpetussuunnitelmanMuokkaustietoController
-                                        </location>
+                                        <location>${eperusteet.amosaa.resources}.koulutustoimija.OpetussuunnitelmaAikatauluController</location>
+                                        <location>${eperusteet.amosaa.resources}.koulutustoimija.SisaltoViiteController</location>
+                                        <location>${eperusteet.amosaa.resources}.koulutustoimija.OpetussuunnitelmanMuokkaustietoController</location>
                                     </locations>
                                     <modelSubstitute>/substitutes.map</modelSubstitute>
                                     <info>

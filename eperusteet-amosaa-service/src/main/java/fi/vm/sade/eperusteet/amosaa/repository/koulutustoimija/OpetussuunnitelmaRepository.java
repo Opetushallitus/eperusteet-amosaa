@@ -27,8 +27,10 @@ import fi.vm.sade.eperusteet.amosaa.service.util.Pair;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -45,9 +47,18 @@ public interface OpetussuunnitelmaRepository extends JpaWithVersioningRepository
     Page<Opetussuunnitelma> findAllByKoulutustoimija(Koulutustoimija koulutustoimija, Pageable pageable);
 
     long countByKoulutustoimija(Koulutustoimija koulutustoimija);
-    long countByKoulutustoimijaAndTila(Koulutustoimija koulutustoimija, Tila tilau);
+
+    long countByKoulutustoimijaAndTila(Koulutustoimija koulutustoimija, Tila tila);
+
+    long countByKoulutustoimijaInAndTila(List<Koulutustoimija> koulutustoimija, Tila tila);
 
     long countByPaatosnumeroAndIdNot(String paatosnumero, Long opsId);
+
+    @Query(value = "SELECT COUNT(DISTINCT o) FROM Opetussuunnitelma o JOIN o.koulutustoimija kt " +
+            "WHERE kt IN (:koulutustoimijat) AND o.tyyppi = :tyyppi AND o.tila IN (:tilat)")
+    long countByTyyppi(@Param("tyyppi") OpsTyyppi tyyppi,
+                       @Param("tilat") Collection<Tila> tilat,
+                       @Param("koulutustoimijat") Collection<Koulutustoimija> koulutustoimijat);
 
     List<Opetussuunnitelma> findAllByKoulutustoimijaAndTila(Koulutustoimija koulutustoimija, Tila tila);
 
