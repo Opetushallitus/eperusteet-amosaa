@@ -15,11 +15,13 @@
  */
 package fi.vm.sade.eperusteet.amosaa.service.teksti.impl;
 
+import fi.vm.sade.eperusteet.amosaa.domain.MuokkausTapahtuma;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.TekstiKappaleDto;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.TekstiKappaleRepository;
+import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaMuokkaustietoService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.teksti.TekstiKappaleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +43,11 @@ public class TekstiKappaleServiceImpl implements TekstiKappaleService {
     @Autowired
     private TekstiKappaleRepository repository;
 
+    @Autowired
+    private OpetussuunnitelmaMuokkaustietoService opetussuunnitelmaMuokkaustietoService;
+
     @Override
-    public TekstiKappaleDto add(SisaltoViite viite, TekstiKappaleDto tekstiKappaleInDto) {
+    public TekstiKappaleDto add(Long opsId, SisaltoViite viite, TekstiKappaleDto tekstiKappaleInDto) {
         TekstiKappaleDto tekstiKappaleDto = tekstiKappaleInDto != null
                 ? tekstiKappaleInDto
                 : new TekstiKappaleDto();
@@ -50,17 +55,22 @@ public class TekstiKappaleServiceImpl implements TekstiKappaleService {
         tekstiKappale.setTila(Tila.LUONNOS);
         viite.setTekstiKappale(tekstiKappale);
         tekstiKappale = repository.saveAndFlush(tekstiKappale);
+        opetussuunnitelmaMuokkaustietoService.addOpsMuokkausTieto(opsId, tekstiKappale, MuokkausTapahtuma.LUONTI);
         mapper.map(tekstiKappale, tekstiKappaleDto);
+
         return tekstiKappaleDto;
     }
 
     @Override
-    public TekstiKappaleDto update(TekstiKappaleDto tekstiKappaleDto) {
+    public TekstiKappaleDto update(Long opsId, TekstiKappaleDto tekstiKappaleDto) {
         Long id = tekstiKappaleDto.getId();
         TekstiKappale current = assertExists(repository.findOne(id), "Tekstikappaletta ei ole olemassa");
         repository.lock(current);
         mapper.map(tekstiKappaleDto, current);
-        return mapper.map(repository.save(current), TekstiKappaleDto.class);
+
+        TekstiKappale paivitetty = repository.save(current);
+        opetussuunnitelmaMuokkaustietoService.addOpsMuokkausTieto(opsId, paivitetty, MuokkausTapahtuma.PAIVITYS);
+        return mapper.map(paivitetty, TekstiKappaleDto.class);
     }
 
     @Override

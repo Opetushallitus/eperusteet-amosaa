@@ -45,7 +45,7 @@ import springfox.documentation.annotations.ApiIgnore;
  */
 @RestController
 @RequestMapping("/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}")
-@Api(value = "sisältö")
+@Api(value = "Sisaltoviitteet")
 @InternalApi
 public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractController {
     @Autowired
@@ -67,7 +67,7 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(value = "/otsikot", method = RequestMethod.GET)
-    List<SisaltoViiteKevytDto> getOtsikot(
+    public List<SisaltoViiteKevytDto> getOtsikot(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId
     ) {

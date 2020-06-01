@@ -89,4 +89,7 @@ public interface KayttajanTietoService {
 
     @PreAuthorize("isAuthenticated()")
     KayttajaDto saveKayttaja(String oid);
+
+    @PreAuthorize("isAuthenticated()")
+    List<KayttajanTietoDto> haeKayttajatiedot(List<String> oid);
 }

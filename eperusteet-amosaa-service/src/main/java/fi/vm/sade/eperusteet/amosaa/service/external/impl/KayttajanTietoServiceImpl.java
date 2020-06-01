@@ -35,6 +35,7 @@ import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaServi
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.RolePermission;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
+import fi.vm.sade.eperusteet.utils.client.OphClientHelper;
 import fi.vm.sade.eperusteet.utils.client.RestClientFactory;
 import fi.vm.sade.javautils.http.OphHttpClient;
 import fi.vm.sade.javautils.http.OphHttpRequest;
@@ -92,6 +93,15 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
     
     @Autowired
     private KayttooikeusService kayttooikeusService;
+
+    @Autowired
+    OphClientHelper ophClientHelper;
+
+    @Value("${cas.service.oppijanumerorekisteri-service:''}")
+    private String onrServiceUrl;
+
+    private static final String HENKILO_API = "/henkilo/";
+    private static final String HENKILOT_BY_LIST = HENKILO_API + "henkilotByHenkiloOidList";
 
     @Override
     public KayttajaDto haeKayttajanTiedot() {
@@ -312,6 +322,11 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
 //            throw new BusinessRuleViolationException("kayttajan-pitaa-kuulua-koulutustoimijaan");
 //        }
         return hae(id);
+    }
+
+    @Override
+    public List<KayttajanTietoDto> haeKayttajatiedot(List<String> oid) {
+        return ophClientHelper.postAsList(onrServiceUrl, onrServiceUrl + HENKILOT_BY_LIST, oid, KayttajanTietoDto.class);
     }
 
 }

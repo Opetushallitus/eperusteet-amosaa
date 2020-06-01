@@ -23,11 +23,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
  * @author mikkom
  */
 public interface TekstiKappaleService {
-    @PreAuthorize("isAuthenticated()")
-    TekstiKappaleDto add(SisaltoViite viite, TekstiKappaleDto tekstiKappaleDto);
 
     @PreAuthorize("isAuthenticated()")
-    TekstiKappaleDto update(TekstiKappaleDto tekstiKappaleDto);
+    TekstiKappaleDto add(Long opsId, SisaltoViite viite, TekstiKappaleDto tekstiKappaleDto);
+
+    @PreAuthorize("isAuthenticated()")
+    TekstiKappaleDto update(Long opsId, TekstiKappaleDto tekstiKappaleDto);
 
     @PreAuthorize("isAuthenticated()")
     TekstiKappaleDto mergeNew(SisaltoViite viite, TekstiKappaleDto tekstiKappaleDto);
