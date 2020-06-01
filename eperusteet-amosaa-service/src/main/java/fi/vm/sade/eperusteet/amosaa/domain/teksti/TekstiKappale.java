@@ -16,10 +16,12 @@
 package fi.vm.sade.eperusteet.amosaa.domain.teksti;
 
 import fi.vm.sade.eperusteet.amosaa.domain.AbstractAuditedEntity;
+import fi.vm.sade.eperusteet.amosaa.domain.HistoriaTapahtuma;
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 
+import fi.vm.sade.eperusteet.amosaa.dto.NavigationType;
 import java.io.Serializable;
 import java.util.UUID;
 import javax.persistence.CascadeType;
@@ -48,7 +50,7 @@ import org.hibernate.envers.RelationTargetAuditMode;
 @Table(name = "tekstikappale")
 @Audited
 public class TekstiKappale extends AbstractAuditedEntity
-        implements Serializable, ReferenceableEntity, Copyable<TekstiKappale> {
+        implements Serializable, ReferenceableEntity, Copyable<TekstiKappale>, HistoriaTapahtuma {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -131,5 +133,10 @@ public class TekstiKappale extends AbstractAuditedEntity
         result.tunniste = this.tunniste;
         result.setPakollinen(this.getPakollinen());
         return result;
+    }
+
+    @Override
+    public NavigationType getNavigationType() {
+        return NavigationType.tekstikappale;
     }
 }
