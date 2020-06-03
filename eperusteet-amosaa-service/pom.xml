@@ -709,6 +709,7 @@
                                         <location>${eperusteet.amosaa.resources}.koulutustoimija.OpetussuunnitelmaAikatauluController</location>
                                         <location>${eperusteet.amosaa.resources}.koulutustoimija.SisaltoViiteController</location>
                                         <location>${eperusteet.amosaa.resources}.koulutustoimija.OpetussuunnitelmanMuokkaustietoController</location>
+                                        <location>${eperusteet.amosaa.resources}.peruste.PerusteController</location>
                                     </locations>
                                     <modelSubstitute>/substitutes.map</modelSubstitute>
                                     <info>

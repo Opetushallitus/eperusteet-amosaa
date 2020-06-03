@@ -19,6 +19,8 @@
     "name" : "kayttaja"
   }, {
     "name" : "opetussuunnitelmat"
+  }, {
+    "name" : "perusteet"
   } ],
   "schemes" : [ "http", "https" ],
   "paths" : {
@@ -1438,6 +1440,123 @@
         }
       }
     },
+    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/version/{revId}" : {
+      "post" : {
+        "tags" : [ "opetussuunnitelmat" ],
+        "operationId" : "revertOpetussuunnitelmaToRevision",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "name" : "opsId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "revId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int32"
+        }, {
+          "name" : "ktId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object"
+            }
+          }
+        }
+      }
+    },
+    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/versiot" : {
+      "get" : {
+        "tags" : [ "opetussuunnitelmat" ],
+        "operationId" : "getOpetussuunnitelmaRevisions",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "name" : "opsId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "ktId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Revision"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/versiot/{revId}" : {
+      "get" : {
+        "tags" : [ "opetussuunnitelmat" ],
+        "operationId" : "getOpetussuunnitelmaRevision",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "name" : "opsId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "revId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int32"
+        }, {
+          "name" : "ktId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object"
+            }
+          }
+        }
+      }
+    },
     "/ohjeet" : {
       "get" : {
         "tags" : [ "Ohjeet" ],
@@ -1518,6 +1637,280 @@
         "responses" : {
           "default" : {
             "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/perusteet" : {
+      "get" : {
+        "tags" : [ "perusteet" ],
+        "operationId" : "getPerusteet",
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/PerusteDto"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/perusteet/haku" : {
+      "get" : {
+        "tags" : [ "perusteet" ],
+        "operationId" : "haePerusteista",
+        "parameters" : [ {
+          "name" : "params",
+          "in" : "query",
+          "required" : true,
+          "type" : "object"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object"
+            }
+          }
+        }
+      }
+    },
+    "/perusteet/opetussuunnitelmat" : {
+      "get" : {
+        "tags" : [ "perusteet" ],
+        "operationId" : "getOpetussuunnitelmat",
+        "parameters" : [ {
+          "name" : "diaarinumero",
+          "in" : "query",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/OpetussuunnitelmaBaseDto"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/perusteet/{id}" : {
+      "get" : {
+        "tags" : [ "perusteet" ],
+        "operationId" : "getPeruste",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/PerusteDto"
+            }
+          }
+        }
+      }
+    },
+    "/perusteet/{id}/kaikki" : {
+      "get" : {
+        "tags" : [ "perusteet" ],
+        "operationId" : "getPerusteAll",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object"
+            }
+          }
+        }
+      }
+    },
+    "/perusteet/{id}/suorituspolkuosat" : {
+      "get" : {
+        "tags" : [ "perusteet" ],
+        "operationId" : "getPerusteTutkinnonOsatKevyt",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/TutkinnonOsaSuoritustapaDto"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/perusteet/{id}/suoritustavat" : {
+      "get" : {
+        "tags" : [ "perusteet" ],
+        "operationId" : "getPerusteRakenteet",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object"
+            }
+          }
+        }
+      }
+    },
+    "/perusteet/{id}/suoritustavat/{st}" : {
+      "get" : {
+        "tags" : [ "perusteet" ],
+        "operationId" : "getPerusteRakenne",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "st",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object"
+            }
+          }
+        }
+      }
+    },
+    "/perusteet/{id}/suoritustavat/{st}/tutkinnonosat/{tosaId}" : {
+      "get" : {
+        "tags" : [ "perusteet" ],
+        "operationId" : "getTutkinnonOsaViite",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "st",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "tosaId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object"
+            }
+          }
+        }
+      }
+    },
+    "/perusteet/{id}/tutkinnonosat" : {
+      "get" : {
+        "tags" : [ "perusteet" ],
+        "operationId" : "getPerusteTutkinnonOsat",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object"
+            }
+          }
+        }
+      }
+    },
+    "/perusteet/{id}/tutkinnonosat/{tosaId}" : {
+      "get" : {
+        "tags" : [ "perusteet" ],
+        "operationId" : "getPerusteTutkinnonOsa",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "tosaId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object"
+            }
+          }
+        }
+      }
+    },
+    "/perusteet/{perusteId}/perusteesta" : {
+      "get" : {
+        "tags" : [ "perusteet" ],
+        "operationId" : "getPerusteByPerusteId",
+        "parameters" : [ {
+          "name" : "perusteId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object"
+            }
           }
         }
       }
@@ -2736,18 +3129,18 @@
           "type" : "integer",
           "format" : "int32"
         },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "sort" : {
           "$ref" : "#/definitions/Sort"
-        },
-        "first" : {
-          "type" : "boolean"
         },
         "last" : {
           "type" : "boolean"
         },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
+        "first" : {
+          "type" : "boolean"
         }
       }
     },
@@ -2776,18 +3169,18 @@
           "type" : "integer",
           "format" : "int32"
         },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "sort" : {
           "$ref" : "#/definitions/Sort"
-        },
-        "first" : {
-          "type" : "boolean"
         },
         "last" : {
           "type" : "boolean"
         },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
+        "first" : {
+          "type" : "boolean"
         }
       }
     },
@@ -2816,18 +3209,18 @@
           "type" : "integer",
           "format" : "int32"
         },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "sort" : {
           "$ref" : "#/definitions/Sort"
-        },
-        "first" : {
-          "type" : "boolean"
         },
         "last" : {
           "type" : "boolean"
         },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
+        "first" : {
+          "type" : "boolean"
         }
       }
     },
@@ -2856,18 +3249,18 @@
           "type" : "integer",
           "format" : "int32"
         },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "sort" : {
           "$ref" : "#/definitions/Sort"
-        },
-        "first" : {
-          "type" : "boolean"
         },
         "last" : {
           "type" : "boolean"
         },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
+        "first" : {
+          "type" : "boolean"
         }
       }
     },
@@ -2955,6 +3348,101 @@
           "type" : "array",
           "items" : {
             "$ref" : "#/definitions/TutkintonimikeKoodiDto"
+          }
+        }
+      }
+    },
+    "PerusteDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "nimi" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "globalVersion" : {
+          "$ref" : "#/definitions/PerusteVersionDto"
+        },
+        "koulutustyyppi" : {
+          "type" : "string",
+          "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA" ]
+        },
+        "kielet" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string",
+            "enum" : [ "FI", "SV", "SE", "RU", "EN" ]
+          }
+        },
+        "kuvaus" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "diaarinumero" : {
+          "type" : "string"
+        },
+        "voimassaoloAlkaa" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "siirtymaPaattyy" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "voimassaoloLoppuu" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "muokattu" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "tila" : {
+          "type" : "string"
+        },
+        "tyyppi" : {
+          "type" : "string"
+        },
+        "korvattavatDiaarinumerot" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "koulutukset" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/KoulutusDto"
+          }
+        },
+        "osaamisalat" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/KoodiDto"
+          }
+        },
+        "tutkintonimikkeet" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/TutkintonimikeKoodiDto"
+          }
+        },
+        "suoritustavat" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/SuoritustapaDto"
           }
         }
       }
@@ -3074,6 +3562,25 @@
         "idLong" : {
           "type" : "integer",
           "format" : "int64"
+        }
+      }
+    },
+    "Revision" : {
+      "type" : "object",
+      "properties" : {
+        "numero" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "pvm" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "muokkaajaOid" : {
+          "type" : "string"
+        },
+        "kommentti" : {
+          "type" : "string"
         }
       }
     },
@@ -3372,6 +3879,19 @@
         }
       }
     },
+    "SuoritustapaDto" : {
+      "type" : "object",
+      "properties" : {
+        "suoritustapakoodi" : {
+          "type" : "string",
+          "enum" : [ "OPS", "NAYTTO", "REFORMI", "PERUSOPETUS", "LISAOPETUS", "VARHAISKASVATUS", "ESIOPETUS", "LUKIOKOULUTUS" ]
+        },
+        "laajuusYksikko" : {
+          "type" : "string",
+          "enum" : [ "OPINTOVIIKKO", "OSAAMISPISTE", "KURSSI" ]
+        }
+      }
+    },
     "TekstiKappaleDto" : {
       "type" : "object",
       "properties" : {
@@ -3578,6 +4098,56 @@
       "properties" : {
         "omatutkinnonosa" : {
           "$ref" : "#/definitions/OmaTutkinnonosaSuorituspolkuDto"
+        }
+      }
+    },
+    "TutkinnonOsaSuoritustapaDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "luotu" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "muokattu" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "nimi" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "tila" : {
+          "type" : "string",
+          "enum" : [ "LUONNOS", "VALMIS", "POISTETTU" ]
+        },
+        "tunniste" : {
+          "type" : "string",
+          "enum" : [ "NORMAALI", "LAAJAALAINENOSAAMINEN", "RAKENNE" ]
+        },
+        "osanTyyppi" : {
+          "type" : "string"
+        },
+        "kuvaus" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "koodiUri" : {
+          "type" : "string"
+        },
+        "koodiArvo" : {
+          "type" : "string"
+        },
+        "tyyppi" : {
+          "type" : "string",
+          "enum" : [ "NORMAALI", "REFORMI_TUTKE2", "TUTKE2" ]
         }
       }
     },

@@ -253,7 +253,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
     })
     @RequestMapping(value = "/{opsId}/versiot", method = RequestMethod.GET)
     @InternalApi
-    List<Revision> getOpetussuunnitelmaRevisions(
+    public List<Revision> getOpetussuunnitelmaRevisions(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId
     ) {
@@ -265,12 +265,25 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
     })
     @RequestMapping(value = "/{opsId}/versiot/{revId}", method = RequestMethod.GET)
     @InternalApi
-    Object getOpetussuunnitelmaRevision(
+    public Object getOpetussuunnitelmaRevision(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Integer revId
     ) {
         return service.getData(ktId, opsId, revId);
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
+    @RequestMapping(value = "/{opsId}/version/{revId}", method = RequestMethod.POST)
+    @InternalApi
+    public Object revertOpetussuunnitelmaToRevision(
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @PathVariable final Long opsId,
+            @PathVariable final Integer revId
+    ) {
+        return service.revertTo(ktId, opsId, revId);
     }
 
     @ApiImplicitParams({

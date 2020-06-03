@@ -100,7 +100,7 @@ public class PerusteController extends KoulutustoimijaIdGetterAbstractController
     }
 
     @RequestMapping(value = "/{id}/suoritustavat", method = RequestMethod.GET)
-    public JsonNode getPerusteRakenne(@PathVariable Long id) {
+    public JsonNode getPerusteRakenteet(@PathVariable Long id) {
         return service.getSuoritustavat(id);
     }
 
