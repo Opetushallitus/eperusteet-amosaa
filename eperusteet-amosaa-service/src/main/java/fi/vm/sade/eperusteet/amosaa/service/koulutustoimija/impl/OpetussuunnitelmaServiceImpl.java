@@ -628,6 +628,12 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     }
 
     @Override
+    public OpetussuunnitelmaDto revertTo(Long ktId, Long opsId, Integer revId) {
+        OpetussuunnitelmaDto rev = (OpetussuunnitelmaDto) getData(ktId, opsId, revId);
+        return update(ktId, opsId, rev);
+    }
+
+    @Override
     public KayttajaoikeusDto updateOikeus(Long ktId, Long opsId, Long kayttajaId, KayttajaoikeusDto oikeusDto) {
         Koulutustoimija kt = koulutustoimijaRepository.findOne(ktId);
         Opetussuunnitelma ops = repository.findOne(opsId);

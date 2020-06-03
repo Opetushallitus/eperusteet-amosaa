@@ -77,6 +77,9 @@ public interface OpetussuunnitelmaService extends RevisionService {
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
     OpetussuunnitelmaDto update(@P("ktId") Long ktId, @P("opsId") Long opsId, OpetussuunnitelmaDto body);
 
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
+    OpetussuunnitelmaDto revertTo(@P("ktId") Long ktId, @P("opsId") Long opsId, Integer revId);
+
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'HALLINTA')")
     void paivitaPeruste(@P("ktId") Long ktId, @P("opsId") Long opsId);
 
