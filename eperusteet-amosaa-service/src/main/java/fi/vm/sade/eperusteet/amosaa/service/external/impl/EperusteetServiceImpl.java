@@ -285,6 +285,12 @@ public class EperusteetServiceImpl implements EperusteetService {
     }
 
     @Override
+    public JsonNode getTiedotteetHaku(TiedoteQueryDto queryDto) {
+        String uri = eperusteetServiceUrl.concat("/api/tiedotteet/haku").concat(queryDto.toRequestParams());
+        return client.exchange(uri, HttpMethod.GET, httpEntity, JsonNode.class).getBody();
+    }
+
+    @Override
     public JsonNode getTutkinnonOsaViite(Long id, String tyyppi, Long tosaId) {
         CachedPeruste cperuste = cachedPerusteRepository.findOne(id);
         try {
