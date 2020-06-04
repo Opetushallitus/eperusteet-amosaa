@@ -16,8 +16,11 @@
 package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
+import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.EtusivuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaJulkinenDto;
@@ -27,16 +30,13 @@ import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.YstavaStatus;
 import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHierarkiaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHistoriaLiitosDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
+import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -48,6 +48,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -68,6 +69,9 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
 
     @Autowired
     private SisaltoviiteRepository sisaltoviiteRepository;
+
+    @Autowired
+    private OpetussuunnitelmaRepository opetussuunnitelmaRepository;
 
     @Autowired
     private DtoMapper mapper;
@@ -141,8 +145,8 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     }
 
     @Override
-    public KoulutustoimijaDto getKoulutustoimija(Long kId) {
-        return mapper.map(repository.findOne(kId), KoulutustoimijaDto.class);
+    public KoulutustoimijaDto getKoulutustoimija(Long ktId) {
+        return mapper.map(repository.findOne(ktId), KoulutustoimijaDto.class);
     }
 
     @Override
@@ -158,8 +162,8 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     }
 
     @Override
-    public KoulutustoimijaJulkinenDto getKoulutustoimijaJulkinen(Long kId) {
-        return mapper.map(repository.findOne(kId), KoulutustoimijaJulkinenDto.class);
+    public KoulutustoimijaJulkinenDto getKoulutustoimijaJulkinen(Long ktId) {
+        return mapper.map(repository.findOne(ktId), KoulutustoimijaJulkinenDto.class);
     }
 
     @Override
@@ -252,6 +256,25 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     public List<OrganisaatioHistoriaLiitosDto> getOrganisaatioHierarkiaHistoriaLiitokset(Long ktId) {
         Koulutustoimija kt = repository.findOne(ktId);
         return organisaatioService.getOrganisaationHistoriaLiitokset(kt.getOrganisaatio());
+    }
+
+    @Override
+    public EtusivuDto getEtusivu(@P("ktId") Long ktId) {
+        Koulutustoimija koulutustoimija = repository.findOne(ktId);
+        EtusivuDto result = new EtusivuDto();
+        if (koulutustoimija != null) {
+            Set<Koulutustoimija> koulutustoimijat = Collections.singleton(koulutustoimija);
+            result.setToteutussuunnitelmatKeskeneraiset(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.OPS, Collections.singleton(Tila.LUONNOS), koulutustoimijat));
+            result.setToteutussuunnitelmatJulkaistut(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.OPS, Collections.singleton(Tila.JULKAISTU), koulutustoimijat));
+            result.setKtYhteinenOsuusKeskeneraiset(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.YHTEINEN, Collections.singleton(Tila.LUONNOS), koulutustoimijat));
+            result.setKtYhteinenOsuusJulkaistut(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.YHTEINEN, Collections.singleton(Tila.JULKAISTU), koulutustoimijat));
+        } else {
+            result.setToteutussuunnitelmatKeskeneraiset(0L);
+            result.setToteutussuunnitelmatJulkaistut(0L);
+            result.setKtYhteinenOsuusKeskeneraiset(0L);
+            result.setKtYhteinenOsuusJulkaistut(0L);
+        }
+        return result;
     }
 
 }

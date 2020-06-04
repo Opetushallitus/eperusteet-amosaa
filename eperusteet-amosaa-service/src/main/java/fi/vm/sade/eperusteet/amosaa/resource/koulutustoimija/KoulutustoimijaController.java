@@ -16,6 +16,7 @@
 
 package fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija;
 
+import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.EtusivuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
@@ -184,4 +185,13 @@ public class KoulutustoimijaController extends KoulutustoimijaIdGetterAbstractCo
         return koulutustoimijaService.getOrganisaatioHierarkiaHistoriaLiitokset(ktId);
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
+    @RequestMapping(value = "/{ktId}/etusivu", method = RequestMethod.GET)
+    public EtusivuDto getEtusivu(
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId
+    ) {
+        return koulutustoimijaService.getEtusivu(ktId);
+    }
 }
