@@ -2479,6 +2479,76 @@
           }
         }
       }
+    },
+    "/ulkopuoliset/tiedotteet/haku" : {
+      "get" : {
+        "tags" : [ "Ulkopuoliset" ],
+        "summary" : "tiedotteiden haku",
+        "description" : "",
+        "operationId" : "getTiedotteetHaku",
+        "parameters" : [ {
+          "name" : "sivu",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "sivukoko",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "kieli",
+          "in" : "query",
+          "description" : "tiedotteen kieli",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "nimi",
+          "in" : "query",
+          "description" : "hae nimellä",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "perusteId",
+          "in" : "query",
+          "description" : "hae perusteeseen liitetyt tiedotteet",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "perusteeton",
+          "in" : "query",
+          "description" : "hae perusteettomat tiedotteet",
+          "required" : false,
+          "type" : "boolean"
+        }, {
+          "name" : "julkinen",
+          "in" : "query",
+          "description" : "hae julkiset tiedotteet",
+          "required" : false,
+          "type" : "boolean"
+        }, {
+          "name" : "yleinen",
+          "in" : "query",
+          "description" : "hae yleiset tiedotteet",
+          "required" : false,
+          "type" : "boolean"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object"
+            }
+          }
+        }
+      }
     }
   },
   "definitions" : {
@@ -3831,13 +3901,13 @@
     "Page" : {
       "type" : "object",
       "properties" : {
-        "totalPages" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "totalElements" : {
           "type" : "integer",
           "format" : "int64"
+        },
+        "totalPages" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "size" : {
           "type" : "integer",
@@ -3853,6 +3923,9 @@
           "type" : "integer",
           "format" : "int32"
         },
+        "first" : {
+          "type" : "boolean"
+        },
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
@@ -3862,22 +3935,19 @@
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
-        },
-        "first" : {
-          "type" : "boolean"
         }
       }
     },
     "PageKoulutustoimijaJulkinenDto" : {
       "type" : "object",
       "properties" : {
-        "totalPages" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "totalElements" : {
           "type" : "integer",
           "format" : "int64"
+        },
+        "totalPages" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "size" : {
           "type" : "integer",
@@ -3893,6 +3963,9 @@
           "type" : "integer",
           "format" : "int32"
         },
+        "first" : {
+          "type" : "boolean"
+        },
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
@@ -3902,22 +3975,19 @@
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
-        },
-        "first" : {
-          "type" : "boolean"
         }
       }
     },
     "PageOpetussuunnitelmaBaseDto" : {
       "type" : "object",
       "properties" : {
-        "totalPages" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "totalElements" : {
           "type" : "integer",
           "format" : "int64"
+        },
+        "totalPages" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "size" : {
           "type" : "integer",
@@ -3933,6 +4003,9 @@
           "type" : "integer",
           "format" : "int32"
         },
+        "first" : {
+          "type" : "boolean"
+        },
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
@@ -3942,22 +4015,19 @@
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
-        },
-        "first" : {
-          "type" : "boolean"
         }
       }
     },
     "PageOpetussuunnitelmaDto" : {
       "type" : "object",
       "properties" : {
-        "totalPages" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "totalElements" : {
           "type" : "integer",
           "format" : "int64"
+        },
+        "totalPages" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "size" : {
           "type" : "integer",
@@ -3973,6 +4043,9 @@
           "type" : "integer",
           "format" : "int32"
         },
+        "first" : {
+          "type" : "boolean"
+        },
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
@@ -3982,9 +4055,6 @@
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
-        },
-        "first" : {
-          "type" : "boolean"
         }
       }
     },

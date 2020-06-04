@@ -17,11 +17,7 @@ package fi.vm.sade.eperusteet.amosaa.service.external;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteBaseDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliTunnisteDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.SuoritustapaLaajaDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonOsaSuoritustapaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.*;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -67,6 +63,8 @@ public interface EperusteetService {
     Set<UUID> getRakenneTunnisteet(Long id, String suoritustapa);
 
     JsonNode getTiedotteet(Long jalkeen);
+
+    JsonNode getTiedotteetHaku(TiedoteQueryDto queryDto);
 
 //    <T> T getPeruste(String diaariNumero, Class<T> type);
 //
