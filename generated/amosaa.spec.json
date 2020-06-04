@@ -14,9 +14,13 @@
   }, {
     "name" : "Sisaltoviitteet"
   }, {
+    "name" : "Ulkopuoliset"
+  }, {
     "name" : "julkinen"
   }, {
     "name" : "kayttaja"
+  }, {
+    "name" : "koulutustoimijat"
   }, {
     "name" : "opetussuunnitelmat"
   }, {
@@ -616,6 +620,285 @@
             "description" : "successful operation",
             "schema" : {
               "$ref" : "#/definitions/KayttajaDto"
+            }
+          }
+        }
+      }
+    },
+    "/koulutustoimijat/{ktId}" : {
+      "get" : {
+        "tags" : [ "koulutustoimijat" ],
+        "operationId" : "get",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "name" : "ktId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/KoulutustoimijaDto"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "koulutustoimijat" ],
+        "operationId" : "update",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/KoulutustoimijaDto"
+          }
+        }, {
+          "name" : "ktId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/KoulutustoimijaDto"
+            }
+          }
+        }
+      }
+    },
+    "/koulutustoimijat/{ktId}/etusivu" : {
+      "get" : {
+        "tags" : [ "koulutustoimijat" ],
+        "operationId" : "getEtusivu",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "name" : "ktId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/EtusivuDto"
+            }
+          }
+        }
+      }
+    },
+    "/koulutustoimijat/{ktId}/hierarkia" : {
+      "get" : {
+        "tags" : [ "koulutustoimijat" ],
+        "operationId" : "getHierarkia",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "name" : "ktId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/OrganisaatioHierarkiaDto"
+            }
+          }
+        }
+      }
+    },
+    "/koulutustoimijat/{ktId}/historialiitokset" : {
+      "get" : {
+        "tags" : [ "koulutustoimijat" ],
+        "operationId" : "getOrganisaatioHistoriaLiitokset",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "name" : "ktId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/OrganisaatioHistoriaLiitosDto"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/koulutustoimijat/{ktId}/kaikkiKayttajat" : {
+      "get" : {
+        "tags" : [ "koulutustoimijat" ],
+        "operationId" : "getKaikkiKayttajat",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "name" : "ktId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/KayttajaDto"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/koulutustoimijat/{ktId}/kayttajat" : {
+      "get" : {
+        "tags" : [ "koulutustoimijat" ],
+        "operationId" : "getKayttajat",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "name" : "ktId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/KayttajaDto"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/koulutustoimijat/{ktId}/kayttajat/{kayttajaOid}" : {
+      "get" : {
+        "tags" : [ "koulutustoimijat" ],
+        "operationId" : "getKayttajat",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "name" : "kayttajaOid",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "ktId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/KayttajanTietoDto"
+            }
+          }
+        }
+      }
+    },
+    "/koulutustoimijat/{ktId}/koodi/{koodi}" : {
+      "get" : {
+        "tags" : [ "koulutustoimijat" ],
+        "operationId" : "getByKoodi",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "name" : "koodi",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "ktId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/SisaltoViiteSijaintiDto"
+              }
             }
           }
         }
@@ -1557,6 +1840,130 @@
         }
       }
     },
+    "/koulutustoimijat/{ktId}/tutkinnonosat" : {
+      "get" : {
+        "tags" : [ "koulutustoimijat" ],
+        "operationId" : "getTutkinnonosat",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "name" : "ktId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/SisaltoViitePaikallinenIntegrationDto"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/koulutustoimijat/{ktId}/yhteistyo" : {
+      "get" : {
+        "tags" : [ "koulutustoimijat" ],
+        "operationId" : "getYhteistyoKoulutustoimijat",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "name" : "ktId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/KoulutustoimijaBaseDto"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/koulutustoimijat/{ktId}/ystavapyynnot" : {
+      "get" : {
+        "tags" : [ "koulutustoimijat" ],
+        "operationId" : "getPyynnot",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "name" : "ktId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/KoulutustoimijaBaseDto"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/koulutustoimijat/{ktId}/ystavat" : {
+      "get" : {
+        "tags" : [ "koulutustoimijat" ],
+        "operationId" : "getOmatYstavat",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "name" : "ktId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/KoulutustoimijaYstavaDto"
+              }
+            }
+          }
+        }
+      }
+    },
     "/ohjeet" : {
       "get" : {
         "tags" : [ "Ohjeet" ],
@@ -1902,6 +2309,164 @@
           "name" : "perusteId",
           "in" : "path",
           "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object"
+            }
+          }
+        }
+      }
+    },
+    "/ulkopuoliset/julkaistutperusteet" : {
+      "get" : {
+        "tags" : [ "Ulkopuoliset" ],
+        "operationId" : "getPerusteet",
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/PerusteDto"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ulkopuoliset/kayttajatiedot/{oid}" : {
+      "get" : {
+        "tags" : [ "Ulkopuoliset" ],
+        "operationId" : "get",
+        "parameters" : [ {
+          "name" : "oid",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "pattern" : ".+"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/KayttajanTietoDto"
+            }
+          }
+        }
+      }
+    },
+    "/ulkopuoliset/koodisto/relaatio/sisaltyy-alakoodit/{koodi}" : {
+      "get" : {
+        "tags" : [ "Ulkopuoliset" ],
+        "operationId" : "alarelaatio",
+        "parameters" : [ {
+          "name" : "koodi",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/KoodistoKoodiDto"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ulkopuoliset/koodisto/relaatio/sisaltyy-ylakoodit/{koodi}" : {
+      "get" : {
+        "tags" : [ "Ulkopuoliset" ],
+        "operationId" : "ylarelaatio",
+        "parameters" : [ {
+          "name" : "koodi",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/KoodistoKoodiDto"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ulkopuoliset/koodisto/{koodisto}" : {
+      "get" : {
+        "tags" : [ "Ulkopuoliset" ],
+        "operationId" : "kaikki",
+        "parameters" : [ {
+          "name" : "koodisto",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "haku",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/KoodistoKoodiDto"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ulkopuoliset/koodisto/{koodisto}/{koodi}" : {
+      "get" : {
+        "tags" : [ "Ulkopuoliset" ],
+        "operationId" : "yksi",
+        "parameters" : [ {
+          "name" : "koodisto",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "koodi",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/KoodistoKoodiDto"
+            }
+          }
+        }
+      }
+    },
+    "/ulkopuoliset/tiedotteet" : {
+      "get" : {
+        "tags" : [ "Ulkopuoliset" ],
+        "operationId" : "getTiedotteet",
+        "parameters" : [ {
+          "name" : "jalkeen",
+          "in" : "query",
+          "required" : false,
           "type" : "integer",
           "format" : "int64"
         } ],
@@ -2287,6 +2852,40 @@
         }
       }
     },
+    "KoodistoKoodiDto" : {
+      "type" : "object",
+      "properties" : {
+        "koodiUri" : {
+          "type" : "string"
+        },
+        "koodiArvo" : {
+          "type" : "string"
+        },
+        "voimassaAlkuPvm" : {
+          "type" : "string"
+        },
+        "voimassaLoppuPvm" : {
+          "type" : "string"
+        },
+        "metadata" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/KoodistoMetadataDto"
+          }
+        }
+      }
+    },
+    "KoodistoMetadataDto" : {
+      "type" : "object",
+      "properties" : {
+        "nimi" : {
+          "type" : "string"
+        },
+        "kieli" : {
+          "type" : "string"
+        }
+      }
+    },
     "KoulutusDto" : {
       "type" : "object",
       "properties" : {
@@ -2328,6 +2927,40 @@
         }
       }
     },
+    "KoulutustoimijaDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "organisaatio" : {
+          "type" : "string"
+        },
+        "nimi" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "kuvaus" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "ystavat" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/Reference"
+          }
+        },
+        "salliystavat" : {
+          "type" : "boolean"
+        }
+      }
+    },
     "KoulutustoimijaJulkinenDto" : {
       "type" : "object",
       "properties" : {
@@ -2352,6 +2985,28 @@
         },
         "salliystavat" : {
           "type" : "boolean"
+        }
+      }
+    },
+    "KoulutustoimijaYstavaDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "organisaatio" : {
+          "type" : "string"
+        },
+        "nimi" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "status" : {
+          "type" : "string",
+          "enum" : [ "YHTEISTYO", "ODOTETAAN" ]
         }
       }
     },
@@ -2497,6 +3152,21 @@
           "additionalProperties" : {
             "type" : "string"
           }
+        }
+      }
+    },
+    "OmaTutkinnonosaIntegrationDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "koodi" : {
+          "type" : "string"
+        },
+        "koodiPrefix" : {
+          "type" : "string"
         }
       }
     },
@@ -3070,6 +3740,60 @@
         }
       }
     },
+    "OrganisaatioHierarkiaDto" : {
+      "type" : "object",
+      "properties" : {
+        "nimi" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "oid" : {
+          "type" : "string"
+        },
+        "parentOid" : {
+          "type" : "string"
+        },
+        "parentOidPath" : {
+          "type" : "string"
+        },
+        "kotipaikkaUri" : {
+          "type" : "string"
+        },
+        "organisaatiotyypit" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "children" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/OrganisaatioHierarkiaDto"
+          }
+        },
+        "status" : {
+          "type" : "string",
+          "enum" : [ "AKTIIVINEN", "PASSIIVINEN" ]
+        }
+      }
+    },
+    "OrganisaatioHistoriaLiitosDto" : {
+      "type" : "object",
+      "properties" : {
+        "organisaatio" : {
+          "$ref" : "#/definitions/OrganisaatioHierarkiaDto"
+        },
+        "kohde" : {
+          "$ref" : "#/definitions/OrganisaatioHierarkiaDto"
+        },
+        "alkuPvm" : {
+          "type" : "string",
+          "format" : "date-time"
+        }
+      }
+    },
     "OsaamisalaDto" : {
       "type" : "object",
       "properties" : {
@@ -3129,15 +3853,15 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
         "last" : {
           "type" : "boolean"
+        },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "first" : {
           "type" : "boolean"
@@ -3169,15 +3893,15 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
         "last" : {
           "type" : "boolean"
+        },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "first" : {
           "type" : "boolean"
@@ -3209,15 +3933,15 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
         "last" : {
           "type" : "boolean"
+        },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "first" : {
           "type" : "boolean"
@@ -3249,15 +3973,15 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
         "last" : {
           "type" : "boolean"
+        },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "first" : {
           "type" : "boolean"
@@ -3719,6 +4443,21 @@
         }
       }
     },
+    "SisaltoViitePaikallinenIntegrationDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "tekstiKappale" : {
+          "$ref" : "#/definitions/TekstiKappaleNimiDto"
+        },
+        "tosa" : {
+          "$ref" : "#/definitions/TutkinnonOsaIntegrationDto"
+        }
+      }
+    },
     "SisaltoViiteSijaintiDto" : {
       "type" : "object",
       "properties" : {
@@ -4081,6 +4820,22 @@
         },
         "muokkaaja" : {
           "type" : "string"
+        }
+      }
+    },
+    "TutkinnonOsaIntegrationDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "tyyppi" : {
+          "type" : "string",
+          "enum" : [ "PERUSTEESTA", "OMA", "VIERAS", "YHTEINEN" ]
+        },
+        "omatutkinnonosa" : {
+          "$ref" : "#/definitions/OmaTutkinnonosaIntegrationDto"
         }
       }
     },
