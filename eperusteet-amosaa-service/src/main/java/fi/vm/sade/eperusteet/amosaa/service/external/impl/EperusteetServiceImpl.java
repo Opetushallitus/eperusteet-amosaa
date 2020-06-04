@@ -45,12 +45,18 @@ import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
+import fi.vm.sade.eperusteet.amosaa.service.util.JsonMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
+
+import static java.util.Collections.singletonList;
 
 /**
  * @author nkala
@@ -83,8 +89,17 @@ public class EperusteetServiceImpl implements EperusteetService {
     @Autowired
     private OpetussuunnitelmaService opetussuunnitelmaService;
 
+    @Autowired
+    private JsonMapper jsonMapper;
+
+    private RestTemplate client;
+
+    @Autowired
+    private HttpEntity httpEntity;
+
     @PostConstruct
     protected void init() {
+        client = new RestTemplate(singletonList(jsonMapper.messageConverter().orElseThrow(IllegalStateException::new)));
         mapper = new ObjectMapper();
         MappingModule module = new MappingModule();
         module.addDeserializer(AbstractRakenneOsaDto.class, new AbstractRakenneOsaDeserializer());
@@ -258,6 +273,15 @@ public class EperusteetServiceImpl implements EperusteetService {
         HashSet<UUID> uuids = new HashSet<>();
         collectTunnisteet(st.get("rakenne"), uuids);
         return uuids;
+    }
+
+    @Override
+    public JsonNode getTiedotteet(Long jalkeen) {
+        String params = "";
+        if (jalkeen != null) {
+            params = "?alkaen=" + String.valueOf(jalkeen);
+        }
+        return client.exchange(eperusteetServiceUrl + "/api/tiedotteet" + params, HttpMethod.GET, httpEntity, JsonNode.class).getBody();
     }
 
     @Override
