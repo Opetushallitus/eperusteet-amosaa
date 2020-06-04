@@ -16,6 +16,7 @@
 
 package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija;
 
+import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.EtusivuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.*;
 import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHierarkiaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHistoriaLiitosDto;
@@ -36,7 +37,7 @@ public interface KoulutustoimijaService {
     List<KoulutustoimijaBaseDto> getKoulutustoimijat(Set<String> ktOid);
 
     @PreAuthorize("isAuthenticated()")
-    List<KoulutustoimijaBaseDto> initKoulutustoimijat(Set<String> kOid);
+    List<KoulutustoimijaBaseDto> initKoulutustoimijat(Set<String> ktOid);
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
     KoulutustoimijaDto getKoulutustoimija(@P("ktId") Long ktId);
@@ -75,6 +76,9 @@ public interface KoulutustoimijaService {
     
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
     List<OrganisaatioHistoriaLiitosDto> getOrganisaatioHierarkiaHistoriaLiitokset(@P("ktId") Long ktId);
+
+    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
+    EtusivuDto getEtusivu(@P("ktId") Long ktId);
 
 //    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'HALLINTA')")
 //    OpetussuunnitelmaBaseDto moveOpetussuunnitelma(Long ktId, Long opsId, KoulutustoimijaBaseDto body);
