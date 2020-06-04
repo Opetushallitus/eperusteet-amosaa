@@ -66,6 +66,8 @@ public interface EperusteetService {
 
     Set<UUID> getRakenneTunnisteet(Long id, String suoritustapa);
 
+    JsonNode getTiedotteet(Long jalkeen);
+
 //    <T> T getPeruste(String diaariNumero, Class<T> type);
 //
 //    PerusteDto getYleinenPohja();

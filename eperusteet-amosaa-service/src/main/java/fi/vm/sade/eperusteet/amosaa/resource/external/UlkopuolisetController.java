@@ -15,6 +15,7 @@
  */
 package fi.vm.sade.eperusteet.amosaa.resource.external;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koodisto.KoodistoKoodiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
@@ -61,10 +62,10 @@ public class UlkopuolisetController {
         return new ResponseEntity<>(eperusteetService.findPerusteet(), HttpStatus.OK);
     }
 
-   /* @RequestMapping(value = "/tiedotteet", method = GET)
+    @RequestMapping(value = "/tiedotteet", method = GET)
     public ResponseEntity<JsonNode> getTiedotteet(@RequestParam(value = "jalkeen", required = false) final Long jalkeen) {
         return new ResponseEntity<>(eperusteetService.getTiedotteet(jalkeen), HttpStatus.OK);
-    }*/
+    }
 
     @RequestMapping(value = "/koodisto/{koodisto}", method = GET)
     public ResponseEntity<List<KoodistoKoodiDto>> kaikki(
