@@ -628,7 +628,7 @@
     "/koulutustoimijat/{ktId}" : {
       "get" : {
         "tags" : [ "koulutustoimijat" ],
-        "operationId" : "get",
+        "operationId" : "getKoulutustoimija",
         "parameters" : [ {
           "in" : "body",
           "name" : "body",
@@ -654,7 +654,7 @@
       },
       "put" : {
         "tags" : [ "koulutustoimijat" ],
-        "operationId" : "update",
+        "operationId" : "updateKoulutustoimija",
         "parameters" : [ {
           "in" : "body",
           "name" : "body",
@@ -807,7 +807,7 @@
     "/koulutustoimijat/{ktId}/kayttajat" : {
       "get" : {
         "tags" : [ "koulutustoimijat" ],
-        "operationId" : "getKayttajat",
+        "operationId" : "getKoulutustoimijaKayttajat",
         "parameters" : [ {
           "in" : "body",
           "name" : "body",
@@ -838,7 +838,7 @@
     "/koulutustoimijat/{ktId}/kayttajat/{kayttajaOid}" : {
       "get" : {
         "tags" : [ "koulutustoimijat" ],
-        "operationId" : "getKayttajat",
+        "operationId" : "getKoulutustoimijaKayttaja",
         "parameters" : [ {
           "in" : "body",
           "name" : "body",
@@ -871,7 +871,7 @@
     "/koulutustoimijat/{ktId}/koodi/{koodi}" : {
       "get" : {
         "tags" : [ "koulutustoimijat" ],
-        "operationId" : "getByKoodi",
+        "operationId" : "getKoulutustoimijaByKoodi",
         "parameters" : [ {
           "in" : "body",
           "name" : "body",
@@ -2325,7 +2325,7 @@
     "/ulkopuoliset/julkaistutperusteet" : {
       "get" : {
         "tags" : [ "Ulkopuoliset" ],
-        "operationId" : "getPerusteet",
+        "operationId" : "getJulkaistutPerusteet",
         "responses" : {
           "200" : {
             "description" : "successful operation",
@@ -2342,7 +2342,7 @@
     "/ulkopuoliset/kayttajatiedot/{oid}" : {
       "get" : {
         "tags" : [ "Ulkopuoliset" ],
-        "operationId" : "get",
+        "operationId" : "getKayttajatiedot",
         "parameters" : [ {
           "name" : "oid",
           "in" : "path",
@@ -2539,6 +2539,17 @@
           "description" : "hae yleiset tiedotteet",
           "required" : false,
           "type" : "boolean"
+        }, {
+          "name" : "perusteIds",
+          "in" : "query",
+          "description" : "tiedotteen perusteiden",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "collectionFormat" : "multi"
         } ],
         "responses" : {
           "200" : {
@@ -3923,13 +3934,13 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "first" : {
-          "type" : "boolean"
-        },
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
         "last" : {
+          "type" : "boolean"
+        },
+        "first" : {
           "type" : "boolean"
         },
         "numberOfElements" : {
@@ -3963,13 +3974,13 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "first" : {
-          "type" : "boolean"
-        },
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
         "last" : {
+          "type" : "boolean"
+        },
+        "first" : {
           "type" : "boolean"
         },
         "numberOfElements" : {
@@ -4003,13 +4014,13 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "first" : {
-          "type" : "boolean"
-        },
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
         "last" : {
+          "type" : "boolean"
+        },
+        "first" : {
           "type" : "boolean"
         },
         "numberOfElements" : {
@@ -4043,13 +4054,13 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "first" : {
-          "type" : "boolean"
-        },
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
         "last" : {
+          "type" : "boolean"
+        },
+        "first" : {
           "type" : "boolean"
         },
         "numberOfElements" : {

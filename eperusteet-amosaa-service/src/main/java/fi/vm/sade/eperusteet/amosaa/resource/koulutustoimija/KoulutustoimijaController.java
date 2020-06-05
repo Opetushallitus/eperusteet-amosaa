@@ -66,7 +66,7 @@ public class KoulutustoimijaController extends KoulutustoimijaIdGetterAbstractCo
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(value = "/{ktId}", method = RequestMethod.GET)
-    public KoulutustoimijaDto get(
+    public KoulutustoimijaDto getKoulutustoimija(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId
     ) {
         return koulutustoimijaService.getKoulutustoimija(ktId);
@@ -76,7 +76,7 @@ public class KoulutustoimijaController extends KoulutustoimijaIdGetterAbstractCo
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(value = "/{ktId}", method = RequestMethod.PUT)
-    public KoulutustoimijaDto update(
+    public KoulutustoimijaDto updateKoulutustoimija(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @RequestBody final KoulutustoimijaDto kt
     ) {
@@ -97,7 +97,7 @@ public class KoulutustoimijaController extends KoulutustoimijaIdGetterAbstractCo
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(value = "/{ktId}/kayttajat", method = RequestMethod.GET)
-    public ResponseEntity<List<KayttajaDto>> getKayttajat(
+    public ResponseEntity<List<KayttajaDto>> getKoulutustoimijaKayttajat(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId
     ) {
         return new ResponseEntity<>(kayttajaTietoService.getKayttajat(ktId), HttpStatus.OK);
@@ -117,7 +117,7 @@ public class KoulutustoimijaController extends KoulutustoimijaIdGetterAbstractCo
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(value = "/{ktId}/kayttajat/{kayttajaOid}", method = RequestMethod.GET)
-    public ResponseEntity<KayttajanTietoDto> getKayttajat(
+    public ResponseEntity<KayttajanTietoDto> getKoulutustoimijaKayttaja(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final String kayttajaOid
     ) {
@@ -128,7 +128,7 @@ public class KoulutustoimijaController extends KoulutustoimijaIdGetterAbstractCo
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(value = "/{ktId}/koodi/{koodi}", method = RequestMethod.GET)
-    public ResponseEntity<List<SisaltoViiteSijaintiDto>> getByKoodi(
+    public ResponseEntity<List<SisaltoViiteSijaintiDto>> getKoulutustoimijaByKoodi(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final String koodi
     ) {

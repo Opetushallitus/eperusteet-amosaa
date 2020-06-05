@@ -59,12 +59,12 @@ public class UlkopuolisetController {
     private KayttajanTietoService kayttajanTietoService;
 
     @RequestMapping(value = "/kayttajatiedot/{oid:.+}", method = GET)
-    public ResponseEntity<KayttajanTietoDto> get(@PathVariable final String oid) {
+    public ResponseEntity<KayttajanTietoDto> getKayttajatiedot(@PathVariable final String oid) {
         return new ResponseEntity<>(kayttajanTietoService.hae(oid), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/julkaistutperusteet", method = GET)
-    public ResponseEntity<List<PerusteDto>> getPerusteet() {
+    public ResponseEntity<List<PerusteDto>> getJulkaistutPerusteet() {
         return new ResponseEntity<>(eperusteetService.findPerusteet(), HttpStatus.OK);
     }
 
@@ -84,7 +84,8 @@ public class UlkopuolisetController {
             @ApiImplicitParam(name = "perusteId", dataType = "long", paramType = "query", value = "hae perusteeseen liitetyt tiedotteet"),
             @ApiImplicitParam(name = "perusteeton", dataType = "boolean", paramType = "query", value = "hae perusteettomat tiedotteet"),
             @ApiImplicitParam(name = "julkinen", dataType = "boolean", paramType = "query", value = "hae julkiset tiedotteet"),
-            @ApiImplicitParam(name = "yleinen", dataType = "boolean", paramType = "query", value = "hae yleiset tiedotteet")
+            @ApiImplicitParam(name = "yleinen", dataType = "boolean", paramType = "query", value = "hae yleiset tiedotteet"),
+            @ApiImplicitParam(name = "perusteIds", dataType = "long", paramType = "query", allowMultiple = true, value = "tiedotteen perusteiden")
     })
     public ResponseEntity<JsonNode> getTiedotteetHaku(@ApiIgnore TiedoteQueryDto queryDto) {
         return ResponseEntity.ok(eperusteetService.getTiedotteetHaku(queryDto));
