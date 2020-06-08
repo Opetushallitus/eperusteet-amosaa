@@ -312,6 +312,23 @@ public class EperusteetServiceImpl implements EperusteetService {
     }
 
     @Override
+    public JsonNode getTutkinnonOsaViitteet(Long id, String tyyppi) {
+        CachedPeruste cperuste = cachedPerusteRepository.findOne(id);
+        try {
+            JsonNode node = mapper.readTree(cperuste.getPeruste());
+            for (JsonNode suoritustapa : node.get("suoritustavat")) {
+                if (suoritustapa.get("suoritustapakoodi").asText().equals(tyyppi)) {
+                    return suoritustapa.get("tutkinnonOsaViitteet");
+                }
+            }
+        } catch (IOException ex) {
+            throw new BusinessRuleViolationException("perusteen-parsinta-epaonnistui");
+        }
+
+        throw new BusinessRuleViolationException("tutkinnon-osa-viite-ei-loytynyt");
+    }
+
+    @Override
     public <T> T getPerusteSisalto(Long cperusteId, Class<T> type) {
         CachedPeruste cperuste = cachedPerusteRepository.findOne(cperusteId);
         return getPerusteSisalto(cperuste, type);

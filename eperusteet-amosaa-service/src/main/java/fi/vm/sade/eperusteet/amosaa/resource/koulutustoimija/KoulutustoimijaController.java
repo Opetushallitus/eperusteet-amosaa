@@ -87,7 +87,7 @@ public class KoulutustoimijaController extends KoulutustoimijaIdGetterAbstractCo
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(value = "/{ktId}/tutkinnonosat", method = RequestMethod.GET)
-    public List<SisaltoViitePaikallinenIntegrationDto> getTutkinnonosat(
+    public List<SisaltoViitePaikallinenIntegrationDto> getPaikallisetTutkinnonosat(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId
     ) {
         return koulutustoimijaService.getPaikallisetTutkinnonOsat(ktId, SisaltoViitePaikallinenIntegrationDto.class);

@@ -89,7 +89,7 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(value = "/tutkinnonosat", method = RequestMethod.GET)
-    List<SisaltoViiteDto> getTutkinnonosat(
+    public List<SisaltoViiteDto> getTutkinnonosat(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId
     ) {
