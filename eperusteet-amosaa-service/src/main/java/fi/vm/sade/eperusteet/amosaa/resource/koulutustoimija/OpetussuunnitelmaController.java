@@ -98,7 +98,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @ApiIgnore OpsHakuDto query
     ) {
-        PageRequest pageRequest = new PageRequest(query.getSivu(), Math.min(query.getSivukoko(), 1000));
+        PageRequest pageRequest = new PageRequest(query.getSivu(), Math.min(query.getSivukoko(), 25));
         return service.getOpetussuunnitelmat(ktId, pageRequest, query, OpetussuunnitelmaDto.class);
     }
 
