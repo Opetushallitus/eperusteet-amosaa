@@ -52,6 +52,8 @@ public interface EperusteetService {
 
     JsonNode getTutkinnonOsaViite(Long id, String tyyppi, Long tosaId);
 
+    JsonNode getTutkinnonOsaViitteet(Long id, String tyyppi);
+
     <T> T getPerusteSisalto(Long cperusteId, Class<T> type);
 
     <T> T getPerusteSisalto(CachedPeruste cperuste, Class<T> type);

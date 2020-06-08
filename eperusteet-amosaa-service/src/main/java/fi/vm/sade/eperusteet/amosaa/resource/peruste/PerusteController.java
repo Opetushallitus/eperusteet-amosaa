@@ -120,6 +120,14 @@ public class PerusteController extends KoulutustoimijaIdGetterAbstractController
         return service.getTutkinnonOsaViite(id, st, tosaId);
     }
 
+    @RequestMapping(value = "/{id}/suoritustavat/{st}/tutkinnonosat", method = RequestMethod.GET)
+    public JsonNode getTutkinnonOsaViitteet(
+            @PathVariable Long id,
+            @PathVariable String st
+    ) {
+        return service.getTutkinnonOsaViitteet(id, st);
+    }
+
     @RequestMapping(value = "/opetussuunnitelmat", method = RequestMethod.GET)
     public List<OpetussuunnitelmaBaseDto> getOpetussuunnitelmat(@RequestParam String diaarinumero) {
         return opetussuunnitelmaService.getPerusteenOpetussuunnitelmat(diaarinumero, OpetussuunnitelmaBaseDto.class);

@@ -1723,6 +1723,43 @@
         }
       }
     },
+    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tutkinnonosat" : {
+      "get" : {
+        "tags" : [ "Sisaltoviitteet" ],
+        "operationId" : "getTutkinnonosat",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "name" : "opsId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "ktId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/SisaltoViiteDto"
+              }
+            }
+          }
+        }
+      }
+    },
     "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/version/{revId}" : {
       "post" : {
         "tags" : [ "opetussuunnitelmat" ],
@@ -1843,7 +1880,7 @@
     "/koulutustoimijat/{ktId}/tutkinnonosat" : {
       "get" : {
         "tags" : [ "koulutustoimijat" ],
-        "operationId" : "getTutkinnonosat",
+        "operationId" : "getPaikallisetTutkinnonosat",
         "parameters" : [ {
           "in" : "body",
           "name" : "body",
@@ -2199,6 +2236,32 @@
       "get" : {
         "tags" : [ "perusteet" ],
         "operationId" : "getPerusteRakenne",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "st",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object"
+            }
+          }
+        }
+      }
+    },
+    "/perusteet/{id}/suoritustavat/{st}/tutkinnonosat" : {
+      "get" : {
+        "tags" : [ "perusteet" ],
+        "operationId" : "getTutkinnonOsaViitteet",
         "parameters" : [ {
           "name" : "id",
           "in" : "path",
@@ -3912,13 +3975,13 @@
     "Page" : {
       "type" : "object",
       "properties" : {
-        "totalElements" : {
-          "type" : "integer",
-          "format" : "int64"
-        },
         "totalPages" : {
           "type" : "integer",
           "format" : "int32"
+        },
+        "totalElements" : {
+          "type" : "integer",
+          "format" : "int64"
         },
         "size" : {
           "type" : "integer",
@@ -3934,6 +3997,10 @@
           "type" : "integer",
           "format" : "int32"
         },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
@@ -3942,23 +4009,19 @@
         },
         "first" : {
           "type" : "boolean"
-        },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
         }
       }
     },
     "PageKoulutustoimijaJulkinenDto" : {
       "type" : "object",
       "properties" : {
-        "totalElements" : {
-          "type" : "integer",
-          "format" : "int64"
-        },
         "totalPages" : {
           "type" : "integer",
           "format" : "int32"
+        },
+        "totalElements" : {
+          "type" : "integer",
+          "format" : "int64"
         },
         "size" : {
           "type" : "integer",
@@ -3974,6 +4037,10 @@
           "type" : "integer",
           "format" : "int32"
         },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
@@ -3982,23 +4049,19 @@
         },
         "first" : {
           "type" : "boolean"
-        },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
         }
       }
     },
     "PageOpetussuunnitelmaBaseDto" : {
       "type" : "object",
       "properties" : {
-        "totalElements" : {
-          "type" : "integer",
-          "format" : "int64"
-        },
         "totalPages" : {
           "type" : "integer",
           "format" : "int32"
+        },
+        "totalElements" : {
+          "type" : "integer",
+          "format" : "int64"
         },
         "size" : {
           "type" : "integer",
@@ -4014,6 +4077,10 @@
           "type" : "integer",
           "format" : "int32"
         },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
@@ -4022,23 +4089,19 @@
         },
         "first" : {
           "type" : "boolean"
-        },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
         }
       }
     },
     "PageOpetussuunnitelmaDto" : {
       "type" : "object",
       "properties" : {
-        "totalElements" : {
-          "type" : "integer",
-          "format" : "int64"
-        },
         "totalPages" : {
           "type" : "integer",
           "format" : "int32"
+        },
+        "totalElements" : {
+          "type" : "integer",
+          "format" : "int64"
         },
         "size" : {
           "type" : "integer",
@@ -4054,6 +4117,10 @@
           "type" : "integer",
           "format" : "int32"
         },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
@@ -4062,10 +4129,6 @@
         },
         "first" : {
           "type" : "boolean"
-        },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
         }
       }
     },
@@ -5000,6 +5063,10 @@
         },
         "koodi" : {
           "type" : "string"
+        },
+        "muokattu" : {
+          "type" : "string",
+          "format" : "date-time"
         }
       }
     },
@@ -5016,6 +5083,10 @@
         },
         "koodi" : {
           "type" : "string"
+        },
+        "muokattu" : {
+          "type" : "string",
+          "format" : "date-time"
         },
         "omatutkinnonosa" : {
           "$ref" : "#/definitions/OmaTutkinnonosaDto"
