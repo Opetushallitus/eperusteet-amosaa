@@ -3260,6 +3260,13 @@
         "muokattu" : {
           "type" : "string",
           "format" : "date-time"
+        },
+        "koulutustoimijat" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/KoulutustoimijaBaseDto"
+          }
         }
       }
     },
@@ -3997,18 +4004,18 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "sort" : {
           "$ref" : "#/definitions/Sort"
+        },
+        "first" : {
+          "type" : "boolean"
         },
         "last" : {
           "type" : "boolean"
         },
-        "first" : {
-          "type" : "boolean"
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
         }
       }
     },
@@ -4037,18 +4044,18 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "sort" : {
           "$ref" : "#/definitions/Sort"
+        },
+        "first" : {
+          "type" : "boolean"
         },
         "last" : {
           "type" : "boolean"
         },
-        "first" : {
-          "type" : "boolean"
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
         }
       }
     },
@@ -4077,18 +4084,18 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "sort" : {
           "$ref" : "#/definitions/Sort"
+        },
+        "first" : {
+          "type" : "boolean"
         },
         "last" : {
           "type" : "boolean"
         },
-        "first" : {
-          "type" : "boolean"
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
         }
       }
     },
@@ -4117,18 +4124,18 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "sort" : {
           "$ref" : "#/definitions/Sort"
+        },
+        "first" : {
+          "type" : "boolean"
         },
         "last" : {
           "type" : "boolean"
         },
-        "first" : {
-          "type" : "boolean"
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
         }
       }
     },
