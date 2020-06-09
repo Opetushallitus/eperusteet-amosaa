@@ -180,7 +180,7 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
     })
     @RequestMapping(value = "/tekstit/{svId}/versiot", method = RequestMethod.GET)
     @InternalApi
-    List<RevisionDto> getRevisions(
+    public List<RevisionDto> getSisaltoviiteRevisions(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long svId
@@ -193,7 +193,7 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
     })
     @RequestMapping(value = "/tekstit/{svId}/versiot/{revId}", method = RequestMethod.GET)
     @InternalApi
-    SisaltoViiteDto getRevisions(
+    public SisaltoViiteDto getSisaltoviiteRevision(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long svId,
