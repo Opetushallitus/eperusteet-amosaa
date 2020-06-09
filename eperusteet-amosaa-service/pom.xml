@@ -712,6 +712,9 @@
                                         <location>${eperusteet.amosaa.resources}.koulutustoimija.KoulutustoimijaController</location>
                                         <location>${eperusteet.amosaa.resources}.peruste.PerusteController</location>
                                         <location>${eperusteet.amosaa.resources}.external.UlkopuolisetController</location>
+                                        <location>${eperusteet.amosaa.resources}.util.KoodistoController</location>
+                                        <location>${eperusteet.amosaa.resources}.util.ArviointiasteikkoController
+                                        </location>
                                     </locations>
                                     <modelSubstitute>/substitutes.map</modelSubstitute>
                                     <info>
