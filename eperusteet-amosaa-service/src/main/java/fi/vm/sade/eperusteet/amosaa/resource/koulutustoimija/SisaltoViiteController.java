@@ -55,7 +55,7 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(value = "/tekstit/{svId}", method = RequestMethod.GET)
-    SisaltoViiteDto.Matala getTekstit(
+    public SisaltoViiteDto.Matala getSisaltoviiteTekstit(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long svId
@@ -100,7 +100,7 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(value = "/tekstit/{svId}", method = RequestMethod.POST)
-    SisaltoViiteDto.Matala addTekstiKappaleLapsi(
+    public SisaltoViiteDto.Matala addTekstiKappaleLapsi(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long svId,
@@ -127,7 +127,7 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(value = "/tekstit/{svId}", method = RequestMethod.PUT)
-    void updateTekstiKappaleViite(
+    public void updateTekstiKappaleViite(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long svId,
@@ -154,7 +154,7 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
     })
     @RequestMapping(value = "/tekstit/{svId}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void removeSisaltoViite(
+    public void removeSisaltoViite(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long svId

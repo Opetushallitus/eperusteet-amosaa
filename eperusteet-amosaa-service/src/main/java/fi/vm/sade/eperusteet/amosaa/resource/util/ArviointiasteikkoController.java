@@ -42,13 +42,13 @@ public class ArviointiasteikkoController {
 
 
     @RequestMapping(method = RequestMethod.GET)
-    public List<ArviointiasteikkoDto> getAll() {
+    public List<ArviointiasteikkoDto> getAllArviointiasteikot() {
         List<ArviointiasteikkoDto> all = service.getAll();
         return all;
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<ArviointiasteikkoDto> get(@PathVariable final Long id) {
+    public ResponseEntity<ArviointiasteikkoDto> getArviointiasteikko(@PathVariable final Long id) {
         return ResponseEntity.ok(service.get(id));
     }
 }
