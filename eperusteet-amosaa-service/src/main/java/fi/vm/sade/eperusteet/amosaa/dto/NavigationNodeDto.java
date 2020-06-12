@@ -37,6 +37,10 @@ public class NavigationNodeDto {
         return of(type, null, null);
     }
 
+    static public NavigationNodeDto of(NavigationType type, Long id) {
+        return of(type, null, id);
+    }
+
     public NavigationNodeDto meta(String key, Object value) {
         meta.put(key, value);
         return this;
