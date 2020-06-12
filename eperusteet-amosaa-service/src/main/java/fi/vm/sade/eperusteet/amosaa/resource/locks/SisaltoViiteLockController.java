@@ -31,7 +31,7 @@ import springfox.documentation.annotations.ApiIgnore;
  */
 @RestController
 @RequestMapping("/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tekstit/{svId}/lukko")
-@Api(value = "Sisaltoviite lukko")
+@Api(value = "SisaltoviiteLukko")
 @InternalApi
 public class SisaltoViiteLockController extends AbstractLockController<SisaltoViiteCtx> {
     @Autowired

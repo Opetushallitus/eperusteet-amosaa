@@ -7,6 +7,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.NavigationNodeDto;
 import fi.vm.sade.eperusteet.amosaa.dto.NavigationType;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteKevytDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
+import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.ops.NavigationBuilder;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
@@ -39,17 +40,22 @@ public class NavigationBuilderDefault implements NavigationBuilder {
     @Override
     public NavigationNodeDto buildNavigation(Long ktId, Long opsId) {
         Opetussuunnitelma ops = opetussuunnitelmaRepository.findOne(opsId);
-        return NavigationNodeDto.of(NavigationType.root)
+        List<SisaltoViiteKevytDto> sisaltoViitteet = sisaltoViiteService.getSisaltoViitteet(ops.getKoulutustoimija().getId(), ops.getId(), SisaltoViiteKevytDto.class);
+        SisaltoViiteKevytDto root = sisaltoViitteet.stream()
+                .filter(sisaltoViitte -> sisaltoViitte.getVanhempi() == null)
+                .findFirst()
+                .orElseThrow(() -> new BusinessRuleViolationException("sisaltoviitehaku-virhe"));
+
+        return NavigationNodeDto.of(NavigationType.root, root.getId())
                 .add(tiedot(opsId))
-                .addAll(sisaltoviitteet(ops));
+                .addAll(sisaltoviitteet(sisaltoViitteet));
     }
 
     private NavigationNodeDto tiedot(Long opsId) {
         return NavigationNodeDto.of(NavigationType.tiedot, null, opsId);
     }
 
-    private List<NavigationNodeDto> sisaltoviitteet(Opetussuunnitelma ops) {
-        List<SisaltoViiteKevytDto> sisaltoViitteet = sisaltoViiteService.getSisaltoViitteet(ops.getKoulutustoimija().getId(), ops.getId(), SisaltoViiteKevytDto.class);
+    private List<NavigationNodeDto> sisaltoviitteet(List<SisaltoViiteKevytDto> sisaltoViitteet) {
         Map<Long, SisaltoViiteKevytDto> sisaltoViitteetIdMap = sisaltoViitteet.stream().collect(Collectors.toMap(SisaltoViiteKevytDto::getId, Function.identity()));
 
         return sisaltoViitteet.stream()
