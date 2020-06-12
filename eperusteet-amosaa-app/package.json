@@ -11,7 +11,7 @@
     "dev": "gulp",
     "build": "gulp build",
     "prettier": "./node_modules/prettier/bin/prettier.js --config .prettierrc --write \"src/**/*.{ts,json,scss}\"",
-    "copy": "cp -R ../eperusteet-amosaa-ui/dist/ ./build/uusi/"
+    "copy": "cp -R ../eperusteet-amosaa-ui/dist/ ./target/dist/uusi/"
   },
   "devDependencies": {
     "event-stream": "3.3.2",
@@ -34,12 +34,12 @@
     "jquery-ui-build": "1.8.1-6.1",
     "lodash": "3.10.1",
     "merge-stream": "1.0.0",
-    "nan": "^2.11.1",
+    "nan": "2.11.1",
+    "node-sass": "4.14.1",
     "prettier": "1.6.1",
     "proxy-middleware": "0.15.0",
     "pug-beautify": "0.1.1",
-    "typescript": "2.5.2",
-    "node-sass": "^4.9.4"
+    "typescript": "2.5.2"
   },
   "dependencies": {
     "angular": "1.4.7",
