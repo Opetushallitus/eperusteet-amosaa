@@ -2034,6 +2034,95 @@
         }
       }
     },
+    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tekstit/{svId}/versiot" : {
+      "get" : {
+        "tags" : [ "Sisaltoviitteet" ],
+        "operationId" : "getSisaltoviiteRevisions",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "name" : "opsId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "svId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "ktId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/RevisionDto"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tekstit/{svId}/versiot/{revId}" : {
+      "get" : {
+        "tags" : [ "Sisaltoviitteet" ],
+        "operationId" : "getSisaltoviiteRevision",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "name" : "opsId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "svId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "revId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int32"
+        }, {
+          "name" : "ktId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/SisaltoViiteDto"
+            }
+          }
+        }
+      }
+    },
     "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tila/{tila}" : {
       "post" : {
         "tags" : [ "opetussuunnitelmat" ],
@@ -4452,10 +4541,10 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
-        "last" : {
+        "first" : {
           "type" : "boolean"
         },
-        "first" : {
+        "last" : {
           "type" : "boolean"
         },
         "numberOfElements" : {
@@ -4492,10 +4581,10 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
-        "last" : {
+        "first" : {
           "type" : "boolean"
         },
-        "first" : {
+        "last" : {
           "type" : "boolean"
         },
         "numberOfElements" : {
@@ -4532,10 +4621,10 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
-        "last" : {
+        "first" : {
           "type" : "boolean"
         },
-        "first" : {
+        "last" : {
           "type" : "boolean"
         },
         "numberOfElements" : {
@@ -4572,10 +4661,10 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
-        "last" : {
+        "first" : {
           "type" : "boolean"
         },
-        "first" : {
+        "last" : {
           "type" : "boolean"
         },
         "numberOfElements" : {
@@ -4886,6 +4975,25 @@
       }
     },
     "Revision" : {
+      "type" : "object",
+      "properties" : {
+        "numero" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "pvm" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "muokkaajaOid" : {
+          "type" : "string"
+        },
+        "kommentti" : {
+          "type" : "string"
+        }
+      }
+    },
+    "RevisionDto" : {
       "type" : "object",
       "properties" : {
         "numero" : {
