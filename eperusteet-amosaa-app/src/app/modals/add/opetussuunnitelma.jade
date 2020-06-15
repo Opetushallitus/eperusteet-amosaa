@@ -51,7 +51,7 @@ div.modal-body.modal-sisalto
 
     div(ng-show="!ladataan && opetussuunnitelmat.length === 0")
       div.ei-tuloksia(ng-bind="'ei-hakutuloksia' | kaanna")
-    
+
 
   div.content-spacing.tutkintohaku(ng-if="valittuTyyppi === 'uusi'")
     div(ng-hide="peruste")
@@ -119,7 +119,7 @@ div.modal-body.modal-sisalto
           span(ng-bind="koulutus.koulutuskoodiArvo")
           span=")"
 
-        toggler.pull-next-to(yes="enemman" no="vahemman" ng-model="$$perusteNaytaLisaa")
+        toggler.pull-next-to(yes="{{'enemman' | kaanna}}" no="{{'vahemman' | kaanna}}" ng-model="$$perusteNaytaLisaa")
 
         div(ng-show="$$perusteNaytaLisaa")
           div(ng-if="peruste.osaamisalat.length > 0")
