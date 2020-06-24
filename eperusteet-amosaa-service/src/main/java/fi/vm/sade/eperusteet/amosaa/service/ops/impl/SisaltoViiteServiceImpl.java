@@ -17,6 +17,8 @@ package fi.vm.sade.eperusteet.amosaa.service.ops.impl;
 
 import static fi.vm.sade.eperusteet.amosaa.service.util.Nulls.assertExists;
 
+
+import java.util.*;
 import fi.vm.sade.eperusteet.amosaa.domain.MuokkausTapahtuma;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaMuokkaustietoService;
 import java.util.ArrayList;
@@ -791,6 +793,16 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
     public void revertToVersion(Long ktId, Long opsId, Long viiteId, Integer versio) {
     }
 
+    private List<SisaltoViite> rankTutkinnonOsat(List<SisaltoViite> viitteet) {
+        viitteet.sort(Comparator.comparing(v -> v.getOwner().getLuotu()));
+        viitteet.sort(Comparator.comparing(v -> v.getOwner().getTyyppi()));
+        viitteet.sort(Comparator.comparing(v -> v.getOwner().getTila()));
+        Collections.reverse(viitteet);
+        return viitteet.stream()
+                .filter(v -> v.getOwner().getTila() != Tila.POISTETTU)
+                .collect(Collectors.toList());
+    }
+
     private List<SisaltoViite> getByKoodiRaw(Long ktId, String koodi) {
         if (koodi == null) {
             return new ArrayList<>();
@@ -805,7 +817,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
         } else if (ktId != null && koodi.startsWith("tutkinnonosat_")) {
             Koulutustoimija kt = koulutustoimijaRepository.findOne(ktId);
             List<SisaltoViite> tutkinnonOsaSisallot = repository.findAllTutkinnonOsatByKoodi(kt, koodi);
-            return tutkinnonOsaSisallot;
+            return rankTutkinnonOsat(tutkinnonOsaSisallot);
         }
 
         return new ArrayList<>();
