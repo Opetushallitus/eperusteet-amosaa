@@ -18,6 +18,7 @@ package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
+import fi.vm.sade.eperusteet.amosaa.dto.NavigationNodeDto;
 import fi.vm.sade.eperusteet.amosaa.dto.OpsHakuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.PoistettuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
@@ -55,6 +56,9 @@ public interface OpetussuunnitelmaService extends RevisionService {
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
     Page<OpetussuunnitelmaBaseDto> getOpetussuunnitelmat(@P("ktId") Long ktId, PageRequest page, OpsHakuDto query);
 
+    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
+    <T> Page<T> getOpetussuunnitelmat(@P("ktId") Long ktId, PageRequest page, OpsHakuDto query, Class<T> clazz);
+
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'ESITYS')")
     KoulutustoimijaJulkinenDto getKoulutustoimijaId(@P("opsId") Long opsId);
 
@@ -72,6 +76,9 @@ public interface OpetussuunnitelmaService extends RevisionService {
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
     OpetussuunnitelmaDto update(@P("ktId") Long ktId, @P("opsId") Long opsId, OpetussuunnitelmaDto body);
+
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
+    OpetussuunnitelmaDto revertTo(@P("ktId") Long ktId, @P("opsId") Long opsId, Integer revId);
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'HALLINTA')")
     void paivitaPeruste(@P("ktId") Long ktId, @P("opsId") Long opsId);
@@ -117,5 +124,8 @@ public interface OpetussuunnitelmaService extends RevisionService {
     
     @PreAuthorize("isAuthenticated()")
     public List<OpetussuunnitelmaDto> getOpetussuunnitelmatOrganisaatioista(String organisaatioId);
+
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
+    NavigationNodeDto buildNavigation(Long ktId, Long opsId);
 }
 

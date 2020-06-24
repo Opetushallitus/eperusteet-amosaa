@@ -25,7 +25,7 @@
         <jsoup.version>1.10.1</jsoup.version>
         <ehcache.version>2.6.11</ehcache.version>
         <slf4j.version>1.7.21</slf4j.version>
-        <fop.version>2.3</fop.version>
+        <fop.version>2.5</fop.version>
         <pdfbox.version>2.0.12</pdfbox.version>
         <springfox.version>2.7.0</springfox.version>
         <metrics.version>4.0.2</metrics.version>
@@ -312,7 +312,7 @@
         <dependency>
             <groupId>fi.vm.sade.eperusteet</groupId>
             <artifactId>eperusteet-backend-utils</artifactId>
-            <version>2.2-SNAPSHOT</version>
+            <version>2.3-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>fi.vm.sade.java-utils</groupId>
@@ -391,6 +391,12 @@
             <groupId>org.apache.xmlgraphics</groupId>
             <artifactId>fop</artifactId>
             <version>${fop.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>servlet-api</artifactId>
+                    <groupId>javax.servlet</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.pdfbox</groupId>
@@ -697,6 +703,19 @@
                                     <basePath>/api</basePath>
                                     <locations>
                                         <location>${eperusteet.amosaa.resources}.julkinen.*</location>
+                                        <location>${eperusteet.amosaa.resources}.util.KayttajaController</location>
+                                        <location>${eperusteet.amosaa.resources}.ohje.OhjeController</location>
+                                        <location>${eperusteet.amosaa.resources}.koulutustoimija.OpetussuunnitelmaController</location>
+                                        <location>${eperusteet.amosaa.resources}.koulutustoimija.OpetussuunnitelmaAikatauluController</location>
+                                        <location>${eperusteet.amosaa.resources}.koulutustoimija.SisaltoViiteController</location>
+                                        <location>${eperusteet.amosaa.resources}.koulutustoimija.OpetussuunnitelmanMuokkaustietoController</location>
+                                        <location>${eperusteet.amosaa.resources}.koulutustoimija.KoulutustoimijaController</location>
+                                        <location>${eperusteet.amosaa.resources}.peruste.PerusteController</location>
+                                        <location>${eperusteet.amosaa.resources}.external.UlkopuolisetController</location>
+                                        <location>${eperusteet.amosaa.resources}.util.KoodistoController</location>
+                                        <location>${eperusteet.amosaa.resources}.util.ArviointiasteikkoController
+                                        </location>
+                                        <location>${eperusteet.amosaa.resources}.locks.SisaltoViiteLockController</location>
                                     </locations>
                                     <modelSubstitute>/substitutes.map</modelSubstitute>
                                     <info>

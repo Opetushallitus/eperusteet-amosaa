@@ -27,6 +27,5 @@ import lombok.Setter;
 @Setter
 public class TutkinnonOsaKevytDto {
 
-
     private TutkinnonosaTyyppi tyyppi;
 }

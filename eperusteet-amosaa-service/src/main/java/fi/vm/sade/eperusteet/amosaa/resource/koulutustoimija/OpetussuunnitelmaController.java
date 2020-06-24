@@ -19,6 +19,7 @@ package fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija;
 import com.fasterxml.jackson.databind.JsonNode;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.revision.Revision;
+import fi.vm.sade.eperusteet.amosaa.dto.NavigationNodeDto;
 import fi.vm.sade.eperusteet.amosaa.dto.OpsHakuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.PoistettuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
@@ -51,6 +52,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+
 /**
  * @author nkala
  */
@@ -79,7 +82,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(method = RequestMethod.GET)
-    public Page<OpetussuunnitelmaBaseDto> getAll(
+    public Page<OpetussuunnitelmaBaseDto> getAllOpetussuunnitelmatBaseSivutettu(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @ApiIgnore OpsHakuDto query
     ) {
@@ -90,8 +93,20 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
     @ApiImplicitParams({
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
+    @RequestMapping(value = "/info", method = RequestMethod.GET)
+    public Page<OpetussuunnitelmaDto> getAllOpetussuunnitelmatSivutettu(
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @ApiIgnore OpsHakuDto query
+    ) {
+        PageRequest pageRequest = new PageRequest(query.getSivu(), Math.min(query.getSivukoko(), 25));
+        return service.getOpetussuunnitelmat(ktId, pageRequest, query, OpetussuunnitelmaDto.class);
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/vanhentuneet", method = RequestMethod.GET)
-    public List<VanhentunutPohjaperusteDto> getPaivitettavat(
+    public List<VanhentunutPohjaperusteDto> getPaivitettavatOpetussuunnitelmat(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId
     ) {
         return service.haePaivitystaVaativatPerusteet(ktId);
@@ -112,7 +127,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(value = "/ystavien", method = RequestMethod.GET)
-    public List<OpetussuunnitelmaDto> getAllOtherOrgs(
+    public List<OpetussuunnitelmaDto> getAllOtherOrgsOpetussuunnitelmat(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId
     ) {
         return service.getOtherOpetussuunnitelmat(ktId);
@@ -122,7 +137,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(method = RequestMethod.POST)
-    public OpetussuunnitelmaBaseDto add(
+    public OpetussuunnitelmaBaseDto addOpetussuunnitelma(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @RequestBody OpetussuunnitelmaLuontiDto opsDto
     ) {
@@ -133,7 +148,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(value = "/{opsId}", method = RequestMethod.GET)
-    public OpetussuunnitelmaDto get(
+    public OpetussuunnitelmaDto getOpetussuunnitelma(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId
     ) {
@@ -144,7 +159,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(value = "/{opsId}/peruste", method = RequestMethod.GET)
-    public JsonNode getPeruste(
+    public JsonNode getOpetussuunnitelmaPeruste(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId) {
         return service.getOpetussuunnitelmanPeruste(ktId, opsId);
@@ -154,7 +169,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(value = "/{opsId}", method = RequestMethod.PUT)
-    public OpetussuunnitelmaDto update(
+    public OpetussuunnitelmaDto updateOpetussuunnitelma(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @RequestBody(required = false) OpetussuunnitelmaDto body
@@ -166,7 +181,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(value = "/{opsId}/poistetut", method = RequestMethod.GET)
-    public List<PoistettuDto> getPoistetut(
+    public List<PoistettuDto> getPoistetutOpetussuunnitelmat(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId
     ) {
@@ -177,7 +192,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(value = "/{opsId}/poistetut/{poistettuId}/palauta", method = RequestMethod.POST)
-    public SisaltoViiteDto getPoistetut(
+    public SisaltoViiteDto palautaOpetussuunnitelmaSisaltoviite(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long poistettuId
@@ -189,7 +204,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(value = "/{opsId}/oikeudet", method = RequestMethod.GET)
-    public List<KayttajaoikeusDto> getOikeudet(
+    public List<KayttajaoikeusDto> getOpetussuunnitelmaOikeudet(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId
     ) {
@@ -200,7 +215,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(value = "/{opsId}/oikeudet/{kayttajaId}", method = RequestMethod.POST)
-    public KayttajaoikeusDto updateOikeus(
+    public KayttajaoikeusDto updateOpetussuunnitelmaOikeus(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long kayttajaId,
@@ -214,7 +229,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
     })
     @RequestMapping(value = "/{opsId}/versiot/uusin", method = RequestMethod.GET)
     @InternalApi
-    Revision getLatestRevision(
+    Revision getOpetussuunnitelmaLatestRevision(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId
     ) {
@@ -226,7 +241,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
     })
     @RequestMapping(value = "/{opsId}/validoi", method = RequestMethod.GET)
     @InternalApi
-    Validointi validoi(
+    Validointi validoiOpetussuunnitelma(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId
     ) {
@@ -238,7 +253,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
     })
     @RequestMapping(value = "/{opsId}/versiot", method = RequestMethod.GET)
     @InternalApi
-    List<Revision> getRevisions(
+    public List<Revision> getOpetussuunnitelmaRevisions(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId
     ) {
@@ -250,7 +265,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
     })
     @RequestMapping(value = "/{opsId}/versiot/{revId}", method = RequestMethod.GET)
     @InternalApi
-    Object getRevisions(
+    public Object getOpetussuunnitelmaRevision(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Integer revId
@@ -261,8 +276,21 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
     @ApiImplicitParams({
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
+    @RequestMapping(value = "/{opsId}/version/{revId}", method = RequestMethod.POST)
+    @InternalApi
+    public Object revertOpetussuunnitelmaToRevision(
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @PathVariable final Long opsId,
+            @PathVariable final Integer revId
+    ) {
+        return service.revertTo(ktId, opsId, revId);
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/{opsId}/tila/{tila}", method = RequestMethod.POST)
-    public OpetussuunnitelmaBaseDto updateTila(
+    public OpetussuunnitelmaBaseDto updateOpetussuunnitelmaTila(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Tila tila
@@ -274,7 +302,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(value = "/{opsId}/siirra", method = RequestMethod.POST)
-    public OpetussuunnitelmaDto updateKoulutustoimija(
+    public OpetussuunnitelmaDto updateOpetussuunnitelmaKoulutustoimija(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @RequestBody(required = false) KoulutustoimijaBaseDto body
@@ -287,7 +315,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
         @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(value = "/{opsId}/siirraPassivoidusta", method = RequestMethod.POST)
-    public OpetussuunnitelmaDto updateKoulutustoimija(
+    public OpetussuunnitelmaDto updateOpetussuunnitelmaKoulutustoimijaPassivoidusta(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId
     ) {
@@ -305,10 +333,23 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
         return service.getOpetussuunnitelmatOrganisaatioista(organisaatioid);
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/{opsId}/suorituspolku", method = RequestMethod.GET)
     public List<RakenneModuuliTunnisteDto> getPerusteRakenneNakyvat(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable Long opsId) {
         return eperusteetService.getSuoritustavat(ktId, opsId);
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
+    @RequestMapping(value = "/{opsId}/navigaatio", method = GET)
+    public NavigationNodeDto getOpetussuunnitelmaNavigation(
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @PathVariable final Long opsId) {
+        return service.buildNavigation(ktId, opsId);
     }
 }

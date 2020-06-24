@@ -17,7 +17,19 @@ package fi.vm.sade.eperusteet.amosaa.service.ops.impl;
 
 import static fi.vm.sade.eperusteet.amosaa.service.util.Nulls.assertExists;
 
+
 import java.util.*;
+import fi.vm.sade.eperusteet.amosaa.domain.MuokkausTapahtuma;
+import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaMuokkaustietoService;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.Stack;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -205,7 +217,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
         SisaltoViite uusiViite = mapper.map(viiteDto, SisaltoViite.class);
         uusiViite.setVersio(0L);
         uusiViite.setOwner(parentViite.getOwner());
-        viiteDto.setTekstiKappale(tekstiKappaleService.add(uusiViite, viiteDto.getTekstiKappale()));
+        viiteDto.setTekstiKappale(tekstiKappaleService.add(opsId, uusiViite, viiteDto.getTekstiKappale()));
         uusiViite.setVanhempi(parentViite);
         parentViite.getLapset().add(0, uusiViite);
 
@@ -305,7 +317,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
         mapTutkinnonParts(uusiViite.getTosa());
         uusiViite = repository.save(uusiViite);
         pelastettu.getTekstiKappale().setId(null);
-        tekstiKappaleService.add(uusiViite, pelastettu.getTekstiKappale());
+        tekstiKappaleService.add(opsId, uusiViite, pelastettu.getTekstiKappale());
         poistetutRepository.delete(poistettu);
         return mapper.map(uusiViite, SisaltoViiteDto.class);
     }
@@ -569,7 +581,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
                         lockMgr.ensureLockedByAuthenticatedUser(tid);
                     }
                 }
-                tekstiKappaleService.update(uusiTekstiKappale);
+                tekstiKappaleService.update(opsId, uusiTekstiKappale);
             } else {
                 throw new BusinessRuleViolationException("Lainattua tekstikappaletta ei voida muokata");
             }

@@ -100,7 +100,7 @@ public class PerusteController extends KoulutustoimijaIdGetterAbstractController
     }
 
     @RequestMapping(value = "/{id}/suoritustavat", method = RequestMethod.GET)
-    public JsonNode getPerusteRakenne(@PathVariable Long id) {
+    public JsonNode getPerusteRakenteet(@PathVariable Long id) {
         return service.getSuoritustavat(id);
     }
 
@@ -118,6 +118,14 @@ public class PerusteController extends KoulutustoimijaIdGetterAbstractController
             @PathVariable Long tosaId
     ) {
         return service.getTutkinnonOsaViite(id, st, tosaId);
+    }
+
+    @RequestMapping(value = "/{id}/suoritustavat/{st}/tutkinnonosat", method = RequestMethod.GET)
+    public JsonNode getTutkinnonOsaViitteet(
+            @PathVariable Long id,
+            @PathVariable String st
+    ) {
+        return service.getTutkinnonOsaViitteet(id, st);
     }
 
     @RequestMapping(value = "/opetussuunnitelmat", method = RequestMethod.GET)

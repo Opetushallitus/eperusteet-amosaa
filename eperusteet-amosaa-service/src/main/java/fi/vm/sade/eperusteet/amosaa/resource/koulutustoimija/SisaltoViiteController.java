@@ -45,7 +45,7 @@ import springfox.documentation.annotations.ApiIgnore;
  */
 @RestController
 @RequestMapping("/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}")
-@Api(value = "sisältö")
+@Api(value = "Sisaltoviitteet")
 @InternalApi
 public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractController {
     @Autowired
@@ -55,7 +55,7 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(value = "/tekstit/{svId}", method = RequestMethod.GET)
-    SisaltoViiteDto.Matala getTekstit(
+    public SisaltoViiteDto.Matala getSisaltoviiteTekstit(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long svId
@@ -67,7 +67,7 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(value = "/otsikot", method = RequestMethod.GET)
-    List<SisaltoViiteKevytDto> getOtsikot(
+    public List<SisaltoViiteKevytDto> getOtsikot(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId
     ) {
@@ -89,7 +89,7 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(value = "/tutkinnonosat", method = RequestMethod.GET)
-    List<SisaltoViiteDto> getTutkinnonosat(
+    public List<SisaltoViiteDto> getTutkinnonosat(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId
     ) {
@@ -100,7 +100,7 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(value = "/tekstit/{svId}", method = RequestMethod.POST)
-    SisaltoViiteDto.Matala addTekstiKappaleLapsi(
+    public SisaltoViiteDto.Matala addTekstiKappaleLapsi(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long svId,
@@ -127,7 +127,7 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(value = "/tekstit/{svId}", method = RequestMethod.PUT)
-    void updateTekstiKappaleViite(
+    public void updateTekstiKappaleViite(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long svId,
@@ -154,7 +154,7 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
     })
     @RequestMapping(value = "/tekstit/{svId}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void removeSisaltoViite(
+    public void removeSisaltoViite(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long svId
@@ -180,7 +180,7 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
     })
     @RequestMapping(value = "/tekstit/{svId}/versiot", method = RequestMethod.GET)
     @InternalApi
-    List<RevisionDto> getRevisions(
+    public List<RevisionDto> getSisaltoviiteRevisions(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long svId
@@ -193,7 +193,7 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
     })
     @RequestMapping(value = "/tekstit/{svId}/versiot/{revId}", method = RequestMethod.GET)
     @InternalApi
-    SisaltoViiteDto getRevisions(
+    public SisaltoViiteDto getSisaltoviiteRevision(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long svId,

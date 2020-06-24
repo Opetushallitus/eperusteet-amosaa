@@ -17,11 +17,7 @@ package fi.vm.sade.eperusteet.amosaa.service.external;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteBaseDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliTunnisteDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.SuoritustapaLaajaDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonOsaSuoritustapaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.*;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -56,6 +52,8 @@ public interface EperusteetService {
 
     JsonNode getTutkinnonOsaViite(Long id, String tyyppi, Long tosaId);
 
+    JsonNode getTutkinnonOsaViitteet(Long id, String tyyppi);
+
     <T> T getPerusteSisalto(Long cperusteId, Class<T> type);
 
     <T> T getPerusteSisalto(CachedPeruste cperuste, Class<T> type);
@@ -65,6 +63,10 @@ public interface EperusteetService {
     <T> T getPerusteSisaltoByPerusteId(Long perusteId, Class<T> type);
 
     Set<UUID> getRakenneTunnisteet(Long id, String suoritustapa);
+
+    JsonNode getTiedotteet(Long jalkeen);
+
+    JsonNode getTiedotteetHaku(TiedoteQueryDto queryDto);
 
 //    <T> T getPeruste(String diaariNumero, Class<T> type);
 //

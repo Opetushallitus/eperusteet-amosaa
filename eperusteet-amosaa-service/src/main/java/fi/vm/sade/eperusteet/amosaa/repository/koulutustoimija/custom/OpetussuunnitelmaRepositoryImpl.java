@@ -24,6 +24,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.*;
 import fi.vm.sade.eperusteet.amosaa.dto.OpsHakuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaQueryDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaCustomRepository;
+import java.util.Date;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -114,15 +115,25 @@ public class OpetussuunnitelmaRepositoryImpl implements OpetussuunnitelmaCustomR
             pred = cb.and(pred, tyyppiOn);
         }
 
-        if (queryDto.getPerusteenDiaarinumero() != null && !"".equals(queryDto.getPerusteenDiaarinumero())) {
-            Predicate matchDiaarinumero = cb.equal(root.get(Opetussuunnitelma_.perusteDiaarinumero), queryDto.getPerusteenDiaarinumero());
-            pred = cb.and(pred, matchDiaarinumero);
-        }
+        if (queryDto.getPerusteenDiaarinumero() != null && !"".equals(queryDto.getPerusteenDiaarinumero()) && queryDto.getPerusteId() != null) {
 
-        if (queryDto.getPerusteId() != null) {
+            Predicate matchDiaarinumero = cb.equal(root.get(Opetussuunnitelma_.perusteDiaarinumero), queryDto.getPerusteenDiaarinumero());
             Join<Opetussuunnitelma, CachedPeruste> peruste = root.join(Opetussuunnitelma_.peruste);
             Predicate matchPeruste = cb.equal(peruste.get(CachedPeruste_.perusteId), queryDto.getPerusteId());
-            pred = cb.and(pred, matchPeruste);
+
+            pred = cb.and(pred, cb.or(matchPeruste, matchDiaarinumero));
+
+        } else {
+            if (queryDto.getPerusteenDiaarinumero() != null && !"".equals(queryDto.getPerusteenDiaarinumero())) {
+                Predicate matchDiaarinumero = cb.equal(root.get(Opetussuunnitelma_.perusteDiaarinumero), queryDto.getPerusteenDiaarinumero());
+                pred = cb.and(pred, matchDiaarinumero);
+            }
+
+            if (queryDto.getPerusteId() != null) {
+                Join<Opetussuunnitelma, CachedPeruste> peruste = root.join(Opetussuunnitelma_.peruste);
+                Predicate matchPeruste = cb.equal(peruste.get(CachedPeruste_.perusteId), queryDto.getPerusteId());
+                pred = cb.and(pred, matchPeruste);
+            }
         }
 
         if (queryDto.getOrganisaatio() != null && !"".equals(queryDto.getOrganisaatio())) {
@@ -213,7 +224,7 @@ public class OpetussuunnitelmaRepositoryImpl implements OpetussuunnitelmaCustomR
 
         // Rajataan tyypin mukaan
         if (!ObjectUtils.isEmpty(queryDto.getTyyppi())) {
-            return cb.and(pred, root.get(Opetussuunnitelma_.tyyppi).in(queryDto.getTyyppi()));
+            return pred = cb.and(pred, root.get(Opetussuunnitelma_.tyyppi).in(queryDto.getTyyppi()));
         }
 
         // Rajataan nimen mukaan
@@ -228,7 +239,22 @@ public class OpetussuunnitelmaRepositoryImpl implements OpetussuunnitelmaCustomR
 
         // Rajataan tilojen mukaan
         if (!ObjectUtils.isEmpty(queryDto.getTila())) {
-            return cb.and(pred, root.get(Opetussuunnitelma_.tila).in(queryDto.getTila()));
+            return pred = cb.and(pred, root.get(Opetussuunnitelma_.tila).in(queryDto.getTila()));
+        }
+
+        if (!(queryDto.isTuleva() && queryDto.isVoimassaolo() && queryDto.isPoistunut())) {
+            if (queryDto.isTuleva()) {
+                pred = cb.and(pred, cb.or(
+                        root.get(Opetussuunnitelma_.voimaantulo).isNull(),
+                        cb.greaterThan(root.get(Opetussuunnitelma_.voimaantulo), new Date())));
+            } else if (queryDto.isVoimassaolo()) {
+                pred = cb.and(pred, cb.lessThanOrEqualTo(root.get(Opetussuunnitelma_.voimaantulo), new Date()));
+                pred = cb.and(pred, cb.or(
+                        root.get(Opetussuunnitelma_.paatospaivamaara).isNull(),
+                        cb.greaterThan(root.get(Opetussuunnitelma_.paatospaivamaara), new Date())));
+            } else if (queryDto.isPoistunut()) {
+                pred = cb.and(pred, cb.lessThanOrEqualTo(root.get(Opetussuunnitelma_.paatospaivamaara), new Date()));
+            }
         }
 
         return pred;

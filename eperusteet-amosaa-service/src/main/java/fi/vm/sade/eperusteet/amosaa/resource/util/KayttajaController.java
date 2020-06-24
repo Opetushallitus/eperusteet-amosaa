@@ -15,6 +15,7 @@
  */
 package fi.vm.sade.eperusteet.amosaa.resource.util;
 
+import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.EtusivuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
@@ -84,5 +85,10 @@ public class KayttajaController {
     @RequestMapping(value = "/organisaatiot", method = RequestMethod.GET)
     public Set<String> getOrganisaatiot() {
         return kayttajat.getUserOrganizations();
+    }
+
+    @RequestMapping(value = "/etusivu", method = RequestMethod.GET)
+    public EtusivuDto getKayttajanEtusivu() {
+        return kayttajat.haeKayttajanEtusivu();
     }
 }

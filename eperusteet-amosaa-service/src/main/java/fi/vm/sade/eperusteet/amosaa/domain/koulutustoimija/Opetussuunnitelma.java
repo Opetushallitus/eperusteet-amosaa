@@ -28,6 +28,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
@@ -42,6 +43,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -168,6 +170,10 @@ public class Opetussuunnitelma extends AbstractAuditedEntity implements Serializ
     @Setter
     private Set<String> osaamisalat = new HashSet<>();
 
+    @Getter
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "opetussuunnitelma", orphanRemoval = true)
+    private Set<OpetussuunnitelmaAikataulu> opetussuunnitelmanAikataulut = new HashSet<>();
+
     public void changeKoulutustoimija(Koulutustoimija kt) {
         this.koulutustoimija = kt;
     }
@@ -182,6 +188,13 @@ public class Opetussuunnitelma extends AbstractAuditedEntity implements Serializ
 
     public void removeLiite(Liite liite) {
         liitteet.remove(liite);
+    }
+
+    public void setOpetussuunnitelmanAikataulut(List<OpetussuunnitelmaAikataulu> opetussuunnitelmanAikataulut) {
+        this.opetussuunnitelmanAikataulut.clear();
+        if (opetussuunnitelmanAikataulut != null) {
+            this.opetussuunnitelmanAikataulut.addAll(opetussuunnitelmanAikataulut);
+        }
     }
 
     @Override

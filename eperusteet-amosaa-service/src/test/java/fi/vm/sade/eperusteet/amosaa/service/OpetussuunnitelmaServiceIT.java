@@ -4,15 +4,18 @@ import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.KayttajaoikeusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
+import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.dto.OpsHakuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.*;
+import fi.vm.sade.eperusteet.amosaa.repository.peruste.CachedPerusteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KayttajaoikeusService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
+import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator;
 import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
 
@@ -42,6 +45,12 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
 
     @Autowired
     private KayttajaoikeusService kayttajaoikeusService;
+
+    @Autowired
+    private CachedPerusteRepository cachedPerusteRepository;
+
+    @Autowired
+    private DtoMapper mapper;
 
     @Test
     @Rollback
@@ -164,6 +173,68 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
         OpetussuunnitelmaBaseDto ops = createOpetussuunnitelma();
         assertThat(opetussuunnitelmaService.findOpetussuunnitelmat(p, pquery).getTotalElements()).isEqualTo(0);
 
+    }
+
+    @Test
+    @Rollback
+    public void testFindopetussuunnitelmatByPerusteId() {
+        useProfileKP2();
+        createOpsWithCachedPeruste("111/111", 1l);
+        createOpsWithCachedPeruste("111/222", 1l);
+        createOpsWithCachedPeruste("111/111", 11l);
+        createOpsWithCachedPeruste("222/222", 2l);
+        createOpsWithCachedPeruste("333/333", 3l);
+
+        OpetussuunnitelmaQueryDto pquery = new OpetussuunnitelmaQueryDto();
+        PageRequest p = new PageRequest(pquery.getSivu(), Math.min(pquery.getSivukoko(), 100));
+
+        assertThat(opetussuunnitelmaService.findOpetussuunnitelmat(p, new OpetussuunnitelmaQueryDto()).getTotalElements()).isEqualTo(5);
+
+        pquery.setPerusteId(11l);
+        assertThat(opetussuunnitelmaService.findOpetussuunnitelmat(p, pquery).getTotalElements()).isEqualTo(1);
+
+        pquery.setPerusteId(1l);
+        assertThat(opetussuunnitelmaService.findOpetussuunnitelmat(p, pquery).getTotalElements()).isEqualTo(2);
+
+        pquery.setPerusteId(null);
+        pquery.setPerusteenDiaarinumero("111/111");
+        assertThat(opetussuunnitelmaService.findOpetussuunnitelmat(p, pquery).getTotalElements()).isEqualTo(2);
+
+        pquery.setPerusteId(1l);
+        pquery.setPerusteenDiaarinumero("111/111");
+        assertThat(opetussuunnitelmaService.findOpetussuunnitelmat(p, pquery).getTotalElements()).isEqualTo(3);
+
+        pquery.setPerusteId(2l);
+        pquery.setPerusteenDiaarinumero("222/222");
+        assertThat(opetussuunnitelmaService.findOpetussuunnitelmat(p, pquery).getTotalElements()).isEqualTo(1);
+
+        pquery.setPerusteId(3l);
+        pquery.setPerusteenDiaarinumero("333/333");
+        assertThat(opetussuunnitelmaService.findOpetussuunnitelmat(p, pquery).getTotalElements()).isEqualTo(1);
+    }
+
+    private OpetussuunnitelmaBaseDto createOpsWithCachedPeruste(String diaarinumero, Long perusteId) {
+
+        CachedPeruste peruste = cachedPerusteRepository.findOne(perusteId);
+
+        if (peruste == null) {
+            peruste = new CachedPeruste();
+            peruste.setDiaarinumero(diaarinumero);
+            peruste.setPerusteId(perusteId);
+            peruste.setPeruste("{}");
+            cachedPerusteRepository.save(peruste);
+        }
+
+        OpetussuunnitelmaBaseDto ops = createOpetussuunnitelma(opss -> {
+            opss.setPerusteDiaarinumero(diaarinumero);
+        });
+
+        Opetussuunnitelma opsEntity = opetussuunnitelmaRepository.findOne(ops.getId());
+        opsEntity.setTila(Tila.JULKAISTU);
+        opsEntity.setPeruste(peruste);
+        opetussuunnitelmaRepository.save(opsEntity);
+
+        return mapper.map(opsEntity, OpetussuunnitelmaBaseDto.class);
     }
 
     @Test
