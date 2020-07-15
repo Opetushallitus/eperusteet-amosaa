@@ -125,7 +125,7 @@ public interface OpetussuunnitelmaService extends RevisionService {
     @PreAuthorize("isAuthenticated()")
     public List<OpetussuunnitelmaDto> getOpetussuunnitelmatOrganisaatioista(String organisaatioId);
 
-    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'ESITYS')")
     NavigationNodeDto buildNavigation(Long ktId, Long opsId);
 }
 
