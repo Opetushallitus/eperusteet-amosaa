@@ -12,7 +12,7 @@ public interface NavigationBuilder extends OpetussuunnitelmaToteutus {
         return NavigationBuilder.class;
     }
 
-    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'ESITYS')")
     default NavigationNodeDto buildNavigation(Long ktId, Long opsId) {
         throw new BusinessRuleViolationException("ei-tuettu");
     }
