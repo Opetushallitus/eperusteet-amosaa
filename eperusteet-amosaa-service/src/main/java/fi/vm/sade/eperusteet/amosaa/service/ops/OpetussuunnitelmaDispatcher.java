@@ -52,7 +52,11 @@ public class OpetussuunnitelmaDispatcher {
         if (p == null) {
             throw new BusinessRuleViolationException("Opetussuunnitelmaa ei ole");
         }
-        return get(p.getPeruste().getKoulutustyyppi(), clazz);
+        if (p.getPeruste() != null) {
+            return get(p.getPeruste().getKoulutustyyppi(), clazz);
+        } else {
+            return get(clazz);
+        }
     }
 
     @PreAuthorize("permitAll()")
