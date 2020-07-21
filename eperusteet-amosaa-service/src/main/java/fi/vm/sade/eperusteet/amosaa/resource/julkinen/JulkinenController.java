@@ -258,7 +258,7 @@ public class JulkinenController {
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path", required = true)
     })
     @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/otsikot", method = RequestMethod.GET)
-    List<SisaltoViiteKevytDto> getOpetussuunnitelmaOtsikot(
+    public List<SisaltoViiteKevytDto> getOpetussuunnitelmaOtsikot(
             @ApiIgnore @ModelAttribute("ktId") final Long ktId,
             @PathVariable final Long opsId
     ) {
@@ -269,7 +269,7 @@ public class JulkinenController {
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path", required = true)
     })
     @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tekstit/{svId}", method = RequestMethod.GET)
-    SisaltoViiteDto.Matala getOpetussuunnitelmaTekstit(
+    public SisaltoViiteDto.Matala getOpetussuunnitelmaTekstit(
             @ApiIgnore @ModelAttribute("ktId") final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long svId

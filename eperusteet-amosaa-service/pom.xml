@@ -716,6 +716,7 @@
                                         <location>${eperusteet.amosaa.resources}.util.ArviointiasteikkoController
                                         </location>
                                         <location>${eperusteet.amosaa.resources}.locks.SisaltoViiteLockController</location>
+                                        <location>${eperusteet.amosaa.resources}.ops.LiitetiedostoController</location>
                                     </locations>
                                     <modelSubstitute>/substitutes.map</modelSubstitute>
                                     <info>
