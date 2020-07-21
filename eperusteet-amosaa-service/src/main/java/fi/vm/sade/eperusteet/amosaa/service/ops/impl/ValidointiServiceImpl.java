@@ -168,7 +168,7 @@ public class ValidointiServiceImpl implements ValidointiService {
                 }
 
                 long paikalliset = sisaltoviiteRepository.findAllPaikallisetTutkinnonOsatByKoodi(ops.getKoulutustoimija(), oma.getKoodi()).stream()
-                        .filter(sv -> sv.getOwner().getTila() == Tila.JULKAISTU || sv.getOwner().getId().equals(ops.getId()))
+                        .filter(sv -> sv.getOwner().getId().equals(ops.getId()))
                         .count();
                 if (paikalliset > 1) {
                     if (KoulutusTyyppi.of(koulutustyppi).isValmaTelma()) {
