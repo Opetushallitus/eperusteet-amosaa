@@ -144,19 +144,19 @@ public class LiitetiedostoController extends KoulutustoimijaIdGetterAbstractCont
     })
     @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/kuvat/{fileName}", method = RequestMethod.GET)
     @CacheControl(age = CacheControl.ONE_YEAR)
-    public void get(
+    public void getKoulutustoimjaImage(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable Long opsId,
             @PathVariable String fileName,
             @RequestHeader(value = "If-None-Match", required = false) String etag,
             HttpServletResponse response
     ) throws IOException {
-        get(opsId, fileName, etag, response);
+        getImage(opsId, fileName, etag, response);
     }
 
     @RequestMapping(value = "/opetussuunnitelmat/{opsId}/kuvat/{fileName}", method = RequestMethod.GET)
     @CacheControl(age = CacheControl.ONE_YEAR)
-    public void get(
+    public void getImage(
             @PathVariable Long opsId,
             @PathVariable String fileName,
             @RequestHeader(value = "If-None-Match", required = false) String etag,
@@ -194,7 +194,7 @@ public class LiitetiedostoController extends KoulutustoimijaIdGetterAbstractCont
     })
     @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/kuvat/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(
+    public void deleteImage(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable Long opsId,
             @PathVariable UUID id
@@ -206,7 +206,7 @@ public class LiitetiedostoController extends KoulutustoimijaIdGetterAbstractCont
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/kuvat", method = RequestMethod.GET)
-    public List<LiiteDto> getAll(
+    public List<LiiteDto> getAllImages(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable Long opsId
     ) {

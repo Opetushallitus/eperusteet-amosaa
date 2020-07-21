@@ -103,7 +103,7 @@ public class JulkinenController {
             @ApiImplicitParam(name = "perusteenDiaarinumero", dataType = "string", paramType = "query"),
             @ApiImplicitParam(name = "perusteId", dataType = "long", paramType = "query"),
             @ApiImplicitParam(name = "organisaatio", dataType = "string", paramType = "query"),
-            @ApiImplicitParam(name = "tyyppi", dataType = "string", paramType = "query"),
+            @ApiImplicitParam(name = "tyyppi", dataType = "string", paramType = "query", allowMultiple = true),
             @ApiImplicitParam(name = "sivu", dataType = "long", paramType = "query"),
             @ApiImplicitParam(name = "sivukoko", dataType = "long", paramType = "query"),
             @ApiImplicitParam(name = "nimi", dataType = "string", paramType = "query"),
@@ -257,7 +257,7 @@ public class JulkinenController {
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path", required = true)
     })
     @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/otsikot", method = RequestMethod.GET)
-    List<SisaltoViiteKevytDto> getOpetussuunnitelmaOtsikot(
+    public List<SisaltoViiteKevytDto> getOpetussuunnitelmaOtsikot(
             @ApiIgnore @ModelAttribute("ktId") final Long ktId,
             @PathVariable final Long opsId
     ) {
@@ -268,7 +268,7 @@ public class JulkinenController {
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path", required = true)
     })
     @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tekstit/{svId}", method = RequestMethod.GET)
-    SisaltoViiteDto.Matala getOpetussuunnitelmaTekstit(
+    public SisaltoViiteDto.Matala getOpetussuunnitelmaTekstit(
             @ApiIgnore @ModelAttribute("ktId") final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long svId
