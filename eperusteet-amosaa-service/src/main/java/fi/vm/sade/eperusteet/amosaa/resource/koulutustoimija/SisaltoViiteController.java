@@ -78,7 +78,7 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(value = "/suorituspolut", method = RequestMethod.GET)
-    List<SisaltoViiteDto> getSuorituspolut(
+    public List<SisaltoViiteDto> getSuorituspolut(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId
     ) {
@@ -206,7 +206,7 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(value = "/polut", method = RequestMethod.GET)
-    List<SuorituspolkuRakenneDto> getSuorituspolutRakenteella(
+    public List<SuorituspolkuRakenneDto> getSuorituspolutRakenteella(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId
     ) {
