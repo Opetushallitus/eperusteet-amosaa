@@ -22,6 +22,8 @@
   }, {
     "name" : "Ulkopuoliset"
   }, {
+    "name" : "dokumentit"
+  }, {
     "name" : "julkinen"
   }, {
     "name" : "kayttaja"
@@ -1571,6 +1573,307 @@
             "description" : "successful operation",
             "schema" : {
               "$ref" : "#/definitions/OpetussuunnitelmaDto"
+            }
+          }
+        }
+      }
+    },
+    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/dokumentti" : {
+      "get" : {
+        "tags" : [ "dokumentit" ],
+        "operationId" : "getPdfDokumentti",
+        "produces" : [ "application/pdf" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "name" : "opsId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "kieli",
+          "in" : "query",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "ktId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "dokumentit" ],
+        "operationId" : "createDokumentti",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "name" : "opsId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "kieli",
+          "in" : "query",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "ktId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/DokumenttiDto"
+            }
+          }
+        }
+      }
+    },
+    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/dokumentti/kuva" : {
+      "get" : {
+        "tags" : [ "dokumentit" ],
+        "operationId" : "getDokumenttiImage",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "name" : "opsId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "tyyppi",
+          "in" : "query",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "kieli",
+          "in" : "query",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "ktId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "dokumentit" ],
+        "operationId" : "addDokumenttiImage",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "name" : "opsId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "tyyppi",
+          "in" : "query",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "kieli",
+          "in" : "query",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "file",
+          "in" : "formData",
+          "required" : true,
+          "type" : "file"
+        }, {
+          "name" : "ktId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "dokumentit" ],
+        "operationId" : "deleteDokumenttiImage",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "name" : "opsId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "tyyppi",
+          "in" : "query",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "kieli",
+          "in" : "query",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "ktId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object"
+            }
+          }
+        }
+      }
+    },
+    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/dokumentti/tila" : {
+      "get" : {
+        "tags" : [ "dokumentit" ],
+        "operationId" : "queryDokumenttiTila",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "name" : "opsId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "kieli",
+          "in" : "query",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "ktId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/DokumenttiDto"
+            }
+          }
+        }
+      }
+    },
+    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/dokumentti/{id}" : {
+      "put" : {
+        "tags" : [ "dokumentit" ],
+        "operationId" : "updateDokumentti",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "name" : "opsId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "kieli",
+          "in" : "query",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/DokumenttiDto"
+          }
+        }, {
+          "name" : "ktId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/DokumenttiDto"
             }
           }
         }
@@ -4985,10 +5288,6 @@
             "enum" : [ "FI", "SV", "SE", "RU", "EN" ]
           }
         },
-        "koulutustyyppi" : {
-          "type" : "string",
-          "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA" ]
-        },
         "perusteNimi" : {
           "type" : "object",
           "additionalProperties" : {
@@ -4998,6 +5297,10 @@
         "perusteId" : {
           "type" : "integer",
           "format" : "int64"
+        },
+        "koulutustyyppi" : {
+          "type" : "string",
+          "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA" ]
         }
       }
     },
@@ -5132,15 +5435,15 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "first" : {
           "type" : "boolean"
         },
         "last" : {
           "type" : "boolean"
+        },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
         }
       }
     },
@@ -5172,15 +5475,15 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "first" : {
           "type" : "boolean"
         },
         "last" : {
           "type" : "boolean"
+        },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
         }
       }
     },
@@ -5212,15 +5515,15 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "first" : {
           "type" : "boolean"
         },
         "last" : {
           "type" : "boolean"
+        },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
         }
       }
     },
@@ -5252,15 +5555,15 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "first" : {
           "type" : "boolean"
         },
         "last" : {
           "type" : "boolean"
+        },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
         }
       }
     },
