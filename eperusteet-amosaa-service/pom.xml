@@ -702,21 +702,21 @@
                                     </schemes>
                                     <basePath>/api</basePath>
                                     <locations>
-                                        <location>${eperusteet.amosaa.resources}.julkinen.*</location>
-                                        <location>${eperusteet.amosaa.resources}.util.KayttajaController</location>
-                                        <location>${eperusteet.amosaa.resources}.ohje.OhjeController</location>
-                                        <location>${eperusteet.amosaa.resources}.koulutustoimija.OpetussuunnitelmaController</location>
-                                        <location>${eperusteet.amosaa.resources}.koulutustoimija.OpetussuunnitelmaAikatauluController</location>
-                                        <location>${eperusteet.amosaa.resources}.koulutustoimija.SisaltoViiteController</location>
-                                        <location>${eperusteet.amosaa.resources}.koulutustoimija.OpetussuunnitelmanMuokkaustietoController</location>
-                                        <location>${eperusteet.amosaa.resources}.koulutustoimija.KoulutustoimijaController</location>
-                                        <location>${eperusteet.amosaa.resources}.peruste.PerusteController</location>
                                         <location>${eperusteet.amosaa.resources}.external.UlkopuolisetController</location>
-                                        <location>${eperusteet.amosaa.resources}.util.KoodistoController</location>
-                                        <location>${eperusteet.amosaa.resources}.util.ArviointiasteikkoController
-                                        </location>
+                                        <location>${eperusteet.amosaa.resources}.julkinen.*</location>
+                                        <location>${eperusteet.amosaa.resources}.koulutustoimija.KoulutustoimijaController</location>
+                                        <location>${eperusteet.amosaa.resources}.koulutustoimija.OpetussuunnitelmaAikatauluController</location>
+                                        <location>${eperusteet.amosaa.resources}.koulutustoimija.OpetussuunnitelmaController</location>
+                                        <location>${eperusteet.amosaa.resources}.koulutustoimija.OpetussuunnitelmanMuokkaustietoController</location>
+                                        <location>${eperusteet.amosaa.resources}.koulutustoimija.SisaltoViiteController</location>
                                         <location>${eperusteet.amosaa.resources}.locks.SisaltoViiteLockController</location>
+                                        <location>${eperusteet.amosaa.resources}.ohje.OhjeController</location>
+                                        <location>${eperusteet.amosaa.resources}.ops.DokumenttiController</location>
                                         <location>${eperusteet.amosaa.resources}.ops.LiitetiedostoController</location>
+                                        <location>${eperusteet.amosaa.resources}.peruste.PerusteController</location>
+                                        <location>${eperusteet.amosaa.resources}.util.ArviointiasteikkoController</location>
+                                        <location>${eperusteet.amosaa.resources}.util.KayttajaController</location>
+                                        <location>${eperusteet.amosaa.resources}.util.KoodistoController</location>
                                     </locations>
                                     <modelSubstitute>/substitutes.map</modelSubstitute>
                                     <info>

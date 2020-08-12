@@ -59,7 +59,7 @@ public class DokumenttiController extends KoulutustoimijaIdGetterAbstractControl
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<DokumenttiDto> create(
+    public ResponseEntity<DokumenttiDto> createDokumentti(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable Long opsId,
             @RequestParam(defaultValue = "fi") String kieli
@@ -83,7 +83,7 @@ public class DokumenttiController extends KoulutustoimijaIdGetterAbstractControl
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(method = RequestMethod.GET, produces = "application/pdf")
-    public ResponseEntity<Object> get(
+    public ResponseEntity<Object> getPdfDokumentti(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable Long opsId,
             @RequestParam(defaultValue = "fi") String kieli
@@ -114,7 +114,7 @@ public class DokumenttiController extends KoulutustoimijaIdGetterAbstractControl
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<DokumenttiDto> update(
+    public ResponseEntity<DokumenttiDto> updateDokumentti(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable Long opsId,
             @PathVariable Long id,
@@ -132,7 +132,7 @@ public class DokumenttiController extends KoulutustoimijaIdGetterAbstractControl
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(value = "/tila", method = RequestMethod.GET)
-    public ResponseEntity<DokumenttiDto> query(
+    public ResponseEntity<DokumenttiDto> queryDokumenttiTila(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable Long opsId,
             @RequestParam(defaultValue = "fi") String kieli
@@ -154,7 +154,7 @@ public class DokumenttiController extends KoulutustoimijaIdGetterAbstractControl
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(value = "/kuva", method = RequestMethod.POST)
-    public ResponseEntity<Object> addImage(
+    public ResponseEntity<Object> addDokumenttiImage(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable Long opsId,
             @RequestParam String tyyppi,
@@ -179,7 +179,7 @@ public class DokumenttiController extends KoulutustoimijaIdGetterAbstractControl
     })
     @Transactional(readOnly = true)
     @RequestMapping(value = "/kuva", method = RequestMethod.GET)
-    public ResponseEntity<Object> getImage(
+    public ResponseEntity<Object> getDokumenttiImage(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable Long opsId,
             @RequestParam String tyyppi,
@@ -231,7 +231,7 @@ public class DokumenttiController extends KoulutustoimijaIdGetterAbstractControl
     })
     @Transactional
     @RequestMapping(value = "/kuva", method = RequestMethod.DELETE)
-    public ResponseEntity<Object> deleteImage(
+    public ResponseEntity<Object> deleteDokumenttiImage(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable Long opsId,
             @RequestParam String tyyppi,
