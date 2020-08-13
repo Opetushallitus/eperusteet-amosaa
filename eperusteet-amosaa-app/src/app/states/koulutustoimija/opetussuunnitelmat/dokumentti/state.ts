@@ -43,7 +43,10 @@ angular.module("app").config($stateProvider =>
                     $scope.poistaKuva = tyyppi => {
                         $http({
                             method: "DELETE",
-                            url: dokumenttiUrl + "/kuva?tyyppi=" + tyyppi + "&kieli=" + KieliService.getSisaltokieli()
+                            url: dokumenttiUrl + "/kuva?tyyppi=" + tyyppi + "&kieli=" + KieliService.getSisaltokieli(),
+                            headers: {
+                                "Caller-Id": "1.2.246.562.10.00000000001.eperusteet-amosaa"
+                            }
                         }).then(() => {
                             $scope.dokumenttiDto[tyyppi] = null;
                             paivitaKuva(tyyppi);
@@ -78,7 +81,8 @@ angular.module("app").config($stateProvider =>
                         var uploader = new FileUploader({
                             url: dokumenttiUrl + "/kuva?tyyppi=" + tyyppi + "&kieli=" + KieliService.getSisaltokieli(),
                             headers: {
-                                CSRF: $cookies.get("CSRF")
+                                CSRF: $cookies.get("CSRF"),
+                                "Caller-Id": "1.2.246.562.10.00000000001.eperusteet-amosaa"
                             },
                             queueLimit: "1",
                             removeAfterUpload: true
