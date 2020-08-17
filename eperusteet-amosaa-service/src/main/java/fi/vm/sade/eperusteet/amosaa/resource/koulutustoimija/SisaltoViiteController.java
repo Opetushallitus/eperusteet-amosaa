@@ -115,7 +115,7 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
     })
     @RequestMapping(value = "/lisaa", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void copyMultiple(
+    public void copyMultipleSisaltoviite(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @RequestBody List<Long> viitteet
