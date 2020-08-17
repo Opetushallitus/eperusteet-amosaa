@@ -600,8 +600,10 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
         if (lapset != null) {
             for (SisaltoViite lapsi : lapset) {
                 SisaltoViite uusiLapsi = kopioiHierarkia(lapsi, owner);
-                uusiLapsi.setVanhempi(result);
-                result.getLapset().add(uusiLapsi);
+                if (uusiLapsi != null) {
+                    uusiLapsi.setVanhempi(result);
+                    result.getLapset().add(uusiLapsi);
+                }
             }
         }
 

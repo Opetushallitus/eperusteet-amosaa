@@ -351,6 +351,10 @@ public class ValidointiServiceImpl implements ValidointiService {
         }
 
         for (SisaltoViite lapsi : viite.getLapset()) {
+            if (lapsi == null) {
+                log.info("Sisältöviitteen validointi NPE: ", viite.getId());
+                continue;
+            }
             if (lapsi.isPakollinen()) {
                 if (lapsi.getTekstiKappale() != null) {
                     LokalisoituTeksti.validoi(validointi, ops, lapsi.getTekstiKappale().getNimi(), nimi);
