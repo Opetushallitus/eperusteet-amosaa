@@ -18,12 +18,14 @@ package fi.vm.sade.eperusteet.amosaa.service.ops;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.dto.RevisionDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.SisaltoviiteQueryDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteRakenneDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SuorituspolkuRakenneDto;
 import fi.vm.sade.eperusteet.amosaa.resource.locks.contexts.SisaltoViiteCtx;
 import fi.vm.sade.eperusteet.amosaa.service.locking.LockService;
 import java.util.List;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -109,5 +111,8 @@ public interface SisaltoViiteService extends LockService<SisaltoViiteCtx> {
     
     @PreAuthorize("isAuthenticated()")
     void updateOpetussuunnitelmaPiilotetutSisaltoviitteet(SisaltoViiteDto sisaltoviite, Opetussuunnitelma opetussuunnitelma);
+
+    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
+    <T> Page<T> getSisaltoviitteetWithQuery(@P("ktId") Long ktId, SisaltoviiteQueryDto query, Class<T> tyyppi);
 }
 

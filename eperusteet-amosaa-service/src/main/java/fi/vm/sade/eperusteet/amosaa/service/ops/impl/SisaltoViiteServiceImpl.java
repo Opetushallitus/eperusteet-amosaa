@@ -18,6 +18,8 @@ package fi.vm.sade.eperusteet.amosaa.service.ops.impl;
 import static fi.vm.sade.eperusteet.amosaa.service.util.Nulls.assertExists;
 
 
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.SisaltoviiteQueryDto;
 import java.util.*;
 import fi.vm.sade.eperusteet.amosaa.domain.MuokkausTapahtuma;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaMuokkaustietoService;
@@ -37,6 +39,10 @@ import java.util.stream.Collectors;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -493,6 +499,12 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
             }
 
         }
+    }
+
+    @Override
+    public <T> Page<T> getSisaltoviitteetWithQuery(Long ktId, SisaltoviiteQueryDto query, Class<T> tyyppi) {
+        Pageable pageable = new PageRequest(query.getSivu(), query.getSivukoko(), new Sort(Sort.Direction.fromString(query.isSortDesc() ? "DESC" : "ASC"), "nimi.teksti"));
+        return repository.findAllWithPagination(ktId, query.getTyyppi(), Kieli.of(query.getKieli()), query.getNimi(), query.getOpetussuunnitelmaId(), query.getOpsTyyppi(), pageable).map(sisaltoviite -> mapper.map(sisaltoviite, tyyppi));
     }
 
     @Override

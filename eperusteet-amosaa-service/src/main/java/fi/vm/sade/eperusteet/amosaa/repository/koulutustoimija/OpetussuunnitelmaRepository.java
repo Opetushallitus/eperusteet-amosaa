@@ -81,4 +81,6 @@ public interface OpetussuunnitelmaRepository extends JpaWithVersioningRepository
     List<Opetussuunnitelma> findAllJulkaistutByPerusteDiaarinumero(String diaari);
      
     List<Opetussuunnitelma> findByKoulutustoimijaOrganisaatio(String organisaatioId);
+
+    List<Opetussuunnitelma> findAllByKoulutustoimijaId(Long ktId);
 }
