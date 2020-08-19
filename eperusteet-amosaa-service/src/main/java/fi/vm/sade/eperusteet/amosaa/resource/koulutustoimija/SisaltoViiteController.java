@@ -17,6 +17,8 @@ package fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija;
  */
 
 import fi.vm.sade.eperusteet.amosaa.dto.RevisionDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.SisaltoviiteLaajaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.SisaltoviiteQueryDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteKevytDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteRakenneDto;
@@ -29,6 +31,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -211,5 +214,17 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
             @PathVariable final Long opsId
     ) {
         return service.getSuorituspolkurakenne(ktId, opsId);
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
+    @RequestMapping(value = "/sisaltoviitteet", method = RequestMethod.GET)
+    public Page<SisaltoviiteLaajaDto> getSisaltoviitteet(
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @PathVariable final Long opsId,
+            @ApiIgnore SisaltoviiteQueryDto query
+    ) {
+        return service.getSisaltoviitteetWithQuery(ktId, query, SisaltoviiteLaajaDto.class);
     }
 }

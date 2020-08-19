@@ -361,4 +361,14 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
             @PathVariable final Long opsId) {
         return service.buildNavigation(ktId, opsId);
     }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
+    @RequestMapping(value = "/koulutustoimija", method = RequestMethod.GET)
+    public List<OpetussuunnitelmaDto> getKoulutustoimijaOpetussuunnitelmat(
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId
+    ) {
+        return service.getOpetussuunnitelmat(ktId);
+    }
 }

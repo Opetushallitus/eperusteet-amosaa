@@ -273,6 +273,13 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     }
 
     @Override
+    public List<OpetussuunnitelmaDto> getOpetussuunnitelmat(Long ktId) {
+        return repository.findAllByKoulutustoimijaId(ktId).stream()
+                .map(ops -> mapper.map(ops, OpetussuunnitelmaDto.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public Page<OpetussuunnitelmaBaseDto> getOpetussuunnitelmat(
             Long ktId,
             PageRequest page,

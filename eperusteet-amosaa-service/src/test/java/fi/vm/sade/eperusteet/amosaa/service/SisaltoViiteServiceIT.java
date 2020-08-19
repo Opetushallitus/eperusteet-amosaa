@@ -6,6 +6,9 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.assertj.core.api.Assertions.tuple;
 
 import fi.vm.sade.eperusteet.amosaa.domain.liite.Liite;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.SisaltoviiteLaajaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.SisaltoviiteQueryDto;
 import fi.vm.sade.eperusteet.amosaa.service.ops.LiiteService;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
@@ -21,6 +24,7 @@ import javax.validation.ConstraintViolationException;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
@@ -450,6 +454,113 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
 
         assertThat(liiteService.getAll(getKoulutustoimijaId(), ops.getId())).hasSize(1);
         assertThat(liiteService.getAll(getKoulutustoimijaId(), ops2.getId())).hasSize(1);
+    }
+
+    @Test
+    @Rollback
+    public void testGetSisaltoviitteetWithQuery() {
+        useProfileKP2();
+        OpetussuunnitelmaBaseDto ops1 = createOpetussuunnitelma();
+        OpetussuunnitelmaBaseDto ops2 = createOpetussuunnitelma();
+
+        // Lisää toteutussuunnitelmaan paikallisen osan annetulla koodilla
+        Function<Object[], SisaltoViiteDto.Matala> addOsaWithKoodi = (Object[] params) -> {
+            SisaltoViiteKevytDto tutkinnonosat = getFirstOfType(getKoulutustoimijaId(), (Long) params[0], SisaltoTyyppi.TUTKINNONOSAT);
+            return sisaltoViiteService.addSisaltoViite(getKoulutustoimijaId(), (Long) params[0], tutkinnonosat.getId(), createSisalto(osa -> {
+                osa.setTyyppi(SisaltoTyyppi.TUTKINNONOSA);
+                TutkinnonosaDto tosa = new TutkinnonosaDto();
+                tosa.setTyyppi(TutkinnonosaTyyppi.OMA);
+                OmaTutkinnonosaDto oma = new OmaTutkinnonosaDto();
+                tosa.setOmatutkinnonosa(oma);
+                osa.setTosa(tosa);
+
+                LokalisoituTekstiDto teksti = LokalisoituTekstiDto.of((String) params[1]);
+                if (params.length == 3) {
+                    teksti.getTekstit().put(Kieli.SV, (String) params[2]);
+                }
+
+                osa.setTekstiKappale(new TekstiKappaleDto(teksti, null, null));
+            }));
+        };
+
+        addOsaWithKoodi.apply(new Object[]{ops1.getId(), "tutkinnonosa_11", "sverige_11"});
+        addOsaWithKoodi.apply(new Object[]{ops1.getId(), "tutkinnonosa_12", "sverige_12"});
+
+        addOsaWithKoodi.apply(new Object[]{ops2.getId(), "tutkinnonosa_21"});
+        addOsaWithKoodi.apply(new Object[]{ops2.getId(), "tutkinnonosa_22"});
+
+
+        SisaltoviiteQueryDto query = new SisaltoviiteQueryDto();
+        query.setTyyppi(SisaltoTyyppi.TUTKINNONOSA);
+
+        {
+            Page<SisaltoviiteLaajaDto> page = service.getSisaltoviitteetWithQuery(
+                    this.getKoulutustoimijaId(),
+                    query,
+                    SisaltoviiteLaajaDto.class);
+            assertThat(page.getContent()).hasSize(24);
+        }
+
+        {
+            query.setNimi("tutkinnonosa");
+            Page<SisaltoviiteLaajaDto> page = service.getSisaltoviitteetWithQuery(
+                    this.getKoulutustoimijaId(),
+                    query,
+                    SisaltoviiteLaajaDto.class);
+            assertThat(page.getContent()).hasSize(4);
+            assertThat(page.getContent().get(0).getTekstiKappale().getNimi().get(Kieli.FI)).isEqualTo("tutkinnonosa_11");
+        }
+
+        {
+            query.setSortDesc(true);
+            Page<SisaltoviiteLaajaDto> page = service.getSisaltoviitteetWithQuery(
+                    this.getKoulutustoimijaId(),
+                    query,
+                    SisaltoviiteLaajaDto.class);
+            assertThat(page.getContent()).hasSize(4);
+            assertThat(page.getContent().get(0).getTekstiKappale().getNimi().get(Kieli.FI)).isEqualTo("tutkinnonosa_22");
+        }
+
+        {
+            query.setOpetussuunnitelmaId(ops1.getId());
+            Page<SisaltoviiteLaajaDto> page = service.getSisaltoviitteetWithQuery(
+                    this.getKoulutustoimijaId(),
+                    query,
+                    SisaltoviiteLaajaDto.class);
+
+            assertThat(page.getContent()).hasSize(2);
+        }
+
+        {
+            query.setNimi(null);
+            query.setKieli("sv");
+            Page<SisaltoviiteLaajaDto> page = service.getSisaltoviitteetWithQuery(
+                    this.getKoulutustoimijaId(),
+                    query,
+                    SisaltoviiteLaajaDto.class);
+
+            assertThat(page.getContent()).hasSize(12);
+        }
+
+        {
+            query.setNimi("sverige");
+            Page<SisaltoviiteLaajaDto> page = service.getSisaltoviitteetWithQuery(
+                    this.getKoulutustoimijaId(),
+                    query,
+                    SisaltoviiteLaajaDto.class);
+
+            assertThat(page.getContent()).hasSize(2);
+        }
+
+        {
+            query.setNimi(null);
+            Page<SisaltoviiteLaajaDto> page = service.getSisaltoviitteetWithQuery(
+                    this.getKoulutustoimijaId(),
+                    query,
+                    SisaltoviiteLaajaDto.class);
+
+            assertThat(page.getContent()).hasSize(12);
+        }
     }
 
 }
