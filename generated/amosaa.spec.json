@@ -6320,6 +6320,10 @@
         "id" : {
           "type" : "integer",
           "format" : "int64"
+        },
+        "muokattu" : {
+          "type" : "string",
+          "format" : "date-time"
         }
       }
     },
@@ -6329,6 +6333,10 @@
         "id" : {
           "type" : "integer",
           "format" : "int64"
+        },
+        "muokattu" : {
+          "type" : "string",
+          "format" : "date-time"
         },
         "naytaKuvausJulkisesti" : {
           "type" : "boolean"
