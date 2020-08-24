@@ -190,7 +190,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(value = "/{opsId}/poistetut", method = RequestMethod.GET)
-    public List<PoistettuDto> getPoistetutOpetussuunnitelmat(
+    public List<PoistettuDto> getPoistetutSisaltoviitteet(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId
     ) {
