@@ -32,6 +32,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHistoriaLiitosD
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
+import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
@@ -51,6 +52,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static fi.vm.sade.eperusteet.amosaa.service.util.Nulls.assertExists;
 
 /**
  * @author nkala
@@ -124,6 +127,21 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
         toimija.getYstavat();
         toimija.setSalliystavat(uusi.isSalliystavat());
         return mapper.map(toimija, KoulutustoimijaDto.class);
+    }
+
+    @Override
+    @Transactional
+    public void hylkaaYhteistyopyynto(Long ktId, Long vierasKtId) {
+        Koulutustoimija toimija = repository.findOne(ktId);
+        Koulutustoimija vierasToimija = repository.findOne(vierasKtId);
+        assertExists(vierasToimija, "Pyynnön tehnyttä koulutustoimijaa ei ole olemassa");
+        if (vierasToimija.getYstavat() != null && vierasToimija.getYstavat().contains(toimija)) {
+            vierasToimija.getYstavat().remove(toimija);
+            repository.save(vierasToimija);
+        }
+        else {
+            throw new BusinessRuleViolationException("Koulutustoimija ei ole tehnyt pyyntöä");
+        }
     }
 
     @Override

@@ -55,6 +55,9 @@ public interface KoulutustoimijaService {
     KoulutustoimijaDto updateKoulutustoimija(@P("ktId") Long ktId, KoulutustoimijaDto kt);
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'HALLINTA')")
+    void hylkaaYhteistyopyynto(@P("ktId") Long ktId, Long vierasKtId);
+
+    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'HALLINTA')")
     List<KoulutustoimijaBaseDto> getYhteistyoKoulutustoimijat(@P("ktId") Long ktId);
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
