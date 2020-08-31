@@ -51,6 +51,7 @@ import javax.persistence.criteria.SetJoin;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.util.ObjectUtils;
 
 /**
@@ -199,8 +200,23 @@ public class OpetussuunnitelmaRepositoryImpl implements OpetussuunnitelmaCustomR
         final Expression<String> nimi = cb.lower(opsNimi.get(Teksti_.teksti));
 
         List<Order> orders = new ArrayList<>();
-        orders.add(cb.asc(nimi));
-        orders.add(cb.asc(root.get(Opetussuunnitelma_.id)));
+        if (queryDto.getJarjestys() != null) {
+            Expression<String> sortExpression;
+            if (queryDto.getJarjestys().equals("nimi")) {
+                sortExpression = cb.lower(opsNimi.get(Teksti_.teksti));
+            } else {
+                sortExpression = root.get(queryDto.getJarjestys());
+            }
+
+            if (queryDto.isJarjestysNouseva()) {
+                orders.add(cb.asc(sortExpression));
+            } else {
+                orders.add(cb.desc(sortExpression));
+            }
+        } else {
+            orders.add(cb.asc(nimi));
+            orders.add(cb.asc(root.get(Opetussuunnitelma_.id)));
+        }
 
         query.multiselect(root, nimi).where(pred).orderBy(orders);
         return em.createQuery(query);
@@ -238,7 +254,7 @@ public class OpetussuunnitelmaRepositoryImpl implements OpetussuunnitelmaCustomR
 
         // Rajataan tyypin mukaan
         if (!ObjectUtils.isEmpty(queryDto.getTyyppi())) {
-            return pred = cb.and(pred, root.get(Opetussuunnitelma_.tyyppi).in(queryDto.getTyyppi()));
+            pred = cb.and(pred, root.get(Opetussuunnitelma_.tyyppi).in(queryDto.getTyyppi()));
         }
 
         // Rajataan nimen mukaan
@@ -253,7 +269,7 @@ public class OpetussuunnitelmaRepositoryImpl implements OpetussuunnitelmaCustomR
 
         // Rajataan tilojen mukaan
         if (!ObjectUtils.isEmpty(queryDto.getTila())) {
-            return pred = cb.and(pred, root.get(Opetussuunnitelma_.tila).in(queryDto.getTila()));
+            pred = cb.and(pred, root.get(Opetussuunnitelma_.tila).in(queryDto.getTila()));
         }
 
         if (!(queryDto.isTuleva() && queryDto.isVoimassaolo() && queryDto.isPoistunut())) {
