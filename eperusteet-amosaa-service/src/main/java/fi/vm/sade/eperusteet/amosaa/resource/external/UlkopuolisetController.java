@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koodisto.KoodistoKoodiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKevytDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TiedoteQueryDto;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
@@ -66,6 +67,11 @@ public class UlkopuolisetController {
     @RequestMapping(value = "/julkaistutperusteet", method = GET)
     public ResponseEntity<List<PerusteDto>> getJulkaistutPerusteet() {
         return new ResponseEntity<>(eperusteetService.findPerusteet(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/julkaistutperusteet/kevyt", method = GET)
+    public ResponseEntity<List<PerusteKevytDto>> getJulkaistutPerusteetKevyt() {
+        return new ResponseEntity<>(eperusteetService.findPerusteet(PerusteKevytDto.class), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/tiedotteet", method = GET)

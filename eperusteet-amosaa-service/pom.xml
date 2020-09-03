@@ -708,6 +708,7 @@
                                         <location>${eperusteet.amosaa.resources}.koulutustoimija.OpetussuunnitelmaAikatauluController</location>
                                         <location>${eperusteet.amosaa.resources}.koulutustoimija.OpetussuunnitelmaController</location>
                                         <location>${eperusteet.amosaa.resources}.koulutustoimija.OpetussuunnitelmanMuokkaustietoController</location>
+                                        <location>${eperusteet.amosaa.resources}.koulutustoimija.OphController</location>
                                         <location>${eperusteet.amosaa.resources}.koulutustoimija.SisaltoViiteController</location>
                                         <location>${eperusteet.amosaa.resources}.locks.SisaltoViiteLockController</location>
                                         <location>${eperusteet.amosaa.resources}.ohje.OhjeController</location>
