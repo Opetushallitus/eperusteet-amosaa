@@ -348,13 +348,18 @@ public class EperusteetServiceImpl implements EperusteetService {
 
     @Override
     public List<PerusteDto> findPerusteet() {
+        return findPerusteet(PerusteDto.class);
+    }
+
+    @Override
+    public <T> List<T> findPerusteet(Class<T> type) {
         HashSet<KoulutusTyyppi> koulutustyypit = new HashSet<>();
         koulutustyypit.add(KoulutusTyyppi.AMMATTITUTKINTO);
         koulutustyypit.add(KoulutusTyyppi.ERIKOISAMMATTITUTKINTO);
         koulutustyypit.add(KoulutusTyyppi.PERUSTUTKINTO);
         koulutustyypit.add(KoulutusTyyppi.VALMA);
         koulutustyypit.add(KoulutusTyyppi.TELMA);
-        return eperusteetClient.findPerusteet(koulutustyypit);
+        return dtoMapper.mapAsList(eperusteetClient.findPerusteet(koulutustyypit), type);
     }
 
     @Override

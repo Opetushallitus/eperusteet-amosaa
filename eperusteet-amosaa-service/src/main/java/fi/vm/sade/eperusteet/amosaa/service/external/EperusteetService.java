@@ -60,6 +60,8 @@ public interface EperusteetService {
 
     List<PerusteDto> findPerusteet();
 
+    <T> List<T> findPerusteet(Class<T> type);
+
     <T> T getPerusteSisaltoByPerusteId(Long perusteId, Class<T> type);
 
     Set<UUID> getRakenneTunnisteet(Long id, String suoritustapa);
