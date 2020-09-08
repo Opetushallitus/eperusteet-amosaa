@@ -18,6 +18,7 @@ package fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija;
 
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.EtusivuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaKtoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
@@ -104,7 +105,7 @@ public class KoulutustoimijaController extends KoulutustoimijaIdGetterAbstractCo
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(value = "/{ktId}/kayttajat", method = RequestMethod.GET)
-    public ResponseEntity<List<KayttajaDto>> getKoulutustoimijaKayttajat(
+    public ResponseEntity<List<KayttajaKtoDto>> getKoulutustoimijaKayttajat(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId
     ) {
         return new ResponseEntity<>(kayttajaTietoService.getKayttajat(ktId), HttpStatus.OK);
@@ -114,7 +115,7 @@ public class KoulutustoimijaController extends KoulutustoimijaIdGetterAbstractCo
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(value = "/{ktId}/kaikkiKayttajat", method = RequestMethod.GET)
-    public ResponseEntity<List<KayttajaDto>> getKaikkiKayttajat(
+    public ResponseEntity<List<KayttajaKtoDto>> getKaikkiKayttajat(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId
     ) {
         return new ResponseEntity<>(kayttajaTietoService.getKaikkiKayttajat(ktId), HttpStatus.OK);

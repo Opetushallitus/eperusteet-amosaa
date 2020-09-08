@@ -24,6 +24,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.EtusivuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaKtoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaYstavaDto;
@@ -240,7 +241,7 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
                 .collect(Collectors.toList());
     }
 
-    private List<KayttajaDto> getKayttajat(Koulutustoimija kt) {
+    private List<KayttajaKtoDto> getKayttajat(Koulutustoimija kt) {
         if (kt.isOph()) {
             return new ArrayList<>();
         }
@@ -251,14 +252,14 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
     }
 
     @Override
-    public List<KayttajaDto> getKayttajat(Long kOid) {
+    public List<KayttajaKtoDto> getKayttajat(Long kOid) {
         Koulutustoimija kt = koulutustoimijaRepository.findOne(kOid);
         return getKayttajat(kt);
     }
 
     @Override
-    public List<KayttajaDto> getKaikkiKayttajat(Long kOid) {
-        Map<String, KayttajaDto> result = new HashMap<>();
+    public List<KayttajaKtoDto> getKaikkiKayttajat(Long kOid) {
+        Map<String, KayttajaKtoDto> result = new HashMap<>();
         Koulutustoimija self = koulutustoimijaRepository.findOne(kOid);
         List<KoulutustoimijaYstavaDto> ystavaorganisaatiot = koulutustoimijaService.getOmatYstavat(self.getId());
 
@@ -273,15 +274,15 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
         return new ArrayList<>(result.values());
     }
 
-    private List<KayttajaDto> getOrganisaatioVirkailijatAsKayttajat(List<String> organisaatioOids) {
+    private List<KayttajaKtoDto> getOrganisaatioVirkailijatAsKayttajat(List<String> organisaatioOids) {
 
         if(organisaatioOids.isEmpty()) {
             return Collections.emptyList();
         }
 
-        Map<String, KayttajaDto> kayttajaMap = organisaatioOids.stream()
+        Map<String, KayttajaKtoDto> kayttajaMap = organisaatioOids.stream()
             .flatMap(organisaatioOid -> kayttooikeusService.getOrganisaatioVirkailijat(organisaatioOid).stream()
-                    .map(kayttooikeusKayttajaDto -> KayttajaDto.of(kayttooikeusKayttajaDto)
+                    .map(kayttooikeusKayttajaDto -> mapper.map(kayttooikeusKayttajaDto, KayttajaKtoDto.class).withOrganisaatioOid(organisaatioOid)
                     ))
                 .collect(Collectors.toMap(KayttajaDto::getOid, kayttaja -> kayttaja, (kayttaja1, kayttaja2) -> kayttaja1));
 

@@ -18,6 +18,7 @@ package fi.vm.sade.eperusteet.amosaa.service.external;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.Kayttaja;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.EtusivuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaKtoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import java.util.List;
@@ -67,7 +68,7 @@ public interface KayttajanTietoService {
     Set<String> getUserOrganizations();
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
-    List<KayttajaDto> getKaikkiKayttajat(@P("ktId") Long ktId);
+    List<KayttajaKtoDto> getKaikkiKayttajat(@P("ktId") Long ktId);
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
     KayttajanTietoDto getKayttaja(@P("ktId") Long ktId, String oid);
@@ -76,7 +77,7 @@ public interface KayttajanTietoService {
     KayttajanTietoDto getKayttaja(@P("ktId") Long ktId, Long oid);
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
-    List<KayttajaDto> getKayttajat(@P("ktId") Long ktId);
+    List<KayttajaKtoDto> getKayttajat(@P("ktId") Long ktId);
 
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
     void removeSuosikki(@P("opsId") Long opsId);
