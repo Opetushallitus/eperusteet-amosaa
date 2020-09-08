@@ -704,6 +704,7 @@
                                     <locations>
                                         <location>${eperusteet.amosaa.resources}.external.UlkopuolisetController</location>
                                         <location>${eperusteet.amosaa.resources}.julkinen.*</location>
+                                        <location>${eperusteet.amosaa.resources}.koulutustoimija.KayttajaoikeusController</location>
                                         <location>${eperusteet.amosaa.resources}.koulutustoimija.KoulutustoimijaController</location>
                                         <location>${eperusteet.amosaa.resources}.koulutustoimija.OpetussuunnitelmaAikatauluController</location>
                                         <location>${eperusteet.amosaa.resources}.koulutustoimija.OpetussuunnitelmaController</location>

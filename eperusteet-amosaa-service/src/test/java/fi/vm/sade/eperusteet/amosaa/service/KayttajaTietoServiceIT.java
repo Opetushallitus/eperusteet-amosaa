@@ -2,6 +2,7 @@ package fi.vm.sade.eperusteet.amosaa.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaKtoDto;
 import java.util.List;
 
 import org.junit.Test;
@@ -24,9 +25,9 @@ public class KayttajaTietoServiceIT extends AbstractIntegrationTest {
     @Test
     public void testGetKaikkiKayttajat() {
 
-        useProfileKP1();        
+        useProfileKP1();
 
-        List<KayttajaDto> kaikkiKayttajat = kayttajanTietoService.getKaikkiKayttajat(getKoulutustoimijaId());
+        List<KayttajaKtoDto> kaikkiKayttajat = kayttajanTietoService.getKaikkiKayttajat(getKoulutustoimijaId());
 
         assertThat(kaikkiKayttajat).hasSize(5);
         assertThat(kaikkiKayttajat)
@@ -53,7 +54,7 @@ public class KayttajaTietoServiceIT extends AbstractIntegrationTest {
 
         useProfileKP1();
 
-        List<KayttajaDto> kaikkiKayttajat = kayttajanTietoService.getKaikkiKayttajat(getKoulutustoimijaId());
+        List<KayttajaKtoDto> kaikkiKayttajat = kayttajanTietoService.getKaikkiKayttajat(getKoulutustoimijaId());
         assertThat(kaikkiKayttajat.stream().filter(k -> k.getOid().equals(TMPR)).findFirst().get().getId()).isNull();
 
         useProfileTmpr();

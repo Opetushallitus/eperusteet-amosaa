@@ -8,6 +8,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.dto.OpsHakuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaKtoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.*;
 import fi.vm.sade.eperusteet.amosaa.repository.peruste.CachedPerusteRepository;
@@ -273,7 +274,7 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
     @Test
     @Rollback
     public void testKoulutustoimijaKayttajaoikeudet() {
-        List<KayttajaDto> kaikki = kayttajanTietoService.getKaikkiKayttajat(getKoulutustoimijaId());
+        List<KayttajaKtoDto> kaikki = kayttajanTietoService.getKaikkiKayttajat(getKoulutustoimijaId());
         assertThat(kaikki)
                 .extracting(KayttajaDto::getOid)
                 .containsExactlyInAnyOrder("kp2", "1.22.3.4.5.kp2", "1.2.3.4.5.kp1", "tmpr");
@@ -284,7 +285,7 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
     public void testKoulutustoimijaKayttajaoikeudetKaikkiTestiorganisaatiot() {
         regAllProfiles();
         useProfileKP2();
-        List<KayttajaDto> kaikki = kayttajanTietoService.getKaikkiKayttajat(getKoulutustoimijaId());
+        List<KayttajaKtoDto> kaikki = kayttajanTietoService.getKaikkiKayttajat(getKoulutustoimijaId());
         assertThat(kaikki)
                 .extracting(KayttajaDto::getOid)
                 .containsExactlyInAnyOrder("kp1", "kp2", "1.22.3.4.5.kp2", "1.2.3.4.5.kp1", "tmpr");
@@ -297,7 +298,7 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
         regAllProfiles();
         makeFriendsWithTmpr();
         useProfileKP2();
-        List<KayttajaDto> kaikki = kayttajanTietoService.getKaikkiKayttajat(getKoulutustoimijaId());
+        List<KayttajaKtoDto> kaikki = kayttajanTietoService.getKaikkiKayttajat(getKoulutustoimijaId());
         assertThat(kaikki)
                 .extracting(KayttajaDto::getOid)
                 .containsExactlyInAnyOrder("kp1", "kp2", "tmpr", "1.22.3.4.5.kp2", "1.2.3.4.5.kp1", "1.22.3.4.5.TMPR");
