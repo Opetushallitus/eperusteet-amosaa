@@ -17,6 +17,7 @@
 package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija;
 
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator;
 
 import java.util.List;
@@ -34,4 +35,6 @@ public interface KayttajaoikeusService {
     List<KayttajaoikeusDto> getKayttooikeudet();
 
     ResponseEntity<Map<PermissionEvaluator.RolePermission, Set<Long>>> getOrganisaatiooikeudet();
+
+    ResponseEntity<Map<PermissionEvaluator.RolePermission, Set<KoulutustoimijaBaseDto>>> getKoulutustoimijaOikeudet();
 }

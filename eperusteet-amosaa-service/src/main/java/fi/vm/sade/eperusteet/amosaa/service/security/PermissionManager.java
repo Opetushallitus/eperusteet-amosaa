@@ -30,7 +30,12 @@ import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.RolePre
 import fi.vm.sade.eperusteet.amosaa.service.util.Pair;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 import java.io.Serializable;
-import java.util.*;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -316,6 +321,17 @@ public class PermissionManager {
                         .map(oid -> koulutustoimijaRepository.findOneByOrganisaatio(oid))
                         .filter(kt -> kt != null)
                         .map(Koulutustoimija::getId)
+                        .collect(Collectors.toSet())))
+                .collect(Collectors.toMap(Pair::getFirst, Pair::getSecond));
+    }
+
+    @Transactional(readOnly = true)
+    @PreAuthorize("isAuthenticated()")
+    public Map<RolePermission, Set<Koulutustoimija>> getKoulutustoimijaOikeudet() {
+        return EnumSet.allOf(RolePermission.class).stream()
+                .map(r -> new Pair<>(r, SecurityUtil.getOrganizations(Collections.singleton(r)).stream()
+                        .map(oid -> koulutustoimijaRepository.findOneByOrganisaatio(oid))
+                        .filter(kt -> kt != null)
                         .collect(Collectors.toSet())))
                 .collect(Collectors.toMap(Pair::getFirst, Pair::getSecond));
     }
