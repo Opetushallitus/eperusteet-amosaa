@@ -17,6 +17,7 @@
 package fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija;
 
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KayttajaoikeusService;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator;
@@ -52,5 +53,10 @@ public class KayttajaoikeusController {
     @RequestMapping(value = "/organisaatiooikeudet", method = RequestMethod.GET)
     public ResponseEntity<Map<PermissionEvaluator.RolePermission, Set<Long>>> getOikeudet() {
         return service.getOrganisaatiooikeudet();
+    }
+
+    @RequestMapping(value = "/koulutustoimijaoikeudet", method = RequestMethod.GET)
+    public ResponseEntity<Map<PermissionEvaluator.RolePermission, Set<KoulutustoimijaBaseDto>>> getKoulutustoimijaOikeudet() {
+        return service.getKoulutustoimijaOikeudet();
     }
 }
