@@ -12,12 +12,12 @@
     <name>eperusteet-amosaa-service</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <hibernate.version>4.3.11.Final</hibernate.version>
+        <hibernate.version>5.2.0.Final</hibernate.version>
         <spring.version>4.3.12.RELEASE</spring.version>
-        <spring.security.version>4.2.13.RELEASE</spring.security.version>
+        <spring.security.version>4.2.16.RELEASE</spring.security.version>
         <spring.data.jpa.version>1.11.22.RELEASE</spring.data.jpa.version>
         <logback.version>1.2.3</logback.version>
-        <postgresql.version>9.4.1211</postgresql.version>
+        <postgresql.version>42.2.13</postgresql.version>
         <jackson.version>2.10.2</jackson.version>
         <eperusteet-amosaa.devdb.jdbcurl>jdbc:postgresql://localhost:5432/${eperusteet-amosaa.devdb.user}</eperusteet-amosaa.devdb.jdbcurl>
         <eperusteet-amosaa.ittestdb.jdbcurl>jdbc:postgresql://localhost:5432/${eperusteet-amosaa.ittestdb.user}</eperusteet-amosaa.ittestdb.jdbcurl>
@@ -27,7 +27,7 @@
         <slf4j.version>1.7.21</slf4j.version>
         <fop.version>2.5</fop.version>
         <pdfbox.version>2.0.12</pdfbox.version>
-        <springfox.version>2.7.0</springfox.version>
+        <springfox.version>2.10.0</springfox.version>
         <metrics.version>4.0.2</metrics.version>
         <aspectj.version>1.8.9</aspectj.version>
         <schema.file>${project.basedir}/target/schema.ddl</schema.file>
@@ -207,7 +207,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>5.2.5.Final</version>
+            <version>6.0.19.Final</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
