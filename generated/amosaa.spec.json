@@ -28,6 +28,8 @@
   }, {
     "name" : "kayttaja"
   }, {
+    "name" : "kayttajaoikeudet"
+  }, {
     "name" : "koulutustoimijat"
   }, {
     "name" : "liitetiedostot"
@@ -647,6 +649,27 @@
         }
       }
     },
+    "/kayttaja/koulutustoimijaoikeudet" : {
+      "get" : {
+        "tags" : [ "kayttajaoikeudet" ],
+        "operationId" : "getKoulutustoimijaOikeudet",
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object",
+              "additionalProperties" : {
+                "type" : "array",
+                "uniqueItems" : true,
+                "items" : {
+                  "$ref" : "#/definitions/KoulutustoimijaBaseDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/kayttaja/koulutustoimijat" : {
       "get" : {
         "tags" : [ "kayttaja" ],
@@ -669,6 +692,45 @@
         "responses" : {
           "default" : {
             "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/kayttaja/oikeudet" : {
+      "get" : {
+        "tags" : [ "kayttajaoikeudet" ],
+        "operationId" : "getTyoryhmat",
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/KayttajaoikeusDto"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/kayttaja/organisaatiooikeudet" : {
+      "get" : {
+        "tags" : [ "kayttajaoikeudet" ],
+        "operationId" : "getOikeudet",
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object",
+              "additionalProperties" : {
+                "type" : "array",
+                "uniqueItems" : true,
+                "items" : {
+                  "type" : "integer",
+                  "format" : "int64"
+                }
+              }
+            }
           }
         }
       }
@@ -1109,7 +1171,7 @@
             "schema" : {
               "type" : "array",
               "items" : {
-                "$ref" : "#/definitions/KayttajaDto"
+                "$ref" : "#/definitions/KayttajaKtoDto"
               }
             }
           }
@@ -1140,7 +1202,7 @@
             "schema" : {
               "type" : "array",
               "items" : {
-                "$ref" : "#/definitions/KayttajaDto"
+                "$ref" : "#/definitions/KayttajaKtoDto"
               }
             }
           }
@@ -4399,6 +4461,41 @@
         }
       }
     },
+    "KayttajaKtoDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "oid" : {
+          "type" : "string"
+        },
+        "etunimet" : {
+          "type" : "string"
+        },
+        "kutsumanimi" : {
+          "type" : "string"
+        },
+        "sukunimi" : {
+          "type" : "string"
+        },
+        "tiedotekuittaus" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "suosikit" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/Reference"
+          }
+        },
+        "organisaatioOid" : {
+          "type" : "string"
+        }
+      }
+    },
     "KayttajanTietoDto" : {
       "type" : "object",
       "properties" : {
@@ -5504,10 +5601,6 @@
             "enum" : [ "FI", "SV", "SE", "RU", "EN" ]
           }
         },
-        "perusteId" : {
-          "type" : "integer",
-          "format" : "int64"
-        },
         "perusteNimi" : {
           "type" : "object",
           "additionalProperties" : {
@@ -5517,6 +5610,10 @@
         "koulutustyyppi" : {
           "type" : "string",
           "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA" ]
+        },
+        "perusteId" : {
+          "type" : "integer",
+          "format" : "int64"
         }
       }
     },
@@ -5648,18 +5745,18 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "sort" : {
-          "$ref" : "#/definitions/Sort"
-        },
-        "last" : {
-          "type" : "boolean"
-        },
         "first" : {
           "type" : "boolean"
+        },
+        "sort" : {
+          "$ref" : "#/definitions/Sort"
         },
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
+        },
+        "last" : {
+          "type" : "boolean"
         }
       }
     },
@@ -5688,18 +5785,18 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "sort" : {
-          "$ref" : "#/definitions/Sort"
-        },
-        "last" : {
-          "type" : "boolean"
-        },
         "first" : {
           "type" : "boolean"
+        },
+        "sort" : {
+          "$ref" : "#/definitions/Sort"
         },
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
+        },
+        "last" : {
+          "type" : "boolean"
         }
       }
     },
@@ -5728,18 +5825,18 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "sort" : {
-          "$ref" : "#/definitions/Sort"
-        },
-        "last" : {
-          "type" : "boolean"
-        },
         "first" : {
           "type" : "boolean"
+        },
+        "sort" : {
+          "$ref" : "#/definitions/Sort"
         },
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
+        },
+        "last" : {
+          "type" : "boolean"
         }
       }
     },
@@ -5768,18 +5865,18 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "sort" : {
-          "$ref" : "#/definitions/Sort"
-        },
-        "last" : {
-          "type" : "boolean"
-        },
         "first" : {
           "type" : "boolean"
+        },
+        "sort" : {
+          "$ref" : "#/definitions/Sort"
         },
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
+        },
+        "last" : {
+          "type" : "boolean"
         }
       }
     },
@@ -5808,18 +5905,18 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "sort" : {
-          "$ref" : "#/definitions/Sort"
-        },
-        "last" : {
-          "type" : "boolean"
-        },
         "first" : {
           "type" : "boolean"
+        },
+        "sort" : {
+          "$ref" : "#/definitions/Sort"
         },
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
+        },
+        "last" : {
+          "type" : "boolean"
         }
       }
     },
