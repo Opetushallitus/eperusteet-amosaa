@@ -686,6 +686,11 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
                 if (toteutuksellaSisaltoa) {
                     docBase.getBodyElement().appendChild(toteutusTaulukko);
                 }
+
+                toteutus.getVapaat().forEach(vapaaTeksti -> {
+                    addLokalisoituteksti(docBase, vapaaTeksti.getNimi(), "h5");
+                    addLokalisoituteksti(docBase, vapaaTeksti.getTeksti(), "div");
+                });
             });
         }
     }
