@@ -34,7 +34,7 @@
         <hibernate.export.type>CREATE</hibernate.export.type>
         <auditlog.api.version>5.0.0-SNAPSHOT</auditlog.api.version>
         <flyway.version>5.2.4</flyway.version>
-        <apache.httpclient.version>4.5.3</apache.httpclient.version>
+        <apache.httpclient.version>4.5.13</apache.httpclient.version>
         <eperusteet.amosaa.resources>fi.vm.sade.eperusteet.amosaa.resource</eperusteet.amosaa.resources>
         <swagger-maven-plugin-version>3.1.7</swagger-maven-plugin-version>
     </properties>
