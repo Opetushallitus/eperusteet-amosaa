@@ -16,6 +16,7 @@
 package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
@@ -49,6 +50,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -292,15 +294,15 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     }
 
     @Override
-    public EtusivuDto getEtusivu(@P("ktId") Long ktId) {
+    public EtusivuDto getEtusivu(@P("ktId") Long ktId, List<KoulutusTyyppi> koulutustyypit) {
         Koulutustoimija koulutustoimija = repository.findOne(ktId);
         EtusivuDto result = new EtusivuDto();
         if (koulutustoimija != null) {
             Set<Koulutustoimija> koulutustoimijat = Collections.singleton(koulutustoimija);
-            result.setToteutussuunnitelmatKeskeneraiset(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.OPS, Collections.singleton(Tila.LUONNOS), koulutustoimijat));
-            result.setToteutussuunnitelmatJulkaistut(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.OPS, Collections.singleton(Tila.JULKAISTU), koulutustoimijat));
-            result.setKtYhteinenOsuusKeskeneraiset(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.YHTEINEN, Collections.singleton(Tila.LUONNOS), koulutustoimijat));
-            result.setKtYhteinenOsuusJulkaistut(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.YHTEINEN, Collections.singleton(Tila.JULKAISTU), koulutustoimijat));
+            result.setToteutussuunnitelmatKeskeneraiset(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.OPS, Collections.singleton(Tila.LUONNOS), koulutustoimijat, koulutustyypit));
+            result.setToteutussuunnitelmatJulkaistut(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.OPS, Collections.singleton(Tila.JULKAISTU), koulutustoimijat, koulutustyypit));
+            result.setKtYhteinenOsuusKeskeneraiset(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.YHTEINEN, Collections.singleton(Tila.LUONNOS), koulutustoimijat, koulutustyypit));
+            result.setKtYhteinenOsuusJulkaistut(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.YHTEINEN, Collections.singleton(Tila.JULKAISTU), koulutustoimijat, koulutustyypit));
         } else {
             result.setToteutussuunnitelmatKeskeneraiset(0L);
             result.setToteutussuunnitelmatJulkaistut(0L);

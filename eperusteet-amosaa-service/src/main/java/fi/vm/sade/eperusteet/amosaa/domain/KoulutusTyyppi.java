@@ -16,6 +16,8 @@
 package fi.vm.sade.eperusteet.amosaa.domain;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author nkala
@@ -25,8 +27,8 @@ public enum KoulutusTyyppi {
     AMMATTITUTKINTO("koulutustyyppi_11"),
     ERIKOISAMMATTITUTKINTO("koulutustyyppi_12"),
     TELMA("koulutustyyppi_5"),
-    VALMA("koulutustyyppi_18");
-
+    VALMA("koulutustyyppi_18"),
+    VAPAASIVISTYSTYO("koulutustyyppi_30");
 
     private final String tyyppi;
 
@@ -66,4 +68,7 @@ public enum KoulutusTyyppi {
         return isOneOf(AMMATTITUTKINTO, ERIKOISAMMATTITUTKINTO, PERUSTUTKINTO);
     }
 
+    public static List ammatilliset() {
+        return Arrays.asList(PERUSTUTKINTO, AMMATTITUTKINTO, ERIKOISAMMATTITUTKINTO, TELMA, VALMA);
+    }
 }

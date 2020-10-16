@@ -14,7 +14,8 @@ public enum NavigationType {
     tosaryhma,
     suorituspolut,
     suorituspolku,
-    osasuorituspolku;
+    osasuorituspolku,
+    opintokokonaisuus;
 
     public static NavigationType of(String type) {
         for (NavigationType t : values()) {

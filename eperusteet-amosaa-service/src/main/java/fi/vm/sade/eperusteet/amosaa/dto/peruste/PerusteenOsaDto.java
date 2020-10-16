@@ -22,10 +22,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.TekstiKappaleDto;
-
 import java.util.Date;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -57,6 +54,7 @@ public abstract class PerusteenOsaDto {
     @JsonSubTypes(value = {
             @JsonSubTypes.Type(value = TekstiKappaleDto.class),
             @JsonSubTypes.Type(value = TutkinnonOsaDto.class),
+            @JsonSubTypes.Type(value = OpintokokonaisuusDto.class),
     })
     public static abstract class Laaja extends PerusteenOsaDto {
 

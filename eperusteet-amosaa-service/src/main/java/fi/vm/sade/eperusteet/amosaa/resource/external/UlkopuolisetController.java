@@ -32,6 +32,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -70,8 +71,8 @@ public class UlkopuolisetController {
     }
 
     @RequestMapping(value = "/julkaistutperusteet/kevyt", method = GET)
-    public ResponseEntity<List<PerusteKevytDto>> getJulkaistutPerusteetKevyt() {
-        return new ResponseEntity<>(eperusteetService.findPerusteet(PerusteKevytDto.class), HttpStatus.OK);
+    public ResponseEntity<List<PerusteKevytDto>> getJulkaistutPerusteetKevyt(@RequestParam(value = "koulutustyyppi", required = false) final Set<String> koulutustyypit) {
+        return new ResponseEntity<>(eperusteetService.findPerusteet(koulutustyypit, PerusteKevytDto.class), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/tiedotteet", method = GET)

@@ -1,0 +1,205 @@
+{
+  "id": 35820,
+  "globalVersion": {
+    "aikaleima": 1603093637749
+  },
+  "nimi": {
+    "_tunniste": "101a1844-af38-42da-9055-80841f4c6d2a",
+    "fi": "Julkaistu vst",
+    "_id": "35920"
+  },
+  "koulutustyyppi": "koulutustyyppi_30",
+  "toteutus": "vapaasivistystyo",
+  "koulutukset": [],
+  "kielet": [
+    "fi"
+  ],
+  "kuvaus": null,
+  "maarayskirje": null,
+  "muutosmaaraykset": [],
+  "diaarinumero": "111/222/6666",
+  "voimassaoloAlkaa": 1601845200000,
+  "siirtymaPaattyy": null,
+  "voimassaoloLoppuu": null,
+  "paatospvm": null,
+  "luotu": 1602851025103,
+  "muokattu": 1603093637750,
+  "tila": "valmis",
+  "tyyppi": "normaali",
+  "koulutusvienti": false,
+  "korvattavatDiaarinumerot": [],
+  "osaamisalat": [],
+  "tyotehtavatJoissaVoiToimia": null,
+  "suorittaneenOsaaminen": null,
+  "perusteenAikataulut": [
+    {
+      "id": 35861,
+      "peruste": {
+        "id": 35820,
+        "nimi": {
+          "_tunniste": "101a1844-af38-42da-9055-80841f4c6d2a",
+          "fi": "Julkaistu vst",
+          "_id": "35920"
+        },
+        "tila": "valmis",
+        "tyyppi": "normaali",
+        "koulutustyyppi": "koulutustyyppi_30",
+        "esikatseltavissa": false
+      },
+      "tavoite": {
+        "_tunniste": "bbfcf54f-22ed-4f49-b86d-76203b6bec56",
+        "fi": "Peruste luotu",
+        "_id": "35802"
+      },
+      "tapahtuma": "luominen",
+      "tapahtumapaiva": 1602851022445
+    },
+    {
+      "id": 35860,
+      "peruste": {
+        "id": 35820,
+        "nimi": {
+          "_tunniste": "101a1844-af38-42da-9055-80841f4c6d2a",
+          "fi": "Julkaistu vst",
+          "_id": "35920"
+        },
+        "tila": "valmis",
+        "tyyppi": "normaali",
+        "koulutustyyppi": "koulutustyyppi_30",
+        "esikatseltavissa": false
+      },
+      "tavoite": {
+        "_tunniste": "bba4b9d6-3492-4de3-ac4c-6dbdf6eb757c",
+        "fi": "Peruste astuu voimaan",
+        "_id": "35801"
+      },
+      "tapahtuma": "tavoite",
+      "tapahtumapaiva": 1602450000000
+    }
+  ],
+  "vapaasivistystyo": {
+    "id": 35830,
+    "sisalto": {
+      "id": 35840,
+      "lapset": [
+        {
+          "id": 35841,
+          "perusteenOsa": {
+            "id": 35880,
+            "luotu": 1602851032791,
+            "muokattu": 1603093637261,
+            "muokkaaja": "test",
+            "nimi": {
+              "_tunniste": "b3742fa5-67fc-4fd6-8b64-eadb5aeb56d9",
+              "fi": "tekstikappale 1",
+              "_id": "35803"
+            },
+            "tila": "luonnos",
+            "teksti": {
+              "_tunniste": "3686eb64-f7f1-4224-8f95-babf9e2f3d1d",
+              "fi": "<p>tekstikappaletekstiä</p>",
+              "_id": "36030"
+            },
+            "koodit": [],
+            "liite": false,
+            "osanTyyppi": "tekstikappale"
+          },
+          "lapset": [
+            {
+              "id": 35842,
+              "perusteenOsa": {
+                "id": 35881,
+                "luotu": 1602851039524,
+                "muokattu": 1602851097815,
+                "muokkaaja": "test",
+                "nimi": {
+                  "_tunniste": "eb4b52f9-31ec-49cc-baf8-dcc0a25a6bfb",
+                  "fi": "Opiskelu- ja urasuunnittelutaidot",
+                  "_id": "35804"
+                },
+                "tila": "luonnos",
+                "nimiKoodi": {
+                  "id": 35763,
+                  "nimi": {
+                    "fi": "Opiskelu- ja urasuunnittelutaidot"
+                  },
+                  "arvo": "06",
+                  "uri": "opintokokonaisuusnimet_06",
+                  "koodisto": "opintokokonaisuusnimet",
+                  "versio": 1
+                },
+                "minimilaajuus": 5,
+                "kuvaus": {
+                  "_tunniste": "ae7728f2-c333-4ad1-9118-e007bb4ce6a9",
+                  "fi": "<p>opintokokonaisuus kuvaus x</p>",
+                  "sv": "<p>asdf</p>",
+                  "_id": "35808"
+                },
+                "opetuksenTavoiteOtsikko": {
+                  "_tunniste": "33493864-312b-47f7-a8ee-2b3a145ea92b",
+                  "fi": "tavoitteita xx",
+                  "sv": "asdf",
+                  "_id": "35809"
+                },
+                "opetuksenTavoitteet": [
+                  {
+                    "id": 35764,
+                    "nimi": {
+                      "fi": "tavoite 3"
+                    },
+                    "arvo": "1048",
+                    "uri": "opintokokonaisuustavoitteet_1048",
+                    "koodisto": "opintokokonaisuustavoitteet",
+                    "versio": 1
+                  },
+                  {
+                    "id": 35765,
+                    "nimi": {
+                      "fi": "tavoite 1"
+                    },
+                    "arvo": "1047",
+                    "uri": "opintokokonaisuustavoitteet_1047",
+                    "koodisto": "opintokokonaisuustavoitteet",
+                    "versio": 1
+                  },
+                  {
+                    "id": 35766,
+                    "nimi": {
+                      "fi": "tavoite 2"
+                    },
+                    "arvo": "1046",
+                    "uri": "opintokokonaisuustavoitteet_1046",
+                    "koodisto": "opintokokonaisuustavoitteet",
+                    "versio": 1
+                  }
+                ],
+                "arvioinnit": [
+                  {
+                    "_tunniste": "ceedbcf5-9800-45b2-a297-acd9229a347d",
+                    "fi": "arviointi 3",
+                    "_id": "35805"
+                  },
+                  {
+                    "_tunniste": "1437fbe1-2908-4035-8220-065ba8e2473c",
+                    "fi": "arviointi 1",
+                    "_id": "35806"
+                  },
+                  {
+                    "_tunniste": "6524b98c-a7e1-434a-a376-21179f8909c1",
+                    "fi": "arviointi 2",
+                    "_id": "35807"
+                  }
+                ],
+                "osanTyyppi": "opintokokonaisuus"
+              },
+              "lapset": [],
+              "_perusteenOsa": "35881"
+            }
+          ],
+          "_perusteenOsa": "35880"
+        }
+      ]
+    },
+    "laajuus": null
+  }
+}

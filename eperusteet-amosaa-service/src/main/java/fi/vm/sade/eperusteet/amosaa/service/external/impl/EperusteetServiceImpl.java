@@ -46,6 +46,7 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import fi.vm.sade.eperusteet.amosaa.service.util.JsonMapper;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -360,6 +361,15 @@ public class EperusteetServiceImpl implements EperusteetService {
         koulutustyypit.add(KoulutusTyyppi.VALMA);
         koulutustyypit.add(KoulutusTyyppi.TELMA);
         return dtoMapper.mapAsList(eperusteetClient.findPerusteet(koulutustyypit), type);
+    }
+
+    @Override
+    public <T> List<T> findPerusteet(Set<String> koulutustyypit, Class<T> type) {
+        if (CollectionUtils.isNotEmpty(koulutustyypit)) {
+            return dtoMapper.mapAsList(eperusteetClient.findPerusteet(koulutustyypit.stream().map(KoulutusTyyppi::of).collect(Collectors.toSet())), type);
+        } else {
+            return findPerusteet(type);
+        }
     }
 
     @Override

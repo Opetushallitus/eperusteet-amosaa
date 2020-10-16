@@ -30,4 +30,5 @@ import lombok.Setter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PerusteDto extends PerusteBaseDto {
     Set<SuoritustapaDto> suoritustavat;
+
 }

@@ -16,6 +16,7 @@
 
 package fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija;
 
+import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.EtusivuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaKtoDto;
@@ -35,6 +36,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -198,8 +201,9 @@ public class KoulutustoimijaController extends KoulutustoimijaIdGetterAbstractCo
     })
     @RequestMapping(value = "/{ktId}/etusivu", method = RequestMethod.GET)
     public EtusivuDto getEtusivu(
-            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @RequestParam(value = "koulutustyypit") final Set<String> koulutustyypit
     ) {
-        return koulutustoimijaService.getEtusivu(ktId);
+        return koulutustoimijaService.getEtusivu(ktId, koulutustyypit.stream().map(KoulutusTyyppi::of).collect(Collectors.toList()));
     }
 }

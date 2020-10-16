@@ -51,7 +51,7 @@
     <beans profile="h2db">
         <bean id="h2db" class="org.h2.tools.Server"
               factory-method="createTcpServer" init-method="start" destroy-method="stop" lazy-init="false">
-            <constructor-arg value="-tcpAllowOthers,-tcpPort,12345" />
+            <constructor-arg value="-tcpAllowOthers,-tcpPort,12345"/>
         </bean>
         <bean id="dataSource"
               class="org.apache.tomcat.dbcp.dbcp.BasicDataSource" destroy-method="close" depends-on="h2db">

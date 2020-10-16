@@ -16,6 +16,7 @@
 
 package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija;
 
+import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.EtusivuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.*;
 import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHierarkiaDto;
@@ -81,7 +82,7 @@ public interface KoulutustoimijaService {
     List<OrganisaatioHistoriaLiitosDto> getOrganisaatioHierarkiaHistoriaLiitokset(@P("ktId") Long ktId);
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
-    EtusivuDto getEtusivu(@P("ktId") Long ktId);
+    EtusivuDto getEtusivu(@P("ktId") Long ktId, List<KoulutusTyyppi> koulutustyypit);
 
 //    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'HALLINTA')")
 //    OpetussuunnitelmaBaseDto moveOpetussuunnitelma(Long ktId, Long opsId, KoulutustoimijaBaseDto body);

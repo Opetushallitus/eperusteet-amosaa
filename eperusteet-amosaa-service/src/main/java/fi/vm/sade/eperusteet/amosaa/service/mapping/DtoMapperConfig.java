@@ -20,6 +20,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.Dokumentti;
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.Dokumentti_;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OpintokokonaisuusTavoite;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
@@ -29,6 +30,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.ops.SuorituspolkuOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.OpintokokonaisuusTavoiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SuorituspolkuRakenneDto;
 import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
 import java.time.Instant;
@@ -41,6 +43,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.client.RestClientException;
 
@@ -55,6 +58,9 @@ public class DtoMapperConfig {
     @Autowired
     OrganisaatioService organisaatioService;
 
+    @Autowired
+    OpintokokonaisuusTavoiteMapper opintokokonaisuusTavoiteMapper;
+
     @Bean
     public DtoMapper dtoMapper(
             ReferenceableEntityConverter referenceableEntityConverter,
@@ -64,7 +70,7 @@ public class DtoMapperConfig {
                 .build();
 
         factory.classMap(RakenneOsaDto.class, SuorituspolkuOsaDto.class)
-            .byDefault()
+                .byDefault()
             .register();
 
         factory.classMap(RakenneModuuliDto.class, SuorituspolkuRakenneDto.class)
@@ -128,6 +134,15 @@ public class DtoMapperConfig {
 
         factory.classMap(Koulutustoimija.class, KoulutustoimijaDto.class)
                 .byDefault()
+                .register();
+
+        factory.classMap(Koulutustoimija.class, KoulutustoimijaDto.class)
+                .byDefault()
+                .register();
+
+        factory.classMap(OpintokokonaisuusTavoite.class, OpintokokonaisuusTavoiteDto.class)
+                .byDefault()
+                .customize(opintokokonaisuusTavoiteMapper)
                 .register();
 
         return new DtoMapperImpl(factory.getMapperFacade());

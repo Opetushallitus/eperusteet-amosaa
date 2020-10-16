@@ -29,6 +29,7 @@ import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationExcep
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetClient;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -55,6 +56,9 @@ public class EperusteetClientMock implements EperusteetClient {
 
     @Autowired
     private ApplicationContext applicationContext;
+
+    @Value("${test.perusteJsonFile:/perusteet/testiperuste.json}")
+    private String perusteJsonFile;
 
     @PostConstruct
     protected void init() {
@@ -93,7 +97,7 @@ public class EperusteetClientMock implements EperusteetClient {
 
     private JsonNode getMockPeruste() {
         try {
-            File file = applicationContext.getResource("testiperuste.json").getFile();
+            File file = applicationContext.getResource(perusteJsonFile).getFile();
             JsonNode peruste = objectMapper.readTree(file);
             return peruste;
         } catch (IOException e) {
