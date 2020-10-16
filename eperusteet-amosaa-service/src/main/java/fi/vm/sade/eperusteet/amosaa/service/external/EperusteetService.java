@@ -16,6 +16,7 @@
 package fi.vm.sade.eperusteet.amosaa.service.external;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.*;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
@@ -61,6 +62,8 @@ public interface EperusteetService {
     List<PerusteDto> findPerusteet();
 
     <T> List<T> findPerusteet(Class<T> type);
+
+    <T> List<T> findPerusteet(Set<String> koulutustyypit, Class<T> type);
 
     <T> T getPerusteSisaltoByPerusteId(Long perusteId, Class<T> type);
 

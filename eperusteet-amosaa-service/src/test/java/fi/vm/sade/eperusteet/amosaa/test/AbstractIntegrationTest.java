@@ -15,6 +15,8 @@
  */
 package fi.vm.sade.eperusteet.amosaa.test;
 
+import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetClient;
+import fi.vm.sade.eperusteet.amosaa.service.util.EperusteetClientMock;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -25,7 +27,12 @@ import java.util.function.Consumer;
 
 import org.junit.Before;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -64,11 +71,11 @@ import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaSer
 @ContextConfiguration("/it-test-context.xml")
 @ActiveProfiles(profiles = "test")
 public abstract class AbstractIntegrationTest {
-    
+
     static public String KP1 = "kp1";
     static public String KP2 = "kp2";
     static public String TMPR = "tmpr";
-    
+
     static public String oidOph = "1.2.246.562.10.00000000001";
     static public String oidKp1 = "1.2.246.562.10.54645809036";
     static public String oidKp2 = "1.2.246.562.10.2013120512391252668625";
@@ -87,13 +94,13 @@ public abstract class AbstractIntegrationTest {
 
     @Autowired
     protected KayttajanTietoService kayttajanTietoService;
-    
+
     @Autowired
-    protected OpetussuunnitelmaRepository opetussuunnitelmaRepository;  
-    
+    protected OpetussuunnitelmaRepository opetussuunnitelmaRepository;
+
     @Autowired
     protected KoulutustoimijaRepository koulutustoimijaRepository;
-    
+
     protected List<KoulutustoimijaBaseDto> koulutustoimijat = new ArrayList<>();
     protected KoulutustoimijaBaseDto toimija = null;
     protected Kayttaja kayttaja = null;
@@ -120,27 +127,28 @@ public abstract class AbstractIntegrationTest {
 
 
     protected OpetussuunnitelmaBaseDto createOpetussuunnitelma() {
-        return createOpetussuunnitelma((ops) -> {});
+        return createOpetussuunnitelma((ops) -> {
+        });
     }
-    
-    protected Opetussuunnitelma createOpetussuunnitelmaJulkaistu() {	
-    	OpetussuunnitelmaBaseDto dto = createOpetussuunnitelma();	
-    	Opetussuunnitelma ops = opetussuunnitelmaRepository.findOne(dto.getId());
-    	ops.setTila(Tila.JULKAISTU);
-    	return opetussuunnitelmaRepository.save(ops);
+
+    protected Opetussuunnitelma createOpetussuunnitelmaJulkaistu() {
+        OpetussuunnitelmaBaseDto dto = createOpetussuunnitelma();
+        Opetussuunnitelma ops = opetussuunnitelmaRepository.findOne(dto.getId());
+        ops.setTila(Tila.JULKAISTU);
+        return opetussuunnitelmaRepository.save(ops);
     }
-    
+
     protected Opetussuunnitelma updateOpetussuunnitelmaJulkaisukielet(Opetussuunnitelma opetussuunnitelma, Set<Kieli> kielet) {
-    	opetussuunnitelma.setJulkaisukielet(kielet);
-    	return opetussuunnitelmaRepository.save(opetussuunnitelma);
+        opetussuunnitelma.setJulkaisukielet(kielet);
+        return opetussuunnitelmaRepository.save(opetussuunnitelma);
     }
-        
+
     protected void updateKoulutustoimijaLokalisointiNimet(Map<Kieli, String> tekstit) {
-    	Koulutustoimija koulutustoimija = koulutustoimijaRepository.findOne(toimija.getId());
-    	koulutustoimija.setNimi(LokalisoituTeksti.of(tekstit));
-    	koulutustoimijaRepository.save(koulutustoimija);
+        Koulutustoimija koulutustoimija = koulutustoimijaRepository.findOne(toimija.getId());
+        koulutustoimija.setNimi(LokalisoituTeksti.of(tekstit));
+        koulutustoimijaRepository.save(koulutustoimija);
     }
-    
+
     protected OpetussuunnitelmaBaseDto createOpetussuunnitelma(Consumer<OpetussuunnitelmaDto> opsfn) {
         OpetussuunnitelmaLuontiDto ops = new OpetussuunnitelmaLuontiDto();
         ops.setKoulutustoimija(getKoulutustoimija());
@@ -155,7 +163,8 @@ public abstract class AbstractIntegrationTest {
     }
 
     protected OpetussuunnitelmaBaseDto createPohja() {
-        return createPohja((ops) -> {});
+        return createPohja((ops) -> {
+        });
     }
 
     protected OpetussuunnitelmaBaseDto createPohja(Consumer<OpetussuunnitelmaDto> opsfn) {
@@ -165,14 +174,17 @@ public abstract class AbstractIntegrationTest {
         HashMap<String, String> nimi = new HashMap<>();
         nimi.put("fi", "auto");
         ops.setNimi(new LokalisoituTekstiDto(nimi));
-        ops.setJulkaisukielet(new HashSet<Kieli>() {{ add(Kieli.FI); }});
+        ops.setJulkaisukielet(new HashSet<Kieli>() {{
+            add(Kieli.FI);
+        }});
         opsfn.accept(ops);
         OpetussuunnitelmaBaseDto pohja = opetussuunnitelmaService.addOpetussuunnitelma(getKoulutustoimijaId(), ops);
         return pohja;
     }
 
     protected SisaltoViiteDto.Matala createSisalto() {
-        return createSisalto((ops) -> {});
+        return createSisalto((ops) -> {
+        });
     }
 
     protected SisaltoViiteDto.Matala createSisalto(Consumer<SisaltoViiteDto> sisaltoFn) {
@@ -229,4 +241,5 @@ public abstract class AbstractIntegrationTest {
         useProfileKP3();
         useProfileTmpr();
     }
+
 }

@@ -30,7 +30,8 @@ public enum SisaltoTyyppi {
     TOSARYHMA("tutkinnonosaryhma"),
     SUORITUSPOLUT("suorituspolut"),
     SUORITUSPOLKU("suorituspolku"),
-    OSASUORITUSPOLKU("osasuorituspolku");
+    OSASUORITUSPOLKU("osasuorituspolku"),
+    OPINTOKOKONAISUUS("opintokokonaisuus");
 
     private final String tyyppi;
 

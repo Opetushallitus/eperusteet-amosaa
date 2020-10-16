@@ -18,6 +18,7 @@ package fi.vm.sade.eperusteet.amosaa.dto;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,7 +30,7 @@ import java.util.Set;
 public class OpsHakuDto extends QueryDto {
     private Long koulutustoimija;
     private Long peruste;
-    private KoulutusTyyppi koulutustyyppi;
+    private List<KoulutusTyyppi> koulutustyyppi;
     private Set<Tila> tila;
     private Set<OpsTyyppi> tyyppi;
     private boolean organisaatioRyhma;

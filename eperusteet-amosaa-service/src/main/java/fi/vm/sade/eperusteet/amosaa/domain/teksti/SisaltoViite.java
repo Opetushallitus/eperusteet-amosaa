@@ -19,6 +19,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Opintokokonaisuus;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Suorituspolku;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Tutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
@@ -128,6 +129,11 @@ public class SisaltoViite implements ReferenceableEntity, Serializable, Copyable
     @Setter
     private Suorituspolku suorituspolku;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Getter
+    @Setter
+    private Opintokokonaisuus opintokokonaisuus;
+
     @OneToMany(mappedBy = "vanhempi", fetch = FetchType.LAZY)
     @OrderColumn
     @Getter
@@ -201,6 +207,20 @@ public class SisaltoViite implements ReferenceableEntity, Serializable, Copyable
         result.setTyyppi(SisaltoTyyppi.TUTKINNONOSA);
         Tutkinnonosa tosa = new Tutkinnonosa();
         result.setTosa(tosa);
+        return result;
+    }
+
+    static public SisaltoViite createTekstikappale(SisaltoViite parent) {
+        SisaltoViite result = createCommon(parent);
+        result.setTyyppi(SisaltoTyyppi.TEKSTIKAPPALE);
+        return result;
+    }
+
+    static public SisaltoViite createOpintokokonaisuus(SisaltoViite parent) {
+        SisaltoViite result = createCommon(parent);
+        result.setTyyppi(SisaltoTyyppi.OPINTOKOKONAISUUS);
+        Opintokokonaisuus opintokokonaisuus = new Opintokokonaisuus();
+        result.setOpintokokonaisuus(opintokokonaisuus);
         return result;
     }
 }

@@ -1048,6 +1048,15 @@
             "format" : "int64"
           }
         }, {
+          "name" : "koulutustyyppit",
+          "in" : "query",
+          "required" : true,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi"
+        }, {
           "name" : "ktId",
           "in" : "path",
           "required" : true,
@@ -3964,6 +3973,16 @@
       "get" : {
         "tags" : [ "Ulkopuoliset" ],
         "operationId" : "getJulkaistutPerusteetKevyt",
+        "parameters" : [ {
+          "name" : "koulutustyyppi",
+          "in" : "query",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi"
+        } ],
         "responses" : {
           "200" : {
             "description" : "successful operation",
@@ -4386,7 +4405,7 @@
         },
         "koulutustyyppi" : {
           "type" : "string",
-          "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA" ]
+          "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO" ]
         },
         "koulutukset" : {
           "type" : "array",
@@ -4877,7 +4896,7 @@
         },
         "tyyppi" : {
           "type" : "string",
-          "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU" ]
+          "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU", "OPINTOKOKONAISUUS" ]
         },
         "ohjeteksti" : {
           "type" : "object",
@@ -4896,6 +4915,9 @@
         },
         "suorituspolku" : {
           "$ref" : "#/definitions/SuorituspolkuDto"
+        },
+        "opintokokonaisuus" : {
+          "$ref" : "#/definitions/OpintokokonaisuusDto"
         },
         "kommentti" : {
           "type" : "string"
@@ -4937,7 +4959,7 @@
         },
         "type" : {
           "type" : "string",
-          "enum" : [ "root", "tiedot", "viite", "liitteet", "liite", "peruste", "tekstikappale", "tutkinnonosat", "tutkinnonosa", "tosaryhma", "suorituspolut", "suorituspolku", "osasuorituspolku" ]
+          "enum" : [ "root", "tiedot", "viite", "liitteet", "liite", "peruste", "tekstikappale", "tutkinnonosat", "tutkinnonosa", "tosaryhma", "suorituspolut", "suorituspolku", "osasuorituspolku", "opintokokonaisuus" ]
         },
         "meta" : {
           "type" : "object",
@@ -5592,7 +5614,7 @@
         },
         "kohde" : {
           "type" : "string",
-          "enum" : [ "root", "tiedot", "viite", "liitteet", "liite", "peruste", "tekstikappale", "tutkinnonosat", "tutkinnonosa", "tosaryhma", "suorituspolut", "suorituspolku", "osasuorituspolku" ]
+          "enum" : [ "root", "tiedot", "viite", "liitteet", "liite", "peruste", "tekstikappale", "tutkinnonosat", "tutkinnonosa", "tosaryhma", "suorituspolut", "suorituspolku", "osasuorituspolku", "opintokokonaisuus" ]
         },
         "luotu" : {
           "type" : "string",
@@ -5650,6 +5672,13 @@
             "type" : "string"
           }
         },
+<<<<<<< HEAD
+=======
+        "koulutustyyppi" : {
+          "type" : "string",
+          "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO" ]
+        },
+>>>>>>> 2b85783c... EP-2446
         "perusteId" : {
           "type" : "integer",
           "format" : "int64"
@@ -5657,6 +5686,97 @@
         "koulutustyyppi" : {
           "type" : "string",
           "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA" ]
+        }
+      }
+    },
+    "OpintokokonaisuusArviointiDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "perusteesta" : {
+          "type" : "boolean"
+        },
+        "arviointi" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "OpintokokonaisuusDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "nimiKoodi" : {
+          "type" : "string"
+        },
+        "kuvaus" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "minimilaajuus" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "opetuksenTavoiteOtsikko" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "tavoitteet" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/OpintokokonaisuusTavoiteDto"
+          }
+        },
+        "keskeisetSisallot" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "arvioinninKuvaus" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "arvioinnit" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/OpintokokonaisuusArviointiDto"
+          }
+        }
+      }
+    },
+    "OpintokokonaisuusTavoiteDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "perusteesta" : {
+          "type" : "boolean"
+        },
+        "tavoiteKoodi" : {
+          "type" : "string"
+        },
+        "tavoite" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
         }
       }
     },
@@ -5790,11 +5910,17 @@
         },
         "sort" : {
           "$ref" : "#/definitions/Sort"
+<<<<<<< HEAD
         },
         "first" : {
           "type" : "boolean"
         },
         "last" : {
+          "type" : "boolean"
+=======
+>>>>>>> 2b85783c... EP-2446
+        },
+        "first" : {
           "type" : "boolean"
         },
         "numberOfElements" : {
@@ -5830,11 +5956,17 @@
         },
         "sort" : {
           "$ref" : "#/definitions/Sort"
+<<<<<<< HEAD
         },
         "first" : {
           "type" : "boolean"
         },
         "last" : {
+          "type" : "boolean"
+=======
+>>>>>>> 2b85783c... EP-2446
+        },
+        "first" : {
           "type" : "boolean"
         },
         "numberOfElements" : {
@@ -5870,11 +6002,17 @@
         },
         "sort" : {
           "$ref" : "#/definitions/Sort"
+<<<<<<< HEAD
         },
         "first" : {
           "type" : "boolean"
         },
         "last" : {
+          "type" : "boolean"
+=======
+>>>>>>> 2b85783c... EP-2446
+        },
+        "first" : {
           "type" : "boolean"
         },
         "numberOfElements" : {
@@ -5910,11 +6048,17 @@
         },
         "sort" : {
           "$ref" : "#/definitions/Sort"
+<<<<<<< HEAD
         },
         "first" : {
           "type" : "boolean"
         },
         "last" : {
+          "type" : "boolean"
+=======
+>>>>>>> 2b85783c... EP-2446
+        },
+        "first" : {
           "type" : "boolean"
         },
         "numberOfElements" : {
@@ -5950,11 +6094,17 @@
         },
         "sort" : {
           "$ref" : "#/definitions/Sort"
+<<<<<<< HEAD
         },
         "first" : {
           "type" : "boolean"
         },
         "last" : {
+          "type" : "boolean"
+=======
+>>>>>>> 2b85783c... EP-2446
+        },
+        "first" : {
           "type" : "boolean"
         },
         "numberOfElements" : {
@@ -5981,7 +6131,7 @@
         },
         "koulutustyyppi" : {
           "type" : "string",
-          "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA" ]
+          "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO" ]
         },
         "kielet" : {
           "type" : "array",
@@ -6042,6 +6192,10 @@
           "items" : {
             "$ref" : "#/definitions/KoodiDto"
           }
+        },
+        "toteutus" : {
+          "type" : "string",
+          "enum" : [ "YKSINKERTAINEN", "PERUSOPETUS", "LOPS", "AMMATILLINEN", "TPO", "LOPS2019", "VAPAASIVISTYSTYO" ]
         },
         "tutkintonimikkeet" : {
           "type" : "array",
@@ -6069,7 +6223,7 @@
         },
         "koulutustyyppi" : {
           "type" : "string",
-          "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA" ]
+          "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO" ]
         },
         "kielet" : {
           "type" : "array",
@@ -6130,6 +6284,10 @@
           "items" : {
             "$ref" : "#/definitions/KoodiDto"
           }
+        },
+        "toteutus" : {
+          "type" : "string",
+          "enum" : [ "YKSINKERTAINEN", "PERUSOPETUS", "LOPS", "AMMATILLINEN", "TPO", "LOPS2019", "VAPAASIVISTYSTYO" ]
         },
         "tutkintonimikkeet" : {
           "type" : "array",
@@ -6168,7 +6326,7 @@
         },
         "koulutustyyppi" : {
           "type" : "string",
-          "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA" ]
+          "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO" ]
         }
       }
     },
@@ -6220,7 +6378,7 @@
         },
         "tyyppi" : {
           "type" : "string",
-          "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU" ]
+          "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU", "OPINTOKOKONAISUUS" ]
         }
       }
     },
@@ -6358,7 +6516,7 @@
         },
         "tyyppi" : {
           "type" : "string",
-          "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU" ]
+          "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU", "OPINTOKOKONAISUUS" ]
         },
         "ohjeteksti" : {
           "type" : "object",
@@ -6378,6 +6536,9 @@
         "suorituspolku" : {
           "$ref" : "#/definitions/SuorituspolkuDto"
         },
+        "opintokokonaisuus" : {
+          "$ref" : "#/definitions/OpintokokonaisuusDto"
+        },
         "kommentti" : {
           "type" : "string"
         },
@@ -6395,7 +6556,7 @@
         },
         "tyyppi" : {
           "type" : "string",
-          "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU" ]
+          "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU", "OPINTOKOKONAISUUS" ]
         },
         "perusteteksti" : {
           "type" : "object",
@@ -6435,7 +6596,7 @@
         },
         "tyyppi" : {
           "type" : "string",
-          "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU" ]
+          "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU", "OPINTOKOKONAISUUS" ]
         },
         "pakollinen" : {
           "type" : "boolean"
@@ -6529,13 +6690,16 @@
         },
         "tyyppi" : {
           "type" : "string",
-          "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU" ]
+          "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU", "OPINTOKOKONAISUUS" ]
         },
         "tosa" : {
           "$ref" : "#/definitions/TutkinnonosaDto"
         },
         "suorituspolku" : {
           "$ref" : "#/definitions/SuorituspolkuDto"
+        },
+        "opintokokonaisuus" : {
+          "$ref" : "#/definitions/OpintokokonaisuusDto"
         },
         "opetussuunnitelma" : {
           "$ref" : "#/definitions/OpetussuunnitelmaDto"
@@ -7057,7 +7221,7 @@
         },
         "tyyppi" : {
           "type" : "string",
-          "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU" ]
+          "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU", "OPINTOKOKONAISUUS" ]
         },
         "tosa" : {
           "$ref" : "#/definitions/TutkinnonosaDto"

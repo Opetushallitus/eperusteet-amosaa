@@ -60,6 +60,8 @@ public class CachedPeruste implements Serializable, ReferenceableEntity {
     @Enumerated(EnumType.STRING)
     private KoulutusTyyppi koulutustyyppi;
 
+    //TODO add koulutustyyppitoteutus
+
     @Basic
     @Column(columnDefinition = "text")
     @Convert(converter = KoulutuksetConverter.class)

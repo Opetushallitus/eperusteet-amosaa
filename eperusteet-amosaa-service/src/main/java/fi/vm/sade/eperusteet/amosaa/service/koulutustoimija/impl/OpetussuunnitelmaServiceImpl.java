@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
+import fi.vm.sade.eperusteet.amosaa.domain.KoulutustyyppiToteutus;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.Kayttaja;
@@ -34,6 +35,9 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Opintokokonaisuus;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OpintokokonaisuusArviointi;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OpintokokonaisuusTavoite;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Tutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.NavigationNodeDto;
@@ -56,9 +60,12 @@ import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioStatus;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.AbstractRakenneOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.KoulutusDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.OpintokokonaisuusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKaikkiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteenOsaViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.Suoritustapakoodi;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.TekstiKappaleDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonosaExportDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonosaKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
@@ -351,7 +358,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         return mapper.mapAsList(opetussuunnitelmat, OpetussuunnitelmaBaseDto.class);
     }
 
-    private void alustaOpetussuunnitelma(Opetussuunnitelma ops, SisaltoViite rootTkv) {
+    private void alustaAmmatillinenOpetussuunnitelma(Opetussuunnitelma ops, SisaltoViite rootTkv) {
         // Lisätään tutkinnonosille oma sisältöviite
         {
             SisaltoViite tosat = new SisaltoViite();
@@ -410,6 +417,42 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         }
     }
 
+    private void alustaVapaasivistystyoOpetussuunnitelma(Opetussuunnitelma ops, SisaltoViite parentViite, PerusteenOsaViiteDto.Laaja sisalto) {
+
+        SisaltoViite sisaltoviite = null;
+
+        if (sisalto.getPerusteenOsa() instanceof TekstiKappaleDto) {
+            sisaltoviite = SisaltoViite.createTekstikappale(parentViite);
+            sisaltoviite.getTekstiKappale().setTeksti(LokalisoituTeksti.of(((TekstiKappaleDto) sisalto.getPerusteenOsa()).getTeksti()));
+        }
+
+        if (sisalto.getPerusteenOsa() instanceof OpintokokonaisuusDto) {
+            sisaltoviite = SisaltoViite.createOpintokokonaisuus(parentViite);
+            OpintokokonaisuusDto opintokokonaisuusDto = (OpintokokonaisuusDto) sisalto.getPerusteenOsa();
+            sisaltoviite.getOpintokokonaisuus().setKuvaus(LokalisoituTeksti.of(opintokokonaisuusDto.getKuvaus()));
+            sisaltoviite.getOpintokokonaisuus().setMinimilaajuus(opintokokonaisuusDto.getMinimilaajuus());
+            sisaltoviite.getOpintokokonaisuus().setOpetuksenTavoiteOtsikko(LokalisoituTeksti.of(opintokokonaisuusDto.getOpetuksenTavoiteOtsikko()));
+            sisaltoviite.getOpintokokonaisuus().setNimiKoodi(opintokokonaisuusDto.getNimiKoodi().getUri());
+            sisaltoviite.getOpintokokonaisuus().setArvioinnit(opintokokonaisuusDto.getArvioinnit().stream()
+                    .map(arviointi -> new OpintokokonaisuusArviointi(true, LokalisoituTeksti.of(arviointi))).collect(Collectors.toList()));
+            sisaltoviite.getOpintokokonaisuus().setTavoitteet(opintokokonaisuusDto.getOpetuksenTavoitteet().stream()
+                    .map(tavoite -> new OpintokokonaisuusTavoite(true, tavoite.getUri())).collect(Collectors.toList()));
+        }
+
+        if (sisaltoviite == null) {
+            throw new BusinessRuleViolationException("vaara-sisaltoviite-tyyppi");
+        } else {
+
+            sisaltoviite.getTekstiKappale().setNimi(LokalisoituTeksti.of(sisalto.getPerusteenOsa().getNimi()));
+            parentViite.getLapset().add(tkvRepository.save(sisaltoviite));
+
+            for (PerusteenOsaViiteDto.Laaja lapsi : sisalto.getLapset()) {
+                alustaVapaasivistystyoOpetussuunnitelma(ops, sisaltoviite, lapsi);
+            }
+        }
+
+    }
+
     private Opetussuunnitelma findOps(Long ktId, Long opsId) {
         Opetussuunnitelma ops = repository.findOne(opsId);
         Koulutustoimija kt = koulutustoimijaRepository.findOne(ktId);
@@ -453,56 +496,67 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         }
 
         ops.setPeruste(cperuste);
-        alustaOpetussuunnitelma(ops, rootTkv);
 
-        PerusteKaikkiDto perusteSisalto = eperusteetService.getPerusteSisalto(cperuste, PerusteKaikkiDto.class);
+        if (KoulutustyyppiToteutus.AMMATILLINEN.equals(peruste.getToteutus()) || peruste.getToteutus() == null) {
+            alustaAmmatillinenOpetussuunnitelma(ops, rootTkv);
 
-        if (perusteSisalto.getTutkinnonOsat() == null) {
-            perusteSisalto.setTutkinnonOsat(new ArrayList<>());
+            PerusteKaikkiDto perusteSisalto = eperusteetService.getPerusteSisalto(cperuste, PerusteKaikkiDto.class);
+
+            if (perusteSisalto.getTutkinnonOsat() == null) {
+                perusteSisalto.setTutkinnonOsat(new ArrayList<>());
+            }
+
+            Map<Long, TutkinnonosaKaikkiDto> idToTosaMap = perusteSisalto.getTutkinnonOsat().stream()
+                    .collect(Collectors.toMap(TutkinnonosaKaikkiDto::getId, Function.identity()));
+
+            List<TutkinnonosaKaikkiDto> tutkinnonOsat;
+
+            if (ops.getTyyppi() == OpsTyyppi.YLEINEN) {
+                tutkinnonOsat = perusteSisalto.getTutkinnonOsat();
+            } else {
+                tutkinnonOsat = perusteSisalto.getSuoritustavat().stream()
+                        .filter(st -> st.getSuoritustapakoodi() == Suoritustapakoodi.of(ops.getSuoritustapa()))
+                        .map(st -> st.getTutkinnonOsat().stream())
+                        .reduce(Stream::concat)
+                        .get()
+                        .sorted((a, b) -> {
+                            if (a.getJarjestys() == null && b.getJarjestys() == null) {
+                                return 0;
+                            }
+                            if (a.getJarjestys() == null) {
+                                return -1;
+                            }
+                            if (b.getJarjestys() == null) {
+                                return 1;
+                            }
+                            return a.getJarjestys() > b.getJarjestys()
+                                    ? 1
+                                    : -1;
+                        })
+                        .map(tosa -> idToTosaMap.get(tosa.getTutkinnonOsa()))
+                        .collect(Collectors.toList());
+            }
+
+            SisaltoViite tosat = rootTkv.getLapset().get(0);
+            for (TutkinnonosaKaikkiDto tosa : tutkinnonOsat) {
+                SisaltoViite uusi = SisaltoViite.createTutkinnonOsa(tosat);
+                uusi.setPakollinen(false);
+                uusi.getTekstiKappale().setNimi(LokalisoituTeksti.of(tosa.getNimi()));
+                Tutkinnonosa uusiTosa = uusi.getTosa();
+                uusiTosa.setTyyppi(TutkinnonosaTyyppi.PERUSTEESTA);
+                uusiTosa.setPerusteentutkinnonosa(tosa.getId());
+                uusiTosa.setKoodi(tosa.getKoodiUri());
+                tkvRepository.save(uusi);
+            }
         }
 
-        Map<Long, TutkinnonosaKaikkiDto> idToTosaMap = perusteSisalto.getTutkinnonOsat().stream()
-                .collect(Collectors.toMap(TutkinnonosaKaikkiDto::getId, Function.identity()));
-
-        List<TutkinnonosaKaikkiDto> tutkinnonOsat;
-
-        if (ops.getTyyppi() == OpsTyyppi.YLEINEN) {
-            tutkinnonOsat = perusteSisalto.getTutkinnonOsat();
-        } else {
-            tutkinnonOsat = perusteSisalto.getSuoritustavat().stream()
-                    .filter(st -> st.getSuoritustapakoodi() == Suoritustapakoodi.of(ops.getSuoritustapa()))
-                    .map(st -> st.getTutkinnonOsat().stream())
-                    .reduce(Stream::concat)
-                    .get()
-                    .sorted((a, b) -> {
-                        if (a.getJarjestys() == null && b.getJarjestys() == null) {
-                            return 0;
-                        }
-                        if (a.getJarjestys() == null) {
-                            return -1;
-                        }
-                        if (b.getJarjestys() == null) {
-                            return 1;
-                        }
-                        return a.getJarjestys() > b.getJarjestys()
-                                ? 1
-                                : -1;
-                    })
-                    .map(tosa -> idToTosaMap.get(tosa.getTutkinnonOsa()))
-                    .collect(Collectors.toList());
+        if (KoulutustyyppiToteutus.VAPAASIVISTYSTYO.equals(peruste.getToteutus())) {
+            PerusteKaikkiDto perusteSisalto = eperusteetService.getPerusteSisalto(cperuste, PerusteKaikkiDto.class);
+            for (PerusteenOsaViiteDto.Laaja lapsi : perusteSisalto.getVapaasivistystyo().getSisalto().getLapset()) {
+                alustaVapaasivistystyoOpetussuunnitelma(ops, rootTkv, lapsi);
+            }
         }
 
-        SisaltoViite tosat = rootTkv.getLapset().get(0);
-        for (TutkinnonosaKaikkiDto tosa : tutkinnonOsat) {
-            SisaltoViite uusi = SisaltoViite.createTutkinnonOsa(tosat);
-            uusi.setPakollinen(false);
-            uusi.getTekstiKappale().setNimi(LokalisoituTeksti.of(tosa.getNimi()));
-            Tutkinnonosa uusiTosa = uusi.getTosa();
-            uusiTosa.setTyyppi(TutkinnonosaTyyppi.PERUSTEESTA);
-            uusiTosa.setPerusteentutkinnonosa(tosa.getId());
-            uusiTosa.setKoodi(tosa.getKoodiUri());
-            tkvRepository.save(uusi);
-        }
     }
 
     @Override

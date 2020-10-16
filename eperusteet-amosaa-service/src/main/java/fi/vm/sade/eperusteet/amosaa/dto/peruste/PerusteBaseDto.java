@@ -17,6 +17,7 @@ package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
+import fi.vm.sade.eperusteet.amosaa.domain.KoulutustyyppiToteutus;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 
@@ -51,5 +52,6 @@ public abstract class PerusteBaseDto implements Serializable {
     private Set<String> korvattavatDiaarinumerot;
     private Set<KoulutusDto> koulutukset;
     private Set<KoodiDto> osaamisalat;
+    private KoulutustyyppiToteutus toteutus;
     List<TutkintonimikeKoodiDto> tutkintonimikkeet;
 }
