@@ -36,6 +36,7 @@ public class OpetussuunnitelmaQueryDto extends QueryDto {
     private Long perusteId;
     private String organisaatio;
     private List<String> tyyppi;
+    private boolean organisaatioRyhma;
 
     public List<OpsTyyppi> getTyyppi() {
         if (tyyppi != null && !tyyppi.isEmpty()) {

@@ -29,4 +29,5 @@ public class KoulutustoimijaBaseDto {
     Long id;
     String organisaatio;
     LokalisoituTekstiDto nimi;
+
 }

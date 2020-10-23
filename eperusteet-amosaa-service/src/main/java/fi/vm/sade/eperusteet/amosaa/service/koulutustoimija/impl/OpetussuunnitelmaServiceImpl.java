@@ -37,6 +37,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Tutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.NavigationNodeDto;
+import fi.vm.sade.eperusteet.amosaa.dto.NavigationType;
 import fi.vm.sade.eperusteet.amosaa.dto.OpsHakuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.PoistettuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
@@ -101,6 +102,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -330,6 +332,17 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     public NavigationNodeDto buildNavigation(Long ktId, Long opsId) {
         return dispatcher.get(opsId, NavigationBuilder.class)
                 .buildNavigation(ktId, opsId);
+    }
+
+    @Override
+    public NavigationNodeDto buildNavigationPublic(Long ktId, Long opsId) {
+        NavigationNodeDto rootNode = buildNavigation(ktId, opsId);
+        rootNode.setChildren(rootNode.getChildren().stream()
+                .filter(node -> !node.getType().equals(NavigationType.suorituspolut) || CollectionUtils.isNotEmpty(node.getChildren()))
+                .collect(Collectors.toList())
+        );
+
+        return rootNode;
     }
 
     @Override
