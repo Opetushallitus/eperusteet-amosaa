@@ -36,8 +36,13 @@ import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationExcep
 import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -86,6 +91,7 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
 
     @Transactional
     private Koulutustoimija initialize(String kOid) {
+
         Koulutustoimija koulutustoimija = repository.findOneByOrganisaatio(kOid);
         if (koulutustoimija != null) {
             return koulutustoimija;
@@ -100,6 +106,15 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
         koulutustoimija = new Koulutustoimija();
         koulutustoimija.setNimi(LokalisoituTeksti.of(organisaatio.get("nimi")));
         koulutustoimija.setOrganisaatio(kOid);
+
+        if (organisaatio.get("tyypit") != null && organisaatio.get("tyypit").isArray()) {
+            for (final JsonNode objNode : organisaatio.get("tyypit")) {
+                if ("Ryhma".equals(objNode.asText())) {
+                    koulutustoimija.setOrganisaatioRyhma(true);
+                }
+            }
+        }
+
         koulutustoimija = repository.save(koulutustoimija);
         return koulutustoimija;
     }
