@@ -16,14 +16,30 @@
 
 package fi.vm.sade.eperusteet.amosaa.service.util.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import fi.vm.sade.eperusteet.amosaa.dto.koodisto.KoodistoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koodisto.KoodistoKoodiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koodisto.KoodistoMetadataDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.util.KoodistoClient;
+import fi.vm.sade.eperusteet.utils.client.RestClientFactory;
+import fi.vm.sade.javautils.http.OphHttpClient;
+import fi.vm.sade.javautils.http.OphHttpEntity;
+import fi.vm.sade.javautils.http.OphHttpRequest;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
@@ -36,12 +52,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
+import static javax.servlet.http.HttpServletResponse.SC_CREATED;
+import static javax.servlet.http.HttpServletResponse.SC_FORBIDDEN;
+import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+import static javax.servlet.http.HttpServletResponse.SC_METHOD_NOT_ALLOWED;
+import static javax.servlet.http.HttpServletResponse.SC_OK;
+import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
+
 /**
  * @author nkala
  */
 @Lazy
 @Service
 @Profile(value = "default")
+@Slf4j
 public class KoodistoClientImpl implements KoodistoClient {
     @Value("${koodisto.service.url:https://virkailija.opintopolku.fi/koodisto-service}")
     private String koodistoServiceUrl;
@@ -49,12 +74,21 @@ public class KoodistoClientImpl implements KoodistoClient {
     private static final String KOODISTO_API = "/rest/json/";
     private static final String YLARELAATIO = "relaatio/sisaltyy-ylakoodit/";
     private static final String ALARELAATIO = "relaatio/sisaltyy-alakoodit/";
+    private static final String CODEELEMENT = "/rest/codeelement";
 
     @Autowired
     private DtoMapper mapper;
 
     @Autowired
     private HttpEntity httpEntity;
+
+    @Autowired
+    private RestClientFactory restClientFactory;
+
+    @Autowired
+    KoodistoClient self; // for cacheable
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public List<KoodistoKoodiDto> getAll(String koodisto) {
@@ -142,6 +176,99 @@ public class KoodistoClientImpl implements KoodistoClient {
         ResponseEntity<KoodistoKoodiDto[]> response = restTemplate.exchange(url, HttpMethod.GET, httpEntity, KoodistoKoodiDto[].class);
         List<KoodistoKoodiDto> koodistoDtot = mapper.mapAsList(Arrays.asList(response.getBody()), KoodistoKoodiDto.class);
         return koodistoDtot;
+    }
+
+    @Override
+    public KoodistoKoodiDto addKoodi(KoodistoKoodiDto koodi) {
+        OphHttpClient client = restClientFactory.get(koodistoServiceUrl, true);
+
+        String url = koodistoServiceUrl
+                + CODEELEMENT + "/"
+                + koodi.getKoodisto().getKoodistoUri();
+        try {
+            String dataStr = objectMapper.writeValueAsString(koodi);
+            OphHttpRequest request = OphHttpRequest.Builder
+                    .post(url)
+                    .addHeader("Content-Type", "application/json;charset=UTF-8")
+                    .setEntity(new OphHttpEntity.Builder()
+                            .content(dataStr)
+                            .contentType(ContentType.APPLICATION_JSON)
+                            .build())
+                    .build();
+
+            return client.<KoodistoKoodiDto>execute(request)
+                    .handleErrorStatus(SC_UNAUTHORIZED, SC_FORBIDDEN, SC_METHOD_NOT_ALLOWED, SC_BAD_REQUEST, SC_INTERNAL_SERVER_ERROR)
+                    .with(res -> {
+                        return Optional.empty();
+                    })
+                    .expectedStatus(SC_OK, SC_CREATED)
+                    .mapWith(text -> {
+                        try {
+                            return objectMapper.readValue(text, KoodistoKoodiDto.class);
+                        } catch (IOException e) {
+                            throw new BusinessRuleViolationException("koodin-parsinta-epaonnistui");
+                        }
+                    })
+                    .orElse(null);
+        } catch (JsonProcessingException e) {
+            throw new BusinessRuleViolationException("koodin-lisays-epaonnistui");
+        }
+    }
+
+    @Override
+    public KoodistoKoodiDto addKoodiNimella(String koodistonimi, LokalisoituTekstiDto koodinimi) {
+        long seuraavaKoodi = nextKoodiId(koodistonimi);
+        return addKoodiNimella(koodistonimi, koodinimi, seuraavaKoodi);
+    }
+
+    @Override
+    public KoodistoKoodiDto addKoodiNimella(String koodistonimi, LokalisoituTekstiDto koodinimi, long seuraavaKoodi) {
+
+        KoodistoKoodiDto uusiKoodi = KoodistoKoodiDto.builder()
+                .koodiArvo(Long.toString(seuraavaKoodi))
+                .koodiUri(koodistonimi + "_" + seuraavaKoodi)
+                .koodisto(KoodistoDto.of(koodistonimi))
+                .voimassaAlkuPvm(new Date())
+                .metadata(koodinimi.getTekstit().entrySet().stream()
+                        .map((k) -> KoodistoMetadataDto.of(k.getValue(), k.getKey().toString().toUpperCase(), k.getValue()))
+                        .toArray(KoodistoMetadataDto[]::new))
+                .build();
+        KoodistoKoodiDto lisattyKoodi = addKoodi(uusiKoodi);
+        if (lisattyKoodi == null
+                || lisattyKoodi.getKoodisto() == null
+                || lisattyKoodi.getKoodisto().getKoodistoUri() == null
+                || lisattyKoodi.getKoodiUri() == null) {
+            log.error("Koodin lisääminen epäonnistui {} {}", uusiKoodi, lisattyKoodi);
+            return null;
+        }
+
+        return lisattyKoodi;
+    }
+
+    @Override
+    public long nextKoodiId(String koodistonimi) {
+        return nextKoodiId(koodistonimi, 1).stream().findFirst().get();
+    }
+
+    @Override
+    public Collection<Long> nextKoodiId(String koodistonimi, int count) {
+        List<KoodistoKoodiDto> koodit = self.getAll(koodistonimi);
+        if (koodit.size() == 0) {
+            koodit = Collections.singletonList(KoodistoKoodiDto.builder().koodiArvo("999").build());
+        }
+
+        List<Long> ids = new ArrayList<>();
+        List<Long> currentIds = koodit.stream().map(k -> Long.parseLong(k.getKoodiArvo())).collect(Collectors.toList());
+        Long max = currentIds.stream().mapToLong(Long::longValue).max().getAsLong();
+        Long min = currentIds.stream().mapToLong(Long::longValue).min().getAsLong();
+
+        for (Long ind = min; ind <= max + count && ids.size() < count; ind++) {
+            if (!currentIds.contains(ind)) {
+                ids.add(ind);
+            }
+        }
+
+        return ids;
     }
 
 }

@@ -30,6 +30,7 @@ public class KoodistoDto {
     private Long id;
     private String koodiUri;
     private String koodiArvo;
+    private String koodistoUri;
     private LokalisoituTekstiDto nimi;
 
     public KoodistoDto() {
@@ -39,5 +40,11 @@ public class KoodistoDto {
         this.id = id;
         this.koodiUri = koodiUri;
         this.koodiArvo = koodiArvo;
+    }
+
+    public static KoodistoDto of(String uri) {
+        KoodistoDto result = new KoodistoDto();
+        result.setKoodistoUri(uri);
+        return result;
     }
 }

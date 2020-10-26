@@ -20,6 +20,7 @@ import static fi.vm.sade.eperusteet.amosaa.service.util.Nulls.assertExists;
 
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.SisaltoviiteQueryDto;
+import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoviiteServiceProvider;
 import java.util.*;
 import fi.vm.sade.eperusteet.amosaa.domain.MuokkausTapahtuma;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaMuokkaustietoService;
@@ -149,7 +150,10 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
 
     @Autowired
     PerusteCacheService perusteCacheService;
-    
+
+    @Autowired
+    SisaltoviiteServiceProvider sisaltoviiteServiceProvider;
+
     @Autowired
     private LockManager lockMgr;
 
@@ -452,6 +456,9 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
             case SUORITUSPOLUT:
             case TUTKINNONOSAT:
                 viite.setPakollinen(true);
+                break;
+            case OPINTOKOKONAISUUS:
+                sisaltoviiteServiceProvider.updateSisaltoViite(viite, uusi);
             default:
                 break;
         }

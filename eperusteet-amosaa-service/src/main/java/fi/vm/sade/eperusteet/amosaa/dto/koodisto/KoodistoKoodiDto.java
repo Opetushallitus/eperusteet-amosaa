@@ -16,6 +16,7 @@
 package fi.vm.sade.eperusteet.amosaa.dto.koodisto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,7 +35,8 @@ import lombok.Setter;
 public class KoodistoKoodiDto {
     private String koodiUri;
     private String koodiArvo;
-    private String voimassaAlkuPvm;
-    private String voimassaLoppuPvm;
+    private Date voimassaAlkuPvm;
+    private Date voimassaLoppuPvm;
+    private KoodistoDto koodisto;
     private KoodistoMetadataDto[] metadata;
 }
