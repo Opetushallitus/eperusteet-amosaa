@@ -68,7 +68,7 @@ public enum SisaltoTyyppi {
     }
 
     public static boolean salliLuonti(SisaltoTyyppi tyyppi) {
-        return EnumSet.of(SUORITUSPOLKU, OSASUORITUSPOLKU, TUTKINNONOSA, TEKSTIKAPPALE).contains(tyyppi);
+        return EnumSet.of(SUORITUSPOLKU, OSASUORITUSPOLKU, TUTKINNONOSA, TEKSTIKAPPALE, OPINTOKOKONAISUUS).contains(tyyppi);
     }
 
     public static boolean isSuorituspolku(SisaltoTyyppi tyyppi) {
