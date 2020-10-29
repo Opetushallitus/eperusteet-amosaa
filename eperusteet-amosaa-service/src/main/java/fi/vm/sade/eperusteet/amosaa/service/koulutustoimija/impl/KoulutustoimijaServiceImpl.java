@@ -297,12 +297,20 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     public EtusivuDto getEtusivu(@P("ktId") Long ktId, List<KoulutusTyyppi> koulutustyypit) {
         Koulutustoimija koulutustoimija = repository.findOne(ktId);
         EtusivuDto result = new EtusivuDto();
+
         if (koulutustoimija != null) {
             Set<Koulutustoimija> koulutustoimijat = Collections.singleton(koulutustoimija);
             result.setToteutussuunnitelmatKeskeneraiset(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.OPS, Collections.singleton(Tila.LUONNOS), koulutustoimijat, koulutustyypit));
             result.setToteutussuunnitelmatJulkaistut(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.OPS, Collections.singleton(Tila.JULKAISTU), koulutustoimijat, koulutustyypit));
-            result.setKtYhteinenOsuusKeskeneraiset(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.YHTEINEN, Collections.singleton(Tila.LUONNOS), koulutustoimijat, koulutustyypit));
-            result.setKtYhteinenOsuusJulkaistut(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.YHTEINEN, Collections.singleton(Tila.JULKAISTU), koulutustoimijat, koulutustyypit));
+
+            if (koulutustoimija.isOph()) {
+                result.setKtYhteinenOsuusKeskeneraiset(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.POHJA, Collections.singleton(Tila.LUONNOS), koulutustoimijat));
+                result.setKtYhteinenOsuusJulkaistut(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.POHJA, Collections.singleton(Tila.JULKAISTU), koulutustoimijat));
+            } else {
+                result.setKtYhteinenOsuusKeskeneraiset(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.YHTEINEN, Collections.singleton(Tila.LUONNOS), koulutustoimijat, koulutustyypit));
+                result.setKtYhteinenOsuusJulkaistut(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.YHTEINEN, Collections.singleton(Tila.JULKAISTU), koulutustoimijat, koulutustyypit));
+            }
+
         } else {
             result.setToteutussuunnitelmatKeskeneraiset(0L);
             result.setToteutussuunnitelmatJulkaistut(0L);

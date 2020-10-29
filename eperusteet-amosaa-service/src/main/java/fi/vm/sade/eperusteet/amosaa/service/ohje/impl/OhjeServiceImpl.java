@@ -15,6 +15,7 @@
  */
 package fi.vm.sade.eperusteet.amosaa.service.ohje.impl;
 
+import fi.vm.sade.eperusteet.amosaa.domain.KoulutustyyppiToteutus;
 import fi.vm.sade.eperusteet.amosaa.domain.ohje.Ohje;
 import fi.vm.sade.eperusteet.amosaa.dto.ohje.OhjeDto;
 import fi.vm.sade.eperusteet.amosaa.repository.ohje.OhjeRepository;
@@ -43,8 +44,8 @@ public class OhjeServiceImpl implements OhjeService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<OhjeDto> getOhjeet() {
-        return mapper.mapAsList(repository.findAll(), OhjeDto.class);
+    public List<OhjeDto> getOhjeet(KoulutustyyppiToteutus toteutus) {
+        return mapper.mapAsList(repository.findByToteutus(toteutus), OhjeDto.class);
     }
 
     @Override

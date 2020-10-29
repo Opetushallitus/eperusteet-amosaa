@@ -16,14 +16,18 @@
 package fi.vm.sade.eperusteet.amosaa.domain.ohje;
 
 import fi.vm.sade.eperusteet.amosaa.domain.AbstractAuditedEntity;
+import fi.vm.sade.eperusteet.amosaa.domain.KoulutustyyppiToteutus;
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -33,6 +37,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -66,4 +71,10 @@ public class Ohje extends AbstractAuditedEntity implements ReferenceableEntity {
             joinColumns = @JoinColumn(name = "ohje_id"),
             inverseJoinColumns = @JoinColumn(name = "koulutustoimija_id"))
     private Set<Koulutustoimija> koulutustoimijat = new HashSet<>();
+
+    @Enumerated(value = EnumType.STRING)
+    @Getter
+    @Setter
+    @NotNull
+    private KoulutustyyppiToteutus toteutus = KoulutustyyppiToteutus.AMMATILLINEN;
 }

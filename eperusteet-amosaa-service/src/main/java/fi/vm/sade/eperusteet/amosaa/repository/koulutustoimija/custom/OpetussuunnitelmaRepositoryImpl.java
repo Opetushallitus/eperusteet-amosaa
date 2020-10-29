@@ -245,7 +245,6 @@ public class OpetussuunnitelmaRepositoryImpl implements OpetussuunnitelmaCustomR
         } else if (!ObjectUtils.isEmpty(queryDto.getKoulutustyyppi())) {
             // Rajataan koulutustoimijan ja koulutustyypin mukaan
             Join<Opetussuunnitelma, CachedPeruste> peruste = root.join(Opetussuunnitelma_.peruste);
-//            Predicate oikeaKoulutustyyppi = cb.equal(peruste.get(CachedPeruste_.koulutustyyppi), queryDto.getKoulutustyyppi());
             Predicate oikeatKoulutustyypit = peruste.get(CachedPeruste_.koulutustyyppi).in(queryDto.getKoulutustyyppi());
             Predicate koulutustyyppiTaiIlmanPerustetta = cb.or(oikeatKoulutustyypit, cb.isNull(peruste));
             pred = cb.and(oikeaKoulutustoimija, koulutustyyppiTaiIlmanPerustetta);
