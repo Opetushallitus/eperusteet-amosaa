@@ -60,6 +60,10 @@ public class Opintokokonaisuus extends AbstractAuditedEntity implements Serializ
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    private LokalisoituTeksti tavoitteidenKuvaus;
+
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     private LokalisoituTeksti keskeisetSisallot;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
