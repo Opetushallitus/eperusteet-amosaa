@@ -15,11 +15,13 @@
  */
 package fi.vm.sade.eperusteet.amosaa.resource.ohje;
 
+import fi.vm.sade.eperusteet.amosaa.domain.KoulutustyyppiToteutus;
 import fi.vm.sade.eperusteet.amosaa.dto.ohje.OhjeDto;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.service.ohje.OhjeService;
 import io.swagger.annotations.Api;
 import java.util.List;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,8 +51,8 @@ public class OhjeController {
     private OhjeService service;
 
     @RequestMapping(method = GET)
-    public ResponseEntity<List<OhjeDto>> getOhjeet() {
-        return ResponseEntity.ok(service.getOhjeet());
+    public ResponseEntity<List<OhjeDto>> getOhjeet(@RequestParam(value = "toteutus", required = false, defaultValue = "ammatillinen") final String toteutus) {
+        return ResponseEntity.ok(service.getOhjeet(KoulutustyyppiToteutus.of(toteutus)));
     }
 
     @RequestMapping(method = POST)

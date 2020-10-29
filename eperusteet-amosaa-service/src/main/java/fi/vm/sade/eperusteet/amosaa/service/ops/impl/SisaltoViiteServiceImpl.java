@@ -18,6 +18,7 @@ package fi.vm.sade.eperusteet.amosaa.service.ops.impl;
 import static fi.vm.sade.eperusteet.amosaa.service.util.Nulls.assertExists;
 
 
+import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.SisaltoviiteQueryDto;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoviiteServiceProvider;
@@ -719,12 +720,14 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
             }
         }
 
-        if (!tutkinnonOsat && (ops.getTyyppi() == OpsTyyppi.OPS || ops.getTyyppi() == OpsTyyppi.YLEINEN)) {
-            throw new BusinessRuleViolationException("tosa-otsikko-puuttuu");
-        }
+        if (ops.getPeruste() != null && KoulutusTyyppi.ammatilliset().contains(ops.getPeruste().getKoulutustyyppi())) {
+            if (!tutkinnonOsat && (ops.getTyyppi() == OpsTyyppi.OPS || ops.getTyyppi() == OpsTyyppi.YLEINEN)) {
+                throw new BusinessRuleViolationException("tosa-otsikko-puuttuu");
+            }
 
-        if (!suorituspolut && ops.getTyyppi() == OpsTyyppi.OPS) {
-            throw new BusinessRuleViolationException("suorituspolut-puuttuvat");
+            if (!suorituspolut && ops.getTyyppi() == OpsTyyppi.OPS) {
+                throw new BusinessRuleViolationException("suorituspolut-puuttuvat");
+            }
         }
 
         if (!Objects.equals(root.getId(), uusi.getId())) {

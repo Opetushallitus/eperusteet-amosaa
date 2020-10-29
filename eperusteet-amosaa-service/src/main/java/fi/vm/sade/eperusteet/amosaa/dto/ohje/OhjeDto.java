@@ -15,6 +15,7 @@
  */
 package fi.vm.sade.eperusteet.amosaa.dto.ohje;
 
+import fi.vm.sade.eperusteet.amosaa.domain.KoulutustyyppiToteutus;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import java.util.Date;
@@ -36,4 +37,5 @@ public class OhjeDto {
     private LokalisoituTekstiDto lokalisoituVastaus;
     private Date muokattu;
     private Set<KoulutustoimijaBaseDto> koulutustoimijat;
+    private KoulutustyyppiToteutus toteutus;
 }

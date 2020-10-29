@@ -39,13 +39,13 @@ public enum KoulutustyyppiToteutus {
     }
 
     @JsonCreator
-    public static KoulutustyyppiToteutus of(String tila) {
+    public static KoulutustyyppiToteutus of(String tyyppi) {
         for (KoulutustyyppiToteutus s : values()) {
-            if (s.tyyppi.equalsIgnoreCase(tila)) {
+            if (s.tyyppi.equalsIgnoreCase(tyyppi)) {
                 return s;
             }
         }
-        throw new IllegalArgumentException(tila + " ei ole kelvollinen toteutus");
+        throw new IllegalArgumentException(tyyppi + " ei ole kelvollinen toteutus");
     }
 
     @Override

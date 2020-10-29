@@ -38,6 +38,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Opintokokonaisuus;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OpintokokonaisuusArviointi;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OpintokokonaisuusTavoite;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OpintokokonaisuusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Tutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.NavigationNodeDto;
@@ -429,6 +430,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         if (sisalto.getPerusteenOsa() instanceof OpintokokonaisuusDto) {
             sisaltoviite = SisaltoViite.createOpintokokonaisuus(parentViite);
             OpintokokonaisuusDto opintokokonaisuusDto = (OpintokokonaisuusDto) sisalto.getPerusteenOsa();
+            sisaltoviite.getOpintokokonaisuus().setTyyppi(OpintokokonaisuusTyyppi.PERUSTEESTA);
             sisaltoviite.getOpintokokonaisuus().setKuvaus(LokalisoituTeksti.of(opintokokonaisuusDto.getKuvaus()));
             sisaltoviite.getOpintokokonaisuus().setMinimilaajuus(opintokokonaisuusDto.getMinimilaajuus());
             sisaltoviite.getOpintokokonaisuus().setOpetuksenTavoiteOtsikko(LokalisoituTeksti.of(opintokokonaisuusDto.getOpetuksenTavoiteOtsikko()));
@@ -444,7 +446,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         } else {
 
             sisaltoviite.getTekstiKappale().setNimi(LokalisoituTeksti.of(sisalto.getPerusteenOsa().getNimi()));
-            parentViite.getLapset().add(tkvRepository.save(sisaltoviite));
+            tkvRepository.save(sisaltoviite);
 
             for (PerusteenOsaViiteDto.Laaja lapsi : sisalto.getLapset()) {
                 alustaVapaasivistystyoOpetussuunnitelma(ops, sisaltoviite, lapsi);
@@ -565,6 +567,10 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         List<VanhentunutPohjaperusteDto> result = new ArrayList<>();
         List<Opetussuunnitelma> opsit = repository.findAllByKoulutustoimijaAndTyyppi(kt, OpsTyyppi.OPS);
         for (Opetussuunnitelma ops : opsit) {
+            if (ops.getPeruste() == null) {
+                continue;
+            }
+
             PerusteDto perusteDto = eperusteetClient.getPerusteOrNull(ops.getPeruste().getPerusteId(), PerusteDto.class);
             if (perusteDto == null || ops.getTila() != Tila.LUONNOS) {
                 continue;

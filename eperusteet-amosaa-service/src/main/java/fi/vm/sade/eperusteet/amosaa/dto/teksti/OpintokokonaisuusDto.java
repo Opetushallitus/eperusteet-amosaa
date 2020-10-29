@@ -1,5 +1,6 @@
 package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OpintokokonaisuusTyyppi;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
@@ -9,7 +10,9 @@ public class OpintokokonaisuusDto {
     private Long id;
     private String nimiKoodi;
     private LokalisoituTekstiDto kuvaus;
+    private Integer laajuus;
     private Integer minimilaajuus;
+    private OpintokokonaisuusTyyppi tyyppi;
     private LokalisoituTekstiDto opetuksenTavoiteOtsikko;
     private List<OpintokokonaisuusTavoiteDto> tavoitteet = new ArrayList<>();
     private LokalisoituTekstiDto tavoitteidenKuvaus;

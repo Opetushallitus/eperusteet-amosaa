@@ -317,9 +317,11 @@ public class EperusteetServiceImpl implements EperusteetService {
         CachedPeruste cperuste = cachedPerusteRepository.findOne(id);
         try {
             JsonNode node = mapper.readTree(cperuste.getPeruste());
-            for (JsonNode suoritustapa : node.get("suoritustavat")) {
-                if (suoritustapa.get("suoritustapakoodi").asText().equals(tyyppi)) {
-                    return suoritustapa.get("tutkinnonOsaViitteet");
+            if (node.get("suoritustavat") != null) {
+                for (JsonNode suoritustapa : node.get("suoritustavat")) {
+                    if (suoritustapa.get("suoritustapakoodi").asText().equals(tyyppi)) {
+                        return suoritustapa.get("tutkinnonOsaViitteet");
+                    }
                 }
             }
         } catch (IOException ex) {
