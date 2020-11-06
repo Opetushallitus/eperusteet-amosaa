@@ -288,8 +288,6 @@ public class OpetussuunnitelmaRepositoryImpl implements OpetussuunnitelmaCustomR
             }
         }
 
-        pred = cb.and(pred, cb.equal(root.join(Opetussuunnitelma_.koulutustoimija).get(Koulutustoimija_.organisaatioRyhma), queryDto.isOrganisaatioRyhma()));
-
         return pred;
     }
 
