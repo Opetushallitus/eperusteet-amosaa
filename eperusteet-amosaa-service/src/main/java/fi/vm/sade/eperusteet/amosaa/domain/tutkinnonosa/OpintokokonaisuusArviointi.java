@@ -42,4 +42,12 @@ public class OpintokokonaisuusArviointi extends AbstractAuditedEntity implements
         this.arviointi = arviointi;
     }
 
+    public static OpintokokonaisuusArviointi copy(OpintokokonaisuusArviointi original) {
+        if (original != null) {
+            return new OpintokokonaisuusArviointi(original.getPerusteesta(), original.getArviointi());
+        }
+
+        return null;
+    }
+
 }

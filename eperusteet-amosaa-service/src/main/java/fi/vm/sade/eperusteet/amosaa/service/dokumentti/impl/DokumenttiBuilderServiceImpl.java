@@ -340,6 +340,10 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
 
             addHeader(docBase, otsikkoBuilder.toString());
 
+            if (lapsi.isNaytaPerusteenTeksti() && lapsi.getPerusteteksti().getTeksti() != null) {
+                addLokalisoituteksti(docBase, lapsi.getPerusteteksti(), "div");
+            }
+
             if (tekstiKappale.getTeksti() != null) {
                 addLokalisoituteksti(docBase, tekstiKappale.getTeksti(), "div");
             } else {

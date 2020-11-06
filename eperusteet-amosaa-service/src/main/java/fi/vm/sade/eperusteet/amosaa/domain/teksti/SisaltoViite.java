@@ -28,6 +28,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -106,6 +107,11 @@ public class SisaltoViite implements ReferenceableEntity, Serializable, Copyable
     @Setter
     private LokalisoituTeksti perusteteksti;
 
+    @Getter
+    @Setter
+    @Column(name = "nayta_perusteen_teksti")
+    private boolean naytaPerusteenTeksti;
+
     // Jos tutkinnon osa on tuotu, opsilla ei ole muuten tietoa perusteen osasta
     // Jos null, käytetään valittua opsia
     @Getter
@@ -170,12 +176,14 @@ public class SisaltoViite implements ReferenceableEntity, Serializable, Copyable
             SisaltoViite result = new SisaltoViite();
             result.setLiikkumaton(original.isLiikkumaton());
             result.setPakollinen(original.isPakollinen());
+            result.setNaytaPerusteenTeksti(original.isNaytaPerusteenTeksti());
             result.setOhjeteksti(original.getOhjeteksti());
             result.setTyyppi(original.getTyyppi());
             result.setPerusteteksti(original.getPerusteteksti());
             result.setTekstiKappale(TekstiKappale.copy(original.getTekstiKappale()));
             result.setTosa(Tutkinnonosa.copy(original.getTosa()));
             result.setSuorituspolku(Suorituspolku.copy(original.getSuorituspolku()));
+            result.setOpintokokonaisuus(Opintokokonaisuus.copy(original.getOpintokokonaisuus()));
             result.setPeruste(original.getPeruste());
 
             if (copyChildren) {

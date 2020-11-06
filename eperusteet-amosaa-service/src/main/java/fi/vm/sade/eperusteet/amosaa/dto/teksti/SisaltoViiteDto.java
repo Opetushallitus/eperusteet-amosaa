@@ -50,6 +50,7 @@ public class SisaltoViiteDto {
     private SuorituspolkuDto suorituspolku;
     private OpintokokonaisuusDto opintokokonaisuus;
     private String kommentti;
+    private boolean naytaPerusteenTeksti;
 
     @JsonProperty("_tekstiKappale")
     private Reference tekstiKappaleRef;
