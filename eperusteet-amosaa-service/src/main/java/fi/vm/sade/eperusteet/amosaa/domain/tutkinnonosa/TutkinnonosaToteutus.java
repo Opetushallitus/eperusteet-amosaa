@@ -90,8 +90,8 @@ public class TutkinnonosaToteutus extends AbstractAuditedEntity implements Seria
         result.setKoodit(new HashSet<>(this.getKoodit()));
         // tutkinnonosa asetetaan parentissa
         result.setOtsikko(this.getOtsikko());
-        result.setTavatjaymparisto(this.getTavatjaymparisto());
-        result.setArvioinnista(this.getArvioinnista());
+        result.setTavatjaymparisto(this.getTavatjaymparisto().copy());
+        result.setArvioinnista(this.getArvioinnista().copy());
 
         List<VapaaTeksti> vapaat = this.getVapaat();
         if (!ObjectUtils.isEmpty(vapaat)) {
