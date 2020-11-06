@@ -3,9 +3,11 @@ package fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.domain.AbstractAuditedEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.VapaaTeksti;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,6 +25,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
+import org.springframework.util.ObjectUtils;
 
 @Entity
 @Audited
@@ -72,4 +75,42 @@ public class Opintokokonaisuus extends AbstractAuditedEntity implements Serializ
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderColumn
     private List<OpintokokonaisuusArviointi> arvioinnit = new ArrayList<>();
+
+    public static Opintokokonaisuus copy(Opintokokonaisuus original) {
+        if (original != null) {
+            Opintokokonaisuus result = new Opintokokonaisuus();
+
+            result.setTyyppi(original.getTyyppi());
+            result.setNimiKoodi(original.getNimiKoodi());
+            result.setLaajuus(original.getLaajuus());
+            result.setMinimilaajuus(original.getMinimilaajuus());
+            if (original.getKuvaus() != null) {
+                result.setKuvaus(LokalisoituTeksti.of(original.getKuvaus().getTeksti()));
+            }
+            if (original.getOpetuksenTavoiteOtsikko() != null) {
+                result.setOpetuksenTavoiteOtsikko(LokalisoituTeksti.of(original.getOpetuksenTavoiteOtsikko().getTeksti()));
+            }
+            if (original.getTavoitteidenKuvaus() != null) {
+                result.setTavoitteidenKuvaus(LokalisoituTeksti.of(original.getTavoitteidenKuvaus().getTeksti()));
+            }
+            if (original.getKeskeisetSisallot() != null) {
+                result.setKeskeisetSisallot(LokalisoituTeksti.of(original.getKeskeisetSisallot().getTeksti()));
+            }
+            if (original.getArvioinninKuvaus() != null) {
+                result.setArvioinninKuvaus(LokalisoituTeksti.of(original.getArvioinninKuvaus().getTeksti()));
+            }
+
+            if (!ObjectUtils.isEmpty(original.getTavoitteet())) {
+                result.setTavoitteet(original.getTavoitteet().stream().map(OpintokokonaisuusTavoite::copy).collect(Collectors.toList()));
+            }
+
+            if (!ObjectUtils.isEmpty(original.getArvioinnit())) {
+                result.setArvioinnit(original.getArvioinnit().stream().map(OpintokokonaisuusArviointi::copy).collect(Collectors.toList()));
+            }
+
+            return result;
+        } else {
+            return null;
+        }
+    }
 }

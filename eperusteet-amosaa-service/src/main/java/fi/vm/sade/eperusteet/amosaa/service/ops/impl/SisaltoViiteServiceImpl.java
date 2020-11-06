@@ -444,6 +444,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
             viite.setOhjeteksti(LokalisoituTeksti.of(uusi.getOhjeteksti()));
             viite.setPerusteteksti(LokalisoituTeksti.of(uusi.getPerusteteksti()));
         }
+        viite.setNaytaPerusteenTeksti(uusi.isNaytaPerusteenTeksti());
 
         switch (viite.getTyyppi()) {
             case TUTKINNONOSA:

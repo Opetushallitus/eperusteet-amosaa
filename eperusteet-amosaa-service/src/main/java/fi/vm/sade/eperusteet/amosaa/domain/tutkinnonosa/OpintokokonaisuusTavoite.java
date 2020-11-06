@@ -37,4 +37,12 @@ public class OpintokokonaisuusTavoite extends AbstractAuditedEntity implements S
         this.perusteesta = perusteesta;
         this.tavoiteKoodi = tavoiteKoodi;
     }
+
+    public static OpintokokonaisuusTavoite copy(OpintokokonaisuusTavoite original) {
+        if (original != null) {
+            return new OpintokokonaisuusTavoite(original.getPerusteesta(), original.getTavoiteKoodi());
+        }
+
+        return null;
+    }
 }

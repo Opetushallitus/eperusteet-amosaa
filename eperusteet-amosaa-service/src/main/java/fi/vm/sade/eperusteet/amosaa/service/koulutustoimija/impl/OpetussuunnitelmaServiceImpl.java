@@ -424,7 +424,8 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
         if (sisalto.getPerusteenOsa() instanceof TekstiKappaleDto) {
             sisaltoviite = SisaltoViite.createTekstikappale(parentViite);
-            sisaltoviite.getTekstiKappale().setTeksti(LokalisoituTeksti.of(((TekstiKappaleDto) sisalto.getPerusteenOsa()).getTeksti()));
+            sisaltoviite.setPerusteteksti(LokalisoituTeksti.of(((TekstiKappaleDto) sisalto.getPerusteenOsa()).getTeksti()));
+            sisaltoviite.setNaytaPerusteenTeksti(true);
         }
 
         if (sisalto.getPerusteenOsa() instanceof OpintokokonaisuusDto) {
