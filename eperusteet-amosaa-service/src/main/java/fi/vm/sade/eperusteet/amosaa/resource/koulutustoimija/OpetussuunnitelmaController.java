@@ -42,6 +42,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import java.util.List;
+import java.util.Set;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -50,6 +52,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -377,8 +380,13 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
     })
     @RequestMapping(value = "/koulutustoimija", method = RequestMethod.GET)
     public List<OpetussuunnitelmaDto> getKoulutustoimijaOpetussuunnitelmat(
-            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @RequestParam(value = "koulutustyypit", required = false) final Set<String> koulutustyypit
     ) {
+        if (CollectionUtils.isNotEmpty(koulutustyypit)) {
+            return service.getOpetussuunnitelmat(ktId, koulutustyypit);
+        }
+
         return service.getOpetussuunnitelmat(ktId);
     }
 }
