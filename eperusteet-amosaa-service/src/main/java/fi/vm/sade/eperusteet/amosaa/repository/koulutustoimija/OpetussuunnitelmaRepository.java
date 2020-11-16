@@ -24,6 +24,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.repository.version.JpaWithVersioningRepository;
 import fi.vm.sade.eperusteet.amosaa.service.util.Pair;
+import java.util.Set;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -86,8 +87,10 @@ public interface OpetussuunnitelmaRepository extends JpaWithVersioningRepository
 
     @Query(value = "SELECT o FROM Opetussuunnitelma o WHERE o.perusteDiaarinumero = ?1 AND (o.tila = fi.vm.sade.eperusteet.amosaa.domain.Tila.JULKAISTU)")
     List<Opetussuunnitelma> findAllJulkaistutByPerusteDiaarinumero(String diaari);
-     
+
     List<Opetussuunnitelma> findByKoulutustoimijaOrganisaatio(String organisaatioId);
 
     List<Opetussuunnitelma> findAllByKoulutustoimijaId(Long ktId);
+
+    List<Opetussuunnitelma> findByKoulutustoimijaIdAndPerusteKoulutustyyppiIn(Long ktId, Set<KoulutusTyyppi> koulutusTyyppi);
 }

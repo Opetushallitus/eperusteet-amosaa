@@ -34,6 +34,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.ops.VanhentunutPohjaperusteDto;
 import fi.vm.sade.eperusteet.amosaa.service.revision.RevisionService;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 import java.util.List;
+import java.util.Set;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.method.P;
@@ -142,5 +143,8 @@ public interface OpetussuunnitelmaService extends RevisionService {
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
     List<OpetussuunnitelmaDto> getOpetussuunnitelmat(@P("ktId") Long ktId);
+
+    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
+    List<OpetussuunnitelmaDto> getOpetussuunnitelmat(@P("ktId") Long ktId, Set<String> koulutustyypit);
 }
 
