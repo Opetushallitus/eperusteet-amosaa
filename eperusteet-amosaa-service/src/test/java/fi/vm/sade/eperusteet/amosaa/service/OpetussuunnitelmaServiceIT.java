@@ -1,5 +1,7 @@
 package fi.vm.sade.eperusteet.amosaa.service;
 
+import com.google.common.collect.Sets;
+import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.KayttajaoikeusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
@@ -11,12 +13,15 @@ import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaKtoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.*;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteKevytDto;
 import fi.vm.sade.eperusteet.amosaa.repository.peruste.CachedPerusteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KayttajaoikeusService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
+import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator;
 import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
 
@@ -52,6 +57,9 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
 
     @Autowired
     private DtoMapper mapper;
+
+    @Autowired
+    private SisaltoViiteService sisaltoViiteService;
 
     @Test
     @Rollback
@@ -512,21 +520,75 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
     @Test
     @Rollback
     public void testUpdateKoulutustoimijaPassivoidusta_historialiitos_aktiivinen() {
-                 
+
         useProfileKP2();
         OpetussuunnitelmaBaseDto ops = createOpetussuunnitelma();
-        
+
         useProfileKP1();
-        
+
         Opetussuunnitelma opetussuunnitelma = opetussuunnitelmaRepository.findOne(ops.getId());
         assertThat(opetussuunnitelma.getKoulutustoimija().getId()).isNotEqualTo(getKoulutustoimijaId());
-        
+
         Assertions.assertThatThrownBy(() -> opetussuunnitelmaService.updateKoulutustoimijaPassivoidusta(getKoulutustoimijaId(), ops.getId()))
-            .isInstanceOf(BusinessRuleViolationException.class)
-            .hasMessage("siirto-mahdollinen-aiemmin-passivoidulta-organisaatiolta");
-        
+                .isInstanceOf(BusinessRuleViolationException.class)
+                .hasMessage("siirto-mahdollinen-aiemmin-passivoidulta-organisaatiolta");
+
         opetussuunnitelma = opetussuunnitelmaRepository.findOne(ops.getId());
         assertThat(opetussuunnitelma.getKoulutustoimija().getId()).isNotEqualTo(getKoulutustoimijaId());
+    }
+
+    @Test
+    @Rollback
+    public void testOpetussuunnitelmaluontiTutkinnonosaInclude() {
+        useProfileKP2();
+
+        {
+            OpetussuunnitelmaBaseDto opetussuunnitelma = createOpetussuunnitelma();
+            List<SisaltoViiteDto> sisaltoviitteet = sisaltoViiteService.getSisaltoViitteet(getKoulutustoimijaId(), opetussuunnitelma.getId(), SisaltoViiteDto.class);
+            assertThat(sisaltoviitteet.stream().filter(sisaltoviite -> sisaltoviite.getTyyppi().equals(SisaltoTyyppi.TUTKINNONOSA))).hasSize(10);
+        }
+
+        {
+            OpetussuunnitelmaBaseDto opetussuunnitelma = createOpetussuunnitelma(opsLuonti -> {
+                opsLuonti.setTutkinnonOsaKoodiIncludes(Sets.newHashSet("tutkinnonosat_104080", "tutkinnonosat_104074"));
+            });
+
+            List<SisaltoViiteDto> sisaltoviitteet = sisaltoViiteService.getSisaltoViitteet(getKoulutustoimijaId(), opetussuunnitelma.getId(), SisaltoViiteDto.class);
+            assertThat(sisaltoviitteet.stream().filter(sisaltoviite -> sisaltoviite.getTyyppi().equals(SisaltoTyyppi.TUTKINNONOSA))).hasSize(2);
+            assertThat(sisaltoviitteet.stream().filter(sisaltoviite -> sisaltoviite.getTyyppi().equals(SisaltoTyyppi.TUTKINNONOSA)))
+                    .extracting("tosa.koodi").containsExactlyInAnyOrder("tutkinnonosat_104080", "tutkinnonosat_104074");
+        }
+
+        {
+            OpetussuunnitelmaBaseDto pohja = createOpetussuunnitelma(opsLuonti -> {
+                opsLuonti.setTutkinnonOsaKoodiIncludes(Sets.newHashSet("tutkinnonosat_104080", "tutkinnonosat_104074"));
+            });
+
+            OpetussuunnitelmaBaseDto opetussuunnitelma = createOpetussuunnitelma(opsLuonti -> {
+                opsLuonti.setOpsId(pohja.getId());
+            });
+
+            List<SisaltoViiteDto> sisaltoviitteet = sisaltoViiteService.getSisaltoViitteet(getKoulutustoimijaId(), opetussuunnitelma.getId(), SisaltoViiteDto.class);
+            assertThat(sisaltoviitteet.stream().filter(sisaltoviite -> sisaltoviite.getTyyppi().equals(SisaltoTyyppi.TUTKINNONOSA))).hasSize(2);
+            assertThat(sisaltoviitteet.stream().filter(sisaltoviite -> sisaltoviite.getTyyppi().equals(SisaltoTyyppi.TUTKINNONOSA)))
+                    .extracting("tosa.koodi").containsExactlyInAnyOrder("tutkinnonosat_104080", "tutkinnonosat_104074");
+        }
+
+        {
+            OpetussuunnitelmaBaseDto pohja = createOpetussuunnitelma(opsLuonti -> {
+                opsLuonti.setTutkinnonOsaKoodiIncludes(Sets.newHashSet("tutkinnonosat_104080", "tutkinnonosat_104074"));
+            });
+
+            OpetussuunnitelmaBaseDto opetussuunnitelma = createOpetussuunnitelma(opsLuonti -> {
+                opsLuonti.setOpsId(pohja.getId());
+                opsLuonti.setTutkinnonOsaKoodiIncludes(Sets.newHashSet("tutkinnonosat_104080"));
+            });
+
+            List<SisaltoViiteDto> sisaltoviitteet = sisaltoViiteService.getSisaltoViitteet(getKoulutustoimijaId(), opetussuunnitelma.getId(), SisaltoViiteDto.class);
+            assertThat(sisaltoviitteet.stream().filter(sisaltoviite -> sisaltoviite.getTyyppi().equals(SisaltoTyyppi.TUTKINNONOSA))).hasSize(1);
+            assertThat(sisaltoviitteet.stream().filter(sisaltoviite -> sisaltoviite.getTyyppi().equals(SisaltoTyyppi.TUTKINNONOSA)))
+                    .extracting("tosa.koodi").containsExactlyInAnyOrder("tutkinnonosat_104080");
+        }
     }
 
 }

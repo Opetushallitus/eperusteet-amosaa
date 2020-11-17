@@ -19,6 +19,7 @@ package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.impl;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Maps;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutustyyppiToteutus;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
@@ -99,6 +100,7 @@ import fi.vm.sade.eperusteet.amosaa.service.ops.ValidointiService;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -474,7 +476,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         return ops;
     }
 
-    private void setOpsCommon(Opetussuunnitelma ops, PerusteDto peruste, SisaltoViite rootTkv) {
+    private void setOpsCommon(Opetussuunnitelma ops, PerusteDto peruste, SisaltoViite rootTkv, Set<String> tutkinnonOsaKoodiIncludes) {
         if (peruste == null) {
             throw new BusinessRuleViolationException("perustetta-ei-loytynyt");
         }
@@ -544,6 +546,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                                     : -1;
                         })
                         .map(tosa -> idToTosaMap.get(tosa.getTutkinnonOsa()))
+                        .filter(tutkinnonosa -> CollectionUtils.isEmpty(tutkinnonOsaKoodiIncludes) || tutkinnonOsaKoodiIncludes.contains(tutkinnonosa.getKoodiUri()))
                         .collect(Collectors.toList());
             }
 
@@ -639,7 +642,8 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                 ops.setNimi(mapper.map(opsDto.getNimi(), LokalisoituTeksti.class));
             }
             ops = repository.save(ops);
-            tkvRepository.save(tkvService.kopioiHierarkia(sisaltoRoot, ops));
+            SisaltoViite root = tkvService.kopioiHierarkia(sisaltoRoot, ops, Collections.singletonMap(SisaltoTyyppi.TUTKINNONOSA, opsDto.getTutkinnonOsaKoodiIncludes()));
+            tkvRepository.save(root);
         }
         else {
             ops = mapper.map(opsDto, Opetussuunnitelma.class);
@@ -662,11 +666,11 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                 switch (opsDto.getTyyppi()) {
                     case OPS:
                         PerusteDto peruste = eperusteetClient.getPeruste(opsDto.getPerusteId(), PerusteDto.class);
-                        setOpsCommon(ops, peruste, rootTkv);
+                        setOpsCommon(ops, peruste, rootTkv, opsDto.getTutkinnonOsaKoodiIncludes());
                         break;
                     case YLEINEN:
                         PerusteDto yleinen = eperusteetClient.getYleinenPohja();
-                        setOpsCommon(ops, yleinen, rootTkv);
+                        setOpsCommon(ops, yleinen, rootTkv, null);
                         opsDto.setSuoritustapa("yleinen");
                         break;
                     case YHTEINEN:
@@ -679,7 +683,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
                         opsDto.setSuoritustapa("yhteinen");
                         SisaltoViite pohjatkv = tkvRepository.findOneRoot(pohja);
-                        tkvRepository.save(tkvService.kopioiHierarkia(pohjatkv, ops));
+                        tkvRepository.save(tkvService.kopioiHierarkia(pohjatkv, ops, null));
                         ops.setPohja(pohja);
                         break;
                     case POHJA:

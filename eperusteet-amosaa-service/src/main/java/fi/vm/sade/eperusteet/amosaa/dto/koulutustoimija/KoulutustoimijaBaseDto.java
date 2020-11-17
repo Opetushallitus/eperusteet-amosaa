@@ -29,5 +29,5 @@ public class KoulutustoimijaBaseDto {
     Long id;
     String organisaatio;
     LokalisoituTekstiDto nimi;
-
+    private boolean organisaatioRyhma;
 }
