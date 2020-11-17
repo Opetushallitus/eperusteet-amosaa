@@ -33,5 +33,4 @@ public class KoulutustoimijaDto extends KoulutustoimijaBaseDto {
     LokalisoituTekstiDto kuvaus;
     private Set<Reference> ystavat;
     private boolean salliystavat;
-    private boolean organisaatioRyhma;
 }

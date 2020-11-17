@@ -40,6 +40,7 @@ import java.util.stream.Collectors;
 
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -613,14 +614,20 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
     // UUID parentin tunniste
     @Override
     @Transactional
-    public SisaltoViite kopioiHierarkia(SisaltoViite original, Opetussuunnitelma owner) {
+    public SisaltoViite kopioiHierarkia(SisaltoViite original, Opetussuunnitelma owner, Map<SisaltoTyyppi, Set<String>> sisaltotyyppiIncludes) {
+        if (sisaltotyyppiIncludes != null && CollectionUtils.isNotEmpty(sisaltotyyppiIncludes.get(original.getTyyppi()))) {
+            if (original.getTyyppi().equals((SisaltoTyyppi.TUTKINNONOSA)) && !sisaltotyyppiIncludes.get(SisaltoTyyppi.TUTKINNONOSA).contains(original.getTosa().getKoodi())) {
+                return null;
+            }
+        }
+
         SisaltoViite result = original.copy(false);
         result.setOwner(owner);
         List<SisaltoViite> lapset = original.getLapset();
 
         if (lapset != null) {
             for (SisaltoViite lapsi : lapset) {
-                SisaltoViite uusiLapsi = kopioiHierarkia(lapsi, owner);
+                SisaltoViite uusiLapsi = kopioiHierarkia(lapsi, owner, sisaltotyyppiIncludes);
                 if (uusiLapsi != null) {
                     uusiLapsi.setVanhempi(result);
                     result.getLapset().add(uusiLapsi);

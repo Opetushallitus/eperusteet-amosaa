@@ -149,7 +149,7 @@ public abstract class AbstractIntegrationTest {
         koulutustoimijaRepository.save(koulutustoimija);
     }
 
-    protected OpetussuunnitelmaBaseDto createOpetussuunnitelma(Consumer<OpetussuunnitelmaDto> opsfn) {
+    protected OpetussuunnitelmaBaseDto createOpetussuunnitelma(Consumer<OpetussuunnitelmaLuontiDto> opsfn) {
         OpetussuunnitelmaLuontiDto ops = new OpetussuunnitelmaLuontiDto();
         ops.setKoulutustoimija(getKoulutustoimija());
         ops.setPerusteDiaarinumero("9/011/2008");
