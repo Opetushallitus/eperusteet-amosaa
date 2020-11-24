@@ -289,9 +289,12 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
             throws ParserConfigurationException, IOException, SAXException {
 
         for (SisaltoViite lapsi : viite.getLapset()) {
-            if (lapsi == null || lapsi.getTekstiKappale() == null || lapsi.getTekstiKappale().getNimi() == null
-                    || (lapsi.getTyyppi().equals(SisaltoTyyppi.SUORITUSPOLUT) && CollectionUtils.isEmpty(lapsi.getLapset()))) {
+            if (lapsi == null || lapsi.getTekstiKappale() == null || lapsi.getTekstiKappale().getNimi() == null) {
                 return;
+            }
+
+            if (lapsi.getTyyppi().equals(SisaltoTyyppi.SUORITUSPOLUT) && CollectionUtils.isEmpty(lapsi.getLapset())) {
+                continue;
             }
 
             TekstiKappale tekstiKappale = lapsi.getTekstiKappale();
