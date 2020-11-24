@@ -3291,6 +3291,40 @@
         }
       }
     },
+    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/validoi" : {
+      "get" : {
+        "tags" : [ "opetussuunnitelmat" ],
+        "operationId" : "validoiOpetussuunnitelma",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "name" : "opsId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "ktId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Validointi"
+            }
+          }
+        }
+      }
+    },
     "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/version/{revId}" : {
       "post" : {
         "tags" : [ "opetussuunnitelmat" ],
@@ -5736,9 +5770,9 @@
             "enum" : [ "FI", "SV", "SE", "RU", "EN" ]
           }
         },
-        "koulutustyyppi" : {
-          "type" : "string",
-          "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO" ]
+        "perusteId" : {
+          "type" : "integer",
+          "format" : "int64"
         },
         "perusteNimi" : {
           "type" : "object",
@@ -5746,9 +5780,9 @@
             "type" : "string"
           }
         },
-        "perusteId" : {
-          "type" : "integer",
-          "format" : "int64"
+        "koulutustyyppi" : {
+          "type" : "string",
+          "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO" ]
         }
       }
     },
@@ -5988,15 +6022,15 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
+        "last" : {
+          "type" : "boolean"
+        },
         "first" : {
           "type" : "boolean"
         },
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
-        },
-        "last" : {
-          "type" : "boolean"
         }
       }
     },
@@ -6028,15 +6062,15 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
+        "last" : {
+          "type" : "boolean"
+        },
         "first" : {
           "type" : "boolean"
         },
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
-        },
-        "last" : {
-          "type" : "boolean"
         }
       }
     },
@@ -6068,15 +6102,15 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
+        "last" : {
+          "type" : "boolean"
+        },
         "first" : {
           "type" : "boolean"
         },
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
-        },
-        "last" : {
-          "type" : "boolean"
         }
       }
     },
@@ -6108,15 +6142,15 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
+        "last" : {
+          "type" : "boolean"
+        },
         "first" : {
           "type" : "boolean"
         },
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
-        },
-        "last" : {
-          "type" : "boolean"
         }
       }
     },
@@ -6148,15 +6182,15 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
+        "last" : {
+          "type" : "boolean"
+        },
         "first" : {
           "type" : "boolean"
         },
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
-        },
-        "last" : {
-          "type" : "boolean"
         }
       }
     },
@@ -6686,6 +6720,9 @@
         },
         "tosa" : {
           "$ref" : "#/definitions/TutkinnonOsaIntegrationDto"
+        },
+        "owner" : {
+          "$ref" : "#/definitions/Reference"
         }
       }
     },
@@ -7356,6 +7393,29 @@
         }
       }
     },
+    "Validointi" : {
+      "type" : "object",
+      "properties" : {
+        "virheet" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Virhe"
+          }
+        },
+        "varoitukset" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Virhe"
+          }
+        },
+        "huomiot" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Virhe"
+          }
+        }
+      }
+    },
     "VanhentunutPohjaperusteDto" : {
       "type" : "object",
       "properties" : {
@@ -7408,6 +7468,20 @@
         "tosaId" : {
           "type" : "integer",
           "format" : "int64"
+        }
+      }
+    },
+    "Virhe" : {
+      "type" : "object",
+      "properties" : {
+        "syy" : {
+          "type" : "string"
+        },
+        "nimi" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
         }
       }
     }
