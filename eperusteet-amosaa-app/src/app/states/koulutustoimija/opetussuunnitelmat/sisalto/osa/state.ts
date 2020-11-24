@@ -4,7 +4,7 @@ namespace SuoritustapaRyhmat {
         i = inject($injector, ["$rootScope", "$uibModal", "$q"]);
     };
 
-    export const editoi = (spRivit, node, tutkinnonosat, koodisto, paikalliset, peruste) =>
+    export const editoi = (spRivit, node, tutkinnonosat, koodisto, paikalliset, peruste, $stateParams) =>
         i.$uibModal.open({
             resolve: {},
             templateUrl: "modals/suoritustaparyhma.jade",
@@ -41,7 +41,7 @@ namespace SuoritustapaRyhmat {
                                     "_" +
                                     pkoodi.tosa.omatutkinnonosa.koodi,
                                 nimi: pkoodi.tekstiKappale.nimi,
-                                $$paikallinen: true
+                                $$paikallinen: pkoodi._owner === $stateParams.opsId,
                             }))
                             .concat(Koodisto.parseRawKoodisto(julkisetKoodit))
                             .reject(koodi => !koodi.arvo || !koodi.uri)
@@ -783,7 +783,8 @@ angular
                                         tosaViitteet,
                                         koodisto,
                                         paikallisetTutkinnonosatEP,
-                                        peruste
+                                        peruste,
+                                        $stateParams,
                                     ).then(res => {
                                         $scope.osa.suorituspolku.rivit = _.compact(_.values(res));
                                         update();
