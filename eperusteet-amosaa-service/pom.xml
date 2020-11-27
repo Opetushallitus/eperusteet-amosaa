@@ -37,6 +37,7 @@
         <apache.httpclient.version>4.5.3</apache.httpclient.version>
         <eperusteet.amosaa.resources>fi.vm.sade.eperusteet.amosaa.resource</eperusteet.amosaa.resources>
         <swagger-maven-plugin-version>3.1.7</swagger-maven-plugin-version>
+        <eperusteet.backendutils.version>2.3-SNAPSHOT</eperusteet.backendutils.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -141,6 +142,11 @@
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-joda</artifactId>
             <version>${jackson.version}</version>
         </dependency>
         <dependency>
@@ -312,7 +318,7 @@
         <dependency>
             <groupId>fi.vm.sade.eperusteet</groupId>
             <artifactId>eperusteet-backend-utils</artifactId>
-            <version>2.3-SNAPSHOT</version>
+            <version>${eperusteet.backendutils.version}</version>
         </dependency>
         <dependency>
             <groupId>fi.vm.sade.java-utils</groupId>
@@ -594,6 +600,44 @@
                         </dependency>
                     </dependencies>
                 </plugin>
+                <plugin>
+                    <groupId>de.juplo</groupId>
+                    <artifactId>hibernate4-maven-plugin</artifactId>
+                    <version>1.1.1</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>export</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <envers>true</envers>
+                        <type>${hibernate.export.type}</type>
+                        <target>SCRIPT</target>
+                        <driverClassName>org.postgresql.Driver</driverClassName>
+                        <hibernateDialect>fi.vm.sade.eperusteet.utils.repository.dialect.CustomPostgreSqlDialect</hibernateDialect>
+                        <url/>
+                        <username/>
+                        <password/>
+                        <hibernateProperties>${project.basedir}/src/test/config/hibernate.properties</hibernateProperties>
+                        <hibernateMapping>${project.basedir}/src/main/resources/hibernate-typedefs.hbm.xml</hibernateMapping>
+                        <outputFile>${schema.file}</outputFile>
+                        <scanDependencies>NONE</scanDependencies>
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.postgresql</groupId>
+                            <artifactId>postgresql</artifactId>
+                            <version>${postgresql.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>fi.vm.sade.eperusteet</groupId>
+                            <artifactId>eperusteet-backend-utils</artifactId>
+                            <version>${eperusteet.backendutils.version}</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
             </plugins>
         </pluginManagement>
         <finalName>eperusteet-amosaa-service</finalName>
@@ -704,6 +748,7 @@
                                     <locations>
                                         <location>${eperusteet.amosaa.resources}.external.UlkopuolisetController</location>
                                         <location>${eperusteet.amosaa.resources}.julkinen.*</location>
+                                        <location>${eperusteet.amosaa.resources}.koulutustoimija.JulkaisuController</location>
                                         <location>${eperusteet.amosaa.resources}.koulutustoimija.KayttajaoikeusController</location>
                                         <location>${eperusteet.amosaa.resources}.koulutustoimija.KoulutustoimijaController</location>
                                         <location>${eperusteet.amosaa.resources}.koulutustoimija.OpetussuunnitelmaAikatauluController</location>
