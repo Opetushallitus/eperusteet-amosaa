@@ -17,6 +17,7 @@
 package fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija;
 
 import fi.vm.sade.eperusteet.amosaa.domain.AbstractAuditedEntity;
+import fi.vm.sade.eperusteet.amosaa.domain.HistoriaTapahtuma;
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.liite.Liite;
@@ -25,6 +26,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 
+import fi.vm.sade.eperusteet.amosaa.dto.NavigationType;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
@@ -62,7 +64,7 @@ import org.hibernate.envers.RelationTargetAuditMode;
 @Entity
 @Audited
 @Table(name = "opetussuunnitelma")
-public class Opetussuunnitelma extends AbstractAuditedEntity implements Serializable, ReferenceableEntity, Copyable<Opetussuunnitelma> {
+public class Opetussuunnitelma extends AbstractAuditedEntity implements Serializable, ReferenceableEntity, Copyable<Opetussuunnitelma>, HistoriaTapahtuma {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Getter
@@ -212,4 +214,8 @@ public class Opetussuunnitelma extends AbstractAuditedEntity implements Serializ
         return result;
     }
 
+    @Override
+    public NavigationType getNavigationType() {
+        return NavigationType.opetussuunnitelma;
+    }
 }

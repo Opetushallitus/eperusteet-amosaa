@@ -16,6 +16,7 @@
 
 package fi.vm.sade.eperusteet.amosaa.service.util;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.http.converter.GenericHttpMessageConverter;
 
 import java.io.*;
@@ -48,4 +49,6 @@ public interface JsonMapper {
     default <T> Optional<T> unwrap(Class<T> clzz) {
         return Optional.empty();
     }
+
+    <T> JsonNode toJson(T obj) throws IOException;
 }

@@ -16,6 +16,7 @@
 
 package fi.vm.sade.eperusteet.amosaa.service.util;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
@@ -71,5 +72,10 @@ public class ObjectMapperJsonMapperAdapter implements JsonMapper {
     @Override
     public <T> String serialize(T obj) throws IOException {
         return mapper.writer().writeValueAsString(obj);
+    }
+
+    @Override
+    public <T> JsonNode toJson(T obj) {
+        return mapper.valueToTree(obj);
     }
 }
