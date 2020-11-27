@@ -8,6 +8,7 @@ public enum NavigationType {
     viite,
     liitteet, liite,
     peruste,
+    opetussuunnitelma,
     tekstikappale,
     tutkinnonosat,
     tutkinnonosa,

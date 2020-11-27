@@ -15,6 +15,7 @@
  */
 package fi.vm.sade.eperusteet.amosaa.dto.kayttaja;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,12 +27,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class KayttajanTietoDto {
 
     public KayttajanTietoDto(String oidHenkilo) {
         this.oidHenkilo = oidHenkilo;
     }
-
 
     String kayttajanimi;
     String kutsumanimi;

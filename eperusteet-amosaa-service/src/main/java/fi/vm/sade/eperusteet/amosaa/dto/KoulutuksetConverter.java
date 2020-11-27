@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.Set;
 
 @Converter
-public class KoulutuksetConverter implements AttributeConverter<Set<KoulutusDto>, String> {
+public class KoulutuksetConverter implements AttributeConverter<Set, String> {
     private static final Logger logger = LoggerFactory.getLogger(KoulutuksetConverter.class);
 
     private ObjectMapper objMapper;
@@ -23,8 +23,8 @@ public class KoulutuksetConverter implements AttributeConverter<Set<KoulutusDto>
         objMapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
     }
 
-    public String convertToDatabaseColumn(Set<KoulutusDto> value) {
-        if ( value == null ) {
+    public String convertToDatabaseColumn(Set value) {
+        if (value == null) {
             return null;
         }
 
