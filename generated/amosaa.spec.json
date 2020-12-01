@@ -3241,7 +3241,7 @@
             "schema" : {
               "type" : "array",
               "items" : {
-                "$ref" : "#/definitions/RevisionDto"
+                "$ref" : "#/definitions/RevisionKayttajaDto"
               }
             }
           }
@@ -6656,7 +6656,7 @@
         }
       }
     },
-    "RevisionDto" : {
+    "RevisionKayttajaDto" : {
       "type" : "object",
       "properties" : {
         "numero" : {
@@ -6672,6 +6672,9 @@
         },
         "kommentti" : {
           "type" : "string"
+        },
+        "kayttajanTieto" : {
+          "$ref" : "#/definitions/KayttajanTietoDto"
         }
       }
     },

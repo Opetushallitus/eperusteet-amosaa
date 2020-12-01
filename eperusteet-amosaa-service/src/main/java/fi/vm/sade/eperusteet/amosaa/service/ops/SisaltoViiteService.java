@@ -19,6 +19,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.dto.RevisionDto;
+import fi.vm.sade.eperusteet.amosaa.dto.RevisionKayttajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.SisaltoviiteQueryDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteRakenneDto;
@@ -80,7 +81,7 @@ public interface SisaltoViiteService extends LockService<SisaltoViiteCtx> {
     RevisionDto getLatestRevision(@P("ktId") Long ktId, @P("opsId") Long opsId, Long viiteId);
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
-    List<RevisionDto> getRevisions(@P("ktId") Long ktId, @P("opsId") Long opsId, Long viiteId);
+    List<RevisionKayttajaDto> getRevisions(@P("ktId") Long ktId, @P("opsId") Long opsId, Long viiteId);
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
     SisaltoViiteDto getData(@P("ktId") Long ktId, @P("opsId") Long opsId, Long viiteId, Integer revId);
