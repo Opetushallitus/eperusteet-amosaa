@@ -17,6 +17,7 @@ package fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija;
  */
 
 import fi.vm.sade.eperusteet.amosaa.dto.RevisionDto;
+import fi.vm.sade.eperusteet.amosaa.dto.RevisionKayttajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.SisaltoviiteLaajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.SisaltoviiteQueryDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
@@ -183,7 +184,7 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
     })
     @RequestMapping(value = "/tekstit/{svId}/versiot", method = RequestMethod.GET)
     @InternalApi
-    public List<RevisionDto> getSisaltoviiteRevisions(
+    public List<RevisionKayttajaDto> getSisaltoviiteRevisions(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long svId

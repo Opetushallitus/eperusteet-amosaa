@@ -103,8 +103,9 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
 
     @Override
     public KayttajaDto haeKayttajanTiedot() {
-        Kayttaja kayttaja = getKayttaja();
-        return mapper.map(kayttaja, KayttajaDto.class);
+        KayttajaDto kayttajaDto = mapper.map(getKayttaja(), KayttajaDto.class);
+        KayttajanTietoDto kirjautunutKayttaja = haeKirjautaunutKayttaja();
+        return mapper.map(kirjautunutKayttaja, kayttajaDto);
     }
 
     @Override
