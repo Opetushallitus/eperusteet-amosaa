@@ -5,6 +5,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.VapaaTeksti;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,7 +46,8 @@ public class Opintokokonaisuus extends AbstractAuditedEntity implements Serializ
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     private LokalisoituTeksti kuvaus;
 
-    private Integer laajuus;
+    @Column(precision = 10, scale = 2)
+    private BigDecimal laajuus;
 
     private Integer minimilaajuus;
 
