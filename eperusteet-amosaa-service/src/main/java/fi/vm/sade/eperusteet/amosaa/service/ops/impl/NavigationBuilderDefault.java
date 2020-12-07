@@ -47,12 +47,7 @@ public class NavigationBuilderDefault implements NavigationBuilder {
                 .orElseThrow(() -> new BusinessRuleViolationException("sisaltoviitehaku-virhe"));
 
         return NavigationNodeDto.of(NavigationType.root, root.getId())
-                .add(tiedot(opsId))
                 .addAll(sisaltoviitteet(sisaltoViitteet));
-    }
-
-    private NavigationNodeDto tiedot(Long opsId) {
-        return NavigationNodeDto.of(NavigationType.tiedot, null, opsId);
     }
 
     private List<NavigationNodeDto> sisaltoviitteet(List<SisaltoViiteKevytDto> sisaltoViitteet) {
