@@ -51,19 +51,16 @@ public class NavigationBuilderDefaultTest {
         NavigationNodeDto navigationNodeDto = navigationBuilderDefault.buildNavigation(1l, 1l);
 
         assertThat(navigationNodeDto).isNotNull();
-        assertThat(navigationNodeDto.getChildren()).hasSize(4);
-        assertThat(navigationNodeDto.getChildren().get(0).getChildren()).hasSize(0);
-        assertThat(navigationNodeDto.getChildren().get(1).getChildren()).hasSize(2);
-        assertThat(navigationNodeDto.getChildren().get(2).getChildren()).hasSize(0);
-        assertThat(navigationNodeDto.getChildren().get(3).getChildren()).hasSize(1);
+        assertThat(navigationNodeDto.getChildren()).hasSize(3);
+        assertThat(navigationNodeDto.getChildren().get(0).getChildren()).hasSize(2);
+        assertThat(navigationNodeDto.getChildren().get(1).getChildren()).hasSize(0);
+        assertThat(navigationNodeDto.getChildren().get(2).getChildren()).hasSize(1);
 
-        assertThat(navigationNodeDto.getChildren()).extracting("type").containsExactly(NavigationType.tiedot, NavigationType.tekstikappale, NavigationType.tekstikappale, NavigationType.tutkinnonosa);
-        assertThat(navigationNodeDto.getChildren().get(1).getChildren()).extracting("type").containsExactly(NavigationType.tekstikappale, NavigationType.tekstikappale);
-        assertThat(navigationNodeDto.getChildren().get(3).getChildren()).extracting("type").containsExactly(NavigationType.tutkinnonosa);
+        assertThat(navigationNodeDto.getChildren()).extracting("type").containsExactly(NavigationType.tekstikappale, NavigationType.tekstikappale, NavigationType.tutkinnonosa);
+        assertThat(navigationNodeDto.getChildren().get(0).getChildren()).extracting("type").containsExactly(NavigationType.tekstikappale, NavigationType.tekstikappale);
+        assertThat(navigationNodeDto.getChildren().get(2).getChildren()).extracting("type").containsExactly(NavigationType.tutkinnonosa);
 
-        assertThat(navigationNodeDto.getChildren().get(0).getLabel()).isNull();
-        assertThat(navigationNodeDto.getChildren().get(3).getLabel().get(Kieli.FI)).isEqualTo("tutkinnonosa1");
-
+        assertThat(navigationNodeDto.getChildren().get(2).getLabel().get(Kieli.FI)).isEqualTo("tutkinnonosa1");
     }
 
     private List<Object> sisaltoviitteet() {

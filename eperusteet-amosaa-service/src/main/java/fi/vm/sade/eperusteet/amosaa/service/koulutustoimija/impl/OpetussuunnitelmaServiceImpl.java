@@ -357,6 +357,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     @Override
     public NavigationNodeDto buildNavigationPublic(Long ktId, Long opsId) {
         NavigationNodeDto rootNode = buildNavigation(ktId, opsId);
+        rootNode.getChildren().add(0, NavigationNodeDto.of(NavigationType.tiedot, null, opsId));
         rootNode.setChildren(rootNode.getChildren().stream()
                 .filter(node -> !node.getType().equals(NavigationType.suorituspolut) || CollectionUtils.isNotEmpty(node.getChildren()))
                 .collect(Collectors.toList())
