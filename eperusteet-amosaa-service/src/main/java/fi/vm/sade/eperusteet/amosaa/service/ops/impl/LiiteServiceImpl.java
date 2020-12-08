@@ -77,7 +77,7 @@ public class LiiteServiceImpl implements LiiteService {
     public LiiteDto get(Long opsId, UUID id) {
         Opetussuunnitelma ops = opetussuunnitelmaRepository.findOne(opsId);
         Liite liite = liiteRepository.findOne(id);
-        if (ops == null || !liite.getOpetussuunnitelmat().contains(ops)) {
+        if (ops == null || liite == null) {
             throw new BusinessRuleViolationException("ei-liitetta");
         }
         return mapper.map(liite, LiiteDto.class);
