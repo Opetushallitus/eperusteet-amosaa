@@ -127,7 +127,7 @@ public class EperusteetClientImpl implements EperusteetClient {
 
     @Override
     public <T> T getPeruste(Long id, Class<T> type) {
-        T peruste = commonGet("/api/perusteet/" + id.toString() + "", type);
+        T peruste = commonGet("/api/perusteet/" + id.toString() + "/kaikki", type);
         return peruste;
     }
 
