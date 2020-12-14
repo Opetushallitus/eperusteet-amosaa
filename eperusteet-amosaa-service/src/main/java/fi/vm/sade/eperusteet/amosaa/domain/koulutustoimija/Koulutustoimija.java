@@ -94,9 +94,10 @@ public class Koulutustoimija extends AbstractAuditedEntity implements Serializab
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     private Set<Liite> liitteet = new HashSet<>();
 
+    @ElementCollection
     @Getter
     @Setter
-    private boolean organisaatioRyhma = false;
+    private Set<String> organisaatioTyypit = new HashSet<>();
 
     public boolean isOph() {
         return SecurityUtil.OPH_OID.equals(this.organisaatio);
@@ -110,4 +111,15 @@ public class Koulutustoimija extends AbstractAuditedEntity implements Serializab
         liitteet.remove(liite);
     }
 
+    public void addOrganisaatioTyyppi(String organisaatioTyyppi) {
+        if (organisaatioTyypit == null) {
+            organisaatioTyypit = new HashSet<>();
+        }
+
+        organisaatioTyypit.add(organisaatioTyyppi);
+    }
+
+    public boolean isOrganisaatioRyhma() {
+        return organisaatioTyypit == null || organisaatioTyypit.contains("Ryhma");
+    }
 }

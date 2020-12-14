@@ -17,6 +17,8 @@
 package fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija;
 
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,5 +31,9 @@ public class KoulutustoimijaBaseDto {
     Long id;
     String organisaatio;
     LokalisoituTekstiDto nimi;
-    private boolean organisaatioRyhma;
+    private Set<String> organisaatioTyypit = new HashSet<>();
+
+    public boolean isOrganisaatioRyhma() {
+        return organisaatioTyypit == null || organisaatioTyypit.contains("Ryhma");
+    }
 }

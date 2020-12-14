@@ -111,9 +111,7 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
 
         if (organisaatio.get("tyypit") != null && organisaatio.get("tyypit").isArray()) {
             for (final JsonNode objNode : organisaatio.get("tyypit")) {
-                if ("Ryhma".equals(objNode.asText())) {
-                    koulutustoimija.setOrganisaatioRyhma(true);
-                }
+                koulutustoimija.addOrganisaatioTyyppi(objNode.asText());
             }
         }
 

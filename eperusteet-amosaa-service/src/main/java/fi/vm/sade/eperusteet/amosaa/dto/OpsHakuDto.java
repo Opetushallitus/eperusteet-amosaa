@@ -33,7 +33,6 @@ public class OpsHakuDto extends QueryDto {
     private List<KoulutusTyyppi> koulutustyyppi;
     private Set<Tila> tila;
     private Set<OpsTyyppi> tyyppi;
-    private boolean organisaatioRyhma;
 
     public void setTila(Tila tila) {
         if (this.tila == null) {

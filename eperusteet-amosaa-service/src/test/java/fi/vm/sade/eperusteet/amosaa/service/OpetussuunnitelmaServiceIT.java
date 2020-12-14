@@ -591,4 +591,24 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
         }
     }
 
+    @Test
+    @Rollback
+    public void testFindOrganisaatioRyhma() {
+        useProfileKP2();
+        createOpsWithCachedPeruste("111/111", 1l);
+        createOpsWithCachedPeruste("111/222", 1l);
+
+        useProfileKP3();
+        setCurrentProfileRyhma();
+        createOpsWithCachedPeruste("222/222", 2l);
+
+        OpetussuunnitelmaQueryDto pquery = new OpetussuunnitelmaQueryDto();
+        PageRequest p = new PageRequest(pquery.getSivu(), Math.min(pquery.getSivukoko(), 100));
+
+        assertThat(opetussuunnitelmaService.findOpetussuunnitelmat(p, pquery).getTotalElements()).isEqualTo(2);
+
+        pquery.setOrganisaatioTyyppi("Ryhma");
+        assertThat(opetussuunnitelmaService.findOpetussuunnitelmat(p, pquery).getTotalElements()).isEqualTo(1);
+    }
+
 }
