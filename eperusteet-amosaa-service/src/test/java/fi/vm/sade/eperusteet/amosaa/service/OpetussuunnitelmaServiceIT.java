@@ -28,6 +28,7 @@ import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -589,6 +590,27 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
             assertThat(sisaltoviitteet.stream().filter(sisaltoviite -> sisaltoviite.getTyyppi().equals(SisaltoTyyppi.TUTKINNONOSA)))
                     .extracting("tosa.koodi").containsExactlyInAnyOrder("tutkinnonosat_104080");
         }
+    }
+
+    @Test
+    @Rollback
+    public void testFindOrganisaatioRyhma() {
+        useProfileKP2();
+        createOpsWithCachedPeruste("111/111", 1l);
+        createOpsWithCachedPeruste("111/222", 1l);
+
+        useProfileKP3();
+        setCurrentProfileRyhma();
+        createOpsWithCachedPeruste("222/222", 2l);
+
+        OpetussuunnitelmaQueryDto pquery = new OpetussuunnitelmaQueryDto();
+        PageRequest p = new PageRequest(pquery.getSivu(), Math.min(pquery.getSivukoko(), 100));
+
+        assertThat(opetussuunnitelmaService.findOpetussuunnitelmat(p, pquery).getTotalElements()).isEqualTo(2);
+
+        pquery.setOrganisaatioRyhma(true);
+        assertThat(opetussuunnitelmaService.findOpetussuunnitelmat(p, pquery).getTotalElements()).isEqualTo(1);
+
     }
 
 }

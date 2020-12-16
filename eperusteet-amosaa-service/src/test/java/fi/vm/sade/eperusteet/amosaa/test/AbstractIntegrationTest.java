@@ -242,4 +242,10 @@ public abstract class AbstractIntegrationTest {
         useProfileTmpr();
     }
 
+    protected void setCurrentProfileRyhma() {
+        Koulutustoimija koulutustoimija = koulutustoimijaRepository.getOne(getKoulutustoimijaId());
+        koulutustoimija.setOrganisaatioRyhma(true);
+        koulutustoimijaRepository.save(koulutustoimija);
+    }
+
 }

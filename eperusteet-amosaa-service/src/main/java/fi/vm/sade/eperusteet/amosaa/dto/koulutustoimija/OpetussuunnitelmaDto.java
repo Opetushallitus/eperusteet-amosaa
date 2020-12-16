@@ -41,4 +41,5 @@ public class OpetussuunnitelmaDto extends OpetussuunnitelmaBaseDto {
     private boolean esikatseltavissa;
     private Set<String> tutkintonimikkeet = new HashSet<>();
     private Set<String> osaamisalat = new HashSet<>();
+    private String oppilaitosTyyppiKoodiUri;
 }
