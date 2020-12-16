@@ -16,6 +16,7 @@
 
 package fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija;
 
+import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.QueryDto;
 
@@ -37,6 +38,8 @@ public class OpetussuunnitelmaQueryDto extends QueryDto {
     private String organisaatio;
     private List<String> tyyppi;
     private boolean organisaatioRyhma;
+    private String oppilaitosTyyppiKoodiUri;
+    private List<KoulutusTyyppi> koulutustyyppi;
 
     public List<OpsTyyppi> getTyyppi() {
         if (tyyppi != null && !tyyppi.isEmpty()) {

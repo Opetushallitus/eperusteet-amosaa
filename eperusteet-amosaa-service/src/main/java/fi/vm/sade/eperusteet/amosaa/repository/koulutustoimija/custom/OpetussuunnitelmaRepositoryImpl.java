@@ -114,8 +114,22 @@ public class OpetussuunnitelmaRepositoryImpl implements OpetussuunnitelmaCustomR
         Predicate onOikeallaKielella = cb.equal(opsNimi.get(Teksti_.kieli), kieli);
         Predicate isJulkaistu = cb.equal(root.get(Opetussuunnitelma_.tila), Tila.JULKAISTU);
         Predicate eiOlePohja = cb.notEqual(root.get(Opetussuunnitelma_.tyyppi), OpsTyyppi.POHJA);
-        Predicate pred = cb.and(isJulkaistu, onOikeallaKielella, eiOlePohja);
+        Predicate pred = cb.and(
+                cb.or(isJulkaistu, cb.isNotEmpty(root.get(Opetussuunnitelma_.julkaisut))),
+                onOikeallaKielella, eiOlePohja);
         pred = cb.and(pred, cb.equal(root.join(Opetussuunnitelma_.koulutustoimija).get(Koulutustoimija_.organisaatioRyhma), queryDto.isOrganisaatioRyhma()));
+
+        if (!ObjectUtils.isEmpty(queryDto.getOppilaitosTyyppiKoodiUri())) {
+            pred = cb.and(pred, cb.equal(root.get(Opetussuunnitelma_.oppilaitosTyyppiKoodiUri), queryDto.getOppilaitosTyyppiKoodiUri()));
+        }
+
+        if (!ObjectUtils.isEmpty(queryDto.getKoulutustyyppi())) {
+            // Rajataan koulutustoimijan ja koulutustyypin mukaan
+            Join<Opetussuunnitelma, CachedPeruste> peruste = root.join(Opetussuunnitelma_.peruste);
+            Predicate oikeatKoulutustyypit = peruste.get(CachedPeruste_.koulutustyyppi).in(queryDto.getKoulutustyyppi());
+            Predicate koulutustyyppiTaiIlmanPerustetta = cb.or(oikeatKoulutustyypit, cb.isNull(peruste));
+            pred = cb.and(pred, koulutustyyppiTaiIlmanPerustetta);
+        }
 
         if (queryDto.getNimi() != null && !"".equals(queryDto.getNimi())) {
             String nimi = RepositoryUtil.kuten(queryDto.getNimi());

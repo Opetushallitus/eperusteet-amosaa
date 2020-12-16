@@ -55,6 +55,7 @@ import fi.vm.sade.eperusteet.amosaa.service.util.Copyable;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
 /**
@@ -166,7 +167,7 @@ public class Opetussuunnitelma extends AbstractAuditedEntity implements Serializ
     @Getter
     @Setter
     private Set<String> tutkintonimikkeet = new HashSet<>();
-    
+
     @ElementCollection
     @Getter
     @Setter
@@ -175,6 +176,15 @@ public class Opetussuunnitelma extends AbstractAuditedEntity implements Serializ
     @Getter
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "opetussuunnitelma", orphanRemoval = true)
     private Set<OpetussuunnitelmaAikataulu> opetussuunnitelmanAikataulut = new HashSet<>();
+
+    @Getter
+    @Setter
+    private String oppilaitosTyyppiKoodiUri;
+
+    @NotAudited
+    @Getter
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "opetussuunnitelma")
+    private Set<Julkaisu> julkaisut = new HashSet<>();
 
     public void changeKoulutustoimija(Koulutustoimija kt) {
         this.koulutustoimija = kt;
