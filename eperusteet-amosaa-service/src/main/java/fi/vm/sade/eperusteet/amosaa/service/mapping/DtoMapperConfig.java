@@ -19,6 +19,7 @@ import com.google.common.base.Throwables;
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.Dokumentti;
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.Dokumentti_;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OpintokokonaisuusTavoite;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
@@ -26,6 +27,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaJulkinenDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaYstavaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.SuorituspolkuOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneOsaDto;
@@ -33,6 +35,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.OpintokokonaisuusTavoiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SuorituspolkuRakenneDto;
 import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
+import fi.vm.sade.eperusteet.amosaa.service.util.KoodistoClient;
 import java.time.Instant;
 import ma.glasnost.orika.CustomMapper;
 import ma.glasnost.orika.MappingContext;
@@ -45,6 +48,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.client.RestClientException;
 
 /**
@@ -60,6 +64,10 @@ public class DtoMapperConfig {
 
     @Autowired
     OpintokokonaisuusTavoiteMapper opintokokonaisuusTavoiteMapper;
+
+    @Lazy
+    @Autowired
+    KoodistoClient koodistoClient;
 
     @Bean
     public DtoMapper dtoMapper(
@@ -144,6 +152,22 @@ public class DtoMapperConfig {
                 .byDefault()
                 .customize(opintokokonaisuusTavoiteMapper)
                 .register();
+
+        factory.classMap(Opetussuunnitelma.class, OpetussuunnitelmaDto.class)
+                .byDefault()
+                .customize(new CustomMapper<Opetussuunnitelma, OpetussuunnitelmaDto>() {
+                    @Override
+                    public void mapAtoB(Opetussuunnitelma source, OpetussuunnitelmaDto target, MappingContext context) {
+                        super.mapAtoB(source, target, context);
+
+                        if (!ObjectUtils.isEmpty(source.getOppilaitosTyyppiKoodiUri())) {
+                            target.setOppilaitosTyyppiKoodi(koodistoClient.getByUri(source.getOppilaitosTyyppiKoodiUri()));
+                        }
+
+                    }
+                })
+                .register();
+
 
         return new DtoMapperImpl(factory.getMapperFacade());
     }

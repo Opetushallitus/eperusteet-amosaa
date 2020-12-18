@@ -17,6 +17,7 @@
 package fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija;
 
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
+import fi.vm.sade.eperusteet.amosaa.dto.koodisto.KoodistoKoodiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.liite.LiiteDto;
 import java.util.Date;
 import java.util.HashSet;
@@ -42,4 +43,5 @@ public class OpetussuunnitelmaDto extends OpetussuunnitelmaBaseDto {
     private Set<String> tutkintonimikkeet = new HashSet<>();
     private Set<String> osaamisalat = new HashSet<>();
     private String oppilaitosTyyppiKoodiUri;
+    private KoodistoKoodiDto oppilaitosTyyppiKoodi;
 }
