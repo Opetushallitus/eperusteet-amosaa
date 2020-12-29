@@ -114,9 +114,10 @@ public class OpetussuunnitelmaRepositoryImpl implements OpetussuunnitelmaCustomR
         Predicate onOikeallaKielella = cb.equal(opsNimi.get(Teksti_.kieli), kieli);
         Predicate isJulkaistu = cb.equal(root.get(Opetussuunnitelma_.tila), Tila.JULKAISTU);
         Predicate eiOlePohja = cb.notEqual(root.get(Opetussuunnitelma_.tyyppi), OpsTyyppi.POHJA);
+        Predicate eiOleOpsPohja = cb.notEqual(root.get(Opetussuunnitelma_.tyyppi), OpsTyyppi.OPSPOHJA);
         Predicate pred = cb.and(
                 cb.or(isJulkaistu, cb.isNotEmpty(root.get(Opetussuunnitelma_.julkaisut))),
-                onOikeallaKielella, eiOlePohja);
+                onOikeallaKielella, eiOlePohja, eiOleOpsPohja);
         pred = cb.and(pred, cb.equal(root.join(Opetussuunnitelma_.koulutustoimija).get(Koulutustoimija_.organisaatioRyhma), queryDto.isOrganisaatioRyhma()));
 
         if (!ObjectUtils.isEmpty(queryDto.getOppilaitosTyyppiKoodiUri())) {

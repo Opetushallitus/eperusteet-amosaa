@@ -18,6 +18,7 @@ package fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija;
 
 import fi.vm.sade.eperusteet.amosaa.domain.AbstractAuditedEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.HistoriaTapahtuma;
+import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.liite.Liite;
@@ -186,6 +187,11 @@ public class Opetussuunnitelma extends AbstractAuditedEntity implements Serializ
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "opetussuunnitelma")
     private Set<Julkaisu> julkaisut = new HashSet<>();
 
+    @Getter
+    @Setter
+    @Enumerated(EnumType.STRING)
+    private KoulutusTyyppi koulutustyyppi;
+
     public void changeKoulutustoimija(Koulutustoimija kt) {
         this.koulutustoimija = kt;
     }
@@ -221,6 +227,7 @@ public class Opetussuunnitelma extends AbstractAuditedEntity implements Serializ
         result.setSuoritustapa(this.getSuoritustapa());
         result.setPohja(this.getPohja());
         result.setTila(Tila.LUONNOS);
+        result.setKoulutustyyppi(this.getKoulutustyyppi());
         return result;
     }
 

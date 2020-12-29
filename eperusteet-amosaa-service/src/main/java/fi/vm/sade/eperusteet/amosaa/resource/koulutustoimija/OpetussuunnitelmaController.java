@@ -18,6 +18,7 @@ package fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.revision.Revision;
 import fi.vm.sade.eperusteet.amosaa.dto.NavigationNodeDto;
 import fi.vm.sade.eperusteet.amosaa.dto.OpsHakuDto;
@@ -47,6 +48,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -381,10 +383,13 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
     @RequestMapping(value = "/koulutustoimija", method = RequestMethod.GET)
     public List<OpetussuunnitelmaDto> getKoulutustoimijaOpetussuunnitelmat(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
-            @RequestParam(value = "koulutustyypit", required = false) final Set<String> koulutustyypit
+            @RequestParam(value = "koulutustyypit", required = false) final Set<String> koulutustyypit,
+            @RequestParam(value = "tyyppi", required = false) final OpsTyyppi tyyppi
     ) {
         if (CollectionUtils.isNotEmpty(koulutustyypit)) {
             return service.getOpetussuunnitelmat(ktId, koulutustyypit);
+        } else if (!ObjectUtils.isEmpty(tyyppi)) {
+            return service.getOpetussuunnitelmat(ktId, tyyppi);
         }
 
         return service.getOpetussuunnitelmat(ktId);

@@ -37,9 +37,11 @@ import java.util.List;
 public class SisaltoViiteDto {
     private Long id;
     private TekstiKappaleDto tekstiKappale;
+    private TekstiKappaleDto pohjanTekstikappale;
     private boolean pakollinen;
     private boolean valmis;
     private boolean liikkumaton;
+    private boolean naytaPohjanTeksti;
     private Reference owner;
     private Reference vanhempi;
     private CachedPerusteBaseDto peruste;

@@ -92,5 +92,12 @@ public interface OpetussuunnitelmaRepository extends JpaWithVersioningRepository
 
     List<Opetussuunnitelma> findAllByKoulutustoimijaId(Long ktId);
 
-    List<Opetussuunnitelma> findByKoulutustoimijaIdAndPerusteKoulutustyyppiIn(Long ktId, Set<KoulutusTyyppi> koulutusTyyppi);
+    List<Opetussuunnitelma> findAllByKoulutustoimijaIdAndTyyppi(Long ktId, OpsTyyppi tyyppi);
+
+    @Query(value = "SELECT o " +
+            "FROM Opetussuunnitelma o " +
+            "JOIN o.koulutustoimija kt " +
+            "LEFT OUTER JOIN o.peruste p " +
+            "WHERE kt.id = :koulutustoimija AND (p.koulutustyyppi IN (:koulutustyyppi) OR o.koulutustyyppi IN (:koulutustyyppi))")
+    List<Opetussuunnitelma> findByKoulutustoimijaIdAndPerusteKoulutustyyppiIn(@Param("koulutustoimija") Long ktId, @Param("koulutustyyppi") Set<KoulutusTyyppi> koulutusTyyppi);
 }

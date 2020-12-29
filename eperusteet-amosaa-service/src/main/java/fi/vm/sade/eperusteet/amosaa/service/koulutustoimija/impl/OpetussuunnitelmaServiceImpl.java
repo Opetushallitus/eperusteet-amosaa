@@ -295,6 +295,13 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     }
 
     @Override
+    public List<OpetussuunnitelmaDto> getOpetussuunnitelmat(Long ktId, OpsTyyppi tyyppi) {
+        return repository.findAllByKoulutustoimijaIdAndTyyppi(ktId, tyyppi).stream()
+                .map(ops -> mapper.map(ops, OpetussuunnitelmaDto.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<OpetussuunnitelmaDto> getOpetussuunnitelmat(Long ktId, Set<String> koulutustyypit) {
         return repository.findByKoulutustoimijaIdAndPerusteKoulutustyyppiIn(ktId, koulutustyypit.stream().map(KoulutusTyyppi::of).collect(Collectors.toSet())).stream()
                 .map(ops -> mapper.map(ops, OpetussuunnitelmaDto.class))
@@ -645,8 +652,15 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
             if (opsDto.getNimi() != null) {
                 ops.setNimi(mapper.map(opsDto.getNimi(), LokalisoituTeksti.class));
             }
+
+            switch (pohja.getTyyppi()) {
+                case OPSPOHJA:
+                    ops.setTyyppi(OpsTyyppi.OPS);
+                    break;
+            }
+
             ops = repository.save(ops);
-            SisaltoViite root = tkvService.kopioiHierarkia(sisaltoRoot, ops, Collections.singletonMap(SisaltoTyyppi.TUTKINNONOSA, opsDto.getTutkinnonOsaKoodiIncludes()));
+            SisaltoViite root = tkvService.kopioiHierarkia(sisaltoRoot, ops, Collections.singletonMap(SisaltoTyyppi.TUTKINNONOSA, opsDto.getTutkinnonOsaKoodiIncludes()), !pohja.getTyyppi().equals(OpsTyyppi.OPSPOHJA));
             tkvRepository.save(root);
         }
         else {
@@ -687,11 +701,13 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
                         opsDto.setSuoritustapa("yhteinen");
                         SisaltoViite pohjatkv = tkvRepository.findOneRoot(pohja);
-                        tkvRepository.save(tkvService.kopioiHierarkia(pohjatkv, ops, null));
+                        tkvRepository.save(tkvService.kopioiHierarkia(pohjatkv, ops, null, true));
                         ops.setPohja(pohja);
                         break;
                     case POHJA:
                         throw new BusinessRuleViolationException("ainoastaan-oph-voi-tehda-pohjia");
+                    case OPSPOHJA:
+                        break;
                     default:
                         throw new BusinessRuleViolationException("opstyypille-ei-toteutusta");
                 }
