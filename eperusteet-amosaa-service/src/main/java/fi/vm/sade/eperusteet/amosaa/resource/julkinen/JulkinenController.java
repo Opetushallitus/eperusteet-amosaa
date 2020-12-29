@@ -16,6 +16,7 @@
 
 package fi.vm.sade.eperusteet.amosaa.resource.julkinen;
 
+import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.*;
@@ -32,6 +33,8 @@ import fi.vm.sade.eperusteet.amosaa.service.ops.TiedoteService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
 import org.springframework.data.domain.Page;
@@ -278,5 +281,12 @@ public class JulkinenController {
             @PathVariable final Long svId
     ) {
         return svService.getSisaltoViite(ktId, opsId, svId);
+    }
+
+    @RequestMapping(value = "/koulutustoimijat/koulutystyypilla", method = RequestMethod.GET)
+    public List<KoulutustoimijaJulkinenDto> findKoulutusatyypinKoulutustoimijat(
+            @RequestParam(value = "koulutustyypit") final Set<String> koulutustyypit
+    ) {
+        return ktService.findKoulutusatyypinKoulutustoimijat(koulutustyypit.stream().map(KoulutusTyyppi::of).collect(Collectors.toSet()));
     }
 }

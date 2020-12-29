@@ -347,6 +347,10 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
                 addLokalisoituteksti(docBase, lapsi.getPerusteteksti(), "div");
             }
 
+            if (lapsi.isNaytaPohjanTeksti() && lapsi.getPohjanTekstikappale().getTeksti() != null) {
+                addLokalisoituteksti(docBase, lapsi.getPohjanTekstikappale().getTeksti(), "div");
+            }
+
             if (tekstiKappale.getTeksti() != null) {
                 addLokalisoituteksti(docBase, tekstiKappale.getTeksti(), "div");
             } else {

@@ -93,6 +93,15 @@ public class SisaltoViite implements ReferenceableEntity, Serializable, Copyable
     @Setter
     private TekstiKappale tekstiKappale;
 
+    @ManyToOne
+    @Getter
+    private TekstiKappale pohjanTekstikappale;
+
+    @Getter
+    @Setter
+    @Column(name = "nayta_pohjan_teksti")
+    private boolean naytaPohjanTeksti = true;
+
     @ValidHtml
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
@@ -164,14 +173,22 @@ public class SisaltoViite implements ReferenceableEntity, Serializable, Copyable
 
     @Override
     public SisaltoViite copy(boolean deep) {
-        return copy(this, deep);
+        return copy(this, deep, true);
+    }
+
+    public SisaltoViite copy(boolean deep, boolean copyText) {
+        return copy(this, deep, copyText);
     }
 
     public static SisaltoViite copy(SisaltoViite kopioitava) {
-        return copy(kopioitava, true);
+        return copy(kopioitava, true, true);
     }
 
-    public static SisaltoViite copy(SisaltoViite original, boolean copyChildren) {
+    public static SisaltoViite copy(SisaltoViite kopioitava, boolean copyChildren) {
+        return copy(kopioitava, copyChildren, true);
+    }
+
+    public static SisaltoViite copy(SisaltoViite original, boolean copyChildren, boolean copyText) {
         if (original != null) {
             SisaltoViite result = new SisaltoViite();
             result.setLiikkumaton(original.isLiikkumaton());
@@ -180,11 +197,17 @@ public class SisaltoViite implements ReferenceableEntity, Serializable, Copyable
             result.setOhjeteksti(original.getOhjeteksti());
             result.setTyyppi(original.getTyyppi());
             result.setPerusteteksti(original.getPerusteteksti());
-            result.setTekstiKappale(TekstiKappale.copy(original.getTekstiKappale()));
             result.setTosa(Tutkinnonosa.copy(original.getTosa()));
             result.setSuorituspolku(Suorituspolku.copy(original.getSuorituspolku()));
             result.setOpintokokonaisuus(Opintokokonaisuus.copy(original.getOpintokokonaisuus()));
             result.setPeruste(original.getPeruste());
+
+            result.setTekstiKappale(TekstiKappale.copy(original.getTekstiKappale()));
+            if (!copyText && original.getTekstiKappale() != null) {
+                result.getTekstiKappale().setTeksti(null);
+                result.updatePohjanTekstikappale(original.getTekstiKappale());
+                result.setNaytaPohjanTeksti(true);
+            }
 
             if (copyChildren) {
                 result.setLapset(new ArrayList<>());
@@ -230,5 +253,9 @@ public class SisaltoViite implements ReferenceableEntity, Serializable, Copyable
         Opintokokonaisuus opintokokonaisuus = new Opintokokonaisuus();
         result.setOpintokokonaisuus(opintokokonaisuus);
         return result;
+    }
+
+    public void updatePohjanTekstikappale(TekstiKappale other) {
+        this.pohjanTekstikappale = other;
     }
 }

@@ -451,6 +451,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
             viite.setPerusteteksti(LokalisoituTeksti.of(uusi.getPerusteteksti()));
         }
         viite.setNaytaPerusteenTeksti(uusi.isNaytaPerusteenTeksti());
+        viite.setNaytaPohjanTeksti(uusi.isNaytaPohjanTeksti());
 
         switch (viite.getTyyppi()) {
             case TUTKINNONOSA:
@@ -619,20 +620,20 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
     // UUID parentin tunniste
     @Override
     @Transactional
-    public SisaltoViite kopioiHierarkia(SisaltoViite original, Opetussuunnitelma owner, Map<SisaltoTyyppi, Set<String>> sisaltotyyppiIncludes) {
+    public SisaltoViite kopioiHierarkia(SisaltoViite original, Opetussuunnitelma owner, Map<SisaltoTyyppi, Set<String>> sisaltotyyppiIncludes, boolean copyTekstikappaleet) {
         if (sisaltotyyppiIncludes != null && CollectionUtils.isNotEmpty(sisaltotyyppiIncludes.get(original.getTyyppi()))) {
             if (original.getTyyppi().equals((SisaltoTyyppi.TUTKINNONOSA)) && !sisaltotyyppiIncludes.get(SisaltoTyyppi.TUTKINNONOSA).contains(original.getTosa().getKoodi())) {
                 return null;
             }
         }
 
-        SisaltoViite result = original.copy(false);
+        SisaltoViite result = original.copy(false, copyTekstikappaleet);
         result.setOwner(owner);
         List<SisaltoViite> lapset = original.getLapset();
 
         if (lapset != null) {
             for (SisaltoViite lapsi : lapset) {
-                SisaltoViite uusiLapsi = kopioiHierarkia(lapsi, owner, sisaltotyyppiIncludes);
+                SisaltoViite uusiLapsi = kopioiHierarkia(lapsi, owner, sisaltotyyppiIncludes, copyTekstikappaleet);
                 if (uusiLapsi != null) {
                     uusiLapsi.setVanhempi(result);
                     result.getLapset().add(uusiLapsi);

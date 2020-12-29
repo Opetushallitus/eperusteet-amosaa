@@ -20,6 +20,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.EtusivuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
@@ -56,6 +57,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -303,7 +306,10 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
             result.setToteutussuunnitelmatKeskeneraiset(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.OPS, Collections.singleton(Tila.LUONNOS), koulutustoimijat, koulutustyypit));
             result.setToteutussuunnitelmatJulkaistut(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.OPS, Collections.singleton(Tila.JULKAISTU), koulutustoimijat, koulutustyypit));
 
-            if (koulutustoimija.isOph()) {
+            if (koulutustyypit.contains(KoulutusTyyppi.VAPAASIVISTYSTYO)) {
+                result.setToteutussuunnitelmaPohjatKeskeneraiset(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.OPSPOHJA, Collections.singleton(Tila.LUONNOS), koulutustoimijat));
+                result.setToteutussuunnitelmaPohjatValmiit(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.OPSPOHJA, Collections.singleton(Tila.VALMIS), koulutustoimijat));
+            } else if (koulutustoimija.isOph()) {
                 result.setKtYhteinenOsuusKeskeneraiset(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.POHJA, Collections.singleton(Tila.LUONNOS), koulutustoimijat));
                 result.setKtYhteinenOsuusJulkaistut(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.POHJA, Collections.singleton(Tila.JULKAISTU), koulutustoimijat));
             } else {
@@ -311,13 +317,14 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
                 result.setKtYhteinenOsuusJulkaistut(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.YHTEINEN, Collections.singleton(Tila.JULKAISTU), koulutustoimijat, koulutustyypit));
             }
 
-        } else {
-            result.setToteutussuunnitelmatKeskeneraiset(0L);
-            result.setToteutussuunnitelmatJulkaistut(0L);
-            result.setKtYhteinenOsuusKeskeneraiset(0L);
-            result.setKtYhteinenOsuusJulkaistut(0L);
         }
+
         return result;
+    }
+
+    @Override
+    public List<KoulutustoimijaJulkinenDto> findKoulutusatyypinKoulutustoimijat(Set<KoulutusTyyppi> koulutustyypit) {
+        return mapper.mapAsList(repository.findByKoulutustyypit(koulutustyypit), KoulutustoimijaJulkinenDto.class);
     }
 
 }

@@ -16,10 +16,13 @@
 
 package fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija;
 
+import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.repository.version.JpaWithVersioningRepository;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
@@ -47,4 +50,11 @@ public interface KoulutustoimijaRepository extends JpaWithVersioningRepository<K
     Set<Koulutustoimija> findAllYstavaPyynnotForKoulutustoimija(Koulutustoimija kt);
 
     List<Koulutustoimija> findByOrganisaatioIn(Collection<String> organisaatio);
+
+    @Query(value = "SELECT DISTINCT kt " +
+            "FROM Opetussuunnitelma o " +
+            "JOIN o.koulutustoimija kt " +
+            "LEFT JOIN o.peruste p " +
+            "WHERE p.koulutustyyppi IN (:koulutustyypit) OR o.koulutustyyppi IN (:koulutustyypit)")
+    List<Koulutustoimija> findByKoulutustyypit(@Param("koulutustyypit") Set<KoulutusTyyppi> koulutustyypit);
 }
