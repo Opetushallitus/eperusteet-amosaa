@@ -7,17 +7,22 @@ import static org.assertj.core.api.Assertions.tuple;
 
 import fi.vm.sade.eperusteet.amosaa.domain.liite.Liite;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.SisaltoviiteLaajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.SisaltoviiteQueryDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteenOsaViiteDto;
+import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.ops.LiiteService;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
 
+import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.validation.ConstraintViolationException;
 
@@ -81,6 +86,9 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
 
     @Autowired
     private LiiteService liiteService;
+
+    @Autowired
+    private SisaltoviiteRepository sisaltoviiteRepository;
 
     @Test
     @Rollback
@@ -440,18 +448,38 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
         Opetussuunnitelma ops = createOpetussuunnitelmaJulkaistu();
         liiteService.add(getKoulutustoimijaId(), ops.getId(), "txt", "teksti.txt", 1l, new ByteArrayInputStream("tekstia".getBytes()));
 
+        SisaltoViite opsRoot = sisaltoviiteRepository.findOneRoot(ops);
         SisaltoViiteDto.Matala root = sisaltoViiteService.getSisaltoRoot(getKoulutustoimijaId(), ops.getId());
-        SisaltoViiteDto.Matala added = sisaltoViiteService.addSisaltoViite(getKoulutustoimijaId(), ops.getId(), root.getLapset().get(1).getIdLong(), createSisalto(sisaltoViiteDto -> {
-            sisaltoViiteDto.setTyyppi(SisaltoTyyppi.TEKSTIKAPPALE);
-        }));
+
+        List<SisaltoViiteDto.Matala> added = Arrays.asList(
+                sisaltoViiteService.addSisaltoViite(getKoulutustoimijaId(), ops.getId(), root.getId(), createSisalto(sisaltoViiteDto -> {
+                    sisaltoViiteDto.setTyyppi(SisaltoTyyppi.TEKSTIKAPPALE);
+                })), sisaltoViiteService.addSisaltoViite(getKoulutustoimijaId(), ops.getId(), root.getLapset().get(0).getIdLong(), createSisalto(sisaltoViiteDto -> {
+                    sisaltoViiteDto.setTyyppi(SisaltoTyyppi.TUTKINNONOSA);
+                })), sisaltoViiteService.addSisaltoViite(getKoulutustoimijaId(), ops.getId(), root.getLapset().get(1).getIdLong(), createSisalto(sisaltoViiteDto -> {
+                    sisaltoViiteDto.setTyyppi(SisaltoTyyppi.SUORITUSPOLKU);
+                })));
 
         Opetussuunnitelma ops2 = createOpetussuunnitelmaJulkaistu();
 
+        SisaltoViite ops2Root = sisaltoviiteRepository.findOneRoot(ops2);
+        assertThat(ops2Root.getLapset()).hasSize(2);
+        assertThat(ops2Root.getLapset().get(0).getTyyppi()).isEqualTo(SisaltoTyyppi.TUTKINNONOSAT);
+        assertThat(ops2Root.getLapset().get(0).getLapset()).hasSize(10);
+        assertThat(ops2Root.getLapset().get(1).getTyyppi()).isEqualTo(SisaltoTyyppi.SUORITUSPOLUT);
+        assertThat(ops2Root.getLapset().get(1).getLapset()).hasSize(0);
         assertThat(liiteService.getAll(getKoulutustoimijaId(), ops.getId())).hasSize(1);
         assertThat(liiteService.getAll(getKoulutustoimijaId(), ops2.getId())).hasSize(0);
 
-        sisaltoViiteService.copySisaltoViiteet(getKoulutustoimijaId(), ops2.getId(), Collections.singletonList(added.getId()));
+        sisaltoViiteService.copySisaltoViiteet(getKoulutustoimijaId(), ops2.getId(), added.stream().map(SisaltoViiteDto.Matala::getId).collect(Collectors.toList()));
 
+        ops2Root = sisaltoviiteRepository.findOneRoot(ops2);
+        assertThat(ops2Root.getLapset()).hasSize(3);
+        assertThat(ops2Root.getLapset().get(0).getTyyppi()).isEqualTo(SisaltoTyyppi.TUTKINNONOSAT);
+        assertThat(ops2Root.getLapset().get(0).getLapset()).hasSize(11);
+        assertThat(ops2Root.getLapset().get(1).getLapset().get(0).getTyyppi()).isEqualTo(SisaltoTyyppi.SUORITUSPOLKU);
+        assertThat(ops2Root.getLapset().get(1).getLapset()).hasSize(1);
+        assertThat(ops2Root.getLapset().get(2).getTyyppi()).isEqualTo(SisaltoTyyppi.TEKSTIKAPPALE);
         assertThat(liiteService.getAll(getKoulutustoimijaId(), ops.getId())).hasSize(1);
         assertThat(liiteService.getAll(getKoulutustoimijaId(), ops2.getId())).hasSize(1);
     }
