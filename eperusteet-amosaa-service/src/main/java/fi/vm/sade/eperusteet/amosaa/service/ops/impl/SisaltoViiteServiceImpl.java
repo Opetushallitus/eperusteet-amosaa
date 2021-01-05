@@ -1030,6 +1030,10 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
                     return repository.save(viite);
                 })
                 .collect(Collectors.toList());
+
+        siirraViitteet(kopiot, root, SisaltoTyyppi.TUTKINNONOSA, SisaltoTyyppi.TUTKINNONOSAT);
+        siirraViitteet(kopiot, root, SisaltoTyyppi.SUORITUSPOLKU, SisaltoTyyppi.SUORITUSPOLUT);
+
         root.getLapset().addAll(kopiot);
         repository.save(root);
 
@@ -1042,6 +1046,20 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
                 .forEach(liite -> ops.attachLiite(liite));
 
         opsRepository.save(ops);
+    }
+
+    private void siirraViitteet(List<SisaltoViite> viitteet, SisaltoViite root, SisaltoTyyppi siirrettavat, SisaltoTyyppi rootTyyppi) {
+        Optional<SisaltoViite> rootViite = root.getLapset().stream().filter(sisaltoviite -> sisaltoviite.getTyyppi().equals(rootTyyppi)).findFirst();
+        if (rootViite.isPresent()) {
+            Set<SisaltoViite> filterViitteet = viitteet.stream().filter(sisaltoViite -> sisaltoViite.getTyyppi().equals(siirrettavat)).collect(Collectors.toSet());
+            filterViitteet.forEach(viite -> {
+                viite.setVanhempi(rootViite.get());
+                repository.save(viite);
+            });
+            rootViite.get().getLapset().addAll(filterViitteet);
+            repository.save(rootViite.get());
+            viitteet.removeAll(filterViitteet);
+        }
     }
 
 }
