@@ -158,6 +158,7 @@ public abstract class AbstractIntegrationTest {
         HashMap<String, String> nimi = new HashMap<>();
         nimi.put("fi", "auto");
         ops.setNimi(new LokalisoituTekstiDto(nimi));
+        ops.setPerusteId(515491l);
         opsfn.accept(ops);
         return opetussuunnitelmaService.addOpetussuunnitelma(getKoulutustoimijaId(), ops);
     }

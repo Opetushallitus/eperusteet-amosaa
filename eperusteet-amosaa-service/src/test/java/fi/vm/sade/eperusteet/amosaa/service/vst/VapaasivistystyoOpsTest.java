@@ -39,7 +39,7 @@ public class VapaasivistystyoOpsTest extends AbstractIntegrationTest {
 
     @Test
     public void test_vapaasivistystyoSisaltoviitteet() {
-        OpetussuunnitelmaBaseDto vstOps = createOpetussuunnitelma();
+        OpetussuunnitelmaBaseDto vstOps = createOpetussuunnitelma(ops -> ops.setPerusteId(35820l));
         List<SisaltoviiteLaajaDto> sisaltoviitteet = sisaltoViiteService.getSisaltoViitteet(vstOps.getKoulutustoimija().getId(), vstOps.getId(), SisaltoviiteLaajaDto.class);
 
         assertThat(sisaltoviitteet).hasSize(3);

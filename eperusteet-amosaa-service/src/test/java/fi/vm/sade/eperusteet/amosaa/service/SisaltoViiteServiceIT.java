@@ -115,8 +115,7 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
         TekstiKappaleDto tekstiKappaleDto = new TekstiKappaleDto();
         viiteDto.setTekstiKappale(tekstiKappaleDto);
 
-
-        Opetussuunnitelma uusi = mapper.map(opetussuunnitelmaService.addOpetussuunnitelma(getKoulutustoimijaId(), ops), Opetussuunnitelma.class);
+        OpetussuunnitelmaBaseDto uusi = createOpetussuunnitelma();
         Long ktId = getKoulutustoimijaId();
         Long opsId = uusi.getId();
 
