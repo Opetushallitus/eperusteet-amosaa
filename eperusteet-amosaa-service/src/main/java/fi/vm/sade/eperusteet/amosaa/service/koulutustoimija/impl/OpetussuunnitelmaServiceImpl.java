@@ -683,8 +683,10 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
             else {
                 switch (opsDto.getTyyppi()) {
                     case OPS:
-                        PerusteDto peruste = eperusteetClient.getPeruste(opsDto.getPerusteId(), PerusteDto.class);
-                        setOpsCommon(ops, peruste, rootTkv, opsDto.getTutkinnonOsaKoodiIncludes());
+                        if (opsDto.getPerusteId() != null) {
+                            PerusteDto peruste = eperusteetClient.getPeruste(opsDto.getPerusteId(), PerusteDto.class);
+                            setOpsCommon(ops, peruste, rootTkv, opsDto.getTutkinnonOsaKoodiIncludes());
+                        }
                         break;
                     case YLEINEN:
                         PerusteDto yleinen = eperusteetClient.getYleinenPohja();
