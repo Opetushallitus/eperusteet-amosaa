@@ -44,6 +44,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -126,9 +127,9 @@ public class OpetussuunnitelmaRepositoryImpl implements OpetussuunnitelmaCustomR
 
         if (!ObjectUtils.isEmpty(queryDto.getKoulutustyyppi())) {
             // Rajataan koulutustoimijan ja koulutustyypin mukaan
-            Join<Opetussuunnitelma, CachedPeruste> peruste = root.join(Opetussuunnitelma_.peruste);
+            Join<Opetussuunnitelma, CachedPeruste> peruste = root.join(Opetussuunnitelma_.peruste, JoinType.LEFT);
             Predicate oikeatKoulutustyypit = peruste.get(CachedPeruste_.koulutustyyppi).in(queryDto.getKoulutustyyppi());
-            Predicate koulutustyyppiTaiIlmanPerustetta = cb.or(oikeatKoulutustyypit, cb.isNull(peruste));
+            Predicate koulutustyyppiTaiIlmanPerustetta = cb.or(oikeatKoulutustyypit, root.get(Opetussuunnitelma_.koulutustyyppi).in(queryDto.getKoulutustyyppi()));
             pred = cb.and(pred, koulutustyyppiTaiIlmanPerustetta);
         }
 
@@ -259,9 +260,9 @@ public class OpetussuunnitelmaRepositoryImpl implements OpetussuunnitelmaCustomR
             pred = cb.and(oikeaKoulutustoimija, oikeaPeruste);
         } else if (!ObjectUtils.isEmpty(queryDto.getKoulutustyyppi())) {
             // Rajataan koulutustoimijan ja koulutustyypin mukaan
-            Join<Opetussuunnitelma, CachedPeruste> peruste = root.join(Opetussuunnitelma_.peruste);
+            Join<Opetussuunnitelma, CachedPeruste> peruste = root.join(Opetussuunnitelma_.peruste, JoinType.LEFT);
             Predicate oikeatKoulutustyypit = peruste.get(CachedPeruste_.koulutustyyppi).in(queryDto.getKoulutustyyppi());
-            Predicate koulutustyyppiTaiIlmanPerustetta = cb.or(oikeatKoulutustyypit, cb.isNull(peruste));
+            Predicate koulutustyyppiTaiIlmanPerustetta = cb.or(oikeatKoulutustyypit, root.get(Opetussuunnitelma_.koulutustyyppi).in(queryDto.getKoulutustyyppi()));
             pred = cb.and(oikeaKoulutustoimija, koulutustyyppiTaiIlmanPerustetta);
         } else {
             // Rajataan koulutustoimijan mukaan

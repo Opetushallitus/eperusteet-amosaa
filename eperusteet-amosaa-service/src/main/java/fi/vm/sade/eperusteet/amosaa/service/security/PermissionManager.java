@@ -22,6 +22,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaoikeusRepository;
+import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.JulkaisuRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.Organization;
@@ -112,6 +113,9 @@ public class PermissionManager {
     private OpetussuunnitelmaRepository opsRepository;
 
     @Autowired
+    private JulkaisuRepository julkaisuRepository;
+
+    @Autowired
     private KayttajaoikeusRepository kayttajaoikeusRepository;
 
     @Transactional(readOnly = true)
@@ -154,7 +158,7 @@ public class PermissionManager {
                 targetId != null ? opsRepository.findTyyppiAndTila((long) targetId) : null;
 
         if (perm == Permission.ESITYS && tyyppiJaTila != null) {
-            if (tyyppiJaTila.getSecond() == Tila.JULKAISTU) {
+            if (tyyppiJaTila.getSecond() == Tila.JULKAISTU || julkaisuRepository.existsByOpetussuunnitelmaId(targetId)) {
                 return true;
             } else if (opsRepository.isEsikatseltavissa((long) targetId)) {
                 return true;
