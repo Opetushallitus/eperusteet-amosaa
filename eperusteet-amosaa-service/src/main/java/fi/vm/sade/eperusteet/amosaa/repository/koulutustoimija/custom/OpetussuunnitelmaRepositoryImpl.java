@@ -129,7 +129,12 @@ public class OpetussuunnitelmaRepositoryImpl implements OpetussuunnitelmaCustomR
             // Rajataan koulutustoimijan ja koulutustyypin mukaan
             Join<Opetussuunnitelma, CachedPeruste> peruste = root.join(Opetussuunnitelma_.peruste, JoinType.LEFT);
             Predicate oikeatKoulutustyypit = peruste.get(CachedPeruste_.koulutustyyppi).in(queryDto.getKoulutustyyppi());
-            Predicate koulutustyyppiTaiIlmanPerustetta = cb.or(oikeatKoulutustyypit, root.get(Opetussuunnitelma_.koulutustyyppi).in(queryDto.getKoulutustyyppi()));
+            Predicate koulutustyyppiTaiIlmanPerustetta = cb.or(
+                    oikeatKoulutustyypit,
+                    root.get(Opetussuunnitelma_.koulutustyyppi).in(queryDto.getKoulutustyyppi()),
+                    cb.and(
+                            cb.isNull(peruste),
+                            cb.isNull(root.get(Opetussuunnitelma_.koulutustyyppi))));
             pred = cb.and(pred, koulutustyyppiTaiIlmanPerustetta);
         }
 
@@ -262,7 +267,12 @@ public class OpetussuunnitelmaRepositoryImpl implements OpetussuunnitelmaCustomR
             // Rajataan koulutustoimijan ja koulutustyypin mukaan
             Join<Opetussuunnitelma, CachedPeruste> peruste = root.join(Opetussuunnitelma_.peruste, JoinType.LEFT);
             Predicate oikeatKoulutustyypit = peruste.get(CachedPeruste_.koulutustyyppi).in(queryDto.getKoulutustyyppi());
-            Predicate koulutustyyppiTaiIlmanPerustetta = cb.or(oikeatKoulutustyypit, root.get(Opetussuunnitelma_.koulutustyyppi).in(queryDto.getKoulutustyyppi()));
+            Predicate koulutustyyppiTaiIlmanPerustetta = cb.or(
+                    oikeatKoulutustyypit,
+                    root.get(Opetussuunnitelma_.koulutustyyppi).in(queryDto.getKoulutustyyppi()),
+                    cb.and(
+                            cb.isNull(peruste),
+                            cb.isNull(root.get(Opetussuunnitelma_.koulutustyyppi))));
             pred = cb.and(oikeaKoulutustoimija, koulutustyyppiTaiIlmanPerustetta);
         } else {
             // Rajataan koulutustoimijan mukaan
