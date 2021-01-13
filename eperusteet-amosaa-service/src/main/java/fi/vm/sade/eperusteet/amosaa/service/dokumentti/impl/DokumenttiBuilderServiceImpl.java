@@ -343,11 +343,11 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
 
             addHeader(docBase, otsikkoBuilder.toString());
 
-            if (lapsi.isNaytaPerusteenTeksti() && lapsi.getPerusteteksti().getTeksti() != null) {
+            if (lapsi.isNaytaPerusteenTeksti() && lapsi.getPerusteteksti() != null && lapsi.getPerusteteksti().getTeksti() != null) {
                 addLokalisoituteksti(docBase, lapsi.getPerusteteksti(), "div");
             }
 
-            if (lapsi.isNaytaPohjanTeksti() && lapsi.getPohjanTekstikappale().getTeksti() != null) {
+            if (lapsi.isNaytaPohjanTeksti() && lapsi.getPohjanTekstikappale() != null && lapsi.getPohjanTekstikappale().getTeksti() != null) {
                 addLokalisoituteksti(docBase, lapsi.getPohjanTekstikappale().getTeksti(), "div");
             }
 
