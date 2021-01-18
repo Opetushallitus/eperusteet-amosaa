@@ -16,11 +16,15 @@
 
 package fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija;
 
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaTilastoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.tilastot.TilastotDto;
 import fi.vm.sade.eperusteet.amosaa.dto.tilastot.ToimijaTilastotDto;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
+import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.tilastot.TilastotService;
 import io.swagger.annotations.Api;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -34,8 +38,12 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(value = "tilastot")
 @InternalApi
 public class TilastotController {
+
     @Autowired
     TilastotService service;
+
+    @Autowired
+    OpetussuunnitelmaService opetussuunnitelmaService;
 
     @RequestMapping(method = RequestMethod.GET)
     TilastotDto get() {
@@ -45,5 +53,10 @@ public class TilastotController {
     @RequestMapping(value = "/toimijat", method = RequestMethod.GET)
     ToimijaTilastotDto getTilastotToimijakohtaisesti() {
         return service.getTilastotToimijakohtaisesti();
+    }
+
+    @RequestMapping(value = "/opetussuunnitelmat", method = RequestMethod.GET)
+    public List<OpetussuunnitelmaTilastoDto> getOpetussuunnitelmaTilastot() {
+        return opetussuunnitelmaService.getOpetussuunnitelmaTilastot();
     }
 }

@@ -31,6 +31,7 @@ import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.RolePre
 import fi.vm.sade.eperusteet.amosaa.service.util.Pair;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashSet;
@@ -39,6 +40,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -118,9 +120,16 @@ public class PermissionManager {
     @Autowired
     private KayttajaoikeusRepository kayttajaoikeusRepository;
 
+    @Autowired
+    private Environment env;
+
     @Transactional(readOnly = true)
     public boolean hasPermission(Authentication authentication, Serializable targetObject, TargetType target,
                                  Permission perm) {
+
+        if (Arrays.stream(env.getActiveProfiles()).anyMatch(profile -> profile.equals("local"))) {
+            return true;
+        }
 
         Long targetId = null;
         Long originalKtId = null;
