@@ -18,7 +18,6 @@ package fi.vm.sade.eperusteet.amosaa.resource.external;
 import com.fasterxml.jackson.databind.JsonNode;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koodisto.KoodistoKoodiDto;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaTilastoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKevytDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TiedoteQueryDto;
@@ -26,23 +25,23 @@ import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import fi.vm.sade.eperusteet.amosaa.service.external.KoodistoService;
-
-import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
-import java.util.List;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
-
-import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * @author mikkom
@@ -61,9 +60,6 @@ public class UlkopuolisetController {
 
     @Autowired
     private KayttajanTietoService kayttajanTietoService;
-
-    @Autowired
-    private OpetussuunnitelmaService opetussuunnitelmaService;
 
     @RequestMapping(value = "/kayttajatiedot/{oid:.+}", method = GET)
     public ResponseEntity<KayttajanTietoDto> getKayttajatiedot(@PathVariable final String oid) {
