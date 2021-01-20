@@ -117,6 +117,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -285,6 +286,14 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         return repository.findAll().stream()
                 .map(ops -> mapper.map(ops, OpetussuunnitelmaTilastoDto.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<OpetussuunnitelmaTilastoDto> getOpetussuunnitelmaTilastot(Integer sivu, Integer sivukoko) {
+        Page<Opetussuunnitelma> opetussuunnitelmat = repository.findAll(new PageRequest(sivu, sivukoko));
+        return new PageImpl(opetussuunnitelmat.getContent().stream()
+                .map(t -> mapper.map(t, OpetussuunnitelmaTilastoDto.class))
+                .collect(Collectors.toList()), null, opetussuunnitelmat.getTotalElements());
     }
 
     @Override
