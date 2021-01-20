@@ -26,6 +26,8 @@ import fi.vm.sade.eperusteet.amosaa.service.tilastot.TilastotService;
 import io.swagger.annotations.Api;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -58,5 +60,10 @@ public class TilastotController {
     @RequestMapping(value = "/opetussuunnitelmat", method = RequestMethod.GET)
     public List<OpetussuunnitelmaTilastoDto> getOpetussuunnitelmaTilastot() {
         return opetussuunnitelmaService.getOpetussuunnitelmaTilastot();
+    }
+
+    @RequestMapping(value = "/opetussuunnitelmat/{sivu}/{sivukoko}", method = RequestMethod.GET)
+    public Page<OpetussuunnitelmaTilastoDto> getOpetussuunnitelmaTilastotSivu(@PathVariable("sivu") Integer sivu, @PathVariable("sivukoko") Integer sivukoko) {
+        return opetussuunnitelmaService.getOpetussuunnitelmaTilastot(sivu, sivukoko);
     }
 }
