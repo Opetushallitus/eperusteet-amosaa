@@ -42,7 +42,6 @@ public class Julkaisu extends AbstractReferenceableEntity {
 
     @ValidHtml(whitelist = ValidHtml.WhitelistType.SIMPLIFIED)
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @NotNull
     private LokalisoituTeksti tiedote;
 
     @Temporal(TemporalType.TIMESTAMP)
