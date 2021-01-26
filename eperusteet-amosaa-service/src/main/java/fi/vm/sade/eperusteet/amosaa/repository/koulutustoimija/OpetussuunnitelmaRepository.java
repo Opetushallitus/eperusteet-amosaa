@@ -63,8 +63,8 @@ public interface OpetussuunnitelmaRepository extends JpaWithVersioningRepository
                        @Param("tilat") Collection<Tila> tilat,
                        @Param("koulutustoimijat") Collection<Koulutustoimija> koulutustoimijat);
 
-    @Query(value = "SELECT COUNT(DISTINCT o) FROM Opetussuunnitelma o JOIN o.koulutustoimija kt " +
-            "WHERE kt IN (:koulutustoimijat) AND o.tyyppi = :tyyppi AND o.tila IN (:tilat) AND o.peruste.koulutustyyppi IN (:koulutustyypit)")
+    @Query(value = "SELECT COUNT(DISTINCT o) FROM Opetussuunnitelma o JOIN o.koulutustoimija kt LEFT JOIN o.peruste p " +
+            "WHERE kt IN (:koulutustoimijat) AND o.tyyppi = :tyyppi AND o.tila IN (:tilat) AND (p.koulutustyyppi IN (:koulutustyypit) or o.koulutustyyppi IN (:koulutustyypit))")
     long countByTyyppi(@Param("tyyppi") OpsTyyppi tyyppi,
                        @Param("tilat") Collection<Tila> tilat,
                        @Param("koulutustoimijat") Collection<Koulutustoimija> koulutustoimijat,
