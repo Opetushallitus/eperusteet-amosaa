@@ -146,8 +146,8 @@ public class DokumenttiServiceImpl implements DokumenttiService {
         dto.setTila(DokumenttiTila.LUODAAN);
         dokumenttiStateService.save(dto);
 
+        Dokumentti dokumentti = dokumenttiRepository.findOne(dto.getId());
         try {
-            Dokumentti dokumentti = dokumenttiRepository.findOne(dto.getId());
             Opetussuunnitelma ops = opsRepository.findOne(dokumentti.getOpsId());
             dokumentti.setTila(DokumenttiTila.VALMIS);
             dokumentti.setValmistumisaika(new Date());
@@ -157,10 +157,9 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 
             dokumenttiRepository.save(dokumentti);
         } catch (Exception ex) {
-            dto.setTila(DokumenttiTila.EPAONNISTUI);
-            dto.setVirhekoodi(ex.getLocalizedMessage());
-
-            dokumenttiStateService.save(dto);
+            dokumentti.setTila(DokumenttiTila.EPAONNISTUI);
+            dokumentti.setVirhekoodi(ex.getLocalizedMessage());
+            dokumenttiRepository.save(dokumentti);
 
             throw new DokumenttiException(ex.getMessage(), ex);
         }
