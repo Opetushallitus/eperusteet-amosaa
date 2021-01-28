@@ -204,7 +204,7 @@ public class OrganisaatioServiceImpl implements OrganisaatioService {
     public LokalisoituTeksti haeOrganisaatioNimi(String organisaatioOid) {
         JsonNode organisaatio = getOrganisaatio(organisaatioOid);
         if (organisaatio == null) {
-            return LokalisoituTeksti.of(Kieli.FI, "tuntematon-organisaatio");
+            return LokalisoituTeksti.of(Kieli.FI, "Tuntematon organisaatio");
         }
         return LokalisoituTeksti.of(organisaatio.get("nimi"));
     }
