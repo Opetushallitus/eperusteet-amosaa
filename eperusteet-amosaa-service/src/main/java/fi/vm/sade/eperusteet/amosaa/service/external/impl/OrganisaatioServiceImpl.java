@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHierarkiaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHistoriaLiitosDto;
@@ -202,6 +203,9 @@ public class OrganisaatioServiceImpl implements OrganisaatioService {
     @Cacheable("organisaationimi")
     public LokalisoituTeksti haeOrganisaatioNimi(String organisaatioOid) {
         JsonNode organisaatio = getOrganisaatio(organisaatioOid);
+        if (organisaatio == null) {
+            return LokalisoituTeksti.of(Kieli.FI, "tuntematon-organisaatio");
+        }
         return LokalisoituTeksti.of(organisaatio.get("nimi"));
     }
 
