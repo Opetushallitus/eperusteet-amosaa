@@ -274,6 +274,12 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
             voimaantulopaivamaaraEl.setAttribute("content", voimaantulopaivamaaraText);
             docBase.getHeadElement().appendChild(voimaantulopaivamaaraEl);
         }
+
+        Element pdfluotu = docBase.getDocument().createElement("meta");
+        pdfluotu.setAttribute("name", "pdfluotu");
+        pdfluotu.setAttribute("content", new SimpleDateFormat("d.M.yyyy").format(new Date()));
+        pdfluotu.setAttribute("translate", messages.translate("docgen.pdf-luotu", docBase.getKieli()));
+        docBase.getHeadElement().appendChild(pdfluotu);
     }
 
     private void addTekstit(DokumenttiBase docBase)
