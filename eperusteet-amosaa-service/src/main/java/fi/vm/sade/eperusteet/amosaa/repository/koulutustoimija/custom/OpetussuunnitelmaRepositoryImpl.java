@@ -27,7 +27,11 @@ import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste_;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti_;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite_;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Teksti;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale_;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Teksti_;
 import fi.vm.sade.eperusteet.amosaa.dto.OpsHakuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaQueryDto;
@@ -49,6 +53,7 @@ import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.SetJoin;
+import javax.persistence.criteria.Subquery;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -141,7 +146,21 @@ public class OpetussuunnitelmaRepositoryImpl implements OpetussuunnitelmaCustomR
             Predicate diaarissa = cb.like(cb.lower(root.get(Opetussuunnitelma_.perusteDiaarinumero)), cb.literal(nimi));
             SetJoin<LokalisoituTeksti, Teksti> ktNimi = koulutustoimija.join(Koulutustoimija_.nimi).join(LokalisoituTeksti_.teksti);
             Predicate ktNimessa = cb.like(cb.lower(ktNimi.get(Teksti_.teksti)), cb.literal(nimi));
-            pred = cb.and(pred, cb.or(nimessa, diaarissa, ktNimessa));
+
+            Subquery tutkinnonOsaSubQuery = cb.createQuery(Opetussuunnitelma.class).subquery(Long.class);
+            Root subRoot = tutkinnonOsaSubQuery.from(SisaltoViite.class);
+            Join<SisaltoViite, Opetussuunnitelma> subSisaltoviite = subRoot.join(SisaltoViite_.owner);
+            Join<SisaltoViite, TekstiKappale> sisaltoviiteTekstikappale = subRoot.join(SisaltoViite_.tekstiKappale);
+            Join<TekstiKappale, LokalisoituTeksti> tekstikappaleenTeksti = sisaltoviiteTekstikappale.join(TekstiKappale_.nimi);
+            SetJoin<LokalisoituTeksti, Teksti> tutkinnonosaNimi = tekstikappaleenTeksti.join(LokalisoituTeksti_.teksti);
+            tutkinnonOsaSubQuery.select(cb.count(subRoot.get(SisaltoViite_.id)));
+            tutkinnonOsaSubQuery.where(cb.and(
+                    cb.equal(root.get(Opetussuunnitelma_.id), subSisaltoviite.get(Opetussuunnitelma_.id))),
+                    cb.isNotNull(subRoot.get(SisaltoViite_.tosa)),
+                    cb.like(cb.lower(tutkinnonosaNimi.get(Teksti_.teksti)), cb.literal(nimi))
+            );
+
+            pred = cb.and(pred, cb.or(nimessa, diaarissa, ktNimessa, cb.greaterThan(tutkinnonOsaSubQuery, 0l)));
         }
 
         if (queryDto.getTyyppi() != null && !queryDto.getTyyppi().isEmpty()) {

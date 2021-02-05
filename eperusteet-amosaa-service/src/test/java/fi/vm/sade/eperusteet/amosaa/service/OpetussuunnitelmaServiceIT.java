@@ -613,4 +613,28 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
 
     }
 
+    @Test
+    @Rollback
+    public void testFindTutkinnonosanNimella() {
+        useProfileKP2();
+
+        createOpetussuunnitelmaJulkaistu();
+
+        createOpetussuunnitelmaJulkaistu(opsLuonti -> {
+            opsLuonti.setTutkinnonOsaKoodiIncludes(Sets.newHashSet("tutkinnonosat_104080", "tutkinnonosat_104074"));
+        });
+
+        OpetussuunnitelmaQueryDto pquery = new OpetussuunnitelmaQueryDto();
+        PageRequest p = new PageRequest(pquery.getSivu(), Math.min(pquery.getSivukoko(), 100));
+
+        assertThat(opetussuunnitelmaService.findOpetussuunnitelmat(p, pquery).getTotalElements()).isEqualTo(2);
+
+        pquery.setNimi("yrittäjyys");
+        assertThat(opetussuunnitelmaService.findOpetussuunnitelmat(p, pquery).getTotalElements()).isEqualTo(2);
+
+        pquery.setNimi("cnc-tekniikka");
+        assertThat(opetussuunnitelmaService.findOpetussuunnitelmat(p, pquery).getTotalElements()).isEqualTo(1);
+
+    }
+
 }
