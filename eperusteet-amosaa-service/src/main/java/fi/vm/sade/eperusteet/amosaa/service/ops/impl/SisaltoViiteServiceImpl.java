@@ -50,6 +50,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliRooli;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.SuoritustapaLaajaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.Suoritustapakoodi;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonosaKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteRakenneDto;
@@ -933,8 +934,8 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
             PerusteKaikkiDto peruste = eperusteetService.getPerusteSisalto(cperuste, PerusteKaikkiDto.class);
             List<SuorituspolkuRakenneDto> result = new ArrayList<>();
             if (peruste.getSuoritustavat() != null) {
-                SuoritustapaLaajaDto suoritustapa = peruste.getSuoritustavat().stream().filter(st -> st.getSuoritustapakoodi().toString()
-                        .equals(ops.getSuoritustapa())).findFirst().get();
+                SuoritustapaLaajaDto suoritustapa = peruste.getSuoritustavat().stream().filter(st -> st.getSuoritustapakoodi()
+                        .equals(Suoritustapakoodi.of(ops.getSuoritustapa()))).findFirst().get();
                 List<SisaltoViiteDto> polut = getSuorituspolut(ktId, opsId, SisaltoViiteDto.class);
                 for (SisaltoViiteDto viite : polut) {
                     SuorituspolkuRakenneDto rakenne = new SuorituspolkuRakenneDto();

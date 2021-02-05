@@ -124,8 +124,7 @@ public class OpetussuunnitelmaRepositoryImpl implements OpetussuunnitelmaCustomR
         Predicate pred = cb.and(
                 cb.or(isJulkaistu, cb.isNotEmpty(root.get(Opetussuunnitelma_.julkaisut))),
                 onOikeallaKielella, eiOlePohja, eiOleOpsPohja);
-        pred = cb.and(pred, cb.equal(root.join(Opetussuunnitelma_.koulutustoimija).get(Koulutustoimija_.organisaatioRyhma), queryDto.isOrganisaatioRyhma()));
-
+        
         if (!ObjectUtils.isEmpty(queryDto.getOppilaitosTyyppiKoodiUri())) {
             pred = cb.and(pred, cb.equal(root.get(Opetussuunnitelma_.oppilaitosTyyppiKoodiUri), queryDto.getOppilaitosTyyppiKoodiUri()));
         }
@@ -192,6 +191,8 @@ public class OpetussuunnitelmaRepositoryImpl implements OpetussuunnitelmaCustomR
         if (queryDto.getOrganisaatio() != null && !"".equals(queryDto.getOrganisaatio())) {
             Predicate matchOrganisaatio = cb.equal(koulutustoimija.get(Koulutustoimija_.organisaatio), cb.literal(queryDto.getOrganisaatio()));
             pred = cb.and(pred, matchOrganisaatio);
+        } else {
+            pred = cb.and(pred, cb.equal(root.join(Opetussuunnitelma_.koulutustoimija).get(Koulutustoimija_.organisaatioRyhma), queryDto.isOrganisaatioRyhma()));
         }
 
         return pred;
