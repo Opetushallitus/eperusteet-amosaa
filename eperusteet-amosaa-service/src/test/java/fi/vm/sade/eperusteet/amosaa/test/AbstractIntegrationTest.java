@@ -149,6 +149,14 @@ public abstract class AbstractIntegrationTest {
         koulutustoimijaRepository.save(koulutustoimija);
     }
 
+    protected OpetussuunnitelmaBaseDto createOpetussuunnitelmaJulkaistu(Consumer<OpetussuunnitelmaLuontiDto> opsfn) {
+        OpetussuunnitelmaBaseDto dto = createOpetussuunnitelma(opsfn);
+        Opetussuunnitelma ops = opetussuunnitelmaRepository.findOne(dto.getId());
+        ops.setTila(Tila.JULKAISTU);
+        opetussuunnitelmaRepository.save(ops);
+        return opetussuunnitelmaService.getOpetussuunnitelma(getKoulutustoimijaId(), dto.getId());
+    }
+
     protected OpetussuunnitelmaBaseDto createOpetussuunnitelma(Consumer<OpetussuunnitelmaLuontiDto> opsfn) {
         OpetussuunnitelmaLuontiDto ops = new OpetussuunnitelmaLuontiDto();
         ops.setKoulutustoimija(getKoulutustoimija());
