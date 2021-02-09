@@ -35,6 +35,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 // TODO: Vaihda koulutustoimijakohtaiseen autentikaatioon
 public interface KoulutustoimijaService {
 
+    String OPH = "1.2.246.562.10.00000000001";
+
     @PreAuthorize("isAuthenticated()")
     List<KoulutustoimijaBaseDto> getKoulutustoimijat(Set<String> ktOid);
 
