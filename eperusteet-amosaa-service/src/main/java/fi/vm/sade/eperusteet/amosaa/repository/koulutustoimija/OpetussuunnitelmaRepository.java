@@ -102,4 +102,20 @@ public interface OpetussuunnitelmaRepository extends JpaWithVersioningRepository
             "LEFT OUTER JOIN o.peruste p " +
             "WHERE kt.id = :koulutustoimija AND (p.koulutustyyppi IN (:koulutustyyppi) OR o.koulutustyyppi IN (:koulutustyyppi))")
     List<Opetussuunnitelma> findByKoulutustoimijaIdAndPerusteKoulutustyyppiIn(@Param("koulutustoimija") Long ktId, @Param("koulutustyyppi") Set<KoulutusTyyppi> koulutusTyyppi);
+
+    @Query(value = "SELECT o " +
+            "FROM Opetussuunnitelma o " +
+            "JOIN o.koulutustoimija kt " +
+            "LEFT OUTER JOIN o.peruste p " +
+            "WHERE kt.id = :koulutustoimija AND (p.koulutustyyppi IN (:koulutustyyppi) OR o.koulutustyyppi IN (:koulutustyyppi)) AND o.tyyppi = :tyyppi")
+    List<Opetussuunnitelma> findByKoulutustoimijaIdAndPerusteKoulutustyyppiIn(@Param("koulutustoimija") Long ktId, @Param("koulutustyyppi") Set<KoulutusTyyppi> koulutusTyyppi, @Param("tyyppi") OpsTyyppi tyyppi);
+
+    @Query(value = "SELECT o " +
+            "FROM Opetussuunnitelma o " +
+            "JOIN o.koulutustoimija kt " +
+            "LEFT OUTER JOIN o.peruste p " +
+            "WHERE kt.id = :koulutustoimija AND (p.koulutustyyppi IN (:koulutustyyppi) OR o.koulutustyyppi IN (:koulutustyyppi)) " +
+            "AND o.tyyppi = :tyyppi AND o.tila IN(:tila)")
+    List<Opetussuunnitelma> findByKoulutustoimijaIdAndTilaAndTyyppiPerusteKoulutustyyppiIn(
+            @Param("koulutustoimija") Long ktId, @Param("koulutustyyppi") Set<KoulutusTyyppi> koulutusTyyppi, @Param("tyyppi") OpsTyyppi tyyppi, @Param("tila") Set<Tila> tila);
 }

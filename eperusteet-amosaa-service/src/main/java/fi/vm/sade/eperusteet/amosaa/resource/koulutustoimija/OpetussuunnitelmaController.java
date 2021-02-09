@@ -17,6 +17,7 @@
 package fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.revision.Revision;
@@ -44,6 +45,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -386,12 +388,26 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
             @RequestParam(value = "koulutustyypit", required = false) final Set<String> koulutustyypit,
             @RequestParam(value = "tyyppi", required = false) final OpsTyyppi tyyppi
     ) {
-        if (CollectionUtils.isNotEmpty(koulutustyypit)) {
+        if (CollectionUtils.isNotEmpty(koulutustyypit) && !ObjectUtils.isEmpty(tyyppi)) {
+            return service.getOpetussuunnitelmat(ktId, koulutustyypit, tyyppi);
+        } else if (CollectionUtils.isNotEmpty(koulutustyypit)) {
             return service.getOpetussuunnitelmat(ktId, koulutustyypit);
         } else if (!ObjectUtils.isEmpty(tyyppi)) {
             return service.getOpetussuunnitelmat(ktId, tyyppi);
         }
 
         return service.getOpetussuunnitelmat(ktId);
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
+    @RequestMapping(value = "/pohjat", method = RequestMethod.GET)
+    public List<OpetussuunnitelmaBaseDto> getOpsPohjat(
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @RequestParam(value = "koulutustyypit") final Set<String> koulutustyypit,
+            @RequestParam(value = "tilat") final Set<String> tilat,
+            @RequestParam(value = "tyyppi") final String tyyppi) {
+        return service.getPohjat(ktId, tilat.stream().map(Tila::of).collect(Collectors.toSet()), koulutustyypit.stream().map(KoulutusTyyppi::of).collect(Collectors.toSet()), OpsTyyppi.of(tyyppi));
     }
 }

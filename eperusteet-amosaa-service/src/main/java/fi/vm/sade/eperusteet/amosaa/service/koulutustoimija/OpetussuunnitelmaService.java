@@ -17,6 +17,7 @@
 package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
@@ -155,5 +156,14 @@ public interface OpetussuunnitelmaService extends RevisionService {
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
     List<OpetussuunnitelmaDto> getOpetussuunnitelmat(@P("ktId") Long ktId, Set<String> koulutustyypit);
+
+    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
+    List<OpetussuunnitelmaDto> getOpetussuunnitelmat(@P("ktId") Long ktId, Set<String> koulutustyypit, OpsTyyppi opsTyyppi);
+
+    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
+    List<OpetussuunnitelmaBaseDto> getPohjat(Long ktId, Set<Tila> tilat, Set<KoulutusTyyppi> koulutustyypit, OpsTyyppi opsTyyppi);
+
+    @PreAuthorize("isAuthenticated()")
+    List<OpetussuunnitelmaBaseDto> getOphOpsPohjat(Set<KoulutusTyyppi> koulutustyypit);
 }
 

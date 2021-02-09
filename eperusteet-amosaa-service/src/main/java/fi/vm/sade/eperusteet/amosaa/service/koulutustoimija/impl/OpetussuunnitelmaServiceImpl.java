@@ -19,6 +19,7 @@ package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.impl;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Sets;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutustyyppiToteutus;
 import fi.vm.sade.eperusteet.amosaa.domain.MuokkausTapahtuma;
@@ -318,6 +319,13 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     }
 
     @Override
+    public List<OpetussuunnitelmaDto> getOpetussuunnitelmat(Long ktId, Set<String> koulutustyypit, OpsTyyppi tyyppi) {
+        return repository.findByKoulutustoimijaIdAndPerusteKoulutustyyppiIn(ktId, koulutustyypit.stream().map(KoulutusTyyppi::of).collect(Collectors.toSet()), tyyppi).stream()
+                .map(ops -> mapper.map(ops, OpetussuunnitelmaDto.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public Page<OpetussuunnitelmaBaseDto> getOpetussuunnitelmat(
             Long ktId,
             PageRequest page,
@@ -385,6 +393,19 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     @Override
     public List<OpetussuunnitelmaBaseDto> getPohjat() {
         List<Opetussuunnitelma> opetussuunnitelmat = repository.findAllByTyyppiAndTila(OpsTyyppi.POHJA, Tila.JULKAISTU);
+        return mapper.mapAsList(opetussuunnitelmat, OpetussuunnitelmaBaseDto.class);
+    }
+
+    @Override
+    public List<OpetussuunnitelmaBaseDto> getOphOpsPohjat(Set<KoulutusTyyppi> koulutustyypit) {
+        KoulutustoimijaJulkinenDto kt = koulutustoimijaService.getKoulutustoimijaJulkinen(koulutustoimijaService.OPH);
+        List<Opetussuunnitelma> opetussuunnitelmat = repository.findByKoulutustoimijaIdAndTilaAndTyyppiPerusteKoulutustyyppiIn(kt.getId(), koulutustyypit, OpsTyyppi.OPSPOHJA, Sets.newHashSet(Tila.VALMIS, Tila.JULKAISTU));
+        return mapper.mapAsList(opetussuunnitelmat, OpetussuunnitelmaBaseDto.class);
+    }
+
+    @Override
+    public List<OpetussuunnitelmaBaseDto> getPohjat(Long ktId, Set<Tila> tilat, Set<KoulutusTyyppi> koulutustyypit, OpsTyyppi opsTyyppi) {
+        List<Opetussuunnitelma> opetussuunnitelmat = repository.findByKoulutustoimijaIdAndTilaAndTyyppiPerusteKoulutustyyppiIn(ktId, koulutustyypit, opsTyyppi, tilat);
         return mapper.mapAsList(opetussuunnitelmat, OpetussuunnitelmaBaseDto.class);
     }
 

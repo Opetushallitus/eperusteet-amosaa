@@ -92,7 +92,7 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     @PersistenceContext
     private EntityManager em;
 
-    static private String OPH = "1.2.246.562.10.00000000001";
+    private static String OPH = "1.2.246.562.10.00000000001";
 
     @Transactional
     private Koulutustoimija initialize(String kOid) {
