@@ -672,8 +672,9 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
         if (opsDto.getOpsId() != null) {
             Opetussuunnitelma pohja = repository.findOne(opsDto.getOpsId());
+            boolean ophOpsPohja = pohja != null && pohja.getTyyppi().equals(OpsTyyppi.OPSPOHJA) && pohja.getKoulutustoimija().getOrganisaatio().equals(KoulutustoimijaService.OPH);
 
-            if (pohja == null || !Objects.equals(pohja.getKoulutustoimija().getId(), ktId)) {
+            if (pohja == null || (!ophOpsPohja && !Objects.equals(pohja.getKoulutustoimija().getId(), ktId))) {
                 throw new BusinessRuleViolationException("ei-oikeutta-opetussuunnitelmaan");
             }
 
@@ -686,6 +687,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
             switch (pohja.getTyyppi()) {
                 case OPSPOHJA:
                     ops.setTyyppi(OpsTyyppi.OPS);
+                    ops.changeKoulutustoimija(kt);
                     break;
             }
 
