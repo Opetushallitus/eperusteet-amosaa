@@ -25,6 +25,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.liite.Liite;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 
 import fi.vm.sade.eperusteet.amosaa.dto.NavigationType;
@@ -191,6 +192,10 @@ public class Opetussuunnitelma extends AbstractAuditedEntity implements Serializ
     @Setter
     @Enumerated(EnumType.STRING)
     private KoulutusTyyppi koulutustyyppi;
+
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
+    @Getter
+    private List<SisaltoViite> sisaltoviitteet;
 
     public void changeKoulutustoimija(Koulutustoimija kt) {
         this.koulutustoimija = kt;

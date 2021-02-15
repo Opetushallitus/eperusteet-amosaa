@@ -145,21 +145,12 @@ public class OpetussuunnitelmaRepositoryImpl implements OpetussuunnitelmaCustomR
             Predicate diaarissa = cb.like(cb.lower(root.get(Opetussuunnitelma_.perusteDiaarinumero)), cb.literal(nimi));
             SetJoin<LokalisoituTeksti, Teksti> ktNimi = koulutustoimija.join(Koulutustoimija_.nimi).join(LokalisoituTeksti_.teksti);
             Predicate ktNimessa = cb.like(cb.lower(ktNimi.get(Teksti_.teksti)), cb.literal(nimi));
+            
+            Join<Opetussuunnitelma, SisaltoViite> sisaltoviitteet = root.join(Opetussuunnitelma_.sisaltoviitteet, JoinType.LEFT);
+            SetJoin<LokalisoituTeksti, Teksti> tutkinnonosaNimi = sisaltoviitteet.join(SisaltoViite_.tekstiKappale).join(TekstiKappale_.nimi).join(LokalisoituTeksti_.teksti);
+            Predicate toNimessa = cb.like(cb.lower(tutkinnonosaNimi.get(Teksti_.teksti)), cb.literal(nimi));
 
-            Subquery tutkinnonOsaSubQuery = cb.createQuery(Opetussuunnitelma.class).subquery(Long.class);
-            Root subRoot = tutkinnonOsaSubQuery.from(SisaltoViite.class);
-            Join<SisaltoViite, Opetussuunnitelma> subSisaltoviite = subRoot.join(SisaltoViite_.owner);
-            Join<SisaltoViite, TekstiKappale> sisaltoviiteTekstikappale = subRoot.join(SisaltoViite_.tekstiKappale);
-            Join<TekstiKappale, LokalisoituTeksti> tekstikappaleenTeksti = sisaltoviiteTekstikappale.join(TekstiKappale_.nimi);
-            SetJoin<LokalisoituTeksti, Teksti> tutkinnonosaNimi = tekstikappaleenTeksti.join(LokalisoituTeksti_.teksti);
-            tutkinnonOsaSubQuery.select(cb.count(subRoot.get(SisaltoViite_.id)));
-            tutkinnonOsaSubQuery.where(cb.and(
-                    cb.equal(root.get(Opetussuunnitelma_.id), subSisaltoviite.get(Opetussuunnitelma_.id))),
-                    cb.isNotNull(subRoot.get(SisaltoViite_.tosa)),
-                    cb.like(cb.lower(tutkinnonosaNimi.get(Teksti_.teksti)), cb.literal(nimi))
-            );
-
-            pred = cb.and(pred, cb.or(nimessa, diaarissa, ktNimessa, cb.greaterThan(tutkinnonOsaSubQuery, 0l)));
+            pred = cb.and(pred, cb.or(nimessa, diaarissa, ktNimessa, toNimessa));
         }
 
         if (queryDto.getTyyppi() != null && !queryDto.getTyyppi().isEmpty()) {
