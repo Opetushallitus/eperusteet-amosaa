@@ -6,6 +6,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.ArviointiasteikkoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteQueryDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.TiedoteQueryDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +32,8 @@ public interface EperusteetClient {
     List<PerusteDto> findPerusteet(Set<KoulutusTyyppi> tyypit);
 
     JsonNode getTiedotteet(Long jalkeen);
+
+    JsonNode getTiedotteetHaku(TiedoteQueryDto queryDto);
 
     ArviointiasteikkoDto getArviointiasteikko(Long id);
 

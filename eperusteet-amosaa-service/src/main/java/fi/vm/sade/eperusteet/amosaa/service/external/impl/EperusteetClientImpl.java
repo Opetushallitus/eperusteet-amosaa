@@ -7,6 +7,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.AbstractRakenneOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.ArviointiasteikkoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.TiedoteQueryDto;
 import fi.vm.sade.eperusteet.amosaa.resource.config.AbstractRakenneOsaDeserializer;
 import fi.vm.sade.eperusteet.amosaa.resource.config.MappingModule;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
@@ -197,5 +198,25 @@ public class EperusteetClientImpl implements EperusteetClient {
     @Override
     public ArviointiasteikkoDto getArviointiasteikko(Long id) {
         return commonGet("/api/arviointiasteikot/" + id, ArviointiasteikkoDto.class);
+    }
+
+    @Override
+    public JsonNode getTiedotteetHaku(TiedoteQueryDto queryDto) {
+        String url = eperusteetServiceUrl.concat("/api/tiedotteet/haku").concat(queryDto.toRequestParams());
+        OphHttpClient client = restClientFactory.get(eperusteetServiceUrl, true);
+        OphHttpRequest request = OphHttpRequest.Builder
+                .get(url)
+                .build();
+
+        return client.<JsonNode>execute(request)
+                .expectedStatus(SC_OK)
+                .mapWith(text -> {
+                    try {
+                        return new ObjectMapper().readTree(text);
+                    } catch (IOException ex) {
+                        throw new BusinessRuleViolationException("Tiedotteiden tietojen hakeminen epäonnistui", ex);
+                    }
+                })
+                .orElse(null);
     }
 }
