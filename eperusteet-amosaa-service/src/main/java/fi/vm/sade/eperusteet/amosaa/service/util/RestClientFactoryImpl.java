@@ -16,9 +16,13 @@
 package fi.vm.sade.eperusteet.amosaa.service.util;
 
 
+import com.google.common.collect.Maps;
 import fi.vm.sade.eperusteet.utils.client.RestClientFactory;
 import fi.vm.sade.javautils.http.OphHttpClient;
 import fi.vm.sade.javautils.http.auth.CasAuthenticator;
+import java.util.HashMap;
+import java.util.Map;
+import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -44,12 +48,12 @@ public class RestClientFactoryImpl implements RestClientFactory {
     @Value("${web.url.cas:''}")
     private String casUrl;
 
-    private final ConcurrentMap<String, OphHttpClient> cache = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, Map<Boolean, OphHttpClient>> cache = new ConcurrentHashMap<>();
 
     public OphHttpClient get(String service, boolean requireCas) {
 
-        if (cache.containsKey(service)) {
-            return cache.get(service);
+        if (cache.containsKey(service) && cache.get(service).containsKey(requireCas)) {
+            return cache.get(service).get(requireCas);
         } else {
             OphHttpClient client;
             if (requireCas) {
@@ -70,8 +74,15 @@ public class RestClientFactoryImpl implements RestClientFactory {
                         .build();
             }
 
-            cache.putIfAbsent(service, client);
-            return cache.get(service);
+            if (cache.containsKey(service)) {
+                cache.get(service).put(requireCas, client);
+            } else {
+                Map<Boolean, OphHttpClient> map = new HashMap<>();
+                map.put(requireCas, client);
+                cache.put(service, map);
+            }
+
+            return cache.get(service).get(requireCas);
         }
     }
 

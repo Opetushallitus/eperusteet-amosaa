@@ -22,7 +22,11 @@ public class TiedoteQueryDto {
     private Boolean julkinen; // Jos null, haetaan julkiset ja sisäiset
     private Boolean yleinen; // Jos halutaan esittää mm. etusivulla
     private List<Long> perusteIds;
-
+    private List<String> tiedoteJulkaisuPaikka;
+    private List<String> koulutusTyyppi;
+    private String jarjestys;
+    private Boolean jarjestysNouseva;
+    
     public String toRequestParams() {
         UriComponentsBuilder builder = UriComponentsBuilder.newInstance();
 
@@ -30,7 +34,7 @@ public class TiedoteQueryDto {
             String name = field.getName();
             try {
                 Object value = field.get(this);
-                if (value instanceof Collection<?>){
+                if (value instanceof Collection<?>) {
                     for (Object element : (Collection<?>) value) {
                         if (!ObjectUtils.isEmpty(value)) {
                             builder.queryParam(name, element);
