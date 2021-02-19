@@ -28,7 +28,8 @@ public enum KoulutusTyyppi {
     ERIKOISAMMATTITUTKINTO("koulutustyyppi_12"),
     TELMA("koulutustyyppi_5"),
     VALMA("koulutustyyppi_18"),
-    VAPAASIVISTYSTYO("koulutustyyppi_30");
+    VAPAASIVISTYSTYO("koulutustyyppi_10"),
+    VAPAASIVISTYSTYO_VANHA("koulutustyyppi_30"); // depricated. Olemassa cached datan vuoksi.
 
     private final String tyyppi;
 

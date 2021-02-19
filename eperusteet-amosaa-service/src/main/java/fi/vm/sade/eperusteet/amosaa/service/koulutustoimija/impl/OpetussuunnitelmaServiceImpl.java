@@ -646,7 +646,6 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         PerusteDto perusteDto = eperusteetClient.getPeruste(ops.getPeruste().getPerusteId(), PerusteDto.class);
         CachedPerusteBaseDto cp = eperusteetService.getCachedPeruste(perusteDto);
         CachedPeruste newCachedPeruste = cachedPerusteRepository.findOne(cp.getId());
-        JsonNode st = eperusteetService.getSuoritustapa(newCachedPeruste.getId(), ops.getSuoritustapa());
         Set<UUID> tunnisteet = eperusteetService.getRakenneTunnisteet(newCachedPeruste.getId(), ops.getSuoritustapa());
         Set<UUID> kaytetytTunnisteet = tkvService.getSuorituspolkurakenne(ktId, opsId).stream()
                 .map(AbstractRakenneOsaDto::getTunniste)

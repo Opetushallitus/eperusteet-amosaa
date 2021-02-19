@@ -247,16 +247,18 @@ public class EperusteetServiceImpl implements EperusteetService {
         CachedPeruste cperuste = cachedPerusteRepository.findOne(id);
         try {
             JsonNode node = mapper.readTree(cperuste.getPeruste());
-            for (JsonNode suoritustapa : node.get("suoritustavat")) {
-                if (suoritustapa.get("suoritustapakoodi").asText().equals(tyyppi)) {
-                    return suoritustapa;
+            if (node.get("suoritustavat") != null) {
+                for (JsonNode suoritustapa : node.get("suoritustavat")) {
+                    if (suoritustapa.get("suoritustapakoodi").asText().equals(tyyppi)) {
+                        return suoritustapa;
+                    }
                 }
             }
         } catch (IOException ex) {
             throw new BusinessRuleViolationException("perusteen-parsinta-epaonnistui");
         }
 
-        throw new BusinessRuleViolationException("suoritustapaa-ei-loytynyt");
+        return null;
     }
 
     private void collectTunnisteet(JsonNode node, Set<UUID> tunnisteet) {
@@ -271,6 +273,9 @@ public class EperusteetServiceImpl implements EperusteetService {
     @Override
     public Set<UUID> getRakenneTunnisteet(Long id, String suoritustapa) {
         JsonNode st = getSuoritustapa(id, suoritustapa);
+        if (st == null) {
+            return Collections.emptySet();
+        }
         HashSet<UUID> uuids = new HashSet<>();
         collectTunnisteet(st.get("rakenne"), uuids);
         return uuids;
