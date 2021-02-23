@@ -146,7 +146,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
         dto.setTila(DokumenttiTila.LUODAAN);
         dokumenttiStateService.save(dto);
 
-        Dokumentti dokumentti = dokumenttiRepository.findOne(dto.getId());
+        Dokumentti dokumentti = mapper.map(dto, Dokumentti.class);
         try {
             Opetussuunnitelma ops = opsRepository.findOne(dokumentti.getOpsId());
             dokumentti.setTila(DokumenttiTila.VALMIS);

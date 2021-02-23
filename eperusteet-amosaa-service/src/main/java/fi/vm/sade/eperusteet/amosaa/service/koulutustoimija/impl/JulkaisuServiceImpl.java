@@ -6,6 +6,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.MuokkausTapahtuma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Julkaisu;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.JulkaisuData;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
@@ -16,6 +17,7 @@ import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.JulkaisuRepositor
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiService;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
+import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.JulkaisuService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaMuokkaustietoService;
@@ -24,6 +26,7 @@ import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.util.JsonMapper;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -84,10 +87,7 @@ public class JulkaisuServiceImpl implements JulkaisuService {
         List<JulkaisuBaseDto> julkaisut = mapper.mapAsList(julkaisuRepository.findAllByOpetussuunnitelma(opetussuunnitelma), JulkaisuBaseDto.class);
 
         try {
-            Map<String, KayttajanTietoDto> kayttajatiedot = kayttajanTietoService
-                    .haeKayttajatiedot(julkaisut.stream().map(JulkaisuBaseDto::getLuoja).collect(Collectors.toList()))
-                    .stream().collect(Collectors.toMap(kayttajanTieto -> kayttajanTieto.getOidHenkilo(), kayttajanTieto -> kayttajanTieto));
-            julkaisut.forEach(julkaisu -> julkaisu.setKayttajanTieto(kayttajatiedot.get(julkaisu.getLuoja())));
+            julkaisut = taytaKayttajaTiedot(julkaisut);
         } catch (Exception e) {
             log.error(Throwables.getStackTraceAsString(e));
         }
@@ -123,6 +123,16 @@ public class JulkaisuServiceImpl implements JulkaisuService {
                 }
             }
 
+            for (Kieli kieli : opetussuunnitelma.getJulkaisukielet()) {
+                try {
+                    DokumenttiDto dokumenttiDto = dokumenttiService.getDto(ktId, opsId, kieli);
+                    dokumenttiService.setStarted(ktId, opsId, dokumenttiDto);
+                    dokumenttiService.generateWithDto(ktId, opsId, dokumenttiDto);
+                } catch (DokumenttiException e) {
+                    log.error(e.getLocalizedMessage(), e.getCause());
+                }
+            }
+
             Set<Long> dokumentit = opetussuunnitelma.getJulkaisukielet().stream()
                     .map(kieli -> dokumenttiService.getDto(ktId, opsId, kieli))
                     .map(DokumenttiDto::getId)
@@ -144,7 +154,19 @@ public class JulkaisuServiceImpl implements JulkaisuService {
             throw new BusinessRuleViolationException("julkaisun-tallennus-epaonnistui");
         }
 
-        return mapper.map(julkaisu, JulkaisuBaseDto.class);
+        return taytaKayttajaTiedot(mapper.map(julkaisu, JulkaisuBaseDto.class));
+    }
+
+    private List<JulkaisuBaseDto> taytaKayttajaTiedot(List<JulkaisuBaseDto> julkaisut) {
+        Map<String, KayttajanTietoDto> kayttajatiedot = kayttajanTietoService
+                .haeKayttajatiedot(julkaisut.stream().map(JulkaisuBaseDto::getLuoja).collect(Collectors.toList()))
+                .stream().collect(Collectors.toMap(kayttajanTieto -> kayttajanTieto.getOidHenkilo(), kayttajanTieto -> kayttajanTieto));
+        julkaisut.forEach(julkaisu -> julkaisu.setKayttajanTieto(kayttajatiedot.get(julkaisu.getLuoja())));
+        return julkaisut;
+    }
+
+    private JulkaisuBaseDto taytaKayttajaTiedot(JulkaisuBaseDto julkaisu) {
+        return taytaKayttajaTiedot(Arrays.asList(julkaisu)).get(0);
     }
 
 }
