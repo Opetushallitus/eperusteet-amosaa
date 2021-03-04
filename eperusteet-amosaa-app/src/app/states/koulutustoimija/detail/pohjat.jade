@@ -2,6 +2,15 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
   h3(ng-bind="'yhteisien-osien-pohjat' | kaanna")
 
   div(ng-hide="opetussuunnitelmat.length > 0")
+    div.row
+      div.col-xs-5
+          div.form-group.has-feedback.has-feedback-left
+            input.form-control(ng-change="paivitaRajaus()"
+              type="text"
+              ng-model="rajain.nimi"
+              ng-model-options="{ debounce: 300 }"
+              placeholder="{{ 'hae' | kaanna }}")
+            i.form-control-feedback.glyphicon.glyphicon-search(style="color: gray;")
     div.alert.alert-info
       div(ng-bind="'yhteisien-osien-pohjia-ei-viela-luotu' | kaanna")
       button.btn.btn-primary.pull-right(style="position: relative; top: -26px" ng-bind="'lisaa-uusi' | kaanna" ng-click="addPohja()")
