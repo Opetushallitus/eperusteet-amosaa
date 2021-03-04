@@ -10,9 +10,10 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
     div.row
       div.col-xs-5
         div.form-group.has-feedback.has-feedback-left
-          input.form-control(ng-change="suodataOpetussuunnitelmat(opetussuunnitelmat, opsSearch)"
+          input.form-control(ng-change="paivitaRajaus()"
             type="text"
-            ng-model="opsSearch"
+            ng-model="rajain.nimi"
+            ng-model-options="{ debounce: 300 }"
             placeholder="{{ 'hae' | kaanna }}")
           i.form-control-feedback.glyphicon.glyphicon-search(style="color: gray;")
       div.checkbox-text.col-xs-5
@@ -40,3 +41,12 @@ div.otsikkotaso.kaikki-opetussuunnitelmat
               a(href="" ui-sref="root.koulutustoimija.opetussuunnitelmat.sisalto.tiedot({ opsId: ops.id })")
                 div
                   span.glyphicon.glyphicon-chevron-right
+
+    nav.text-center
+          ul.pagination(uib-pagination
+                        total-items="pagination.kokonaismaara"
+                        items-per-page="pagination.sivukoko"
+                        ng-model="pagination.sivu"
+                        previous-text="{{'edellinen' | kaanna}}"
+                        next-text="{{'seuraava' | kaanna}}"
+                        ng-change="paivitaRajaus(false)")

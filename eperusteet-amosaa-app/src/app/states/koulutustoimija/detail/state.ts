@@ -83,11 +83,54 @@ angular.module("app").config($stateProvider =>
                 }
             },
             pohjat: {
-                controller: ($scope, koulutustoimija, opetussuunnitelmatSivu, opsSaver) => {
-                    $scope.opetussuunnitelmat = opetussuunnitelmatSivu.data;
+                controller: (
+                    $scope,
+                    koulutustoimija,
+                    opetussuunnitelmatSivu,
+                    opsSaver,
+                    $q: angular.IQService,
+                ) => {
+
+                    const updateOpetussuunnitelmat = opetussuunnitelmat => {
+                        $scope.opetussuunnitelmat = opetussuunnitelmat.data;
+                        $scope.pagination = {
+                            sivu: opetussuunnitelmat.sivu + 1,
+                            sivukoko: opetussuunnitelmat.sivukoko,
+                            kokonaismaara: opetussuunnitelmat.kokonaismäärä,
+                        };
+
+                    };
                     $scope.addPohja = () =>
                         ModalAdd.pohja()
                             .then(opsSaver);
+
+                    let timeout: ng.IDeferred<void>;
+                    $scope.paivitaRajaus = async (alkuun = true) => {
+                        // Jos rajaus muuttuu
+                        if (alkuun) {
+                            $scope.pagination.sivu = 1;
+                        }
+
+                        if (timeout) {
+                            timeout.resolve();
+                        }
+
+                        timeout = $q.defer();
+
+                        try {
+                            const res = await opetussuunnitelmatSivu.customGET("", {
+                                sivu: $scope.pagination.sivu - 1,
+                                sivukoko: $scope.pagination.sivukoko,
+                                nimi: $scope.rajain.nimi,
+                            }, { timeout });
+                            $scope.$applyAsync(() => updateOpetussuunnitelmat(res));
+                        }
+                        finally {
+                            timeout = null;
+                        }
+                    };
+
+                    updateOpetussuunnitelmat(opetussuunnitelmatSivu);
                 }
             },
             opetussuunnitelmat: {
