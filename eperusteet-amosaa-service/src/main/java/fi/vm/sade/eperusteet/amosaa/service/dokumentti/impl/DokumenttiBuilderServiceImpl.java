@@ -651,7 +651,6 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
                 Element toteutusTaulukko = docBase.getDocument().createElement("table");
                 toteutusTaulukko.setAttribute("border", "1");
 
-
                 Element kooditTr = docBase.getDocument().createElement("tr");
                 Element kooditTd = docBase.getDocument().createElement("th");
                 kooditTr.appendChild(kooditTd);

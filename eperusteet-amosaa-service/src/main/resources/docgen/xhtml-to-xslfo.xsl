@@ -749,6 +749,17 @@
         <fo:table-cell
                 padding-start="3pt" padding-end="3pt"
                 padding-before="3pt" padding-after="3pt">
+            <xsl:if test="not(table[@border='1']) and not(table[@border='0'])">
+                <xsl:attribute name="border-style">
+                    <xsl:text>solid</xsl:text>
+                </xsl:attribute>
+                <xsl:attribute name="border-color">
+                    <xsl:text>#ddd</xsl:text>
+                </xsl:attribute>
+                <xsl:attribute name="border-width">
+                    <xsl:text>1pt</xsl:text>
+                </xsl:attribute>
+            </xsl:if>
             <xsl:if test="@colspan">
                 <xsl:attribute name="number-columns-spanned">
                     <xsl:value-of select="@colspan"/>
@@ -868,6 +879,17 @@
     <xsl:template match="th">
         <fo:table-cell padding-start="3pt" padding-end="3pt"
                        padding-before="3pt" padding-after="3pt">
+            <xsl:if test="not(table[@border='1']) and not(table[@border='0'])">
+                <xsl:attribute name="border-style">
+                    <xsl:text>solid</xsl:text>
+                </xsl:attribute>
+                <xsl:attribute name="border-color">
+                    <xsl:text>#ddd</xsl:text>
+                </xsl:attribute>
+                <xsl:attribute name="border-width">
+                    <xsl:text>1pt</xsl:text>
+                </xsl:attribute>
+            </xsl:if>
             <xsl:if test="@colspan">
                 <xsl:attribute name="number-columns-spanned">
                     <xsl:value-of select="@colspan"/>
