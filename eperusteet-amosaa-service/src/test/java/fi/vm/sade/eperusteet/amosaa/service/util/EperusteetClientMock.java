@@ -15,11 +15,13 @@
  */
 package fi.vm.sade.eperusteet.amosaa.service.util;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonObject;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
+import fi.vm.sade.eperusteet.amosaa.dto.PalauteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.AbstractRakenneOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.ArviointiasteikkoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
@@ -150,6 +152,11 @@ public class EperusteetClientMock implements EperusteetClient {
 
     @Override
     public JsonNode findFromPerusteet(Map<String, String> query) {
+        return null;
+    }
+
+    @Override
+    public PalauteDto lahetaPalaute(PalauteDto palaute) throws JsonProcessingException {
         return null;
     }
 

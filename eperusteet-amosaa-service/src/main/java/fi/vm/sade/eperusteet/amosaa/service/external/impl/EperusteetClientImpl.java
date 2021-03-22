@@ -1,17 +1,20 @@
 package fi.vm.sade.eperusteet.amosaa.service.external.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.AbstractRakenneOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.ArviointiasteikkoDto;
+import fi.vm.sade.eperusteet.amosaa.dto.PalauteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TiedoteQueryDto;
 import fi.vm.sade.eperusteet.amosaa.resource.config.AbstractRakenneOsaDeserializer;
 import fi.vm.sade.eperusteet.amosaa.resource.config.MappingModule;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetClient;
+import fi.vm.sade.eperusteet.utils.client.OphClientHelper;
 import fi.vm.sade.eperusteet.utils.client.RestClientFactory;
 import fi.vm.sade.javautils.http.OphHttpClient;
 import fi.vm.sade.javautils.http.OphHttpRequest;
@@ -51,6 +54,9 @@ public class EperusteetClientImpl implements EperusteetClient {
     private OphHttpClient client;
 
     private ObjectMapper mapper;
+
+    @Autowired
+    private OphClientHelper ophClientHelper;
 
     @PostConstruct
     protected void init() {
@@ -112,6 +118,11 @@ public class EperusteetClientImpl implements EperusteetClient {
                     }
                 })
                 .orElse(null);
+    }
+
+    @Override
+    public PalauteDto lahetaPalaute(PalauteDto palaute) throws JsonProcessingException {
+        return ophClientHelper.post(eperusteetServiceUrl, String.format(eperusteetServiceUrl + "/api/palaute"), palaute, PalauteDto.class);
     }
 
     @Override

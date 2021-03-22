@@ -18,6 +18,8 @@
   }, {
     "name" : "Ohjeet"
   }, {
+    "name" : "Palautteet"
+  }, {
     "name" : "SisaltoviiteLukko"
   }, {
     "name" : "Sisaltoviitteet"
@@ -3909,6 +3911,31 @@
         }
       }
     },
+    "/palaute" : {
+      "post" : {
+        "tags" : [ "Palautteet" ],
+        "operationId" : "sendPalaute",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/PalauteDto"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/PalauteDto"
+            }
+          },
+          "202" : {
+            "description" : ""
+          }
+        }
+      }
+    },
     "/perusteet" : {
       "get" : {
         "tags" : [ "perusteet" ],
@@ -4694,7 +4721,7 @@
         },
         "koulutustyyppi" : {
           "type" : "string",
-          "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO" ]
+          "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO", "VAPAASIVISTYSTYO_VANHA" ]
         },
         "koulutukset" : {
           "type" : "array",
@@ -5641,7 +5668,7 @@
         },
         "koulutustyyppi" : {
           "type" : "string",
-          "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO" ]
+          "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO", "VAPAASIVISTYSTYO_VANHA" ]
         }
       }
     },
@@ -5858,7 +5885,7 @@
         },
         "koulutustyyppi" : {
           "type" : "string",
-          "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO" ]
+          "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO", "VAPAASIVISTYSTYO_VANHA" ]
         },
         "sisalto" : {
           "$ref" : "#/definitions/SisaltoViiteExportDto"
@@ -5988,7 +6015,7 @@
         },
         "koulutustyyppi" : {
           "type" : "string",
-          "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO" ]
+          "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO", "VAPAASIVISTYSTYO_VANHA" ]
         },
         "opsId" : {
           "type" : "integer",
@@ -6094,7 +6121,7 @@
         },
         "koulutustyyppi" : {
           "type" : "string",
-          "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO" ]
+          "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO", "VAPAASIVISTYSTYO_VANHA" ]
         }
       }
     },
@@ -6308,13 +6335,13 @@
     "Page" : {
       "type" : "object",
       "properties" : {
-        "totalElements" : {
-          "type" : "integer",
-          "format" : "int64"
-        },
         "totalPages" : {
           "type" : "integer",
           "format" : "int32"
+        },
+        "totalElements" : {
+          "type" : "integer",
+          "format" : "int64"
         },
         "size" : {
           "type" : "integer",
@@ -6333,28 +6360,28 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "first" : {
           "type" : "boolean"
         },
         "last" : {
           "type" : "boolean"
-        },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
         }
       }
     },
     "PageKoulutustoimijaJulkinenDto" : {
       "type" : "object",
       "properties" : {
-        "totalElements" : {
-          "type" : "integer",
-          "format" : "int64"
-        },
         "totalPages" : {
           "type" : "integer",
           "format" : "int32"
+        },
+        "totalElements" : {
+          "type" : "integer",
+          "format" : "int64"
         },
         "size" : {
           "type" : "integer",
@@ -6373,28 +6400,28 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "first" : {
           "type" : "boolean"
         },
         "last" : {
           "type" : "boolean"
-        },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
         }
       }
     },
     "PageOpetussuunnitelmaBaseDto" : {
       "type" : "object",
       "properties" : {
-        "totalElements" : {
-          "type" : "integer",
-          "format" : "int64"
-        },
         "totalPages" : {
           "type" : "integer",
           "format" : "int32"
+        },
+        "totalElements" : {
+          "type" : "integer",
+          "format" : "int64"
         },
         "size" : {
           "type" : "integer",
@@ -6413,28 +6440,28 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "first" : {
           "type" : "boolean"
         },
         "last" : {
           "type" : "boolean"
-        },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
         }
       }
     },
     "PageOpetussuunnitelmaDto" : {
       "type" : "object",
       "properties" : {
-        "totalElements" : {
-          "type" : "integer",
-          "format" : "int64"
-        },
         "totalPages" : {
           "type" : "integer",
           "format" : "int32"
+        },
+        "totalElements" : {
+          "type" : "integer",
+          "format" : "int64"
         },
         "size" : {
           "type" : "integer",
@@ -6453,28 +6480,28 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "first" : {
           "type" : "boolean"
         },
         "last" : {
           "type" : "boolean"
-        },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
         }
       }
     },
     "PageSisaltoviiteLaajaDto" : {
       "type" : "object",
       "properties" : {
-        "totalElements" : {
-          "type" : "integer",
-          "format" : "int64"
-        },
         "totalPages" : {
           "type" : "integer",
           "format" : "int32"
+        },
+        "totalElements" : {
+          "type" : "integer",
+          "format" : "int64"
         },
         "size" : {
           "type" : "integer",
@@ -6493,15 +6520,40 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "first" : {
           "type" : "boolean"
         },
         "last" : {
           "type" : "boolean"
-        },
-        "numberOfElements" : {
+        }
+      }
+    },
+    "PalauteDto" : {
+      "type" : "object",
+      "properties" : {
+        "stars" : {
           "type" : "integer",
           "format" : "int32"
+        },
+        "feedback" : {
+          "type" : "string"
+        },
+        "key" : {
+          "type" : "string"
+        },
+        "data" : {
+          "type" : "string"
+        },
+        "user-agent" : {
+          "type" : "string"
+        },
+        "created-at" : {
+          "type" : "string",
+          "format" : "date-time"
         }
       }
     },
@@ -6523,7 +6575,7 @@
         },
         "koulutustyyppi" : {
           "type" : "string",
-          "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO" ]
+          "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO", "VAPAASIVISTYSTYO_VANHA" ]
         },
         "kielet" : {
           "type" : "array",
@@ -6615,7 +6667,7 @@
         },
         "koulutustyyppi" : {
           "type" : "string",
-          "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO" ]
+          "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO", "VAPAASIVISTYSTYO_VANHA" ]
         },
         "kielet" : {
           "type" : "array",
@@ -6718,7 +6770,7 @@
         },
         "koulutustyyppi" : {
           "type" : "string",
-          "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO" ]
+          "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO", "VAPAASIVISTYSTYO_VANHA" ]
         }
       }
     },

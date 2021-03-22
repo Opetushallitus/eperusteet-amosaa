@@ -1,11 +1,11 @@
 package fi.vm.sade.eperusteet.amosaa.service.external;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.google.gson.JsonObject;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.ArviointiasteikkoDto;
+import fi.vm.sade.eperusteet.amosaa.dto.PalauteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteQueryDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TiedoteQueryDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -38,4 +38,8 @@ public interface EperusteetClient {
     ArviointiasteikkoDto getArviointiasteikko(Long id);
 
     JsonNode findFromPerusteet(Map<String, String> query);
+
+    @PreAuthorize("permitAll()")
+    PalauteDto lahetaPalaute(PalauteDto palaute) throws JsonProcessingException;
+    
 }
