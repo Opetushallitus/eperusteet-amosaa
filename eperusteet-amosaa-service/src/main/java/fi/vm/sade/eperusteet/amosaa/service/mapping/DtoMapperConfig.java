@@ -16,10 +16,13 @@
 package fi.vm.sade.eperusteet.amosaa.service.mapping;
 
 import com.google.common.base.Throwables;
+import fi.vm.sade.eperusteet.amosaa.domain.Tila;
+import fi.vm.sade.eperusteet.amosaa.domain.Tyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.Dokumentti;
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.Dokumentti_;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OpintokokonaisuusTavoite;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
@@ -41,6 +44,7 @@ import ma.glasnost.orika.CustomMapper;
 import ma.glasnost.orika.MappingContext;
 import ma.glasnost.orika.converter.builtin.PassThroughConverter;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -162,6 +166,10 @@ public class DtoMapperConfig {
 
                         if (!ObjectUtils.isEmpty(source.getOppilaitosTyyppiKoodiUri())) {
                             target.setOppilaitosTyyppiKoodi(koodistoClient.getByUri(source.getOppilaitosTyyppiKoodiUri()));
+                        }
+
+                        if (!OpsTyyppi.POHJA.equals(source.getTyyppi()) && !Tila.POISTETTU.equals(source.getTila()) && CollectionUtils.isNotEmpty(source.getJulkaisut())) {
+                            target.setTila(Tila.JULKAISTU);
                         }
 
                     }

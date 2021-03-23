@@ -58,15 +58,40 @@ public interface OpetussuunnitelmaRepository extends JpaWithVersioningRepository
     long countByPaatosnumeroAndIdNot(String paatosnumero, Long opsId);
 
     @Query(value = "SELECT COUNT(DISTINCT o) FROM Opetussuunnitelma o JOIN o.koulutustoimija kt " +
-            "WHERE kt IN (:koulutustoimijat) AND o.tyyppi = :tyyppi AND o.tila IN (:tilat)")
+            "WHERE kt IN (:koulutustoimijat) " +
+            "AND o.tyyppi = :tyyppi " +
+            "AND o.tila IN (:tilat)")
     long countByTyyppi(@Param("tyyppi") OpsTyyppi tyyppi,
                        @Param("tilat") Collection<Tila> tilat,
                        @Param("koulutustoimijat") Collection<Koulutustoimija> koulutustoimijat);
 
     @Query(value = "SELECT COUNT(DISTINCT o) FROM Opetussuunnitelma o JOIN o.koulutustoimija kt LEFT JOIN o.peruste p " +
-            "WHERE kt IN (:koulutustoimijat) AND o.tyyppi = :tyyppi AND o.tila IN (:tilat) AND (p.koulutustyyppi IN (:koulutustyypit) or o.koulutustyyppi IN (:koulutustyypit))")
+            "WHERE kt IN (:koulutustoimijat) " +
+            "AND o.tyyppi = :tyyppi " +
+            "AND o.tila IN (:tilat) " +
+            "AND (p.koulutustyyppi IN (:koulutustyypit) or o.koulutustyyppi IN (:koulutustyypit))")
     long countByTyyppi(@Param("tyyppi") OpsTyyppi tyyppi,
                        @Param("tilat") Collection<Tila> tilat,
+                       @Param("koulutustoimijat") Collection<Koulutustoimija> koulutustoimijat,
+                       @Param("koulutustyypit") Collection<KoulutusTyyppi> koulutustyypit);
+
+    @Query(value = "SELECT COUNT(DISTINCT o) FROM Opetussuunnitelma o JOIN o.koulutustoimija kt " +
+            "WHERE kt IN (:koulutustoimijat) " +
+            "AND o.tyyppi = :tyyppi " +
+            "AND ( (:julkaistu = false AND o.julkaisut IS EMPTY AND o.tila = 'LUONNOS') " +
+            "       or (:julkaistu = true AND tila != 'POISTETTU' AND (o.julkaisut IS NOT EMPTY OR o.tila = 'JULKAISTU')) )")
+    long countByTyyppi(@Param("tyyppi") OpsTyyppi tyyppi,
+                       @Param("julkaistu") boolean julkaistu,
+                       @Param("koulutustoimijat") Collection<Koulutustoimija> koulutustoimijat);
+
+    @Query(value = "SELECT COUNT(DISTINCT o) FROM Opetussuunnitelma o JOIN o.koulutustoimija kt LEFT JOIN o.peruste p " +
+            "WHERE kt IN (:koulutustoimijat) " +
+            "AND o.tyyppi = :tyyppi " +
+            "AND ( (:julkaistu = false AND o.julkaisut IS EMPTY AND o.tila = 'LUONNOS') " +
+            "       or (:julkaistu = true AND tila != 'POISTETTU' AND (o.julkaisut IS NOT EMPTY OR o.tila = 'JULKAISTU')) )" +
+            "AND (p.koulutustyyppi IN (:koulutustyypit) or o.koulutustyyppi IN (:koulutustyypit))")
+    long countByTyyppi(@Param("tyyppi") OpsTyyppi tyyppi,
+                       @Param("julkaistu") boolean julkaistu,
                        @Param("koulutustoimijat") Collection<Koulutustoimija> koulutustoimijat,
                        @Param("koulutustyypit") Collection<KoulutusTyyppi> koulutustyypit);
 
