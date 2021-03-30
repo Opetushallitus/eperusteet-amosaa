@@ -550,7 +550,9 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
         ops.setPeruste(cperuste);
 
-        if (KoulutustyyppiToteutus.AMMATILLINEN.equals(peruste.getToteutus()) || peruste.getToteutus() == null) {
+        if (KoulutustyyppiToteutus.AMMATILLINEN.equals(peruste.getToteutus())
+                || peruste.getKoulutustyyppi().isValmaTelma()
+                || peruste.getToteutus() == null) {
             alustaAmmatillinenOpetussuunnitelma(ops, rootTkv);
 
             PerusteKaikkiDto perusteSisalto = eperusteetService.getPerusteSisalto(cperuste, PerusteKaikkiDto.class);
