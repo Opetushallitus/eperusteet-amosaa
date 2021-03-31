@@ -121,7 +121,7 @@ angular.module("app").config($stateProvider =>
                             const res = await opetussuunnitelmatSivu.customGET("", {
                                 sivu: $scope.pagination.sivu - 1,
                                 sivukoko: $scope.pagination.sivukoko,
-                                nimi: $scope.rajain.nimi,
+                                nimi: $scope.rajain && $scope.rajain.nimi,
                             }, { timeout });
                             $scope.$applyAsync(() => updateOpetussuunnitelmat(res));
                         }
@@ -226,7 +226,8 @@ angular.module("app").config($stateProvider =>
                                 sivu: $scope.pagination.sivu - 1,
                                 sivukoko: $scope.pagination.sivukoko,
                                 tila: $scope.rajain.tila,
-                                nimi: $scope.rajain.nimi
+                                nimi: $scope.rajain.nimi,
+                                tyyppi: opsOletusRajaus.tyyppi,
                             }, { timeout });
                             $scope.$applyAsync(() => updateOpetussuunnitelmat(res));
                         }

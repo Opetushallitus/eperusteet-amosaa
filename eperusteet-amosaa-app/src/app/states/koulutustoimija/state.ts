@@ -16,6 +16,7 @@ angular.module("app").config($stateProvider =>
             opsOletusRajaus: () => {
                 return {
                     sivukoko: 10,
+                    tyyppi: ['ops', 'yleinen'],
                     tila: _(Constants.tosTilat)
                         .filter(tila => tila !== "poistettu")
                         .value()
