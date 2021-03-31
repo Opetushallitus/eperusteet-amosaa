@@ -122,6 +122,7 @@ angular.module("app").config($stateProvider =>
                                 sivu: $scope.pagination.sivu - 1,
                                 sivukoko: $scope.pagination.sivukoko,
                                 nimi: $scope.rajain && $scope.rajain.nimi,
+                                tyyppi: ['pohja'],
                             }, { timeout });
                             $scope.$applyAsync(() => updateOpetussuunnitelmat(res));
                         }
@@ -130,7 +131,11 @@ angular.module("app").config($stateProvider =>
                         }
                     };
 
-                    updateOpetussuunnitelmat(opetussuunnitelmatSivu);
+                    $scope.pagination = {
+                        sivu: 1,
+                        sivukoko: 10,
+                    };
+                    $scope.paivitaRajaus(true);
                 }
             },
             opetussuunnitelmat: {
@@ -162,7 +167,6 @@ angular.module("app").config($stateProvider =>
                         );
 
                         $scope.opetussuunnitelmat = _(opetussuunnitelmat.data)
-                            .reject((ops: any) => ops.tyyppi === "yhteinen")
                             .each(ops => {
                                 ops.$$oikeus =
                                     $scope.ktOikeus === "hallinta" ||
@@ -184,6 +188,7 @@ angular.module("app").config($stateProvider =>
                     $scope.tilat = _.cloneDeep(Constants.tosTilat);
                     $scope.pagination = {
                         sivu: 1,
+                        sivukoko: 10,
                         kokonaismaara: 0
                     };
                     $scope.rajain =  _.assign(_.cloneDeep(opsOletusRajaus), {
@@ -227,7 +232,7 @@ angular.module("app").config($stateProvider =>
                                 sivukoko: $scope.pagination.sivukoko,
                                 tila: $scope.rajain.tila,
                                 nimi: $scope.rajain.nimi,
-                                tyyppi: opsOletusRajaus.tyyppi,
+                                tyyppi: ['ops', 'yleinen'],
                             }, { timeout });
                             $scope.$applyAsync(() => updateOpetussuunnitelmat(res));
                         }
@@ -236,7 +241,7 @@ angular.module("app").config($stateProvider =>
                         }
                     };
 
-                    updateOpetussuunnitelmat(opetussuunnitelmatSivu);
+                    $scope.paivitaRajaus(true);
                 }
             },
             yhteinen: {
