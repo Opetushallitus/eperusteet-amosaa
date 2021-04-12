@@ -245,8 +245,53 @@ angular.module("app").config($stateProvider =>
                 }
             },
             yhteinen: {
-                controller: ($scope, yhteiset, koulutustoimija, opsSaver) => {
-                    $scope.yhteiset = yhteiset;
+                controller: (
+                    $q: angular.IQService,$scope,
+                     yhteiset,
+                     koulutustoimija,
+                     opsSaver,
+                     opetussuunnitelmatSivu) => {
+
+                    const updateOpetussuunnitelmat = opetussuunnitelmat => {
+                        $scope.yhteiset = opetussuunnitelmat.data;
+                        $scope.pagination = {
+                            sivu: opetussuunnitelmat.sivu + 1,
+                            sivukoko: opetussuunnitelmat.sivukoko,
+                            kokonaismaara: opetussuunnitelmat.kokonaismäärä,
+                        };
+
+                    };
+
+                    $scope.pagination = {
+                        sivu: 1,
+                        sivukoko: 10,
+                        kokonaismaara: 0
+                    };
+
+                    updateOpetussuunnitelmat(yhteiset);
+
+                    let timeout: ng.IDeferred<void>;
+                    $scope.paivitaRajaus = async () => {
+
+                        if (timeout) {
+                            timeout.resolve();
+                        }
+
+                        timeout = $q.defer();
+
+                        try {
+                            const res = await opetussuunnitelmatSivu.customGET("", {
+                                sivu: $scope.pagination.sivu - 1,
+                                sivukoko: $scope.pagination.sivukoko,
+                                tyyppi: ['yhteinen'],
+                            }, { timeout });
+                            $scope.$applyAsync(() => updateOpetussuunnitelmat(res));
+                        }
+                        finally {
+                            timeout = null;
+                        }
+                    };
+
                     $scope.addYhteinen = () =>
                         ModalAdd.yhteinen($scope.yhteiset)
                             .then(opsSaver)

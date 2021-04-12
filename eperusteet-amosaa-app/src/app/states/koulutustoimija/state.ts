@@ -28,9 +28,9 @@ angular.module("app").config($stateProvider =>
             ystavaOpsit: koulutustoimija => koulutustoimija.all("opetussuunnitelmat/ystavien").getList(),
             async yhteiset(koulutustoimija, opsOletusRajaus) {
                 return (await koulutustoimija.one("opetussuunnitelmat").customGET("", {
-                    sivukoko: 1000,
+                    sivukoko: 10,
                     tyyppi: 'yhteinen',
-                })).data;
+                }));
             },
             kayttajanTieto: koulutustoimija => kayttajaId => koulutustoimija.one("kayttajat", kayttajaId).get(),
             paikallisetTutkinnonosatEP: koulutustoimija => koulutustoimija.all("tutkinnonosat")
