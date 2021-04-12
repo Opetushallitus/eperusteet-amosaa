@@ -284,6 +284,9 @@ angular.module("app").config($stateProvider =>
                                 sivu: $scope.pagination.sivu - 1,
                                 sivukoko: $scope.pagination.sivukoko,
                                 tyyppi: ['yhteinen'],
+                                tila: _(Constants.tosTilat)
+                                    .filter(tila => tila !== "poistettu")
+                                    .value(),
                             }, { timeout });
                             $scope.$applyAsync(() => updateOpetussuunnitelmat(res));
                         }

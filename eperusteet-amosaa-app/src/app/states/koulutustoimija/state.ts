@@ -30,6 +30,9 @@ angular.module("app").config($stateProvider =>
                 return (await koulutustoimija.one("opetussuunnitelmat").customGET("", {
                     sivukoko: 10,
                     tyyppi: 'yhteinen',
+                    tila: _(Constants.tosTilat)
+                        .filter(tila => tila !== "poistettu")
+                        .value(),
                 }));
             },
             kayttajanTieto: koulutustoimija => kayttajaId => koulutustoimija.one("kayttajat", kayttajaId).get(),
