@@ -568,11 +568,20 @@
                     </fo:table-row>
                     <fo:table-row>
                         <fo:table-cell>
-                            <xsl:if test="not(@alt = 'undefined')">
-                                <fo:block>
-                                    <xsl:value-of select="@alt"/>
-                                </fo:block>
-                            </xsl:if>
+                            <xsl:choose>
+                                <xsl:when test="@figcaption and not(@figcaption = '')">
+                                    <fo:block>
+                                        <xsl:value-of select="@figcaption"/>
+                                    </fo:block>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <xsl:if test="not(@alt = 'undefined')">
+                                        <fo:block>
+                                            <xsl:value-of select="@alt"/>
+                                        </fo:block>
+                                    </xsl:if>
+                                </xsl:otherwise>
+                            </xsl:choose>
                         </fo:table-cell>
                     </fo:table-row>
                 </fo:table-body>
