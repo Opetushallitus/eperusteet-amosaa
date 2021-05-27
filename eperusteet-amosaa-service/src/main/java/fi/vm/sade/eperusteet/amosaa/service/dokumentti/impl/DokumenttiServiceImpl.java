@@ -46,6 +46,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -116,6 +117,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public DokumenttiDto createDtoFor(Long ktId, Long id, Kieli kieli) {
         Dokumentti dokumentti = new Dokumentti();
         dokumentti.setTila(DokumenttiTila.EI_OLE);
@@ -131,6 +133,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     }
 
     @Override
+    @Transactional
     public void setStarted(Long ktId, Long opsId, DokumenttiDto dto) {
         // Asetetaan dokumentti luonti tilaan
         dto.setAloitusaika(new Date());
@@ -144,9 +147,8 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     @Async(value = "docTaskExecutor")
     public void generateWithDto(Long ktId, @NotNull Long opsId, DokumenttiDto dto) throws DokumenttiException {
         dto.setTila(DokumenttiTila.LUODAAN);
-        dokumenttiStateService.save(dto);
+        Dokumentti dokumentti = dokumenttiStateService.save(dto);
 
-        Dokumentti dokumentti = mapper.map(dto, Dokumentti.class);
         try {
             Opetussuunnitelma ops = opsRepository.findOne(dokumentti.getOpsId());
             dokumentti.setTila(DokumenttiTila.VALMIS);
