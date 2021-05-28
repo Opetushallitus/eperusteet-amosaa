@@ -48,6 +48,6 @@ public class DokumenttiStateServiceImpl implements DokumenttiStateService {
             return dokumenttiRepository.save(dokumentti);
         }
 
-        return new Dokumentti();
+        return null;
     }
 }
