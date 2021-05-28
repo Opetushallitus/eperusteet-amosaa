@@ -44,6 +44,7 @@ import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -74,8 +75,12 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     @Autowired
     private DokumenttiStateService dokumenttiStateService;
 
+    @Lazy
+    @Autowired
+    private DokumenttiService self;
+
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public DokumenttiDto getDto(Long ktId, Long opsId, Kieli kieli) {
         Dokumentti dokumentti = getLatestDokumentti(opsId, kieli);
 
@@ -91,7 +96,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 
             return mapper.map(dokumentti, DokumenttiDto.class);
         } else {
-            return createDtoFor(ktId, opsId, kieli);
+            return self.createDtoFor(ktId, opsId, kieli);
         }
     }
 
