@@ -7,15 +7,21 @@ import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.SisaltoviiteLaajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.OpintokokonaisuusDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.OpintokokonaisuusTavoiteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DirtiesContext
 @Transactional
 @TestPropertySource(properties = {"test.perusteJsonFile: /perusteet/vstPeruste.json"})
-public class VapaasivistystyoOpsTest extends AbstractIntegrationTest {
+public class VapaasivistystyoOpsIT extends AbstractIntegrationTest {
 
     private ObjectMapper objectMapper;
 
@@ -38,6 +44,7 @@ public class VapaasivistystyoOpsTest extends AbstractIntegrationTest {
     private OpetussuunnitelmaService opetussuunnitelmaService;
 
     @Test
+    @Rollback
     public void test_vapaasivistystyoSisaltoviitteet() {
         OpetussuunnitelmaBaseDto vstOps = createOpetussuunnitelma(ops -> ops.setPerusteId(35820l));
         List<SisaltoviiteLaajaDto> sisaltoviitteet = sisaltoViiteService.getSisaltoViitteet(vstOps.getKoulutustoimija().getId(), vstOps.getId(), SisaltoviiteLaajaDto.class);
@@ -76,8 +83,43 @@ public class VapaasivistystyoOpsTest extends AbstractIntegrationTest {
                         "opintokokonaisuustavoitteet_1046",
                         "opintokokonaisuustavoitteet_1047",
                         "opintokokonaisuustavoitteet_1048");
-
-
+        assertThat(opintokokonaisuus.getTavoitteet()).extracting("tavoite")
+                .containsExactlyInAnyOrder(
+                        null,
+                        null,
+                        null);
     }
 
+    @Test
+    public void test_vapaasivistystyoSisaltoviitteet_lisaaTavoitteita() {
+        OpetussuunnitelmaBaseDto vstOps = createOpetussuunnitelma(ops -> ops.setPerusteId(35820l));
+        List<SisaltoviiteLaajaDto> sisaltoviitteet = sisaltoViiteService.getSisaltoViitteet(vstOps.getKoulutustoimija().getId(), vstOps.getId(), SisaltoviiteLaajaDto.class);
+        List<SisaltoviiteLaajaDto> opintokokonaisuudet = sisaltoviitteet.stream().filter(viite -> SisaltoTyyppi.OPINTOKOKONAISUUS.equals(viite.getTyyppi())).collect(Collectors.toList());
+        OpintokokonaisuusDto opintokokonaisuus = opintokokonaisuudet.get(0).getOpintokokonaisuus();
+
+        SisaltoViiteDto.Matala sisaltoviiteDto = sisaltoViiteService.getSisaltoViite(vstOps.getKoulutustoimija().getId(), vstOps.getId(), opintokokonaisuudet.get(0).getId());
+
+        sisaltoviiteDto.getOpintokokonaisuus().setTavoitteet(Stream.concat(
+                opintokokonaisuus.getTavoitteet().stream(),
+                Stream.of(OpintokokonaisuusTavoiteDto.builder()
+                        .perusteesta(false)
+                        .tavoite(LokalisoituTekstiDto.of("tavoite1"))
+                        .build()
+                )).collect(Collectors.toList()));
+
+        sisaltoViiteService.updateSisaltoViite(vstOps.getKoulutustoimija().getId(), vstOps.getId(), opintokokonaisuudet.get(0).getId(), sisaltoviiteDto);
+
+        sisaltoviiteDto = sisaltoViiteService.getSisaltoViite(vstOps.getKoulutustoimija().getId(), vstOps.getId(), opintokokonaisuudet.get(0).getId());
+        assertThat(sisaltoviiteDto.getOpintokokonaisuus().getTavoitteet()).extracting("tavoiteKoodi")
+                .containsExactlyInAnyOrder(
+                        "opintokokonaisuustavoitteet_1046",
+                        "opintokokonaisuustavoitteet_1047",
+                        "opintokokonaisuustavoitteet_1048",
+                        null);
+        assertThat(sisaltoviiteDto.getOpintokokonaisuus().getTavoitteet().get(3))
+                .extracting("tavoite")
+                .extracting("tekstit")
+                .containsExactlyInAnyOrder(LokalisoituTekstiDto.of("tavoite1").getTeksti());
+
+    }
 }

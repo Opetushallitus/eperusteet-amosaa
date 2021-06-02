@@ -40,4 +40,13 @@ public class SisaltoviiteServiceProviderImpl implements SisaltoviiteServiceProvi
     public SisaltoViite updateSisaltoViite(SisaltoViite viite, SisaltoViiteDto uusi) {
         return getSisaltoViiteToteutusService(viite).updateSisaltoViite(viite, uusi);
     }
+
+    @Override
+    public void koodita(SisaltoViite viite) {
+        try {
+            getSisaltoViiteToteutusService(viite).koodita(viite);
+        } catch (BusinessRuleViolationException e) {
+            // skip
+        }
+    }
 }

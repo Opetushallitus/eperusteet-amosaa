@@ -8,13 +8,16 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.JulkaisuData;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.JulkaisuBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaKaikkiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteRakenneDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.JulkaisuDataRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.JulkaisuRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
+import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiService;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
@@ -23,6 +26,8 @@ import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.JulkaisuService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaMuokkaustietoService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
+import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
+import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoviiteServiceProvider;
 import fi.vm.sade.eperusteet.amosaa.service.util.JsonMapper;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 import java.io.IOException;
@@ -76,6 +81,15 @@ public class JulkaisuServiceImpl implements JulkaisuService {
     @Autowired
     private JulkaisuDataRepository julkaisuDataRepository;
 
+    @Autowired
+    private SisaltoviiteServiceProvider sisaltoviiteServiceProvider;
+
+    @Autowired
+    private SisaltoViiteService sisaltoViiteService;
+
+    @Autowired
+    private SisaltoviiteRepository sisaltoviiteRepository;
+
     @Override
     @Transactional(readOnly = true)
     public List<JulkaisuBaseDto> getJulkaisut(long ktIds, long opsId) {
@@ -123,6 +137,8 @@ public class JulkaisuServiceImpl implements JulkaisuService {
                 }
             }
 
+            kooditaSisaltoviitteet(ktId, opsId);
+
             for (Kieli kieli : opetussuunnitelma.getJulkaisukielet()) {
                 try {
                     DokumenttiDto dokumenttiDto = dokumenttiService.getDto(ktId, opsId, kieli);
@@ -167,6 +183,16 @@ public class JulkaisuServiceImpl implements JulkaisuService {
 
     private JulkaisuBaseDto taytaKayttajaTiedot(JulkaisuBaseDto julkaisu) {
         return taytaKayttajaTiedot(Arrays.asList(julkaisu)).get(0);
+    }
+
+    private void kooditaSisaltoviitteet(long ktId, long opsId) {
+        SisaltoViiteRakenneDto sisaltoViiteRakenneDto = sisaltoViiteService.getRakenne(ktId, opsId);
+        kooditaSisaltoviite(sisaltoviiteRepository.findOneByOwnerIdAndId(opsId, sisaltoViiteRakenneDto.getId()));
+    }
+
+    private void kooditaSisaltoviite(SisaltoViite sisaltoViite) {
+        sisaltoviiteServiceProvider.koodita(sisaltoViite);
+        sisaltoViite.getLapset().forEach(lapsi -> kooditaSisaltoviite(lapsi));
     }
 
 }
