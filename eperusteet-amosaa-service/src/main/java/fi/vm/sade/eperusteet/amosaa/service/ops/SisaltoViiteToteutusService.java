@@ -9,4 +9,7 @@ public interface SisaltoViiteToteutusService {
     SisaltoTyyppi getSisaltoTyyppi();
 
     SisaltoViite updateSisaltoViite(SisaltoViite viite, SisaltoViiteDto uusi);
+
+    default void koodita(SisaltoViite viite) {
+    }
 }

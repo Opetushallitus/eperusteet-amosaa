@@ -8,4 +8,6 @@ public interface SisaltoviiteServiceProvider {
     SisaltoViiteToteutusService getSisaltoViiteToteutusService(SisaltoViite viite);
 
     SisaltoViite updateSisaltoViite(SisaltoViite viite, SisaltoViiteDto uusi);
+
+    void koodita(SisaltoViite viite);
 }

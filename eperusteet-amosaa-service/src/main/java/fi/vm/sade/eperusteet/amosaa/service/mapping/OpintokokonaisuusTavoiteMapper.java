@@ -33,10 +33,13 @@ public class OpintokokonaisuusTavoiteMapper extends CustomMapper<Opintokokonaisu
     @Override
     public void mapAtoB(OpintokokonaisuusTavoite opintokokonaisuusTavoite, OpintokokonaisuusTavoiteDto opintokokonaisuusTavoiteDto, MappingContext context) {
         super.mapAtoB(opintokokonaisuusTavoite, opintokokonaisuusTavoiteDto, context);
-        KoodistoKoodiDto koodistokoodi = koodistoClient.getByUri(opintokokonaisuusTavoite.getTavoiteKoodi());
-        if (koodistokoodi != null) {
-            Map<String, String> lokalisoitu = Arrays.stream(koodistokoodi.getMetadata()).collect(Collectors.toMap(KoodistoMetadataDto::getKieli, KoodistoMetadataDto::getNimi));
-            opintokokonaisuusTavoiteDto.setTavoite(new LokalisoituTekstiDto(lokalisoitu));
+
+        if (opintokokonaisuusTavoite.getTavoiteKoodi() != null) {
+            KoodistoKoodiDto koodistokoodi = koodistoClient.getByUri(opintokokonaisuusTavoite.getTavoiteKoodi());
+            if (koodistokoodi != null) {
+                Map<String, String> lokalisoitu = Arrays.stream(koodistokoodi.getMetadata()).collect(Collectors.toMap(KoodistoMetadataDto::getKieli, KoodistoMetadataDto::getNimi));
+                opintokokonaisuusTavoiteDto.setTavoite(new LokalisoituTekstiDto(lokalisoitu));
+            }
         }
     }
 }
