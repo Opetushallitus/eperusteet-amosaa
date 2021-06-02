@@ -1,4 +1,4 @@
-ALTER TABLE opintokokonaisuus_tavoite ALTER COLUMN tavoiteKoodi DROP NOT NULL;
+ALTER TABLE opintokokonaisuus_tavoite ALTER COLUMN tavoite_koodi DROP NOT NULL;
 
 ALTER TABLE opintokokonaisuus_tavoite ADD COLUMN tavoite_id int8;
 
