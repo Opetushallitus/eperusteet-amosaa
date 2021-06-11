@@ -102,6 +102,7 @@ public class KoulutustoimijaRepositoryImpl implements KoulutustoimijaCustomRepos
     ) {
         Predicate pred = cb.notEqual(koulutustoimija.get(Koulutustoimija_.organisaatio), SecurityUtil.OPH_OID);
         pred = cb.and(pred, cb.equal(root.get(Opetussuunnitelma_.tila), Tila.JULKAISTU));
+        pred = cb.and(pred, cb.equal(koulutustoimija.get(Koulutustoimija_.organisaatioRyhma), queryDto.isOrganisaatioRyhma()));
 
         Kieli kieli = Kieli.of(queryDto.getKieli());
         if (!kieli.equals(Kieli.FI)) {

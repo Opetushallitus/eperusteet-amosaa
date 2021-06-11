@@ -27,4 +27,5 @@ import lombok.Setter;
 @Setter
 public class KoulutustoimijaQueryDto extends QueryDto {
     private String organisaatio;
+    private boolean organisaatioRyhma;
 }
