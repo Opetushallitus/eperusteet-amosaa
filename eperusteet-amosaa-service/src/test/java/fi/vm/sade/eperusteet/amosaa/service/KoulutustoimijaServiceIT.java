@@ -176,15 +176,52 @@ public class KoulutustoimijaServiceIT extends AbstractIntegrationTest {
         julkisetToimijat = koulutustoimijaService.findKoulutustoimijat(p, pquery);
         assertThat(julkisetToimijat).isEmpty();
     }
-    
+
+    @Test
+    @Rollback
+    public void testKoulutustoimijaHakuOrganisaatioRyhma() {
+        kayttajanTietoService.updateKoulutustoimijat();
+
+        {
+            OpetussuunnitelmaBaseDto dto = createOpetussuunnitelma();
+
+            OpetussuunnitelmaDto ops = opetussuunnitelmaService.getOpetussuunnitelma(getKoulutustoimijaId(), dto.getId());
+
+            Set<Kieli> kielet = new HashSet<>();
+            kielet.add(Kieli.FI);
+            ops.setJulkaisukielet(kielet);
+
+            // Validointi vaatii
+            ops.setHyvaksyja("Hyvaksyja");
+            ops.setPaatosnumero("Paatosnumero");
+            ops.setPaatospaivamaara(new Date());
+
+            opetussuunnitelmaService.update(getKoulutustoimijaId(), ops.getId(), ops);
+            opetussuunnitelmaService.updateTila(getKoulutustoimijaId(), ops.getId(), Tila.VALMIS, false);
+            opetussuunnitelmaService.updateTila(getKoulutustoimijaId(), ops.getId(), Tila.JULKAISTU, false);
+        }
+
+        PageRequest p = new PageRequest(0, 10);
+        KoulutustoimijaQueryDto pquery = new KoulutustoimijaQueryDto();
+
+        koulutustoimijaService.findKoulutustoimijat(p, pquery);
+        assertThat(koulutustoimijaService.findKoulutustoimijat(p, pquery)).hasSize(1);
+
+        setCurrentProfileRyhma();
+        assertThat(koulutustoimijaService.findKoulutustoimijat(p, pquery)).hasSize(0);
+
+        pquery.setOrganisaatioRyhma(true);
+        assertThat(koulutustoimijaService.findKoulutustoimijat(p, pquery)).hasSize(1);
+    }
+
     @Test
     @Rollback
     public void testKoulutustoimijaSorttaus() {
-    	
-    	useProfileKP2();
-    	Opetussuunnitelma opetussuunnitelma = createOpetussuunnitelmaJulkaistu();
-    	updateOpetussuunnitelmaJulkaisukielet(opetussuunnitelma, Sets.newHashSet(Kieli.FI, Kieli.EN));
-    	updateKoulutustoimijaLokalisointiNimet(ImmutableMap.of(Kieli.FI, "testijarjestys5", Kieli.EN, "test1"));
+
+        useProfileKP2();
+        Opetussuunnitelma opetussuunnitelma = createOpetussuunnitelmaJulkaistu();
+        updateOpetussuunnitelmaJulkaisukielet(opetussuunnitelma, Sets.newHashSet(Kieli.FI, Kieli.EN));
+        updateKoulutustoimijaLokalisointiNimet(ImmutableMap.of(Kieli.FI, "testijarjestys5", Kieli.EN, "test1"));
     	
     	useProfileKP1();
     	opetussuunnitelma = createOpetussuunnitelmaJulkaistu();
