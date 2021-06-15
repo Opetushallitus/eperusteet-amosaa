@@ -306,9 +306,9 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
             result.setToteutussuunnitelmatKeskeneraiset(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.OPS, false, koulutustoimijat, koulutustyypit));
             result.setToteutussuunnitelmatJulkaistut(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.OPS, true, koulutustoimijat, koulutustyypit));
 
-            if (koulutustyypit.contains(KoulutusTyyppi.VAPAASIVISTYSTYO)) {
-                result.setToteutussuunnitelmaPohjatKeskeneraiset(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.OPSPOHJA, Collections.singleton(Tila.LUONNOS), koulutustoimijat));
-                result.setToteutussuunnitelmaPohjatValmiit(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.OPSPOHJA, Collections.singleton(Tila.VALMIS), koulutustoimijat));
+            if (koulutustyypit.contains(KoulutusTyyppi.VAPAASIVISTYSTYO) || koulutustyypit.contains(KoulutusTyyppi.TUTKINTOONVALMENTAVA)) {
+                result.setToteutussuunnitelmaPohjatKeskeneraiset(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.OPSPOHJA, Collections.singleton(Tila.LUONNOS), koulutustoimijat, koulutustyypit));
+                result.setToteutussuunnitelmaPohjatValmiit(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.OPSPOHJA, Collections.singleton(Tila.VALMIS), koulutustoimijat, koulutustyypit));
             } else if (koulutustoimija.isOph()) {
                 result.setKtYhteinenOsuusKeskeneraiset(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.POHJA, false, koulutustoimijat));
                 result.setKtYhteinenOsuusJulkaistut(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.POHJA, true, koulutustoimijat));

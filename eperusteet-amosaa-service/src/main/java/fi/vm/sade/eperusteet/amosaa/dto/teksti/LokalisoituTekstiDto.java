@@ -18,6 +18,7 @@ package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.databind.JsonNode;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import java.util.EnumMap;
@@ -120,5 +121,23 @@ public class LokalisoituTekstiDto {
             result.put(kv.getKey(), kv.getValue().map(teksti -> new LokalisoituTekstiDto(teksti.getId(), teksti.getTunniste(), teksti.getTeksti())));
         }
         return result;
+    }
+
+    public static LokalisoituTekstiDto of(JsonNode node) {
+        if (node == null) {
+            return null;
+        }
+
+        Map<String, String> nimet = new HashMap<>();
+        if (node.has("fi")) {
+            nimet.put(Kieli.FI.toString(), node.get("fi").asText());
+        }
+        if (node.has("en")) {
+            nimet.put(Kieli.EN.toString(), node.get("en").asText());
+        }
+        if (node.has("sv")) {
+            nimet.put(Kieli.SV.toString(), node.get("sv").asText());
+        }
+        return new LokalisoituTekstiDto(nimet);
     }
 }

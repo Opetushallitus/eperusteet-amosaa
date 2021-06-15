@@ -330,12 +330,18 @@
            maxElementsInMemory="10000"
            eternal="false"
            timeToLiveSeconds="600"
-           overflowToDisk="false" />
+           overflowToDisk="false"/>
 
     <cache name="organisaationimi"
            maxElementsInMemory="1000"
            eternal="false"
            timeToLiveSeconds="3600"
+           overflowToDisk="false"/>
+
+    <cache name="koulutuksenjarjestajat"
+           maxElementsInMemory="10000"
+           eternal="false"
+           timeToLiveSeconds="600"
            overflowToDisk="false"/>
 
 </ehcache>

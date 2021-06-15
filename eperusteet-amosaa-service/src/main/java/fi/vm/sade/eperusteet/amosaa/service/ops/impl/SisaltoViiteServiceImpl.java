@@ -30,6 +30,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.VapaaTeksti;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Koulutuksenosa;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaTutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Suorituspolku;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.SuorituspolkuRivi;
@@ -52,6 +53,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliRooli;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.SuoritustapaLaajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.Suoritustapakoodi;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonosaKaikkiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.KoulutuksenOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteRakenneDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SuorituspolkuDto;
@@ -468,6 +470,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
                 viite.setPakollinen(true);
                 break;
             case OPINTOKOKONAISUUS:
+            case KOULUTUKSENOSA:
                 sisaltoviiteServiceProvider.updateSisaltoViite(viite, uusi);
             default:
                 break;
@@ -994,6 +997,14 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
         return repository.findTutkinnonosat(ops).stream()
                 .map(SisaltoViite::getTosa)
                 .map(tosa -> mapper.map(tosa, aClass))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<SisaltoViiteDto> getSisaltoviitteet(Long ktId, Long opsId, SisaltoTyyppi tyyppi) {
+        Opetussuunnitelma ops = opsRepository.findOne(opsId);
+        return repository.findByTyyppi(ops, tyyppi).stream()
+                .map(ko -> mapper.map(ko, SisaltoViiteDto.class))
                 .collect(Collectors.toList());
     }
 

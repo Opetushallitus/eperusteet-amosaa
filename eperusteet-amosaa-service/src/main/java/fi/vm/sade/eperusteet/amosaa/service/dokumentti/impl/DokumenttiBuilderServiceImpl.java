@@ -43,8 +43,11 @@ import fi.vm.sade.eperusteet.amosaa.dto.koodisto.KoodistoMetadataDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.TermiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.*;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.AmmattitaitovaatimusKohdealueetDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.KoulutuksenOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.OpintokokonaisuusTavoiteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteKevytDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.TuvaLaajaAlainenOsaaminenDto;
 import fi.vm.sade.eperusteet.amosaa.repository.dokumentti.DokumenttiRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiBuilderService;
@@ -59,6 +62,7 @@ import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.TermistoService;
 import fi.vm.sade.eperusteet.amosaa.service.util.KoodistoClient;
 import fi.vm.sade.eperusteet.utils.dto.dokumentti.DokumenttiMetaDto;
+import java.util.stream.Stream;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -295,7 +299,9 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
             throws ParserConfigurationException, IOException, SAXException {
 
         for (SisaltoViite lapsi : viite.getLapset()) {
-            if (lapsi == null || lapsi.getTekstiKappale() == null || lapsi.getTekstiKappale().getNimi() == null) {
+            SisaltoViiteKevytDto sisaltoViiteKevytDto = mapper.map(lapsi, SisaltoViiteKevytDto.class);
+
+            if (lapsi == null || sisaltoViiteKevytDto == null || sisaltoViiteKevytDto.getNimi() == null) {
                 return;
             }
 
@@ -305,7 +311,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
 
             TekstiKappale tekstiKappale = lapsi.getTekstiKappale();
             StringBuilder otsikkoBuilder = new StringBuilder();
-            otsikkoBuilder.append(getTextString(docBase, tekstiKappale.getNimi()));
+            otsikkoBuilder.append(getTextString(docBase, sisaltoViiteKevytDto.getNimi()));
 
             if (lapsi.getTyyppi().equals(SisaltoTyyppi.TUTKINNONOSA) && lapsi.getTosa() != null) {
                 Tutkinnonosa tosa = lapsi.getTosa();
@@ -347,6 +353,10 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
                 otsikkoBuilder.append(", " + lapsi.getOpintokokonaisuus().getLaajuus() + " " + messages.translate("docgen.laajuus.op", docBase.getKieli()));
             }
 
+            if (lapsi.getTyyppi().equals(SisaltoTyyppi.KOULUTUKSENOSA)) {
+                otsikkoBuilder.append(", " + lapsi.getKoulutuksenosa().getLaajuusMinimi() + " - " + lapsi.getKoulutuksenosa().getLaajuusMaksimi() + " " + messages.translate("docgen.laajuus.viikkoa", docBase.getKieli()));
+            }
+
             addHeader(docBase, otsikkoBuilder.toString());
 
             if (lapsi.isNaytaPerusteenTeksti() && lapsi.getPerusteteksti() != null && lapsi.getPerusteteksti().getTeksti() != null) {
@@ -373,6 +383,12 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
                     break;
                 case OPINTOKOKONAISUUS:
                     addOpintokokonaisuus(docBase, lapsi);
+                    break;
+                case LAAJAALAINENOSAAMINEN:
+                    addLaajaalainenOsaaminen(docBase, lapsi);
+                    break;
+                case KOULUTUKSENOSA:
+                    addKoulutuksenosa(docBase, lapsi);
                     break;
                 default:
                     break;
@@ -1063,6 +1079,75 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
             arvioinnitEl.appendChild(arviointiEl);
         });
         docBase.getBodyElement().appendChild(arvioinnitEl);
+    }
+
+    private void addLaajaalainenOsaaminen(DokumenttiBase docBase, SisaltoViite lapsi) {
+        TuvaLaajaAlainenOsaaminenDto tuvaLaajaAlainenOsaaminenDto = mapper.map(lapsi.getTuvaLaajaAlainenOsaaminen(), TuvaLaajaAlainenOsaaminenDto.class);
+        addTeksti(docBase, getTextString(docBase, tuvaLaajaAlainenOsaaminenDto.getTeksti()), "div");
+    }
+
+    private void addKoulutuksenosa(DokumenttiBase docBase, SisaltoViite lapsi) {
+        KoulutuksenOsaDto koulutuksenOsaDto = mapper.map(lapsi.getKoulutuksenosa(), KoulutuksenOsaDto.class);
+        addTeksti(docBase, getTextString(docBase, koulutuksenOsaDto.getKuvaus()), "div");
+
+        addTeksti(docBase, messages.translate("docgen.tavoitteet.title", docBase.getKieli()), "h5");
+        Element tavoitteetEl = docBase.getDocument().createElement("ul");
+        Stream.concat(
+                Stream.of(koulutuksenOsaDto.getTavoitteet()),
+                Stream.of(koulutuksenOsaDto.getPaikallinenTarkennus() != null ? koulutuksenOsaDto.getPaikallinenTarkennus().getTavoitteet() : Collections.<LokalisoituTekstiDto>emptyList()))
+                .flatMap(Collection::stream)
+                .forEach(tavoite -> {
+                    Element tavoiteEl = docBase.getDocument().createElement("li");
+                    String rivi = getTextString(docBase, tavoite);
+                    tavoiteEl.setTextContent(rivi);
+                    tavoitteetEl.appendChild(tavoiteEl);
+                });
+        docBase.getBodyElement().appendChild(tavoitteetEl);
+
+        if (koulutuksenOsaDto.getPaikallinenTarkennus() != null) {
+            addTeksti(docBase, getTextString(docBase, koulutuksenOsaDto.getPaikallinenTarkennus().getTavoitteetKuvaus()), "div");
+        }
+
+        addTeksti(docBase, messages.translate("docgen.laaja-alainen-osaaminen.title", docBase.getKieli()), "h5");
+        addTeksti(docBase, getTextString(docBase, koulutuksenOsaDto.getLaajaAlaisenOsaamisenKuvaus()), "div");
+        koulutuksenOsaDto.getPaikallinenTarkennus().getLaajaalaisetosaamiset().forEach(lao -> {
+            addTeksti(docBase, getTextString(docBase, lao.getNimi()), "h6");
+            addTeksti(docBase, getTextString(docBase, lao.getLaajaAlaisenOsaamisenKuvaus()), "div");
+        });
+
+
+        addTeksti(docBase, messages.translate("docgen.keskeinen-sisalto.title", docBase.getKieli()), "h5");
+        addTeksti(docBase, getTextString(docBase, koulutuksenOsaDto.getKeskeinenSisalto()), "div");
+        if (koulutuksenOsaDto.getPaikallinenTarkennus() != null) {
+            addTeksti(docBase, getTextString(docBase, koulutuksenOsaDto.getPaikallinenTarkennus().getKeskeinenSisalto()), "div");
+        }
+
+        addTeksti(docBase, messages.translate("docgen.arviointi.title", docBase.getKieli()), "h5");
+        addTeksti(docBase, getTextString(docBase, koulutuksenOsaDto.getArvioinninKuvaus()), "div");
+        if (koulutuksenOsaDto.getPaikallinenTarkennus() != null) {
+            addTeksti(docBase, getTextString(docBase, koulutuksenOsaDto.getPaikallinenTarkennus().getArvioinninKuvaus()), "div");
+        }
+
+        if (koulutuksenOsaDto.getPaikallinenTarkennus() != null && !CollectionUtils.isEmpty(koulutuksenOsaDto.getPaikallinenTarkennus().getKoulutuksenJarjestajat())) {
+            addTeksti(docBase, messages.translate("docgen.koulutuksen-jarjestajat.title", docBase.getKieli()), "h5");
+
+            koulutuksenOsaDto.getPaikallinenTarkennus().getKoulutuksenJarjestajat().forEach(koulutuksenJarjestajaDto -> {
+                addTeksti(docBase, getTextString(docBase, koulutuksenJarjestajaDto.getNimi()), "h5");
+
+                addTeksti(docBase, messages.translate("docgen.toteutusuunnitelman-tai-koulutuksen-jarjestajan-verkkosivut.title", docBase.getKieli()), "h6");
+
+                Element linkkiDiv = docBase.getDocument().createElement("div");
+                Element koulutuksenjarjestajanUrl = docBase.getDocument().createElement("a");
+                koulutuksenjarjestajanUrl.setTextContent(getTextString(docBase, koulutuksenJarjestajaDto.getUrl()));
+                koulutuksenjarjestajanUrl.setAttribute("href", getTextString(docBase, koulutuksenJarjestajaDto.getUrl()));
+                linkkiDiv.appendChild(koulutuksenjarjestajanUrl);
+                docBase.getBodyElement().appendChild(linkkiDiv);
+
+                addTeksti(docBase, messages.translate("docgen.kaytannon-toteutus.title", docBase.getKieli()), "h6");
+                addTeksti(docBase, getTextString(docBase, koulutuksenJarjestajaDto.getKuvaus()), "div");
+            });
+        }
+
     }
 
     private void addValmatelmaSisalto(DokumenttiBase docBase, ValmaTelmaSisaltoDto valmaTelmaSisalto) {

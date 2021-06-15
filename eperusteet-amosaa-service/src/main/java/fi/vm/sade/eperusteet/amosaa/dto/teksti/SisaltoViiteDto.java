@@ -19,11 +19,13 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteBaseDto;
-import lombok.*;
-
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * @author nkala
@@ -51,6 +53,8 @@ public class SisaltoViiteDto {
     private TutkinnonosaDto tosa;
     private SuorituspolkuDto suorituspolku;
     private OpintokokonaisuusDto opintokokonaisuus;
+    private KoulutuksenOsaDto koulutuksenosa;
+    private TuvaLaajaAlainenOsaaminenDto tuvaLaajaAlainenOsaaminen;
     private String kommentti;
     private boolean naytaPerusteenTeksti;
 
