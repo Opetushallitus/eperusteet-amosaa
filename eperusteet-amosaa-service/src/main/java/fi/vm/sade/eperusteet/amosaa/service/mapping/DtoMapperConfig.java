@@ -16,6 +16,7 @@
 package fi.vm.sade.eperusteet.amosaa.service.mapping;
 
 import com.google.common.base.Throwables;
+import fi.vm.sade.eperusteet.amosaa.domain.Kooditettu;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.Tyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.Dokumentti;
@@ -24,8 +25,13 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Koulutuksenosa;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OpintokokonaisuusTavoite;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TuvaLaajaAlainenOsaaminen;
+import fi.vm.sade.eperusteet.amosaa.dto.KooditettuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koodisto.KoodistoKoodiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koodisto.KoodistoMetadataDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaJulkinenDto;
@@ -35,12 +41,17 @@ import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaTilasto
 import fi.vm.sade.eperusteet.amosaa.dto.ops.SuorituspolkuOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneOsaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.KoulutuksenOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.OpintokokonaisuusTavoiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SuorituspolkuRakenneDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.TuvaLaajaAlainenOsaaminenDto;
 import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
 import fi.vm.sade.eperusteet.amosaa.service.util.KoodistoClient;
 import java.time.Instant;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Collectors;
 import ma.glasnost.orika.CustomMapper;
 import ma.glasnost.orika.MappingContext;
 import ma.glasnost.orika.converter.builtin.PassThroughConverter;
@@ -187,6 +198,24 @@ public class DtoMapperConfig {
                             target.setTila(Tila.JULKAISTU);
                         }
 
+                    }
+                })
+                .register();
+
+        factory.classMap(Kooditettu.class, KooditettuDto.class)
+                .byDefault()
+                .favorExtension(true)
+                .customize(new CustomMapper<Kooditettu, KooditettuDto>() {
+                    @Override
+                    public void mapAtoB(Kooditettu source, KooditettuDto target, MappingContext context) {
+                        super.mapAtoB(source, target, context);
+                        if (source.getUri() != null) {
+                            KoodistoKoodiDto koodistokoodi = koodistoClient.getByUri(source.getUri());
+                            if (koodistokoodi != null) {
+                                Map<String, String> lokalisoitu = Arrays.stream(koodistokoodi.getMetadata()).collect(Collectors.toMap(KoodistoMetadataDto::getKieli, KoodistoMetadataDto::getNimi));
+                                target.setKooditettu(new LokalisoituTekstiDto(lokalisoitu));
+                            }
+                        }
                     }
                 })
                 .register();

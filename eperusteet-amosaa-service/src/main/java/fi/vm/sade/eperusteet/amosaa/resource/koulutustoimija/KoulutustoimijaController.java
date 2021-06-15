@@ -30,6 +30,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHistoriaLiitosD
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViitePaikallinenIntegrationDto;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
+import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import io.swagger.annotations.Api;
@@ -60,6 +61,9 @@ public class KoulutustoimijaController extends KoulutustoimijaIdGetterAbstractCo
 
     @Autowired
     private KayttajanTietoService kayttajaTietoService;
+
+    @Autowired
+    private OrganisaatioService organisaatioService;
 
     @ApiImplicitParams({
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
@@ -205,5 +209,10 @@ public class KoulutustoimijaController extends KoulutustoimijaIdGetterAbstractCo
             @RequestParam(value = "koulutustyypit") final Set<String> koulutustyypit
     ) {
         return koulutustoimijaService.getEtusivu(ktId, koulutustyypit.stream().map(KoulutusTyyppi::of).collect(Collectors.toList()));
+    }
+
+    @RequestMapping(value = "/koulutuksenjarjestajat", method = RequestMethod.GET)
+    public List<KoulutustoimijaDto> getKoulutuksenJarjestajat() {
+        return organisaatioService.getKoulutustoimijaOrganisaatiot();
     }
 }

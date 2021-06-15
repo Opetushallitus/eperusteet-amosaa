@@ -16,10 +16,12 @@ package fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija;
  * European Union Public Licence for more details.
  */
 
+import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.RevisionDto;
 import fi.vm.sade.eperusteet.amosaa.dto.RevisionKayttajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.SisaltoviiteLaajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.SisaltoviiteQueryDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.KoulutuksenOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteKevytDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteRakenneDto;
@@ -98,6 +100,18 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
             @PathVariable final Long opsId
     ) {
         return service.getTutkinnonOsaViitteet(ktId, opsId, SisaltoViiteDto.class);
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
+    @RequestMapping(value = "/sisaltoviitteet/{tyyppi}", method = RequestMethod.GET)
+    public List<SisaltoViiteDto> getSisaltoviitteeTyypilla(
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @PathVariable final Long opsId,
+            @PathVariable final String tyyppi
+    ) {
+        return service.getSisaltoviitteet(ktId, opsId, SisaltoTyyppi.of(tyyppi));
     }
 
     @ApiImplicitParams({

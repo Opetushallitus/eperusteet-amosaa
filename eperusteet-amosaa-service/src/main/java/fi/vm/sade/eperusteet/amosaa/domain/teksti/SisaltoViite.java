@@ -19,9 +19,12 @@ import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Koulutuksenosa;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Opintokokonaisuus;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.KoulutuksenosanPaikallinenTarkennus;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Suorituspolku;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Tutkinnonosa;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TuvaLaajaAlainenOsaaminen;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 
 import java.io.Serializable;
@@ -149,6 +152,16 @@ public class SisaltoViite implements ReferenceableEntity, Serializable, Copyable
     @Setter
     private Opintokokonaisuus opintokokonaisuus;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Getter
+    @Setter
+    private Koulutuksenosa koulutuksenosa;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Getter
+    @Setter
+    private TuvaLaajaAlainenOsaaminen tuvaLaajaAlainenOsaaminen;
+
     @OneToMany(mappedBy = "vanhempi", fetch = FetchType.LAZY)
     @OrderColumn
     @Getter
@@ -200,6 +213,8 @@ public class SisaltoViite implements ReferenceableEntity, Serializable, Copyable
             result.setTosa(Tutkinnonosa.copy(original.getTosa()));
             result.setSuorituspolku(Suorituspolku.copy(original.getSuorituspolku()));
             result.setOpintokokonaisuus(Opintokokonaisuus.copy(original.getOpintokokonaisuus()));
+            result.setKoulutuksenosa(Koulutuksenosa.copy(original.getKoulutuksenosa()));
+            result.setTuvaLaajaAlainenOsaaminen(TuvaLaajaAlainenOsaaminen.copy(original.getTuvaLaajaAlainenOsaaminen()));
             result.setPeruste(original.getPeruste());
 
             result.setTekstiKappale(TekstiKappale.copy(original.getTekstiKappale()));
@@ -252,6 +267,22 @@ public class SisaltoViite implements ReferenceableEntity, Serializable, Copyable
         result.setTyyppi(SisaltoTyyppi.OPINTOKOKONAISUUS);
         Opintokokonaisuus opintokokonaisuus = new Opintokokonaisuus();
         result.setOpintokokonaisuus(opintokokonaisuus);
+        return result;
+    }
+
+    static public SisaltoViite createKoulutuksenosa(SisaltoViite parent) {
+        SisaltoViite result = createCommon(parent);
+        result.setTyyppi(SisaltoTyyppi.KOULUTUKSENOSA);
+        Koulutuksenosa koulutuksenosa = new Koulutuksenosa();
+        result.setKoulutuksenosa(koulutuksenosa);
+        return result;
+    }
+
+    static public SisaltoViite createTuvaLaajaAlainenOsaaminen(SisaltoViite parent) {
+        SisaltoViite result = createCommon(parent);
+        result.setTyyppi(SisaltoTyyppi.LAAJAALAINENOSAAMINEN);
+        TuvaLaajaAlainenOsaaminen tuvaLaajaAlainenOsaaminen = new TuvaLaajaAlainenOsaaminen();
+        result.setTuvaLaajaAlainenOsaaminen(tuvaLaajaAlainenOsaaminen);
         return result;
     }
 

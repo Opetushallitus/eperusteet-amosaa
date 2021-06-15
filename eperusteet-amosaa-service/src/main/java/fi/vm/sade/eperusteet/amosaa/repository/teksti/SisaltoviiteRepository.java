@@ -68,6 +68,9 @@ public interface SisaltoviiteRepository extends JpaWithVersioningRepository<Sisa
     @Query(value = "SELECT sv FROM SisaltoViite sv WHERE sv.owner = ?1 AND sv.tyyppi = 'TUTKINNONOSA'")
     List<SisaltoViite> findTutkinnonosat(Opetussuunnitelma owner);
 
+    @Query(value = "SELECT sv FROM SisaltoViite sv WHERE sv.owner = :owner AND sv.tyyppi = :tyyppi")
+    List<SisaltoViite> findByTyyppi(@Param("owner") Opetussuunnitelma owner, @Param("tyyppi") SisaltoTyyppi tyyppi);
+
     @Query(value = "SELECT sv FROM SisaltoViite sv WHERE sv.owner = ?1 AND (sv.tyyppi = 'SUORITUSPOLKU' OR sv.tyyppi = 'OSASUORITUSPOLKU')")
     List<SisaltoViite> findSuorituspolut(Opetussuunnitelma owner);
 

@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.ImmutableMap;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHierarkiaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHistoriaLiitosDto;
 import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioStatus;
@@ -81,23 +82,28 @@ public class OrganisaatioServiceMock implements OrganisaatioService {
         
         return Arrays.asList(
                 OrganisaatioHistoriaLiitosDto.builder()
-                    .organisaatio(OrganisaatioHierarkiaDto.builder()
-                                    .oid("1.2.246.562.10.54645809036")
-                                    .status(OrganisaatioStatus.PASSIIVINEN)
-                                    .build())
-                    .build(),
-                    OrganisaatioHistoriaLiitosDto.builder()
                         .organisaatio(OrganisaatioHierarkiaDto.builder()
-                                    .oid("1.2.246.562.10.2013120512391252668625")
-                                    .status(OrganisaatioStatus.AKTIIVINEN)
-                                    .build())
-                    .build()    
-                );
+                                .oid("1.2.246.562.10.54645809036")
+                                .status(OrganisaatioStatus.PASSIIVINEN)
+                                .build())
+                        .build(),
+                OrganisaatioHistoriaLiitosDto.builder()
+                        .organisaatio(OrganisaatioHierarkiaDto.builder()
+                                .oid("1.2.246.562.10.2013120512391252668625")
+                                .status(OrganisaatioStatus.AKTIIVINEN)
+                                .build())
+                        .build()
+        );
     }
 
     @Override
     public LokalisoituTeksti haeOrganisaatioNimi(String organisaatioOid) {
         return LokalisoituTeksti.of(ImmutableMap.of(Kieli.FI, "faa", Kieli.SV, "bor"));
+    }
+
+    @Override
+    public List<KoulutustoimijaDto> getKoulutustoimijaOrganisaatiot() {
+        return null;
     }
 
 }

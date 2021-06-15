@@ -23,14 +23,17 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHierarkiaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHistoriaLiitosDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 import fi.vm.sade.eperusteet.utils.client.RestClientFactory;
 import fi.vm.sade.javautils.http.OphHttpClient;
 import fi.vm.sade.javautils.http.OphHttpRequest;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
@@ -133,6 +136,27 @@ public class OrganisaatioServiceImpl implements OrganisaatioService {
                     })
                     .orElse(null);
         }
+
+        public JsonNode getKoulutustoimijat() {
+            OphHttpClient client = restClientFactory.get(serviceUrl, false);
+            String url = serviceUrl + ORGANISAATIOT + "v4/hae?aktiiviset=true&suunnitellut=true&lakkautetut=false&organisaatiotyyppi=organisaatiotyyppi_01";
+
+            OphHttpRequest request = OphHttpRequest.Builder
+                    .get(url)
+                    .build();
+
+            return client.<JsonNode>execute(request)
+                    .expectedStatus(SC_OK)
+                    .mapWith(text -> {
+                        try {
+                            return mapper.readTree(text);
+                        } catch (IOException e) {
+                            return null;
+                        }
+                    })
+                    .orElse(null);
+        }
+
     }
 
     @Override
@@ -207,6 +231,23 @@ public class OrganisaatioServiceImpl implements OrganisaatioService {
             return LokalisoituTeksti.of(Kieli.FI, "Tuntematon organisaatio");
         }
         return LokalisoituTeksti.of(organisaatio.get("nimi"));
+    }
+
+    @Override
+    @Cacheable("koulutuksenjarjestajat")
+    public List<KoulutustoimijaDto> getKoulutustoimijaOrganisaatiot() {
+        JsonNode koulutustoimijatNode = client.getKoulutustoimijat().get("organisaatiot");
+        List<KoulutustoimijaDto> koulutustoimijat = new ArrayList<>();
+
+        koulutustoimijatNode.forEach(koulutustoimija -> {
+            KoulutustoimijaDto koulutustoimijaDto = new KoulutustoimijaDto();
+            koulutustoimijaDto.setNimi(LokalisoituTekstiDto.of(koulutustoimija.get("nimi")));
+            koulutustoimijaDto.setOrganisaatio(koulutustoimija.get("oid").asText());
+            koulutustoimijat.add(koulutustoimijaDto);
+        });
+
+
+        return koulutustoimijat;
     }
 
 }

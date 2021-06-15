@@ -21,6 +21,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.dto.RevisionDto;
 import fi.vm.sade.eperusteet.amosaa.dto.RevisionKayttajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.SisaltoviiteQueryDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.KoulutuksenOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteRakenneDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SuorituspolkuRakenneDto;
@@ -112,11 +113,14 @@ public interface SisaltoViiteService extends LockService<SisaltoViiteCtx> {
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'ESITYS')")
     List<SuorituspolkuRakenneDto> getSuorituspolkurakenne(@P("ktId") Long ktId, @P("opsId") Long opsId);
-    
+
     @PreAuthorize("isAuthenticated()")
     void updateOpetussuunnitelmaPiilotetutSisaltoviitteet(SisaltoViiteDto sisaltoviite, Opetussuunnitelma opetussuunnitelma);
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
     <T> Page<T> getSisaltoviitteetWithQuery(@P("ktId") Long ktId, SisaltoviiteQueryDto query, Class<T> tyyppi);
+
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
+    List<SisaltoViiteDto> getSisaltoviitteet(Long ktId, Long opsId, SisaltoTyyppi tyyppi);
 }
 

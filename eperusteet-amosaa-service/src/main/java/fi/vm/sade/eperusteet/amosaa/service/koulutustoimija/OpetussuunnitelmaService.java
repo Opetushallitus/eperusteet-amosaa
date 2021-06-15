@@ -21,6 +21,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.dto.NavigationNodeDto;
 import fi.vm.sade.eperusteet.amosaa.dto.OpsHakuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.PoistettuDto;
@@ -34,6 +35,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaLuontiD
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaQueryDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaTilastoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.VanhentunutPohjaperusteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
 import fi.vm.sade.eperusteet.amosaa.service.revision.RevisionService;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 import java.util.List;
@@ -165,5 +167,8 @@ public interface OpetussuunnitelmaService extends RevisionService {
 
     @PreAuthorize("isAuthenticated()")
     List<OpetussuunnitelmaBaseDto> getOphOpsPohjat(Set<KoulutusTyyppi> koulutustyypit);
+
+    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUONTI')")
+    void setOpsCommon(Long ktId, Opetussuunnitelma ops, PerusteDto peruste, SisaltoViite rootTkv);
 }
 
