@@ -12,9 +12,9 @@
     <name>eperusteet-amosaa-service</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <hibernate.version>4.3.11.Final</hibernate.version>
+        <hibernate.version>5.2.0.Final</hibernate.version>
         <spring.version>4.3.12.RELEASE</spring.version>
-        <spring.security.version>4.2.13.RELEASE</spring.security.version>
+        <spring.security.version>5.3.0.RELEASE</spring.security.version>
         <spring.data.jpa.version>1.11.22.RELEASE</spring.data.jpa.version>
         <logback.version>1.2.3</logback.version>
         <postgresql.version>9.4.1211</postgresql.version>
@@ -25,9 +25,9 @@
         <jsoup.version>1.10.1</jsoup.version>
         <ehcache.version>2.6.11</ehcache.version>
         <slf4j.version>1.7.21</slf4j.version>
-        <fop.version>2.5</fop.version>
-        <pdfbox.version>2.0.12</pdfbox.version>
-        <springfox.version>2.7.0</springfox.version>
+        <fop.version>2.6</fop.version>
+        <pdfbox.version>2.0.24</pdfbox.version>
+        <springfox.version>2.10.0</springfox.version>
         <metrics.version>4.0.2</metrics.version>
         <aspectj.version>1.8.9</aspectj.version>
         <schema.file>${project.basedir}/target/schema.ddl</schema.file>
