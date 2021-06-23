@@ -117,6 +117,18 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
     @ApiImplicitParams({
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
+    @RequestMapping(value = "/pohjansisaltoviitteet/{tyyppi}", method = RequestMethod.GET)
+    public List<SisaltoViiteDto> getOpetussuunnitelmanPohjanSisaltoviitteet(
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @PathVariable final Long opsId,
+            @PathVariable final String tyyppi
+    ) {
+        return service.getOpetussuunnitelmanPohjanSisaltoviitteet(ktId, opsId, SisaltoTyyppi.of(tyyppi));
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/tekstit/{svId}", method = RequestMethod.POST)
     public SisaltoViiteDto.Matala addTekstiKappaleLapsi(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
