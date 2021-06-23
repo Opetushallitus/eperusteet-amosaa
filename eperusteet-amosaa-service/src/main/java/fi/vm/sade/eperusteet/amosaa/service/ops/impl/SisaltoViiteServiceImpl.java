@@ -1009,6 +1009,15 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
     }
 
     @Override
+    public List<SisaltoViiteDto> getOpetussuunnitelmanPohjanSisaltoviitteet(Long ktId, Long opsId, SisaltoTyyppi tyyppi) {
+        Opetussuunnitelma ops = opsRepository.findOne(opsId);
+        if (ops.getPohja() == null) {
+            return null;
+        }
+        return getSisaltoviitteet(ops.getPohja().getKoulutustoimija().getId(), ops.getPohja().getId(), tyyppi);
+    }
+
+    @Override
     @Transactional(readOnly = false)
     public void copySisaltoViiteet(Long ktId, Long opsId, List<Long> viitteet) {
         Opetussuunnitelma ops = opsRepository.findOne(opsId);

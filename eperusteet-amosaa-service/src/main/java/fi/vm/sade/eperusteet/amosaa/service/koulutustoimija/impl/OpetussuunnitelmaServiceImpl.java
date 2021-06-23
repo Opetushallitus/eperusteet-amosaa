@@ -727,6 +727,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                 case OPSPOHJA:
                     ops.setTyyppi(OpsTyyppi.OPS);
                     ops.changeKoulutustoimija(kt);
+                    ops.setPohja(pohja);
                     break;
             }
 
