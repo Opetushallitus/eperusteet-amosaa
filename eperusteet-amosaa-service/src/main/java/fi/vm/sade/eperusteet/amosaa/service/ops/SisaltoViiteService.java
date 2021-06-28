@@ -120,10 +120,10 @@ public interface SisaltoViiteService extends LockService<SisaltoViiteCtx> {
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
     <T> Page<T> getSisaltoviitteetWithQuery(@P("ktId") Long ktId, SisaltoviiteQueryDto query, Class<T> tyyppi);
 
-    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'ESITYS')")
     List<SisaltoViiteDto> getSisaltoviitteet(Long ktId, Long opsId, SisaltoTyyppi tyyppi);
 
-    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'ESITYS')")
     List<SisaltoViiteDto> getOpetussuunnitelmanPohjanSisaltoviitteet(Long ktId, Long opsId, SisaltoTyyppi tyyppi);
 }
 
