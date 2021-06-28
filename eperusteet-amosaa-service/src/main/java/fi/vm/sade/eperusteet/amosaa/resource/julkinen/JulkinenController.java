@@ -19,7 +19,12 @@ package fi.vm.sade.eperusteet.amosaa.resource.julkinen;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.*;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaJulkinenDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaQueryDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaJulkinenDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaKaikkiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaQueryDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.SisaltoViiteSijaintiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.TiedoteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
@@ -33,6 +38,7 @@ import fi.vm.sade.eperusteet.amosaa.service.ops.TiedoteService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,10 +48,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
-
-import java.util.List;
 
 /**
  * @author nkala
@@ -238,9 +248,14 @@ public class JulkinenController {
             @RequestParam(defaultValue = "fi") String kieli
     ) {
         // Tehdään DokumenttiDto jos ei löydy jo valmiina
-        DokumenttiDto dokumenttiDto = service.getDto(ktId, opsId, Kieli.of(kieli));
-        if (dokumenttiDto == null) {
-            dokumenttiDto = service.createDtoFor(ktId, opsId, Kieli.of(kieli));
+        DokumenttiDto dokumenttiDto = null;
+        try {
+            dokumenttiDto = service.getDto(ktId, opsId, Kieli.of(kieli));
+            if (dokumenttiDto == null) {
+                dokumenttiDto = service.createDtoFor(ktId, opsId, Kieli.of(kieli));
+            }
+        } catch (AccessDeniedException e) {
+            dokumenttiDto = new DokumenttiDto();
         }
 
         if (dokumenttiDto == null) {
