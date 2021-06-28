@@ -1,11 +1,11 @@
-alter table sisaltoviite drop column koulutuksenosa_id;
-alter table sisaltoviite_aud drop column koulutuksenosa_id;
-alter table sisaltoviite drop column tuvaLaajaAlainenOsaaminen_id;
-alter table sisaltoviite_aud drop column tuvaLaajaAlainenOsaaminen_id;
+alter table sisaltoviite drop column IF EXISTS koulutuksenosa_id;
+alter table sisaltoviite_aud drop column IF EXISTS koulutuksenosa_id;
+alter table sisaltoviite drop column IF EXISTS tuvaLaajaAlainenOsaaminen_id;
+alter table sisaltoviite_aud drop column IF EXISTS tuvaLaajaAlainenOsaaminen_id;
 
 drop table if exists paikallinen_koulutuksenosa_tavoitteet;
 drop table if exists paikallinen_koulutuksenosa_tavoitteet_AUD;
-drop table if exists koulutuksenosan_paikallinen_tarkennus;
+drop table if exists koulutuksenosan_paikallinen_tarkennus CASCADE;
 drop table if exists koulutuksenosan_paikallinen_tarkennus_AUD;
 drop table if exists koulutuksenosan_laajaalainen_osaaminen;
 drop table if exists koulutuksenosan_laajaalainen_osaaminen_AUD;
