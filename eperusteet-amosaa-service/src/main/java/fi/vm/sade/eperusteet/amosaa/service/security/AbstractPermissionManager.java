@@ -1,5 +1,6 @@
 package fi.vm.sade.eperusteet.amosaa.service.security;
 
+import com.google.common.collect.Sets;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaoikeusRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.JulkaisuRepository;
@@ -42,11 +43,17 @@ public abstract class AbstractPermissionManager implements PermissionManager {
 
     @Transactional(readOnly = true)
     public Map<PermissionEvaluator.RolePermission, Set<Koulutustoimija>> getKoulutustoimijaOikeudet() {
-        return EnumSet.allOf(PermissionEvaluator.RolePermission.class).stream()
+        Map<PermissionEvaluator.RolePermission, Set<Koulutustoimija>> permMap = EnumSet.allOf(PermissionEvaluator.RolePermission.class).stream()
                 .map(r -> new Pair<>(r, SecurityUtil.getOrganizations(Collections.singleton(r)).stream()
                         .map(oid -> koulutustoimijaRepository.findOneByOrganisaatio(oid))
                         .filter(kt -> kt != null)
                         .collect(Collectors.toSet())))
                 .collect(Collectors.toMap(Pair::getFirst, Pair::getSecond));
+
+        if (SecurityUtil.isUserOphAdmin()) {
+            permMap.put(PermissionEvaluator.RolePermission.READ, Sets.newHashSet(koulutustoimijaRepository.findAll()));
+        }
+
+        return permMap;
     }
 }

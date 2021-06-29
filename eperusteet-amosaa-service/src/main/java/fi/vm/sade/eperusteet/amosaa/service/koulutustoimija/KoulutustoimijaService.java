@@ -41,6 +41,9 @@ public interface KoulutustoimijaService {
     List<KoulutustoimijaBaseDto> getKoulutustoimijat(Set<String> ktOid);
 
     @PreAuthorize("isAuthenticated()")
+    List<KoulutustoimijaBaseDto> getKoulutustoimijat();
+
+    @PreAuthorize("isAuthenticated()")
     List<KoulutustoimijaBaseDto> initKoulutustoimijat(Set<String> ktOid);
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")

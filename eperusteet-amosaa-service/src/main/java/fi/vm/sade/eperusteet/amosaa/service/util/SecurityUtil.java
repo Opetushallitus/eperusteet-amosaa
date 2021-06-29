@@ -30,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 
@@ -40,6 +41,7 @@ public final class SecurityUtil {
     private static final Logger LOG = LoggerFactory.getLogger(SecurityUtil.class);
 
     public static final String OPH_OID = "1.2.246.562.10.00000000001";
+    public static final String OPH_ADMIN = "ROLE_APP_EPERUSTEET_AMOSAA_ADMIN_1.2.246.562.10.00000000001";
 
     private SecurityUtil() {
         //helper class
@@ -88,5 +90,10 @@ public final class SecurityUtil {
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .findAny();
+    }
+
+    public static boolean isUserOphAdmin() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).anyMatch(authority -> authority.equals(OPH_ADMIN));
     }
 }

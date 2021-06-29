@@ -213,8 +213,9 @@ public abstract class AbstractIntegrationTest {
         ctx.setAuthentication(new UsernamePasswordAuthenticationToken(username, "test"));
         SecurityContextHolder.setContext(ctx);
         kayttajanTietoService.updateKoulutustoimijat();
+        String userOrgOid = kayttajanTietoService.getUserOrganizations().stream().findFirst().get();
         this.koulutustoimijat = kayttajanTietoService.koulutustoimijat();
-        this.toimija = this.koulutustoimijat.get(0);
+        this.toimija = this.koulutustoimijat.stream().filter(kt -> kt.getOrganisaatio().equals(userOrgOid)).findFirst().get();
         kayttaja = kayttajanTietoService.getKayttaja();
     }
 
