@@ -14,4 +14,7 @@ public interface JulkaisuRepository extends JpaRepository<Julkaisu, Long> {
     boolean existsByOpetussuunnitelmaId(Long opetussuunnitelmaId);
 
     Julkaisu findFirstByOpetussuunnitelmaOrderByRevisionDesc(Opetussuunnitelma opetussuunnitelma);
+
+    Julkaisu findByOpetussuunnitelmaAndRevision(Opetussuunnitelma opetussuunnitelma, int revision);
+
 }
