@@ -237,7 +237,10 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
 
     @Override
     public List<KoulutustoimijaBaseDto> koulutustoimijat() {
-        return koulutustoimijaService.getKoulutustoimijat(getUserOrganizations()).stream()
+        List<KoulutustoimijaBaseDto> koulutustoimijat = SecurityUtil.isUserOphAdmin() ?
+                koulutustoimijaService.getKoulutustoimijat() : koulutustoimijaService.getKoulutustoimijat(getUserOrganizations());
+
+        return koulutustoimijat.stream()
                 .filter(ktDto -> ktDto != null && ktDto.getId() != null)
                 .collect(Collectors.toList());
     }

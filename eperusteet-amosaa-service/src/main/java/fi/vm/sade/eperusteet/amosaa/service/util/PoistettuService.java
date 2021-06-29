@@ -32,6 +32,6 @@ public interface PoistettuService {
     @PreAuthorize("hasPermission({#ktId, #ops.id}, 'opetussuunnitelma', 'POISTO')")
     PoistettuDto lisaaPoistettu(@P("ktId") Long koulutustoimija, @P("ops") Opetussuunnitelma ops, SisaltoViite osa);
 
-    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'POISTO')")
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
     List<PoistettuDto> poistetut(@P("ktId") Long koulutustoimija, @P("opsId") Long opsId);
 }

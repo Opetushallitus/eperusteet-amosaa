@@ -177,6 +177,14 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     }
 
     @Override
+    @Transactional
+    public List<KoulutustoimijaBaseDto> getKoulutustoimijat() {
+        return repository.findAll().stream()
+                .map(koulutustoimija -> mapper.map(koulutustoimija, KoulutustoimijaBaseDto.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public Page<KoulutustoimijaJulkinenDto> findKoulutustoimijat(PageRequest page, KoulutustoimijaQueryDto query) {
         return repository.findBy(page, query)
                 .map(ops -> mapper.map(ops, KoulutustoimijaJulkinenDto.class));

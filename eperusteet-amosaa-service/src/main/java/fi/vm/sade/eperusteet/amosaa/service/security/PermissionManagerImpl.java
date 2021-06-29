@@ -77,6 +77,11 @@ public class PermissionManagerImpl extends AbstractPermissionManager {
             return true;
         }
 
+        // OPH admin oikeuksilla lukuoikeudet
+        if ((perm == Permission.LUKU || perm == Permission.ESITYS) && SecurityUtil.isUserOphAdmin()) {
+            return true;
+        }
+
         // Käyttäjän luonti mahdollista vain jos käyttäjällä on AMOSAA-rooli
         if (perm == Permission.LUKU && targetId == null && target == TargetType.KOULUTUSTOIMIJA &&
                 hasAmosaaRole(authentication)) {

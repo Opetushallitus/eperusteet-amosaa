@@ -11,7 +11,7 @@ public interface OpetussuunnitelmaValidationService extends OpetussuunnitelmaTot
         return OpetussuunnitelmaValidationService.class;
     }
 
-    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
     default Validointi validoi(@P("ktId") Long ktId, @P("opsId") Long opsId) {
         return null;
     }
