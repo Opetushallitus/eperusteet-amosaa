@@ -11,4 +11,7 @@ public interface JulkaisuService {
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
     JulkaisuBaseDto teeJulkaisu(@P("ktId") long ktId, @P("opsId") long opsId, JulkaisuBaseDto julkaisuBaseDto);
+
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
+    JulkaisuBaseDto aktivoiJulkaisu(@P("ktId") long ktId, @P("opsId") long opsId, int revision);
 }

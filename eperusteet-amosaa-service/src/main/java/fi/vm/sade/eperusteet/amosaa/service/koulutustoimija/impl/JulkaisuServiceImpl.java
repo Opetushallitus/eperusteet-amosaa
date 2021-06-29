@@ -2,6 +2,7 @@ package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.impl;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Throwables;
+import com.google.common.collect.Sets;
 import fi.vm.sade.eperusteet.amosaa.domain.MuokkausTapahtuma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Julkaisu;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.JulkaisuData;
@@ -169,6 +170,24 @@ public class JulkaisuServiceImpl implements JulkaisuService {
             e.printStackTrace();
             throw new BusinessRuleViolationException("julkaisun-tallennus-epaonnistui");
         }
+
+        return taytaKayttajaTiedot(mapper.map(julkaisu, JulkaisuBaseDto.class));
+    }
+
+    @Override
+    public JulkaisuBaseDto aktivoiJulkaisu(long ktId, long opsId, int revision) {
+        Opetussuunnitelma opetussuunnitelma = opetussuunnitelmaRepository.findOne(opsId);
+        Julkaisu vanhaJulkaisu = julkaisuRepository.findByOpetussuunnitelmaAndRevision(opetussuunnitelma, revision);
+        Julkaisu viimeisinJulkaisu = julkaisuRepository.findFirstByOpetussuunnitelmaOrderByRevisionDesc(opetussuunnitelma);
+
+        Julkaisu julkaisu = new Julkaisu();
+        julkaisu.setRevision(viimeisinJulkaisu != null ? viimeisinJulkaisu.getRevision() + 1 : 1);
+        julkaisu.setTiedote(vanhaJulkaisu.getTiedote());
+        julkaisu.setDokumentit(Sets.newHashSet(vanhaJulkaisu.getDokumentit()));
+        julkaisu.setOpetussuunnitelma(opetussuunnitelma);
+        julkaisu.setData(vanhaJulkaisu.getData());
+        julkaisu = julkaisuRepository.save(julkaisu);
+        muokkausTietoService.addOpsMuokkausTieto(opsId, opetussuunnitelma, MuokkausTapahtuma.JULKAISU);
 
         return taytaKayttajaTiedot(mapper.map(julkaisu, JulkaisuBaseDto.class));
     }

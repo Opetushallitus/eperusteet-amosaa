@@ -47,4 +47,15 @@ public class JulkaisuController extends KoulutustoimijaIdGetterAbstractControlle
         return julkaisutService.teeJulkaisu(ktId, opsId, julkaisuBaseDto);
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
+    @RequestMapping(method = POST, value = "/aktivoi/{revision}")
+    public JulkaisuBaseDto aktivoiJulkaisu(
+            @ModelAttribute("solvedKtId") final Long ktId,
+            @PathVariable("opsId") final long opsId,
+            @PathVariable("revision") final int revision) {
+        return julkaisutService.aktivoiJulkaisu(ktId, opsId, revision);
+    }
+
 }
