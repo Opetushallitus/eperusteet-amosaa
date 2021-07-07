@@ -471,6 +471,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
                 break;
             case OPINTOKOKONAISUUS:
             case KOULUTUKSENOSA:
+            case LAAJAALAINENOSAAMINEN:
                 sisaltoviiteServiceProvider.updateSisaltoViite(viite, uusi);
             default:
                 break;

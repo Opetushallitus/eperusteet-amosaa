@@ -173,11 +173,13 @@ public class LiitetiedostoController extends KoulutustoimijaIdGetterAbstractCont
             isCorrectExtension = Objects.equals(dto.getTyyppi(), new MimetypesFileTypeMap().getContentType(fileName));
         }
 
-        if (dto != null && isCorrectExtension) {
-            if (dto.getId().toString().equals(etag)) {
+        if (isCorrectExtension) {
+            if (dto != null && dto.getId().toString().equals(etag)) {
                 response.setStatus(HttpStatus.NOT_MODIFIED.value());
             } else {
-                response.setHeader("Content-Type", dto.getTyyppi());
+                if (dto != null) {
+                    response.setHeader("Content-Type", dto.getTyyppi());
+                }
                 response.setHeader("ETag", id.toString());
                 try (OutputStream os = response.getOutputStream()) {
                     liitteet.export(opsId, id, os);

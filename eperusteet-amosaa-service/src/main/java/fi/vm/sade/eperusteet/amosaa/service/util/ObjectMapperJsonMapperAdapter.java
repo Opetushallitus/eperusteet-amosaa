@@ -47,6 +47,21 @@ public class ObjectMapperJsonMapperAdapter implements JsonMapper {
     }
 
     @Override
+    public JsonNode readTree(String str) throws IOException {
+        return mapper.readTree(str);
+    }
+
+    @Override
+    public JsonNode readTree(byte[] bytes) throws IOException {
+        return mapper.readTree(bytes);
+    }
+
+    @Override
+    public <T> byte[] writeValueAsBytes(T data) throws IOException {
+        return mapper.writeValueAsBytes(data);
+    }
+
+    @Override
     public <T> T deserialize(Class<T> t, String from) throws IOException {
         return mapper.readerFor(t).readValue(from);
     }
@@ -65,6 +80,11 @@ public class ObjectMapperJsonMapperAdapter implements JsonMapper {
     }
 
     @Override
+    public <T> JsonNode toJson(T obj) {
+        return mapper.valueToTree(obj);
+    }
+
+    @Override
     public Optional<MappingJackson2HttpMessageConverter> messageConverter() {
         return Optional.of(new MappingJackson2HttpMessageConverter(mapper));
     }
@@ -72,10 +92,5 @@ public class ObjectMapperJsonMapperAdapter implements JsonMapper {
     @Override
     public <T> String serialize(T obj) throws IOException {
         return mapper.writer().writeValueAsString(obj);
-    }
-
-    @Override
-    public <T> JsonNode toJson(T obj) {
-        return mapper.valueToTree(obj);
     }
 }

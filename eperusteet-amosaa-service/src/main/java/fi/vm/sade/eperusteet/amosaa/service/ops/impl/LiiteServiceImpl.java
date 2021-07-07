@@ -24,9 +24,11 @@ import fi.vm.sade.eperusteet.amosaa.repository.liite.LiiteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.exception.NotExistsException;
 import fi.vm.sade.eperusteet.amosaa.service.exception.ServiceException;
+import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.ops.LiiteService;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -36,8 +38,10 @@ import java.util.UUID;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
 
 /**
  * @author jhyoty
@@ -55,31 +59,58 @@ public class LiiteServiceImpl implements LiiteService {
     private OpetussuunnitelmaRepository opetussuunnitelmaRepository;
 
     @Autowired
+    private EperusteetService eperusteetService;
+
+    @Autowired
     DtoMapper mapper;
 
     @Override
     @Transactional(readOnly = true)
     public void export(Long opsId, UUID id, OutputStream os) {
         Liite liite = liiteRepository.findOne(id);
-        if (liite == null) {
-            throw new NotExistsException("ei ole");
-        }
-        try (InputStream is = liite.getData().getBinaryStream()) {
-            IOUtils.copy(is, os);
+        InputStream liiteInputStream;
+
+        try {
+            if (liite != null) {
+                liiteInputStream = liite.getData().getBinaryStream();
+            } else {
+                liiteInputStream = exportLiitePerusteelta(opsId, id);
+            }
+
+            IOUtils.copy(liiteInputStream, os);
         } catch (SQLException | IOException ex) {
             throw new ServiceException("Liiteen lataaminen ei onnistu", ex);
         }
     }
 
+    @Override
+    @Transactional(readOnly = true, noRollbackFor = NotExistsException.class)
+    public InputStream exportLiitePerusteelta(Long opsId, UUID id) {
+        Opetussuunnitelma ops = opetussuunnitelmaRepository.findOne(opsId);
+        if (ops.getPeruste() == null) {
+            throw new NotExistsException("liite-ei-ole");
+        }
+
+        try {
+            byte[] liite = eperusteetService.getLiite(ops.getPeruste().getPerusteId(), id);
+            if (liite.length > 0) {
+                return new ByteArrayInputStream(liite);
+            } else {
+                throw new NotExistsException("liite-ei-ole");
+            }
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
+                throw new NotExistsException("liite-ei-ole");
+            }
+
+            throw e;
+        }
+    }
 
     @Override
     @Transactional(readOnly = true)
     public LiiteDto get(Long opsId, UUID id) {
-        Opetussuunnitelma ops = opetussuunnitelmaRepository.findOne(opsId);
         Liite liite = liiteRepository.findOne(id);
-        if (ops == null || liite == null) {
-            throw new BusinessRuleViolationException("ei-liitetta");
-        }
         return mapper.map(liite, LiiteDto.class);
     }
 
