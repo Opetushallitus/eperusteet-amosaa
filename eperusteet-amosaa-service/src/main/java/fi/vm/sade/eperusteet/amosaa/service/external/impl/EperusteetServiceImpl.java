@@ -53,6 +53,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -106,6 +108,9 @@ public class EperusteetServiceImpl implements EperusteetService {
         module.addDeserializer(AbstractRakenneOsaDto.class, new AbstractRakenneOsaDeserializer());
         mapper.registerModule(module);
         mapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
+        ByteArrayHttpMessageConverter converter = new ByteArrayHttpMessageConverter();
+        converter.setSupportedMediaTypes(Arrays.asList(MediaType.IMAGE_JPEG, MediaType.IMAGE_PNG));
+        client.getMessageConverters().add(converter);
     }
 
     @Override
@@ -389,5 +394,10 @@ public class EperusteetServiceImpl implements EperusteetService {
             logger.error("Perusteen parsinta epäonnistui", ex);
             throw new BusinessRuleViolationException("perusteen-parsinta-epaonnistui");
         }
+    }
+
+    @Override
+    public byte[] getLiite(Long perusteId, UUID id) {
+        return client.exchange(eperusteetServiceUrl + "/api/perusteet/{perusteId}/kuvat/{id}", HttpMethod.GET, httpEntity, byte[].class, perusteId, id).getBody();
     }
 }

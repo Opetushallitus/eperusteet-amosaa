@@ -73,6 +73,8 @@ public interface EperusteetService {
 
     JsonNode getTiedotteetHaku(TiedoteQueryDto queryDto);
 
+    byte[] getLiite(Long perusteId, UUID id);
+
 //    <T> T getPeruste(String diaariNumero, Class<T> type);
 //
 //    PerusteDto getYleinenPohja();

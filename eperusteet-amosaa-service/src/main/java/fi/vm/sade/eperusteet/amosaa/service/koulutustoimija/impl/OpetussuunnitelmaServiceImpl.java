@@ -512,7 +512,12 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
             TuvaLaajaAlainenOsaaminen tuvaLaajaAlainenOsaaminen = sisaltoviite.getTuvaLaajaAlainenOsaaminen();
             TuvaLaajaAlainenOsaaminenDto tuvaLaajaAlainenOsaaminenDto = (TuvaLaajaAlainenOsaaminenDto) sisalto.getPerusteenOsa();
             mapper.map(tuvaLaajaAlainenOsaaminenDto, tuvaLaajaAlainenOsaaminen);
+
+            sisaltoviite.setPerusteteksti(LokalisoituTeksti.of(tuvaLaajaAlainenOsaaminenDto.getTeksti()));
+            sisaltoviite.setNaytaPerusteenTeksti(true);
+            
             sisaltoviite.getTuvaLaajaAlainenOsaaminen().setId(null);
+            sisaltoviite.getTuvaLaajaAlainenOsaaminen().setTeksti(null);
         }
 
         if (sisaltoviite == null) {

@@ -28,6 +28,10 @@ import java.util.Optional;
  * Time: 15.28
  */
 public interface JsonMapper {
+    JsonNode readTree(byte[] bytes) throws IOException;
+
+    <T> byte[] writeValueAsBytes(T data) throws IOException;
+
     default <T> T deserialize(Class<T> t, String from) throws IOException {
         return deserialize(t, new StringReader(from));
     }
@@ -40,6 +44,10 @@ public interface JsonMapper {
         return writer.getBuffer().toString();
     }
 
+    <T> JsonNode toJson(T obj) throws IOException;
+
+    <T> JsonNode readTree(String str) throws IOException;
+
     <T> void serialize(T obj, Writer to) throws IOException;
 
     default Optional<? extends GenericHttpMessageConverter<?>> messageConverter() {
@@ -49,6 +57,4 @@ public interface JsonMapper {
     default <T> Optional<T> unwrap(Class<T> clzz) {
         return Optional.empty();
     }
-
-    <T> JsonNode toJson(T obj) throws IOException;
 }

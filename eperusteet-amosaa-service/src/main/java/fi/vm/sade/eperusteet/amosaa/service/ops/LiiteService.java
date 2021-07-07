@@ -43,4 +43,7 @@ public interface LiiteService {
 
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'ESITYS')")
     void export(@P("opsId") Long opsId, UUID id, OutputStream os);
+
+    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'ESITYS')")
+    InputStream exportLiitePerusteelta(Long opsId, UUID id);
 }
