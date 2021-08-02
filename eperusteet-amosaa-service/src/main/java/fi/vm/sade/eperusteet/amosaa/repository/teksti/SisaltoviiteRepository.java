@@ -91,4 +91,12 @@ public interface SisaltoviiteRepository extends JpaWithVersioningRepository<Sisa
                                              @Param("opsId") Long opsId,
                                              @Param("opsTyyppi") OpsTyyppi opsTyyppi,
                                              Pageable pageable);
+
+    @Query(value = "SELECT sv " +
+            "FROM SisaltoViite sv " +
+            "JOIN sv.tuvaLaajaAlainenOsaaminen lao " +
+            "WHERE sv.owner = :owner " +
+            "AND sv.tyyppi = 'LAAJAALAINENOSAAMINEN' " +
+            "AND lao.nimiKoodi = :koodiUri")
+    SisaltoViite findTuvaLaajaAlainenOsaaminenByKoodiUri(@Param("owner") Opetussuunnitelma owner, @Param("koodiUri") String koodiUri);
 }

@@ -1112,6 +1112,12 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
         addTeksti(docBase, getTextString(docBase, koulutuksenOsaDto.getLaajaAlaisenOsaamisenKuvaus()), "div");
         koulutuksenOsaDto.getPaikallinenTarkennus().getLaajaalaisetosaamiset().forEach(lao -> {
             addTeksti(docBase, getTextString(docBase, lao.getNimi()), "h6");
+
+            SisaltoViite laoKoodilla = tkvRepository.findTuvaLaajaAlainenOsaaminenByKoodiUri(docBase.getOpetussuunnitelma(), lao.getKoodiUri());
+            if (laoKoodilla != null) {
+                addTeksti(docBase, getTextString(docBase, laoKoodilla.getPerusteteksti()), "div");
+            }
+
             addTeksti(docBase, getTextString(docBase, lao.getLaajaAlaisenOsaamisenKuvaus()), "div");
         });
 
