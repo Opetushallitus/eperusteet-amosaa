@@ -144,6 +144,9 @@ public interface OpetussuunnitelmaService extends RevisionService {
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'ESITYS')")
     NavigationNodeDto buildNavigationPublic(Long ktId, Long opsId);
 
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'ESITYS')")
+    void publicNavigationEvict(Long ktId, Long opsId);
+
     @PreAuthorize("hasPermission(null, 'OPH','HALLINTA')")
     List<OpetussuunnitelmaTilastoDto> getOpetussuunnitelmaTilastot();
 
