@@ -41,6 +41,12 @@ public interface SisaltoviiteRepository extends JpaWithVersioningRepository<Sisa
 
     List<SisaltoViite> findAllByOwner(Opetussuunnitelma owner);
 
+    @Query(value = "SELECT DISTINCT sv " +
+            "FROM SisaltoViite sv " +
+            "LEFT JOIN FETCH sv.tekstiKappale tk " +
+            "LEFT JOIN FETCH tk.nimi nimi " +
+            "LEFT JOIN FETCH nimi.teksti tk " +
+            "WHERE sv.owner.id = ?1")
     List<SisaltoViite> findAllByOwnerId(Long owner);
 
     SisaltoViite findOneByOwnerAndId(Opetussuunnitelma owner, Long id);
