@@ -166,6 +166,10 @@ public class JulkaisuServiceImpl implements JulkaisuService {
             julkaisu.setData(julkaisuData);
             julkaisu = julkaisuRepository.save(julkaisu);
             muokkausTietoService.addOpsMuokkausTieto(opsId, opetussuunnitelma, MuokkausTapahtuma.JULKAISU);
+
+            opetussuunnitelmaService.publicNavigationEvict(ktId, opsId);
+            opetussuunnitelmaService.buildNavigationPublic(ktId, opsId);
+
         } catch (IOException e) {
             e.printStackTrace();
             throw new BusinessRuleViolationException("julkaisun-tallennus-epaonnistui");

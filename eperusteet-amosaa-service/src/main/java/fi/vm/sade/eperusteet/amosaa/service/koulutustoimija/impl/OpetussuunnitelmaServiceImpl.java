@@ -124,6 +124,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -209,6 +211,9 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
     @Autowired
     private OpetussuunnitelmaMuokkaustietoService muokkausTietoService;
+
+    @Autowired
+    private OpetussuunnitelmaService self;
 
     @PostConstruct
     protected void init() {
@@ -386,6 +391,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     }
 
     @Override
+    @Cacheable("ops-navigation")
     public NavigationNodeDto buildNavigationPublic(Long ktId, Long opsId) {
         NavigationNodeDto rootNode = buildNavigation(ktId, opsId);
         rootNode.getChildren().add(0, NavigationNodeDto.of(NavigationType.tiedot, null, opsId));
@@ -395,6 +401,12 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         );
 
         return rootNode;
+    }
+
+    @Override
+    @CacheEvict("ops-navigation")
+    public void publicNavigationEvict(Long ktId, Long opsId) {
+        // this method doesn't do anything and is only here for evicting the cache
     }
 
     @Override
@@ -943,6 +955,8 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                     }
                 }
 
+                self.publicNavigationEvict(ktId, opsId);
+                self.buildNavigationPublic(ktId, opsId);
             }
 
             // Muutetaan tila
