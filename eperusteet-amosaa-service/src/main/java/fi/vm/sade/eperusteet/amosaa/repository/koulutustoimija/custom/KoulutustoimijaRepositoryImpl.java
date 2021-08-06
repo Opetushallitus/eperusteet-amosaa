@@ -53,7 +53,7 @@ public class KoulutustoimijaRepositoryImpl implements KoulutustoimijaCustomRepos
         TypedQuery<Long> countQuery = getCountQuery(queryDto);
         TypedQuery<Tuple> query = getQuery(queryDto);
         if (page != null) {
-            query.setFirstResult(page.getOffset());
+            query.setFirstResult((int) page.getOffset());
             query.setMaxResults(page.getPageSize());
         }
         List<Koulutustoimija> list = query.getResultList().stream()

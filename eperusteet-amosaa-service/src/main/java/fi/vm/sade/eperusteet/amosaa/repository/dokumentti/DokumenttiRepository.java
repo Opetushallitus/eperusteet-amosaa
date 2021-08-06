@@ -19,6 +19,7 @@ package fi.vm.sade.eperusteet.amosaa.repository.dokumentti;
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.Dokumentti;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 
+import fi.vm.sade.eperusteet.amosaa.repository.CustomJpaRepository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -29,7 +30,7 @@ import org.springframework.stereotype.Repository;
  * @author iSaul
  */
 @Repository
-public interface DokumenttiRepository extends JpaRepository<Dokumentti, Long> {
+public interface DokumenttiRepository extends CustomJpaRepository<Dokumentti, Long> {
     @Query("SELECT doc from Dokumentti doc WHERE doc.opsId = ?1 AND doc.kieli = ?2 ORDER BY doc.valmistumisaika")
     List<Dokumentti> findByOpsIdAndKieli(Long opsId, Kieli kieli);
 }

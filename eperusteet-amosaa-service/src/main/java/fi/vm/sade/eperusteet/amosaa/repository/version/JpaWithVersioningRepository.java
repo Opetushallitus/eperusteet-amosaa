@@ -17,6 +17,7 @@ package fi.vm.sade.eperusteet.amosaa.repository.version;
 
 import fi.vm.sade.eperusteet.amosaa.domain.revision.Revision;
 
+import fi.vm.sade.eperusteet.amosaa.repository.CustomJpaRepository;
 import java.io.Serializable;
 import java.util.List;
 
@@ -27,7 +28,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @NoRepositoryBean
-public interface JpaWithVersioningRepository<T, ID extends Serializable> extends JpaRepository<T, ID> {
+public interface JpaWithVersioningRepository<T, ID extends Serializable> extends CustomJpaRepository<T, ID> {
 
     List<Revision> getRevisions(final ID id);
 

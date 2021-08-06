@@ -303,7 +303,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
     @Override
     public Page<OpetussuunnitelmaTilastoDto> getOpetussuunnitelmaTilastot(Integer sivu, Integer sivukoko) {
-        Page<Opetussuunnitelma> opetussuunnitelmat = repository.findAll(new PageRequest(sivu, sivukoko));
+        Page<Opetussuunnitelma> opetussuunnitelmat = repository.findAll(PageRequest.of(sivu, sivukoko));
         return new PageImpl(opetussuunnitelmat.getContent().stream()
                 .map(t -> mapper.map(t, OpetussuunnitelmaTilastoDto.class))
                 .collect(Collectors.toList()), null, opetussuunnitelmat.getTotalElements());

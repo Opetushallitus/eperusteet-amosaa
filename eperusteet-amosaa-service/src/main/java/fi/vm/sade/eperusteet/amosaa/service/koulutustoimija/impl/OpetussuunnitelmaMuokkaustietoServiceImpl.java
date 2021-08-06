@@ -74,7 +74,7 @@ public class OpetussuunnitelmaMuokkaustietoServiceImpl implements Opetussuunnite
                         .findByKohdeId(historiaTapahtuma.getId()).stream()
                         .peek(tapahtuma -> tapahtuma.setPoistettu(true))
                         .collect(Collectors.toList());
-                muokkausTietoRepository.save(aiemminTapahtumat);
+                muokkausTietoRepository.saveAll(aiemminTapahtumat);
             }
 
             // Lisäään uusi tapahtuma

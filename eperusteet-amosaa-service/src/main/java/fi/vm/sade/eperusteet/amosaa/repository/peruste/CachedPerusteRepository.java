@@ -18,6 +18,7 @@ package fi.vm.sade.eperusteet.amosaa.repository.peruste;
 
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 
+import fi.vm.sade.eperusteet.amosaa.repository.CustomJpaRepository;
 import java.util.Date;
 import java.util.List;
 
@@ -28,7 +29,7 @@ import org.springframework.stereotype.Repository;
  * @author nkala
  */
 @Repository
-public interface CachedPerusteRepository extends JpaRepository<CachedPeruste, Long> {
+public interface CachedPerusteRepository extends CustomJpaRepository<CachedPeruste, Long> {
     List<CachedPeruste> findAllByDiaarinumero(String diaarinumero);
 
     CachedPeruste findFirstByDiaarinumeroOrderByLuotu(String diaarinumero);

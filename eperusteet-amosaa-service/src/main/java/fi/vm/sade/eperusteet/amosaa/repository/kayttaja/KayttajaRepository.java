@@ -17,6 +17,7 @@
 package fi.vm.sade.eperusteet.amosaa.repository.kayttaja;
 
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.Kayttaja;
+import fi.vm.sade.eperusteet.amosaa.repository.CustomJpaRepository;
 import java.util.Collection;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -26,7 +27,7 @@ import org.springframework.stereotype.Repository;
  * @author nkala
  */
 @Repository
-public interface KayttajaRepository extends JpaRepository<Kayttaja, Long> {
+public interface KayttajaRepository extends CustomJpaRepository<Kayttaja, Long> {
     Kayttaja findOneByOid(String oid);
 
     Collection<Kayttaja> findByOidIn(Collection<String> oids);
