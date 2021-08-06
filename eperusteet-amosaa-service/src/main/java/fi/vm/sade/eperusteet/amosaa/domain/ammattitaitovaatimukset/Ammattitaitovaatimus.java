@@ -69,10 +69,6 @@ public class Ammattitaitovaatimus implements Serializable, Copyable<Ammattitaito
         ammattitaitovaatimus.setSelite(this.getSelite());
         ammattitaitovaatimus.setAmmattitaitovaatimusKoodi(this.getAmmattitaitovaatimusKoodi());
         ammattitaitovaatimus.setJarjestys(this.getJarjestys());
-        AmmattitaitovaatimuksenKohde ammattitaitovaatimuksenkohde = this.getAmmattitaitovaatimuksenkohde();
-        if (ammattitaitovaatimuksenkohde != null) {
-            ammattitaitovaatimus.setAmmattitaitovaatimuksenkohde(ammattitaitovaatimuksenkohde.copy());
-        }
 
         return ammattitaitovaatimus;
     }

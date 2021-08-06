@@ -17,13 +17,21 @@ package fi.vm.sade.eperusteet.amosaa.domain.ammattitaitovaatimukset;
 
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
-
+import fi.vm.sade.eperusteet.amosaa.service.util.Copyable;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.*;
-
-import fi.vm.sade.eperusteet.amosaa.service.util.Copyable;
+import java.util.stream.Collectors;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderColumn;
+import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
@@ -75,15 +83,12 @@ public class AmmattitaitovaatimuksenKohde implements Serializable, Copyable<Amma
 
         kohde.setOtsikko(this.getOtsikko());
         kohde.setSelite(this.getSelite());
-        // ammattitaitovaatimuksenkohdealue parent asettaa
 
-        List<Ammattitaitovaatimus> vaatimukset = this.getVaatimukset();
-        if (!ObjectUtils.isEmpty(vaatimukset)) {
-            kohde.setVaatimukset(new ArrayList<>());
-
-            for (Ammattitaitovaatimus vaatimus : vaatimukset) {
-                kohde.getVaatimukset().add(vaatimus.copy());
-            }
+        if (!ObjectUtils.isEmpty(this.getVaatimukset())) {
+            kohde.setVaatimukset(this.getVaatimukset().stream()
+                    .map(Ammattitaitovaatimus::copy)
+                    .collect(Collectors.toList()));
+            kohde.getVaatimukset().forEach(kj -> kj.setAmmattitaitovaatimuksenkohde(this));
         }
 
         return kohde;
