@@ -616,22 +616,7 @@
                 <artifactId>snyk-maven-plugin</artifactId>
                 <version>2.0.0</version>
                 <inherited>false</inherited>
-                <executions>
-                    <execution>
-                        <id>snyk-test</id>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>snyk-monitor</id>
-                        <goals>
-                            <goal>monitor</goal>
-                        </goals>
-                    </execution>
-                </executions>
                 <configuration>
-                    <skip>true</skip>
                     <args>
                         <arg>--all-projects</arg>
                     </args>
