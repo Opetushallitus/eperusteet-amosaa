@@ -13,8 +13,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <hibernate.version>4.3.11.Final</hibernate.version>
-        <spring.version>5.3.6</spring.version>
-        <spring.security.version>5.4.6</spring.security.version>
+        <spring.version>5.3.7</spring.version>
+        <spring.security.version>5.4.7</spring.security.version>
         <spring.data.jpa.version>1.11.23.RELEASE</spring.data.jpa.version>
         <spring.session.jdbc.version>2.4.3</spring.session.jdbc.version>
         <logback.version>1.2.3</logback.version>
@@ -26,8 +26,8 @@
         <jsoup.version>1.10.1</jsoup.version>
         <ehcache.version>2.6.11</ehcache.version>
         <slf4j.version>1.7.21</slf4j.version>
-        <fop.version>2.5</fop.version>
-        <pdfbox.version>2.0.12</pdfbox.version>
+        <fop.version>2.6</fop.version>
+        <pdfbox.version>2.0.24</pdfbox.version>
         <springfox.version>2.7.0</springfox.version>
         <metrics.version>4.0.2</metrics.version>
         <aspectj.version>1.8.9</aspectj.version>
@@ -81,7 +81,7 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.5</version>
+            <version>2.7</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -128,7 +128,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.9.10.5</version>
+            <version>2.9.10.8</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
@@ -212,9 +212,9 @@
             <version>${metrics.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.hibernate</groupId>
+            <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>5.2.5.Final</version>
+            <version>6.0.22.Final</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -258,9 +258,9 @@
             <version>${postgresql.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.tomcat</groupId>
-            <artifactId>tomcat-dbcp</artifactId>
-            <version>${tomcat.version}</version>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+            <version>1.4</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -449,7 +449,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>19.0</version>
+            <version>30.0-jre</version>
         </dependency>
         <dependency>
             <groupId>org.apache.tika</groupId>
@@ -609,6 +609,32 @@
                         <exclude>**/domain/**/*_.java</exclude>
                         <exclude>com/google/code/**</exclude>
                     </sourceFileExcludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>io.snyk</groupId>
+                <artifactId>snyk-maven-plugin</artifactId>
+                <version>2.0.0</version>
+                <inherited>false</inherited>
+                <executions>
+                    <execution>
+                        <id>snyk-test</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>snyk-monitor</id>
+                        <goals>
+                            <goal>monitor</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <skip>true</skip>
+                    <args>
+                        <arg>--all-projects</arg>
+                    </args>
                 </configuration>
             </plugin>
         </plugins>
