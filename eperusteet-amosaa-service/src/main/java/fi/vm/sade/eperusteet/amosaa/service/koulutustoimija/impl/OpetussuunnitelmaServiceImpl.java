@@ -853,11 +853,6 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         body.setId(opsId);
         body.setTila(ops.getTila());
         repository.setRevisioKommentti(body.getKommentti());
-        String paatosnumero = body.getPaatosnumero();
-        if (!ObjectUtils.isEmpty(paatosnumero)
-                && repository.countByPaatosnumeroAndIdNot(paatosnumero, opsId) > 0) {
-            throw new BusinessRuleViolationException("paatosnumero-on-jo-kaytossa");
-        }
         Opetussuunnitelma updated = mapper.map(body, ops);
         muokkausTietoService.addOpsMuokkausTieto(opsId, updated, MuokkausTapahtuma.PAIVITYS);
         return mapper.map(updated, OpetussuunnitelmaDto.class);
