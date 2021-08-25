@@ -16,9 +16,12 @@
 
 package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.base.Throwables;
 import com.google.common.collect.Sets;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutustyyppiToteutus;
@@ -28,6 +31,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.Kayttaja;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.Kayttajaoikeus;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.KayttajaoikeusTyyppi;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Julkaisu;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
@@ -79,6 +83,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteExportDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SuorituspolkuRakenneDto;
 import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaoikeusRepository;
+import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.JulkaisuRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.peruste.CachedPerusteRepository;
@@ -214,6 +219,9 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
     @Autowired
     private OpetussuunnitelmaService self;
+
+    @Autowired
+    private JulkaisuRepository julkaisuRepository;
 
     @PostConstruct
     protected void init() {
@@ -840,6 +848,24 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         result.setSuorituspolut(suorituspolut);
         result.setTutkinnonOsat(tutkinnonOsat);
         return result;
+    }
+
+    @Override
+    public OpetussuunnitelmaKaikkiDto getOpetussuunnitelmaJulkaistuSisalto(Long ktId, Long opsId) {
+        Opetussuunnitelma ops = repository.findOne(opsId);
+        Julkaisu julkaisu = julkaisuRepository.findFirstByOpetussuunnitelmaOrderByRevisionDesc(ops);
+
+        if (julkaisu != null) {
+            ObjectNode data = julkaisu.getData().getData();
+            try {
+                return objMapper.treeToValue(data, OpetussuunnitelmaKaikkiDto.class);
+            } catch (JsonProcessingException e) {
+                log.error(Throwables.getStackTraceAsString(e));
+                throw new BusinessRuleViolationException("opetussuunnitelman-haku-epaonnistui");
+            }
+        } else {
+            return getOpetussuunnitelmaKaikki(ktId, opsId);
+        }
     }
 
     @Override

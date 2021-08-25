@@ -1,6 +1,8 @@
 package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
+import fi.vm.sade.eperusteet.amosaa.dto.Reference;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteBaseDto;
 import lombok.Getter;
 import lombok.Setter;
 

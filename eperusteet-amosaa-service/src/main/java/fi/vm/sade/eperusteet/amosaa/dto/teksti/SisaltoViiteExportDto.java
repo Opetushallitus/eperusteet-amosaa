@@ -13,9 +13,15 @@ import java.util.List;
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SisaltoViiteExportDto extends SisaltoViiteExportBaseDto {
+    private boolean naytaPohjanTeksti;
+    private boolean naytaPerusteenTeksti;
     private LokalisoituTekstiDto perusteteksti;
+    private TekstiKappaleDto pohjanTekstikappale;
     private TutkinnonosaBaseDto tosa;
-    private SuorituspolkuBaseDto suorituspolku;
+    private SuorituspolkuExportDto suorituspolku;
     private TekstiKappaleJulkinenDto tekstiKappale;
     private List<SisaltoViiteExportDto> lapset;
+    private OpintokokonaisuusDto opintokokonaisuus;
+    private KoulutuksenOsaDto koulutuksenosa;
+    private TuvaLaajaAlainenOsaaminenDto tuvaLaajaAlainenOsaaminen;
 }

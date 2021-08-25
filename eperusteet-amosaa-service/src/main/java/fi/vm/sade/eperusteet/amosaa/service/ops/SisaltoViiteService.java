@@ -42,7 +42,7 @@ public interface SisaltoViiteService extends LockService<SisaltoViiteCtx> {
         return getSisaltoRoot(ktId, opsId, SisaltoViiteDto.Matala.class);
     }
 
-    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'ESITYS')")
     <T> T getSisaltoRoot(Long ktId, Long opsId, Class<T> t);
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
