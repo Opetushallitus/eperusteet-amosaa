@@ -279,6 +279,17 @@ public class JulkinenController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path", required = true)
     })
+    @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/julkaistu", method = RequestMethod.GET)
+    public OpetussuunnitelmaKaikkiDto getOpetussuunnitelmaJulkaistuSisalto(
+            @ApiIgnore @ModelAttribute("ktId") final Long ktId,
+            @PathVariable final Long opsId
+    ) {
+        return opsService.getOpetussuunnitelmaJulkaistuSisalto(ktId, opsId);
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path", required = true)
+    })
     @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/otsikot", method = RequestMethod.GET)
     public List<SisaltoViiteKevytDto> getOpetussuunnitelmaOtsikot(
             @ApiIgnore @ModelAttribute("ktId") final Long ktId,
