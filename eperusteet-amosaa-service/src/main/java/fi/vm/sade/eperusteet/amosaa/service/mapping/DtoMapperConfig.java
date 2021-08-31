@@ -37,6 +37,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaJulkinenDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaYstavaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaTilastoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.SuorituspolkuOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliDto;
@@ -193,6 +194,20 @@ public class DtoMapperConfig {
                 .customize(new CustomMapper<Opetussuunnitelma, OpetussuunnitelmaTilastoDto>() {
                     @Override
                     public void mapAtoB(Opetussuunnitelma source, OpetussuunnitelmaTilastoDto target, MappingContext context) {
+                        super.mapAtoB(source, target, context);
+                        if (!OpsTyyppi.POHJA.equals(source.getTyyppi()) && !Tila.POISTETTU.equals(source.getTila()) && CollectionUtils.isNotEmpty(source.getJulkaisut())) {
+                            target.setTila(Tila.JULKAISTU);
+                        }
+
+                    }
+                })
+                .register();
+
+        factory.classMap(Opetussuunnitelma.class, OpetussuunnitelmaKaikkiDto.class)
+                .byDefault()
+                .customize(new CustomMapper<Opetussuunnitelma, OpetussuunnitelmaKaikkiDto>() {
+                    @Override
+                    public void mapAtoB(Opetussuunnitelma source, OpetussuunnitelmaKaikkiDto target, MappingContext context) {
                         super.mapAtoB(source, target, context);
                         if (!OpsTyyppi.POHJA.equals(source.getTyyppi()) && !Tila.POISTETTU.equals(source.getTila()) && CollectionUtils.isNotEmpty(source.getJulkaisut())) {
                             target.setTila(Tila.JULKAISTU);
