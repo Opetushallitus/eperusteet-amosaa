@@ -58,6 +58,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaJulkinenDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaJulkaistuQueryDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaLuontiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaQueryDto;
@@ -124,8 +125,10 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -134,6 +137,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
@@ -1004,6 +1009,30 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     public Page<OpetussuunnitelmaDto> findOpetussuunnitelmat(PageRequest p, OpetussuunnitelmaQueryDto pquery) {
         return repository.findBy(p, pquery)
                 .map(ops -> mapper.map(ops, OpetussuunnitelmaDto.class));
+    }
+
+    @Override
+    public Page<OpetussuunnitelmaDto> findOpetussuunnitelmatJulkaisut(OpetussuunnitelmaJulkaistuQueryDto pquery) {
+        Pageable pageable = new PageRequest(pquery.getSivu(), pquery.getSivukoko());
+        return julkaisuRepository.findAllJulkisetJulkaisut(
+                pquery.getKoulutustyyppi(),
+                pquery.getNimi(),
+                pquery.getKieli(),
+                pquery.getOppilaitosTyyppiKoodiUri(),
+                pquery.isOrganisaatioRyhma(),
+                pquery.getTyyppi(),
+                pquery.getOrganisaatio(),
+                pquery.getPerusteId(),
+                pquery.getPerusteenDiaarinumero(),
+                pageable)
+                .map(obj -> {
+                    try {
+                        return objMapper.readValue(obj, OpetussuunnitelmaDto.class);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        throw new RuntimeException(e);
+                    }
+                });
     }
 
     @Override
