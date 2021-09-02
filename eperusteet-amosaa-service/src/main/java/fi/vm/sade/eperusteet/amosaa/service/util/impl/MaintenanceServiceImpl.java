@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -55,7 +56,13 @@ public class MaintenanceServiceImpl implements MaintenanceService {
     @Override
     @Transactional(propagation = Propagation.NEVER)
     public void teeJulkaisut(boolean julkaiseKaikki, Set<KoulutusTyyppi> koulutustyypit) {
-        List<Opetussuunnitelma> opetussuunnitelmat = opetussuunnitelmaRepository.findJulkaistutByTyyppi(OpsTyyppi.OPS, koulutustyypit);
+        List<Opetussuunnitelma> opetussuunnitelmat;
+        if (koulutustyypit != null) {
+            opetussuunnitelmat = opetussuunnitelmaRepository.findJulkaistutByTyyppi(OpsTyyppi.OPS, koulutustyypit);
+        } else {
+            opetussuunnitelmat = opetussuunnitelmaRepository.findJulkaistutByTyyppi(OpsTyyppi.OPS);
+        }
+
         List<Long> ids = opetussuunnitelmat.stream()
                 .filter(peruste -> julkaiseKaikki || CollectionUtils.isEmpty(peruste.getJulkaisut()))
                 .map(Opetussuunnitelma::getId)

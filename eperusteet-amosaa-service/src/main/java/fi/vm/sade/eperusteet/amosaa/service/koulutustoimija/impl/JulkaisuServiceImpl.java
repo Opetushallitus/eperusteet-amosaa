@@ -41,6 +41,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,6 +51,7 @@ import static java.util.stream.Collectors.toSet;
 @Slf4j
 @Service
 @Transactional
+@Profile("default")
 public class JulkaisuServiceImpl implements JulkaisuService {
 
     @Value("${fi.vm.sade.eperusteet.salli_virheelliset:false}")
@@ -215,7 +217,9 @@ public class JulkaisuServiceImpl implements JulkaisuService {
 
     private void kooditaSisaltoviite(SisaltoViite sisaltoViite) {
         sisaltoviiteServiceProvider.koodita(sisaltoViite);
-        sisaltoViite.getLapset().forEach(lapsi -> kooditaSisaltoviite(lapsi));
+        sisaltoViite.getLapset().stream()
+                .filter(lapsi -> lapsi != null)
+                .forEach(lapsi -> kooditaSisaltoviite(lapsi));
     }
 
 }

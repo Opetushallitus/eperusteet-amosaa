@@ -52,5 +52,5 @@ public interface JulkaisuRepository extends JpaRepository<Julkaisu, Long> {
             @Param("perusteId") Long perusteId,
             @Param("perusteenDiaarinumero") String perusteenDiaarinumero,
             Pageable pageable);
-
+    
 }

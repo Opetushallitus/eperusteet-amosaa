@@ -147,7 +147,7 @@ public class JulkinenController {
             @ApiImplicitParam(name = "kieli", dataType = "string", paramType = "query"),
             @ApiImplicitParam(name = "organisaatioRyhma", dataType = "boolean", paramType = "query"),
             @ApiImplicitParam(name = "oppilaitosTyyppiKoodiUri", dataType = "string", paramType = "query"),
-            @ApiImplicitParam(name = "koulutustyyppi", dataType = "string", paramType = "query", allowMultiple = true),
+            @ApiImplicitParam(name = "koulutustyyppi", dataType = "string", paramType = "query", allowMultiple = true, required = true),
     })
     @RequestMapping(value = "/opetussuunnitelmat/julkaisut", method = RequestMethod.GET)
     @Description("Opetussuunnitelmien parametrihaku.")
@@ -301,7 +301,7 @@ public class JulkinenController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path", required = true)
     })
-    @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/julkaistu", method = RequestMethod.GET)
+    @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/julkaisu", method = RequestMethod.GET)
     public OpetussuunnitelmaKaikkiDto getOpetussuunnitelmaJulkaistuSisalto(
             @ApiIgnore @ModelAttribute("ktId") final Long ktId,
             @PathVariable final Long opsId

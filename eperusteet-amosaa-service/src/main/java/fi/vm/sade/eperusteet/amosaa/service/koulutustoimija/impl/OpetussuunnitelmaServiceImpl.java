@@ -54,6 +54,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.OpsHakuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.PoistettuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.JulkaisuBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaJulkinenDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
@@ -71,6 +72,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.KoulutuksenOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.KoulutusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.OpintokokonaisuusDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteenOsaViiteDto;
@@ -79,6 +81,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.peruste.TekstiKappaleDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonosaExportDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonosaKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TuvaLaajaAlainenOsaaminenDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteExportDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SuorituspolkuRakenneDto;
@@ -91,6 +94,7 @@ import fi.vm.sade.eperusteet.amosaa.repository.peruste.CachedPerusteRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.TekstiKappaleRepository;
 import fi.vm.sade.eperusteet.amosaa.resource.config.AbstractRakenneOsaDeserializer;
+import fi.vm.sade.eperusteet.amosaa.resource.config.InitJacksonConverter;
 import fi.vm.sade.eperusteet.amosaa.resource.config.MappingModule;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiService;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.LocalizedMessagesService;
@@ -100,6 +104,7 @@ import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetClient;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
+import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.JulkaisuService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaMuokkaustietoService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
@@ -125,10 +130,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -138,10 +141,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ObjectUtils;
 
 /**
  * @author nkala
@@ -227,6 +228,9 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
     @Autowired
     private JulkaisuRepository julkaisuRepository;
+
+    @Autowired
+    private JulkaisuService julkaisuService;
 
     @PostConstruct
     protected void init() {
@@ -863,7 +867,10 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         if (julkaisu != null) {
             ObjectNode data = julkaisu.getData().getData();
             try {
-                return objMapper.treeToValue(data, OpetussuunnitelmaKaikkiDto.class);
+                ObjectMapper objectMapper = InitJacksonConverter.createMapper();
+                OpetussuunnitelmaKaikkiDto kaikkiDto = objectMapper.treeToValue(data, OpetussuunnitelmaKaikkiDto.class);
+                kaikkiDto.setTila(Tila.JULKAISTU);
+                return kaikkiDto;
             } catch (JsonProcessingException e) {
                 log.error(Throwables.getStackTraceAsString(e));
                 throw new BusinessRuleViolationException("opetussuunnitelman-haku-epaonnistui");
@@ -963,30 +970,24 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         Tila nykyinen = ops.getTila();
         if (nykyinen.mahdollisetSiirtymat().contains(tila)) {
 
+            // Muutetaan tila
+            ops.setTila(tila);
+
             // Julkaisun rutiinit
             if (tila.equals(Tila.JULKAISTU)) {
 
                 validoi(ktId, opsId).tuomitse();
 
-                // Testeissä pois käytöstä
-                if (generatePDF) {
-                    for (Kieli kieli : ops.getJulkaisukielet()) {
-                        try {
-                            DokumenttiDto dokumenttiDto = dokumenttiService.getDto(ktId, opsId, kieli);
-                            dokumenttiService.setStarted(ktId, opsId, dokumenttiDto);
-                            dokumenttiService.generateWithDto(ktId, opsId, dokumenttiDto);
-                        } catch (DokumenttiException e) {
-                            LOG.error(e.getLocalizedMessage(), e.getCause());
-                        }
-                    }
-                }
-
                 self.publicNavigationEvict(ktId, opsId);
                 self.buildNavigationPublic(ktId, opsId);
-            }
 
-            // Muutetaan tila
-            ops.setTila(tila);
+                julkaisuService.teeJulkaisu(
+                        ktId, opsId,
+                        JulkaisuBaseDto
+                                .builder()
+                                .tiedote(LokalisoituTekstiDto.of("Julkaisu"))
+                                .build());
+            }
         } else {
             throw new IllegalArgumentException(tila + " ei ole kelvollinen tilasiirtymä");
         }

@@ -51,9 +51,10 @@ public class MaintenanceController {
     @RequestMapping(value = "/julkaisut", method = GET)
     public void teeJulkaisut(
             @RequestParam(value = "julkaisekaikki", defaultValue = "false") boolean julkaiseKaikki,
-            @RequestParam(value = "koulutustyypit") final Set<String> koulutustyypit
+            @RequestParam(value = "koulutustyypit", required = false) final Set<String> koulutustyypit
     ) {
-        maintenanceService.teeJulkaisut(julkaiseKaikki, koulutustyypit.stream().map(KoulutusTyyppi::of).collect(Collectors.toSet()));
+        maintenanceService.teeJulkaisut(julkaiseKaikki,
+                koulutustyypit != null ? koulutustyypit.stream().map(KoulutusTyyppi::of).collect(Collectors.toSet()) : null);
     }
 
 }
