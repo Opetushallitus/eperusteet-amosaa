@@ -262,7 +262,8 @@ namespace ModalAdd {
                                     sivu: sivu - 1,
                                     sivukoko: $scope.sivukoko,
                                     kieli: KieliService.getSisaltokieli(),
-                                    tila: ["luonnos", "valmis", "julkaistu"]
+                                    tila: ["luonnos", "valmis", "julkaistu"],
+                                    koulutustyyppi: Amosaa.tuetutKoulutustyypit()
                                 });
                                 $scope.ladataan = false;
                                 const { data, ...params } = res;
