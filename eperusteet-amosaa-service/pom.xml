@@ -13,20 +13,22 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <hibernate.version>4.3.11.Final</hibernate.version>
-        <spring.version>4.3.12.RELEASE</spring.version>
-        <spring.security.version>4.2.13.RELEASE</spring.security.version>
-        <spring.data.jpa.version>1.11.22.RELEASE</spring.data.jpa.version>
+        <spring.version>5.3.7</spring.version>
+        <spring.security.version>5.4.7</spring.security.version>
+        <spring.data.jpa.version>1.11.23.RELEASE</spring.data.jpa.version>
+        <spring.session.jdbc.version>2.4.3</spring.session.jdbc.version>
         <logback.version>1.2.3</logback.version>
         <postgresql.version>9.4.1211</postgresql.version>
-        <jackson.version>2.10.2</jackson.version>
+        <jackson.version>2.11.4</jackson.version>
+        <jackson.databind.version>2.10.5.1</jackson.databind.version>
         <eperusteet-amosaa.devdb.jdbcurl>jdbc:postgresql://localhost:5432/${eperusteet-amosaa.devdb.user}</eperusteet-amosaa.devdb.jdbcurl>
         <eperusteet-amosaa.ittestdb.jdbcurl>jdbc:postgresql://localhost:5432/${eperusteet-amosaa.ittestdb.user}</eperusteet-amosaa.ittestdb.jdbcurl>
         <buildhelper.skipAttach>true</buildhelper.skipAttach>
         <jsoup.version>1.10.1</jsoup.version>
         <ehcache.version>2.6.11</ehcache.version>
         <slf4j.version>1.7.21</slf4j.version>
-        <fop.version>2.5</fop.version>
-        <pdfbox.version>2.0.12</pdfbox.version>
+        <fop.version>2.6</fop.version>
+        <pdfbox.version>2.0.24</pdfbox.version>
         <springfox.version>2.7.0</springfox.version>
         <metrics.version>4.0.2</metrics.version>
         <aspectj.version>1.8.9</aspectj.version>
@@ -80,7 +82,7 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.5</version>
+            <version>2.7</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -127,7 +129,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.9.10.5</version>
+            <version>${jackson.databind.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
@@ -152,7 +154,7 @@
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
-            <version>3.0.1</version>
+            <version>3.1.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -188,7 +190,7 @@
         <dependency>
             <groupId>org.springframework.session</groupId>
             <artifactId>spring-session-jdbc</artifactId>
-            <version>2.0.10.RELEASE</version>
+            <version>${spring.session.jdbc.version}</version>
         </dependency>
         <dependency>
             <groupId>com.ryantenney.metrics</groupId>
@@ -211,9 +213,9 @@
             <version>${metrics.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.hibernate</groupId>
+            <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>5.2.5.Final</version>
+            <version>6.0.22.Final</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -257,9 +259,9 @@
             <version>${postgresql.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.tomcat</groupId>
-            <artifactId>tomcat-dbcp</artifactId>
-            <version>${tomcat.version}</version>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+            <version>1.4</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -448,7 +450,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>19.0</version>
+            <version>30.0-jre</version>
         </dependency>
         <dependency>
             <groupId>org.apache.tika</groupId>
@@ -501,6 +503,42 @@
                 <configuration>
                     <path>/eperusteet-amosaa-service</path>
                     <contextFile>${basedir}/src/test/config/context.xml</contextFile>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.postgresql</groupId>
+                        <artifactId>postgresql</artifactId>
+                        <version>${postgresql.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>9.4.39.v20210325</version>
+                <configuration>
+                    <httpConnector>
+                        <port>8090</port>
+                    </httpConnector>
+                    <scanIntervalSeconds>10</scanIntervalSeconds>
+                    <webApp>
+                        <contextPath>/eperusteet-amosaa-service</contextPath>
+                    </webApp>
+                    <contextXml>${basedir}/src/test/config/jetty-env.xml</contextXml>
+                    <systemProperties>
+                        <systemProperty>
+                            <name>user</name>
+                            <value>${eperusteet-amosaa.devdb.user}</value>
+                        </systemProperty>
+                        <systemProperty>
+                            <name>password</name>
+                            <value>${eperusteet-amosaa.devdb.password}</value>
+                        </systemProperty>
+                        <systemProperty>
+                            <name>url</name>
+                            <value>${eperusteet-amosaa.devdb.jdbcurl}</value>
+                        </systemProperty>
+                    </systemProperties>
                 </configuration>
                 <dependencies>
                     <dependency>
@@ -572,6 +610,17 @@
                         <exclude>**/domain/**/*_.java</exclude>
                         <exclude>com/google/code/**</exclude>
                     </sourceFileExcludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>io.snyk</groupId>
+                <artifactId>snyk-maven-plugin</artifactId>
+                <version>2.0.0</version>
+                <inherited>false</inherited>
+                <configuration>
+                    <args>
+                        <arg>--all-projects</arg>
+                    </args>
                 </configuration>
             </plugin>
         </plugins>

@@ -54,7 +54,7 @@
             <constructor-arg value="-tcpAllowOthers,-tcpPort,12345"/>
         </bean>
         <bean id="dataSource"
-              class="org.apache.tomcat.dbcp.dbcp.BasicDataSource" destroy-method="close" depends-on="h2db">
+              class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" depends-on="h2db">
             <property name="driverClassName" value="org.h2.Driver"/>
             <property name="url" value="jdbc:h2:tcp://localhost:12345/mem:test"/>
         </bean>
@@ -72,7 +72,7 @@
         </bean>
 
         <bean id="dataSource"
-              class="org.apache.tomcat.dbcp.dbcp.BasicDataSource" destroy-method="close">
+              class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
             <property name="driverClassName" value="org.h2.Driver"/>
             <property name="url" value="jdbc:h2:mem:test"/>
         </bean>
@@ -128,18 +128,24 @@
         <security:authentication-manager alias="authenticationManager">
             <security:authentication-provider>
                 <security:user-service>
-                    <security:user name="oph" password="test" authorities="ROLE_USER, ROLE_APP_EPERUSTEET_AMOSAA, ROLE_APP_EPERUSTEET_AMOSAA_ADMIN_1.2.246.562.10.00000000001"/>
-                    <security:user name="kp1" password="test" authorities="ROLE_USER, ROLE_APP_EPERUSTEET_AMOSAA, ROLE_APP_EPERUSTEET_AMOSAA_ADMIN_1.2.246.562.10.54645809036"/>
-                    <security:user name="kp2" password="test" authorities="ROLE_USER, ROLE_APP_EPERUSTEET_AMOSAA, ROLE_APP_EPERUSTEET_AMOSAA_ADMIN_1.2.246.562.10.2013120512391252668625"/>
-                    <security:user name="kp2user2" password="test" authorities="ROLE_USER, ROLE_APP_EPERUSTEET_AMOSAA, ROLE_APP_EPERUSTEET_AMOSAA_ADMIN_1.2.246.562.10.2013120512391252668625"/>
-                    <security:user name="kp3" password="test" authorities="ROLE_USER, ROLE_APP_EPERUSTEET_AMOSAA, ROLE_APP_EPERUSTEET_AMOSAA_ADMIN_1.2.246.562.10.2013120513110198396408"/>
-                    <security:user name="tmpr" password="test" authorities="ROLE_USER, ROLE_APP_EPERUSTEET_AMOSAA, ROLE_APP_EPERUSTEET_AMOSAA_ADMIN_1.2.246.562.10.79499343246"/>
-                    <security:user name="test3" password="test" authorities="ROLE_USER"/>
-                    <security:user name="test4" password="test" authorities="ROLE_USER"/>
-                    <security:user name="test5" password="test" authorities="ROLE_USER"/>
-                    <security:user name="test6" password="test" authorities="ROLE_USER"/>
-                    <security:user name="test7" password="test" authorities="ROLE_USER"/>
-                    <security:user name="test8" password="test" authorities="ROLE_USER"/>
+                    <security:user name="oph" password="{noop}test"
+                                   authorities="ROLE_USER, ROLE_APP_EPERUSTEET_AMOSAA, ROLE_APP_EPERUSTEET_AMOSAA_ADMIN_1.2.246.562.10.00000000001"/>
+                    <security:user name="kp1" password="{noop}test"
+                                   authorities="ROLE_USER, ROLE_APP_EPERUSTEET_AMOSAA, ROLE_APP_EPERUSTEET_AMOSAA_ADMIN_1.2.246.562.10.54645809036"/>
+                    <security:user name="kp2" password="{noop}test"
+                                   authorities="ROLE_USER, ROLE_APP_EPERUSTEET_AMOSAA, ROLE_APP_EPERUSTEET_AMOSAA_ADMIN_1.2.246.562.10.2013120512391252668625"/>
+                    <security:user name="kp2user2" password="{noop}test"
+                                   authorities="ROLE_USER, ROLE_APP_EPERUSTEET_AMOSAA, ROLE_APP_EPERUSTEET_AMOSAA_ADMIN_1.2.246.562.10.2013120512391252668625"/>
+                    <security:user name="kp3" password="{noop}test"
+                                   authorities="ROLE_USER, ROLE_APP_EPERUSTEET_AMOSAA, ROLE_APP_EPERUSTEET_AMOSAA_ADMIN_1.2.246.562.10.2013120513110198396408"/>
+                    <security:user name="tmpr" password="{noop}test"
+                                   authorities="ROLE_USER, ROLE_APP_EPERUSTEET_AMOSAA, ROLE_APP_EPERUSTEET_AMOSAA_ADMIN_1.2.246.562.10.79499343246"/>
+                    <security:user name="test3" password="{noop}test" authorities="ROLE_USER"/>
+                    <security:user name="test4" password="{noop}test" authorities="ROLE_USER"/>
+                    <security:user name="test5" password="{noop}test" authorities="ROLE_USER"/>
+                    <security:user name="test6" password="{noop}test" authorities="ROLE_USER"/>
+                    <security:user name="test7" password="{noop}test" authorities="ROLE_USER"/>
+                    <security:user name="test8" password="{noop}test" authorities="ROLE_USER"/>
                 </security:user-service>
             </security:authentication-provider>
         </security:authentication-manager>
