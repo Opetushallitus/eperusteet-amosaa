@@ -9,8 +9,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-//@Service
-//@Profile("test")
+@Service
+@Profile("test")
 public class DokumenttiServiceMock implements DokumenttiService {
     @Override
     public DokumenttiDto getDto(Long ktId, Long opsId, Kieli kieli) {

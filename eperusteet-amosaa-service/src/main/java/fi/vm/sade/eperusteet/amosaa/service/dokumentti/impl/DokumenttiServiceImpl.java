@@ -58,7 +58,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @Service
 @Transactional
-//@Profile("default")
+@Profile("default")
 public class DokumenttiServiceImpl implements DokumenttiService {
     private static final Logger LOG = LoggerFactory.getLogger(DokumenttiServiceImpl.class);
 
