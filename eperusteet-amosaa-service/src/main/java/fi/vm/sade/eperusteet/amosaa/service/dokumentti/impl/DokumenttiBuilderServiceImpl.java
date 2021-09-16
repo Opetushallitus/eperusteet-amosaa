@@ -1274,6 +1274,10 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
                 Element element = (Element) list.item(i);
                 String id = element.getAttribute("data-uid");
 
+                if (StringUtils.isEmpty(id)) {
+                    continue;
+                }
+
                 UUID uuid = UUID.fromString(id);
 
                 // Ladataan kuvan data muistiin
