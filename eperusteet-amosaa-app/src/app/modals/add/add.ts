@@ -128,6 +128,7 @@ namespace ModalAdd {
                         sivukoko: $scope.pagination.sivukoko,
                         tila: $scope.rajain.tila,
                         nimi: $scope.rajain.nimi,
+                        koulutustyyppi: Amosaa.tuetutKoulutustyypit(),
                         tyyppi: _(_.cloneDeep(Constants.tosTyypit))
                             .filter(tila => tila === "ops")
                             .value()

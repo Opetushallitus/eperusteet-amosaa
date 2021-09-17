@@ -122,6 +122,7 @@ angular.module("app").config($stateProvider =>
                                 sivu: $scope.pagination.sivu - 1,
                                 sivukoko: $scope.pagination.sivukoko,
                                 nimi: $scope.rajain && $scope.rajain.nimi,
+                                koulutustyyppi: Amosaa.tuetutKoulutustyypit(),
                                 tyyppi: ['pohja'],
                             }, { timeout });
                             $scope.$applyAsync(() => updateOpetussuunnitelmat(res));
@@ -233,6 +234,7 @@ angular.module("app").config($stateProvider =>
                                 tila: $scope.rajain.tila,
                                 nimi: $scope.rajain.nimi,
                                 tyyppi: ['ops', 'yleinen'],
+                                koulutustyyppi: Amosaa.tuetutKoulutustyypit(),
                             }, { timeout });
                             $scope.$applyAsync(() => updateOpetussuunnitelmat(res));
                         }
