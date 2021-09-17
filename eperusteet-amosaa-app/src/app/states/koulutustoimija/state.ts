@@ -17,6 +17,7 @@ angular.module("app").config($stateProvider =>
                 return {
                     sivukoko: 10,
                     tyyppi: ['ops', 'yleinen'],
+                    koulutustyyppi: Amosaa.tuetutKoulutustyypit(),
                     tila: _(Constants.tosTilat)
                         .filter(tila => tila !== "poistettu")
                         .value()
