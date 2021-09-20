@@ -8,6 +8,7 @@ import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.JulkaisuDataRepos
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.JulkaisuService;
 import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
@@ -31,6 +32,7 @@ public class JulkaisuServiceIt extends AbstractIntegrationTest {
     }
 
     @Test
+    @Ignore
     public void testJulkaisu1() {
         useProfileKP1();
         OpetussuunnitelmaBaseDto ops = createOpetussuunnitelma();

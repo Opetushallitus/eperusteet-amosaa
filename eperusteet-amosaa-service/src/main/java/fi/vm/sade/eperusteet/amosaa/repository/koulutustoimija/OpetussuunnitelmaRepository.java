@@ -152,4 +152,12 @@ public interface OpetussuunnitelmaRepository extends JpaWithVersioningRepository
             "AND (p.koulutustyyppi IN (:koulutustyyppi) OR o.koulutustyyppi IN (:koulutustyyppi)) " +
             "AND (o.julkaisut IS NOT EMPTY OR o.tila = 'JULKAISTU')")
     List<Opetussuunnitelma> findJulkaistutByTyyppi(@Param("tyyppi") OpsTyyppi tyyppi, @Param("koulutustyyppi") Set<KoulutusTyyppi> koulutusTyyppi);
+
+    @Query(value = "SELECT o " +
+            "FROM Opetussuunnitelma o " +
+            "LEFT OUTER JOIN o.peruste p " +
+            "WHERE o.tyyppi = :tyyppi " +
+            "AND tila != 'POISTETTU' " +
+            "AND (o.julkaisut IS NOT EMPTY OR o.tila = 'JULKAISTU')")
+    List<Opetussuunnitelma> findJulkaistutByTyyppi(@Param("tyyppi") OpsTyyppi tyyppi);
 }

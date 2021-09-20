@@ -8,5 +8,5 @@ public interface MaintenanceService {
 
     @PreAuthorize("hasPermission(null, 'oph', 'HALLINTA')")
     void teeJulkaisut(boolean julkaiseKaikki, Set<KoulutusTyyppi> koulutustyypit);
-
+    
 }

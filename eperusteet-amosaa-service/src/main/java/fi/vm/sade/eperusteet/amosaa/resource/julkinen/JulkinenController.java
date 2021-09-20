@@ -22,6 +22,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaJulkinenDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaQueryDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaJulkaistuQueryDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaJulkinenDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaQueryDto;
@@ -133,6 +134,27 @@ public class JulkinenController {
         // Oletuksena älä palauta pohjia
         PageRequest p = new PageRequest(pquery.getSivu(), Math.min(pquery.getSivukoko(), 100));
         return opsService.findOpetussuunnitelmat(p, pquery);
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "perusteenDiaarinumero", dataType = "string", paramType = "query"),
+            @ApiImplicitParam(name = "perusteId", dataType = "long", paramType = "query"),
+            @ApiImplicitParam(name = "organisaatio", dataType = "string", paramType = "query"),
+            @ApiImplicitParam(name = "tyyppi", dataType = "string", paramType = "query", allowMultiple = true),
+            @ApiImplicitParam(name = "sivu", dataType = "long", paramType = "query"),
+            @ApiImplicitParam(name = "sivukoko", dataType = "long", paramType = "query"),
+            @ApiImplicitParam(name = "nimi", dataType = "string", paramType = "query"),
+            @ApiImplicitParam(name = "kieli", dataType = "string", paramType = "query"),
+            @ApiImplicitParam(name = "organisaatioRyhma", dataType = "boolean", paramType = "query"),
+            @ApiImplicitParam(name = "oppilaitosTyyppiKoodiUri", dataType = "string", paramType = "query"),
+            @ApiImplicitParam(name = "koulutustyyppi", dataType = "string", paramType = "query", allowMultiple = true, required = true),
+    })
+    @RequestMapping(value = "/opetussuunnitelmat/julkaisut", method = RequestMethod.GET)
+    @Description("Opetussuunnitelmien parametrihaku.")
+    public Page<OpetussuunnitelmaDto> findOpetussuunnitelmatJulkaisut(
+            @ApiIgnore final OpetussuunnitelmaJulkaistuQueryDto pquery
+    ) {
+        return opsService.findOpetussuunnitelmatJulkaisut(pquery);
     }
 
     @RequestMapping(value = "/perusteenopetussuunnitelmat", method = RequestMethod.GET)
@@ -279,7 +301,7 @@ public class JulkinenController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path", required = true)
     })
-    @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/julkaistu", method = RequestMethod.GET)
+    @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/julkaisu", method = RequestMethod.GET)
     public OpetussuunnitelmaKaikkiDto getOpetussuunnitelmaJulkaistuSisalto(
             @ApiIgnore @ModelAttribute("ktId") final Long ktId,
             @PathVariable final Long opsId

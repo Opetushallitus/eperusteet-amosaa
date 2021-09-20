@@ -180,6 +180,7 @@ public class KoulutustoimijaServiceIT extends AbstractIntegrationTest {
     @Test
     @Rollback
     public void testKoulutustoimijaHakuOrganisaatioRyhma() {
+        useProfileKP1();
         kayttajanTietoService.updateKoulutustoimijat();
 
         {
