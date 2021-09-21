@@ -422,6 +422,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         // this method doesn't do anything and is only here for evicting the cache
     }
 
+    @Override
     public NavigationNodeDto buildNavigationPublic(Long ktId, Long opsId) {
         NavigationNodeDto rootNode = dispatcher.get(opsId, NavigationBuilderPublic.class).buildNavigation(ktId, opsId);
         rootNode.getChildren().add(0, NavigationNodeDto.of(NavigationType.tiedot, null, opsId));
