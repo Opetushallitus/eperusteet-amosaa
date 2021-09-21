@@ -24,4 +24,20 @@ public class SisaltoViiteExportDto extends SisaltoViiteExportBaseDto {
     private OpintokokonaisuusDto opintokokonaisuus;
     private KoulutuksenOsaDto koulutuksenosa;
     private TuvaLaajaAlainenOsaaminenDto tuvaLaajaAlainenOsaaminen;
+
+    public LokalisoituTekstiDto getNimi() {
+        if (koulutuksenosa != null) {
+            return koulutuksenosa.getNimi();
+        }
+
+        if (tuvaLaajaAlainenOsaaminen != null) {
+            return tuvaLaajaAlainenOsaaminen.getNimi();
+        }
+
+        if (tekstiKappale != null) {
+            return tekstiKappale.getNimi();
+        }
+
+        return null;
+    }
 }

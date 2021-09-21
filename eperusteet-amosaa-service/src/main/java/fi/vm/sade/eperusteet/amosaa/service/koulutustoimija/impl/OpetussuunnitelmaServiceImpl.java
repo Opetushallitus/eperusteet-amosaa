@@ -108,6 +108,7 @@ import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaMuo
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.ops.NavigationBuilder;
+import fi.vm.sade.eperusteet.amosaa.service.ops.NavigationBuilderPublic;
 import fi.vm.sade.eperusteet.amosaa.service.ops.OpetussuunnitelmaCreateService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.OpetussuunnitelmaDispatcher;
 import fi.vm.sade.eperusteet.amosaa.service.ops.OpetussuunnitelmaPohjaCreateService;
@@ -404,7 +405,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
     @Override
     @Cacheable("ops-navigation")
-    public NavigationNodeDto buildNavigationPublic(Long ktId, Long opsId) {
+    public NavigationNodeDto buildNavigationJulkinen(Long ktId, Long opsId) {
         NavigationNodeDto rootNode = buildNavigation(ktId, opsId);
         rootNode.getChildren().add(0, NavigationNodeDto.of(NavigationType.tiedot, null, opsId));
         rootNode.setChildren(rootNode.getChildren().stream()
@@ -419,6 +420,18 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     @CacheEvict("ops-navigation")
     public void publicNavigationEvict(Long ktId, Long opsId) {
         // this method doesn't do anything and is only here for evicting the cache
+    }
+
+    @Override
+    public NavigationNodeDto buildNavigationPublic(Long ktId, Long opsId) {
+        NavigationNodeDto rootNode = dispatcher.get(opsId, NavigationBuilderPublic.class).buildNavigation(ktId, opsId);
+        rootNode.getChildren().add(0, NavigationNodeDto.of(NavigationType.tiedot, null, opsId));
+        rootNode.setChildren(rootNode.getChildren().stream()
+                .filter(node -> !node.getType().equals(NavigationType.suorituspolut) || CollectionUtils.isNotEmpty(node.getChildren()))
+                .collect(Collectors.toList())
+        );
+
+        return rootNode;
     }
 
     @Override
@@ -974,7 +987,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                 validoi(ktId, opsId).tuomitse();
 
                 self.publicNavigationEvict(ktId, opsId);
-                self.buildNavigationPublic(ktId, opsId);
+                self.buildNavigationJulkinen(ktId, opsId);
 
                 julkaisuService.teeJulkaisu(
                         ktId, opsId,

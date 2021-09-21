@@ -170,7 +170,7 @@ public class JulkaisuServiceImpl implements JulkaisuService {
             muokkausTietoService.addOpsMuokkausTieto(opsId, opetussuunnitelma, MuokkausTapahtuma.JULKAISU);
 
             opetussuunnitelmaService.publicNavigationEvict(ktId, opsId);
-            opetussuunnitelmaService.buildNavigationPublic(ktId, opsId);
+            opetussuunnitelmaService.buildNavigationJulkinen(ktId, opsId);
 
         } catch (IOException e) {
             e.printStackTrace();
