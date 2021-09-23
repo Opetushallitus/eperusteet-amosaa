@@ -11,6 +11,7 @@ public enum NavigationType {
     opetussuunnitelma,
     tekstikappale,
     tutkinnonosat,
+    valmatelmaKoulutuksenosat,
     tutkinnonosa,
     tosaryhma,
     suorituspolut,
