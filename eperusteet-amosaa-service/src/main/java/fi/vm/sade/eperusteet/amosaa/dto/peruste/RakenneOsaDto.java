@@ -18,7 +18,10 @@ package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -27,6 +30,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
+@AllArgsConstructor
+@NoArgsConstructor
 public class RakenneOsaDto extends AbstractRakenneOsaDto {
     private String erikoisuus;
     @JsonProperty("_tutkinnonOsaViite")
@@ -36,4 +41,5 @@ public class RakenneOsaDto extends AbstractRakenneOsaDto {
     protected void foreach(final Visitor visitor, final int depth) {
         visitor.visit(this, depth);
     }
+    
 }
