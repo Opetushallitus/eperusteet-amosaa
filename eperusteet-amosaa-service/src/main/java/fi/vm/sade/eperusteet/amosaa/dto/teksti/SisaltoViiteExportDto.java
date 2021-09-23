@@ -1,5 +1,6 @@
 package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,6 +26,7 @@ public class SisaltoViiteExportDto extends SisaltoViiteExportBaseDto {
     private KoulutuksenOsaDto koulutuksenosa;
     private TuvaLaajaAlainenOsaaminenDto tuvaLaajaAlainenOsaaminen;
 
+    @JsonIgnore
     public LokalisoituTekstiDto getNimi() {
         if (koulutuksenosa != null) {
             return koulutuksenosa.getNimi();
