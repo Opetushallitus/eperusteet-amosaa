@@ -1,24 +1,16 @@
 package fi.vm.sade.eperusteet.amosaa.service.ops.impl;
 
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
-import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
+import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.NavigationNodeDto;
 import fi.vm.sade.eperusteet.amosaa.dto.NavigationType;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteExportDto;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteKevytDto;
-import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
-import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
-import fi.vm.sade.eperusteet.amosaa.service.ops.NavigationBuilder;
 import fi.vm.sade.eperusteet.amosaa.service.ops.NavigationBuilderPublic;
-import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -42,23 +34,26 @@ public class NavigationBuilderPublicDefault implements NavigationBuilderPublic {
         SisaltoViiteExportDto root = opetussuunnitelmaKaikkiDto.getSisalto();
 
         return NavigationNodeDto.of(NavigationType.root, root.getId())
-                .addAll(sisaltoviitteet(root));
+                .addAll(sisaltoviitteet(root, opetussuunnitelmaKaikkiDto));
     }
 
-    private List<NavigationNodeDto> sisaltoviitteet(SisaltoViiteExportDto root) {
+    private List<NavigationNodeDto> sisaltoviitteet(SisaltoViiteExportDto root, OpetussuunnitelmaKaikkiDto opetussuunnitelmaKaikkiDto) {
         return root.getLapset().stream()
-                .map(sisaltoViite -> sisaltoviiteToNavigationNode(sisaltoViite))
+                .map(sisaltoViite -> sisaltoviiteToNavigationNode(sisaltoViite, opetussuunnitelmaKaikkiDto))
                 .collect(Collectors.toList());
     }
 
-    private NavigationNodeDto sisaltoviiteToNavigationNode(SisaltoViiteExportDto sisaltoviite) {
+    private NavigationNodeDto sisaltoviiteToNavigationNode(SisaltoViiteExportDto sisaltoviite, OpetussuunnitelmaKaikkiDto opetussuunnitelmaKaikkiDto) {
         return NavigationNodeDto.of(
-                NavigationType.of(sisaltoviite.getTyyppi().toString()),
+                NavigationType.of(sisaltoviite.getTyyppi().equals(SisaltoTyyppi.TUTKINNONOSAT)
+                        && opetussuunnitelmaKaikkiDto.getKoulutustyyppi() != null
+                        && opetussuunnitelmaKaikkiDto.getKoulutustyyppi().isValmaTelma() ?
+                        NavigationType.valmatelmaKoulutuksenosat.toString() : sisaltoviite.getTyyppi().toString()),
                 sisaltoviite.getNimi(),
                 sisaltoviite.getId())
                 .addAll(sisaltoviite.getLapset() != null ?
                         sisaltoviite.getLapset().stream()
-                                .map(this::sisaltoviiteToNavigationNode)
+                                .map(lapsi -> sisaltoviiteToNavigationNode(lapsi, opetussuunnitelmaKaikkiDto))
                                 .collect(Collectors.toList())
                         : Collections.emptyList());
     }
