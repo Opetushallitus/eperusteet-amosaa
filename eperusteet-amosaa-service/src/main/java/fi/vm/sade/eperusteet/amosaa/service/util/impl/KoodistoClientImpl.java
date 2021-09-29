@@ -76,6 +76,8 @@ public class KoodistoClientImpl implements KoodistoClient {
     private static final String ALARELAATIO = "relaatio/sisaltyy-alakoodit/";
     private static final String CODEELEMENT = "/rest/codeelement";
 
+    private static final int KOODISTO_TEKSTI_MAX_LENGTH = 512;
+
     @Autowired
     private DtoMapper mapper;
 
@@ -223,6 +225,10 @@ public class KoodistoClientImpl implements KoodistoClient {
 
     @Override
     public KoodistoKoodiDto addKoodiNimella(String koodistonimi, LokalisoituTekstiDto koodinimi, long seuraavaKoodi) {
+
+        if (koodinimi.getTekstit().values().stream().anyMatch(teksti -> teksti != null && teksti.length() > KOODISTO_TEKSTI_MAX_LENGTH)) {
+            throw new BusinessRuleViolationException("koodi-arvo-liian-pitka");
+        }
 
         KoodistoKoodiDto uusiKoodi = KoodistoKoodiDto.builder()
                 .koodiArvo(Long.toString(seuraavaKoodi))
