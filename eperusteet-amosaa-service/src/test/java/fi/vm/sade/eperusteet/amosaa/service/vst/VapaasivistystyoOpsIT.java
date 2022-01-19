@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 @DirtiesContext
 @Transactional
@@ -110,5 +111,11 @@ public class VapaasivistystyoOpsIT extends AbstractIntegrationTest {
                 .extracting("tekstit")
                 .containsExactlyInAnyOrder(LokalisoituTekstiDto.of("tavoite1").getTeksti());
 
+    }
+
+    @Test
+    public void test_EP_2941() {
+        OpintokokonaisuusTavoite tavoite = new OpintokokonaisuusTavoite();
+        assertThatCode(() -> OpintokokonaisuusTavoite.copy(tavoite)).doesNotThrowAnyException();
     }
 }
