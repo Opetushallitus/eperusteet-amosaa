@@ -38,7 +38,7 @@ public class VapaasivistystyoOpsIT extends AbstractIntegrationTest {
     @Test
     @Rollback
     public void test_vapaasivistystyoSisaltoviitteet() {
-        OpetussuunnitelmaBaseDto vstOps = createOpetussuunnitelma(ops -> ops.setPerusteId(35820l));
+        OpetussuunnitelmaBaseDto vstOps = createOpetussuunnitelma(ops -> ops.setPerusteId(35820L));
         List<SisaltoviiteLaajaDto> sisaltoviitteet = sisaltoViiteService.getSisaltoViitteet(vstOps.getKoulutustoimija().getId(), vstOps.getId(), SisaltoviiteLaajaDto.class);
 
         assertThat(sisaltoviitteet).hasSize(3);
@@ -84,7 +84,7 @@ public class VapaasivistystyoOpsIT extends AbstractIntegrationTest {
 
     @Test
     public void test_vapaasivistystyoSisaltoviitteet_lisaaTavoitteita() {
-        OpetussuunnitelmaBaseDto vstOps = createOpetussuunnitelma(ops -> ops.setPerusteId(35820l));
+        OpetussuunnitelmaBaseDto vstOps = createOpetussuunnitelma(ops -> ops.setPerusteId(35820L));
         List<SisaltoviiteLaajaDto> sisaltoviitteet = sisaltoViiteService.getSisaltoViitteet(vstOps.getKoulutustoimija().getId(), vstOps.getId(), SisaltoviiteLaajaDto.class);
         List<SisaltoviiteLaajaDto> opintokokonaisuudet = sisaltoviitteet.stream().filter(viite -> SisaltoTyyppi.OPINTOKOKONAISUUS.equals(viite.getTyyppi())).collect(Collectors.toList());
         OpintokokonaisuusDto opintokokonaisuus = opintokokonaisuudet.get(0).getOpintokokonaisuus();
