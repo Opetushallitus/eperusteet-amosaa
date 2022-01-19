@@ -55,7 +55,7 @@ public class OpintokokonaisuusTavoite extends AbstractAuditedEntity implements S
 
     public static OpintokokonaisuusTavoite copy(OpintokokonaisuusTavoite original) {
         if (original != null) {
-            return new OpintokokonaisuusTavoite(original.getPerusteesta(), original.getTavoiteKoodi(), LokalisoituTeksti.of(original.getTavoite().getTeksti()));
+            return new OpintokokonaisuusTavoite(original.getPerusteesta(), original.getTavoiteKoodi(), original.getTavoite());
         }
 
         return null;
