@@ -32,16 +32,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @TestPropertySource(properties = {"test.perusteJsonFile: /perusteet/vstPeruste.json"})
 public class VapaasivistystyoOpsIT extends AbstractIntegrationTest {
 
-    private ObjectMapper objectMapper;
-
-    @Autowired
-    private ApplicationContext applicationContext;
-
     @Autowired
     private SisaltoViiteService sisaltoViiteService;
-
-    @Autowired
-    private OpetussuunnitelmaService opetussuunnitelmaService;
 
     @Test
     @Rollback
