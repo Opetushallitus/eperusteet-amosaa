@@ -27,7 +27,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import javax.persistence.Cacheable;
@@ -70,11 +69,6 @@ public class LokalisoituTeksti implements Serializable {
     private Set<Teksti> teksti;
 
     protected LokalisoituTeksti() {
-    }
-
-    private LokalisoituTeksti(Set<Teksti> tekstit) {
-        this.teksti = tekstit;
-        this.tunniste = UUID.randomUUID();
     }
 
     private LokalisoituTeksti(Set<Teksti> tekstit, UUID tunniste) {
@@ -222,15 +216,5 @@ public class LokalisoituTeksti implements Serializable {
         if (teksti == null || !teksti.hasKielet(ops.getJulkaisukielet())) {
             validointi.virhe(syy, parents);
         }
-    }
-
-    public Optional<String> firstByKieliOrder() {
-        Map<Kieli, String> map = getTeksti();
-        for (Kieli k : Kieli.values()) {
-            if (map.containsKey(k) && map.get(k).trim().length() > 0) {
-                return Optional.of(map.get(k));
-            }
-        }
-        return Optional.empty();
     }
 }
