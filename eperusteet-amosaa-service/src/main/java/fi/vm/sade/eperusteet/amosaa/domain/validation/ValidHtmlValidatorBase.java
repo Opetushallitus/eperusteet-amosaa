@@ -44,7 +44,8 @@ public abstract class ValidHtmlValidatorBase {
             Map<Kieli, String> tekstit = lokalisoituTeksti.getTeksti();
             if (tekstit != null) {
                 return tekstit.values().stream()
-                        .allMatch(teksti -> Jsoup.isValid(teksti, whitelist) && isValidUrls(teksti));
+                        .allMatch(teksti -> Jsoup.isValid(teksti, whitelist) &&
+                                            isValidUrls(teksti));
             }
         }
         return true;
