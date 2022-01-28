@@ -18,17 +18,20 @@
             <pattern>%msg%n</pattern>
         </encoder>
     </appender>
-    
+    <logger name="fi.vm.sade.auditlog.Audit" level="info" additivity="false">
+        <appender-ref ref="ROLLING" />
+    </logger>
+
+
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%d{yyyy-MM-dd'T'HH:mm:ss.SSSX} %-5p {%X{user}} [%thread] %-5level %logger: %msg%n</pattern>
         </encoder>
     </appender>
+    <root level="info">
+        <appender-ref ref="console"/>
+    </root>
 
-    <logger name="fi.vm.sade.auditlog.Audit" level="info" additivity="false">
-        <appender-ref ref="ROLLING" />
-    </logger>
-    
     <logger name="org.hibernate" level="error"/>
     <!-- näytä kyselyjen parametrit -->
     <!-- logger name="org.hibernate.type" level="trace/ -->
@@ -41,9 +44,7 @@
     <logger name="springfox.documentation" level="warn"/>
     <logger name="org.apache.fop.apps.FopConfParser" level="warn"/>
     <logger name="org.apache.http.client.protocol.ResponseProcessCookies" level="error"/>
-    <root level="info">
-        <appender-ref ref="console"/>
-    </root>
+
 
     <appender name="AUDIT" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <encoding>UTF-8</encoding>
@@ -57,7 +58,6 @@
             <pattern>%msg%n</pattern>
         </encoder>
     </appender>
-
     <logger name="fi.vm.sade.eperusteet.amosaa.service.audit" level="INFO" additivity="false">
         <appender-ref ref="AUDIT"/>
     </logger>
