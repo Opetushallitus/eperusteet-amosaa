@@ -32,8 +32,8 @@ import org.jsoup.select.Elements;
 public abstract class ValidHtmlValidatorBase {
 
     private Whitelist whitelist;
-    private UrlValidator urlValidator = new UrlValidator(UrlValidator.ALLOW_LOCAL_URLS);
-    private EmailValidator emailValidator = EmailValidator.getInstance(true, true);
+    private final UrlValidator urlValidator = new UrlValidator(UrlValidator.ALLOW_LOCAL_URLS);
+    private final EmailValidator emailValidator = EmailValidator.getInstance(true, true);
 
     protected void setupValidator(ValidHtml constraintAnnotation) {
         whitelist = constraintAnnotation.whitelist().getWhitelist();
