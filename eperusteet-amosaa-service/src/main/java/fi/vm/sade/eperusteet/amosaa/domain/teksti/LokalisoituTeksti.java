@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import javax.persistence.Cacheable;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -177,11 +178,11 @@ public class LokalisoituTeksti implements Serializable {
         if (tekstit.isEmpty()) {
             return "";
         }
-        String fi = tekstit.get(Kieli.FI);
-        if (fi != null) {
-            return fi;
-        }
-        return tekstit.entrySet().iterator().next().getValue();
+
+        return tekstit.entrySet().stream()
+                .filter(x -> x.getValue() != null)
+                .map(x -> x.getKey().toString() + ": " + x.getValue() + ", ")
+                .collect(Collectors.joining());
     }
 
     public boolean hasKielet(Set<Kieli> kielet) {
