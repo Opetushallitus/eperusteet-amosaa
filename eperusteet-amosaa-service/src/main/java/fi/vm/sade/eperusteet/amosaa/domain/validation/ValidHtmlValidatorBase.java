@@ -24,6 +24,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.safety.Whitelist;
 
 import java.util.Map;
+
 import org.jsoup.select.Elements;
 
 /**
@@ -40,15 +41,19 @@ public abstract class ValidHtmlValidatorBase {
     }
 
     protected boolean isValid(LokalisoituTeksti lokalisoituTeksti) {
-        if (lokalisoituTeksti != null) {
-            Map<Kieli, String> tekstit = lokalisoituTeksti.getTeksti();
-            if (tekstit != null) {
-                return tekstit.values().stream()
-                        .allMatch(teksti -> Jsoup.isValid(teksti, whitelist) &&
-                                            isValidUrls(teksti));
-            }
+        if (lokalisoituTeksti == null) {
+            return true;
         }
-        return true;
+
+        Map<Kieli, String> tekstit = lokalisoituTeksti.getTeksti();
+
+        if (tekstit == null) {
+            return true;
+        }
+
+        return tekstit.values().stream()
+                .allMatch(teksti -> Jsoup.isValid(teksti, whitelist) &&
+                        isValidUrls(teksti));
     }
 
     private boolean isValidUrls(String teksti) {
