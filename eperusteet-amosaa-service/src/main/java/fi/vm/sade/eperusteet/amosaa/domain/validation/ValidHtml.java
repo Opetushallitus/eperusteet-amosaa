@@ -44,7 +44,7 @@ public @interface ValidHtml {
 
     Class<? extends Payload>[] payload() default {};
 
-    public enum WhitelistType {
+    enum WhitelistType {
         NONE(Whitelist.none()),
         MINIMAL(Whitelist.none().addTags("p")),
         SIMPLIFIED(Whitelist.none().addTags("p", "strong", "em", "i", "s", "ol", "li", "ul")),
@@ -60,9 +60,9 @@ public @interface ValidHtml {
                 .addAttributes("figure", "class")
                 .addAttributes("span", "kommentti", "class"));
 
-        private Whitelist whitelist;
+        private final Whitelist whitelist;
 
-        private WhitelistType(Whitelist whitelist) {
+        WhitelistType(Whitelist whitelist) {
             this.whitelist = whitelist;
         }
 
