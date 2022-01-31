@@ -26,6 +26,8 @@ import org.jsoup.safety.Whitelist;
 import java.util.Map;
 
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author mikkom
@@ -35,6 +37,8 @@ public abstract class ValidHtmlValidatorBase {
     private Whitelist whitelist;
     private final UrlValidator urlValidator = new UrlValidator(UrlValidator.ALLOW_LOCAL_URLS);
     private final EmailValidator emailValidator = EmailValidator.getInstance(true, true);
+
+    private static final Logger logger = LoggerFactory.getLogger(ValidHtmlValidatorBase.class);
 
     protected void setupValidator(ValidHtml constraintAnnotation) {
         whitelist = constraintAnnotation.whitelist().getWhitelist();
@@ -51,9 +55,15 @@ public abstract class ValidHtmlValidatorBase {
             return true;
         }
 
-        return tekstit.values().stream()
+        boolean htmlIsValid = tekstit.values().stream()
                 .allMatch(teksti -> Jsoup.isValid(teksti, whitelist) &&
                         isValidUrls(teksti));
+
+        if (!htmlIsValid) {
+            logger.error("html:n validointi epäonnistui", lokalisoituTeksti);
+        }
+
+        return htmlIsValid;
     }
 
     private boolean isValidUrls(String teksti) {
