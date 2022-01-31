@@ -47,16 +47,18 @@ public @interface ValidHtml {
     public enum WhitelistType {
         NONE(Whitelist.none()),
         MINIMAL(Whitelist.none().addTags("p")),
-        SIMPLIFIED(Whitelist.none().addTags("p", "strong", "em", "s", "ol", "li", "ul")),
+        SIMPLIFIED(Whitelist.none().addTags("p", "strong", "em", "i", "s", "ol", "li", "ul")),
         NORMAL(Whitelist.none()
-                .addTags("p", "strong", "em", "s", "ol", "li", "ul", "blockquote", "table", "caption",
-                        "tbody", "tr", "td", "hr", "pre", "th", "thead", "a", "abbr")
+                .addTags("p", "span", "strong", "em", "i", "s", "ol", "li", "ul", "blockquote", "table", "caption",
+                        "tbody", "tr", "td", "hr", "pre", "th", "thead", "a", "abbr", "comment", "figcaption", "br")
                 .addAttributes("table", "align", "border", "cellpadding", "cellspacing", "style", "summary")
-                .addAttributes("th", "scope", "colspan", "rowspan")
-                .addAttributes("td", "colspan", "rowspan", "style")
+                .addAttributes("th", "scope", "colspan", "rowspan", "style")
+                .addAttributes("td", "colspan", "rowspan", "style", "data-colwidth")
                 .addAttributes("a", "href", "target", "rel", "routenode")
-                .addAttributes("img", "data-uid", "alt", "height", "width", "figcaption")
-                .addAttributes("abbr", "data-viite"));
+                .addAttributes("img", "data-uid", "src", "alt", "height", "width", "style", "figcaption")
+                .addAttributes("abbr", "data-viite")
+                .addAttributes("figure", "class")
+                .addAttributes("span", "kommentti", "class"));
 
         private Whitelist whitelist;
 
