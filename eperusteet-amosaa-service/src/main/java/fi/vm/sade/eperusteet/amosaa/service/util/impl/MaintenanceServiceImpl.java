@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 @Profile("!test")
 public class MaintenanceServiceImpl implements MaintenanceService {
 
-    private static final Logger log = LoggerFactory.getLogger(MaintenanceServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(MaintenanceServiceImpl.class);
 
     @Autowired
     private OpetussuunnitelmaRepository opetussuunnitelmaRepository;
@@ -63,6 +63,7 @@ public class MaintenanceServiceImpl implements MaintenanceService {
     @Async
     @Transactional(propagation = Propagation.NEVER)
     public void teeJulkaisut(boolean julkaiseKaikki, Set<KoulutusTyyppi> koulutustyypit) {
+        logger.error("tultiin julkaisujenn alkuun");
         List<Opetussuunnitelma> opetussuunnitelmat;
         if (koulutustyypit != null) {
             opetussuunnitelmat = opetussuunnitelmaRepository.findJulkaistutByTyyppi(OpsTyyppi.OPS, koulutustyypit);
@@ -70,22 +71,24 @@ public class MaintenanceServiceImpl implements MaintenanceService {
             opetussuunnitelmat = opetussuunnitelmaRepository.findJulkaistutByTyyppi(OpsTyyppi.OPS);
         }
 
+        logger.error("listataan id:t");
+
         List<Long> ids = opetussuunnitelmat.stream()
                 .filter(peruste -> julkaiseKaikki || CollectionUtils.isEmpty(peruste.getJulkaisut()))
                 .map(Opetussuunnitelma::getId)
                 .collect(Collectors.toList());
 
-        log.info("Julkaistaan näin monta perustetta: ", ids.size());
+        logger.error("Julkaistaan näin monta perustetta: ", ids.size());
 
         for (Long opsId : ids) {
             try {
                 teeJulkaisu(opsId);
             } catch (RuntimeException ex) {
-                log.error(ex.getLocalizedMessage(), ex);
+                logger.error(ex.getLocalizedMessage(), ex);
             }
         }
 
-        log.info("julkaisut tehty");
+        logger.error("julkaisut tehty");
     }
 
     private void teeJulkaisu(Long opsId) {
@@ -93,7 +96,7 @@ public class MaintenanceServiceImpl implements MaintenanceService {
         template.execute(status -> {
             try {
                 Opetussuunnitelma opetussuunnitelma = opetussuunnitelmaRepository.findOne(opsId);
-                log.info("Luodaan julkaisu opetussuunnitelmalle: " + opetussuunnitelma.getId());
+                logger.info("Luodaan julkaisu opetussuunnitelmalle: " + opetussuunnitelma.getId());
                 Julkaisu viimeisinJulkaisu = julkaisuRepository.findFirstByOpetussuunnitelmaOrderByRevisionDesc(opetussuunnitelma);
 
                 OpetussuunnitelmaKaikkiDto sisalto = opetussuunnitelmaService.getOpetussuunnitelmaKaikki(opetussuunnitelma.getKoulutustoimija().getId(), opetussuunnitelma.getId());
