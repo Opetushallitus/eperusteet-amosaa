@@ -16,16 +16,11 @@ import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaMuo
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.util.JsonMapper;
 import fi.vm.sade.eperusteet.amosaa.service.util.MaintenanceService;
-import java.io.IOException;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Propagation;
@@ -33,11 +28,18 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.CollectionUtils;
 
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Service
 @Transactional
-@Slf4j
 @Profile("!test")
 public class MaintenanceServiceImpl implements MaintenanceService {
+
+    private static final Logger log = LoggerFactory.getLogger(MaintenanceServiceImpl.class);
 
     @Autowired
     private OpetussuunnitelmaRepository opetussuunnitelmaRepository;
@@ -73,11 +75,11 @@ public class MaintenanceServiceImpl implements MaintenanceService {
                 .map(Opetussuunnitelma::getId)
                 .collect(Collectors.toList());
 
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        log.info("Julkaistaan näin monta perustetta: ", ids.size());
 
         for (Long opsId : ids) {
             try {
-                teeJulkaisu(username, opsId);
+                teeJulkaisu(opsId);
             } catch (RuntimeException ex) {
                 log.error(ex.getLocalizedMessage(), ex);
             }
@@ -86,7 +88,7 @@ public class MaintenanceServiceImpl implements MaintenanceService {
         log.info("julkaisut tehty");
     }
 
-    private void teeJulkaisu(String username, Long opsId) {
+    private void teeJulkaisu(Long opsId) {
         TransactionTemplate template = new TransactionTemplate(ptm);
         template.execute(status -> {
             try {
