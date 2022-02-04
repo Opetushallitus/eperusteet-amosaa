@@ -5,6 +5,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.service.util.MaintenanceService;
+import fi.vm.sade.eperusteet.amosaa.service.util.impl.MaintenanceServiceImpl;
 import io.swagger.annotations.Api;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -12,6 +13,9 @@ import java.util.Date;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.zip.ZipOutputStream;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Profile;
@@ -35,6 +39,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @Api("Maintenance")
 public class MaintenanceController {
 
+    private static final Logger logger = LoggerFactory.getLogger(MaintenanceServiceImpl.class);
+
     @Autowired
     CacheManager cacheManager;
 
@@ -53,6 +59,7 @@ public class MaintenanceController {
             @RequestParam(value = "julkaisekaikki", defaultValue = "false") boolean julkaiseKaikki,
             @RequestParam(value = "koulutustyypit", required = false) final Set<String> koulutustyypit
     ) {
+        logger.error("tultiin maintenance endpointtiin");
         maintenanceService.teeJulkaisut(julkaiseKaikki,
                 koulutustyypit != null ? koulutustyypit.stream().map(KoulutusTyyppi::of).collect(Collectors.toSet()) : null);
     }
