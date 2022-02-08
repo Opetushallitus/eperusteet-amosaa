@@ -63,7 +63,6 @@ public class MaintenanceServiceImpl implements MaintenanceService {
     @Async
     @Transactional(propagation = Propagation.NEVER)
     public void teeJulkaisut(boolean julkaiseKaikki, Set<KoulutusTyyppi> koulutustyypit) {
-        logger.error("tultiin julkaisujenn alkuun");
         List<Opetussuunnitelma> opetussuunnitelmat;
         if (koulutustyypit != null) {
             opetussuunnitelmat = opetussuunnitelmaRepository.findJulkaistutByTyyppi(OpsTyyppi.OPS, koulutustyypit);
@@ -71,14 +70,12 @@ public class MaintenanceServiceImpl implements MaintenanceService {
             opetussuunnitelmat = opetussuunnitelmaRepository.findJulkaistutByTyyppi(OpsTyyppi.OPS);
         }
 
-        logger.error("listataan id:t");
-
         List<Long> ids = opetussuunnitelmat.stream()
                 .filter(peruste -> julkaiseKaikki || CollectionUtils.isEmpty(peruste.getJulkaisut()))
                 .map(Opetussuunnitelma::getId)
                 .collect(Collectors.toList());
 
-        logger.error("Julkaistaan näin monta perustetta: ", ids.size());
+        logger.info("Julkaistavien perusteiden lukumäärä: " + ids.size());
 
         for (Long opsId : ids) {
             try {
@@ -88,7 +85,7 @@ public class MaintenanceServiceImpl implements MaintenanceService {
             }
         }
 
-        logger.error("julkaisut tehty");
+        logger.info("julkaisut tehty");
     }
 
     private void teeJulkaisu(Long opsId) {
