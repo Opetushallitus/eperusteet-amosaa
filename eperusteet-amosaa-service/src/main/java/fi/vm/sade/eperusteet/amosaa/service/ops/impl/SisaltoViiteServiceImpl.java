@@ -939,19 +939,22 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
         }
 
         PerusteKaikkiDto peruste = eperusteetService.getPerusteSisalto(cperuste, PerusteKaikkiDto.class);
+
+        if (peruste.getSuoritustavat() == null) {
+            return Collections.emptyList();
+        }
+
         List<SuorituspolkuRakenneDto> result = new ArrayList<>();
-        if (peruste.getSuoritustavat() != null) {
-            SuoritustapaLaajaDto suoritustapa = peruste.getSuoritustavat().stream()
-                    .filter(st -> st.getSuoritustapakoodi().equals(Suoritustapakoodi.of(ops.getSuoritustapa())))
-                    .findFirst()
-                    .get();
-            List<SisaltoViiteDto> polut = getSuorituspolut(ktId, opsId, SisaltoViiteDto.class);
-            for (SisaltoViiteDto viite : polut) {
-                SuorituspolkuDto polku = viite.getSuorituspolku();
-                Map<UUID, SuorituspolkuRiviDto> polkuMap = polku.getRivit().stream()
-                        .collect(Collectors.toMap(SuorituspolkuRiviDto::getRakennemoduuli, Function.identity()));
-                result.add(luoSuorituspolkuRakenne(suoritustapa.getRakenne(), polkuMap));
-            }
+        SuoritustapaLaajaDto suoritustapa = peruste.getSuoritustavat().stream()
+                .filter(st -> st.getSuoritustapakoodi().equals(Suoritustapakoodi.of(ops.getSuoritustapa())))
+                .findFirst()
+                .get();
+        List<SisaltoViiteDto> polut = getSuorituspolut(ktId, opsId, SisaltoViiteDto.class);
+        for (SisaltoViiteDto viite : polut) {
+            SuorituspolkuDto polku = viite.getSuorituspolku();
+            Map<UUID, SuorituspolkuRiviDto> polkuMap = polku.getRivit().stream()
+                    .collect(Collectors.toMap(SuorituspolkuRiviDto::getRakennemoduuli, Function.identity()));
+            result.add(luoSuorituspolkuRakenne(suoritustapa.getRakenne(), polkuMap));
         }
 
         return result;
