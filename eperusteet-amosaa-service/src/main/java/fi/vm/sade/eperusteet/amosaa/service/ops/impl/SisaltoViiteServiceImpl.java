@@ -954,7 +954,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
         return Collections.emptyList();
     }
 
-    private SuorituspolkuRakenneDto luoSuorituspolkuRakenne(RakenneModuuliDto rakenne, Map<UUID, SuorituspolkuRiviDto> polkuMap) {
+    public SuorituspolkuRakenneDto luoSuorituspolkuRakenne(RakenneModuuliDto rakenne, Map<UUID, SuorituspolkuRiviDto> polkuMap) {
         SuorituspolkuRakenneDto result = new SuorituspolkuRakenneDto();
         mapper.map(rakenne, result);
         result.setPaikallinenKuvaus(polkuMap.get(rakenne.getTunniste()));
