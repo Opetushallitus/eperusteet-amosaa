@@ -945,10 +945,10 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
         }
 
         List<SuorituspolkuRakenneDto> result = new ArrayList<>();
-        RakenneModuuliDto suoritustavanRakenne = peruste.getSuoritustavat().stream()
+        RakenneModuuliDto perusteenRakenne = peruste.getSuoritustavat().stream()
                 .filter(st -> st.getSuoritustapakoodi().equals(Suoritustapakoodi.of(ops.getSuoritustapa())))
                 .findFirst()
-                .get()
+                .orElseThrow(() -> new BusinessRuleViolationException("Perusteelta ei löydy opetussuunnitelmaa vastaavaa suoritustapaa"))
                 .getRakenne();
 
         List<SisaltoViiteDto> polut = getSuorituspolut(ktId, opsId, SisaltoViiteDto.class);
@@ -956,7 +956,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
             SuorituspolkuDto polku = viite.getSuorituspolku();
             Map<UUID, SuorituspolkuRiviDto> polkuMap = polku.getRivit().stream()
                     .collect(Collectors.toMap(SuorituspolkuRiviDto::getRakennemoduuli, Function.identity()));
-            result.add(luoSuorituspolkuRakenne(suoritustavanRakenne, polkuMap));
+            result.add(luoSuorituspolkuRakenne(perusteenRakenne, polkuMap));
         }
 
         return result;
