@@ -578,9 +578,9 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
         addModuleToRoot(suorituspolkuB,  perusteenRakenneRoot);
         addModuleToRoot(suorituspolkuC,  perusteenRakenneRoot);
 
-        Map<UUID, SuorituspolkuRiviDto> paikallisestiPoistettavatSuorituspolut = createPaikallisestiPoistettavat(suorituspolkuB);
+        SisaltoViiteDto paikallisestiPoistettavatSuorituspolut = createPaikallisestiPoistettavaUUSI(suorituspolkuB);
 
-        SuorituspolkuRakenneDto result = sisaltoViiteService.luoSuorituspolkuRakenne(perusteenRakenneRoot, paikallisestiPoistettavatSuorituspolut);
+        SuorituspolkuRakenneDto result = sisaltoViiteService.luoSuorituspolkuRakenneUUSI(perusteenRakenneRoot, paikallisestiPoistettavatSuorituspolut);
 
         assertThat(result.getOsat()).extracting(AbstractRakenneOsaDto::getTunniste)
                 .containsExactly(suorituspolkuA, suorituspolkuC);
