@@ -580,7 +580,7 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
 
         SisaltoViiteDto paikallisestiPoistettavatSuorituspolut = createPaikallisestiPoistettavaUUSI(suorituspolkuB);
 
-        SuorituspolkuRakenneDto result = sisaltoViiteService.luoSuorituspolkuRakenneUUSI(perusteenRakenneRoot, paikallisestiPoistettavatSuorituspolut);
+        SuorituspolkuRakenneDto result = sisaltoViiteService.luoSuorituspolkuRakenne(perusteenRakenneRoot, paikallisestiPoistettavatSuorituspolut);
 
         assertThat(result.getOsat()).extracting(AbstractRakenneOsaDto::getTunniste)
                 .containsExactly(suorituspolkuA, suorituspolkuC);

@@ -118,7 +118,7 @@ public interface SisaltoViiteService extends LockService<SisaltoViiteCtx> {
     List<SuorituspolkuRakenneDto> getSuorituspolkurakenne(@P("ktId") Long ktId, @P("opsId") Long opsId);
 
     @PreAuthorize("permitAll()")
-    SuorituspolkuRakenneDto luoSuorituspolkuRakenneUUSI(RakenneModuuliDto rakenne, SisaltoViiteDto suorituspolunViite);
+    SuorituspolkuRakenneDto luoSuorituspolkuRakenne(RakenneModuuliDto rakenne, SisaltoViiteDto suorituspolunViite);
 
     @PreAuthorize("isAuthenticated()")
     void updateOpetussuunnitelmaPiilotetutSisaltoviitteet(SisaltoViiteDto sisaltoviite, Opetussuunnitelma opetussuunnitelma);
