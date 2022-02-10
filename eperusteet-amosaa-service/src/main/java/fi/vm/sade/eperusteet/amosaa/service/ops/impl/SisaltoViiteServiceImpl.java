@@ -956,7 +956,9 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
             SuorituspolkuDto opsinSuoritusPolku = viite.getSuorituspolku();
             Map<UUID, SuorituspolkuRiviDto> polkuMap = opsinSuoritusPolku.getRivit().stream()
                     .collect(Collectors.toMap(SuorituspolkuRiviDto::getRakennemoduuli, Function.identity()));
-            result.add(luoSuorituspolkuRakenne(perusteenRakenne, polkuMap));
+            SuorituspolkuRakenneDto suorituspolkuRakenne = luoSuorituspolkuRakenne(perusteenRakenne, polkuMap);
+            suorituspolkuRakenne.setSisaltoviiteId(viite.getId());
+            result.add(suorituspolkuRakenne);
         }
 
         return result;

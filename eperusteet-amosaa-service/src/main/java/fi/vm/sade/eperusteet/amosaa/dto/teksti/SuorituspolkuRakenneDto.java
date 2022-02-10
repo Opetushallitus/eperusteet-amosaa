@@ -13,5 +13,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class SuorituspolkuRakenneDto extends RakenneModuuliDto {
     private SuorituspolkuRiviJulkinenDto paikallinenKuvaus;
-
+    private Long sisaltoviiteId;
 }
