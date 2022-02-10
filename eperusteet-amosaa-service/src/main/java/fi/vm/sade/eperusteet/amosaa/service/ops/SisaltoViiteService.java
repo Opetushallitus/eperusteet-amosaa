@@ -120,9 +120,6 @@ public interface SisaltoViiteService extends LockService<SisaltoViiteCtx> {
     @PreAuthorize("permitAll()")
     SuorituspolkuRakenneDto luoSuorituspolkuRakenneUUSI(RakenneModuuliDto rakenne, SisaltoViiteDto suorituspolunViite);
 
-    @PreAuthorize("permitAll()")
-    SuorituspolkuRakenneDto luoSuorituspolkuRakenne(RakenneModuuliDto rakenne, Map<UUID, SuorituspolkuRiviDto> polkuMap);
-
     @PreAuthorize("isAuthenticated()")
     void updateOpetussuunnitelmaPiilotetutSisaltoviitteet(SisaltoViiteDto sisaltoviite, Opetussuunnitelma opetussuunnitelma);
 

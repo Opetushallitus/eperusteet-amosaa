@@ -592,16 +592,6 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
         moduuliDtoRoot.getOsat().add(moduuliDto);
     }
 
-    private Map<UUID, SuorituspolkuRiviDto> createPaikallisestiPoistettavat(UUID tunnisteB) {
-        SuorituspolkuRiviDto riviDto = new SuorituspolkuRiviDto();
-        riviDto.setRakennemoduuli(tunnisteB);
-        riviDto.setPiilotettu(true);
-
-        Map<UUID, SuorituspolkuRiviDto> paikallisestiPoistettavatSuorituspolut = new HashMap<>();
-        paikallisestiPoistettavatSuorituspolut.put(tunnisteB, riviDto);
-        return paikallisestiPoistettavatSuorituspolut;
-    }
-
     private SisaltoViiteDto createPaikallisestiPoistettavaUUSI(UUID suorituspolkuTunniste) {
         SuorituspolkuRiviDto rivi = new SuorituspolkuRiviDto();
         rivi.setRakennemoduuli(suorituspolkuTunniste);
