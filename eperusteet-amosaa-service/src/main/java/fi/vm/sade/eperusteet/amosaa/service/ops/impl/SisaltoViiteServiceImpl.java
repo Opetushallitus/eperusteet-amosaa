@@ -963,32 +963,11 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
         Map<UUID, SuorituspolkuRiviDto> polkuMap = opsinSuoritusPolku.getRivit().stream()
                 .collect(Collectors.toMap(SuorituspolkuRiviDto::getRakennemoduuli, Function.identity()));
 
-        SuorituspolkuRakenneDto result = new SuorituspolkuRakenneDto();
-        mapper.map(rakenne, result);
-        result.setPaikallinenKuvaus(polkuMap.get(rakenne.getTunniste()));
-
-        result.setOsat(rakenne.getOsat().stream()
-                .filter(osa -> {
-                    SuorituspolkuRiviDto paikallinen = polkuMap.get(osa.getTunniste());
-                    return paikallinen == null || paikallinen.getPiilotettu() == null || !paikallinen.getPiilotettu();
-                })
-                .map(osa -> {
-                    if (osa instanceof RakenneModuuliDto) {
-                        return luoSuorituspolkuRakenne((RakenneModuuliDto) osa, polkuMap);
-                    }
-                    else {
-                        SuorituspolkuOsaDto polunRakenneOsa = mapper.map(osa, SuorituspolkuOsaDto.class);
-                        polunRakenneOsa.setPaikallinenKuvaus(polkuMap.get(osa.getTunniste()));
-                        return polunRakenneOsa;
-                    }
-                })
-                .collect(Collectors.toList()));
-
-        return result;
+        return luoSuorituspolkuRakenne(rakenne, polkuMap);
     }
 
 
-    public SuorituspolkuRakenneDto luoSuorituspolkuRakenne(RakenneModuuliDto rakenne, Map<UUID, SuorituspolkuRiviDto> polkuMap) {
+    private SuorituspolkuRakenneDto luoSuorituspolkuRakenne(RakenneModuuliDto rakenne, Map<UUID, SuorituspolkuRiviDto> polkuMap) {
         SuorituspolkuRakenneDto result = new SuorituspolkuRakenneDto();
         mapper.map(rakenne, result);
         result.setPaikallinenKuvaus(polkuMap.get(rakenne.getTunniste()));
