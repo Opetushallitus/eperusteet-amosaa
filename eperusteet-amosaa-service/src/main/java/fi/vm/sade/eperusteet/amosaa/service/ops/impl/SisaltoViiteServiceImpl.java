@@ -949,13 +949,9 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
                 .getRakenne();
 
         List<SisaltoViiteDto> polut = getSuorituspolut(ktId, opsId, SisaltoViiteDto.class);
-        for (SisaltoViiteDto viite : polut) {
-            SuorituspolkuRakenneDto suorituspolkuRakenne = luoSuorituspolkuRakenne(perusteenRakenne, viite);
-            suorituspolkuRakenne.setSisaltoviiteId(viite.getId());
-            result.add(suorituspolkuRakenne);
-        }
-
-        return result;
+        return polut.stream()
+                .map(viite -> luoSuorituspolkuRakenne(perusteenRakenne, viite))
+                .collect(Collectors.toList());
     }
 
     public SuorituspolkuRakenneDto luoSuorituspolkuRakenne(RakenneModuuliDto rakenne, SisaltoViiteDto suorituspolunViite) {
@@ -963,9 +959,10 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
         Map<UUID, SuorituspolkuRiviDto> polkuMap = opsinSuoritusPolku.getRivit().stream()
                 .collect(Collectors.toMap(SuorituspolkuRiviDto::getRakennemoduuli, Function.identity()));
 
-        return luoSuorituspolkuRakenne(rakenne, polkuMap);
+        SuorituspolkuRakenneDto suorituspolkuRakenne = luoSuorituspolkuRakenne(rakenne, polkuMap);
+        suorituspolkuRakenne.setSisaltoviiteId(suorituspolunViite.getId());
+        return suorituspolkuRakenne;
     }
-
 
     private SuorituspolkuRakenneDto luoSuorituspolkuRakenne(RakenneModuuliDto rakenne, Map<UUID, SuorituspolkuRiviDto> polkuMap) {
         SuorituspolkuRakenneDto result = new SuorituspolkuRakenneDto();
