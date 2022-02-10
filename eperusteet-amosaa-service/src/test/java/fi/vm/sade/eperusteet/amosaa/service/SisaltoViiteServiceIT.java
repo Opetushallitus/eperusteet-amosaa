@@ -17,8 +17,6 @@ import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.*;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
-import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
-import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.ops.LiiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.ValidointiService;
@@ -48,16 +46,10 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
     private SisaltoViiteService sisaltoViiteService;
 
     @Autowired
-    private OpetussuunnitelmaService opetussuunnitelmaService;
-
-    @Autowired
     private SisaltoViiteService service;
 
     @Autowired
     private ValidointiService validointiService;
-
-    @Autowired
-    private DtoMapper mapper;
 
     @Autowired
     private EntityManager em;
@@ -608,5 +600,19 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
         Map<UUID, SuorituspolkuRiviDto> paikallisestiPoistettavatSuorituspolut = new HashMap<>();
         paikallisestiPoistettavatSuorituspolut.put(tunnisteB, riviDto);
         return paikallisestiPoistettavatSuorituspolut;
+    }
+
+    private SisaltoViiteDto createPaikallisestiPoistettavaUUSI(UUID suorituspolkuTunniste) {
+        SuorituspolkuRiviDto rivi = new SuorituspolkuRiviDto();
+        rivi.setRakennemoduuli(suorituspolkuTunniste);
+        rivi.setPiilotettu(true);
+
+        SuorituspolkuDto suorituspolku = new SuorituspolkuDto();
+        suorituspolku.setRivit(Collections.singleton(rivi));
+
+        SisaltoViiteDto viite = new SisaltoViiteDto();
+        viite.setSuorituspolku(suorituspolku);
+
+        return viite;
     }
 }
