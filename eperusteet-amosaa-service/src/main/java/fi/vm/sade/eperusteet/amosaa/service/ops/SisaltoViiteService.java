@@ -118,6 +118,9 @@ public interface SisaltoViiteService extends LockService<SisaltoViiteCtx> {
     List<SuorituspolkuRakenneDto> getSuorituspolkurakenne(@P("ktId") Long ktId, @P("opsId") Long opsId);
 
     @PreAuthorize("permitAll()")
+    SuorituspolkuRakenneDto luoSuorituspolkuRakenneTODO(RakenneModuuliDto rakenne, Map<UUID, SuorituspolkuRiviDto> polkuMap);
+
+    @PreAuthorize("permitAll()")
     SuorituspolkuRakenneDto luoSuorituspolkuRakenne(RakenneModuuliDto rakenne, Map<UUID, SuorituspolkuRiviDto> polkuMap);
 
     @PreAuthorize("isAuthenticated()")
