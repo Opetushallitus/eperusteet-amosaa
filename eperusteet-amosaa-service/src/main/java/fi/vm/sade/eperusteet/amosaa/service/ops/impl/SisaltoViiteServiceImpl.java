@@ -950,10 +950,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
 
         List<SisaltoViiteDto> polut = getSuorituspolut(ktId, opsId, SisaltoViiteDto.class);
         for (SisaltoViiteDto viite : polut) {
-            SuorituspolkuDto opsinSuoritusPolku = viite.getSuorituspolku();
-            Map<UUID, SuorituspolkuRiviDto> polkuMap = opsinSuoritusPolku.getRivit().stream()
-                    .collect(Collectors.toMap(SuorituspolkuRiviDto::getRakennemoduuli, Function.identity()));
-            SuorituspolkuRakenneDto suorituspolkuRakenne = luoSuorituspolkuRakenne(perusteenRakenne, polkuMap);
+            SuorituspolkuRakenneDto suorituspolkuRakenne = luoSuorituspolkuRakenneUUSI(perusteenRakenne, viite);
             suorituspolkuRakenne.setSisaltoviiteId(viite.getId());
             result.add(suorituspolkuRakenne);
         }
