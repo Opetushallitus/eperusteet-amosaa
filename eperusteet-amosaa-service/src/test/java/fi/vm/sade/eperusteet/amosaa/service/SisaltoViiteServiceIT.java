@@ -567,10 +567,12 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
      */
     @Test
     @Rollback
-    public void testSuorituspolunFiltterointi() {
+    public void testSuorituspolunFiltterointi_EP2977() {
         UUID suorituspolkuA = UUID.randomUUID();
         UUID suorituspolkuB = UUID.randomUUID();
         UUID suorituspolkuC = UUID.randomUUID();
+
+        long suorituspolunSisaltoviiteId = 123L;
 
         RakenneModuuliDto perusteenRakenneRoot = new RakenneModuuliDto();
 
@@ -578,12 +580,16 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
         addModuleToRoot(suorituspolkuB,  perusteenRakenneRoot);
         addModuleToRoot(suorituspolkuC,  perusteenRakenneRoot);
 
-        SisaltoViiteDto paikallisestiPoistettavatSuorituspolut = createPaikallisestiPoistettavaUUSI(suorituspolkuB);
+        SisaltoViiteDto paikallisestiPoistettavaSisaltoviite = createPaikallisestiPoistettavaSisaltoviite(suorituspolkuB, suorituspolunSisaltoviiteId);
 
-        SuorituspolkuRakenneDto result = sisaltoViiteService.luoSuorituspolkuRakenne(perusteenRakenneRoot, paikallisestiPoistettavatSuorituspolut);
+        SuorituspolkuRakenneDto result = sisaltoViiteService.luoSuorituspolkuRakenne(perusteenRakenneRoot, paikallisestiPoistettavaSisaltoviite);
 
         assertThat(result.getOsat()).extracting(AbstractRakenneOsaDto::getTunniste)
                 .containsExactly(suorituspolkuA, suorituspolkuC);
+
+        assertThat(result.getSisaltoviiteId())
+                .withFailMessage("Pitäisi olla sisältöviiteId jotta sen avulla julkaisudatasta löydetään oikean suorituspolun tiedot")
+                .isEqualTo(suorituspolunSisaltoviiteId);
     }
 
     private void addModuleToRoot(UUID tunniste, RakenneModuuliDto moduuliDtoRoot) {
@@ -592,7 +598,7 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
         moduuliDtoRoot.getOsat().add(moduuliDto);
     }
 
-    private SisaltoViiteDto createPaikallisestiPoistettavaUUSI(UUID suorituspolkuTunniste) {
+    private SisaltoViiteDto createPaikallisestiPoistettavaSisaltoviite(UUID suorituspolkuTunniste, long poistettavaSisaltoviiteId) {
         SuorituspolkuRiviDto rivi = new SuorituspolkuRiviDto();
         rivi.setRakennemoduuli(suorituspolkuTunniste);
         rivi.setPiilotettu(true);
@@ -601,6 +607,7 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
         suorituspolku.setRivit(Collections.singleton(rivi));
 
         SisaltoViiteDto viite = new SisaltoViiteDto();
+        viite.setId(poistettavaSisaltoviiteId);
         viite.setSuorituspolku(suorituspolku);
 
         return viite;

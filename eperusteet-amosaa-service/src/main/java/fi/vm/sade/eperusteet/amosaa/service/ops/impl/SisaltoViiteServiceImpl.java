@@ -941,7 +941,6 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
             return Collections.emptyList();
         }
 
-        List<SuorituspolkuRakenneDto> result = new ArrayList<>();
         RakenneModuuliDto perusteenRakenne = peruste.getSuoritustavat().stream()
                 .filter(st -> st.getSuoritustapakoodi().equals(Suoritustapakoodi.of(ops.getSuoritustapa())))
                 .findFirst()
