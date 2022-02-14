@@ -5865,7 +5865,7 @@
         },
         "type" : {
           "type" : "string",
-          "enum" : [ "root", "tiedot", "viite", "liitteet", "liite", "peruste", "opetussuunnitelma", "tekstikappale", "tutkinnonosat", "tutkinnonosa", "tosaryhma", "suorituspolut", "suorituspolku", "osasuorituspolku", "opintokokonaisuus", "koulutuksenosa", "koulutuksenosat", "laajaalainenosaaminen" ]
+          "enum" : [ "root", "tiedot", "viite", "liitteet", "liite", "peruste", "opetussuunnitelma", "tekstikappale", "tutkinnonosat", "valmatelmaKoulutuksenosat", "tutkinnonosa", "tosaryhma", "suorituspolut", "suorituspolku", "osasuorituspolku", "opintokokonaisuus", "koulutuksenosa", "koulutuksenosat", "laajaalainenosaaminen" ]
         },
         "meta" : {
           "type" : "object",
@@ -6387,10 +6387,6 @@
         "oppilaitosTyyppiKoodi" : {
           "$ref" : "#/definitions/KoodistoKoodiDto"
         },
-        "koulutustyyppi" : {
-          "type" : "string",
-          "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO", "VAPAASIVISTYSTYO_VANHA", "VAPAASIVISTYSTYOLUKUTAITO", "TUTKINTOONVALMENTAVA" ]
-        },
         "sisalto" : {
           "$ref" : "#/definitions/SisaltoViiteExportDto"
         },
@@ -6561,7 +6557,7 @@
         },
         "kohde" : {
           "type" : "string",
-          "enum" : [ "root", "tiedot", "viite", "liitteet", "liite", "peruste", "opetussuunnitelma", "tekstikappale", "tutkinnonosat", "tutkinnonosa", "tosaryhma", "suorituspolut", "suorituspolku", "osasuorituspolku", "opintokokonaisuus", "koulutuksenosa", "koulutuksenosat", "laajaalainenosaaminen" ]
+          "enum" : [ "root", "tiedot", "viite", "liitteet", "liite", "peruste", "opetussuunnitelma", "tekstikappale", "tutkinnonosat", "valmatelmaKoulutuksenosat", "tutkinnonosa", "tosaryhma", "suorituspolut", "suorituspolku", "osasuorituspolku", "opintokokonaisuus", "koulutuksenosa", "koulutuksenosat", "laajaalainenosaaminen" ]
         },
         "luotu" : {
           "type" : "string",
@@ -6617,15 +6613,15 @@
           "type" : "string",
           "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO", "VAPAASIVISTYSTYO_VANHA", "VAPAASIVISTYSTYOLUKUTAITO", "TUTKINTOONVALMENTAVA" ]
         },
+        "perusteId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
         "perusteNimi" : {
           "type" : "object",
           "additionalProperties" : {
             "type" : "string"
           }
-        },
-        "perusteId" : {
-          "type" : "integer",
-          "format" : "int64"
         }
       }
     },
@@ -6847,6 +6843,19 @@
           "type" : "integer",
           "format" : "int64"
         },
+        "last" : {
+          "type" : "boolean"
+        },
+        "first" : {
+          "type" : "boolean"
+        },
+        "sort" : {
+          "$ref" : "#/definitions/Sort"
+        },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "size" : {
           "type" : "integer",
           "format" : "int32"
@@ -6860,19 +6869,6 @@
         "number" : {
           "type" : "integer",
           "format" : "int32"
-        },
-        "first" : {
-          "type" : "boolean"
-        },
-        "sort" : {
-          "$ref" : "#/definitions/Sort"
-        },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-        "last" : {
-          "type" : "boolean"
         }
       }
     },
@@ -6887,6 +6883,19 @@
           "type" : "integer",
           "format" : "int64"
         },
+        "last" : {
+          "type" : "boolean"
+        },
+        "first" : {
+          "type" : "boolean"
+        },
+        "sort" : {
+          "$ref" : "#/definitions/Sort"
+        },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "size" : {
           "type" : "integer",
           "format" : "int32"
@@ -6900,19 +6909,6 @@
         "number" : {
           "type" : "integer",
           "format" : "int32"
-        },
-        "first" : {
-          "type" : "boolean"
-        },
-        "sort" : {
-          "$ref" : "#/definitions/Sort"
-        },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-        "last" : {
-          "type" : "boolean"
         }
       }
     },
@@ -6927,6 +6923,19 @@
           "type" : "integer",
           "format" : "int64"
         },
+        "last" : {
+          "type" : "boolean"
+        },
+        "first" : {
+          "type" : "boolean"
+        },
+        "sort" : {
+          "$ref" : "#/definitions/Sort"
+        },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "size" : {
           "type" : "integer",
           "format" : "int32"
@@ -6940,19 +6949,6 @@
         "number" : {
           "type" : "integer",
           "format" : "int32"
-        },
-        "first" : {
-          "type" : "boolean"
-        },
-        "sort" : {
-          "$ref" : "#/definitions/Sort"
-        },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-        "last" : {
-          "type" : "boolean"
         }
       }
     },
@@ -6967,6 +6963,19 @@
           "type" : "integer",
           "format" : "int64"
         },
+        "last" : {
+          "type" : "boolean"
+        },
+        "first" : {
+          "type" : "boolean"
+        },
+        "sort" : {
+          "$ref" : "#/definitions/Sort"
+        },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "size" : {
           "type" : "integer",
           "format" : "int32"
@@ -6980,19 +6989,6 @@
         "number" : {
           "type" : "integer",
           "format" : "int32"
-        },
-        "first" : {
-          "type" : "boolean"
-        },
-        "sort" : {
-          "$ref" : "#/definitions/Sort"
-        },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-        "last" : {
-          "type" : "boolean"
         }
       }
     },
@@ -7007,6 +7003,19 @@
           "type" : "integer",
           "format" : "int64"
         },
+        "last" : {
+          "type" : "boolean"
+        },
+        "first" : {
+          "type" : "boolean"
+        },
+        "sort" : {
+          "$ref" : "#/definitions/Sort"
+        },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "size" : {
           "type" : "integer",
           "format" : "int32"
@@ -7020,19 +7029,6 @@
         "number" : {
           "type" : "integer",
           "format" : "int32"
-        },
-        "first" : {
-          "type" : "boolean"
-        },
-        "sort" : {
-          "$ref" : "#/definitions/Sort"
-        },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-        "last" : {
-          "type" : "boolean"
         }
       }
     },
@@ -7812,6 +7808,10 @@
         },
         "paikallinenKuvaus" : {
           "$ref" : "#/definitions/SuorituspolkuRiviJulkinenDto"
+        },
+        "sisaltoviiteId" : {
+          "type" : "integer",
+          "format" : "int64"
         }
       }
     },
