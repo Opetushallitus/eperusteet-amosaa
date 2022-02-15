@@ -1,18 +1,21 @@
 package fi.vm.sade.eperusteet.amosaa.service;
 
 import com.google.common.collect.Sets;
+import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.KayttajaoikeusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.OpsHakuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaKtoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.*;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteKevytDto;
 import fi.vm.sade.eperusteet.amosaa.repository.peruste.CachedPerusteRepository;
@@ -23,6 +26,7 @@ import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaSer
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator;
+import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
 
 import org.assertj.core.api.Assertions;
@@ -635,6 +639,32 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
         pquery.setNimi("cnc-tekniikka");
         assertThat(opetussuunnitelmaService.findOpetussuunnitelmat(p, pquery).getTotalElements()).isEqualTo(1);
 
+    }
+
+    @Test
+    @Rollback
+    public void testTuvaValidointi() {
+        useProfileOPH();
+
+        OpetussuunnitelmaBaseDto ops = createOpetussuunnitelmaJulkaistu(opsLuonti -> {
+            opsLuonti.setKoulutustyyppi(KoulutusTyyppi.TUTKINTOONVALMENTAVA);
+            opsLuonti.setJulkaisukielet(Collections.singleton(Kieli.FI));
+        });
+
+        SisaltoViiteDto.Matala root = sisaltoViiteService.getSisaltoRoot(getKoulutustoimijaId(), ops.getId());
+        SisaltoViiteDto.Matala sisalto = createSisalto();
+        sisalto = sisaltoViiteService.addSisaltoViite(ops.getKoulutustoimija().getId(), ops.getId(), root.getId(), sisalto);
+        Validointi validointi = opetussuunnitelmaService.validoi(ops.getKoulutustoimija().getId(), ops.getId());
+        assertThat(validointi.getVirheet())
+                .extracting(Validointi.Virhe::getSyy)
+                .contains("kielisisaltoa-ei-loytynyt-opsin-kielilla");
+
+        sisalto.getTekstiKappale().setTeksti(LokalisoituTekstiDto.of(Kieli.FI, "teksti"));
+        sisaltoViiteService.updateSisaltoViite(ops.getKoulutustoimija().getId(), ops.getId(), sisalto.getId(), sisalto);
+        validointi = opetussuunnitelmaService.validoi(ops.getKoulutustoimija().getId(), ops.getId());
+        assertThat(validointi.getVirheet())
+                .extracting(Validointi.Virhe::getSyy)
+                .doesNotContain("kielisisaltoa-ei-loytynyt-opsin-kielilla");
     }
 
 }

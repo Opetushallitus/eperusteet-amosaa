@@ -140,6 +140,8 @@
                                    authorities="ROLE_USER, ROLE_APP_EPERUSTEET_AMOSAA, ROLE_APP_EPERUSTEET_AMOSAA_ADMIN_1.2.246.562.10.2013120513110198396408"/>
                     <security:user name="tmpr" password="{noop}test"
                                    authorities="ROLE_USER, ROLE_APP_EPERUSTEET_AMOSAA, ROLE_APP_EPERUSTEET_AMOSAA_ADMIN_1.2.246.562.10.79499343246"/>
+                    <security:user name="tuva" password="{noop}tuva"
+                                   authorities="ROLE_USER, ROLE_APP_EPERUSTEET_AMOSAA, ROLE_APP_EPERUSTEET_AMOSAA_ADMIN_1.2.246.562.10.2013120512391252668625, ROLE_APP_EPERUSTEET_AMOSAA_ADMIN_1.2.246.562.10.00000000001"/>
                     <security:user name="test3" password="{noop}test" authorities="ROLE_USER"/>
                     <security:user name="test4" password="{noop}test" authorities="ROLE_USER"/>
                     <security:user name="test5" password="{noop}test" authorities="ROLE_USER"/>
