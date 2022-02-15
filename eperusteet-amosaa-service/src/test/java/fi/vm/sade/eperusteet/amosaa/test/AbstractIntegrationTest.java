@@ -243,6 +243,10 @@ public abstract class AbstractIntegrationTest {
         updateProfile("tmpr");
     }
 
+    protected void useProfileTuva() {
+        updateProfile("tuva");
+    }
+
     protected void regAllProfiles() {
         useProfileOPH();
         useProfileKP1();

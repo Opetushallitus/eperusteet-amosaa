@@ -51,14 +51,20 @@ public class TuvaOpetussuunnitelmaValidationService implements Opetussuunnitelma
 
         LokalisoituTeksti nimi = viite.getTekstiKappale() != null ? viite.getTekstiKappale().getNimi() : null;
 
+        // Validointi jos osa on pakollinen tai kyseessä itse määritetty sisältö millä ei ole alisisältöä
+        if ((viite.getPerusteteksti() == null && viite.getPohjanTekstikappale() == null)) {
+            if (viite.getLapset().isEmpty()) {
+                LokalisoituTeksti.validoi(validointi, ops, viite.getTekstiKappale().getTeksti(), viite.getTekstiKappale().getNimi());
+            }
+        }
+
+        if (viite.isPakollinen()) {
+            validointi.varoitus("tekstikappaleella-ei-lainkaan-sisaltoa", nimi);
+        }
+
         for (SisaltoViite lapsi : viite.getLapset()) {
             if (lapsi == null || !lapsi.getTyyppi().equals(SisaltoTyyppi.TEKSTIKAPPALE)) {
                 continue;
-            }
-            if (lapsi.getTekstiKappale() != null) {
-                LokalisoituTeksti.validoi(validointi, ops, lapsi.getTekstiKappale().getTeksti(), lapsi.getTekstiKappale().getNimi());
-            } else {
-                validointi.varoitus("tekstikappaleella-ei-lainkaan-sisaltoa", nimi);
             }
 
             validoi(validointi, lapsi, ops);
