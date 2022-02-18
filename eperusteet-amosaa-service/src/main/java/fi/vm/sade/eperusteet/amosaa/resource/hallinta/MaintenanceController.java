@@ -48,7 +48,6 @@ public class MaintenanceController {
             @RequestParam(value = "julkaisekaikki", defaultValue = "false") boolean julkaiseKaikki,
             @RequestParam(value = "koulutustyypit", required = false) final Set<String> koulutustyypit
     ) {
-        logger.error("kutsuttu teeJulkaisut endpointtia, error");
         logger.info("kutsuttu teeJulkaisut endpointtia, info");
         maintenanceService.teeJulkaisut(julkaiseKaikki,
                 koulutustyypit != null ? koulutustyypit.stream().map(KoulutusTyyppi::of).collect(Collectors.toSet()) : null);
