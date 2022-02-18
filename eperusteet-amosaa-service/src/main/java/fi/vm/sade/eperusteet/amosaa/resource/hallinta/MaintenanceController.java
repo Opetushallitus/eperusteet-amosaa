@@ -4,6 +4,8 @@ import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.service.util.MaintenanceService;
 import io.swagger.annotations.Api;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Profile;
@@ -32,6 +34,8 @@ public class MaintenanceController {
     @Autowired
     private MaintenanceService maintenanceService;
 
+    private static final Logger logger = LoggerFactory.getLogger(MaintenanceController.class);
+
     @RequestMapping(value = "/cacheclear/{cache}", method = GET)
     public ResponseEntity clearCache(@PathVariable final String cache) {
         cacheManager.getCache(cache).clear();
@@ -44,6 +48,8 @@ public class MaintenanceController {
             @RequestParam(value = "julkaisekaikki", defaultValue = "false") boolean julkaiseKaikki,
             @RequestParam(value = "koulutustyypit", required = false) final Set<String> koulutustyypit
     ) {
+        logger.error("kutsuttu teeJulkaisut endpointtia, error");
+        logger.info("kutsuttu teeJulkaisut endpointtia, info");
         maintenanceService.teeJulkaisut(julkaiseKaikki,
                 koulutustyypit != null ? koulutustyypit.stream().map(KoulutusTyyppi::of).collect(Collectors.toSet()) : null);
     }
