@@ -813,6 +813,7 @@
                                         <location>${eperusteet.amosaa.resources}.util.ArviointiasteikkoController</location>
                                         <location>${eperusteet.amosaa.resources}.util.KayttajaController</location>
                                         <location>${eperusteet.amosaa.resources}.util.KoodistoController</location>
+                                        <location>${eperusteet.amosaa.resources}.hallinta.MaintenanceController</location>
                                     </locations>
                                     <modelSubstitute>/substitutes.map</modelSubstitute>
                                     <info>
