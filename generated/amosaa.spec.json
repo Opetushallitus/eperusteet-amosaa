@@ -2331,6 +2331,13 @@
           "type" : "integer",
           "format" : "int64"
         }, {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/JulkaisuBaseDto"
+          }
+        }, {
           "name" : "ktId",
           "in" : "path",
           "required" : true,
@@ -6881,18 +6888,18 @@
           "type" : "integer",
           "format" : "int32"
         },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "first" : {
+          "type" : "boolean"
+        },
         "last" : {
           "type" : "boolean"
         },
         "sort" : {
           "$ref" : "#/definitions/Sort"
-        },
-        "first" : {
-          "type" : "boolean"
-        },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
         },
         "size" : {
           "type" : "integer",
@@ -6921,18 +6928,18 @@
           "type" : "integer",
           "format" : "int32"
         },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "first" : {
+          "type" : "boolean"
+        },
         "last" : {
           "type" : "boolean"
         },
         "sort" : {
           "$ref" : "#/definitions/Sort"
-        },
-        "first" : {
-          "type" : "boolean"
-        },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
         },
         "size" : {
           "type" : "integer",
@@ -6961,18 +6968,18 @@
           "type" : "integer",
           "format" : "int32"
         },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "first" : {
+          "type" : "boolean"
+        },
         "last" : {
           "type" : "boolean"
         },
         "sort" : {
           "$ref" : "#/definitions/Sort"
-        },
-        "first" : {
-          "type" : "boolean"
-        },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
         },
         "size" : {
           "type" : "integer",
@@ -7001,18 +7008,18 @@
           "type" : "integer",
           "format" : "int32"
         },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "first" : {
+          "type" : "boolean"
+        },
         "last" : {
           "type" : "boolean"
         },
         "sort" : {
           "$ref" : "#/definitions/Sort"
-        },
-        "first" : {
-          "type" : "boolean"
-        },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
         },
         "size" : {
           "type" : "integer",
@@ -7041,18 +7048,18 @@
           "type" : "integer",
           "format" : "int32"
         },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "first" : {
+          "type" : "boolean"
+        },
         "last" : {
           "type" : "boolean"
         },
         "sort" : {
           "$ref" : "#/definitions/Sort"
-        },
-        "first" : {
-          "type" : "boolean"
-        },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
         },
         "size" : {
           "type" : "integer",
@@ -7557,14 +7564,6 @@
         "tyyppi" : {
           "type" : "string",
           "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU", "OPINTOKOKONAISUUS", "KOULUTUKSENOSA", "KOULUTUKSENOSAT", "LAAJAALAINENOSAAMINEN" ]
-        },
-        "luotu" : {
-          "type" : "string",
-          "format" : "date-time"
-        },
-        "muokattu" : {
-          "type" : "string",
-          "format" : "date-time"
         },
         "naytaPohjanTeksti" : {
           "type" : "boolean"
@@ -8283,6 +8282,9 @@
           "type" : "string",
           "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU", "OPINTOKOKONAISUUS", "KOULUTUKSENOSA", "KOULUTUKSENOSAT", "LAAJAALAINENOSAAMINEN" ]
         },
+        "tosa" : {
+          "$ref" : "#/definitions/TutkinnonosaDto"
+        },
         "luotu" : {
           "type" : "string",
           "format" : "date-time"
@@ -8290,9 +8292,6 @@
         "muokattu" : {
           "type" : "string",
           "format" : "date-time"
-        },
-        "tosa" : {
-          "$ref" : "#/definitions/TutkinnonosaDto"
         },
         "nimi" : {
           "type" : "object",
@@ -8305,6 +8304,10 @@
           "additionalProperties" : {
             "type" : "string"
           }
+        },
+        "tunniste" : {
+          "type" : "string",
+          "format" : "uuid"
         }
       }
     },
