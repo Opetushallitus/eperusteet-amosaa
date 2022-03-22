@@ -270,9 +270,13 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
         if (!self.isOph()) {
             result.putAll(getOrganisaatioVirkailijatAsKayttajat(Collections.singletonList(self.getOrganisaatio())).stream()
                     .collect(Collectors.toMap(KayttajaDto::getOid, kayttaja -> kayttaja, (kayttaja1, kayttaja2) -> kayttaja1)));
-            result.putAll(getOrganisaatioVirkailijatAsKayttajat(ystavaorganisaatiot.stream()
-                    .map(KoulutustoimijaYstavaDto::getOrganisaatio).collect(Collectors.toList())).stream()
-                    .collect(Collectors.toMap(KayttajaDto::getOid, kayttaja -> kayttaja, (kayttaja1, kayttaja2) -> kayttaja1)));
+            try {
+                result.putAll(getOrganisaatioVirkailijatAsKayttajat(ystavaorganisaatiot.stream()
+                        .map(KoulutustoimijaYstavaDto::getOrganisaatio).collect(Collectors.toList())).stream()
+                        .collect(Collectors.toMap(KayttajaDto::getOid, kayttaja -> kayttaja, (kayttaja1, kayttaja2) -> kayttaja1)));
+            }
+            catch (RuntimeException ignored) {
+            }
         }
 
         return new ArrayList<>(result.values());
