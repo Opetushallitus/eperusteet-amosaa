@@ -40,6 +40,17 @@ public class OpetussuunnitelmaJulkaistuQueryDto extends QueryDto {
     private String oppilaitosTyyppiKoodiUri = "";
     private List<String> koulutustyyppi;
 
+    public List<String> getKoulutustyyppi() {
+        if (koulutustyyppi != null) {
+            return koulutustyyppi;
+        }
+        else {
+            return Arrays.stream(KoulutusTyyppi.values())
+                    .map(KoulutusTyyppi::toString)
+                    .collect(Collectors.toList());
+        }
+    }
+
     private String nimi = "";
     private int sivukoko = 10;
 

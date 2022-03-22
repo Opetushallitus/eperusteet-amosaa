@@ -16,6 +16,9 @@
 package fi.vm.sade.eperusteet.amosaa.domain;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import jdk.nashorn.internal.runtime.arrays.ArrayLikeIterator;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
