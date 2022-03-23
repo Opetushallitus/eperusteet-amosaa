@@ -32,9 +32,9 @@ public interface JulkaisuRepository extends JpaRepository<Julkaisu, Long> {
             "   AND (:oppilaitosTyyppiKoodiUri = '' OR :oppilaitosTyyppiKoodiUri = data.\"oppilaitosTyyppiKoodiUri\")" +
             "   AND tyyppi IN (:tyyppi) " +
             "   AND (:organisaatio = '' OR koulutustoimija->>'organisaatio' = :organisaatio)" +
-            "   AND ((:perusteId = 0) " +
+            "   AND ((:perusteId = 0) OR (:perusteId IS NULL) " +
             "           OR (CAST(peruste->>'perusteId' AS numeric) = :perusteId))" +
-            "   AND ((:perusteenDiaarinumero = '') " +
+            "   AND ((:perusteenDiaarinumero IS NULL) OR (:perusteenDiaarinumero = '') " +
             "           OR (peruste->>'diaarinumero' = :perusteenDiaarinumero))" +
             "   order by nimi->>:kieli asc, ?#{#pageable} " +
             ") t";
