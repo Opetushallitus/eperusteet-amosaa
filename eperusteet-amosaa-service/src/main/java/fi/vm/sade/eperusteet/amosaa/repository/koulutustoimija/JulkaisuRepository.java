@@ -2,7 +2,7 @@ package fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija;
 
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Julkaisu;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
-import io.swagger.annotations.ApiImplicitParam;
+
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,15 +25,16 @@ public interface JulkaisuRepository extends JpaRepository<Julkaisu, Long> {
     String julkaisutQuery = "FROM ( " +
             "   SELECT * " +
             "   FROM julkaistu_opetussuunnitelma_Data_view data" +
-            "   WHERE 1 = 1 " +
-            "   AND (koulutustyyppi IN (:koulutustyypit) OR peruste->>'koulutustyyppi' IN (:koulutustyypit))" +
+            "   WHERE 1 = 1 "  +
+            "   AND ((koulutustyyppi IN (:koulutustyypit) OR peruste->>'koulutustyyppi' IN (:koulutustyypit))" +
+            "       OR (koulutustyyppi IN (:koulutustyypitEnums) OR peruste->>'koulutustyyppi' IN (:koulutustyypitEnums)))" +
             "   AND (:nimi LIKE '' OR LOWER(nimi->>:kieli) LIKE LOWER(CONCAT('%',:nimi,'%'))) " +
             "   AND (:organisaatioRyhma = false OR cast(koulutustoimija->>'organisaatioRyhma' as boolean) = true) " +
             "   AND (:oppilaitosTyyppiKoodiUri = '' OR :oppilaitosTyyppiKoodiUri = data.\"oppilaitosTyyppiKoodiUri\")" +
             "   AND tyyppi IN (:tyyppi) " +
             "   AND (:organisaatio = '' OR koulutustoimija->>'organisaatio' = :organisaatio)" +
             "   AND ((:perusteId = 0) OR (:perusteId IS NULL) " +
-            "           OR (CAST(peruste->>'perusteId' AS numeric) = :perusteId))" +
+            "           OR (cast(peruste->>'perusteId' as bigint) = :perusteId))" +
             "   AND ((:perusteenDiaarinumero IS NULL) OR (:perusteenDiaarinumero = '') " +
             "           OR (peruste->>'diaarinumero' = :perusteenDiaarinumero))" +
             "   order by nimi->>:kieli asc, ?#{#pageable} " +
@@ -45,6 +46,7 @@ public interface JulkaisuRepository extends JpaRepository<Julkaisu, Long> {
     )
     Page<String> findAllJulkisetJulkaisut(
             @Param("koulutustyypit") List<String> koulutustyypit,
+            @Param("koulutustyypitEnums") List<String> koulutustyypitEnums,
             @Param("nimi") String nimi,
             @Param("kieli") String kieli,
             @Param("oppilaitosTyyppiKoodiUri") String oppilaitosTyyppiKoodiUri,
@@ -53,6 +55,6 @@ public interface JulkaisuRepository extends JpaRepository<Julkaisu, Long> {
             @Param("organisaatio") String organisaatio,
             @Param("perusteId") Long perusteId,
             @Param("perusteenDiaarinumero") String perusteenDiaarinumero,
-            Pageable pageable);
-    
+            Pageable pageable
+    );
 }

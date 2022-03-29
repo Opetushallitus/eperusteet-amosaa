@@ -152,6 +152,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     static private final Logger LOG = LoggerFactory.getLogger(OpetussuunnitelmaServiceImpl.class);
 
+    private ObjectMapper jsonMapper = InitJacksonConverter.createMapper();
+
     @Autowired
     private DtoMapper mapper;
 
@@ -1023,17 +1025,20 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     @Override
     public Page<OpetussuunnitelmaDto> findOpetussuunnitelmatJulkaisut(OpetussuunnitelmaJulkaistuQueryDto pquery) {
         Pageable pageable = new PageRequest(pquery.getSivu(), pquery.getSivukoko());
-        return julkaisuRepository.findAllJulkisetJulkaisut(
-                pquery.getKoulutustyyppi(),
-                pquery.getNimi(),
-                pquery.getKieli(),
-                pquery.getOppilaitosTyyppiKoodiUri(),
-                pquery.isOrganisaatioRyhma(),
-                pquery.getTyyppi(),
-                pquery.getOrganisaatio(),
-                pquery.getPerusteId(),
-                pquery.getPerusteenDiaarinumero(),
-                pageable)
+        List<String> koulutustyypit = pquery.getKoulutustyyppi().stream().map(KoulutusTyyppi::toString).collect(Collectors.toList());
+        List<String> koulutustyypitEnums = pquery.getKoulutustyyppi().stream().map(KoulutusTyyppi::name).collect(Collectors.toList());
+        Page<OpetussuunnitelmaDto> result = julkaisuRepository.findAllJulkisetJulkaisut(
+                        koulutustyypit,
+                        koulutustyypitEnums,
+                        pquery.getNimi(),
+                        pquery.getKieli(),
+                        pquery.getOppilaitosTyyppiKoodiUri(),
+                        pquery.isOrganisaatioRyhma(),
+                        pquery.getTyyppi(),
+                        pquery.getOrganisaatio(),
+                        pquery.getPerusteId(),
+                        pquery.getPerusteenDiaarinumero(),
+                        pageable)
                 .map(obj -> {
                     try {
                         return objMapper.readValue(obj, OpetussuunnitelmaDto.class);
@@ -1042,6 +1047,8 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                         throw new RuntimeException(e);
                     }
                 });
+
+        return result;
     }
 
     @Override
