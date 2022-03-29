@@ -21,6 +21,7 @@ import jdk.nashorn.internal.runtime.arrays.ArrayLikeIterator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author nkala
@@ -48,13 +49,13 @@ public enum KoulutusTyyppi {
     }
 
     @JsonCreator
-    public static KoulutusTyyppi of(String tila) {
+    public static KoulutusTyyppi of(String koulutustyyppi) {
         for (KoulutusTyyppi s : values()) {
-            if (s.tyyppi.equalsIgnoreCase(tila)) {
+            if (s.tyyppi.equalsIgnoreCase(koulutustyyppi) || s.name().equals(koulutustyyppi)) {
                 return s;
             }
         }
-        throw new IllegalArgumentException(tila + " ei ole kelvollinen tila");
+        throw new IllegalArgumentException(koulutustyyppi + " ei ole kelvollinen koulutustyyppi");
     }
 
     public boolean isOneOf(KoulutusTyyppi... tyypit) {

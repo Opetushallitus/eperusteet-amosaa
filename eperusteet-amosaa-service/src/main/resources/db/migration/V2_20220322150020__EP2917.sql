@@ -5,7 +5,7 @@ drop function if exists tg_refresh_julkaistu_opetussuunnitelma_data_view;
 
 create materialized view julkaistu_opetussuunnitelma_data_view as
 SELECT
-     d.data->>'id' as id,
+     d.data->'id' as id,
      d.data->'nimi' as nimi,
      d.data->'koulutustoimija' as koulutustoimija,
      d.data->'peruste' as peruste,

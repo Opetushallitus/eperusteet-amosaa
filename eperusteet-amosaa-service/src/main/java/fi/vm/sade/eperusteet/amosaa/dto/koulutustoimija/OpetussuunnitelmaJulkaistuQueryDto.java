@@ -38,15 +38,15 @@ public class OpetussuunnitelmaJulkaistuQueryDto extends QueryDto {
     private List<String> tyyppi;
     private boolean organisaatioRyhma = false;
     private String oppilaitosTyyppiKoodiUri = "";
-    private List<String> koulutustyyppi;
+    private List<KoulutusTyyppi> koulutustyyppi;
 
-    public List<String> getKoulutustyyppi() {
+    public List<KoulutusTyyppi> getKoulutustyyppi() {
         if (koulutustyyppi != null) {
             return koulutustyyppi;
         }
         else {
             return Arrays.stream(KoulutusTyyppi.values())
-                    .map(KoulutusTyyppi::toString)
+//                    .map(KoulutusTyyppi::toString)
                     .collect(Collectors.toList());
         }
     }
