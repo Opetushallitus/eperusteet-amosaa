@@ -16,7 +16,6 @@ public class OpetussuunnitelmaKaikkiDto extends OpetussuunnitelmaDto {
     List<SuorituspolkuRakenneDto> suorituspolut;
     List<TutkinnonosaExportDto> tutkinnonOsat;
 
-    @JsonIgnore
     public KoulutusTyyppi getKoulutustyyppi() {
         if (super.getKoulutustyyppi() != null) {
             return super.getKoulutustyyppi();
