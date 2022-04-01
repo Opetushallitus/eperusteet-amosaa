@@ -180,6 +180,10 @@ public class DtoMapperConfig {
                         if (!ObjectUtils.isEmpty(source.getOppilaitosTyyppiKoodiUri())) {
                             target.setOppilaitosTyyppiKoodi(koodistoClient.getByUri(source.getOppilaitosTyyppiKoodiUri()));
                         }
+
+                        if (!OpsTyyppi.POHJA.equals(source.getTyyppi()) && !Tila.POISTETTU.equals(source.getTila()) && CollectionUtils.isNotEmpty(source.getJulkaisut())) {
+                            target.setTila(Tila.JULKAISTU);
+                        }
                         
                     }
                 })
