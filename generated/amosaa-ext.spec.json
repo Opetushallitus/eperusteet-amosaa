@@ -1,0 +1,1655 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "version" : "v1",
+    "title" : "ePerusteet amosaa api"
+  },
+  "basePath" : "/api",
+  "tags" : [ {
+    "name" : "Julkinen"
+  } ],
+  "schemes" : [ "http", "https" ],
+  "paths" : {
+    "/external/opetussuunnitelma/{koulutustoimijaId}/{opsId}" : {
+      "get" : {
+        "tags" : [ "Julkinen" ],
+        "operationId" : "getPublicOpetussuunnitelma",
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "name" : "opsId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "ktId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/OpetussuunnitelmaKaikkiDto"
+            }
+          }
+        }
+      }
+    },
+    "/external/opetussuunnitelmat" : {
+      "get" : {
+        "tags" : [ "Julkinen" ],
+        "operationId" : "getPublicOpetussuunnitelmat",
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "parameters" : [ {
+          "name" : "perusteenDiaarinumero",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "perusteId",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "organisaatio",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "tyyppi",
+          "in" : "query",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "sivu",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "sivukoko",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "nimi",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "kieli",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "organisaatioRyhma",
+          "in" : "query",
+          "required" : false,
+          "type" : "boolean"
+        }, {
+          "name" : "oppilaitosTyyppiKoodiUri",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "koulutustyyppi",
+          "in" : "query",
+          "required" : true,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/PageOpetussuunnitelmaDto"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "AbstractRakenneOsaDto" : {
+      "type" : "object",
+      "properties" : {
+        "kuvaus" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "vieras" : {
+          "$ref" : "#/definitions/KoodiDto"
+        },
+        "tunniste" : {
+          "type" : "string",
+          "format" : "uuid"
+        },
+        "pakollinen" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "AmmattitaitovaatimuksenKohdeDto" : {
+      "type" : "object",
+      "properties" : {
+        "otsikko" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "selite" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "vaatimukset" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/AmmattitaitovaatimusDto"
+          }
+        }
+      }
+    },
+    "AmmattitaitovaatimuksenKohdealueDto" : {
+      "type" : "object",
+      "properties" : {
+        "otsikko" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "vaatimuksenKohteet" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/AmmattitaitovaatimuksenKohdeDto"
+          }
+        }
+      }
+    },
+    "AmmattitaitovaatimusDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "selite" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "ammattitaitovaatimusKoodi" : {
+          "type" : "string"
+        },
+        "jarjestys" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    },
+    "ArvioinninKohdeDto" : {
+      "type" : "object",
+      "properties" : {
+        "otsikko" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "selite" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "osaamistasonKriteerit" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/OsaamistasonKriteeriDto"
+          }
+        },
+        "_arviointiasteikko" : {
+          "$ref" : "#/definitions/Reference"
+        }
+      }
+    },
+    "ArvioinninKohdealueDto" : {
+      "type" : "object",
+      "properties" : {
+        "otsikko" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "arvioinninKohteet" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ArvioinninKohdeDto"
+          }
+        }
+      }
+    },
+    "ArviointiDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "lisatiedot" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "arvioinninKohdealueet" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ArvioinninKohdealueDto"
+          }
+        }
+      }
+    },
+    "CachedPerusteBaseDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "diaarinumero" : {
+          "type" : "string"
+        },
+        "perusteId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "nimi" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "koulutustyyppi" : {
+          "type" : "string",
+          "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO", "VAPAASIVISTYSTYO_VANHA", "VAPAASIVISTYSTYOLUKUTAITO", "TUTKINTOONVALMENTAVA" ]
+        },
+        "koulutukset" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/KoulutusDto"
+          }
+        }
+      }
+    },
+    "Koko" : {
+      "type" : "object",
+      "properties" : {
+        "minimi" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "maksimi" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    },
+    "KoodiDto" : {
+      "type" : "object",
+      "properties" : {
+        "nimi" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "arvo" : {
+          "type" : "string"
+        },
+        "uri" : {
+          "type" : "string"
+        },
+        "koodisto" : {
+          "type" : "string"
+        },
+        "versio" : {
+          "type" : "integer",
+          "format" : "int64"
+        }
+      }
+    },
+    "KoodistoDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "koodiUri" : {
+          "type" : "string"
+        },
+        "koodiArvo" : {
+          "type" : "string"
+        },
+        "koodistoUri" : {
+          "type" : "string"
+        },
+        "nimi" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "KoodistoKoodiDto" : {
+      "type" : "object",
+      "properties" : {
+        "koodiUri" : {
+          "type" : "string"
+        },
+        "koodiArvo" : {
+          "type" : "string"
+        },
+        "voimassaAlkuPvm" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "voimassaLoppuPvm" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "koodisto" : {
+          "$ref" : "#/definitions/KoodistoDto"
+        },
+        "metadata" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/KoodistoMetadataDto"
+          }
+        }
+      }
+    },
+    "KoodistoMetadataDto" : {
+      "type" : "object",
+      "properties" : {
+        "nimi" : {
+          "type" : "string"
+        },
+        "kieli" : {
+          "type" : "string"
+        },
+        "kuvaus" : {
+          "type" : "string"
+        }
+      }
+    },
+    "KoulutuksenJarjestajaDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "oid" : {
+          "type" : "string"
+        },
+        "nimi" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "url" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "kuvaus" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "KoulutuksenOsaDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "nimi" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "kooditettuNimi" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "nimiKoodi" : {
+          "type" : "string"
+        },
+        "laajuusMinimi" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "laajuusMaksimi" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "koulutusOsanKoulutustyyppi" : {
+          "type" : "string",
+          "enum" : [ "TUTKINTOKOULUTUKSEENVALMENTAVA", "PERUSOPETUS", "LUKIOKOULUTUS", "AMMATILLINENKOULUTUS" ]
+        },
+        "koulutusOsanTyyppi" : {
+          "type" : "string",
+          "enum" : [ "YHTEINEN", "VALINNAINEN" ]
+        },
+        "kuvaus" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "tavoitteet" : {
+          "type" : "array",
+          "items" : {
+            "type" : "object",
+            "additionalProperties" : {
+              "type" : "string"
+            }
+          }
+        },
+        "keskeinenSisalto" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "laajaAlaisenOsaamisenKuvaus" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "arvioinninKuvaus" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "paikallinenTarkennus" : {
+          "$ref" : "#/definitions/KoulutuksenosanPaikallinenTarkennusDto"
+        }
+      }
+    },
+    "KoulutuksenosaLaajaalainenOsaaminenDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "koodiUri" : {
+          "type" : "string"
+        },
+        "nimi" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "laajaAlaisenOsaamisenKuvaus" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "KoulutuksenosanPaikallinenTarkennusDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "tavoitteetKuvaus" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "tavoitteet" : {
+          "type" : "array",
+          "items" : {
+            "type" : "object",
+            "additionalProperties" : {
+              "type" : "string"
+            }
+          }
+        },
+        "laajaalaisetosaamiset" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/KoulutuksenosaLaajaalainenOsaaminenDto"
+          }
+        },
+        "keskeinenSisalto" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "arvioinninKuvaus" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "koulutuksenJarjestajat" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/KoulutuksenJarjestajaDto"
+          }
+        }
+      }
+    },
+    "KoulutusDto" : {
+      "type" : "object",
+      "properties" : {
+        "nimi" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "koulutuskoodiArvo" : {
+          "type" : "string"
+        },
+        "koulutuskoodiUri" : {
+          "type" : "string"
+        },
+        "koulutusalakoodi" : {
+          "type" : "string"
+        },
+        "opintoalakoodi" : {
+          "type" : "string"
+        }
+      }
+    },
+    "KoulutustoimijaBaseDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "organisaatio" : {
+          "type" : "string"
+        },
+        "nimi" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "organisaatioRyhma" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "Laajuus" : {
+      "type" : "object",
+      "properties" : {
+        "minimi" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "maksimi" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "yksikko" : {
+          "type" : "string",
+          "enum" : [ "OPINTOVIIKKO", "OSAAMISPISTE", "KURSSI" ]
+        }
+      }
+    },
+    "LiiteDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "string",
+          "format" : "uuid"
+        },
+        "tyyppi" : {
+          "type" : "string"
+        },
+        "nimi" : {
+          "type" : "string"
+        },
+        "luotu" : {
+          "type" : "string",
+          "format" : "date-time"
+        }
+      }
+    },
+    "MuodostumisSaantoDto" : {
+      "type" : "object",
+      "properties" : {
+        "laajuus" : {
+          "$ref" : "#/definitions/Laajuus"
+        },
+        "koko" : {
+          "$ref" : "#/definitions/Koko"
+        }
+      }
+    },
+    "OmaTutkinnonosaDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "koodi" : {
+          "type" : "string"
+        },
+        "laajuus" : {
+          "type" : "number"
+        },
+        "tavoitteet" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "ammattitaitovaatimuksetLista" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/AmmattitaitovaatimuksenKohdealueDto"
+          }
+        },
+        "arviointi" : {
+          "$ref" : "#/definitions/ArviointiDto"
+        },
+        "ammattitaidonOsoittamistavat" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "OpetussuunnitelmaDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "nimi" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "tila" : {
+          "type" : "string",
+          "enum" : [ "LUONNOS", "VALMIS", "POISTETTU", "JULKAISTU" ]
+        },
+        "tyyppi" : {
+          "type" : "string",
+          "enum" : [ "POHJA", "OPS", "OPSPOHJA", "YLEINEN", "YHTEINEN" ]
+        },
+        "kuvaus" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "koulutustoimija" : {
+          "$ref" : "#/definitions/KoulutustoimijaBaseDto"
+        },
+        "luotu" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "muokattu" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "pohja" : {
+          "$ref" : "#/definitions/Reference"
+        },
+        "perusteId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "perusteDiaarinumero" : {
+          "type" : "string"
+        },
+        "peruste" : {
+          "$ref" : "#/definitions/CachedPerusteBaseDto"
+        },
+        "kommentti" : {
+          "type" : "string"
+        },
+        "julkaisukielet" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string",
+            "enum" : [ "FI", "SV", "SE", "RU", "EN" ]
+          }
+        },
+        "liitteet" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/LiiteDto"
+          }
+        },
+        "paatospaivamaara" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "voimaantulo" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "hyvaksyja" : {
+          "type" : "string"
+        },
+        "paatosnumero" : {
+          "type" : "string"
+        },
+        "suoritustapa" : {
+          "type" : "string"
+        },
+        "esikatseltavissa" : {
+          "type" : "boolean"
+        },
+        "tutkintonimikkeet" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "osaamisalat" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "oppilaitosTyyppiKoodiUri" : {
+          "type" : "string"
+        },
+        "oppilaitosTyyppiKoodi" : {
+          "$ref" : "#/definitions/KoodistoKoodiDto"
+        },
+        "koulutustyyppi" : {
+          "type" : "string",
+          "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO", "VAPAASIVISTYSTYO_VANHA", "VAPAASIVISTYSTYOLUKUTAITO", "TUTKINTOONVALMENTAVA" ]
+        }
+      }
+    },
+    "OpetussuunnitelmaKaikkiDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "nimi" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "tila" : {
+          "type" : "string",
+          "enum" : [ "LUONNOS", "VALMIS", "POISTETTU", "JULKAISTU" ]
+        },
+        "tyyppi" : {
+          "type" : "string",
+          "enum" : [ "POHJA", "OPS", "OPSPOHJA", "YLEINEN", "YHTEINEN" ]
+        },
+        "kuvaus" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "koulutustoimija" : {
+          "$ref" : "#/definitions/KoulutustoimijaBaseDto"
+        },
+        "luotu" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "muokattu" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "pohja" : {
+          "$ref" : "#/definitions/Reference"
+        },
+        "perusteId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "perusteDiaarinumero" : {
+          "type" : "string"
+        },
+        "peruste" : {
+          "$ref" : "#/definitions/CachedPerusteBaseDto"
+        },
+        "kommentti" : {
+          "type" : "string"
+        },
+        "julkaisukielet" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string",
+            "enum" : [ "FI", "SV", "SE", "RU", "EN" ]
+          }
+        },
+        "liitteet" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/LiiteDto"
+          }
+        },
+        "paatospaivamaara" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "voimaantulo" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "hyvaksyja" : {
+          "type" : "string"
+        },
+        "paatosnumero" : {
+          "type" : "string"
+        },
+        "suoritustapa" : {
+          "type" : "string"
+        },
+        "esikatseltavissa" : {
+          "type" : "boolean"
+        },
+        "tutkintonimikkeet" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "osaamisalat" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "oppilaitosTyyppiKoodiUri" : {
+          "type" : "string"
+        },
+        "oppilaitosTyyppiKoodi" : {
+          "$ref" : "#/definitions/KoodistoKoodiDto"
+        },
+        "koulutustyyppi" : {
+          "type" : "string",
+          "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO", "VAPAASIVISTYSTYO_VANHA", "VAPAASIVISTYSTYOLUKUTAITO", "TUTKINTOONVALMENTAVA" ]
+        },
+        "sisalto" : {
+          "$ref" : "#/definitions/SisaltoViiteExportDto"
+        },
+        "suorituspolut" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/SuorituspolkuRakenneDto"
+          }
+        },
+        "tutkinnonOsat" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/TutkinnonosaExportDto"
+          }
+        }
+      }
+    },
+    "OpintokokonaisuusArviointiDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "perusteesta" : {
+          "type" : "boolean"
+        },
+        "arviointi" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "OpintokokonaisuusDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "nimiKoodi" : {
+          "type" : "string"
+        },
+        "kuvaus" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "laajuus" : {
+          "type" : "number"
+        },
+        "minimilaajuus" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "tyyppi" : {
+          "type" : "string",
+          "enum" : [ "PERUSTEESTA", "OMA" ]
+        },
+        "opetuksenTavoiteOtsikko" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "tavoitteet" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/OpintokokonaisuusTavoiteDto"
+          }
+        },
+        "tavoitteidenKuvaus" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "keskeisetSisallot" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "arvioinninKuvaus" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "arvioinnit" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/OpintokokonaisuusArviointiDto"
+          }
+        }
+      }
+    },
+    "OpintokokonaisuusTavoiteDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "perusteesta" : {
+          "type" : "boolean"
+        },
+        "tavoiteKoodi" : {
+          "type" : "string"
+        },
+        "tavoite" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "OsaamisalaDto" : {
+      "type" : "object",
+      "properties" : {
+        "nimi" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "osaamisalakoodiArvo" : {
+          "type" : "string"
+        },
+        "osaamisalakoodiUri" : {
+          "type" : "string"
+        }
+      }
+    },
+    "OsaamistasonKriteeriDto" : {
+      "type" : "object",
+      "properties" : {
+        "kriteerit" : {
+          "type" : "array",
+          "items" : {
+            "type" : "object",
+            "additionalProperties" : {
+              "type" : "string"
+            }
+          }
+        },
+        "_osaamistaso" : {
+          "$ref" : "#/definitions/Reference"
+        }
+      }
+    },
+    "Page" : {
+      "type" : "object",
+      "properties" : {
+        "totalElements" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "totalPages" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "size" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "content" : {
+          "type" : "array",
+          "items" : {
+            "type" : "object"
+          }
+        },
+        "number" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "sort" : {
+          "$ref" : "#/definitions/Sort"
+        },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "first" : {
+          "type" : "boolean"
+        },
+        "last" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "PageOpetussuunnitelmaDto" : {
+      "type" : "object",
+      "properties" : {
+        "totalElements" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "totalPages" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "size" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "content" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/OpetussuunnitelmaDto"
+          }
+        },
+        "number" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "sort" : {
+          "$ref" : "#/definitions/Sort"
+        },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "first" : {
+          "type" : "boolean"
+        },
+        "last" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "Reference" : {
+      "type" : "object",
+      "properties" : {
+        "idLong" : {
+          "type" : "integer",
+          "format" : "int64"
+        }
+      }
+    },
+    "SisaltoViiteExportDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "tyyppi" : {
+          "type" : "string",
+          "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU", "OPINTOKOKONAISUUS", "KOULUTUKSENOSA", "KOULUTUKSENOSAT", "LAAJAALAINENOSAAMINEN" ]
+        },
+        "naytaPohjanTeksti" : {
+          "type" : "boolean"
+        },
+        "naytaPerusteenTeksti" : {
+          "type" : "boolean"
+        },
+        "perusteteksti" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "pohjanTekstikappale" : {
+          "$ref" : "#/definitions/TekstiKappaleDto"
+        },
+        "tosa" : {
+          "$ref" : "#/definitions/TutkinnonosaBaseDto"
+        },
+        "suorituspolku" : {
+          "$ref" : "#/definitions/SuorituspolkuExportDto"
+        },
+        "tekstiKappale" : {
+          "$ref" : "#/definitions/TekstiKappaleJulkinenDto"
+        },
+        "lapset" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/SisaltoViiteExportDto"
+          }
+        },
+        "opintokokonaisuus" : {
+          "$ref" : "#/definitions/OpintokokonaisuusDto"
+        },
+        "koulutuksenosa" : {
+          "$ref" : "#/definitions/KoulutuksenOsaDto"
+        },
+        "tuvaLaajaAlainenOsaaminen" : {
+          "$ref" : "#/definitions/TuvaLaajaAlainenOsaaminenDto"
+        },
+        "nimi" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "Sort" : {
+      "type" : "object"
+    },
+    "SuorituspolkuExportDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "muokattu" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "osasuorituspolkuLaajuus" : {
+          "type" : "number"
+        }
+      }
+    },
+    "SuorituspolkuRakenneDto" : {
+      "type" : "object",
+      "properties" : {
+        "kuvaus" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "vieras" : {
+          "$ref" : "#/definitions/KoodiDto"
+        },
+        "tunniste" : {
+          "type" : "string",
+          "format" : "uuid"
+        },
+        "pakollinen" : {
+          "type" : "boolean"
+        },
+        "nimi" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "rooli" : {
+          "type" : "string",
+          "enum" : [ "NORMAALI", "VIRTUAALINEN", "OSAAMISALA", "TUTKINTONIMIKE", "VIERAS" ]
+        },
+        "muodostumisSaanto" : {
+          "$ref" : "#/definitions/MuodostumisSaantoDto"
+        },
+        "osaamisala" : {
+          "$ref" : "#/definitions/OsaamisalaDto"
+        },
+        "tutkintonimike" : {
+          "$ref" : "#/definitions/KoodiDto"
+        },
+        "osat" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/AbstractRakenneOsaDto"
+          }
+        },
+        "versioId" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "paikallinenKuvaus" : {
+          "$ref" : "#/definitions/SuorituspolkuRiviJulkinenDto"
+        },
+        "sisaltoviiteId" : {
+          "type" : "integer",
+          "format" : "int64"
+        }
+      }
+    },
+    "SuorituspolkuRiviJulkinenDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "kuvaus" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "koodit" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "TekstiKappaleDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "luotu" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "muokattu" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "muokkaaja" : {
+          "type" : "string"
+        },
+        "muokkaajanNimi" : {
+          "type" : "string"
+        },
+        "nimi" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "teksti" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "tunniste" : {
+          "type" : "string",
+          "format" : "uuid"
+        },
+        "pakollinen" : {
+          "type" : "boolean"
+        },
+        "valmis" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "TekstiKappaleJulkinenDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "luotu" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "muokattu" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "nimi" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "teksti" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "tunniste" : {
+          "type" : "string",
+          "format" : "uuid"
+        }
+      }
+    },
+    "TekstiosaDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "otsikko" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "teksti" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "TutkinnonosaBaseDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "tyyppi" : {
+          "type" : "string",
+          "enum" : [ "PERUSTEESTA", "OMA", "VIERAS", "YHTEINEN" ]
+        },
+        "koodi" : {
+          "type" : "string"
+        },
+        "muokattu" : {
+          "type" : "string",
+          "format" : "date-time"
+        }
+      }
+    },
+    "TutkinnonosaDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "tyyppi" : {
+          "type" : "string",
+          "enum" : [ "PERUSTEESTA", "OMA", "VIERAS", "YHTEINEN" ]
+        },
+        "koodi" : {
+          "type" : "string"
+        },
+        "muokattu" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "omatutkinnonosa" : {
+          "$ref" : "#/definitions/OmaTutkinnonosaDto"
+        },
+        "vierastutkinnonosa" : {
+          "$ref" : "#/definitions/VierasTutkinnonosaDto"
+        },
+        "toteutukset" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/TutkinnonosaToteutusDto"
+          }
+        },
+        "osaamisenOsoittaminen" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "perusteentutkinnonosa" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "vapaat" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/VapaaTekstiDto"
+          }
+        }
+      }
+    },
+    "TutkinnonosaExportDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "tyyppi" : {
+          "type" : "string",
+          "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU", "OPINTOKOKONAISUUS", "KOULUTUKSENOSA", "KOULUTUKSENOSAT", "LAAJAALAINENOSAAMINEN" ]
+        },
+        "tosa" : {
+          "$ref" : "#/definitions/TutkinnonosaDto"
+        },
+        "luotu" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "muokattu" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "nimi" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "teksti" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "tunniste" : {
+          "type" : "string",
+          "format" : "uuid"
+        }
+      }
+    },
+    "TutkinnonosaToteutusDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "otsikko" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "tavatjaymparisto" : {
+          "$ref" : "#/definitions/TekstiosaDto"
+        },
+        "arvioinnista" : {
+          "$ref" : "#/definitions/TekstiosaDto"
+        },
+        "koodit" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "vapaat" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/VapaaTekstiDto"
+          }
+        }
+      }
+    },
+    "TuvaLaajaAlainenOsaaminenDto" : {
+      "type" : "object",
+      "properties" : {
+        "nimiKoodi" : {
+          "type" : "string"
+        },
+        "nimi" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "teksti" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "liite" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "VapaaTekstiDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "nimi" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "teksti" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "VierasTutkinnonosaDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "cperuste" : {
+          "$ref" : "#/definitions/Reference"
+        },
+        "perusteId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "tosaId" : {
+          "type" : "integer",
+          "format" : "int64"
+        }
+      }
+    }
+  }
+}
