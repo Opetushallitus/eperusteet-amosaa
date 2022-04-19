@@ -176,6 +176,7 @@ public class DtoMapperConfig {
                     @Override
                     public void mapAtoB(Opetussuunnitelma source, OpetussuunnitelmaDto target, MappingContext context) {
                         super.mapAtoB(source, target, context);
+                        target.setTila2016(target.getTila());
 
                         if (!ObjectUtils.isEmpty(source.getOppilaitosTyyppiKoodiUri())) {
                             target.setOppilaitosTyyppiKoodi(koodistoClient.getByUri(source.getOppilaitosTyyppiKoodiUri()));
@@ -184,7 +185,6 @@ public class DtoMapperConfig {
                         if (!OpsTyyppi.POHJA.equals(source.getTyyppi()) && !Tila.POISTETTU.equals(source.getTila()) && CollectionUtils.isNotEmpty(source.getJulkaisut())) {
                             target.setTila(Tila.JULKAISTU);
                         }
-                        
                     }
                 })
                 .register();
