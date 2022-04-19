@@ -22,6 +22,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
+import io.swagger.annotations.ApiModelProperty;
 import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
@@ -52,4 +53,8 @@ public class OpetussuunnitelmaBaseDto {
     private String perusteDiaarinumero;
 
     private CachedPerusteBaseDto peruste;
+
+    @Deprecated
+    @ApiModelProperty(hidden = true)
+    private Tila tila2016;
 }
