@@ -24,11 +24,29 @@ public class HtmlValidationTest {
     }
 
     @Test
+    public void validLinkSpacesValidation() {
+        TestHtmlvalidator htmlvalidator = new TestHtmlvalidator();
+        htmlvalidator.initialize();
+        boolean htmlIsValid = htmlvalidator.isValid(
+                "<a href=\"   https://www.google.fi/    \" target=\"_blank\" rel=\"noopener noreferrer nofollow\">Linkin teksti</a>");
+        assertThat(htmlIsValid).isTrue();
+    }
+
+    @Test
     public void invalidLinkFailsValidation() {
         TestHtmlvalidator htmlvalidator = new TestHtmlvalidator();
         htmlvalidator.initialize();
         boolean htmlIsValid = htmlvalidator.isValid(
                 "<a href=\"#_ftnref3\" target=\"_blank\" rel=\"noopener noreferrer nofollow\">[3]</a>");
+        assertThat(htmlIsValid).isFalse();
+    }
+
+    @Test
+    public void invalidLinkSpacesValidation() {
+        TestHtmlvalidator htmlvalidator = new TestHtmlvalidator();
+        htmlvalidator.initialize();
+        boolean htmlIsValid = htmlvalidator.isValid(
+                "<a href=\"https://www.   google.fi/\" target=\"_blank\" rel=\"noopener noreferrer nofollow\">Linkin teksti</a>");
         assertThat(htmlIsValid).isFalse();
     }
 
