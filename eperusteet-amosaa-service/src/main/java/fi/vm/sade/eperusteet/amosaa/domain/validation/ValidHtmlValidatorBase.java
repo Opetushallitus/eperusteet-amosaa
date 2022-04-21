@@ -15,6 +15,7 @@
  */
 package fi.vm.sade.eperusteet.amosaa.domain.validation;
 
+import com.google.common.base.CharMatcher;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import org.apache.commons.validator.routines.EmailValidator;
@@ -60,7 +61,7 @@ public abstract class ValidHtmlValidatorBase {
                         isValidUrls(teksti));
 
         if (!htmlIsValid) {
-            logger.error("html:n validointi epäonnistui", lokalisoituTeksti);
+            logger.error("html:n validointi epäonnistui, {}", lokalisoituTeksti.getTunniste());
         }
 
         return htmlIsValid;
@@ -71,7 +72,8 @@ public abstract class ValidHtmlValidatorBase {
         Elements links = doc.select("a[href]");
         return links.stream().allMatch(link ->
                 !link.attr("routenode").isEmpty()
-                        || urlValidator.isValid(link.attr("abs:href"))
-                        || emailValidator.isValid(link.attr("href").replace("mailto:", "")));
+                        || urlValidator.isValid(CharMatcher.whitespace().trimFrom(link.attr("abs:href")))
+                        || emailValidator.isValid(CharMatcher.whitespace().trimFrom(link.attr("href").replace("mailto:", "")))
+        );
     }
 }
