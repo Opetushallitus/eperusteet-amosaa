@@ -15,7 +15,10 @@
  */
 package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -25,6 +28,9 @@ import java.util.List;
  */
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class AmmattitaitovaatimusKohdeDto {
     private Long id;
     private LokalisoituTekstiDto otsikko;

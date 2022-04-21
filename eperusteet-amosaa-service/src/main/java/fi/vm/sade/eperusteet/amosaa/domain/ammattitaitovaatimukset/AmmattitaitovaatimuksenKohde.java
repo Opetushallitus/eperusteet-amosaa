@@ -88,7 +88,7 @@ public class AmmattitaitovaatimuksenKohde implements Serializable, Copyable<Amma
             kohde.setVaatimukset(this.getVaatimukset().stream()
                     .map(Ammattitaitovaatimus::copy)
                     .collect(Collectors.toList()));
-            kohde.getVaatimukset().forEach(kj -> kj.setAmmattitaitovaatimuksenkohde(this));
+            kohde.getVaatimukset().forEach(kj -> kj.setAmmattitaitovaatimuksenkohde(kohde));
         }
 
         return kohde;

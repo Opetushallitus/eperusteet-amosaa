@@ -22,6 +22,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -34,6 +35,7 @@ import lombok.Setter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class TutkinnonosaDto extends TutkinnonosaBaseDto {
     private OmaTutkinnonosaDto omatutkinnonosa;
     private VierasTutkinnonosaDto vierastutkinnonosa;
