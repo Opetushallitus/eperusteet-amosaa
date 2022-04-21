@@ -1033,6 +1033,25 @@
         </fo:list-item>
     </xsl:template>
 
+    <xsl:template match="dl">
+        <fo:block space-after="20pt">
+            <xsl:apply-templates select="*|text()"/>
+        </fo:block>
+    </xsl:template>
+
+    <xsl:template match="dl/dt">
+        <fo:block color="#444444" font-style="italic" font-size="10pt" font-weight="bold"
+                  text-align="justify" line-height="1.25em">
+            <xsl:apply-templates select="*|text()"/>
+        </fo:block>
+    </xsl:template>
+
+    <xsl:template match="dl/dd">
+        <fo:block color="#444444" font-size="10pt" text-align="justify" line-height="1.25em">
+            <xsl:apply-templates select="*|text()"/>
+        </fo:block>
+    </xsl:template>
+
     <xsl:template match="cite">
         <fo:block color="#444444" font-style="italic" font-size="10pt"
                   space-after="20pt" text-align="justify" line-height="1.25em">
