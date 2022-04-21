@@ -15,7 +15,10 @@
  */
 package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -23,6 +26,9 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class AmmattitaitovaatimusDto {
     private Long id;
     private LokalisoituTekstiDto selite;

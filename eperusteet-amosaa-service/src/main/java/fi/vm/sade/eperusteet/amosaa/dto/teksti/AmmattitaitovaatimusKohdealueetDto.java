@@ -26,8 +26,6 @@ import java.util.List;
 @Getter
 @Setter
 public class AmmattitaitovaatimusKohdealueetDto {
-
-
     private Long id;
     private LokalisoituTekstiDto otsikko;
     private List<AmmattitaitovaatimusKohdeDto> vaatimuksenKohteet;
