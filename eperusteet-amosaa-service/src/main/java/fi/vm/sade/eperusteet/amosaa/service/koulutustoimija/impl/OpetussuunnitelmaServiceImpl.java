@@ -388,7 +388,10 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                 .map(Kayttajaoikeus::getOpetussuunnitelma)
                 .filter(ops -> ops.getKoulutustoimija().getYstavat().contains(omaKoulutustoimija)
                         && omaKoulutustoimija.getYstavat().contains(ops.getKoulutustoimija()))
-                .filter(ops -> koulutustyypit == null || CollectionUtils.isEmpty(koulutustyypit) || koulutustyypit.contains(ops.getKoulutustyyppi()))
+                .filter(ops -> koulutustyypit == null
+                        || CollectionUtils.isEmpty(koulutustyypit)
+                        || koulutustyypit.contains(ops.getKoulutustyyppi())
+                        || (ops.getPeruste() != null && koulutustyypit.contains(ops.getPeruste().getKoulutustyyppi())))
                 .map(ops -> mapper.map(ops, OpetussuunnitelmaDto.class))
                 .collect(Collectors.toList());
     }
