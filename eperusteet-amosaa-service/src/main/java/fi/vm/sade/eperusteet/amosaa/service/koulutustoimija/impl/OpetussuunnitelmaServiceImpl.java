@@ -380,7 +380,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     }
 
     @Override
-    public List<OpetussuunnitelmaDto> getOtherOpetussuunnitelmat(Long ktId) {
+    public List<OpetussuunnitelmaDto> getOtherOpetussuunnitelmat(Long ktId, Set<KoulutusTyyppi> koulutustyypit) {
         Kayttaja kayttaja = kayttajaRepository.findOneByOid(ktService.getUserOid());
         Koulutustoimija omaKoulutustoimija = koulutustoimijaRepository.findOne(ktId);
         List<Kayttajaoikeus> oikeudet = kayttajaoikeusRepository.findAllByKayttaja(kayttaja);
@@ -388,6 +388,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                 .map(Kayttajaoikeus::getOpetussuunnitelma)
                 .filter(ops -> ops.getKoulutustoimija().getYstavat().contains(omaKoulutustoimija)
                         && omaKoulutustoimija.getYstavat().contains(ops.getKoulutustoimija()))
+                .filter(ops -> koulutustyypit == null || CollectionUtils.isEmpty(koulutustyypit) || koulutustyypit.contains(ops.getKoulutustyyppi()))
                 .map(ops -> mapper.map(ops, OpetussuunnitelmaDto.class))
                 .collect(Collectors.toList());
     }
@@ -577,11 +578,18 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         Opetussuunnitelma ops = repository.findOne(opsId);
         Koulutustoimija kt = koulutustoimijaRepository.findOne(ktId);
 
-        // TODO: Tarkista kaveriorganisaatio
-        if (!ops.getKoulutustoimija().getId().equals(kt.getId())) {
+        if (!ops.getKoulutustoimija().getId().equals(kt.getId()) && !areFriends(ops.getKoulutustoimija(), kt)) {
             throw new BusinessRuleViolationException("ops-ei-koulutustoimijan");
         }
+
         return ops;
+    }
+
+    private static boolean areFriends(Koulutustoimija a, Koulutustoimija b) {
+        return a.isSalliystavat()
+                && b.isSalliystavat()
+                && a.getYstavat().contains(b)
+                && b.getYstavat().contains(a);
     }
 
     @Override
