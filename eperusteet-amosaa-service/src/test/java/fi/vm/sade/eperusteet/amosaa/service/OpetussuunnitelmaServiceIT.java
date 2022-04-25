@@ -18,6 +18,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.*;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteKevytDto;
+import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaoikeusRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.peruste.CachedPerusteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KayttajaoikeusService;
@@ -350,7 +351,7 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
         updateUserOikeus(getKoulutustoimijaId(), ops.getId(), KayttajaoikeusTyyppi.LUKU, "tmpr");
 
         useProfileTmpr();
-        List<OpetussuunnitelmaDto> opsit = opetussuunnitelmaService.getOtherOpetussuunnitelmat(getKoulutustoimijaId());
+        List<OpetussuunnitelmaDto> opsit = opetussuunnitelmaService.getOtherOpetussuunnitelmat(getKoulutustoimijaId(), null);
         assertThat(opsit)
                 .extracting(OpetussuunnitelmaBaseDto::getId)
                 .containsExactlyInAnyOrder(ops.getId());
@@ -379,7 +380,7 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
         toimija = koulutustoimijaService.updateKoulutustoimija(getKoulutustoimijaId(), toimija);
 
         useProfileTmpr();
-        opsit = opetussuunnitelmaService.getOtherOpetussuunnitelmat(getKoulutustoimijaId());
+        opsit = opetussuunnitelmaService.getOtherOpetussuunnitelmat(getKoulutustoimijaId(), Sets.newHashSet(KoulutusTyyppi.PERUSTUTKINTO));
         assertThat(opsit).isEmpty();
 
         useProfileKP2();
@@ -388,7 +389,7 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
 
         // Palautetaan
         useProfileTmpr();
-        opsit = opetussuunnitelmaService.getOtherOpetussuunnitelmat(getKoulutustoimijaId());
+        opsit = opetussuunnitelmaService.getOtherOpetussuunnitelmat(getKoulutustoimijaId(), null);
         assertThat(opsit).hasSize(1);
         ystavaops = opetussuunnitelmaService.getOpetussuunnitelma(getKoulutustoimijaId(), ops.getId());
         assertThat(ystavaops).hasFieldOrPropertyWithValue("id", ops.getId());
@@ -399,7 +400,7 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
         updateUserOikeus(getKoulutustoimijaId(), ops.getId(), KayttajaoikeusTyyppi.ESTETTY, "tmpr");
 
         useProfileTmpr();
-        opsit = opetussuunnitelmaService.getOtherOpetussuunnitelmat(getKoulutustoimijaId());
+        opsit = opetussuunnitelmaService.getOtherOpetussuunnitelmat(getKoulutustoimijaId(), null);
         assertThat(opsit).isEmpty();
 
         assertThat(catchThrowable(() -> {
@@ -665,6 +666,39 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
         assertThat(validointi.getVirheet())
                 .extracting(Validointi.Virhe::getSyy)
                 .doesNotContain("kielisisaltoa-ei-loytynyt-opsin-kielilla");
+    }
+
+    @Test
+    @Rollback
+    public void testYstavaOrganisaationOpsinValidointi() {
+        useProfileKP1();
+        KoulutustoimijaDto kt1 = koulutustoimijaService.getKoulutustoimija(getKoulutustoimijaId());
+
+        OpetussuunnitelmaBaseDto ops = createOpetussuunnitelma(opsLuonti -> {
+        });
+
+        useProfileKP2();
+        Long kayttaja2id = kayttaja.getId();
+        KoulutustoimijaDto kt2 = koulutustoimijaService.getKoulutustoimija(getKoulutustoimijaId());
+
+        assertThatThrownBy(() -> opetussuunnitelmaService.validoi(ops.getKoulutustoimija().getId(), ops.getId()))
+                .hasMessage("Access is denied");
+
+        useProfileKP1();
+        kt1.setSalliystavat(true);
+        kt1.setYstavat(Sets.newHashSet(Reference.of(kt2.getId())));
+        koulutustoimijaService.updateKoulutustoimija(kt1.getId(), kt1);
+        KayttajaoikeusDto oikeus = new KayttajaoikeusDto();
+        oikeus.setOikeus(KayttajaoikeusTyyppi.HALLINTA);
+        opetussuunnitelmaService.updateOikeus(kt1.getId(), ops.getId(), kayttaja2id, oikeus);
+
+        useProfileKP2();
+        kt2.setSalliystavat(true);
+        kt2.setYstavat(Sets.newHashSet(Reference.of(kt1.getId())));
+        koulutustoimijaService.updateKoulutustoimija(kt2.getId(), kt2);
+
+        Validointi validointi = opetussuunnitelmaService.validoi(ops.getKoulutustoimija().getId(), ops.getId());
+        assertThat(validointi.getVirheet()).isNotEmpty();
     }
 
 }

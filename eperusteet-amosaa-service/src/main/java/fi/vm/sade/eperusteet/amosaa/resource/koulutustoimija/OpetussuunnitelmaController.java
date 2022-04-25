@@ -144,9 +144,10 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
     })
     @RequestMapping(value = "/ystavien", method = RequestMethod.GET)
     public List<OpetussuunnitelmaDto> getAllOtherOrgsOpetussuunnitelmat(
-            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @RequestParam(value = "koulutustyypit", required = false) final Set<String> koulutustyypit
     ) {
-        return service.getOtherOpetussuunnitelmat(ktId);
+        return service.getOtherOpetussuunnitelmat(ktId, koulutustyypit != null ? koulutustyypit.stream().map(KoulutusTyyppi::of).collect(Collectors.toSet()) : null);
     }
 
     @ApiImplicitParams({

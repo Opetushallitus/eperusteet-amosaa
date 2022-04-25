@@ -52,7 +52,7 @@ public class ExternalController {
     })
     @RequestMapping(value = "opetussuunnitelma/{koulutustoimijaId}/{opsId}", method = RequestMethod.GET)
     public OpetussuunnitelmaKaikkiDto getPublicOpetussuunnitelma(
-            @ApiIgnore @ModelAttribute("koulutustoimijaId") final Long koulutustoimijaId,
+            @PathVariable final Long koulutustoimijaId,
             @PathVariable final Long opsId
     ) {
         return opsService.getOpetussuunnitelmaJulkaistuSisalto(koulutustoimijaId, opsId);
