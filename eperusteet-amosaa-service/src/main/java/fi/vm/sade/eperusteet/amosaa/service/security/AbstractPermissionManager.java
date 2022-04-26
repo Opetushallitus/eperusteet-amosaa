@@ -2,14 +2,17 @@ package fi.vm.sade.eperusteet.amosaa.service.security;
 
 import com.google.common.collect.Sets;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaoikeusRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.JulkaisuRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
+import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import fi.vm.sade.eperusteet.amosaa.service.util.Pair;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -17,6 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 public abstract class AbstractPermissionManager implements PermissionManager {
+
+    @Autowired
+    private KayttajanTietoService kayttajanTietoService;
 
     @Autowired
     protected KoulutustoimijaRepository koulutustoimijaRepository;
@@ -55,5 +61,9 @@ public abstract class AbstractPermissionManager implements PermissionManager {
         }
 
         return permMap;
+    }
+
+    public List<Koulutustoimija> kayttajanKoulutustoimijat() {
+        return koulutustoimijaRepository.findAll(kayttajanTietoService.koulutustoimijat().stream().map(KoulutustoimijaBaseDto::getId).collect(Collectors.toList()));
     }
 }

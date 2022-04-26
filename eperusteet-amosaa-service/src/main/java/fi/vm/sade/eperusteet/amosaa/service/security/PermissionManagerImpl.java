@@ -180,7 +180,16 @@ public class PermissionManagerImpl extends AbstractPermissionManager {
 
         // Koulutustoimijan oikeus
         if (target == TargetType.KOULUTUSTOIMIJA) {
-            return hasAnyRole(authentication, RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA, permissions, organisaatio);
+            if (!hasAnyRole(authentication, RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA, permissions, organisaatio)) {
+                if (perm == Permission.LUKU) {
+                    final Koulutustoimija kohdeKt = koulutustoimija;
+                    return kayttajanKoulutustoimijat().stream().anyMatch(kayttajanKt -> areFriends(kayttajanKt, kohdeKt));
+                } else {
+                    return false;
+                }
+            } else {
+                return true;
+            }
         }
         // Opetussuunnitelmien oikeudet
         else if (target == TargetType.OPETUSSUUNNITELMA) {
