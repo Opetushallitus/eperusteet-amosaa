@@ -562,6 +562,18 @@ angular
                         $scope.sortableOptionsVaatimukset = Sorting.getSortableOptions(".vaatimukset");
 
                         $scope.arviointiAsteikot = arviointiAsteikot.plain();
+                        if (!!$scope.pTosa.geneerinenArviointiasteikko && !!$scope.pTosa.geneerinenArviointiasteikko._arviointiAsteikko) {
+                            const arviointiasteikko = _.find($scope.arviointiAsteikot, aa => aa.id === Number($scope.pTosa.geneerinenArviointiasteikko._arviointiAsteikko))
+                            $scope.pTosa.geneerinenArviointiasteikko = {
+                                ...$scope.pTosa.geneerinenArviointiasteikko,
+                                osaamistasonKriteerit: _.map($scope.pTosa.geneerinenArviointiasteikko.osaamistasonKriteerit, gaa => {
+                                    return {
+                                        ...gaa,
+                                        osaamistaso: _.find(arviointiasteikko.osaamistasot, osaamistaso => osaamistaso.id === Number(gaa._osaamistaso)),
+                                    };
+                                })
+                            }
+                        }
 
                         $scope.lisaaArvioinninKohdealue = () => {
                             $scope.osa.tosa.omatutkinnonosa = $scope.osa.tosa.omatutkinnonosa || {};

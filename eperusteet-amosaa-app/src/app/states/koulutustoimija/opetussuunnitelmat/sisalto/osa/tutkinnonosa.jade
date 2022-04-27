@@ -164,6 +164,22 @@ mixin arviointiKohde()
                   span.linkki.pull-right(ng-click="lisaaKriteeri((arviointiKohde.osaamistasonKriteerit | orderBy:'_osaamistaso')[index])")
                     +icon("plus")
 
+mixin geneerinenArviointiasteikko()
+  h4
+    span(ng-bind="'arvioinnin-kohde' | kaanna")
+  p
+    span(ng-bind="pTosa.geneerinenArviointiasteikko.kohde | kaanna")
+  table.table.table-striped.table-condensed
+    tbody
+      tr
+        th(ng-bind="'osaamistaso' | kaanna")
+        th(ng-bind="'kriteerit' | kaanna")
+      tr(ng-repeat="osaamistasokriteeri in pTosa.geneerinenArviointiasteikko.osaamistasonKriteerit | orderBy: 'osaamistaso.id'")
+        td(ng-bind="osaamistasokriteeri.osaamistaso.otsikko | kaanna")
+        td
+          ul
+            li(ng-bind="kriteeri | kaanna" ng-repeat="kriteeri in osaamistasokriteeri.kriteerit")
+
 mixin arviointiAsteikko()
   .arviointi-asteikko
     .radio(ng-repeat="arviointiAsteikko in arviointiAsteikot")
@@ -490,6 +506,9 @@ mixin perusteenTosaSisalto()
         .arviointi-kohdealueet
           div(ng-repeat="arvioinninKohdealue in pTosa.arviointi.arvioinninKohdealueet")
             +arviointi
+    div(ng-if="pTosa.geneerinenArviointiasteikko")
+      +contentToggler("pTosa.$$showGeneerinenArviointiasteikko", "'osaamisen-arviointi'")
+        +geneerinenArviointiasteikko
     div(ng-if="pTosa.ammattitaidonOsoittamistavat")
       +contentToggler("pTosa.$$showAmOsoittamiset", "'ammattitaidon-osoittamistavat'")
         +teksti("pTosa.ammattitaidonOsoittamistavat")
