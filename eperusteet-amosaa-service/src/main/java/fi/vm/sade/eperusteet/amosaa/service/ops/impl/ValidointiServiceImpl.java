@@ -226,19 +226,15 @@ public class ValidointiServiceImpl implements ValidointiService {
         if (osa instanceof RakenneModuuliDto) {
             MuodostumisSaantoDto ms = ((RakenneModuuliDto) osa).getMuodostumisSaanto();
             if (ms != null) {
-                int kokoMin = (ms.getKoko() != null && ms.getKoko().getMinimi() != null) ? ms.getKoko().getMinimi() : 0;
-                int kokoMax = (ms.getKoko() != null && ms.getKoko().getMaksimi() != null) ? ms.getKoko().getMaksimi() : 0;
-                int koko = kokoMax > kokoMin ? kokoMax : kokoMin;
-                int laajuusMin = (ms.getLaajuus() != null && ms.getLaajuus().getMinimi() != null) ? ms.getLaajuus().getMinimi() : 0;
-                int laajuusMax = (ms.getLaajuus() != null && ms.getLaajuus().getMaksimi() != null) ? ms.getLaajuus().getMaksimi() : 0;
-                int laajuus = laajuusMax > laajuusMin ? laajuusMax : laajuusMin;
-                return Pair.of(koko, new BigDecimal(laajuus));
+                Pair<Integer, BigDecimal> muodostumisSaanotLaskettuLaajuus = muodostumisSaanotLaskettuLaajuus(ms);
+                if (muodostumisSaanotLaskettuLaajuus.getFirst() > 0 || muodostumisSaanotLaskettuLaajuus.getSecond().compareTo(BigDecimal.ZERO) > 0) {
+                    return muodostumisSaanotLaskettuLaajuus;
+                }
             }
+
             // Ryhmälle ei ole määritelty osien laajuutta
-            else {
-                Pair<Integer, BigDecimal> ryhmanSisallonMuodostuminen = sisallonLaajuusJaKoko(ctx, (RakenneModuuliDto) osa);
-                return ryhmanSisallonMuodostuminen;
-            }
+            Pair<Integer, BigDecimal> ryhmanSisallonMuodostuminen = sisallonLaajuusJaKoko(ctx, (RakenneModuuliDto) osa);
+            return ryhmanSisallonMuodostuminen;
         }
         else if (osa instanceof RakenneOsaDto) {
             Long tovId = ((RakenneOsaDto) osa).getTutkinnonOsaViite();
@@ -247,14 +243,23 @@ public class ValidointiServiceImpl implements ValidointiService {
                 if (tov != null) {
                     if (tov.getLaajuusMaksimi() != null && tov.getLaajuus().compareTo(tov.getLaajuusMaksimi()) <= 0) {
                         return Pair.of(1, tov.getLaajuusMaksimi());
-                    }
-                    else {
+                    } else {
                         return Pair.of(1, tov.getLaajuus());
                     }
                 }
             }
         }
         return Pair.of(0, new BigDecimal(0));
+    }
+
+    private Pair<Integer, BigDecimal> muodostumisSaanotLaskettuLaajuus(MuodostumisSaantoDto ms) {
+        int kokoMin = (ms.getKoko() != null && ms.getKoko().getMinimi() != null) ? ms.getKoko().getMinimi() : 0;
+        int kokoMax = (ms.getKoko() != null && ms.getKoko().getMaksimi() != null) ? ms.getKoko().getMaksimi() : 0;
+        int koko = Math.max(kokoMax, kokoMin);
+        int laajuusMin = (ms.getLaajuus() != null && ms.getLaajuus().getMinimi() != null) ? ms.getLaajuus().getMinimi() : 0;
+        int laajuusMax = (ms.getLaajuus() != null && ms.getLaajuus().getMaksimi() != null) ? ms.getLaajuus().getMaksimi() : 0;
+        int laajuus = Math.max(laajuusMax, laajuusMin);
+        return Pair.of(koko, new BigDecimal(laajuus));
     }
 
     private Pair<Integer, BigDecimal> sisallonLaajuusJaKoko(ValidointiHelper ctx, RakenneModuuliDto moduuli) {
