@@ -148,6 +148,9 @@ public class JulkinenController {
             @ApiImplicitParam(name = "organisaatioRyhma", dataType = "boolean", paramType = "query"),
             @ApiImplicitParam(name = "oppilaitosTyyppiKoodiUri", dataType = "string", paramType = "query"),
             @ApiImplicitParam(name = "koulutustyyppi", dataType = "string", paramType = "query", allowMultiple = true, required = true),
+            @ApiImplicitParam(name = "tuleva", dataType = "boolean", paramType = "query"),
+            @ApiImplicitParam(name = "voimassaolo", dataType = "boolean", paramType = "query"),
+            @ApiImplicitParam(name = "poistunut", dataType = "boolean", paramType = "query"),
     })
     @RequestMapping(value = "/opetussuunnitelmat/julkaisut", method = RequestMethod.GET)
     @Description("Opetussuunnitelmien parametrihaku.")

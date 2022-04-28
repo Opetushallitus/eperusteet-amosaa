@@ -43,8 +43,7 @@ public class OpetussuunnitelmaJulkaistuQueryDto extends QueryDto {
     public List<KoulutusTyyppi> getKoulutustyyppi() {
         if (koulutustyyppi != null) {
             return koulutustyyppi;
-        }
-        else {
+        } else {
             return Arrays.stream(KoulutusTyyppi.values())
 //                    .map(KoulutusTyyppi::toString)
                     .collect(Collectors.toList());
