@@ -2014,6 +2014,40 @@
         }
       }
     },
+    "/koulutustoimijat/{ktId}/opetussuunnitelmat/vanhentuneet/{opsId}" : {
+      "get" : {
+        "tags" : [ "opetussuunnitelmat" ],
+        "operationId" : "getPaivitettavaOpetussuunnitelma",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "name" : "opsId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "ktId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/VanhentunutPohjaperusteDto"
+            }
+          }
+        }
+      }
+    },
     "/koulutustoimijat/{ktId}/opetussuunnitelmat/ystavien" : {
       "get" : {
         "tags" : [ "opetussuunnitelmat" ],
@@ -6826,19 +6860,19 @@
             "enum" : [ "FI", "SV", "SE", "RU", "EN" ]
           }
         },
-        "koulutustyyppi" : {
-          "type" : "string",
-          "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO", "VAPAASIVISTYSTYO_VANHA", "VAPAASIVISTYSTYOLUKUTAITO", "TUTKINTOONVALMENTAVA" ]
-        },
-        "perusteId" : {
-          "type" : "integer",
-          "format" : "int64"
-        },
         "perusteNimi" : {
           "type" : "object",
           "additionalProperties" : {
             "type" : "string"
           }
+        },
+        "perusteId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "koulutustyyppi" : {
+          "type" : "string",
+          "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO", "VAPAASIVISTYSTYO_VANHA", "VAPAASIVISTYSTYOLUKUTAITO", "TUTKINTOONVALMENTAVA" ]
         }
       }
     },
@@ -7077,15 +7111,15 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
+        "first" : {
+          "type" : "boolean"
         },
         "last" : {
           "type" : "boolean"
         },
-        "first" : {
-          "type" : "boolean"
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
         }
       }
     },
@@ -7117,15 +7151,15 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
+        "first" : {
+          "type" : "boolean"
         },
         "last" : {
           "type" : "boolean"
         },
-        "first" : {
-          "type" : "boolean"
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
         }
       }
     },
@@ -7157,15 +7191,15 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
+        "first" : {
+          "type" : "boolean"
         },
         "last" : {
           "type" : "boolean"
         },
-        "first" : {
-          "type" : "boolean"
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
         }
       }
     },
@@ -7197,15 +7231,15 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
+        "first" : {
+          "type" : "boolean"
         },
         "last" : {
           "type" : "boolean"
         },
-        "first" : {
-          "type" : "boolean"
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
         }
       }
     },
@@ -7237,15 +7271,15 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
+        "first" : {
+          "type" : "boolean"
         },
         "last" : {
           "type" : "boolean"
         },
-        "first" : {
-          "type" : "boolean"
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
         }
       }
     },
@@ -8594,6 +8628,14 @@
         },
         "perusteVanha" : {
           "$ref" : "#/definitions/PerusteBaseDto"
+        },
+        "edellinenPaivitys" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "perustePaivittynyt" : {
+          "type" : "string",
+          "format" : "date-time"
         }
       }
     },

@@ -31,6 +31,8 @@ import fi.vm.sade.eperusteet.amosaa.resource.config.MappingModule;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetClient;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
+import java.util.Date;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -158,6 +160,11 @@ public class EperusteetClientMock implements EperusteetClient {
     @Override
     public PalauteDto lahetaPalaute(PalauteDto palaute) throws JsonProcessingException {
         return null;
+    }
+
+    @Override
+    public Date getViimeisinJulkaisuPeruste(Long perusteId) {
+        return DateTime.now().toDate();
     }
 
     @Override

@@ -131,6 +131,17 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
     @ApiImplicitParams({
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
+    @RequestMapping(value = "/vanhentuneet/{opsId}", method = RequestMethod.GET)
+    public VanhentunutPohjaperusteDto getPaivitettavaOpetussuunnitelma(
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @PathVariable final Long opsId
+    ) {
+        return service.haePaivitystaVaativaPeruste(ktId, opsId);
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/{opsId}/paivita", method = RequestMethod.POST)
     public void paivitaOpetussuunnitelmanPeruste(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,

@@ -78,6 +78,7 @@ import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoviiteServiceProvider;
 import fi.vm.sade.eperusteet.amosaa.service.peruste.PerusteCacheService;
 import fi.vm.sade.eperusteet.amosaa.service.teksti.TekstiKappaleService;
 import fi.vm.sade.eperusteet.amosaa.service.util.PoistettuService;
+import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -202,12 +203,13 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
     // FIXME: Muut saattavat haluta käyttää tätä myös
     @Transactional(readOnly = false)
     private CachedPeruste addCachedPeruste(PerusteDto peruste) {
-        CachedPeruste result = cachedPerusteRepository.findOneByDiaarinumeroAndLuotu(peruste.getDiaarinumero(), peruste.getGlobalVersion().getAikaleima());
+        Date viimeisinJulkaisu = eperusteetClient.getViimeisinJulkaisuPeruste(peruste.getId());
+        CachedPeruste result = cachedPerusteRepository.findOneByDiaarinumeroAndLuotu(peruste.getDiaarinumero(), viimeisinJulkaisu);
         if (result == null) {
             result = new CachedPeruste();
             result.setNimi(LokalisoituTeksti.of(peruste.getNimi().getTekstit()));
             result.setDiaarinumero(peruste.getDiaarinumero());
-            result.setLuotu(peruste.getGlobalVersion().getAikaleima());
+            result.setLuotu(viimeisinJulkaisu);
             result.setPeruste(eperusteetClient.getPerusteData(peruste.getId()));
             result.setPerusteId(peruste.getId());
             result = cachedPerusteRepository.save(result);
