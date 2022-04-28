@@ -115,8 +115,8 @@ public class EperusteetServiceImpl implements EperusteetService {
 
     @Override
     public CachedPerusteBaseDto getCachedPeruste(PerusteDto peruste) {
-        CachedPeruste cperuste = cachedPerusteRepository.findOneByPerusteIdAndLuotu(peruste.getId(),
-                peruste.getGlobalVersion().getAikaleima());
+        Date viimeisinJulkaisu = eperusteetClient.getViimeisinJulkaisuPeruste(peruste.getId());
+        CachedPeruste cperuste = cachedPerusteRepository.findOneByPerusteIdAndLuotu(peruste.getId(), viimeisinJulkaisu);
         if (cperuste == null) {
             cperuste = new CachedPeruste();
             if (peruste.getNimi() != null) {
@@ -125,7 +125,7 @@ public class EperusteetServiceImpl implements EperusteetService {
 
             cperuste.setDiaarinumero(peruste.getDiaarinumero());
             cperuste.setPerusteId(peruste.getId());
-            cperuste.setLuotu(peruste.getGlobalVersion().getAikaleima());
+            cperuste.setLuotu(viimeisinJulkaisu);
             cperuste.setPeruste(eperusteetClient.getPerusteData(peruste.getId()));
             cperuste.setKoulutustyyppi(peruste.getKoulutustyyppi());
             cperuste.setKoulutukset(peruste.getKoulutukset());

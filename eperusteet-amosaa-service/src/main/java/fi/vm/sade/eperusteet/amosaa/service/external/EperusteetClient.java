@@ -7,6 +7,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.peruste.ArviointiasteikkoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.PalauteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TiedoteQueryDto;
+import java.util.Date;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -41,5 +42,7 @@ public interface EperusteetClient {
 
     @PreAuthorize("permitAll()")
     PalauteDto lahetaPalaute(PalauteDto palaute) throws JsonProcessingException;
-    
+
+    Date getViimeisinJulkaisuPeruste(Long perusteId);
+
 }

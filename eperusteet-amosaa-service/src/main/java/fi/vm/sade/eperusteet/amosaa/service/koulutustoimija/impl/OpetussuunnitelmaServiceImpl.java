@@ -119,6 +119,7 @@ import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -610,13 +611,14 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
             throw new BusinessRuleViolationException("perustetta-ei-loytynyt");
         }
 
+        Date viimeisinJulkaisu = eperusteetClient.getViimeisinJulkaisuPeruste(peruste.getId());
         CachedPeruste cperuste;
         if (ops.getTyyppi() == OpsTyyppi.YLEINEN) {
             // EP-1392
             // Yhteinen pohja
-            cperuste = cachedPerusteRepository.findOneByPerusteIdAndLuotu(peruste.getId(), peruste.getGlobalVersion().getAikaleima());
+            cperuste = cachedPerusteRepository.findOneByPerusteIdAndLuotu(peruste.getId(), viimeisinJulkaisu);
         } else {
-            cperuste = cachedPerusteRepository.findOneByDiaarinumeroAndLuotu(peruste.getDiaarinumero(), peruste.getGlobalVersion().getAikaleima());
+            cperuste = cachedPerusteRepository.findOneByDiaarinumeroAndLuotu(peruste.getDiaarinumero(), viimeisinJulkaisu);
         }
 
         if (cperuste == null) {
@@ -627,7 +629,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
             cperuste.setDiaarinumero(peruste.getDiaarinumero());
             cperuste.setPerusteId(peruste.getId());
-            cperuste.setLuotu(peruste.getGlobalVersion().getAikaleima());
+            cperuste.setLuotu(viimeisinJulkaisu);
             cperuste.setPeruste(ops.getTyyppi() == OpsTyyppi.YLEINEN
                     ? eperusteetClient.getYleinenPohjaSisalto()
                     : eperusteetClient.getPerusteData(peruste.getId()));
@@ -707,28 +709,44 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     @Override
     public List<VanhentunutPohjaperusteDto> haePaivitystaVaativatPerusteet(Long ktId) {
         Koulutustoimija kt = koulutustoimijaRepository.findOne(ktId);
-        List<VanhentunutPohjaperusteDto> result = new ArrayList<>();
         List<Opetussuunnitelma> opsit = repository.findAllByKoulutustoimijaAndTyyppi(kt, OpsTyyppi.OPS);
-        for (Opetussuunnitelma ops : opsit) {
-            if (ops.getPeruste() == null) {
-                continue;
-            }
+        return opsit.stream()
+                .map(ops -> getOpetussuunnitelmaVanhentunutPeruste(ops))
+                .filter(v -> v != null)
+                .collect(Collectors.toList());
+    }
 
-            PerusteDto perusteDto = eperusteetClient.getPerusteOrNull(ops.getPeruste().getPerusteId(), PerusteDto.class);
-            if (perusteDto == null || ops.getTila() != Tila.LUONNOS) {
-                continue;
-            }
-            CachedPeruste cperuste = ops.getPeruste();
-            if (perusteDto.getGlobalVersion().getAikaleima().getTime() > cperuste.getLuotu().getTime()) {
-                VanhentunutPohjaperusteDto vpp = new VanhentunutPohjaperusteDto();
-                PerusteDto perusteVanha = eperusteetService.getPerusteSisalto(cperuste.getId(), PerusteDto.class);
-                vpp.setOpetussuunnitelma(mapper.map(ops, OpetussuunnitelmaBaseDto.class));
-                vpp.setPerusteVanha(perusteVanha);
-                vpp.setPerusteUusi(perusteDto);
-                result.add(vpp);
+    private VanhentunutPohjaperusteDto getOpetussuunnitelmaVanhentunutPeruste(Opetussuunnitelma ops) {
+        VanhentunutPohjaperusteDto vanhentunutPohjaperusteDto = null;
+
+        if (ops.getPeruste() != null) {
+            try {
+                Date viimeisinJulkaisu = eperusteetClient.getViimeisinJulkaisuPeruste(ops.getPeruste().getPerusteId());
+                CachedPeruste cperuste = ops.getPeruste();
+                if (cperuste != null && viimeisinJulkaisu.getTime() > cperuste.getLuotu().getTime()) {
+                    PerusteDto perusteDto = eperusteetClient.getPerusteOrNull(ops.getPeruste().getPerusteId(), PerusteDto.class);
+                    if (perusteDto != null) {
+                        PerusteDto perusteVanha = eperusteetService.getPerusteSisalto(cperuste.getId(), PerusteDto.class);
+                        vanhentunutPohjaperusteDto = new VanhentunutPohjaperusteDto();
+                        vanhentunutPohjaperusteDto.setOpetussuunnitelma(mapper.map(ops, OpetussuunnitelmaBaseDto.class));
+                        vanhentunutPohjaperusteDto.setPerusteVanha(perusteVanha);
+                        vanhentunutPohjaperusteDto.setPerusteUusi(perusteDto);
+                        vanhentunutPohjaperusteDto.setPerustePaivittynyt(viimeisinJulkaisu);
+                        vanhentunutPohjaperusteDto.setEdellinenPaivitys(cperuste.getLuotu());
+                    }
+                }
+            } catch (BusinessRuleViolationException e) {
+                log.error("Perusteen viimeisimman julkaisuajan haku epaonnistui: {}", ops.getPeruste().getId());
             }
         }
-        return result;
+
+        return vanhentunutPohjaperusteDto;
+    }
+
+    @Override
+    public VanhentunutPohjaperusteDto haePaivitystaVaativaPeruste(Long ktId, Long opsId) {
+        Opetussuunnitelma ops = repository.findOne(opsId);
+        return getOpetussuunnitelmaVanhentunutPeruste(ops);
     }
 
     @Override

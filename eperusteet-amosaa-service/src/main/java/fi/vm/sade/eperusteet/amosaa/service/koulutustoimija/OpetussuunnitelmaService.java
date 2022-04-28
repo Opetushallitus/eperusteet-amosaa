@@ -100,6 +100,9 @@ public interface OpetussuunnitelmaService extends RevisionService {
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'HALLINTA')")
     List<VanhentunutPohjaperusteDto> haePaivitystaVaativatPerusteet(@P("ktId") Long ktId);
 
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'HALLINTA')")
+    VanhentunutPohjaperusteDto haePaivitystaVaativaPeruste(@P("ktId") Long ktId, @P("opsId") Long opsId);
+
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUONTI')")
     OpetussuunnitelmaBaseDto addOpetussuunnitelma(@P("ktId") Long ktId, OpetussuunnitelmaLuontiDto opsDto);
 
