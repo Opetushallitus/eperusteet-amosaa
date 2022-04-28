@@ -114,6 +114,21 @@
             "type" : "string"
           },
           "collectionFormat" : "multi"
+        }, {
+          "name" : "tuleva",
+          "in" : "query",
+          "required" : false,
+          "type" : "boolean"
+        }, {
+          "name" : "voimassaolo",
+          "in" : "query",
+          "required" : false,
+          "type" : "boolean"
+        }, {
+          "name" : "poistunut",
+          "in" : "query",
+          "required" : false,
+          "type" : "boolean"
         } ],
         "responses" : {
           "200" : {
@@ -793,6 +808,10 @@
           "type" : "string",
           "format" : "date-time"
         },
+        "voimassaoloLoppuu" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
         "hyvaksyja" : {
           "type" : "string"
         },
@@ -905,6 +924,10 @@
           "format" : "date-time"
         },
         "voimaantulo" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "voimassaoloLoppuu" : {
           "type" : "string",
           "format" : "date-time"
         },
@@ -1127,11 +1150,11 @@
         "first" : {
           "type" : "boolean"
         },
-        "last" : {
-          "type" : "boolean"
-        },
         "sort" : {
           "$ref" : "#/definitions/Sort"
+        },
+        "last" : {
+          "type" : "boolean"
         },
         "numberOfElements" : {
           "type" : "integer",
@@ -1167,11 +1190,11 @@
         "first" : {
           "type" : "boolean"
         },
-        "last" : {
-          "type" : "boolean"
-        },
         "sort" : {
           "$ref" : "#/definitions/Sort"
+        },
+        "last" : {
+          "type" : "boolean"
         },
         "numberOfElements" : {
           "type" : "integer",

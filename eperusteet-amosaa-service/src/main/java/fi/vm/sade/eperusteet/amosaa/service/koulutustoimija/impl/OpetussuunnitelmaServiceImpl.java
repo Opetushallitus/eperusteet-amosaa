@@ -131,6 +131,7 @@ import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1039,17 +1040,21 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         List<String> koulutustyypit = pquery.getKoulutustyyppi().stream().map(KoulutusTyyppi::toString).collect(Collectors.toList());
         List<String> koulutustyypitEnums = pquery.getKoulutustyyppi().stream().map(KoulutusTyyppi::name).collect(Collectors.toList());
         Page<OpetussuunnitelmaDto> result = julkaisuRepository.findAllJulkisetJulkaisut(
-                        koulutustyypit,
-                        koulutustyypitEnums,
-                        pquery.getNimi(),
-                        pquery.getKieli(),
-                        pquery.getOppilaitosTyyppiKoodiUri(),
-                        pquery.isOrganisaatioRyhma(),
-                        pquery.getTyyppi(),
-                        pquery.getOrganisaatio(),
-                        pquery.getPerusteId(),
-                        pquery.getPerusteenDiaarinumero(),
-                        pageable)
+                koulutustyypit,
+                koulutustyypitEnums,
+                pquery.getNimi(),
+                pquery.getKieli(),
+                pquery.getOppilaitosTyyppiKoodiUri(),
+                pquery.isOrganisaatioRyhma(),
+                pquery.getTyyppi(),
+                pquery.getOrganisaatio(),
+                pquery.getPerusteId(),
+                pquery.getPerusteenDiaarinumero(),
+                pquery.isTuleva(),
+                pquery.isVoimassaolo(),
+                pquery.isPoistunut(),
+                DateTime.now().getMillis(),
+                pageable)
                 .map(obj -> {
                     try {
                         return objMapper.readValue(obj, OpetussuunnitelmaDto.class);

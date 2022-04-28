@@ -35,6 +35,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -135,6 +136,12 @@ public class Opetussuunnitelma extends AbstractAuditedEntity implements Serializ
     @Getter
     @Setter
     private Date voimaantulo;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Getter
+    @Setter
+    @Column(name = "voimassaolo_loppuu")
+    private Date voimassaoloLoppuu;
 
     @Getter
     @Setter
