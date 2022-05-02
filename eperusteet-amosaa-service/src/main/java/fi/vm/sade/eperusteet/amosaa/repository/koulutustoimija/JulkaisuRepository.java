@@ -38,7 +38,7 @@ public interface JulkaisuRepository extends JpaRepository<Julkaisu, Long> {
             "   AND ((:perusteenDiaarinumero IS NULL) OR (:perusteenDiaarinumero = '') " +
             "           OR (peruste->>'diaarinumero' = :perusteenDiaarinumero))" +
             "   AND ((:tulevat = true " +
-            "                       AND (data.\"voimaantulo\" IS NULL OR CAST(data.\"voimaantulo\" as bigint) > :nykyhetki)) " +
+            "                       AND (data.\"voimaantulo\" IS NOT NULL OR CAST(data.\"voimaantulo\" as bigint) > :nykyhetki)) " +
             "       OR (:poistuneet = true AND CAST(data.\"voimassaoloLoppuu\" as bigint) < :nykyhetki)" +
             "       OR (:voimassa = true " +
             "                       AND (data.\"voimaantulo\" IS NULL OR CAST(data.\"voimaantulo\" as bigint) < :nykyhetki) " +
