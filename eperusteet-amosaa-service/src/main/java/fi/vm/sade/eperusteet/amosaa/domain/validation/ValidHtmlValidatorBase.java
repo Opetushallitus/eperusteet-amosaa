@@ -57,8 +57,7 @@ public abstract class ValidHtmlValidatorBase {
         }
 
         boolean htmlIsValid = tekstit.values().stream()
-                .allMatch(teksti -> Jsoup.isValid(teksti, whitelist) &&
-                        isValidUrls(teksti));
+                .allMatch(teksti -> Jsoup.isValid(teksti, whitelist));
 
         if (!htmlIsValid) {
             logger.error("html:n validointi epäonnistui, {}", lokalisoituTeksti.getTunniste());
@@ -67,6 +66,7 @@ public abstract class ValidHtmlValidatorBase {
         return htmlIsValid;
     }
 
+    @Deprecated
     private boolean isValidUrls(String teksti) {
         Document doc = Jsoup.parse(teksti);
         Elements links = doc.select("a[href]");

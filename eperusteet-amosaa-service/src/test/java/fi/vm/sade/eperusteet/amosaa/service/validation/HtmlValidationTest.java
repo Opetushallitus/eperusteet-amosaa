@@ -4,6 +4,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtmlValidatorBase;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.validation.Payload;
@@ -12,6 +13,7 @@ import java.util.HashMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Ignore("linkkivalidointi otettu pois kaytosta")
 public class HtmlValidationTest {
 
     @Test
@@ -63,8 +65,7 @@ public class HtmlValidationTest {
         }
     }
 
-    public static class ValidHtmlHelper implements ValidHtml
-    {
+    public static class ValidHtmlHelper implements ValidHtml {
         @Override
         public String message() {
             return null;
