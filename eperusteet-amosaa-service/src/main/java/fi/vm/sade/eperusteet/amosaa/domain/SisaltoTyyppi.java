@@ -17,6 +17,7 @@ package fi.vm.sade.eperusteet.amosaa.domain;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import java.util.EnumSet;
 
 
@@ -57,7 +58,7 @@ public enum SisaltoTyyppi {
         throw new IllegalArgumentException(tila + " ei ole kelvollinen tila");
     }
 
-    public boolean isOneOf(SisaltoTyyppi[] tyypit) {
+    public boolean isOneOf(SisaltoTyyppi... tyypit) {
         for (SisaltoTyyppi toinen : tyypit) {
             if (toinen.toString().equals(this.tyyppi)) {
                 return true;
@@ -76,5 +77,17 @@ public enum SisaltoTyyppi {
 
     public static boolean isSuorituspolku(SisaltoTyyppi tyyppi) {
         return EnumSet.of(SUORITUSPOLKU, OSASUORITUSPOLKU).contains(tyyppi);
+    }
+
+    public boolean isAmmatillinenTyyppi() {
+        return isOneOf(TUTKINNONOSAT, SUORITUSPOLUT, SUORITUSPOLKU, TUTKINNONOSA, TEKSTIKAPPALE, TOSARYHMA, OSASUORITUSPOLKU);
+    }
+
+    public boolean isVstTyyppi() {
+        return isOneOf(TEKSTIKAPPALE, KOULUTUKSENOSA);
+    }
+
+    public boolean isTuvaTyyppi() {
+        return isOneOf(TEKSTIKAPPALE, KOULUTUKSENOSA, KOULUTUKSENOSAT, LAAJAALAINENOSAAMINEN);
     }
 }
