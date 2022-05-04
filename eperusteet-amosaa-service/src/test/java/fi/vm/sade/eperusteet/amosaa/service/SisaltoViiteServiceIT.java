@@ -609,6 +609,28 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
                 .isEqualTo(suorituspolunSisaltoviiteId);
     }
 
+    @Test
+    @Rollback
+    public void testAddSisaltoViite_vaaraTyyppiKoulutustyypille() {
+
+        useProfileKP2();
+        Opetussuunnitelma ops = createOpetussuunnitelmaJulkaistu();
+        liiteService.add(getKoulutustoimijaId(), ops.getId(), "txt", "teksti.txt", 1l, new ByteArrayInputStream("tekstia".getBytes()));
+
+        SisaltoViite opsRoot = sisaltoviiteRepository.findOneRoot(ops);
+        SisaltoViiteDto.Matala root = sisaltoViiteService.getSisaltoRoot(getKoulutustoimijaId(), ops.getId());
+
+        sisaltoViiteService.addSisaltoViite(getKoulutustoimijaId(), ops.getId(), root.getId(), createSisalto(sisaltoViiteDto -> {
+            sisaltoViiteDto.setTyyppi(SisaltoTyyppi.TEKSTIKAPPALE);
+        }));
+
+        assertThatThrownBy(() ->
+                sisaltoViiteService.addSisaltoViite(getKoulutustoimijaId(), ops.getId(), root.getId(), createSisalto(sisaltoViiteDto -> {
+                    sisaltoViiteDto.setTyyppi(SisaltoTyyppi.OPINTOKOKONAISUUS);
+                }))).hasMessage("ei-sallittu-sisaltoviite-tyyppi");
+
+    }
+
     private void addModuleToRoot(UUID tunniste, RakenneModuuliDto moduuliDtoRoot) {
         RakenneModuuliDto moduuliDto = new RakenneModuuliDto();
         moduuliDto.setTunniste(tunniste);

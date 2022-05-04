@@ -75,7 +75,16 @@ public enum KoulutusTyyppi {
         return isOneOf(AMMATTITUTKINTO, ERIKOISAMMATTITUTKINTO, PERUSTUTKINTO);
     }
 
+    public boolean isVST() {
+        return isOneOf(VAPAASIVISTYSTYO, VAPAASIVISTYSTYOLUKUTAITO);
+    }
+
+    public boolean isTuva() {
+        return isOneOf(TUTKINTOONVALMENTAVA);
+    }
+
     public static List<KoulutusTyyppi> ammatilliset() {
         return Arrays.asList(PERUSTUTKINTO, AMMATTITUTKINTO, ERIKOISAMMATTITUTKINTO, TELMA, VALMA);
     }
+    
 }

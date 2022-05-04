@@ -230,6 +230,16 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
             throw new BusinessRuleViolationException("ei-sallittu-tyyppi");
         }
 
+        Opetussuunnitelma ops = opsRepository.findOne(opsId);
+        KoulutusTyyppi koulutusTyyppi = ops.getPeruste() != null ? ops.getPeruste().getKoulutustyyppi() : ops.getKoulutustyyppi();
+        // Ei sallita vääriä sisältötyyppejä koulutustyypeille
+        if (koulutusTyyppi != null &&
+                ((koulutusTyyppi.isAmmatillinen() && !viiteDto.getTyyppi().isAmmatillinenTyyppi())
+                        || (koulutusTyyppi.isVST() && !viiteDto.getTyyppi().isVstTyyppi())
+                        || (koulutusTyyppi.isTuva() && !viiteDto.getTyyppi().isTuvaTyyppi()))) {
+            throw new BusinessRuleViolationException("ei-sallittu-sisaltoviite-tyyppi");
+        }
+
         // TODO: Tarkistetaan onko sisältö lisätty oikeantyyppiseen sisältöelementtiin
 
         SisaltoViite parentViite = findViite(opsId, viiteId);
