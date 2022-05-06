@@ -3,14 +3,16 @@ package fi.vm.sade.eperusteet.amosaa.resource.julkinen;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaJulkaistuQueryDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaKaikkiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.OpintokokonaisuusExternalDto;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
+import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -53,11 +55,16 @@ public class ExternalController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path", required = true)
     })
-    @RequestMapping(value = "opetussuunnitelma/{koulutustoimijaId}/{opsId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/opetussuunnitelma/{koulutustoimijaId}/{opsId}", method = RequestMethod.GET)
     public OpetussuunnitelmaKaikkiDto getPublicOpetussuunnitelma(
             @PathVariable final Long koulutustoimijaId,
             @PathVariable final Long opsId
     ) {
         return opsService.getOpetussuunnitelmaJulkaistuSisalto(koulutustoimijaId, opsId);
+    }
+
+    @RequestMapping(value = "/opintokokonaisuudet", method = RequestMethod.GET)
+    public List<OpintokokonaisuusExternalDto> getPublicOpintokokonaisuudet() {
+        return opsService.findOpetussuunnitelmienOpintokokonaisuudetJulkaisut();
     }
 }

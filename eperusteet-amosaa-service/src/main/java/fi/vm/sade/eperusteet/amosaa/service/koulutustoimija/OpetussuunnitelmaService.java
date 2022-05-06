@@ -37,6 +37,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaQueryDt
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaTilastoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.VanhentunutPohjaperusteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.OpintokokonaisuusExternalDto;
 import fi.vm.sade.eperusteet.amosaa.service.revision.RevisionService;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 import java.util.List;
@@ -129,6 +130,9 @@ public interface OpetussuunnitelmaService extends RevisionService {
 
     @PreAuthorize("permitAll()")
     Page<OpetussuunnitelmaDto> findOpetussuunnitelmatJulkaisut(OpetussuunnitelmaJulkaistuQueryDto pquery);
+
+    @PreAuthorize("permitAll()")
+    List<OpintokokonaisuusExternalDto> findOpetussuunnitelmienOpintokokonaisuudetJulkaisut();
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'HALLINTA')")
     OpetussuunnitelmaDto updateKoulutustoimija(@P("ktId") Long ktId, @P("opsId") Long opsId, KoulutustoimijaBaseDto body);
