@@ -562,7 +562,7 @@ angular
                         $scope.sortableOptionsVaatimukset = Sorting.getSortableOptions(".vaatimukset");
 
                         $scope.arviointiAsteikot = arviointiAsteikot.plain();
-                        if (!!$scope.pTosa.geneerinenArviointiasteikko) {
+                        if ($scope.pTosa && $scope.pTosa.geneerinenArviointiasteikko) {
                             const arviointiasteikko = $scope.pTosa.geneerinenArviointiasteikko.arviointiAsteikko ?
                                 $scope.pTosa.geneerinenArviointiasteikko.arviointiAsteikko
                                 : _.find($scope.arviointiAsteikot, aa => aa.id === Number($scope.pTosa.geneerinenArviointiasteikko._arviointiAsteikko))
