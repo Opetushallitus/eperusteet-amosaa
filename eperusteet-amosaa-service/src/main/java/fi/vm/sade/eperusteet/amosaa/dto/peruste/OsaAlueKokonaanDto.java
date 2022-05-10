@@ -26,5 +26,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class OsaAlueKokonaanDto extends OsaAlueDto {
+    private Arviointi2020Dto arviointi;
+    private Osaamistavoite2020Dto pakollisetOsaamistavoitteet;
+    private Osaamistavoite2020Dto valinnaisetOsaamistavoitteet;
+
+    @Deprecated
     private List<OsaamistavoiteLaajaDto> osaamistavoitteet;
 }

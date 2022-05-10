@@ -126,7 +126,7 @@ public class EperusteetServiceImpl implements EperusteetService {
             cperuste.setDiaarinumero(peruste.getDiaarinumero());
             cperuste.setPerusteId(peruste.getId());
             cperuste.setLuotu(viimeisinJulkaisu);
-            cperuste.setPeruste(eperusteetClient.getPerusteData(peruste.getId()));
+            cperuste.setPeruste(eperusteetClient.getPerusteDataAsString(peruste.getId()));
             cperuste.setKoulutustyyppi(peruste.getKoulutustyyppi());
             cperuste.setKoulutukset(peruste.getKoulutukset());
             cperuste = cachedPerusteRepository.save(cperuste);
@@ -386,14 +386,7 @@ public class EperusteetServiceImpl implements EperusteetService {
 
     @Override
     public <T> T getPerusteSisaltoByPerusteId(Long perusteId, Class<T> type) {
-        try {
-            String perusteData = eperusteetClient.getPerusteData(perusteId);
-            JsonNode node = mapper.readTree(perusteData);
-            return mapper.treeToValue(node, type);
-        } catch (IOException ex) {
-            logger.error("Perusteen parsinta epäonnistui", ex);
-            throw new BusinessRuleViolationException("perusteen-parsinta-epaonnistui");
-        }
+        return eperusteetClient.getPerusteData(perusteId, type);
     }
 
     @Override

@@ -18,7 +18,11 @@ import java.util.Set;
 @Service
 @PreAuthorize("permitAll()") // OK, koska mäppääntyy julkisiin rajapintoihin
 public interface EperusteetClient {
-    String getPerusteData(Long id);
+    <T> T getPerusteData(Long id, Class<T> type);
+
+    JsonNode getPerusteData(Long id);
+
+    String getPerusteDataAsString(Long id);
 
     <T> T getPeruste(Long id, Class<T> type);
 

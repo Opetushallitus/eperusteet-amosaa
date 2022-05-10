@@ -49,5 +49,6 @@ public class TutkinnonosaKaikkiDto extends PerusteenOsaDto {
     private String koodiArvo;
     private List<OsaAlueKokonaanDto> osaAlueet;
     private TutkinnonOsaTyyppi tyyppi;
+    private KoodiDto koodi;
     private ValmaTelmaSisaltoDto valmaTelmaSisalto;
 }

@@ -32,5 +32,6 @@ public class TutkinnonOsaSuoritustapaDto extends PerusteenOsaDto.Suppea {
     private String koodiUri;
     private String koodiArvo;
     private TutkinnonOsaTyyppi tyyppi;
+    private KoodiDto koodi;
 //    private ValmaTelmaSisaltoDto valmaTelmaSisalto;
 }

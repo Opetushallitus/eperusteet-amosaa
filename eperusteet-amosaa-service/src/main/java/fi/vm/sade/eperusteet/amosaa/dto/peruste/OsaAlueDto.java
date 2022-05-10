@@ -36,6 +36,8 @@ public class OsaAlueDto {
     private KoodiDto koodi;
     private String koodiUri;
     private String koodiArvo;
+    private OsaAlueTyyppi tyyppi;
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Kieli kieli;
     @JsonInclude(JsonInclude.Include.NON_NULL)

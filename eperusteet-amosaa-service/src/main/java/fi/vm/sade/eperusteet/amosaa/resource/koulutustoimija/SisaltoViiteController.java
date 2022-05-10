@@ -72,6 +72,19 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
     @ApiImplicitParams({
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
+    @RequestMapping(method = RequestMethod.POST)
+    public SisaltoViiteDto.Matala addSisaltoViite(
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @PathVariable final Long opsId,
+            @RequestBody(required = false) SisaltoViiteDto.Matala tekstiKappaleViiteDto
+    ) {
+        tekstiKappaleViiteDto.setLapset(new ArrayList<>());
+        return service.addSisaltoViite(ktId, opsId, tekstiKappaleViiteDto);
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/otsikot", method = RequestMethod.GET)
     public List<SisaltoViiteKevytDto> getOtsikot(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,

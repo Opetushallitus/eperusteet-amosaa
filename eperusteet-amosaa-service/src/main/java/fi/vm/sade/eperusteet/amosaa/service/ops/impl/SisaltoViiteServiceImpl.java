@@ -210,11 +210,24 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
             result.setNimi(LokalisoituTeksti.of(peruste.getNimi().getTekstit()));
             result.setDiaarinumero(peruste.getDiaarinumero());
             result.setLuotu(viimeisinJulkaisu);
-            result.setPeruste(eperusteetClient.getPerusteData(peruste.getId()));
+            result.setPeruste(eperusteetClient.getPerusteDataAsString(peruste.getId()));
             result.setPerusteId(peruste.getId());
             result = cachedPerusteRepository.save(result);
         }
         return result;
+    }
+
+    @Override
+    public SisaltoViiteDto.Matala addSisaltoViite(Long ktId, Long opsId, SisaltoViiteDto.Matala viiteDto) {
+        Opetussuunnitelma ops = opsRepository.findOne(opsId);
+        Long rootId = getSisaltoRoot(ktId, opsId).getId();
+        if (SisaltoTyyppi.TUTKINNONOSA.equals(viiteDto.getTyyppi())) {
+            rootId = repository.findTutkinnonosatRoot(ops).getId();
+        }
+        else if (viiteDto.getTyyppi().isOneOf(SisaltoTyyppi.SUORITUSPOLKU, SisaltoTyyppi.OSASUORITUSPOLKU)) {
+            rootId = repository.findSuorituspolutRoot(ops).getId();
+        }
+        return addSisaltoViite(ktId, opsId, rootId, viiteDto);
     }
 
     @Override
@@ -301,6 +314,9 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
                     tosa.setVierastutkinnonosa(vierastutkinnonosaRepository.save(vt));
                 } else {
                     tosa.setTyyppi(TutkinnonosaTyyppi.OMA);
+                    if (tosa.getOmatutkinnonosa() == null) {
+                        tosa.setOmatutkinnonosa(new OmaTutkinnonosa());
+                    }
                 }
                 uusiViite.setTosa(tutkinnonosaRepository.save(tosa));
                 break;

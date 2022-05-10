@@ -23,11 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Sets;
-import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
-import fi.vm.sade.eperusteet.amosaa.domain.KoulutustyyppiToteutus;
-import fi.vm.sade.eperusteet.amosaa.domain.MuokkausTapahtuma;
-import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
-import fi.vm.sade.eperusteet.amosaa.domain.Tila;
+import fi.vm.sade.eperusteet.amosaa.domain.*;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.Kayttaja;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.Kayttajaoikeus;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.KayttajaoikeusTyyppi;
@@ -632,7 +628,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
             cperuste.setLuotu(viimeisinJulkaisu);
             cperuste.setPeruste(ops.getTyyppi() == OpsTyyppi.YLEINEN
                     ? eperusteetClient.getYleinenPohjaSisalto()
-                    : eperusteetClient.getPerusteData(peruste.getId()));
+                    : eperusteetClient.getPerusteDataAsString(peruste.getId()));
             cperuste.setKoulutustyyppi(peruste.getKoulutustyyppi());
             cperuste.setKoulutukset(peruste.getKoulutukset());
             cperuste = cachedPerusteRepository.save(cperuste);
@@ -752,9 +748,18 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     @Override
     public void paivitaPeruste(Long ktId, Long opsId) {
         Opetussuunnitelma ops = repository.getOne(opsId);
-        PerusteDto perusteDto = eperusteetClient.getPeruste(ops.getPeruste().getPerusteId(), PerusteDto.class);
+        PerusteDto perusteDto = eperusteetClient.getPerusteData(ops.getPeruste().getPerusteId(), PerusteDto.class);
         CachedPerusteBaseDto cp = eperusteetService.getCachedPeruste(perusteDto);
         CachedPeruste newCachedPeruste = cachedPerusteRepository.findOne(cp.getId());
+
+        { // Tarkistetaan versiot
+            PerusteDto vanhaPeruste = eperusteetService.getPerusteSisalto(ops.getPeruste(), PerusteDto.class);
+            PerusteDto uusiPeruste = eperusteetService.getPerusteSisalto(newCachedPeruste, PerusteDto.class);
+            if (vanhaPeruste.getGlobalVersion().getAikaleima().after(uusiPeruste.getGlobalVersion().getAikaleima())) {
+                throw new BusinessRuleViolationException("perustetta-ei-voi-asettaa-vanhempaan-versioon");
+            }
+        }
+
         Set<UUID> tunnisteet = eperusteetService.getRakenneTunnisteet(newCachedPeruste.getId(), ops.getSuoritustapa());
         Set<UUID> kaytetytTunnisteet = tkvService.getSuorituspolkurakenne(ktId, opsId).stream()
                 .map(AbstractRakenneOsaDto::getTunniste)
@@ -770,6 +775,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         }
 
         ops.setPeruste(newCachedPeruste);
+        muokkausTietoService.addOpsMuokkausTieto(opsId, ops, MuokkausTapahtuma.PAIVITYS);
     }
 
     @Override

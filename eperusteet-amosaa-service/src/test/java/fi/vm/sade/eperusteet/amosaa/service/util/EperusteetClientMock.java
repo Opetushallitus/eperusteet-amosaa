@@ -112,7 +112,17 @@ public class EperusteetClientMock implements EperusteetClient {
     }
 
     @Override
-    public String getPerusteData(Long id) {
+    public <T> T getPerusteData(Long id, Class<T> type) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public JsonNode getPerusteData(Long id) {
+        return null;
+    }
+
+    @Override
+    public String getPerusteDataAsString(Long id) {
         try {
             JsonNode node = getMockPeruste();
             Object perusteObj = objectMapper.treeToValue(node, Object.class);

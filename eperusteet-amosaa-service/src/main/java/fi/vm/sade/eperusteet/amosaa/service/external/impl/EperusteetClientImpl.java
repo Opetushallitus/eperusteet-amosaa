@@ -34,6 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -91,6 +92,8 @@ public class EperusteetClientImpl implements EperusteetClient {
                 .orElse(null);
     }
 
+
+
     @Override
     public JsonNode findFromPerusteet(Map<String, String> queryDto) {
         queryDto.put("tuleva", "true");
@@ -128,9 +131,21 @@ public class EperusteetClientImpl implements EperusteetClient {
     }
 
     @Override
-    public String getPerusteData(Long id) {
+    @Cacheable("perustedata")
+    public <T> T getPerusteData(Long id, Class<T> type) {
+        T node = commonGet("/api/perusteet/" + String.valueOf(id) + "/kaikki", type);
+        return node;
+    }
+
+    @Override
+    public JsonNode getPerusteData(Long id) {
+        return getPerusteData(id, JsonNode.class);
+    }
+
+    @Override
+    public String getPerusteDataAsString(Long id) {
         try {
-            JsonNode node = commonGet("/api/perusteet/" + String.valueOf(id) + "/kaikki", JsonNode.class);
+            JsonNode node = getPerusteData(id);
             Object perusteObj = mapper.treeToValue(node, Object.class);
             String json = mapper.writeValueAsString(perusteObj);
             return json;
@@ -190,6 +205,7 @@ public class EperusteetClientImpl implements EperusteetClient {
                 perusteet.add(peruste);
             } catch (IOException ex) {
                 logger.error(ex.getMessage());
+                throw new BusinessRuleViolationException("perusteiden-haku-epaonnistui");
             }
         }
 
