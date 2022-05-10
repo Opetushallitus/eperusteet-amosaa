@@ -559,6 +559,12 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
             throw new BusinessRuleViolationException("Pakollisia sisältöjä ei voi poistaa");
         }
 
+        if (viite.getTyyppi().equals(SisaltoTyyppi.OPINTOKOKONAISUUS)
+                && CollectionUtils.isNotEmpty(ops.getJulkaisut())
+                && !ops.getTila().equals(Tila.POISTETTU)) {
+            throw new BusinessRuleViolationException("Julkaistuja sisältöjä ei voi poistaa");
+        }
+
         poistetutService.lisaaPoistettu(ktId, ops, viite);
 
         viite.getVanhempi().getLapset().remove(viite);

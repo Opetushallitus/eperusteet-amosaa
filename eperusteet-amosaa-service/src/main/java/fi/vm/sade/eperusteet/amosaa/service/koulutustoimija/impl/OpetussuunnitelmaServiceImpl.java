@@ -115,6 +115,7 @@ import fi.vm.sade.eperusteet.amosaa.service.ops.OpetussuunnitelmaPohjaCreateServ
 import fi.vm.sade.eperusteet.amosaa.service.ops.OpetussuunnitelmaValidationService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.ValidointiService;
+import fi.vm.sade.eperusteet.amosaa.service.security.PermissionManager;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -232,6 +233,9 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
     @Autowired
     private JulkaisuService julkaisuService;
+
+    @Autowired
+    private PermissionManager permissionManager;
 
     @PostConstruct
     protected void init() {
@@ -1015,7 +1019,8 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     public OpetussuunnitelmaBaseDto updateTila(Long ktId, Long opsId, Tila tila, boolean generatePDF) {
         Opetussuunnitelma ops = findOps(ktId, opsId);
         Tila nykyinen = ops.getTila();
-        if (nykyinen.mahdollisetSiirtymat().contains(tila)) {
+        if (nykyinen.mahdollisetSiirtymat().contains(tila)
+                && (!(tila.equals(Tila.POISTETTU) && CollectionUtils.isNotEmpty(ops.getJulkaisut())) || permissionManager.hasOphAdminPermission())) {
 
             // Muutetaan tila
             ops.setTila(tila);
