@@ -84,7 +84,7 @@ public enum SisaltoTyyppi {
     }
 
     public boolean isVstTyyppi() {
-        return isOneOf(TEKSTIKAPPALE, KOULUTUKSENOSA);
+        return isOneOf(TEKSTIKAPPALE, OPINTOKOKONAISUUS);
     }
 
     public boolean isTuvaTyyppi() {
