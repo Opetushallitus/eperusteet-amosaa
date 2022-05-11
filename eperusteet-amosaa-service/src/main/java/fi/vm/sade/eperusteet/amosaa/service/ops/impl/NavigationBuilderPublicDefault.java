@@ -5,6 +5,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.NavigationNodeDto;
 import fi.vm.sade.eperusteet.amosaa.dto.NavigationType;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaKaikkiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteExportDto;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.NavigationBuilderPublic;
@@ -49,12 +50,16 @@ public class NavigationBuilderPublicDefault implements NavigationBuilderPublic {
                         && opetussuunnitelmaKaikkiDto.getKoulutustyyppi() != null
                         && opetussuunnitelmaKaikkiDto.getKoulutustyyppi().isValmaTelma() ?
                         NavigationType.valmatelmaKoulutuksenosat.toString() : sisaltoviite.getTyyppi().toString()),
-                sisaltoviite.getNimi(),
+                getSisaltoviiteNimi(sisaltoviite),
                 sisaltoviite.getId())
                 .addAll(sisaltoviite.getLapset() != null ?
                         sisaltoviite.getLapset().stream()
                                 .map(lapsi -> sisaltoviiteToNavigationNode(lapsi, opetussuunnitelmaKaikkiDto))
                                 .collect(Collectors.toList())
                         : Collections.emptyList());
+    }
+
+    protected LokalisoituTekstiDto getSisaltoviiteNimi(SisaltoViiteExportDto sisaltoviite) {
+        return sisaltoviite.getNimi();
     }
 }

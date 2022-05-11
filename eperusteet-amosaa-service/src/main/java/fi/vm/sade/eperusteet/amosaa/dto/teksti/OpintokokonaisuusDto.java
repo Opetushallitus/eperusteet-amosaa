@@ -10,6 +10,7 @@ import lombok.Data;
 public class OpintokokonaisuusDto {
     private Long id;
     private String nimiKoodi;
+    private String koodi;
     private LokalisoituTekstiDto kuvaus;
     private BigDecimal laajuus;
     private Integer minimilaajuus;
@@ -20,4 +21,13 @@ public class OpintokokonaisuusDto {
     private LokalisoituTekstiDto keskeisetSisallot;
     private LokalisoituTekstiDto arvioinninKuvaus;
     private List<OpintokokonaisuusArviointiDto> arvioinnit = new ArrayList<>();
+
+    public String getKoodiArvo() {
+        if (koodi != null) {
+            return koodi.substring(koodi.indexOf("_") + 1);
+        }
+
+        return null;
+    }
+
 }

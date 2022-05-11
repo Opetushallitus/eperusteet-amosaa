@@ -128,6 +128,8 @@ public class JulkaisuServiceImpl implements JulkaisuService {
 
         Julkaisu julkaisu = new Julkaisu();
         try {
+            kooditaSisaltoviitteet(ktId, opsId);
+
             Julkaisu viimeisinJulkaisu = julkaisuRepository.findFirstByOpetussuunnitelmaOrderByRevisionDesc(opetussuunnitelma);
             OpetussuunnitelmaKaikkiDto opetussuunnitelmaKaikki = opetussuunnitelmaService.getOpetussuunnitelmaKaikki(ktId, opsId);
             ObjectNode dataJson = (ObjectNode) jsonMapper.toJson(opetussuunnitelmaKaikki);
@@ -139,8 +141,6 @@ public class JulkaisuServiceImpl implements JulkaisuService {
                     throw new BusinessRuleViolationException("ei-muuttunut-viime-julkaisun-jalkeen");
                 }
             }
-
-            kooditaSisaltoviitteet(ktId, opsId);
 
             for (Kieli kieli : opetussuunnitelma.getJulkaisukielet()) {
                 try {
