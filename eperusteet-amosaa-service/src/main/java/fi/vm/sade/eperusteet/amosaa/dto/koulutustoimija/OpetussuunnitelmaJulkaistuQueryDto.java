@@ -20,6 +20,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.Tyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.QueryDto;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,18 +39,7 @@ public class OpetussuunnitelmaJulkaistuQueryDto extends QueryDto {
     private List<String> tyyppi;
     private boolean organisaatioRyhma = false;
     private String oppilaitosTyyppiKoodiUri = "";
-    private List<KoulutusTyyppi> koulutustyyppi;
-
-    public List<KoulutusTyyppi> getKoulutustyyppi() {
-        if (koulutustyyppi != null) {
-            return koulutustyyppi;
-        } else {
-            return Arrays.stream(KoulutusTyyppi.values())
-//                    .map(KoulutusTyyppi::toString)
-                    .collect(Collectors.toList());
-        }
-    }
-
+    private List<KoulutusTyyppi> koulutustyyppi = new ArrayList<>();
     private String nimi = "";
     private int sivukoko = 10;
 

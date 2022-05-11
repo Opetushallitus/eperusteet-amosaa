@@ -25,9 +25,8 @@ public interface JulkaisuRepository extends JpaRepository<Julkaisu, Long> {
     String julkaisutQuery = "FROM ( " +
             "   SELECT * " +
             "   FROM julkaistu_opetussuunnitelma_Data_view data" +
-            "   WHERE 1 = 1 "  +
-            "   AND ((koulutustyyppi IN (:koulutustyypit) OR peruste->>'koulutustyyppi' IN (:koulutustyypit))" +
-            "       OR (koulutustyyppi IN (:koulutustyypitEnums) OR peruste->>'koulutustyyppi' IN (:koulutustyypitEnums)))" +
+            "   WHERE 1 = 1 " +
+            "   AND (COALESCE(:koulutustyypit, NULL) = '' OR koulutustyyppi IN (:koulutustyypit) OR peruste->>'koulutustyyppi' IN (:koulutustyypit))" +
             "   AND (:nimi LIKE '' OR LOWER(nimi->>:kieli) LIKE LOWER(CONCAT('%',:nimi,'%'))) " +
             "   AND (:organisaatioRyhma = false OR cast(koulutustoimija->>'organisaatioRyhma' as boolean) = true) " +
             "   AND (:oppilaitosTyyppiKoodiUri = '' OR :oppilaitosTyyppiKoodiUri = data.\"oppilaitosTyyppiKoodiUri\")" +
@@ -52,7 +51,6 @@ public interface JulkaisuRepository extends JpaRepository<Julkaisu, Long> {
     )
     Page<String> findAllJulkisetJulkaisut(
             @Param("koulutustyypit") List<String> koulutustyypit,
-            @Param("koulutustyypitEnums") List<String> koulutustyypitEnums,
             @Param("nimi") String nimi,
             @Param("kieli") String kieli,
             @Param("oppilaitosTyyppiKoodiUri") String oppilaitosTyyppiKoodiUri,
