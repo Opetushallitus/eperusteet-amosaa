@@ -3,6 +3,7 @@ package fi.vm.sade.eperusteet.amosaa.service.vst;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OpintokokonaisuusTavoite;
+import fi.vm.sade.eperusteet.amosaa.dto.koodisto.KoodistoUriArvo;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.SisaltoviiteLaajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
@@ -110,6 +111,26 @@ public class VapaasivistystyoOpsIT extends AbstractIntegrationTest {
                 .extracting("tavoite")
                 .extracting("tekstit")
                 .containsExactlyInAnyOrder(LokalisoituTekstiDto.of("tavoite1").getTeksti());
+
+    }
+
+    @Test
+    public void test_vapaasivistystyoSisaltoviitteet_koodi() {
+        OpetussuunnitelmaBaseDto vstOps = createOpetussuunnitelma(ops -> ops.setPerusteId(35820L));
+        List<SisaltoviiteLaajaDto> sisaltoviitteet = sisaltoViiteService.getSisaltoViitteet(vstOps.getKoulutustoimija().getId(), vstOps.getId(), SisaltoviiteLaajaDto.class);
+        List<SisaltoviiteLaajaDto> opintokokonaisuudet = sisaltoviitteet.stream().filter(viite -> SisaltoTyyppi.OPINTOKOKONAISUUS.equals(viite.getTyyppi())).collect(Collectors.toList());
+
+        SisaltoViiteDto.Matala sisaltoviiteDto = sisaltoViiteService.getSisaltoViite(vstOps.getKoulutustoimija().getId(), vstOps.getId(), opintokokonaisuudet.get(0).getId());
+        sisaltoviiteDto.getOpintokokonaisuus().setKoodi(KoodistoUriArvo.OPINTOKOKONAISUUDET + "_" + 1234);
+        sisaltoViiteService.updateSisaltoViite(vstOps.getKoulutustoimija().getId(), vstOps.getId(), opintokokonaisuudet.get(0).getId(), sisaltoviiteDto);
+        sisaltoviiteDto = sisaltoViiteService.getSisaltoViite(vstOps.getKoulutustoimija().getId(), vstOps.getId(), opintokokonaisuudet.get(0).getId());
+        assertThat(sisaltoviiteDto.getOpintokokonaisuus().getKoodi()).isEqualTo(KoodistoUriArvo.OPINTOKOKONAISUUDET + "_" + 1234);
+        assertThat(sisaltoviiteDto.getOpintokokonaisuus().getKoodiArvo()).isEqualTo("1234");
+
+        sisaltoviiteDto.getOpintokokonaisuus().setKoodi(KoodistoUriArvo.OPINTOKOKONAISUUDET + "_" + 5555);
+        sisaltoViiteService.updateSisaltoViite(vstOps.getKoulutustoimija().getId(), vstOps.getId(), opintokokonaisuudet.get(0).getId(), sisaltoviiteDto);
+        sisaltoviiteDto = sisaltoViiteService.getSisaltoViite(vstOps.getKoulutustoimija().getId(), vstOps.getId(), opintokokonaisuudet.get(0).getId());
+        assertThat(sisaltoviiteDto.getOpintokokonaisuus().getKoodi()).isEqualTo(KoodistoUriArvo.OPINTOKOKONAISUUDET + "_" + 1234);
 
     }
 

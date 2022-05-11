@@ -54,9 +54,13 @@ public class OpetussuunnitelmaDispatcher {
         }
         if (p.getPeruste() != null) {
             return get(p.getPeruste().getKoulutustyyppi(), clazz);
-        } else {
-            return get(clazz);
         }
+
+        if (p.getKoulutustyyppi() != null) {
+            return get(p.getKoulutustyyppi(), clazz);
+        }
+        
+        return get(clazz);
     }
 
     @PreAuthorize("permitAll()")

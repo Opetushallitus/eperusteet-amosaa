@@ -6883,10 +6883,6 @@
             "enum" : [ "FI", "SV", "SE", "RU", "EN" ]
           }
         },
-        "perusteId" : {
-          "type" : "integer",
-          "format" : "int64"
-        },
         "koulutustyyppi" : {
           "type" : "string",
           "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO", "VAPAASIVISTYSTYO_VANHA", "VAPAASIVISTYSTYOLUKUTAITO", "TUTKINTOONVALMENTAVA" ]
@@ -6896,6 +6892,10 @@
           "additionalProperties" : {
             "type" : "string"
           }
+        },
+        "perusteId" : {
+          "type" : "integer",
+          "format" : "int64"
         }
       }
     },
@@ -6925,6 +6925,9 @@
           "format" : "int64"
         },
         "nimiKoodi" : {
+          "type" : "string"
+        },
+        "koodi" : {
           "type" : "string"
         },
         "kuvaus" : {
@@ -6979,6 +6982,9 @@
           "items" : {
             "$ref" : "#/definitions/OpintokokonaisuusArviointiDto"
           }
+        },
+        "koodiArvo" : {
+          "type" : "string"
         }
       }
     },
@@ -6990,6 +6996,9 @@
           "format" : "int64"
         },
         "nimiKoodi" : {
+          "type" : "string"
+        },
+        "koodi" : {
           "type" : "string"
         },
         "kuvaus" : {
@@ -7048,6 +7057,9 @@
         "opetussuunnitelmaId" : {
           "type" : "integer",
           "format" : "int64"
+        },
+        "koodiArvo" : {
+          "type" : "string"
         }
       }
     },
@@ -7203,15 +7215,15 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
-        "last" : {
-          "type" : "boolean"
-        },
         "first" : {
           "type" : "boolean"
         },
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
+        },
+        "last" : {
+          "type" : "boolean"
         }
       }
     },
@@ -7243,15 +7255,15 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
-        "last" : {
-          "type" : "boolean"
-        },
         "first" : {
           "type" : "boolean"
         },
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
+        },
+        "last" : {
+          "type" : "boolean"
         }
       }
     },
@@ -7283,15 +7295,15 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
-        "last" : {
-          "type" : "boolean"
-        },
         "first" : {
           "type" : "boolean"
         },
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
+        },
+        "last" : {
+          "type" : "boolean"
         }
       }
     },
@@ -7323,15 +7335,15 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
-        "last" : {
-          "type" : "boolean"
-        },
         "first" : {
           "type" : "boolean"
         },
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
+        },
+        "last" : {
+          "type" : "boolean"
         }
       }
     },
@@ -7363,15 +7375,15 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
-        "last" : {
-          "type" : "boolean"
-        },
         "first" : {
           "type" : "boolean"
         },
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
+        },
+        "last" : {
+          "type" : "boolean"
         }
       }
     },
