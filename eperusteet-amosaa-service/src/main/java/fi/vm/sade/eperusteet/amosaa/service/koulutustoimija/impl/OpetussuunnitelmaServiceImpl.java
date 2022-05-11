@@ -28,6 +28,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.KoulutustyyppiToteutus;
 import fi.vm.sade.eperusteet.amosaa.domain.MuokkausTapahtuma;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
+import fi.vm.sade.eperusteet.amosaa.domain.Tyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.Kayttaja;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.Kayttajaoikeus;
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.KayttajaoikeusTyyppi;
@@ -891,12 +892,16 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     public OpetussuunnitelmaKaikkiDto getOpetussuunnitelmaKaikki(Long ktId, Long opsId) {
         Opetussuunnitelma ops = repository.findOne(opsId);
         SisaltoViiteExportDto sisalto = tkvService.getSisaltoRoot(ktId, opsId, SisaltoViiteExportDto.class);
-        List<SuorituspolkuRakenneDto> suorituspolut = tkvService.getSuorituspolkurakenne(ktId, opsId);
         List<TutkinnonosaExportDto> tutkinnonOsat = tkvService.getTutkinnonOsaViitteet(ktId, opsId, TutkinnonosaExportDto.class);
         OpetussuunnitelmaKaikkiDto result = mapper.map(ops, OpetussuunnitelmaKaikkiDto.class);
         result.setSisalto(sisalto);
-        result.setSuorituspolut(suorituspolut);
         result.setTutkinnonOsat(tutkinnonOsat);
+
+        if (ops.getSuoritustapa() != null) {
+            List<SuorituspolkuRakenneDto> suorituspolut = tkvService.getSuorituspolkurakenne(ktId, opsId);
+            result.setSuorituspolut(suorituspolut);
+        }
+        
         return result;
     }
 
@@ -1057,10 +1062,14 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     public Page<OpetussuunnitelmaDto> findOpetussuunnitelmatJulkaisut(OpetussuunnitelmaJulkaistuQueryDto pquery) {
         Pageable pageable = new PageRequest(pquery.getSivu(), pquery.getSivukoko());
         List<String> koulutustyypit = pquery.getKoulutustyyppi().stream().map(KoulutusTyyppi::toString).collect(Collectors.toList());
-        List<String> koulutustyypitEnums = pquery.getKoulutustyyppi().stream().map(KoulutusTyyppi::name).collect(Collectors.toList());
+        koulutustyypit.addAll(pquery.getKoulutustyyppi().stream().map(KoulutusTyyppi::name).collect(Collectors.toList()));
+
+        if (CollectionUtils.isNotEmpty(pquery.getTyyppi()) && pquery.getTyyppi().contains(OpsTyyppi.YHTEINEN.toString())) {
+            koulutustyypit = Arrays.asList("");
+        }
+
         Page<OpetussuunnitelmaDto> result = julkaisuRepository.findAllJulkisetJulkaisut(
                 koulutustyypit,
-                koulutustyypitEnums,
                 pquery.getNimi(),
                 pquery.getKieli(),
                 pquery.getOppilaitosTyyppiKoodiUri(),

@@ -62,12 +62,12 @@ public class MaintenanceServiceImpl implements MaintenanceService {
     @Override
     @Async
     @Transactional(propagation = Propagation.NEVER)
-    public void teeJulkaisut(boolean julkaiseKaikki, Set<KoulutusTyyppi> koulutustyypit) {
+    public void teeJulkaisut(boolean julkaiseKaikki, Set<KoulutusTyyppi> koulutustyypit, OpsTyyppi opsTyyppi) {
         List<Opetussuunnitelma> opetussuunnitelmat;
         if (koulutustyypit != null) {
-            opetussuunnitelmat = opetussuunnitelmaRepository.findJulkaistutByTyyppi(OpsTyyppi.OPS, koulutustyypit);
+            opetussuunnitelmat = opetussuunnitelmaRepository.findJulkaistutByTyyppi(opsTyyppi, koulutustyypit);
         } else {
-            opetussuunnitelmat = opetussuunnitelmaRepository.findJulkaistutByTyyppi(OpsTyyppi.OPS);
+            opetussuunnitelmat = opetussuunnitelmaRepository.findJulkaistutByTyyppi(opsTyyppi);
         }
 
         List<Long> ids = opetussuunnitelmat.stream()
