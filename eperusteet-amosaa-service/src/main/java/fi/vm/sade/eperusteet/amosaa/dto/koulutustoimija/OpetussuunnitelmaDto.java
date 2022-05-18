@@ -16,6 +16,7 @@
 
 package fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.koodisto.KoodistoKoodiDto;
@@ -31,6 +32,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class OpetussuunnitelmaDto extends OpetussuunnitelmaBaseDto {
     private String kommentti;
     private Set<Kieli> julkaisukielet;
