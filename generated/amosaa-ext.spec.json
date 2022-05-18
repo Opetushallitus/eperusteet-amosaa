@@ -6,13 +6,13 @@
   },
   "basePath" : "/api",
   "tags" : [ {
-    "name" : "Julkinen"
+    "name" : "external"
   } ],
   "schemes" : [ "http", "https" ],
   "paths" : {
     "/external/opetussuunnitelma/{koulutustoimijaId}/{opsId}" : {
       "get" : {
-        "tags" : [ "Julkinen" ],
+        "tags" : [ "external" ],
         "operationId" : "getPublicOpetussuunnitelma",
         "produces" : [ "application/json;charset=UTF-8" ],
         "parameters" : [ {
@@ -45,7 +45,7 @@
     },
     "/external/opetussuunnitelmat" : {
       "get" : {
-        "tags" : [ "Julkinen" ],
+        "tags" : [ "external" ],
         "operationId" : "getPublicOpetussuunnitelmat",
         "produces" : [ "application/json;charset=UTF-8" ],
         "parameters" : [ {
@@ -140,19 +140,22 @@
         }
       }
     },
-    "/external/opintokokonaisuudet" : {
+    "/external/opintokokonaisuus/{koodiArvo}" : {
       "get" : {
-        "tags" : [ "Julkinen" ],
-        "operationId" : "getPublicOpintokokonaisuudet",
+        "tags" : [ "external" ],
+        "operationId" : "getPublicOpintokokonaisuusKoodilla",
         "produces" : [ "application/json;charset=UTF-8" ],
+        "parameters" : [ {
+          "name" : "koodiArvo",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
         "responses" : {
           "200" : {
             "description" : "successful operation",
             "schema" : {
-              "type" : "array",
-              "items" : {
-                "$ref" : "#/definitions/OpintokokonaisuusExternalDto"
-              }
+              "$ref" : "#/definitions/SisaltoviiteOpintokokonaisuusExternalDto"
             }
           }
         }
@@ -999,6 +1002,12 @@
           "items" : {
             "$ref" : "#/definitions/TutkinnonosaExportDto"
           }
+        },
+        "opintokokonaisuudet" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/SisaltoViiteExportOpintokokonaisuusDto"
+          }
         }
       }
     },
@@ -1030,69 +1039,7 @@
         "nimiKoodi" : {
           "type" : "string"
         },
-        "kuvaus" : {
-          "type" : "object",
-          "additionalProperties" : {
-            "type" : "string"
-          }
-        },
-        "laajuus" : {
-          "type" : "number"
-        },
-        "minimilaajuus" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-        "tyyppi" : {
-          "type" : "string",
-          "enum" : [ "PERUSTEESTA", "OMA" ]
-        },
-        "opetuksenTavoiteOtsikko" : {
-          "type" : "object",
-          "additionalProperties" : {
-            "type" : "string"
-          }
-        },
-        "tavoitteet" : {
-          "type" : "array",
-          "items" : {
-            "$ref" : "#/definitions/OpintokokonaisuusTavoiteDto"
-          }
-        },
-        "tavoitteidenKuvaus" : {
-          "type" : "object",
-          "additionalProperties" : {
-            "type" : "string"
-          }
-        },
-        "keskeisetSisallot" : {
-          "type" : "object",
-          "additionalProperties" : {
-            "type" : "string"
-          }
-        },
-        "arvioinninKuvaus" : {
-          "type" : "object",
-          "additionalProperties" : {
-            "type" : "string"
-          }
-        },
-        "arvioinnit" : {
-          "type" : "array",
-          "items" : {
-            "$ref" : "#/definitions/OpintokokonaisuusArviointiDto"
-          }
-        }
-      }
-    },
-    "OpintokokonaisuusExternalDto" : {
-      "type" : "object",
-      "properties" : {
-        "id" : {
-          "type" : "integer",
-          "format" : "int64"
-        },
-        "nimiKoodi" : {
+        "koodi" : {
           "type" : "string"
         },
         "kuvaus" : {
@@ -1148,9 +1095,8 @@
             "$ref" : "#/definitions/OpintokokonaisuusArviointiDto"
           }
         },
-        "opetussuunnitelmaId" : {
-          "type" : "integer",
-          "format" : "int64"
+        "koodiArvo" : {
+          "type" : "string"
         }
       }
     },
@@ -1212,13 +1158,13 @@
     "Page" : {
       "type" : "object",
       "properties" : {
-        "totalPages" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "totalElements" : {
           "type" : "integer",
           "format" : "int64"
+        },
+        "totalPages" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "size" : {
           "type" : "integer",
@@ -1234,31 +1180,31 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "sort" : {
           "$ref" : "#/definitions/Sort"
+        },
+        "first" : {
+          "type" : "boolean"
         },
         "last" : {
           "type" : "boolean"
         },
-        "first" : {
-          "type" : "boolean"
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
         }
       }
     },
     "PageOpetussuunnitelmaDto" : {
       "type" : "object",
       "properties" : {
-        "totalPages" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "totalElements" : {
           "type" : "integer",
           "format" : "int64"
+        },
+        "totalPages" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "size" : {
           "type" : "integer",
@@ -1274,18 +1220,18 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "sort" : {
           "$ref" : "#/definitions/Sort"
+        },
+        "first" : {
+          "type" : "boolean"
         },
         "last" : {
           "type" : "boolean"
         },
-        "first" : {
-          "type" : "boolean"
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
         }
       }
     },
@@ -1353,6 +1299,35 @@
           "additionalProperties" : {
             "type" : "string"
           }
+        }
+      }
+    },
+    "SisaltoViiteExportOpintokokonaisuusDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "tyyppi" : {
+          "type" : "string",
+          "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU", "OPINTOKOKONAISUUS", "KOULUTUKSENOSA", "KOULUTUKSENOSAT", "LAAJAALAINENOSAAMINEN" ]
+        },
+        "opintokokonaisuus" : {
+          "$ref" : "#/definitions/OpintokokonaisuusDto"
+        }
+      }
+    },
+    "SisaltoviiteOpintokokonaisuusExternalDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "opetussuunnitelmaId" : {
+          "type" : "integer",
+          "format" : "int64"
         }
       }
     },

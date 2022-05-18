@@ -1,18 +1,19 @@
 package fi.vm.sade.eperusteet.amosaa.resource.julkinen;
 
+import fi.vm.sade.eperusteet.amosaa.dto.external.SisaltoviiteOpintokokonaisuusExternalDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaJulkaistuQueryDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaKaikkiDto;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.OpintokokonaisuusExternalDto;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
-import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
-import java.util.List;
+import java.io.IOException;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,7 +22,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
 @RequestMapping(value = "/external", produces = "application/json;charset=UTF-8")
-@Api(value = "Julkinen")
+@Api(value = "external")
 @Description("Opetussuunnitelminen julkinen rajapinta")
 public class ExternalController {
 
@@ -63,8 +64,8 @@ public class ExternalController {
         return opsService.getOpetussuunnitelmaJulkaistuSisalto(koulutustoimijaId, opsId);
     }
 
-    @RequestMapping(value = "/opintokokonaisuudet", method = RequestMethod.GET)
-    public List<OpintokokonaisuusExternalDto> getPublicOpintokokonaisuudet() {
-        return opsService.findOpetussuunnitelmienOpintokokonaisuudetJulkaisut();
+    @RequestMapping(value = "/opintokokonaisuus/{koodiArvo}", method = RequestMethod.GET)
+    public ResponseEntity<SisaltoviiteOpintokokonaisuusExternalDto> getPublicOpintokokonaisuusKoodilla(@PathVariable final String koodiArvo) throws IOException {
+        return ResponseEntity.of(Optional.ofNullable(opsService.findJulkaistuOpintokokonaisuus(koodiArvo)));
     }
 }
