@@ -108,7 +108,7 @@ public class MaintenanceServiceImpl implements MaintenanceService {
                 julkaisu.setData(new JulkaisuData(dataJson));
                 julkaisuRepository.save(julkaisu);
 
-                opetussuunnitelmaMuokkaustietoService.addOpsMuokkausTieto(opsId, opetussuunnitelma, MuokkausTapahtuma.JULKAISU);
+                opetussuunnitelmaMuokkaustietoService.addOpsMuokkausTieto(opsId, opetussuunnitelma, MuokkausTapahtuma.JULKAISU, opetussuunnitelma.getNavigationType(), null, "maintenance");
             } catch (IOException e) {
                 e.printStackTrace();
                 return false;
