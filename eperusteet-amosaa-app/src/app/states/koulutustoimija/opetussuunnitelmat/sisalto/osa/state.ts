@@ -571,7 +571,7 @@ angular
                                 osaamistasonKriteerit: _.map($scope.pTosa.geneerinenArviointiasteikko.osaamistasonKriteerit, gaa => {
                                     return {
                                         ...gaa,
-                                        osaamistaso: _.find(arviointiasteikko.osaamistasot, osaamistaso => osaamistaso.id === Number(gaa._osaamistaso)),
+                                        osaamistaso: gaa.osaamistaso || _.find(arviointiasteikko.osaamistasot, osaamistaso => osaamistaso.id === Number(gaa._osaamistaso)),
                                     };
                                 })
                             }
