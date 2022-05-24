@@ -607,7 +607,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
 
     @Transactional
     private void clearChildrenAndParent(SisaltoViite parent, Set<SisaltoViite> viitteet) {
-        for (SisaltoViite lapsi : parent.getLapset()) {
+        for (SisaltoViite lapsi : parent.getLapset().stream().filter(l -> l != null).collect(Collectors.toList())) {
             viitteet.add(lapsi);
             clearChildrenAndParent(lapsi, viitteet);
         }
@@ -675,7 +675,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
 
         result.add(viite.get());
 
-        for (SisaltoViite sv : parent.getLapset()) {
+        for (SisaltoViite sv : parent.getLapset().stream().filter(l -> l != null).collect(Collectors.toList())) {
             haeViitteet(sv, result);
         }
     }
