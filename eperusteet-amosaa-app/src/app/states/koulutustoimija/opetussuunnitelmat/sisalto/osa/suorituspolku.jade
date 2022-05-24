@@ -22,6 +22,8 @@ div
         span(style="margin-left: 5px;" ng-bind="perusteRakenne.muodostumisSaanto.laajuus.minimi || perusteRakenne.muodostumisSaanto.laajuus.maksimi")
         span(style="margin-left: 5px;" ng-bind="misc.suoritustapa.laajuusYksikko | kaanna")
     p(ng-bind-html="perusteRakenne.kuvaus | kaanna")
+      div(ng-show="$$ekEditing", style="margin-bottom: 30px;")
+        +checkbox("osa.suorituspolku.piilotaPerusteenTeksti", "", "'piilota-perusteen-teksti' | kaanna")
 
   .pull-left.haku
     .form-inline
