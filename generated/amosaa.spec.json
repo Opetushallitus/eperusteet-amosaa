@@ -6892,10 +6892,6 @@
             "enum" : [ "FI", "SV", "SE", "RU", "EN" ]
           }
         },
-        "koulutustyyppi" : {
-          "type" : "string",
-          "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO", "VAPAASIVISTYSTYO_VANHA", "VAPAASIVISTYSTYOLUKUTAITO", "TUTKINTOONVALMENTAVA" ]
-        },
         "perusteId" : {
           "type" : "integer",
           "format" : "int64"
@@ -6905,6 +6901,10 @@
           "additionalProperties" : {
             "type" : "string"
           }
+        },
+        "koulutustyyppi" : {
+          "type" : "string",
+          "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO", "VAPAASIVISTYSTYO_VANHA", "VAPAASIVISTYSTYOLUKUTAITO", "TUTKINTOONVALMENTAVA" ]
         }
       }
     },
@@ -7146,9 +7146,8 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
+        "first" : {
+          "type" : "boolean"
         },
         "sort" : {
           "$ref" : "#/definitions/Sort"
@@ -7156,8 +7155,9 @@
         "last" : {
           "type" : "boolean"
         },
-        "first" : {
-          "type" : "boolean"
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
         }
       }
     },
@@ -7186,9 +7186,8 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
+        "first" : {
+          "type" : "boolean"
         },
         "sort" : {
           "$ref" : "#/definitions/Sort"
@@ -7196,8 +7195,9 @@
         "last" : {
           "type" : "boolean"
         },
-        "first" : {
-          "type" : "boolean"
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
         }
       }
     },
@@ -7226,9 +7226,8 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
+        "first" : {
+          "type" : "boolean"
         },
         "sort" : {
           "$ref" : "#/definitions/Sort"
@@ -7236,8 +7235,9 @@
         "last" : {
           "type" : "boolean"
         },
-        "first" : {
-          "type" : "boolean"
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
         }
       }
     },
@@ -7266,9 +7266,8 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
+        "first" : {
+          "type" : "boolean"
         },
         "sort" : {
           "$ref" : "#/definitions/Sort"
@@ -7276,8 +7275,9 @@
         "last" : {
           "type" : "boolean"
         },
-        "first" : {
-          "type" : "boolean"
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
         }
       }
     },
@@ -7306,9 +7306,8 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
+        "first" : {
+          "type" : "boolean"
         },
         "sort" : {
           "$ref" : "#/definitions/Sort"
@@ -7316,8 +7315,9 @@
         "last" : {
           "type" : "boolean"
         },
-        "first" : {
-          "type" : "boolean"
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
         }
       }
     },
@@ -8048,6 +8048,9 @@
         "naytaKuvausJulkisesti" : {
           "type" : "boolean"
         },
+        "piilotaPerusteenTeksti" : {
+          "type" : "boolean"
+        },
         "rivit" : {
           "type" : "array",
           "uniqueItems" : true,
@@ -8073,6 +8076,9 @@
         },
         "osasuorituspolkuLaajuus" : {
           "type" : "number"
+        },
+        "piilotaPerusteenTeksti" : {
+          "type" : "boolean"
         }
       }
     },

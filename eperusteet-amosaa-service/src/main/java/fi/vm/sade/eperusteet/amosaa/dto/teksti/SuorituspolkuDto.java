@@ -33,6 +33,7 @@ import java.util.Set;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SuorituspolkuDto extends SuorituspolkuBaseDto {
     private Boolean naytaKuvausJulkisesti;
+    private Boolean piilotaPerusteenTeksti;
     private Set<SuorituspolkuRiviDto> rivit = new HashSet<>();
     private BigDecimal osasuorituspolkuLaajuus;
 }

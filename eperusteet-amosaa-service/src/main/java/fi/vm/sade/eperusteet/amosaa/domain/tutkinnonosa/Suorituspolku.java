@@ -54,6 +54,10 @@ public class Suorituspolku extends AbstractAuditedEntity implements Serializable
 
     @Getter
     @Setter
+    private Boolean piilotaPerusteenTeksti;
+
+    @Getter
+    @Setter
     @Column(precision = 10, scale = 2, name = "osasuorituspolku_laajuus")
     private BigDecimal osasuorituspolkuLaajuus;
 
