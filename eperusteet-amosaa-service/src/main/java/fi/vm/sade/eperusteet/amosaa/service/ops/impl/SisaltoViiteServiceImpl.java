@@ -323,6 +323,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
         SisaltoViiteDto pelastettu = getData(ktId, opsId, poistettu.getPoistettu(), poistettu.getRev());
         SisaltoViite uusiViite = mapper.map(pelastettu, SisaltoViite.class);
         uusiViite = SisaltoViite.copy(uusiViite);
+        uusiViite.updatePohjanTekstikappale(mapper.map(pelastettu.getPohjanTekstikappale(), TekstiKappale.class));
         uusiViite.setOwner(ops);
 
         SisaltoViite parentViite;
@@ -335,7 +336,10 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
                 parentViite = repository.findSuorituspolutRoot(ops);
                 break;
             default:
-                parentViite = repository.findOneRoot(ops);
+                parentViite = repository.findOneByOwnerIdAndId(ops.getId(), pelastettu.getVanhempi().getIdLong());
+                if (parentViite == null) {
+                    parentViite = repository.findOneRoot(ops);
+                }
                 break;
         }
 
