@@ -12,12 +12,23 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.JulkaisuRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
+import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaMuokkaustietoService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.util.JsonMapper;
 import fi.vm.sade.eperusteet.amosaa.service.util.MaintenanceService;
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobParameter;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Async;
@@ -28,14 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.CollectionUtils;
 
-import java.io.IOException;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 @Service
-@Transactional
 @Profile("!test")
 public class MaintenanceServiceImpl implements MaintenanceService {
 
@@ -59,6 +63,13 @@ public class MaintenanceServiceImpl implements MaintenanceService {
     @Autowired
     private OpetussuunnitelmaMuokkaustietoService opetussuunnitelmaMuokkaustietoService;
 
+    @Autowired
+    private JobLauncher jobLauncher;
+
+    @Autowired()
+    private List<? extends Job> jobs;
+
+    @Deprecated
     @Override
     @Async
     @Transactional(propagation = Propagation.NEVER)
@@ -86,6 +97,16 @@ public class MaintenanceServiceImpl implements MaintenanceService {
         }
 
         logger.info("julkaisut tehty");
+    }
+
+    @Override
+    @Async
+    public void kaynnistaJob(String job, Map<String, String> parametrit) throws Exception {
+        parametrit.put("kaynnistysaika", String.valueOf(new Date().getTime()));
+        jobLauncher.run(jobs.stream().filter(j -> j.getName().equals(job))
+                        .findFirst()
+                        .orElseThrow(() -> new BusinessRuleViolationException("Jobia ei löydy")),
+                new JobParameters(parametrit.keySet().stream().collect(Collectors.toMap(k -> k, k -> new JobParameter(parametrit.get(k))))));
     }
 
     private void teeJulkaisu(Long opsId) {
