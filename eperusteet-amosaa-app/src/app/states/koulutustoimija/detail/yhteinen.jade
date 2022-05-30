@@ -3,7 +3,13 @@ div.otsikkotaso.ops-osa
 
   div(ng-show="yhteiset.length > 0")
     div.row
-      div.col-xs-10
+      div.col-xs-10(style="margin-bottom: 10px;")
+          .pull-left
+            select.form-control(title='tila'
+                                ng-model='rajain.tila'
+                                ng-options="tila as ('tila-'+tila) | kaanna for tila in tilat"
+                                ng-change='paivitaRajaus()')
+              option(value='') {{'kaikki' | kaanna}}
       div.col-xs-2
         div.pull-right
           button.btn.btn-default(style="position: relative; top: -20px;" ng-bind="'lisaa-uusi' | kaanna" ng-click="addYhteinen()" oikeustarkastelu="lisays")
@@ -14,7 +20,7 @@ div.otsikkotaso.ops-osa
       button.btn.btn-primary.pull-right(style="position: relative; top: -26px" ng-bind="'lisaa-uusi' | kaanna" ng-click="addYhteinen()" oikeustarkastelu="lisays")
 
   div(ng-if="yhteiset.length > 0")
-    table.table.boxtable(style="margin-bottom: 0px;" ng-repeat="yhteinen in yhteiset | filter:{ tila: (checks.poistetut ? '' : '!poistettu') }")
+    table.table.boxtable(style="margin-bottom: 0px;" ng-repeat="yhteinen in yhteiset")
       tbody
         tr
           td
