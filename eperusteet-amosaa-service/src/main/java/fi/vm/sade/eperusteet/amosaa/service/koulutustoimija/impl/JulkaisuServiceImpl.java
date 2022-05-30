@@ -133,6 +133,7 @@ public class JulkaisuServiceImpl implements JulkaisuService {
             Julkaisu viimeisinJulkaisu = julkaisuRepository.findFirstByOpetussuunnitelmaOrderByRevisionDesc(opetussuunnitelma);
             OpetussuunnitelmaKaikkiDto opetussuunnitelmaKaikki = opetussuunnitelmaService.getOpetussuunnitelmaKaikki(ktId, opsId);
             ObjectNode dataJson = (ObjectNode) jsonMapper.toJson(opetussuunnitelmaKaikki);
+            List<Julkaisu> vanhatJulkaisut = julkaisuRepository.findAllByOpetussuunnitelma(opetussuunnitelma);
 
             if (viimeisinJulkaisu != null) {
                 int lastHash = viimeisinJulkaisu.getData().getHash();
@@ -159,7 +160,7 @@ public class JulkaisuServiceImpl implements JulkaisuService {
 
             JulkaisuData julkaisuData = julkaisuDataRepository.save(new JulkaisuData(dataJson));
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
-            julkaisu.setRevision(viimeisinJulkaisu != null ? viimeisinJulkaisu.getRevision() + 1 : 1);
+            julkaisu.setRevision(vanhatJulkaisut.stream().mapToInt(Julkaisu::getRevision).max().orElse(0) + 1);
             julkaisu.setTiedote(mapper.map(julkaisuBaseDto.getTiedote(), LokalisoituTeksti.class));
             julkaisu.setDokumentit(dokumentit);
             julkaisu.setLuoja(username);
