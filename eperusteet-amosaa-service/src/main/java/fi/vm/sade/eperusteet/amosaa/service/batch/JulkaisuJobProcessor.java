@@ -14,6 +14,7 @@ import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaMuo
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.util.JsonMapper;
 import java.util.Date;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemProcessor;
@@ -46,11 +47,11 @@ public class JulkaisuJobProcessor implements ItemProcessor<Long, Julkaisu> {
     @Override
     public Julkaisu process(Long opsId) throws Exception {
         Opetussuunnitelma opetussuunnitelma = opetussuunnitelmaRepository.findOne(opsId);
-        Julkaisu viimeisinJulkaisu = julkaisuRepository.findFirstByOpetussuunnitelmaOrderByRevisionDesc(opetussuunnitelma);
+        List<Julkaisu> vanhatJulkaisut = julkaisuRepository.findAllByOpetussuunnitelma(opetussuunnitelma);
 
         OpetussuunnitelmaKaikkiDto sisalto = opetussuunnitelmaService.getOpetussuunnitelmaKaikki(opetussuunnitelma.getKoulutustoimija().getId(), opetussuunnitelma.getId());
         Julkaisu julkaisu = new Julkaisu();
-        julkaisu.setRevision(viimeisinJulkaisu != null ? viimeisinJulkaisu.getRevision() + 1 : 1);
+        julkaisu.setRevision(vanhatJulkaisut.stream().mapToInt(Julkaisu::getRevision).max().orElse(0) + 1);
         julkaisu.setLuoja("maintenance");
         julkaisu.setTiedote(LokalisoituTeksti.of(Kieli.FI, "Ylläpidon suorittama julkaisu"));
         julkaisu.setLuotu(new Date());
