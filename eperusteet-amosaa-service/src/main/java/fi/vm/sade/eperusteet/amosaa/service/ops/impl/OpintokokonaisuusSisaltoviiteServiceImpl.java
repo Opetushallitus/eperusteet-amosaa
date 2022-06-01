@@ -72,7 +72,7 @@ public class OpintokokonaisuusSisaltoviiteServiceImpl implements SisaltoViiteTot
     }
 
     private void kooditaOpintokokonaisuus(SisaltoViiteDto sisaltoViiteDto) {
-        if (StringUtils.isNotEmpty(sisaltoViiteDto.getOpintokokonaisuus().getKoodi()) && sisaltoViiteDto.getTekstiKappale().getNimi() != null) {
+        if (StringUtils.isEmpty(sisaltoViiteDto.getOpintokokonaisuus().getKoodi()) && sisaltoViiteDto.getTekstiKappale().getNimi() != null) {
             KoodistoKoodiDto lisattyKoodi = koodistoClient.addKoodiNimella(KoodistoUriArvo.OPINTOKOKONAISUUDET, sisaltoViiteDto.getTekstiKappale().getNimi());
             if (lisattyKoodi == null) {
                 log.error("Koodin lisääminen epäonnistui: {} {}", KoodistoUriArvo.OPINTOKOKONAISUUDET, sisaltoViiteDto.getTekstiKappale().getNimi());
@@ -83,14 +83,14 @@ public class OpintokokonaisuusSisaltoviiteServiceImpl implements SisaltoViiteTot
 
     private void kooditaTavoitteet(SisaltoViiteDto sisaltoViiteDto) {
         List<OpintokokonaisuusTavoiteDto> tallentamattomat = sisaltoViiteDto.getOpintokokonaisuus().getTavoitteet()
-                .stream().filter(tavoite -> tavoite.getTavoiteKoodi() == null || tavoite.getTavoiteKoodi().isEmpty())
+                .stream().filter(tavoite -> StringUtils.isEmpty(tavoite.getTavoiteKoodi()))
                 .collect(Collectors.toList());
 
         Stack<Long> koodiStack = new Stack<>();
         koodiStack.addAll(koodistoClient.nextKoodiId(KoodistoUriArvo.OPINTOKOKONAISUUS_TAVOITTEET, tallentamattomat.size()));
 
         for (OpintokokonaisuusTavoiteDto tavoite : sisaltoViiteDto.getOpintokokonaisuus().getTavoitteet()) {
-            if (StringUtils.isNotEmpty(tavoite.getTavoiteKoodi())) {
+            if (StringUtils.isEmpty(tavoite.getTavoiteKoodi())) {
                 KoodistoKoodiDto lisattyKoodi = koodistoClient.addKoodiNimella(KoodistoUriArvo.OPINTOKOKONAISUUS_TAVOITTEET, tavoite.getTavoite(), koodiStack.pop());
                 if (lisattyKoodi == null) {
                     log.error("Koodin lisääminen epäonnistui: {} {}", KoodistoUriArvo.OPINTOKOKONAISUUS_TAVOITTEET, tavoite.getTavoite().getTekstit());
