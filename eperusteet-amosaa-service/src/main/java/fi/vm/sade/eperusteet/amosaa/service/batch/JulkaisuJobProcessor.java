@@ -10,6 +10,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.JulkaisuRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
+import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.JulkaisuService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaMuokkaustietoService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.util.JsonMapper;
@@ -44,10 +45,15 @@ public class JulkaisuJobProcessor implements ItemProcessor<Long, Julkaisu> {
     @Autowired
     private OpetussuunnitelmaMuokkaustietoService opetussuunnitelmaMuokkaustietoService;
 
+    @Autowired
+    private JulkaisuService julkaisuService;
+
     @Override
     public Julkaisu process(Long opsId) throws Exception {
         Opetussuunnitelma opetussuunnitelma = opetussuunnitelmaRepository.findOne(opsId);
         List<Julkaisu> vanhatJulkaisut = julkaisuRepository.findAllByOpetussuunnitelma(opetussuunnitelma);
+
+        julkaisuService.kooditaSisaltoviitteet(opetussuunnitelma.getKoulutustoimija().getId(), opsId);
 
         OpetussuunnitelmaKaikkiDto sisalto = opetussuunnitelmaService.getOpetussuunnitelmaKaikki(opetussuunnitelma.getKoulutustoimija().getId(), opetussuunnitelma.getId());
         Julkaisu julkaisu = new Julkaisu();

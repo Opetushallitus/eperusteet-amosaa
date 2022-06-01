@@ -17,6 +17,7 @@ import java.util.Objects;
 import java.util.Stack;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -71,7 +72,7 @@ public class OpintokokonaisuusSisaltoviiteServiceImpl implements SisaltoViiteTot
     }
 
     private void kooditaOpintokokonaisuus(SisaltoViiteDto sisaltoViiteDto) {
-        if (sisaltoViiteDto.getOpintokokonaisuus().getKoodi() == null || sisaltoViiteDto.getOpintokokonaisuus().getKoodi().isEmpty()) {
+        if (StringUtils.isNotEmpty(sisaltoViiteDto.getOpintokokonaisuus().getKoodi()) && sisaltoViiteDto.getTekstiKappale().getNimi() != null) {
             KoodistoKoodiDto lisattyKoodi = koodistoClient.addKoodiNimella(KoodistoUriArvo.OPINTOKOKONAISUUDET, sisaltoViiteDto.getTekstiKappale().getNimi());
             if (lisattyKoodi == null) {
                 log.error("Koodin lisääminen epäonnistui: {} {}", KoodistoUriArvo.OPINTOKOKONAISUUDET, sisaltoViiteDto.getTekstiKappale().getNimi());
@@ -89,7 +90,7 @@ public class OpintokokonaisuusSisaltoviiteServiceImpl implements SisaltoViiteTot
         koodiStack.addAll(koodistoClient.nextKoodiId(KoodistoUriArvo.OPINTOKOKONAISUUS_TAVOITTEET, tallentamattomat.size()));
 
         for (OpintokokonaisuusTavoiteDto tavoite : sisaltoViiteDto.getOpintokokonaisuus().getTavoitteet()) {
-            if (tavoite.getTavoiteKoodi() == null || tavoite.getTavoiteKoodi().isEmpty()) {
+            if (StringUtils.isNotEmpty(tavoite.getTavoiteKoodi())) {
                 KoodistoKoodiDto lisattyKoodi = koodistoClient.addKoodiNimella(KoodistoUriArvo.OPINTOKOKONAISUUS_TAVOITTEET, tavoite.getTavoite(), koodiStack.pop());
                 if (lisattyKoodi == null) {
                     log.error("Koodin lisääminen epäonnistui: {} {}", KoodistoUriArvo.OPINTOKOKONAISUUS_TAVOITTEET, tavoite.getTavoite().getTekstit());
