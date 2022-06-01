@@ -211,7 +211,8 @@ public class JulkaisuServiceImpl implements JulkaisuService {
         return taytaKayttajaTiedot(Arrays.asList(julkaisu)).get(0);
     }
 
-    private void kooditaSisaltoviitteet(long ktId, long opsId) {
+    @Override
+    public void kooditaSisaltoviitteet(long ktId, long opsId) {
         SisaltoViiteRakenneDto sisaltoViiteRakenneDto = sisaltoViiteService.getRakenne(ktId, opsId);
         kooditaSisaltoviite(sisaltoviiteRepository.findOneByOwnerIdAndId(opsId, sisaltoViiteRakenneDto.getId()));
     }

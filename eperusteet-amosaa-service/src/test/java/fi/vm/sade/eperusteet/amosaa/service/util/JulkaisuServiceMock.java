@@ -23,4 +23,9 @@ public class JulkaisuServiceMock implements JulkaisuService {
     public JulkaisuBaseDto aktivoiJulkaisu(long ktId, long opsId, int revision) {
         return null;
     }
+
+    @Override
+    public void kooditaSisaltoviitteet(long ktId, long opsId) {
+        
+    }
 }
