@@ -2,6 +2,7 @@ package fi.vm.sade.eperusteet.amosaa.service.vst;
 
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OpintokokonaisuusTavoite;
 import fi.vm.sade.eperusteet.amosaa.dto.koodisto.KoodistoUriArvo;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
@@ -10,7 +11,9 @@ import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.OpintokokonaisuusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.OpintokokonaisuusTavoiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
+import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
+import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoviiteServiceProvider;
 import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +36,12 @@ public class VapaasivistystyoOpsIT extends AbstractIntegrationTest {
 
     @Autowired
     private SisaltoViiteService sisaltoViiteService;
+
+    @Autowired
+    private SisaltoviiteServiceProvider sisaltoviiteServiceProvider;
+
+    @Autowired
+    private SisaltoviiteRepository sisaltoviiteRepository;
 
     @Test
     @Rollback
@@ -112,25 +121,31 @@ public class VapaasivistystyoOpsIT extends AbstractIntegrationTest {
                 .extracting("tekstit")
                 .containsExactlyInAnyOrder(LokalisoituTekstiDto.of("tavoite1").getTeksti());
 
+        SisaltoViite sisaltoViite = sisaltoviiteRepository.getOne(sisaltoviiteDto.getId());
+        sisaltoviiteServiceProvider.koodita(sisaltoViite);
+        sisaltoviiteDto = sisaltoViiteService.getSisaltoViite(vstOps.getKoulutustoimija().getId(), vstOps.getId(), opintokokonaisuudet.get(0).getId());
+        assertThat(sisaltoviiteDto.getOpintokokonaisuus().getTavoitteet()).extracting("tavoiteKoodi").doesNotContainNull();
     }
 
     @Test
-    public void test_vapaasivistystyoSisaltoviitteet_koodi() {
+    public void test_vapaasivistystyoSisaltoviitteet_opintokokonaisuus_kooditus() {
         OpetussuunnitelmaBaseDto vstOps = createOpetussuunnitelma(ops -> ops.setPerusteId(35820L));
         List<SisaltoviiteLaajaDto> sisaltoviitteet = sisaltoViiteService.getSisaltoViitteet(vstOps.getKoulutustoimija().getId(), vstOps.getId(), SisaltoviiteLaajaDto.class);
         List<SisaltoviiteLaajaDto> opintokokonaisuudet = sisaltoviitteet.stream().filter(viite -> SisaltoTyyppi.OPINTOKOKONAISUUS.equals(viite.getTyyppi())).collect(Collectors.toList());
 
-        SisaltoViiteDto.Matala sisaltoviiteDto = sisaltoViiteService.getSisaltoViite(vstOps.getKoulutustoimija().getId(), vstOps.getId(), opintokokonaisuudet.get(0).getId());
-        sisaltoviiteDto.getOpintokokonaisuus().setKoodi(KoodistoUriArvo.OPINTOKOKONAISUUDET + "_" + 1234);
-        sisaltoViiteService.updateSisaltoViite(vstOps.getKoulutustoimija().getId(), vstOps.getId(), opintokokonaisuudet.get(0).getId(), sisaltoviiteDto);
-        sisaltoviiteDto = sisaltoViiteService.getSisaltoViite(vstOps.getKoulutustoimija().getId(), vstOps.getId(), opintokokonaisuudet.get(0).getId());
-        assertThat(sisaltoviiteDto.getOpintokokonaisuus().getKoodi()).isEqualTo(KoodistoUriArvo.OPINTOKOKONAISUUDET + "_" + 1234);
-        assertThat(sisaltoviiteDto.getOpintokokonaisuus().getKoodiArvo()).isEqualTo("1234");
+        opintokokonaisuudet.forEach(ok -> {
+            assertThat(ok.getOpintokokonaisuus().getKoodi()).isNull();
+            SisaltoViite sisaltoViite = sisaltoviiteRepository.getOne(ok.getId());
+            sisaltoviiteServiceProvider.koodita(sisaltoViite);
+            sisaltoViite = sisaltoviiteRepository.getOne(opintokokonaisuudet.get(0).getId());
+            assertThat(sisaltoViite.getOpintokokonaisuus().getKoodi()).isNotNull();
+        });
 
+        SisaltoViiteDto.Matala sisaltoviiteDto = sisaltoViiteService.getSisaltoViite(vstOps.getKoulutustoimija().getId(), vstOps.getId(), opintokokonaisuudet.get(0).getId());
         sisaltoviiteDto.getOpintokokonaisuus().setKoodi(KoodistoUriArvo.OPINTOKOKONAISUUDET + "_" + 5555);
         sisaltoViiteService.updateSisaltoViite(vstOps.getKoulutustoimija().getId(), vstOps.getId(), opintokokonaisuudet.get(0).getId(), sisaltoviiteDto);
         sisaltoviiteDto = sisaltoViiteService.getSisaltoViite(vstOps.getKoulutustoimija().getId(), vstOps.getId(), opintokokonaisuudet.get(0).getId());
-        assertThat(sisaltoviiteDto.getOpintokokonaisuus().getKoodi()).isEqualTo(KoodistoUriArvo.OPINTOKOKONAISUUDET + "_" + 1234);
+        assertThat(sisaltoviiteDto.getOpintokokonaisuus().getKoodi()).isNotEqualTo(KoodistoUriArvo.OPINTOKOKONAISUUDET + "_" + 5555);
 
     }
 
