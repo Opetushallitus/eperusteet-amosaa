@@ -19,6 +19,9 @@ import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.KotoKielitaitotaso;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.KotoLaajaAlainenOsaaminen;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.KotoOpinto;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Koulutuksenosa;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Opintokokonaisuus;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.KoulutuksenosanPaikallinenTarkennus;
@@ -162,6 +165,26 @@ public class SisaltoViite implements ReferenceableEntity, Serializable, Copyable
     @Setter
     private TuvaLaajaAlainenOsaaminen tuvaLaajaAlainenOsaaminen;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Getter
+    @Setter
+    private KotoKielitaitotaso kotoKielitaitotaso;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Getter
+    @Setter
+    private KotoOpinto kotoOpinto;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Getter
+    @Setter
+    private KotoLaajaAlainenOsaaminen kotoLaajaAlainenOsaaminen;
+
+    @Getter
+    @Setter
+    @Column(updatable = false)
+    private Long perusteenOsaId;
+
     @OneToMany(mappedBy = "vanhempi", fetch = FetchType.LAZY)
     @OrderColumn
     @Getter
@@ -215,10 +238,16 @@ public class SisaltoViite implements ReferenceableEntity, Serializable, Copyable
             result.setOpintokokonaisuus(Opintokokonaisuus.copy(original.getOpintokokonaisuus()));
             result.setKoulutuksenosa(Koulutuksenosa.copy(original.getKoulutuksenosa()));
             result.setTuvaLaajaAlainenOsaaminen(TuvaLaajaAlainenOsaaminen.copy(original.getTuvaLaajaAlainenOsaaminen()));
+            result.setKotoKielitaitotaso(KotoKielitaitotaso.copy(original.getKotoKielitaitotaso()));
+            result.setKotoOpinto(KotoOpinto.copy(original.getKotoOpinto()));
+            result.setKotoLaajaAlainenOsaaminen(KotoLaajaAlainenOsaaminen.copy(original.getKotoLaajaAlainenOsaaminen()));
             result.setPeruste(original.getPeruste());
+            result.setPerusteenOsaId(original.getPerusteenOsaId());
 
             result.setTekstiKappale(TekstiKappale.copy(original.getTekstiKappale()));
-            if (!copyText && original.getTekstiKappale() != null) {
+            if (!copyText
+                    && original.getTekstiKappale() != null
+                    && original.getTyyppi().equals(SisaltoTyyppi.TEKSTIKAPPALE)) {
                 result.getTekstiKappale().setTeksti(null);
                 result.updatePohjanTekstikappale(original.getTekstiKappale());
                 result.setNaytaPohjanTeksti(true);
@@ -283,6 +312,30 @@ public class SisaltoViite implements ReferenceableEntity, Serializable, Copyable
         result.setTyyppi(SisaltoTyyppi.LAAJAALAINENOSAAMINEN);
         TuvaLaajaAlainenOsaaminen tuvaLaajaAlainenOsaaminen = new TuvaLaajaAlainenOsaaminen();
         result.setTuvaLaajaAlainenOsaaminen(tuvaLaajaAlainenOsaaminen);
+        return result;
+    }
+
+    static public SisaltoViite createKotoKielitaitotaso(SisaltoViite parent) {
+        SisaltoViite result = createCommon(parent);
+        result.setTyyppi(SisaltoTyyppi.KOTO_KIELITAITOTASO);
+        KotoKielitaitotaso kielitaitotaso = new KotoKielitaitotaso();
+        result.setKotoKielitaitotaso(kielitaitotaso);
+        return result;
+    }
+
+    static public SisaltoViite createKotoOpinto(SisaltoViite parent) {
+        SisaltoViite result = createCommon(parent);
+        result.setTyyppi(SisaltoTyyppi.KOTO_OPINTO);
+        KotoOpinto kotoOpinto = new KotoOpinto();
+        result.setKotoOpinto(kotoOpinto);
+        return result;
+    }
+
+    static public SisaltoViite createKotoLaajaAlainenOsaaminen(SisaltoViite parent) {
+        SisaltoViite result = createCommon(parent);
+        result.setTyyppi(SisaltoTyyppi.KOTO_LAAJAALAINENOSAAMINEN);
+        KotoLaajaAlainenOsaaminen lao = new KotoLaajaAlainenOsaaminen();
+        result.setKotoLaajaAlainenOsaaminen(lao);
         return result;
     }
 

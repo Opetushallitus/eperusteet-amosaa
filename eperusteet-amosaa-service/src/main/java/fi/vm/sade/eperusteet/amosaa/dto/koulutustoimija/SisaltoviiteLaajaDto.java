@@ -3,6 +3,9 @@ package fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteBaseDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.KotoKielitaitotasoDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.KotoLaajaAlainenOsaaminenDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.KotoOpintoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.KoulutuksenOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.OpintokokonaisuusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SuorituspolkuDto;
@@ -24,6 +27,10 @@ public class SisaltoviiteLaajaDto {
     private OpintokokonaisuusDto opintokokonaisuus;
     private KoulutuksenOsaDto koulutuksenosa;
     private TuvaLaajaAlainenOsaaminenDto tuvaLaajaAlainenOsaaminen;
+    private KotoKielitaitotasoDto kotoKielitaitotaso;
+    private KotoOpintoDto kotoOpinto;
+    private KotoLaajaAlainenOsaaminenDto kotoLaajaAlainenOsaaminen;
+    private Long perusteenOsaId;
 
     public OpetussuunnitelmaDto getOpetussuunnitelma() {
         return owner;

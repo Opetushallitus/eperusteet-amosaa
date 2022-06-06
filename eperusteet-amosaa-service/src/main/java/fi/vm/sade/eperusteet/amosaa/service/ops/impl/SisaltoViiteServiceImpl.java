@@ -16,7 +16,9 @@
 package fi.vm.sade.eperusteet.amosaa.service.ops.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fi.vm.sade.eperusteet.amosaa.domain.HistoriaTapahtumaAuditointitiedoilla;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
+import fi.vm.sade.eperusteet.amosaa.domain.MuokkausTapahtuma;
 import fi.vm.sade.eperusteet.amosaa.domain.Poistettu;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
@@ -36,6 +38,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Tutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaToteutus;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.VierasTutkinnonosa;
+import fi.vm.sade.eperusteet.amosaa.dto.NavigationType;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import fi.vm.sade.eperusteet.amosaa.dto.RevisionDto;
 import fi.vm.sade.eperusteet.amosaa.dto.RevisionKayttajaDto;
@@ -70,6 +73,7 @@ import fi.vm.sade.eperusteet.amosaa.service.exception.LockingException;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetClient;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
+import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaMuokkaustietoService;
 import fi.vm.sade.eperusteet.amosaa.service.locking.AbstractLockService;
 import fi.vm.sade.eperusteet.amosaa.service.locking.LockManager;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
@@ -78,6 +82,7 @@ import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoviiteServiceProvider;
 import fi.vm.sade.eperusteet.amosaa.service.peruste.PerusteCacheService;
 import fi.vm.sade.eperusteet.amosaa.service.teksti.TekstiKappaleService;
 import fi.vm.sade.eperusteet.amosaa.service.util.PoistettuService;
+import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -160,6 +165,9 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
 
     @Autowired
     KayttajanTietoService kayttajanTietoService;
+
+    @Autowired
+    OpetussuunnitelmaMuokkaustietoService opetussuunnitelmaMuokkaustietoService;
 
     @Autowired
     private LockManager lockMgr;
@@ -484,6 +492,9 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
             case OPINTOKOKONAISUUS:
             case KOULUTUKSENOSA:
             case LAAJAALAINENOSAAMINEN:
+            case KOTO_KIELITAITOTASO:
+            case KOTO_LAAJAALAINENOSAAMINEN:
+            case KOTO_OPINTO:
                 sisaltoviiteServiceProvider.updateSisaltoViite(viite, uusi);
             default:
                 break;
@@ -827,6 +838,16 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
 
         // Siirretään poistetut viitteet poistettuihin
         updatePoistetut(kt, ops, vanhatViitteet);
+
+        opetussuunnitelmaMuokkaustietoService.addOpsMuokkausTieto(
+                opsId,
+                HistoriaTapahtumaAuditointitiedoilla.builder()
+                        .luotu(new Date()).muokattu(new Date())
+                        .luoja(SecurityUtil.getAuthenticatedPrincipal().getName()).muokkaaja(SecurityUtil.getAuthenticatedPrincipal().getName())
+                        .id(ops.getId())
+                        .navigationType(NavigationType.opetussuunnitelma_rakenne)
+                        .build(),
+                MuokkausTapahtuma.PAIVITYS);
     }
 
     @Override

@@ -55,6 +55,10 @@ public class SisaltoViiteDto {
     private OpintokokonaisuusDto opintokokonaisuus;
     private KoulutuksenOsaDto koulutuksenosa;
     private TuvaLaajaAlainenOsaaminenDto tuvaLaajaAlainenOsaaminen;
+    private KotoKielitaitotasoDto kotoKielitaitotaso;
+    private KotoOpintoDto kotoOpinto;
+    private KotoLaajaAlainenOsaaminenDto kotoLaajaAlainenOsaaminen;
+    private Long perusteenOsaId;
     private String kommentti;
     private boolean naytaPerusteenTeksti;
 

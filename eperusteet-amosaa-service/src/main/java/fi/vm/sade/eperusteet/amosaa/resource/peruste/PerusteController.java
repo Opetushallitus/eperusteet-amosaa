@@ -16,6 +16,7 @@
 
 package fi.vm.sade.eperusteet.amosaa.resource.peruste;
 
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteenOsaDto;
 import java.util.List;
 import java.util.Map;
 
@@ -136,6 +137,11 @@ public class PerusteController extends KoulutustoimijaIdGetterAbstractController
     @RequestMapping(value = "/{perusteId}/perusteesta", method = RequestMethod.GET)
     public JsonNode getPerusteByPerusteId(@PathVariable Long perusteId) {
         return service.getPerusteSisaltoByPerusteId(perusteId, JsonNode.class);
+    }
+
+    @RequestMapping(value = "/{perusteId}/perusteenosa/{perusteenosaId}", method = RequestMethod.GET)
+    public PerusteenOsaDto getPerusteenOsa(@PathVariable Long perusteId, @PathVariable Long perusteenosaId) {
+        return service.getPerusteenOsa(perusteId, perusteenosaId);
     }
     
 //    @RequestMapping(value = "/{perusteId}/tutkintonimikekoodit", method = GET)

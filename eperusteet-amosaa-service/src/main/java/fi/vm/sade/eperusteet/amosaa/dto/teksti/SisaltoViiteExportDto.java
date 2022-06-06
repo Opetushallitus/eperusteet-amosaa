@@ -1,8 +1,8 @@
 package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteenOsaDto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,6 +27,10 @@ public class SisaltoViiteExportDto extends SisaltoViiteExportBaseDto {
     private OpintokokonaisuusDto opintokokonaisuus;
     private KoulutuksenOsaDto koulutuksenosa;
     private TuvaLaajaAlainenOsaaminenDto tuvaLaajaAlainenOsaaminen;
+    private KotoKielitaitotasoExportDto kotoKielitaitotaso;
+    private KotoOpintoExportDto kotoOpinto;
+    private KotoLaajaAlainenOsaaminenExportDto kotoLaajaAlainenOsaaminen;
+    private Long perusteenOsaId;
 
     public LokalisoituTekstiDto getNimi() {
         if (koulutuksenosa != null) {
@@ -42,5 +46,17 @@ public class SisaltoViiteExportDto extends SisaltoViiteExportBaseDto {
         }
 
         return null;
+    }
+
+    public void setPerusteSisalto(PerusteenOsaDto perusteenOsaDto) {
+        if (kotoKielitaitotaso != null && perusteenOsaDto instanceof fi.vm.sade.eperusteet.amosaa.dto.peruste.KotoKielitaitotasoDto) {
+            kotoKielitaitotaso.setPerusteenOsa((fi.vm.sade.eperusteet.amosaa.dto.peruste.KotoKielitaitotasoDto) perusteenOsaDto);
+        }
+        if (kotoOpinto != null && perusteenOsaDto instanceof fi.vm.sade.eperusteet.amosaa.dto.peruste.KotoOpintoDto) {
+            kotoOpinto.setPerusteenOsa((fi.vm.sade.eperusteet.amosaa.dto.peruste.KotoOpintoDto) perusteenOsaDto);
+        }
+        if (kotoLaajaAlainenOsaaminen != null && perusteenOsaDto instanceof fi.vm.sade.eperusteet.amosaa.dto.peruste.KotoLaajaAlainenOsaaminenDto) {
+            kotoLaajaAlainenOsaaminen.setPerusteenOsa((fi.vm.sade.eperusteet.amosaa.dto.peruste.KotoLaajaAlainenOsaaminenDto) perusteenOsaDto);
+        }
     }
 }

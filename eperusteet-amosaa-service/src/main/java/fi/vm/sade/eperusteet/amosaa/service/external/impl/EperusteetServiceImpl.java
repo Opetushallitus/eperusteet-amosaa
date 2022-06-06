@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
@@ -37,6 +38,7 @@ import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.peruste.PerusteCacheService;
 
+import fi.vm.sade.eperusteet.amosaa.service.util.CollectionUtil;
 import java.io.IOException;
 import java.util.*;
 import java.util.function.Function;
@@ -399,5 +401,26 @@ public class EperusteetServiceImpl implements EperusteetService {
     @Override
     public byte[] getLiite(Long perusteId, UUID id) {
         return client.exchange(eperusteetServiceUrl + "/api/perusteet/{perusteId}/kuvat/{id}", HttpMethod.GET, httpEntity, byte[].class, perusteId, id).getBody();
+    }
+
+    @Override
+    public PerusteenOsaDto getPerusteenOsa(Long perusteId, Long perusteenOsaId) {
+        try {
+            CachedPeruste cperuste = cachedPerusteRepository.findOne(perusteId);
+            JsonNode node = mapper.readTree(cperuste.getPeruste());
+            PerusteKaikkiDto peruste = mapper.treeToValue(node, PerusteKaikkiDto.class);
+
+            if (peruste.getSisalto() != null) {
+                return CollectionUtil.treeToStream(peruste.getSisalto(), PerusteenOsaViiteDto.Laaja::getLapset)
+                        .filter(viite -> viite.getPerusteenOsa() != null && viite.getPerusteenOsa().getId().equals(perusteenOsaId))
+                        .map(PerusteenOsaViiteDto.Laaja::getPerusteenOsa)
+                        .findFirst()
+                        .orElseThrow(() -> new BusinessRuleViolationException("perusteen-osaa-ei-loydy"));
+            }
+        } catch (IOException ex) {
+            throw new BusinessRuleViolationException("perusteen-parsinta-epaonnistui");
+        }
+
+        return null;
     }
 }

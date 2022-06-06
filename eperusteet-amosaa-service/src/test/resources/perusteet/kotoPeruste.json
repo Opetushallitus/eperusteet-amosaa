@@ -1,0 +1,338 @@
+{
+  "id": 99860,
+  "globalVersion": {
+    "aikaleima": 1654513164994
+  },
+  "nimi": {
+    "_id": "100039",
+    "_tunniste": "24d42005-e2a6-43bf-9eb0-0d7ce5115cc1",
+    "fi": "koto peruste 2022"
+  },
+  "koulutustyyppi": "koulutustyyppi_30",
+  "toteutus": "kotoutumiskoulutus",
+  "koulutukset": [],
+  "kielet": [
+    "fi"
+  ],
+  "kuvaus": null,
+  "maarayskirje": null,
+  "muutosmaaraykset": [],
+  "diaarinumero": "555/333/9494",
+  "voimassaoloAlkaa": 1654030800000,
+  "siirtymaPaattyy": null,
+  "voimassaoloLoppuu": null,
+  "paatospvm": 1656018000000,
+  "luotu": 1654512965417,
+  "muokattu": 1654513164954,
+  "tila": "luonnos",
+  "tyyppi": "normaali",
+  "koulutusvienti": false,
+  "korvattavatDiaarinumerot": [],
+  "osaamisalat": [],
+  "tyotehtavatJoissaVoiToimia": null,
+  "suorittaneenOsaaminen": null,
+  "perusteenAikataulut": [
+    {
+      "id": 99900,
+      "peruste": {
+        "id": 99860,
+        "nimi": {
+          "_id": "100039",
+          "_tunniste": "24d42005-e2a6-43bf-9eb0-0d7ce5115cc1",
+          "fi": "koto peruste 2022"
+        },
+        "tila": "luonnos",
+        "tyyppi": "normaali",
+        "koulutustyyppi": "koulutustyyppi_30",
+        "esikatseltavissa": false,
+        "voimassaoloAlkaa": 1654030800000,
+        "voimassaoloLoppuu": null
+      },
+      "tavoite": {
+        "_id": "99910",
+        "_tunniste": "8a464859-30e5-4f42-b27c-357524a35487",
+        "fi": "Peruste luotu"
+      },
+      "tapahtuma": "luominen",
+      "tapahtumapaiva": 1654512953142,
+      "julkinen": false
+    }
+  ],
+  "vapaasivistystyo": {
+    "id": 99870,
+    "sisalto": {
+      "id": 99880,
+      "lapset": [
+        {
+          "id": 99881,
+          "perusteenOsa": {
+            "id": 99930,
+            "luotu": 1654512981431,
+            "muokattu": 1654513124880,
+            "muokkaaja": "test",
+            "nimi": {
+              "_id": "99911",
+              "_tunniste": "8cf0433b-48ec-4732-b3a9-d17e649f6dbf",
+              "fi": "Perusteen tekstikappale"
+            },
+            "tila": "luonnos",
+            "teksti": {
+              "_id": "100038",
+              "_tunniste": "9d99df9b-99fa-49fb-839c-32337a14bd42",
+              "fi": "<p>perusteen tarkennus</p>"
+            },
+            "koodit": [],
+            "liite": false,
+            "osanTyyppi": "tekstikappale"
+          },
+          "lapset": [],
+          "_perusteenOsa": "99930"
+        },
+        {
+          "id": 99882,
+          "perusteenOsa": {
+            "id": 99931,
+            "luotu": 1654512986537,
+            "muokattu": 1654513113793,
+            "muokkaaja": "test",
+            "nimi": {
+              "_id": "100032",
+              "_tunniste": "ddde74f4-5c5e-4239-96bb-4f7f1c275b3d",
+              "fi": "Työelämätaidot"
+            },
+            "tila": "luonnos",
+            "nimiKoodi": {
+              "id": 99995,
+              "nimi": {
+                "fi": "Työelämätaidot"
+              },
+              "arvo": "06",
+              "uri": "tavoitesisaltoalueenotsikko_06",
+              "koodisto": "tavoitesisaltoalueenotsikko",
+              "versio": 1,
+              "temporary": false
+            },
+            "kuvaus": {
+              "_id": "100033",
+              "_tunniste": "37e9a1d9-c1db-4925-870c-9befdcb1c718",
+              "fi": "<p>perusteen tarkennus1</p>"
+            },
+            "taitotasot": [
+              {
+                "id": 100022,
+                "nimi": {
+                  "id": 99996,
+                  "nimi": {
+                    "fi": "Ammatti- ja koulutustietous",
+                    "sv": "Kunskap om yrken och utbildning"
+                  },
+                  "arvo": "1010",
+                  "uri": "kotoutumiskoulutustavoitteet_1010",
+                  "koodisto": "kotoutumiskoulutustavoitteet",
+                  "versio": 1,
+                  "temporary": false
+                },
+                "tavoitteet": {
+                  "_id": "100036",
+                  "_tunniste": "1037847a-8cfa-4cec-a839-e32920ee532e",
+                  "fi": "<p>perusteen tarkennus2</p>"
+                },
+                "kielenkayttotarkoitus": null,
+                "aihealueet": null,
+                "viestintataidot": null,
+                "opiskelijantaidot": null,
+                "opiskelijanTyoelamataidot": null,
+                "tyoelamaOpintoMinimiLaajuus": null,
+                "tyoelamaOpintoMaksimiLaajuus": null,
+                "suullinenVastaanottaminen": {
+                  "_id": "100035",
+                  "_tunniste": "727b9dbb-6795-43a9-ab1a-fa5442f48e29",
+                  "fi": "<p>perusteen tarkennus3</p>"
+                },
+                "suullinenTuottaminen": {
+                  "_id": "100034",
+                  "_tunniste": "8510c0b8-fb18-4785-a0a5-00450e31ec0a",
+                  "fi": "<p>perusteen tarkennus4</p>"
+                },
+                "vuorovaikutusJaMediaatio": {
+                  "_id": "100037",
+                  "_tunniste": "bd07d7b5-dcac-4a4c-b25c-eedc98a87e86",
+                  "fi": "<p>perusteen tarkennus5</p>"
+                }
+              }
+            ],
+            "osanTyyppi": "koto_kielitaitotaso"
+          },
+          "lapset": [],
+          "_perusteenOsa": "99931"
+        },
+        {
+          "id": 99883,
+          "perusteenOsa": {
+            "id": 99932,
+            "luotu": 1654512991220,
+            "muokattu": 1654513076767,
+            "muokkaaja": "test",
+            "nimi": {
+              "_id": "99916",
+              "_tunniste": "e3ff3f50-72b2-4a73-a15f-42c6b1cc3fe8",
+              "fi": "Opiskelu- ja itsearviointitaidot"
+            },
+            "tila": "luonnos",
+            "nimiKoodi": {
+              "id": 99992,
+              "nimi": {
+                "fi": "Opiskelu- ja itsearviointitaidot"
+              },
+              "arvo": "03",
+              "uri": "tavoitesisaltoalueenotsikko_03",
+              "koodisto": "tavoitesisaltoalueenotsikko",
+              "versio": 1,
+              "temporary": false
+            },
+            "kuvaus": {
+              "_id": "99917",
+              "_tunniste": "5fcdfb4b-b5c8-4048-b303-a36052156a50",
+              "fi": "<p>perusteen tarkennus</p>"
+            },
+            "taitotasot": [
+              {
+                "id": 100020,
+                "nimi": {
+                  "id": 99993,
+                  "nimi": {
+                    "fi": "Kehittyvä ja toimiva alkeiskielitaito (A1.1-A1.3)"
+                  },
+                  "arvo": "1011",
+                  "uri": "kotoutumiskoulutustavoitteet_1011",
+                  "koodisto": "kotoutumiskoulutustavoitteet",
+                  "versio": 1,
+                  "temporary": false
+                },
+                "tavoitteet": {
+                  "_id": "99919",
+                  "_tunniste": "4dee7ee8-3258-43d3-9b9f-6dcef9646b47",
+                  "fi": "<p>perusteen tarkennus</p>"
+                },
+                "kielenkayttotarkoitus": null,
+                "aihealueet": null,
+                "viestintataidot": null,
+                "opiskelijantaidot": null,
+                "opiskelijanTyoelamataidot": {
+                  "_id": "99918",
+                  "_tunniste": "69de7361-8aa7-4230-8b66-2ddbbff32666",
+                  "fi": "<p>perusteen tarkennus</p>"
+                },
+                "tyoelamaOpintoMinimiLaajuus": 5,
+                "tyoelamaOpintoMaksimiLaajuus": 10,
+                "suullinenVastaanottaminen": null,
+                "suullinenTuottaminen": null,
+                "vuorovaikutusJaMediaatio": null
+              },
+              {
+                "id": 100021,
+                "nimi": {
+                  "id": 99994,
+                  "nimi": {
+                    "fi": "Toimiva ja sujuva peruskielitaito (B1.1-B1.2)"
+                  },
+                  "arvo": "1012",
+                  "uri": "kotoutumiskoulutustavoitteet_1012",
+                  "koodisto": "kotoutumiskoulutustavoitteet",
+                  "versio": 1,
+                  "temporary": false
+                },
+                "tavoitteet": {
+                  "_id": "100031",
+                  "_tunniste": "632bc716-4afd-496d-8a3d-29cd57cb52ca",
+                  "fi": "<p>perusteen tarkennus</p>"
+                },
+                "kielenkayttotarkoitus": null,
+                "aihealueet": null,
+                "viestintataidot": null,
+                "opiskelijantaidot": null,
+                "opiskelijanTyoelamataidot": {
+                  "_id": "100030",
+                  "_tunniste": "5b2802b8-7ae1-4d0f-b94f-1475f4475333",
+                  "fi": "<p>perusteen tarkennus</p>"
+                },
+                "tyoelamaOpintoMinimiLaajuus": 7,
+                "tyoelamaOpintoMaksimiLaajuus": null,
+                "suullinenVastaanottaminen": null,
+                "suullinenTuottaminen": null,
+                "vuorovaikutusJaMediaatio": null
+              }
+            ],
+            "osanTyyppi": "koto_opinto"
+          },
+          "lapset": [],
+          "_perusteenOsa": "99932"
+        },
+        {
+          "id": 99884,
+          "perusteenOsa": {
+            "id": 99933,
+            "luotu": 1654512996645,
+            "muokattu": 1654513037128,
+            "muokkaaja": "test",
+            "nimi": {
+              "_id": "99912",
+              "_tunniste": "f8f1eb37-39e8-482c-b165-527e5d10dc41",
+              "fi": "perusteen laaja-alaiset opinnot"
+            },
+            "tila": "luonnos",
+            "yleiskuvaus": {
+              "_id": "99915",
+              "_tunniste": "236c19a0-d60f-4fbb-8ec4-96adc7050ab7",
+              "fi": "<p>perusteen tekstiä</p>"
+            },
+            "osaamisAlueet": [
+              {
+                "koodi": {
+                  "id": 99990,
+                  "nimi": {
+                    "fi": "Oppimaan oppimisen taidot ja opiskelutaidot",
+                    "sv": "Studiefärdigheter och förmåga att lära sig lära"
+                  },
+                  "arvo": "01",
+                  "uri": "laajaalainenosaaminenkoto2022_01",
+                  "koodisto": "laajaalainenosaaminenkoto2022",
+                  "versio": null,
+                  "temporary": false
+                },
+                "kuvaus": {
+                  "_id": "99913",
+                  "_tunniste": "deeb6331-9711-4cb8-afeb-917e8ff6e573",
+                  "fi": "<p>perusteen oppimaan</p>"
+                }
+              },
+              {
+                "koodi": {
+                  "id": 99991,
+                  "nimi": {
+                    "fi": "Digitaidot",
+                    "sv": "Digital kompetens"
+                  },
+                  "arvo": "03",
+                  "uri": "laajaalainenosaaminenkoto2022_03",
+                  "koodisto": "laajaalainenosaaminenkoto2022",
+                  "versio": null,
+                  "temporary": false
+                },
+                "kuvaus": {
+                  "_id": "99914",
+                  "_tunniste": "85eee97e-5a1c-4bda-a33e-147591d6a000",
+                  "fi": "<p>perusteen digitaidot</p>"
+                }
+              }
+            ],
+            "osanTyyppi": "koto_laajaalainenosaaminen"
+          },
+          "lapset": [],
+          "_perusteenOsa": "99933"
+        }
+      ]
+    },
+    "laajuus": null
+  }
+}

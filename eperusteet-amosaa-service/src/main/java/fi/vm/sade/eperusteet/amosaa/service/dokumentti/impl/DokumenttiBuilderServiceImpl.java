@@ -32,6 +32,8 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Tekstiosa;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.KotoTaitotaso;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.KotoTaitotasoLaajaAlainenOsaaminen;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaTutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Opintokokonaisuus;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Suorituspolku;
@@ -46,6 +48,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.teksti.AmmattitaitovaatimusKohdealueetDt
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.KoulutuksenOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.OpintokokonaisuusTavoiteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteKevytDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.TuvaLaajaAlainenOsaaminenDto;
 import fi.vm.sade.eperusteet.amosaa.repository.dokumentti.DokumenttiRepository;
@@ -389,6 +392,15 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
                     break;
                 case KOULUTUKSENOSA:
                     addKoulutuksenosa(docBase, lapsi);
+                    break;
+                case KOTO_LAAJAALAINENOSAAMINEN:
+                    addKotoLaajaAlainenOsaaminen(docBase, lapsi);
+                    break;
+                case KOTO_KIELITAITOTASO:
+                    addKotoKielitaitotaso(docBase, lapsi);
+                    break;
+                case KOTO_OPINTO:
+                    addKotoOpinto(docBase, lapsi);
                     break;
                 default:
                     break;
@@ -1154,6 +1166,125 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
             });
         }
 
+    }
+
+    private void addKotoLaajaAlainenOsaaminen(DokumenttiBase docBase, SisaltoViite lapsi) {
+        KotoLaajaAlainenOsaaminenDto perusteenOsaDto = (KotoLaajaAlainenOsaaminenDto) eperusteetService.getPerusteenOsa(docBase.getOpetussuunnitelma().getPeruste().getId(), lapsi.getPerusteenOsaId());
+        addTeksti(docBase, getTextString(docBase, perusteenOsaDto.getYleiskuvaus()), "div");
+
+        perusteenOsaDto.getOsaamisAlueet().forEach(osaamisalue -> {
+            addTeksti(docBase, getTextString(docBase, new LokalisoituTekstiDto(osaamisalue.getKoodi().getNimi())), "h6");
+            addTeksti(docBase, getTextString(docBase, osaamisalue.getKuvaus()), "div");
+        });
+
+        addTeksti(docBase, messages.translate("docgen.laaja-alaisen-osaamisen-paikallinen-tarkennus", docBase.getKieli()), "h6");
+        addTeksti(docBase, getTextString(docBase, lapsi.getKotoLaajaAlainenOsaaminen().getTeksti()), "div");
+    }
+
+    private void addKotoKielitaitotaso(DokumenttiBase docBase, SisaltoViite lapsi) {
+        KotoKielitaitotasoDto perusteenOsaDto = (KotoKielitaitotasoDto) eperusteetService.getPerusteenOsa(docBase.getOpetussuunnitelma().getPeruste().getId(), lapsi.getPerusteenOsaId());
+        addTeksti(docBase, getTextString(docBase, perusteenOsaDto.getKuvaus()), "div");
+
+        Map<String, KotoTaitotaso> taitotasoMap = lapsi.getKotoKielitaitotaso().getTaitotasot().stream().collect(Collectors.toMap((taitotaso -> taitotaso.getKoodiUri()), (taitotaso -> taitotaso)));
+        addKotoTaitotasot(docBase, taitotasoMap, perusteenOsaDto.getTaitotasot(), "docgen.tavoitteet.title");
+
+        addKotoTaitotasoLaajaAlaisetOsaamiset(docBase, lapsi.getKotoKielitaitotaso().getLaajaAlaisetOsaamiset());
+    }
+
+    private void addKotoOpinto(DokumenttiBase docBase, SisaltoViite lapsi) {
+        KotoOpintoDto perusteenOsaDto = (KotoOpintoDto) eperusteetService.getPerusteenOsa(docBase.getOpetussuunnitelma().getPeruste().getId(), lapsi.getPerusteenOsaId());
+        addTeksti(docBase, getTextString(docBase, perusteenOsaDto.getKuvaus()), "div");
+
+        Map<String, KotoTaitotaso> taitotasoMap = lapsi.getKotoOpinto().getTaitotasot().stream().collect(Collectors.toMap((KotoTaitotaso::getKoodiUri), (taitotaso -> taitotaso)));
+        addKotoTaitotasot(docBase, taitotasoMap, perusteenOsaDto.getTaitotasot(), "docgen.tavoitteet-ja-sisallot.title");
+
+        addKotoTaitotasoLaajaAlaisetOsaamiset(docBase, lapsi.getKotoOpinto().getLaajaAlaisetOsaamiset());
+    }
+
+    private void addKotoTaitotasoLaajaAlaisetOsaamiset(DokumenttiBase docBase, List<KotoTaitotasoLaajaAlainenOsaaminen> laajaAlaisetOsaamiset) {
+        List<SisaltoViiteDto> laajaAlaisetViitteet = svService.getSisaltoviitteet(docBase.getOpetussuunnitelma().getKoulutustoimija().getId(), docBase.getOpetussuunnitelma().getId(), SisaltoTyyppi.KOTO_LAAJAALAINENOSAAMINEN);
+
+        Map<String, KotoLaajaAlaisenOsaamisenAlueDto> perusteenLaot = laajaAlaisetViitteet.stream()
+                .map(laoViite -> eperusteetService.getPerusteenOsa(docBase.getOpetussuunnitelma().getPeruste().getId(), laoViite.getPerusteenOsaId()))
+                .map(perusteenOsaDto -> ((KotoLaajaAlainenOsaaminenDto) perusteenOsaDto))
+                .map(KotoLaajaAlainenOsaaminenDto::getOsaamisAlueet)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toMap((lao -> lao.getKoodi().getUri()), (lao -> lao)));
+
+        if (!laajaAlaisetOsaamiset.isEmpty()) {
+            addTeksti(docBase, messages.translate("docgen.laaja-alainen-osaaminen.title", docBase.getKieli()), "h5");
+        }
+
+        laajaAlaisetOsaamiset.forEach(lao -> {
+            KotoLaajaAlaisenOsaamisenAlueDto perusteenLao = perusteenLaot.get(lao.getKoodiUri());
+            addTeksti(docBase, getTextString(docBase, new LokalisoituTekstiDto(perusteenLao.getKoodi().getNimi())), "h6");
+            addTeksti(docBase, getTextString(docBase, perusteenLao.getKuvaus()), "div");
+
+            addTeksti(docBase, getTextString(docBase, lao.getTeksti()), "div");
+        });
+    }
+
+    private void addKotoTaitotasot(DokumenttiBase docBase, Map<String, KotoTaitotaso> taitotasoMap, List<KotoTaitotasoDto> taitotasot, String tavoiteTitle) {
+
+        taitotasot.forEach(taitotaso -> {
+
+            addTeksti(docBase, getTextString(docBase, new LokalisoituTekstiDto(taitotaso.getNimi().getNimi())), "h5");
+
+            String tavoitteet = getTextString(docBase, taitotaso.getTavoitteet());
+            addTextWithTopic(tavoitteet, tavoiteTitle, docBase);
+
+            if (taitotasoMap.get(taitotaso.getNimi().getUri()) != null) {
+                KotoTaitotaso opsTaitotaso = taitotasoMap.get(taitotaso.getNimi().getUri());
+
+                if (opsTaitotaso.getTavoiteTarkennus() != null) {
+                    String tavoiteTarkennus = getTextString(docBase, opsTaitotaso.getTavoiteTarkennus());
+                    addTextWithTopic(tavoiteTarkennus, "docgen.tavoitteiden-paikallinen-tarkennus.title", docBase);
+                }
+
+                if (opsTaitotaso.getSisaltoTarkennus() != null) {
+                    String sisaltoTarkennus = getTextString(docBase, opsTaitotaso.getSisaltoTarkennus());
+                    addTextWithTopic(sisaltoTarkennus, "docgen.sisaltojen-paikallinen-tarkennus.title", docBase);
+                }
+            }
+
+            String kielenkayttotarkoitus = getTextString(docBase, taitotaso.getKielenkayttotarkoitus());
+            String aihealueet = getTextString(docBase, taitotaso.getAihealueet());
+            String viestintataidot = getTextString(docBase, taitotaso.getViestintataidot());
+            String opiskelijantaidot = getTextString(docBase, taitotaso.getOpiskelijantaidot());
+
+            String opiskelijanTyoelamataidot = getTextString(docBase, taitotaso.getOpiskelijanTyoelamataidot());
+            String suullinenVastaanottaminen = getTextString(docBase, taitotaso.getSuullinenVastaanottaminen());
+            String suullinenTuottaminen = getTextString(docBase, taitotaso.getSuullinenTuottaminen());
+            String vuorovaikutusJaMediaatio = getTextString(docBase, taitotaso.getVuorovaikutusJaMediaatio());
+
+            if (StringUtils.isNotEmpty(kielenkayttotarkoitus)
+                    || StringUtils.isNotEmpty(aihealueet)
+                    || StringUtils.isNotEmpty(viestintataidot)
+                    || StringUtils.isNotEmpty(opiskelijantaidot)
+                    || StringUtils.isNotEmpty(opiskelijanTyoelamataidot)
+                    || StringUtils.isNotEmpty(suullinenVastaanottaminen)
+                    || StringUtils.isNotEmpty(suullinenTuottaminen)
+                    || StringUtils.isNotEmpty(vuorovaikutusJaMediaatio)) {
+                addTeksti(docBase, messages.translate("docgen.keskeiset-sisallot.title", docBase.getKieli()), "h5");
+            }
+
+            addTextWithTopic(kielenkayttotarkoitus, "docgen.kielenkayttotarkoitus.title", docBase);
+            addTextWithTopic(aihealueet, "docgen.aihealueet.title", docBase);
+            addTextWithTopic(viestintataidot, "docgen.viestintataidot.title", docBase);
+            addTextWithTopic(opiskelijantaidot, "docgen.opiskelijantaidot.title", docBase);
+
+            addTextWithTopic(opiskelijanTyoelamataidot, "docgen.opiskelijan_tyoelamataidot.title", docBase);
+            addTextWithTopic(suullinenVastaanottaminen, "docgen.suullinen_vastaanottaminen.title", docBase);
+            addTextWithTopic(suullinenTuottaminen, "docgen.suullinen_tuottaminen.title", docBase);
+            addTextWithTopic(vuorovaikutusJaMediaatio, "docgen.vuorovaikutus_ja_mediaatio.title", docBase);
+        });
+    }
+
+    private void addTextWithTopic(String text, String translationKey, DokumenttiBase docBase) {
+        if (StringUtils.isNotEmpty(text)) {
+            addTeksti(docBase, messages.translate(translationKey, docBase.getKieli()), "h6");
+            addTeksti(docBase, text, "div");
+        }
     }
 
     private void addValmatelmaSisalto(DokumenttiBase docBase, ValmaTelmaSisaltoDto valmaTelmaSisalto) {
