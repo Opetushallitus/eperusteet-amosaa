@@ -57,8 +57,12 @@ public abstract class PerusteenOsaDto {
             @JsonSubTypes.Type(value = OpintokokonaisuusDto.class),
             @JsonSubTypes.Type(value = KoulutuksenOsaDto.class),
             @JsonSubTypes.Type(value = TuvaLaajaAlainenOsaaminenDto.class),
+            @JsonSubTypes.Type(value = KotoKielitaitotasoDto.class),
+            @JsonSubTypes.Type(value = KotoLaajaAlainenOsaaminenDto.class),
+            @JsonSubTypes.Type(value = KotoOpintoDto.class),
     })
     public static abstract class Laaja extends PerusteenOsaDto {
+        public abstract String getOsanTyyppi();
 
         public Laaja() {
         }

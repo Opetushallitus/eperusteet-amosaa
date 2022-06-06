@@ -1,7 +1,5 @@
 package fi.vm.sade.eperusteet.amosaa.dto;
 
-import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
-
 public enum NavigationType {
     root,
     tiedot,
@@ -20,7 +18,11 @@ public enum NavigationType {
     opintokokonaisuus,
     koulutuksenosa,
     koulutuksenosat,
-    laajaalainenosaaminen;
+    laajaalainenosaaminen,
+    koto_kielitaitotaso,
+    koto_opinto,
+    koto_laajaalainenosaaminen,
+    opetussuunnitelma_rakenne;
 
     public static NavigationType of(String type) {
         for (NavigationType t : values()) {

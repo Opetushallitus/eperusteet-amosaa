@@ -41,6 +41,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.KotoTaitotaso;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Koulutuksenosa;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OpintokokonaisuusArviointi;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OpintokokonaisuusTavoite;
@@ -69,11 +70,15 @@ import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHistoriaLiitosD
 import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioStatus;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.AbstractRakenneOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteBaseDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.KotoKielitaitotasoDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.KotoLaajaAlainenOsaaminenDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.KotoOpintoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.KoulutuksenOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.KoulutusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.OpintokokonaisuusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKaikkiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteenOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteenOsaViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.Suoritustapakoodi;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TekstiKappaleDto;
@@ -116,6 +121,7 @@ import fi.vm.sade.eperusteet.amosaa.service.ops.OpetussuunnitelmaValidationServi
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.ValidointiService;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionManager;
+import fi.vm.sade.eperusteet.amosaa.service.util.CollectionUtil;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -565,15 +571,36 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
             sisaltoviite.setPerusteteksti(LokalisoituTeksti.of(tuvaLaajaAlainenOsaaminenDto.getTeksti()));
             sisaltoviite.setNaytaPerusteenTeksti(true);
-            
+
             sisaltoviite.getTuvaLaajaAlainenOsaaminen().setId(null);
             sisaltoviite.getTuvaLaajaAlainenOsaaminen().setTeksti(null);
+        }
+
+        if (sisalto.getPerusteenOsa() instanceof KotoKielitaitotasoDto) {
+            sisaltoviite = SisaltoViite.createKotoKielitaitotaso(parentViite);
+            KotoKielitaitotasoDto kotoKielitaitotasoDto = (KotoKielitaitotasoDto) sisalto.getPerusteenOsa();
+            sisaltoviite.getKotoKielitaitotaso().setTaitotasot(kotoKielitaitotasoDto.getTaitotasot().stream()
+                    .map(perusteenTaitotaso -> KotoTaitotaso.of(perusteenTaitotaso.getNimi().getUri()))
+                    .collect(Collectors.toList()));
+        }
+
+        if (sisalto.getPerusteenOsa() instanceof KotoOpintoDto) {
+            sisaltoviite = SisaltoViite.createKotoOpinto(parentViite);
+            KotoOpintoDto kotoOpintoDto = (KotoOpintoDto) sisalto.getPerusteenOsa();
+            sisaltoviite.getKotoOpinto().setTaitotasot(kotoOpintoDto.getTaitotasot().stream()
+                    .map(perusteenTaitotaso -> KotoTaitotaso.of(perusteenTaitotaso.getNimi().getUri()))
+                    .collect(Collectors.toList()));
+        }
+
+        if (sisalto.getPerusteenOsa() instanceof KotoLaajaAlainenOsaaminenDto) {
+            sisaltoviite = SisaltoViite.createKotoLaajaAlainenOsaaminen(parentViite);
         }
 
         if (sisaltoviite == null) {
             throw new BusinessRuleViolationException("vaara-sisaltoviite-tyyppi");
         } else {
 
+            sisaltoviite.setPerusteenOsaId(sisalto.getPerusteenOsa().getId());
             sisaltoviite.getTekstiKappale().setNimi(LokalisoituTeksti.of(sisalto.getPerusteenOsa().getNimi()));
             tkvRepository.save(sisaltoviite);
 
@@ -702,7 +729,8 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         }
 
         if (KoulutustyyppiToteutus.VAPAASIVISTYSTYO.equals(peruste.getToteutus())
-                || KoulutustyyppiToteutus.TUTKINTOONVALMENTAVA.equals(peruste.getToteutus())) {
+                || KoulutustyyppiToteutus.TUTKINTOONVALMENTAVA.equals(peruste.getToteutus())
+                || KoulutustyyppiToteutus.KOTOUTUMISKOULUTUS.equals(peruste.getToteutus())) {
             PerusteKaikkiDto perusteSisalto = eperusteetService.getPerusteSisalto(cperuste, PerusteKaikkiDto.class);
             for (PerusteenOsaViiteDto.Laaja lapsi : perusteSisalto.getSisalto().getLapset()) {
                 alustaOpetussuunnitelmaPerusteenSisallolla(ops, rootTkv, lapsi);
@@ -811,7 +839,11 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
             }
 
             ops = repository.save(ops);
-            SisaltoViite root = tkvService.kopioiHierarkia(sisaltoRoot, ops, Collections.singletonMap(SisaltoTyyppi.TUTKINNONOSA, opsDto.getTutkinnonOsaKoodiIncludes()), !pohja.getTyyppi().equals(OpsTyyppi.OPSPOHJA));
+            SisaltoViite root = tkvService.kopioiHierarkia(
+                    sisaltoRoot,
+                    ops,
+                    Collections.singletonMap(SisaltoTyyppi.TUTKINNONOSA, opsDto.getTutkinnonOsaKoodiIncludes()),
+                    !pohja.getTyyppi().equals(OpsTyyppi.OPSPOHJA));
             tkvRepository.save(root);
         }
         else {
@@ -887,8 +919,13 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
     @Override
     public OpetussuunnitelmaDto getOpetussuunnitelma(Long ktId, Long opsId) {
+        return getOpetussuunnitelma(ktId, opsId, OpetussuunnitelmaDto.class);
+    }
+
+    @Override
+    public <T extends OpetussuunnitelmaBaseDto> T getOpetussuunnitelma(Long ktId, Long opsId, Class<T> type) {
         Opetussuunnitelma ops = repository.findOne(opsId);
-        return mapper.map(ops, OpetussuunnitelmaDto.class);
+        return mapper.map(ops, type);
     }
 
     @Override
@@ -897,6 +934,16 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         SisaltoViiteExportDto sisalto = tkvService.getSisaltoRoot(ktId, opsId, SisaltoViiteExportDto.class);
         List<TutkinnonosaExportDto> tutkinnonOsat = tkvService.getTutkinnonOsaViitteet(ktId, opsId, TutkinnonosaExportDto.class);
         OpetussuunnitelmaKaikkiDto result = mapper.map(ops, OpetussuunnitelmaKaikkiDto.class);
+
+        CollectionUtil.treeToStream(sisalto.getLapset(), SisaltoViiteExportDto::getLapset)
+                .filter(sisaltoViite -> sisaltoViite.getPerusteenOsaId() != null)
+                .forEach(sisaltoViite -> {
+                    PerusteenOsaDto perusteenOsaDto = eperusteetService.getPerusteenOsa(ops.getPeruste().getId(), sisaltoViite.getPerusteenOsaId());
+                    if (perusteenOsaDto != null) {
+                        sisaltoViite.setPerusteSisalto(perusteenOsaDto);
+                    }
+                });
+
         result.setSisalto(sisalto);
         result.setTutkinnonOsat(tutkinnonOsat);
 
@@ -1050,9 +1097,13 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     @Override
     public Validointi validoi(Long ktId, Long opsId) {
         Opetussuunnitelma ops = findOps(ktId, opsId);
-        Validointi validointi = dispatcher.get(ops.getKoulutustyyppi(), OpetussuunnitelmaValidationService.class).validoi(ktId, opsId);
-        if (validointi != null) {
-            return validointi;
+        if (ops.getKoulutustyyppi() != null || ops.getPeruste() != null) {
+            Validointi validointi = dispatcher.get(
+                    ops.getKoulutustyyppi() != null ? ops.getKoulutustyyppi() : ops.getPeruste().getKoulutustyyppi(),
+                    OpetussuunnitelmaValidationService.class).validoi(ktId, opsId);
+            if (validointi != null) {
+                return validointi;
+            }
         }
 
         return validointiService.validoi(ops);

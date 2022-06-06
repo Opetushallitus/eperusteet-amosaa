@@ -35,7 +35,10 @@ public enum SisaltoTyyppi {
     OPINTOKOKONAISUUS("opintokokonaisuus"),
     KOULUTUKSENOSA("koulutuksenosa"),
     KOULUTUKSENOSAT("koulutuksenosat"),
-    LAAJAALAINENOSAAMINEN("laajaalainenosaaminen");
+    LAAJAALAINENOSAAMINEN("laajaalainenosaaminen"),
+    KOTO_KIELITAITOTASO("koto_kielitaitotaso"),
+    KOTO_OPINTO("koto_opinto"),
+    KOTO_LAAJAALAINENOSAAMINEN("koto_laajaalainenosaaminen");
 
     private final String tyyppi;
 
