@@ -38,7 +38,7 @@ jobs:
         id: restore-service-build
         with:
           path: eperusteet-amosaa-service/target
-          key: ${{ github.sha }}
+          key: ${{ github.sha }}-service
 
   build-and-test-eperusteet-amosaa-ui:
     runs-on: ubuntu-latest
@@ -113,7 +113,7 @@ jobs:
         id: restore-app-build
         with:
           path: eperusteet-amosaa-app/target
-          key: ${{ github.sha }}
+          key: ${{ github.sha }}-app
 
   # generate-spec-file:
     # runs-on: ubuntu-latest
@@ -161,14 +161,14 @@ jobs:
         id: restore-service-build
         with:
           path: eperusteet-amosaa-service/target
-          key: ${{ github.sha }}
+          key: ${{ github.sha }}-service
 
       - name: Get eperusteet-amosaa-app build results
         uses: actions/cache@v3
         id: restore-app-build
         with:
           path: eperusteet-amosaa-app/target
-          key: ${{ github.sha }}
+          key: ${{ github.sha }}-app
 
       - name: Build image
         run: |
@@ -184,3 +184,4 @@ jobs:
           ./ci-tools/common/pull-image.sh
           ./ci-tools/github-build/build-war.sh ${ARTIFACT_NAME}
           ./ci-tools/github-build/upload-image.sh ${ARTIFACT_NAME}
+
