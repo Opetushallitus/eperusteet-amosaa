@@ -14,6 +14,9 @@ import java.util.List;
 @Service
 @Profile("test")
 public class KoodistoClientMock implements KoodistoClient {
+
+    private Long koodiNumero = 1000l;
+
     @Override
     public List<KoodistoKoodiDto> getAll(String koodisto) {
         return null;
@@ -56,7 +59,7 @@ public class KoodistoClientMock implements KoodistoClient {
 
     @Override
     public KoodistoKoodiDto addKoodiNimella(String koodistonimi, LokalisoituTekstiDto koodinimi) {
-        return null;
+        return addKoodiNimella(koodistonimi, koodinimi, koodiNumero++);
     }
 
     @Override

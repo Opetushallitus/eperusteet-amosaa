@@ -16,4 +16,7 @@ public interface PermissionManager {
 
     @PreAuthorize("isAuthenticated()")
     Map<PermissionEvaluator.RolePermission, Set<Koulutustoimija>> getKoulutustoimijaOikeudet();
+
+    @PreAuthorize("isAuthenticated()")
+    boolean hasOphAdminPermission();
 }

@@ -17,10 +17,11 @@
         <spring.security.version>5.4.7</spring.security.version>
         <spring.data.jpa.version>1.11.23.RELEASE</spring.data.jpa.version>
         <spring.session.jdbc.version>2.4.3</spring.session.jdbc.version>
+        <spring.batch.version>4.3.6</spring.batch.version>
         <logback.version>1.2.3</logback.version>
         <postgresql.version>9.4.1211</postgresql.version>
         <jackson.version>2.11.4</jackson.version>
-        <jackson.databind.version>2.10.5.1</jackson.databind.version>
+        <jackson.databind.version>2.11.4</jackson.databind.version>
         <eperusteet-amosaa.devdb.jdbcurl>jdbc:postgresql://localhost:5432/${eperusteet-amosaa.devdb.user}</eperusteet-amosaa.devdb.jdbcurl>
         <eperusteet-amosaa.ittestdb.jdbcurl>jdbc:postgresql://localhost:5432/${eperusteet-amosaa.ittestdb.user}</eperusteet-amosaa.ittestdb.jdbcurl>
         <buildhelper.skipAttach>true</buildhelper.skipAttach>
@@ -191,6 +192,11 @@
             <groupId>org.springframework.session</groupId>
             <artifactId>spring-session-jdbc</artifactId>
             <version>${spring.session.jdbc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.batch</groupId>
+            <artifactId>spring-batch-core</artifactId>
+            <version>${spring.batch.version}</version>
         </dependency>
         <dependency>
             <groupId>com.ryantenney.metrics</groupId>

@@ -48,7 +48,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.NavigationNodeDto;
 import fi.vm.sade.eperusteet.amosaa.dto.NavigationType;
 import fi.vm.sade.eperusteet.amosaa.dto.OpsHakuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.PoistettuDto;
-import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.external.SisaltoviiteOpintokokonaisuusExternalDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.JulkaisuBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
@@ -68,7 +68,6 @@ import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.KoulutuksenOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.KoulutusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.OpintokokonaisuusDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteenOsaViiteDto;
@@ -80,6 +79,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.peruste.TuvaLaajaAlainenOsaaminenDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteExportDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteExportOpintokokonaisuusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SuorituspolkuRakenneDto;
 import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaoikeusRepository;
@@ -111,9 +111,11 @@ import fi.vm.sade.eperusteet.amosaa.service.ops.OpetussuunnitelmaPohjaCreateServ
 import fi.vm.sade.eperusteet.amosaa.service.ops.OpetussuunnitelmaValidationService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.ValidointiService;
+import fi.vm.sade.eperusteet.amosaa.service.security.PermissionManager;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -192,10 +194,10 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     private CachedPerusteRepository cachedPerusteRepository;
 
     private KoulutustoimijaService koulutustoimijaService;
-    
+
     @Autowired
     private SisaltoviiteRepository sisaltoviiteRepository;
-    
+
     @Autowired
     private OrganisaatioService organisaatioService;
 
@@ -227,6 +229,9 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
     @Autowired
     private JulkaisuService julkaisuService;
+
+    @Autowired
+    private PermissionManager permissionManager;
 
     @PostConstruct
     protected void init() {
@@ -896,12 +901,18 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     public OpetussuunnitelmaKaikkiDto getOpetussuunnitelmaKaikki(Long ktId, Long opsId) {
         Opetussuunnitelma ops = repository.findOne(opsId);
         SisaltoViiteExportDto sisalto = tkvService.getSisaltoRoot(ktId, opsId, SisaltoViiteExportDto.class);
-        List<SuorituspolkuRakenneDto> suorituspolut = tkvService.getSuorituspolkurakenne(ktId, opsId);
         List<TutkinnonosaExportDto> tutkinnonOsat = tkvService.getTutkinnonOsaViitteet(ktId, opsId, TutkinnonosaExportDto.class);
         OpetussuunnitelmaKaikkiDto result = mapper.map(ops, OpetussuunnitelmaKaikkiDto.class);
         result.setSisalto(sisalto);
-        result.setSuorituspolut(suorituspolut);
         result.setTutkinnonOsat(tutkinnonOsat);
+
+        result.setOpintokokonaisuudet(mapper.mapAsList(tkvService.getSisaltoviitteet(ktId, opsId, SisaltoTyyppi.OPINTOKOKONAISUUS), SisaltoViiteExportOpintokokonaisuusDto.class));
+
+        if (ops.getSuoritustapa() != null) {
+            List<SuorituspolkuRakenneDto> suorituspolut = tkvService.getSuorituspolkurakenne(ktId, opsId);
+            result.setSuorituspolut(suorituspolut);
+        }
+
         return result;
     }
 
@@ -1014,7 +1025,8 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     public OpetussuunnitelmaBaseDto updateTila(Long ktId, Long opsId, Tila tila, boolean generatePDF) {
         Opetussuunnitelma ops = findOps(ktId, opsId);
         Tila nykyinen = ops.getTila();
-        if (nykyinen.mahdollisetSiirtymat().contains(tila)) {
+        if (nykyinen.mahdollisetSiirtymat().contains(tila)
+                && (!(tila.equals(Tila.POISTETTU) && CollectionUtils.isNotEmpty(ops.getJulkaisut())) || permissionManager.hasOphAdminPermission())) {
 
             // Muutetaan tila
             ops.setTila(tila);
@@ -1062,10 +1074,14 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     public Page<OpetussuunnitelmaDto> findOpetussuunnitelmatJulkaisut(OpetussuunnitelmaJulkaistuQueryDto pquery) {
         Pageable pageable = new PageRequest(pquery.getSivu(), pquery.getSivukoko());
         List<String> koulutustyypit = pquery.getKoulutustyyppi().stream().map(KoulutusTyyppi::toString).collect(Collectors.toList());
-        List<String> koulutustyypitEnums = pquery.getKoulutustyyppi().stream().map(KoulutusTyyppi::name).collect(Collectors.toList());
+        koulutustyypit.addAll(pquery.getKoulutustyyppi().stream().map(KoulutusTyyppi::name).collect(Collectors.toList()));
+
+        if (CollectionUtils.isNotEmpty(pquery.getTyyppi()) && pquery.getTyyppi().contains(OpsTyyppi.YHTEINEN.toString())) {
+            koulutustyypit = Arrays.asList("");
+        }
+
         Page<OpetussuunnitelmaDto> result = julkaisuRepository.findAllJulkisetJulkaisut(
                 koulutustyypit,
-                koulutustyypitEnums,
                 pquery.getNimi(),
                 pquery.getKieli(),
                 pquery.getOppilaitosTyyppiKoodiUri(),
@@ -1089,6 +1105,38 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                 });
 
         return result;
+    }
+
+    @Override
+    public SisaltoviiteOpintokokonaisuusExternalDto findJulkaistuOpintokokonaisuus(String koodiArvo) throws IOException {
+        String opetussuunnitelma = julkaisuRepository.findByOpintokokonaisuusKoodiArvo(koodiArvo);
+        if (opetussuunnitelma != null) {
+            OpetussuunnitelmaKaikkiDto opsKaikki = objMapper.readValue(opetussuunnitelma, OpetussuunnitelmaKaikkiDto.class);
+            SisaltoViiteExportOpintokokonaisuusDto opintokokonaisuusViite = opsKaikki.getOpintokokonaisuudet().stream()
+                    .filter(opintokokonaisuus -> opintokokonaisuus.getOpintokokonaisuus().getKoodiArvo().equals(koodiArvo))
+                    .findFirst().orElseThrow(() -> new IOException("Virhe luettaessa opintokokonaisuutta opetussuunnitelmasta"));
+
+            SisaltoviiteOpintokokonaisuusExternalDto opintokokonaisuusExternalDto = mapper.map(opintokokonaisuusViite, SisaltoviiteOpintokokonaisuusExternalDto.class);
+            opintokokonaisuusExternalDto.setOpetussuunnitelmaId(opsKaikki.getId());
+
+            return opintokokonaisuusExternalDto;
+        }
+
+        return null;
+    }
+
+    private List<fi.vm.sade.eperusteet.amosaa.dto.teksti.OpintokokonaisuusDto> recursiveOpintokokonaisuudet(SisaltoViiteExportDto sisalto) {
+        List<fi.vm.sade.eperusteet.amosaa.dto.teksti.OpintokokonaisuusDto> opintokokonaisuudet = new ArrayList<>();
+
+        if (sisalto.getOpintokokonaisuus() != null) {
+            opintokokonaisuudet.add(sisalto.getOpintokokonaisuus());
+        }
+
+        if (CollectionUtils.isNotEmpty(sisalto.getLapset())) {
+            sisalto.getLapset().forEach(lapsi -> opintokokonaisuudet.addAll(recursiveOpintokokonaisuudet(lapsi)));
+        }
+
+        return opintokokonaisuudet;
     }
 
     @Override

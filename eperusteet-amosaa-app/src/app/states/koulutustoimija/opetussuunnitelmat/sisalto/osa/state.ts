@@ -4,7 +4,7 @@ namespace SuoritustapaRyhmat {
         i = inject($injector, ["$rootScope", "$uibModal", "$q"]);
     };
 
-    export const editoi = (spRivit, node, tutkinnonosat, koodisto, paikalliset, peruste, $stateParams) =>
+    export const editoi = (spRivit, node, tutkinnonosat, koodisto, paikalliset, peruste, $stateParams, koulutustoimija) =>
         i.$uibModal.open({
             resolve: {},
             templateUrl: "modals/suoritustaparyhma.jade",
@@ -37,7 +37,7 @@ namespace SuoritustapaRyhmat {
                                 arvo: pkoodi.tosa.omatutkinnonosa.koodi,
                                 uri:
                                     "paikallinen_tutkinnonosa_" +
-                                    pkoodi.tosa.omatutkinnonosa.koodiPrefix +
+                                    (pkoodi.tosa.omatutkinnonosa.koodiPrefix || koulutustoimija.organisaatio) +
                                     "_" +
                                     pkoodi.tosa.omatutkinnonosa.koodi,
                                 nimi: pkoodi.tekstiKappale.nimi,
@@ -571,7 +571,7 @@ angular
                                 osaamistasonKriteerit: _.map($scope.pTosa.geneerinenArviointiasteikko.osaamistasonKriteerit, gaa => {
                                     return {
                                         ...gaa,
-                                        osaamistaso: _.find(arviointiasteikko.osaamistasot, osaamistaso => osaamistaso.id === Number(gaa._osaamistaso)),
+                                        osaamistaso: gaa.osaamistaso || _.find(arviointiasteikko.osaamistasot, osaamistaso => osaamistaso.id === Number(gaa._osaamistaso)),
                                     };
                                 })
                             }
@@ -799,6 +799,7 @@ angular
                                         paikallisetTutkinnonosatEP,
                                         peruste,
                                         $stateParams,
+                                        koulutustoimija,
                                     ).then(res => {
                                         $scope.osa.suorituspolku.rivit = _.compact(_.values(res));
                                         update();

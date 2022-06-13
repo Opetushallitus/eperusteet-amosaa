@@ -78,21 +78,10 @@ import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoviiteServiceProvider;
 import fi.vm.sade.eperusteet.amosaa.service.peruste.PerusteCacheService;
 import fi.vm.sade.eperusteet.amosaa.service.teksti.TekstiKappaleService;
 import fi.vm.sade.eperusteet.amosaa.service.util.PoistettuService;
-import java.util.Date;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ObjectUtils;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -103,6 +92,16 @@ import java.util.Stack;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import static fi.vm.sade.eperusteet.amosaa.service.util.Nulls.assertExists;
 
@@ -340,6 +339,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
         SisaltoViiteDto pelastettu = getData(ktId, opsId, poistettu.getPoistettu(), poistettu.getRev());
         SisaltoViite uusiViite = mapper.map(pelastettu, SisaltoViite.class);
         uusiViite = SisaltoViite.copy(uusiViite);
+        uusiViite.updatePohjanTekstikappale(mapper.map(pelastettu.getPohjanTekstikappale(), TekstiKappale.class));
         uusiViite.setOwner(ops);
 
         SisaltoViite parentViite;
@@ -352,7 +352,10 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
                 parentViite = repository.findSuorituspolutRoot(ops);
                 break;
             default:
-                parentViite = repository.findOneRoot(ops);
+                parentViite = repository.findOneByOwnerIdAndId(ops.getId(), pelastettu.getVanhempi().getIdLong());
+                if (parentViite == null) {
+                    parentViite = repository.findOneRoot(ops);
+                }
                 break;
         }
 
@@ -576,6 +579,12 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
             throw new BusinessRuleViolationException("Pakollisia sisältöjä ei voi poistaa");
         }
 
+        if (viite.getTyyppi().equals(SisaltoTyyppi.OPINTOKOKONAISUUS)
+                && CollectionUtils.isNotEmpty(ops.getJulkaisut())
+                && !ops.getTila().equals(Tila.POISTETTU)) {
+            throw new BusinessRuleViolationException("Julkaistuja sisältöjä ei voi poistaa");
+        }
+
         poistetutService.lisaaPoistettu(ktId, ops, viite);
 
         viite.getVanhempi().getLapset().remove(viite);
@@ -614,7 +623,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
 
     @Transactional
     private void clearChildrenAndParent(SisaltoViite parent, Set<SisaltoViite> viitteet) {
-        for (SisaltoViite lapsi : parent.getLapset()) {
+        for (SisaltoViite lapsi : parent.getLapset().stream().filter(l -> l != null).collect(Collectors.toList())) {
             viitteet.add(lapsi);
             clearChildrenAndParent(lapsi, viitteet);
         }
@@ -682,7 +691,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
 
         result.add(viite.get());
 
-        for (SisaltoViite sv : parent.getLapset()) {
+        for (SisaltoViite sv : parent.getLapset().stream().filter(l -> l != null).collect(Collectors.toList())) {
             haeViitteet(sv, result);
         }
     }

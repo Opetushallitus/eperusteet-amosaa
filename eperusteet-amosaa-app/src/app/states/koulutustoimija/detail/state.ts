@@ -251,6 +251,7 @@ angular.module("app").config($stateProvider =>
                      yhteiset,
                      koulutustoimija,
                      opsSaver,
+                     opsOletusRajaus,
                      opetussuunnitelmatSivu) => {
 
                     const updateOpetussuunnitelmat = opetussuunnitelmat => {
@@ -263,16 +264,24 @@ angular.module("app").config($stateProvider =>
 
                     };
 
+                    $scope.tilat = _.cloneDeep(Constants.tosTilat);
                     $scope.pagination = {
                         sivu: 1,
                         sivukoko: 10,
                         kokonaismaara: 0
                     };
+                    $scope.rajain =  _.assign(_.cloneDeep(opsOletusRajaus), {
+                        tila: null,
+                    });
 
                     updateOpetussuunnitelmat(yhteiset);
 
                     let timeout: ng.IDeferred<void>;
                     $scope.paivitaRajaus = async () => {
+
+                        if ($scope.rajain.tila == null) {
+                            $scope.rajain.tila = _.cloneDeep(opsOletusRajaus.tila);
+                        }
 
                         if (timeout) {
                             timeout.resolve();
@@ -285,9 +294,7 @@ angular.module("app").config($stateProvider =>
                                 sivu: $scope.pagination.sivu - 1,
                                 sivukoko: $scope.pagination.sivukoko,
                                 tyyppi: ['yhteinen'],
-                                tila: _(Constants.tosTilat)
-                                    .filter(tila => tila !== "poistettu")
-                                    .value(),
+                                tila: $scope.rajain.tila,
                             }, { timeout });
                             $scope.$applyAsync(() => updateOpetussuunnitelmat(res));
                         }

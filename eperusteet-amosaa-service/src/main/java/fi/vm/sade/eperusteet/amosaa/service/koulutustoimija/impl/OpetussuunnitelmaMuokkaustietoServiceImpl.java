@@ -67,6 +67,11 @@ public class OpetussuunnitelmaMuokkaustietoServiceImpl implements Opetussuunnite
 
     @Override
     public void addOpsMuokkausTieto(Long opsId, HistoriaTapahtuma historiaTapahtuma, MuokkausTapahtuma muokkausTapahtuma, NavigationType navigationType, String lisatieto) {
+        addOpsMuokkausTieto(opsId, historiaTapahtuma, muokkausTapahtuma, navigationType, lisatieto, SecurityUtil.getAuthenticatedPrincipal().getName());
+    }
+
+    @Override
+    public void addOpsMuokkausTieto(Long opsId, HistoriaTapahtuma historiaTapahtuma, MuokkausTapahtuma muokkausTapahtuma, NavigationType navigationType, String lisatieto, String muokkaaja) {
         try {
             // Merkataan aiemmat tapahtumat poistetuksi
             if (Objects.equals(muokkausTapahtuma.getTapahtuma(), MuokkausTapahtuma.POISTO.toString())) {
@@ -82,7 +87,7 @@ public class OpetussuunnitelmaMuokkaustietoServiceImpl implements Opetussuunnite
                     .opetussuunnitelmaId(opsId)
                     .nimi(historiaTapahtuma.getNimi())
                     .tapahtuma(muokkausTapahtuma)
-                    .muokkaaja(SecurityUtil.getAuthenticatedPrincipal().getName())
+                    .muokkaaja(muokkaaja)
                     .kohde(navigationType)
                     .kohdeId(historiaTapahtuma.getId())
                     .luotu(historiaTapahtuma.getMuokattu())

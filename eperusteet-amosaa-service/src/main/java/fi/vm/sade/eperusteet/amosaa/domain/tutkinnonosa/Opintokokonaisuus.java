@@ -3,7 +3,6 @@ package fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.domain.AbstractAuditedEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
-import fi.vm.sade.eperusteet.amosaa.domain.teksti.VapaaTeksti;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -41,6 +40,8 @@ public class Opintokokonaisuus extends AbstractAuditedEntity implements Serializ
 
     @Column(updatable = false)
     private String nimiKoodi;
+
+    private String koodi;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
@@ -115,4 +116,5 @@ public class Opintokokonaisuus extends AbstractAuditedEntity implements Serializ
             return null;
         }
     }
+
 }

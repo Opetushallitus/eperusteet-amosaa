@@ -17,6 +17,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 
 public abstract class AbstractPermissionManager implements PermissionManager {
@@ -65,5 +67,11 @@ public abstract class AbstractPermissionManager implements PermissionManager {
 
     public List<Koulutustoimija> kayttajanKoulutustoimijat() {
         return koulutustoimijaRepository.findAll(kayttajanTietoService.koulutustoimijat().stream().map(KoulutustoimijaBaseDto::getId).collect(Collectors.toList()));
+    }
+
+    @Transactional(readOnly = true)
+    public boolean hasOphAdminPermission() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return hasPermission(authentication, 0l, TargetType.OPH, Permission.HALLINTA);
     }
 }
