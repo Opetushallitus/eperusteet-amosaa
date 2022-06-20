@@ -12,7 +12,7 @@ public interface NavigationBuilderPublic extends OpetussuunnitelmaToteutus {
     }
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'ESITYS')")
-    default NavigationNodeDto buildNavigation(Long ktId, Long opsId) {
+    default NavigationNodeDto buildNavigation(Long ktId, Long opsId, boolean esikatselu) {
         throw new BusinessRuleViolationException("ei-tuettu");
     }
 }

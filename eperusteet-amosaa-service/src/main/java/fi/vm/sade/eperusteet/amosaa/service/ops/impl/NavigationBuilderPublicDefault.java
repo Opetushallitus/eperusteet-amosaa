@@ -30,8 +30,8 @@ public class NavigationBuilderPublicDefault implements NavigationBuilderPublic {
     }
 
     @Override
-    public NavigationNodeDto buildNavigation(Long ktId, Long opsId) {
-        OpetussuunnitelmaKaikkiDto opetussuunnitelmaKaikkiDto = opetussuunnitelmaService.getOpetussuunnitelmaJulkaistuSisalto(ktId, opsId);
+    public NavigationNodeDto buildNavigation(Long ktId, Long opsId, boolean esikatselu) {
+        OpetussuunnitelmaKaikkiDto opetussuunnitelmaKaikkiDto = opetussuunnitelmaService.getOpetussuunnitelmaJulkaistuSisalto(ktId, opsId, esikatselu);
         SisaltoViiteExportDto root = opetussuunnitelmaKaikkiDto.getSisalto();
 
         return NavigationNodeDto.of(NavigationType.root, root.getId())

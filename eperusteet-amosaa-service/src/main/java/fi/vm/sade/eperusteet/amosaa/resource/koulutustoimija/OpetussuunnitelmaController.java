@@ -419,8 +419,9 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
     @RequestMapping(value = "/{opsId}/navigaatio/public", method = GET)
     public NavigationNodeDto getOpetussuunnitelmaNavigationPublic(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
-            @PathVariable final Long opsId) {
-        return service.buildNavigationPublic(ktId, opsId);
+            @PathVariable final Long opsId,
+            @RequestParam(value = "esikatselu", required = false) final boolean esikatselu) {
+        return service.buildNavigationPublic(ktId, opsId, esikatselu);
     }
 
     @ApiImplicitParams({

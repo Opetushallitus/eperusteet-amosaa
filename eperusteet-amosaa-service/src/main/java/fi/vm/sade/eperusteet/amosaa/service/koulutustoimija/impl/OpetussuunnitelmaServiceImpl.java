@@ -436,14 +436,8 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     }
 
     @Override
-    @CacheEvict("ops-navigation")
-    public void publicNavigationEvict(Long ktId, Long opsId) {
-        // this method doesn't do anything and is only here for evicting the cache
-    }
-
-    @Override
-    public NavigationNodeDto buildNavigationPublic(Long ktId, Long opsId) {
-        NavigationNodeDto rootNode = dispatcher.get(opsId, NavigationBuilderPublic.class).buildNavigation(ktId, opsId);
+    public NavigationNodeDto buildNavigationPublic(Long ktId, Long opsId, boolean esikatselu) {
+        NavigationNodeDto rootNode = dispatcher.get(opsId, NavigationBuilderPublic.class).buildNavigation(ktId, opsId, esikatselu);
         rootNode.getChildren().add(0, NavigationNodeDto.of(NavigationType.tiedot, null, opsId));
         rootNode.setChildren(rootNode.getChildren().stream()
                 .filter(node -> !node.getType().equals(NavigationType.suorituspolut) || CollectionUtils.isNotEmpty(node.getChildren()))
@@ -969,6 +963,15 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     }
 
     @Override
+    public OpetussuunnitelmaKaikkiDto getOpetussuunnitelmaJulkaistuSisalto(Long ktId, Long opsId, boolean esikatselu) {
+        if (esikatselu) {
+            return getOpetussuunnitelmaKaikki(ktId, opsId);
+        }
+
+        return getOpetussuunnitelmaJulkaistuSisalto(ktId, opsId);
+    }
+
+    @Override
     public OpetussuunnitelmaKaikkiDto getOpetussuunnitelmaJulkaistuSisalto(Long ktId, Long opsId) {
         Opetussuunnitelma ops = repository.findOne(opsId);
         Julkaisu julkaisu = julkaisuRepository.findFirstByOpetussuunnitelmaOrderByRevisionDesc(ops);
@@ -1087,9 +1090,6 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
             if (tila.equals(Tila.JULKAISTU)) {
 
                 validoi(ktId, opsId).tuomitse();
-
-                self.publicNavigationEvict(ktId, opsId);
-                self.buildNavigationJulkinen(ktId, opsId);
 
                 julkaisuService.teeJulkaisu(
                         ktId, opsId,
