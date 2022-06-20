@@ -307,9 +307,10 @@ public class JulkinenController {
     @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/julkaisu", method = RequestMethod.GET)
     public OpetussuunnitelmaKaikkiDto getOpetussuunnitelmaJulkaistuSisalto(
             @ApiIgnore @ModelAttribute("ktId") final Long ktId,
-            @PathVariable final Long opsId
+            @PathVariable final Long opsId,
+            @RequestParam(value = "esikatselu", required = false) final boolean esikatselu
     ) {
-        return opsService.getOpetussuunnitelmaJulkaistuSisalto(ktId, opsId);
+        return opsService.getOpetussuunnitelmaJulkaistuSisalto(ktId, opsId, esikatselu);
     }
 
     @ApiImplicitParams({

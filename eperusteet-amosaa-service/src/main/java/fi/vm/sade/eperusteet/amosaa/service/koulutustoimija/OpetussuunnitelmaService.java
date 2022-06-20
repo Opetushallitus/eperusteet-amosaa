@@ -152,6 +152,9 @@ public interface OpetussuunnitelmaService extends RevisionService {
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'ESITYS')")
     OpetussuunnitelmaKaikkiDto getOpetussuunnitelmaJulkaistuSisalto(@P("ktId") Long ktId, @P("opsId") Long opsId);
 
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'ESITYS')")
+    OpetussuunnitelmaKaikkiDto getOpetussuunnitelmaJulkaistuSisalto(@P("ktId") Long ktId, @P("opsId") Long opsId, boolean esikatselu);
+
     @PreAuthorize("hasPermission(null, 'OPH','HALLINTA')")
     void updateOpetussuunnitelmaSisaltoviitePiilotukset();
 
@@ -162,13 +165,11 @@ public interface OpetussuunnitelmaService extends RevisionService {
     NavigationNodeDto buildNavigation(Long ktId, Long opsId);
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'ESITYS')")
+    @Deprecated
     NavigationNodeDto buildNavigationJulkinen(Long ktId, Long opsId);
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'ESITYS')")
-    NavigationNodeDto buildNavigationPublic(Long ktId, Long opsId);
-
-    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'ESITYS')")
-    void publicNavigationEvict(Long ktId, Long opsId);
+    NavigationNodeDto buildNavigationPublic(Long ktId, Long opsId, boolean esikatselu);
 
     @PreAuthorize("hasPermission(null, 'OPH','HALLINTA')")
     List<OpetussuunnitelmaTilastoDto> getOpetussuunnitelmaTilastot();

@@ -564,6 +564,11 @@
           "type" : "integer",
           "format" : "int64"
         }, {
+          "name" : "esikatselu",
+          "in" : "query",
+          "required" : false,
+          "type" : "boolean"
+        }, {
           "name" : "ktId",
           "in" : "path",
           "required" : true,
@@ -2932,6 +2937,11 @@
           "required" : true,
           "type" : "integer",
           "format" : "int64"
+        }, {
+          "name" : "esikatselu",
+          "in" : "query",
+          "required" : false,
+          "type" : "boolean"
         }, {
           "name" : "ktId",
           "in" : "path",
@@ -7179,15 +7189,15 @@
             "enum" : [ "FI", "SV", "SE", "RU", "EN" ]
           }
         },
-        "perusteId" : {
-          "type" : "integer",
-          "format" : "int64"
-        },
         "perusteNimi" : {
           "type" : "object",
           "additionalProperties" : {
             "type" : "string"
           }
+        },
+        "perusteId" : {
+          "type" : "integer",
+          "format" : "int64"
         },
         "koulutustyyppi" : {
           "type" : "string",
@@ -7433,11 +7443,11 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "last" : {
-          "type" : "boolean"
-        },
         "sort" : {
           "$ref" : "#/definitions/Sort"
+        },
+        "last" : {
+          "type" : "boolean"
         },
         "first" : {
           "type" : "boolean"
@@ -7473,11 +7483,11 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "last" : {
-          "type" : "boolean"
-        },
         "sort" : {
           "$ref" : "#/definitions/Sort"
+        },
+        "last" : {
+          "type" : "boolean"
         },
         "first" : {
           "type" : "boolean"
@@ -7513,11 +7523,11 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "last" : {
-          "type" : "boolean"
-        },
         "sort" : {
           "$ref" : "#/definitions/Sort"
+        },
+        "last" : {
+          "type" : "boolean"
         },
         "first" : {
           "type" : "boolean"
@@ -7553,11 +7563,11 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "last" : {
-          "type" : "boolean"
-        },
         "sort" : {
           "$ref" : "#/definitions/Sort"
+        },
+        "last" : {
+          "type" : "boolean"
         },
         "first" : {
           "type" : "boolean"
@@ -7593,11 +7603,11 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "last" : {
-          "type" : "boolean"
-        },
         "sort" : {
           "$ref" : "#/definitions/Sort"
+        },
+        "last" : {
+          "type" : "boolean"
         },
         "first" : {
           "type" : "boolean"
