@@ -929,6 +929,17 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     }
 
     @Override
+    public OpetussuunnitelmaBaseDto getOpetussuunnitelmaPohjaKevyt(Long ktId, Long opsId) {
+        Opetussuunnitelma ops = repository.findOne(opsId);
+        if (ops.getPohja() != null) {
+            Opetussuunnitelma pohja = repository.findOne(ops.getPohja().getId());
+            return mapper.map(pohja, OpetussuunnitelmaBaseDto.class);
+        }
+
+        return null;
+    }
+
+    @Override
     public OpetussuunnitelmaKaikkiDto getOpetussuunnitelmaKaikki(Long ktId, Long opsId) {
         Opetussuunnitelma ops = repository.findOne(opsId);
         SisaltoViiteExportDto sisalto = tkvService.getSisaltoRoot(ktId, opsId, SisaltoViiteExportDto.class);

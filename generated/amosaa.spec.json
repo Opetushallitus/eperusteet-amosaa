@@ -3134,6 +3134,40 @@
         }
       }
     },
+    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/pohja/kevyt" : {
+      "get" : {
+        "tags" : [ "opetussuunnitelmat" ],
+        "operationId" : "getOpetussuunnitelmaPohjaKevyt",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "name" : "opsId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "ktId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/OpetussuunnitelmaBaseDto"
+            }
+          }
+        }
+      }
+    },
     "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/pohjansisaltoviitteet/{tyyppi}" : {
       "get" : {
         "tags" : [ "Sisaltoviitteet" ],
@@ -7377,13 +7411,13 @@
     "Page" : {
       "type" : "object",
       "properties" : {
-        "totalPages" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "totalElements" : {
           "type" : "integer",
           "format" : "int64"
+        },
+        "totalPages" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "size" : {
           "type" : "integer",
@@ -7399,11 +7433,11 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "sort" : {
-          "$ref" : "#/definitions/Sort"
-        },
         "last" : {
           "type" : "boolean"
+        },
+        "sort" : {
+          "$ref" : "#/definitions/Sort"
         },
         "first" : {
           "type" : "boolean"
@@ -7417,13 +7451,13 @@
     "PageKoulutustoimijaJulkinenDto" : {
       "type" : "object",
       "properties" : {
-        "totalPages" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "totalElements" : {
           "type" : "integer",
           "format" : "int64"
+        },
+        "totalPages" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "size" : {
           "type" : "integer",
@@ -7439,11 +7473,11 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "sort" : {
-          "$ref" : "#/definitions/Sort"
-        },
         "last" : {
           "type" : "boolean"
+        },
+        "sort" : {
+          "$ref" : "#/definitions/Sort"
         },
         "first" : {
           "type" : "boolean"
@@ -7457,13 +7491,13 @@
     "PageOpetussuunnitelmaBaseDto" : {
       "type" : "object",
       "properties" : {
-        "totalPages" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "totalElements" : {
           "type" : "integer",
           "format" : "int64"
+        },
+        "totalPages" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "size" : {
           "type" : "integer",
@@ -7479,11 +7513,11 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "sort" : {
-          "$ref" : "#/definitions/Sort"
-        },
         "last" : {
           "type" : "boolean"
+        },
+        "sort" : {
+          "$ref" : "#/definitions/Sort"
         },
         "first" : {
           "type" : "boolean"
@@ -7497,13 +7531,13 @@
     "PageOpetussuunnitelmaDto" : {
       "type" : "object",
       "properties" : {
-        "totalPages" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "totalElements" : {
           "type" : "integer",
           "format" : "int64"
+        },
+        "totalPages" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "size" : {
           "type" : "integer",
@@ -7519,11 +7553,11 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "sort" : {
-          "$ref" : "#/definitions/Sort"
-        },
         "last" : {
           "type" : "boolean"
+        },
+        "sort" : {
+          "$ref" : "#/definitions/Sort"
         },
         "first" : {
           "type" : "boolean"
@@ -7537,13 +7571,13 @@
     "PageSisaltoviiteLaajaDto" : {
       "type" : "object",
       "properties" : {
-        "totalPages" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "totalElements" : {
           "type" : "integer",
           "format" : "int64"
+        },
+        "totalPages" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "size" : {
           "type" : "integer",
@@ -7559,11 +7593,11 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "sort" : {
-          "$ref" : "#/definitions/Sort"
-        },
         "last" : {
           "type" : "boolean"
+        },
+        "sort" : {
+          "$ref" : "#/definitions/Sort"
         },
         "first" : {
           "type" : "boolean"
