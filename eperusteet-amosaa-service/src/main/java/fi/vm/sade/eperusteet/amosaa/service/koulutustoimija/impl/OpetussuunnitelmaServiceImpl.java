@@ -648,7 +648,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         if (ops.getTyyppi() == OpsTyyppi.YLEINEN) {
             // EP-1392
             // Yhteinen pohja
-            cperuste = cachedPerusteRepository.findOneByPerusteIdAndLuotu(peruste.getId(), viimeisinJulkaisu);
+            cperuste = cachedPerusteRepository.findFirstByPerusteIdAndLuotu(peruste.getId(), viimeisinJulkaisu);
         } else {
             cperuste = cachedPerusteRepository.findOneByDiaarinumeroAndLuotu(peruste.getDiaarinumero(), viimeisinJulkaisu);
         }
