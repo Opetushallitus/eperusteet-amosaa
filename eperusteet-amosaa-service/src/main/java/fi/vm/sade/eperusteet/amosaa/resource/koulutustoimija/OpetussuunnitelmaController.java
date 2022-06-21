@@ -197,6 +197,17 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
     @ApiImplicitParams({
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
+    @RequestMapping(value = "/{opsId}/pohja/kevyt", method = RequestMethod.GET)
+    public OpetussuunnitelmaBaseDto getOpetussuunnitelmaPohjaKevyt(
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @PathVariable final Long opsId
+    ) {
+        return service.getOpetussuunnitelmaPohjaKevyt(ktId, opsId);
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/{opsId}/peruste", method = RequestMethod.GET)
     public JsonNode getOpetussuunnitelmaPeruste(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,

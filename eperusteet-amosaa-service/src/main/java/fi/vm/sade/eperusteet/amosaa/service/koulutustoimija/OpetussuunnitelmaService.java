@@ -83,6 +83,9 @@ public interface OpetussuunnitelmaService extends RevisionService {
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'ESITYS')")
     <T extends OpetussuunnitelmaBaseDto> T getOpetussuunnitelma(Long ktId, Long opsId, Class<T> type);
 
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'ESITYS')")
+    OpetussuunnitelmaBaseDto getOpetussuunnitelmaPohjaKevyt(Long ktId, Long opsId);
+
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
     List<PoistettuDto> getPoistetut(@P("ktId") Long ktId, @P("opsId") Long opsId);
 
