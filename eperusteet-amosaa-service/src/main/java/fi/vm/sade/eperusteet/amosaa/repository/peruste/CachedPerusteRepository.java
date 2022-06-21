@@ -36,4 +36,6 @@ public interface CachedPerusteRepository extends JpaRepository<CachedPeruste, Lo
     CachedPeruste findOneByDiaarinumeroAndLuotu(String diaarinumero, Date luotu);
 
     CachedPeruste findOneByPerusteIdAndLuotu(Long perusteId, Date luotu);
+
+    CachedPeruste findFirstByPerusteIdAndLuotu(Long perusteId, Date luotu);
 }
