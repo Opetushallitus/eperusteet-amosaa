@@ -90,9 +90,22 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node- 
 
+      - name: Check if UI has same branch
+        id: ui_branch_status
+        run: |
+          if [ "$(curl -s -o /dev/null -I -w '%{http_code}' https://github.com/Opetushallitus/eperusteet-amosaa-ui/tree/${{ github.ref_name }})" == "200" ] 
+          then
+            echo branch found
+            echo "EPERUSTEET_AMOSAA_UI_GIT_BRANCH=-b ${{ github.ref_name }}" >> $GITHUB_ENV
+          else
+            echo "EPERUSTEET_AMOSAA_UI_GIT_BRANCH=" >> $GITHUB_ENV
+            echo branch not found
+          fi
+
       - name: Build with Maven
         run: |
-          git clone --recurse-submodules --depth 1 https://github.com/Opetushallitus/eperusteet-amosaa-ui.git
+          echo "EPERUSTEET_AMOSAA_SPECFILE=https://raw.githubusercontent.com/Opetushallitus/eperusteet-amosaa/${{ github.ref_name }}/generated/amosaa.spec.json" >> $GITHUB_ENV
+          git clone ${{ env.EPERUSTEET_AMOSAA_UI_GIT_BRANCH }} --recurse-submodules --depth 1 https://github.com/Opetushallitus/eperusteet-amosaa-ui.git
             
           cd eperusteet-amosaa-ui
           yarn install --silent
