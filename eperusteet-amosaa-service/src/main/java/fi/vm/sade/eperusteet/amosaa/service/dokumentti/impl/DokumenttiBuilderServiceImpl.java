@@ -1120,18 +1120,24 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
             addTeksti(docBase, getTextString(docBase, koulutuksenOsaDto.getPaikallinenTarkennus().getTavoitteetKuvaus()), "div");
         }
 
-        addTeksti(docBase, messages.translate("docgen.laaja-alainen-osaaminen.title", docBase.getKieli()), "h5");
-        addTeksti(docBase, getTextString(docBase, koulutuksenOsaDto.getLaajaAlaisenOsaamisenKuvaus()), "div");
-        koulutuksenOsaDto.getPaikallinenTarkennus().getLaajaalaisetosaamiset().forEach(lao -> {
-            addTeksti(docBase, getTextString(docBase, lao.getNimi()), "h6");
+        if (!koulutuksenOsaDto.getPaikallinenTarkennus().getLaajaalaisetosaamiset().isEmpty()) {
+            addTeksti(docBase, messages.translate("docgen.laaja-alainen-osaaminen.title", docBase.getKieli()), "h5");
 
-            SisaltoViite laoKoodilla = tkvRepository.findTuvaLaajaAlainenOsaaminenByKoodiUri(docBase.getOpetussuunnitelma(), lao.getKoodiUri());
-            if (laoKoodilla != null) {
-                addTeksti(docBase, getTextString(docBase, laoKoodilla.getPerusteteksti()), "div");
-            }
+            // Tämä kenttä sisältää ohjetekstiä laatijalle EP-3230
+            //            addTeksti(docBase, getTextString(docBase, koulutuksenOsaDto.getLaajaAlaisenOsaamisenKuvaus()), "div");
 
-            addTeksti(docBase, getTextString(docBase, lao.getLaajaAlaisenOsaamisenKuvaus()), "div");
-        });
+            koulutuksenOsaDto.getPaikallinenTarkennus().getLaajaalaisetosaamiset().forEach(lao -> {
+                addTeksti(docBase, getTextString(docBase, lao.getNimi()), "h6");
+
+                // Ei perusteen kuvausta moneen kertaan EP-3230
+                //                SisaltoViite laoKoodilla = tkvRepository.findTuvaLaajaAlainenOsaaminenByKoodiUri(docBase.getOpetussuunnitelma(), lao.getKoodiUri());
+                //                if (laoKoodilla != null) {
+                //                    addTeksti(docBase, getTextString(docBase, laoKoodilla.getPerusteteksti()), "div");
+                //                }
+
+                addTeksti(docBase, getTextString(docBase, lao.getLaajaAlaisenOsaamisenKuvaus()), "div");
+            });
+        }
 
 
         addTeksti(docBase, messages.translate("docgen.keskeinen-sisalto.title", docBase.getKieli()), "h5");
