@@ -35,7 +35,7 @@ public interface LiiteService {
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'ESITYS')")
     LiiteDto get(@P("opsId") Long opsId, UUID id);
 
-    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
+    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
     List<LiiteDto> getAll(@P("ktId") Long ktId, @P("opsId") Long opsId);
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'MUOKKAUS')")
