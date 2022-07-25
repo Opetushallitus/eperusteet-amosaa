@@ -447,6 +447,42 @@ mixin tutke2osa()
       h1.osa-alue-nimi(id="{{ 'osa-alue-' + osaAlue.id }}")
         span(ng-bind="osaAlue.nimi | kaanna")
         span.koodi(ng-show="osaAlue.koodiArvo") ({{ osaAlue.koodiArvo }})
+      h2(ng-if="osaAlue.pakollisetOsaamistavoitteet && osaAlue.pakollisetOsaamistavoitteet.tavoitteet && osaAlue.pakollisetOsaamistavoitteet.tavoitteet.kohdealueet.length > 0" ng-bind="'pakolliset-osaamistavoitteet' | kaanna")
+      .laajuus(style="margin-bottom: 20px")
+        b(ng-bind="'laajuus' | kaanna")
+        br
+        span {{osaAlue.pakollisetOsaamistavoitteet.laajuus}} {{'OSAAMISPISTE' | kaanna}}
+      .kohdealue(ng-repeat="kohdealue in osaAlue.pakollisetOsaamistavoitteet.tavoitteet.kohdealueet")
+        h3.kohdealue-kuvaus(ng-bind="kohdealue.kuvaus | kaanna")
+        h4.kohdealue-kuvaus(ng-bind="osaAlue.pakollisetOsaamistavoitteet.tavoitteet.kohde | kaanna")
+        ul
+          li(ng-bind="vaatimus.vaatimus | kaanna" ng-repeat="vaatimus in kohdealue.vaatimukset")
+      h2(ng-if="osaAlue.valinnaisetOsaamistavoitteet && osaAlue.valinnaisetOsaamistavoitteet.tavoitteet && osaAlue.valinnaisetOsaamistavoitteet.tavoitteet.kohdealueet.length > 0" ng-bind="'valinnaiset-osaamistavoitteet' | kaanna")
+      .laajuus(style="margin-bottom: 20px")
+        b(ng-bind="'laajuus' | kaanna")
+        br
+        span {{osaAlue.valinnaisetOsaamistavoitteet.laajuus}} {{'OSAAMISPISTE' | kaanna}}
+      .kohdealue(ng-repeat="kohdealue in osaAlue.valinnaisetOsaamistavoitteet.tavoitteet.kohdealueet")
+        h3.kohdealue-kuvaus(ng-bind="kohdealue.kuvaus | kaanna")
+        h4.kohdealue-kuvaus(ng-bind="osaAlue.valinnaisetOsaamistavoitteet.tavoitteet.kohde | kaanna")
+        ul
+          li(ng-bind="vaatimus.vaatimus | kaanna" ng-repeat="vaatimus in kohdealue.vaatimukset")
+      div(ng-if="osaAlue.arviointi")
+        h2(ng-bind="'osaamisen-arviointi' | kaanna")
+        h4
+          span(ng-bind="'arvioinnin-kohde' | kaanna")
+        p
+          span(ng-bind="osaAlue.arviointi.kohde | kaanna")
+        table.table.table-striped.table-condensed
+          tbody
+            tr
+              th(ng-bind="'osaamistaso' | kaanna")
+              th(ng-bind="'kriteerit' | kaanna")
+            tr(ng-repeat="osaamistasokriteeri in osaAlue.arviointi.osaamistasonKriteerit | orderBy: 'osaamistaso.id'")
+              td(ng-bind="osaamistasokriteeri.osaamistaso.otsikko | kaanna")
+              td
+                ul
+                  li(ng-bind="kriteeri | kaanna" ng-repeat="kriteeri in osaamistasokriteeri.kriteerit")
       .osaamistavoite(ng-repeat="osaamistavoite in osaAlue.osaamistavoitteet")
         h2.osaamistavoite-nimi(ng-bind="osaamistavoite.nimi | kaanna")
         div(ng-if="osaamistavoite.tavoitteet")
