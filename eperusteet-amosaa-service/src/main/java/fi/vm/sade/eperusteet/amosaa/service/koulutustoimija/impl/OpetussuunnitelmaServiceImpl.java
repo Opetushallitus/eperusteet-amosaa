@@ -323,8 +323,8 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     }
 
     @Override
-    public List<OpetussuunnitelmaTilastoDto> getOpetussuunnitelmaTilastot() {
-        return repository.findAll().stream()
+    public List<OpetussuunnitelmaTilastoDto> getOpetussuunnitelmaTilastot(Set<KoulutusTyyppi> koulutusTyyppi) {
+        return repository.findOpetussuunnitelmaTilastot(koulutusTyyppi).stream()
                 .map(ops -> mapper.map(ops, OpetussuunnitelmaTilastoDto.class))
                 .collect(Collectors.toList());
     }

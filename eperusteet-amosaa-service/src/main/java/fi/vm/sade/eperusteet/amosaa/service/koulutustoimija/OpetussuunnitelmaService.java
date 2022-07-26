@@ -172,7 +172,7 @@ public interface OpetussuunnitelmaService extends RevisionService {
     NavigationNodeDto buildNavigationPublic(Long ktId, Long opsId, boolean esikatselu);
 
     @PreAuthorize("hasPermission(null, 'OPH','HALLINTA')")
-    List<OpetussuunnitelmaTilastoDto> getOpetussuunnitelmaTilastot();
+    List<OpetussuunnitelmaTilastoDto> getOpetussuunnitelmaTilastot(Set<KoulutusTyyppi> koulutusTyyppi);
 
     @PreAuthorize("isAuthenticated()")
     Page<OpetussuunnitelmaTilastoDto> getOpetussuunnitelmaTilastot(Integer sivu, Integer sivukoko);
