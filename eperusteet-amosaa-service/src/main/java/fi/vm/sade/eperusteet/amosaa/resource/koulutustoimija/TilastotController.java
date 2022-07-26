@@ -57,11 +57,6 @@ public class TilastotController {
         return service.getTilastotToimijakohtaisesti();
     }
 
-    @RequestMapping(value = "/opetussuunnitelmat", method = RequestMethod.GET)
-    public List<OpetussuunnitelmaTilastoDto> getOpetussuunnitelmaTilastot() {
-        return opetussuunnitelmaService.getOpetussuunnitelmaTilastot();
-    }
-
     @RequestMapping(value = "/opetussuunnitelmat/{sivu}/{sivukoko}", method = RequestMethod.GET)
     public Page<OpetussuunnitelmaTilastoDto> getOpetussuunnitelmaTilastotSivu(@PathVariable("sivu") Integer sivu, @PathVariable("sivukoko") Integer sivukoko) {
         return opetussuunnitelmaService.getOpetussuunnitelmaTilastot(sivu, sivukoko);

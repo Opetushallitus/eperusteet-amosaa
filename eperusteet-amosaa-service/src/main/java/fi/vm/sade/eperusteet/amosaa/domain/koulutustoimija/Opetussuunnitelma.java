@@ -106,7 +106,7 @@ public class Opetussuunnitelma extends AbstractAuditedEntity implements Serializ
     private LokalisoituTeksti nimi;
 
     @ValidHtml(whitelist = ValidHtml.WhitelistType.NORMAL)
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @Getter
     @Setter

@@ -114,8 +114,10 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(value = "/tilastot", method = RequestMethod.GET)
-    public List<OpetussuunnitelmaTilastoDto> getOpetussuunnitelmaTilastot() {
-        return service.getOpetussuunnitelmaTilastot();
+    public List<OpetussuunnitelmaTilastoDto> getOpetussuunnitelmaTilastot(
+            @RequestParam(value = "koulutustyypit", required = true) final Set<String> koulutustyypit
+    ) {
+        return service.getOpetussuunnitelmaTilastot(koulutustyypit.stream().map(KoulutusTyyppi::of).collect(Collectors.toSet()));
     }
 
     @ApiImplicitParams({
