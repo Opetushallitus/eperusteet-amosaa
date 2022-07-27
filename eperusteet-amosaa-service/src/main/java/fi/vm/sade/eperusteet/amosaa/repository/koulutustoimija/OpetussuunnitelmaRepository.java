@@ -162,17 +162,7 @@ public interface OpetussuunnitelmaRepository extends JpaWithVersioningRepository
     List<Opetussuunnitelma> findJulkaistutByTyyppi(@Param("tyyppi") OpsTyyppi tyyppi);
 
     @Query(value = "SELECT DISTINCT o FROM Opetussuunnitelma o " +
-            "LEFT JOIN FETCH o.nimi nimi " +
-            "LEFT JOIN FETCH nimi.teksti tk " +
-            "LEFT JOIN FETCH o.peruste p " +
-            "LEFT JOIN FETCH p.nimi pnimi " +
-            "LEFT JOIN FETCH pnimi.teksti ptk " +
-            "LEFT JOIN FETCH o.julkaisukielet " +
-            "LEFT JOIN FETCH o.julkaisut " +
-            "LEFT JOIN FETCH o.nimi nimi " +
-            "LEFT JOIN FETCH o.koulutustoimija kt " +
-            "LEFT JOIN FETCH kt.nimi ktnimi " +
-            "LEFT JOIN FETCH ktnimi.teksti ktteksti " +
+            "LEFT JOIN o.peruste p " +
             "WHERE (p.koulutustyyppi IN (:koulutustyyppi) OR o.koulutustyyppi IN (:koulutustyyppi)) ")
     List<Opetussuunnitelma> findOpetussuunnitelmaTilastot(@Param("koulutustyyppi") Set<KoulutusTyyppi> koulutusTyyppi);
 
