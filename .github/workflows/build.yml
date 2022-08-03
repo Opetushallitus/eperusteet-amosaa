@@ -61,19 +61,22 @@ jobs:
 
       - name: Generate api
         run: |
-          cd eperusteet-amosaa-service
-          mvn clean compile -P generate-openapi
-          cp target/openapi/amosaa.spec.json ../generated
+          if [ "${{ github.ref_name }}" != "master" ]
+          then
+            cd eperusteet-amosaa-service
+            mvn clean compile -P generate-openapi
+            cp target/openapi/amosaa.spec.json ../generated
           
-          mvn clean compile -P generate-openapi-ext 
-          cp target/openapi/amosaa-ext.spec.json ../generated
+            mvn clean compile -P generate-openapi-ext 
+            cp target/openapi/amosaa-ext.spec.json ../generated
           
-          git config --global user.name "GitHub Actions runner"
-          git config --global user.email "<>"
-          git add ../generated/amosaa-ext.spec.json
-          git add ../generated/amosaa.spec.json
-          git commit -m "github actions generated spec files [skip actions]"
-          git push origin ${{ github.ref_name }}
+            git config --global user.name "GitHub Actions runner"
+            git config --global user.email "<>"
+            git add ../generated/amosaa-ext.spec.json
+            git add ../generated/amosaa.spec.json
+            git commit -m "github actions generated spec files [skip actions]"
+            git push origin ${{ github.ref_name }}
+          fi
 
   build-and-test-eperusteet-amosaa-ui:
     needs: [generate-spec-file]
