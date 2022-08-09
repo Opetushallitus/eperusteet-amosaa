@@ -45,7 +45,7 @@ import java.util.*;
 
 import static org.assertj.core.api.Assertions.*;
 
-@DirtiesContext
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @Transactional
 public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
 
