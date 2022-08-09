@@ -273,28 +273,34 @@
     created programmtically using CacheManager.add(String cacheName)
     -->
     <defaultCache
-        maxElementsInMemory="10000"
-        eternal="false"
-        timeToIdleSeconds="3600"
-        timeToLiveSeconds="3600"
-        overflowToDisk="true"
-        maxElementsOnDisk="10000"
-        diskPersistent="false"
-        diskExpiryThreadIntervalSeconds="120"
-        memoryStoreEvictionPolicy="LRU"
+            maxElementsInMemory="10000"
+            eternal="false"
+            timeToIdleSeconds="3600"
+            timeToLiveSeconds="3600"
+            overflowToDisk="true"
+            maxElementsOnDisk="10000"
+            diskPersistent="false"
+            diskExpiryThreadIntervalSeconds="120"
+            memoryStoreEvictionPolicy="LRU"
     />
 
     <cache name="organisaatiot"
            maxElementsInMemory="10000"
            eternal="false"
            timeToLiveSeconds="600"
-           overflowToDisk="false" />
+           overflowToDisk="false"/>
+
+    <cache name="koulutustoimijat"
+           maxElementsInMemory="1"
+           eternal="false"
+           timeToLiveSeconds="86400"
+           overflowToDisk="false"/>
 
     <cache name="kayttajat"
            maxElementsInMemory="10000"
            eternal="false"
            timeToLiveSeconds="3600"
-           overflowToDisk="false" />
+           overflowToDisk="false"/>
 
     <cache name="kayttajatiedot"
            maxElementsInMemory="10000"
