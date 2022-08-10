@@ -38,4 +38,7 @@ public interface CachedPerusteRepository extends JpaRepository<CachedPeruste, Lo
     CachedPeruste findOneByPerusteIdAndLuotu(Long perusteId, Date luotu);
 
     CachedPeruste findFirstByPerusteIdAndLuotu(Long perusteId, Date luotu);
+
+    CachedPeruste findFirstByPerusteIdOrderByLuotuDesc(Long perusteId);
+
 }
