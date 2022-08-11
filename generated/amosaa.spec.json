@@ -7219,8 +7219,19 @@
           }
         },
         "perusteId" : {
+<<<<<<< HEAD
+=======
           "type" : "integer",
           "format" : "int64"
+        },
+        "koulutustyyppi" : {
+          "type" : "string",
+          "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO", "MAAHANMUUTTAJIENKOTOUTUMISKOULUTUS", "VAPAASIVISTYSTYOLUKUTAITO", "TUTKINTOONVALMENTAVA" ]
+        },
+        "julkaisuVuosi" : {
+>>>>>>> 0bbabdcc... github actions generated spec files [skip actions]
+          "type" : "integer",
+          "format" : "int32"
         },
         "julkaisuVuosi" : {
           "type" : "integer",
@@ -7231,10 +7242,13 @@
           "additionalProperties" : {
             "type" : "string"
           }
+<<<<<<< HEAD
         },
         "koulutustyyppi" : {
           "type" : "string",
           "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO", "MAAHANMUUTTAJIENKOTOUTUMISKOULUTUS", "VAPAASIVISTYSTYOLUKUTAITO", "TUTKINTOONVALMENTAVA" ]
+=======
+>>>>>>> 0bbabdcc... github actions generated spec files [skip actions]
         }
       }
     },
@@ -7459,6 +7473,19 @@
           "format" : "int32"
         },
         "totalElements" : {
+<<<<<<< HEAD
+=======
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "sort" : {
+          "$ref" : "#/definitions/Sort"
+        },
+        "first" : {
+          "type" : "boolean"
+        },
+        "numberOfElements" : {
+>>>>>>> 0bbabdcc... github actions generated spec files [skip actions]
           "type" : "integer",
           "format" : "int64"
         },
@@ -7475,9 +7502,25 @@
         "number" : {
           "type" : "integer",
           "format" : "int32"
+<<<<<<< HEAD
         },
         "first" : {
           "type" : "boolean"
+=======
+        }
+      }
+    },
+    "PageKoulutustoimijaJulkinenDto" : {
+      "type" : "object",
+      "properties" : {
+        "totalPages" : {
+          "type" : "integer",
+          "format" : "int32"
+>>>>>>> 0bbabdcc... github actions generated spec files [skip actions]
+        },
+        "totalElements" : {
+          "type" : "integer",
+          "format" : "int64"
         },
         "sort" : {
           "$ref" : "#/definitions/Sort"
@@ -7515,9 +7558,25 @@
         "number" : {
           "type" : "integer",
           "format" : "int32"
+<<<<<<< HEAD
         },
         "first" : {
           "type" : "boolean"
+=======
+        }
+      }
+    },
+    "PageOpetussuunnitelmaBaseDto" : {
+      "type" : "object",
+      "properties" : {
+        "totalPages" : {
+          "type" : "integer",
+          "format" : "int32"
+>>>>>>> 0bbabdcc... github actions generated spec files [skip actions]
+        },
+        "totalElements" : {
+          "type" : "integer",
+          "format" : "int64"
         },
         "sort" : {
           "$ref" : "#/definitions/Sort"
@@ -7555,9 +7614,25 @@
         "number" : {
           "type" : "integer",
           "format" : "int32"
+<<<<<<< HEAD
         },
         "first" : {
           "type" : "boolean"
+=======
+        }
+      }
+    },
+    "PageOpetussuunnitelmaDto" : {
+      "type" : "object",
+      "properties" : {
+        "totalPages" : {
+          "type" : "integer",
+          "format" : "int32"
+>>>>>>> 0bbabdcc... github actions generated spec files [skip actions]
+        },
+        "totalElements" : {
+          "type" : "integer",
+          "format" : "int64"
         },
         "sort" : {
           "$ref" : "#/definitions/Sort"
@@ -7595,9 +7670,25 @@
         "number" : {
           "type" : "integer",
           "format" : "int32"
+<<<<<<< HEAD
         },
         "first" : {
           "type" : "boolean"
+=======
+        }
+      }
+    },
+    "PageSisaltoviiteLaajaDto" : {
+      "type" : "object",
+      "properties" : {
+        "totalPages" : {
+          "type" : "integer",
+          "format" : "int32"
+>>>>>>> 0bbabdcc... github actions generated spec files [skip actions]
+        },
+        "totalElements" : {
+          "type" : "integer",
+          "format" : "int64"
         },
         "sort" : {
           "$ref" : "#/definitions/Sort"
