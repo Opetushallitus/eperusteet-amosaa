@@ -796,6 +796,27 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
             throw new BusinessRuleViolationException("ei-voi-synkronoida");
         }
 
+        List<SisaltoViite> tutkinnonOsaViitteet = sisaltoviiteRepository.findTutkinnonosat(ops);
+        Set<Long> tutkinnonOsienPerusteIdt = tutkinnonOsaViitteet.stream()
+                .filter(tov -> tov.getPerusteId() != null)
+                .map(tov -> tov.getPerusteId())
+                .collect(Collectors.toSet());
+        tutkinnonOsienPerusteIdt.forEach(perusteId -> {
+            PerusteDto tosanPeruste = eperusteetClient.getPeruste(perusteId, PerusteDto.class);
+            CachedPerusteBaseDto tosanCp = eperusteetService.getCachedPeruste(tosanPeruste);
+            CachedPeruste tosanNewCachedPeruste = cachedPerusteRepository.findOne(tosanCp.getId());
+            tutkinnonOsaViitteet.stream()
+                    .filter(tov -> tov.getPerusteId() != null && tov.getPerusteId().equals(perusteId))
+                    .forEach(tosa -> {
+                        if (tosa.getTosa() != null && tosa.getTosa().getVierastutkinnonosa() != null) {
+                            tosa.getTosa().getVierastutkinnonosa().setCperuste(tosanNewCachedPeruste);
+                        } else {
+                            tosa.setPeruste(tosanNewCachedPeruste);
+                        }
+                    });
+        });
+
+
         ops.setPeruste(newCachedPeruste);
     }
 

@@ -138,7 +138,7 @@ public class EperusteetServiceImpl implements EperusteetService {
 
     @Override
     public JsonNode getTutkinnonOsat(Long id) {
-        CachedPeruste cperuste = cachedPerusteRepository.findOne(id);
+        CachedPeruste cperuste = getMostRecentCachedPerusteByPerusteId(id);
         try {
             JsonNode node = mapper.readTree(cperuste.getPeruste());
             return node.get("tutkinnonOsat");
@@ -163,7 +163,7 @@ public class EperusteetServiceImpl implements EperusteetService {
 
     @Override
     public JsonNode getSuoritustavat(Long id) {
-        CachedPeruste cperuste = cachedPerusteRepository.findOne(id);
+        CachedPeruste cperuste = getMostRecentCachedPerusteByPerusteId(id);
         try {
             JsonNode node = mapper.readTree(cperuste.getPeruste());
             return node.get("suoritustavat");
@@ -233,7 +233,7 @@ public class EperusteetServiceImpl implements EperusteetService {
 
     @Override
     public JsonNode getTutkinnonOsa(Long id, Long tosaId) {
-        CachedPeruste cperuste = cachedPerusteRepository.findOne(id);
+        CachedPeruste cperuste = getMostRecentCachedPerusteByPerusteId(id);
 
         try {
             JsonNode node = mapper.readTree(cperuste.getPeruste());
@@ -251,7 +251,7 @@ public class EperusteetServiceImpl implements EperusteetService {
 
     @Override
     public JsonNode getSuoritustapa(Long id, String tyyppi) {
-        CachedPeruste cperuste = cachedPerusteRepository.findOne(id);
+        CachedPeruste cperuste = getMostRecentCachedPerusteByPerusteId(id);
         try {
             JsonNode node = mapper.readTree(cperuste.getPeruste());
             if (node.get("suoritustavat") != null) {
@@ -305,7 +305,7 @@ public class EperusteetServiceImpl implements EperusteetService {
 
     @Override
     public JsonNode getTutkinnonOsaViite(Long id, String tyyppi, Long tosaId) {
-        CachedPeruste cperuste = cachedPerusteRepository.findOne(id);
+        CachedPeruste cperuste = getMostRecentCachedPerusteByPerusteId(id);
         try {
             JsonNode node = mapper.readTree(cperuste.getPeruste());
             for (JsonNode suoritustapa : node.get("suoritustavat")) {
@@ -326,7 +326,7 @@ public class EperusteetServiceImpl implements EperusteetService {
 
     @Override
     public JsonNode getTutkinnonOsaViitteet(Long id, String tyyppi) {
-        CachedPeruste cperuste = cachedPerusteRepository.findOne(id);
+        CachedPeruste cperuste = getMostRecentCachedPerusteByPerusteId(id);
         try {
             JsonNode node = mapper.readTree(cperuste.getPeruste());
             if (node.get("suoritustavat") != null) {
@@ -345,7 +345,7 @@ public class EperusteetServiceImpl implements EperusteetService {
 
     @Override
     public <T> T getPerusteSisalto(Long cperusteId, Class<T> type) {
-        CachedPeruste cperuste = cachedPerusteRepository.findOne(cperusteId);
+        CachedPeruste cperuste = getMostRecentCachedPerusteByPerusteId(cperusteId);
         return getPerusteSisalto(cperuste, type);
     }
 
@@ -406,7 +406,7 @@ public class EperusteetServiceImpl implements EperusteetService {
     @Override
     public PerusteenOsaDto getPerusteenOsa(Long perusteId, Long perusteenOsaId) {
         try {
-            CachedPeruste cperuste = cachedPerusteRepository.findOne(perusteId);
+            CachedPeruste cperuste = getMostRecentCachedPerusteByPerusteId(perusteId);
             JsonNode node = mapper.readTree(cperuste.getPeruste());
             PerusteKaikkiDto peruste = mapper.treeToValue(node, PerusteKaikkiDto.class);
 
@@ -422,5 +422,10 @@ public class EperusteetServiceImpl implements EperusteetService {
         }
 
         return null;
+    }
+
+    private CachedPeruste getMostRecentCachedPerusteByPerusteId(Long perusteCacheId) {
+        CachedPeruste cperuste = cachedPerusteRepository.findOne(perusteCacheId);
+        return cachedPerusteRepository.findFirstByPerusteIdOrderByLuotuDesc(cperuste.getPerusteId());
     }
 }
