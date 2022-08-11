@@ -7218,24 +7218,31 @@
             "$ref" : "#/definitions/JulkaisuKevytDto"
           }
         },
+<<<<<<< HEAD
         "perusteId" : {
 <<<<<<< HEAD
 =======
           "type" : "integer",
           "format" : "int64"
         },
+=======
+>>>>>>> bf6fbbcc... github actions generated spec files [skip actions]
         "koulutustyyppi" : {
           "type" : "string",
           "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO", "MAAHANMUUTTAJIENKOTOUTUMISKOULUTUS", "VAPAASIVISTYSTYOLUKUTAITO", "TUTKINTOONVALMENTAVA" ]
         },
+<<<<<<< HEAD
         "julkaisuVuosi" : {
 >>>>>>> 0bbabdcc... github actions generated spec files [skip actions]
           "type" : "integer",
           "format" : "int32"
         },
         "julkaisuVuosi" : {
+=======
+        "perusteId" : {
+>>>>>>> bf6fbbcc... github actions generated spec files [skip actions]
           "type" : "integer",
-          "format" : "int32"
+          "format" : "int64"
         },
         "perusteNimi" : {
           "type" : "object",
@@ -7243,12 +7250,19 @@
             "type" : "string"
           }
 <<<<<<< HEAD
+<<<<<<< HEAD
         },
         "koulutustyyppi" : {
           "type" : "string",
           "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO", "MAAHANMUUTTAJIENKOTOUTUMISKOULUTUS", "VAPAASIVISTYSTYOLUKUTAITO", "TUTKINTOONVALMENTAVA" ]
 =======
 >>>>>>> 0bbabdcc... github actions generated spec files [skip actions]
+=======
+        },
+        "julkaisuVuosi" : {
+          "type" : "integer",
+          "format" : "int32"
+>>>>>>> bf6fbbcc... github actions generated spec files [skip actions]
         }
       }
     },
