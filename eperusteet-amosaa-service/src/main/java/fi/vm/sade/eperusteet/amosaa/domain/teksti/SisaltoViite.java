@@ -342,4 +342,16 @@ public class SisaltoViite implements ReferenceableEntity, Serializable, Copyable
     public void updatePohjanTekstikappale(TekstiKappale other) {
         this.pohjanTekstikappale = other;
     }
+
+    public Long getPerusteId() {
+        if (tosa != null && tosa.getVierastutkinnonosa() != null) {
+            return tosa.getVierastutkinnonosa().getPerusteId();
+        }
+
+        if (peruste != null) {
+            return peruste.getPerusteId();
+        }
+
+        return null;
+    }
 }
