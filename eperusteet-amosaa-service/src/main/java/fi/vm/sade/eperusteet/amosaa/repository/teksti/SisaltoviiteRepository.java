@@ -62,7 +62,16 @@ public interface SisaltoviiteRepository extends JpaWithVersioningRepository<Sisa
     @Query(value = "SELECT sv FROM SisaltoViite sv WHERE sv.tosa.tyyppi = 'OMA' AND sv.owner.koulutustoimija = ?1 AND sv.tosa.omatutkinnonosa.koodi = ?2")
     List<SisaltoViite> findAllPaikallisetTutkinnonOsatByKoodi(Koulutustoimija kt, String koodi);
 
-    @Query(value = "SELECT sv FROM SisaltoViite sv WHERE sv.tosa.tyyppi = 'PERUSTEESTA' AND sv.owner.koulutustoimija = ?1 AND sv.tosa.koodi = ?2")
+
+    @Query(nativeQuery = true, value = "SELECT DISTINCT sv.* FROM SisaltoViite sv " +
+            "INNER JOIN tutkinnonosa tosa ON tosa.id = sv.tosa_id " +
+            "INNER JOIN opetussuunnitelma ops ON ops.id = sv.owner_id " +
+            "LEFT OUTER JOIN vierastutkinnonosa vtosa ON vtosa.id = tosa.vierastutkinnonosa_id " +
+            "LEFT OUTER JOIN tutkinnonosa vtosatosa ON vtosatosa.perusteentutkinnonosa = vtosa.tosa_id " +
+            "WHERE 1 = 1 " +
+            "AND (tosa.tyyppi = 'PERUSTEESTA' OR tosa.tyyppi ='VIERAS') " +
+            "AND ops.koulutustoimija_id = ?1 " +
+            "AND (tosa.koodi = ?2 or vtosatosa.koodi = ?2)")
     List<SisaltoViite> findAllTutkinnonOsatByKoodi(Koulutustoimija kt, String koodi);
 
     @Query(value = "SELECT sv FROM SisaltoViite sv WHERE sv.owner = ?1 AND sv.tyyppi = 'TUTKINNONOSAT'")
