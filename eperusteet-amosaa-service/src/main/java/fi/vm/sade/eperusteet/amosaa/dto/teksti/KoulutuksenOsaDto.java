@@ -18,5 +18,5 @@ public class KoulutuksenOsaDto extends KoulutuksenOsaKevytDto {
     private LokalisoituTekstiDto laajaAlaisenOsaamisenKuvaus;
     private LokalisoituTekstiDto arvioinninKuvaus;
     private KoulutuksenosanPaikallinenTarkennusDto paikallinenTarkennus;
-
+    
 }
