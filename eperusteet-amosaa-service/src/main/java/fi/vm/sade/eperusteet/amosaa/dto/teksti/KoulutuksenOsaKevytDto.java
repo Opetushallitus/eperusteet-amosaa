@@ -27,4 +27,12 @@ public class KoulutuksenOsaKevytDto implements KooditettuDto {
         return nimi;
     }
 
+    public String getKoodiArvo() {
+        if (getNimiKoodi() != null) {
+            return getNimiKoodi().substring(getNimiKoodi().indexOf("_") + 1);
+        }
+
+        return null;
+    }
+
 }

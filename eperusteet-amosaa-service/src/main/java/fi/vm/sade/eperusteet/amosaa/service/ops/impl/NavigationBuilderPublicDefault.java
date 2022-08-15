@@ -52,6 +52,7 @@ public class NavigationBuilderPublicDefault implements NavigationBuilderPublic {
                         NavigationType.valmatelmaKoulutuksenosat.toString() : sisaltoviite.getTyyppi().toString()),
                 getSisaltoviiteNimi(sisaltoviite),
                 sisaltoviite.getId())
+                .meta("koodi", getSisaltoviiteMetaKoodi(sisaltoviite))
                 .addAll(sisaltoviite.getLapset() != null ?
                         sisaltoviite.getLapset().stream()
                                 .map(lapsi -> sisaltoviiteToNavigationNode(lapsi, opetussuunnitelmaKaikkiDto))

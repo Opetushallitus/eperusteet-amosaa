@@ -29,4 +29,5 @@ public class NavigationBuilderVstPublic extends NavigationBuilderPublicDefault {
 
         return sisaltoviite.getNimi();
     }
+
 }

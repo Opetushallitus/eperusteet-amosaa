@@ -67,6 +67,7 @@ public class NavigationBuilderDefault implements NavigationBuilder {
                 NavigationType.of(sisaltoviite.getTyyppi().toString()),
                 sisaltoviite.getNimi(),
                 sisaltoviite.getId())
+                .meta("koodi", getSisaltoviiteMetaKoodi(sisaltoviite))
                 .addAll(sisaltoviite.getLapset() != null ? sisaltoviite.getLapset().stream()
                         .map(lapsi -> sisaltoviiteToNavigationNode(sisaltoViitteetIdMap.get(lapsi.getIdLong()), sisaltoViitteetIdMap))
                         .collect(Collectors.toList())
