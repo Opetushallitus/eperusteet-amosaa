@@ -6024,6 +6024,9 @@
         },
         "paikallinenTarkennus" : {
           "$ref" : "#/definitions/KoulutuksenosanPaikallinenTarkennusDto"
+        },
+        "koodiArvo" : {
+          "type" : "string"
         }
       }
     },
@@ -6047,6 +6050,9 @@
           }
         },
         "nimiKoodi" : {
+          "type" : "string"
+        },
+        "koodiArvo" : {
           "type" : "string"
         }
       }
@@ -7218,16 +7224,6 @@
             "$ref" : "#/definitions/JulkaisuKevytDto"
           }
         },
-        "julkaisuVuosi" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-        "perusteNimi" : {
-          "type" : "object",
-          "additionalProperties" : {
-            "type" : "string"
-          }
-        },
         "perusteId" : {
           "type" : "integer",
           "format" : "int64"
@@ -7235,6 +7231,16 @@
         "koulutustyyppi" : {
           "type" : "string",
           "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO", "MAAHANMUUTTAJIENKOTOUTUMISKOULUTUS", "VAPAASIVISTYSTYOLUKUTAITO", "TUTKINTOONVALMENTAVA" ]
+        },
+        "perusteNimi" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "julkaisuVuosi" : {
+          "type" : "integer",
+          "format" : "int32"
         }
       }
     },
@@ -7462,6 +7468,19 @@
           "type" : "integer",
           "format" : "int64"
         },
+        "sort" : {
+          "$ref" : "#/definitions/Sort"
+        },
+        "first" : {
+          "type" : "boolean"
+        },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "last" : {
+          "type" : "boolean"
+        },
         "size" : {
           "type" : "integer",
           "format" : "int32"
@@ -7473,19 +7492,6 @@
           }
         },
         "number" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-        "sort" : {
-          "$ref" : "#/definitions/Sort"
-        },
-        "last" : {
-          "type" : "boolean"
-        },
-        "first" : {
-          "type" : "boolean"
-        },
-        "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
         }
@@ -7502,6 +7508,19 @@
           "type" : "integer",
           "format" : "int64"
         },
+        "sort" : {
+          "$ref" : "#/definitions/Sort"
+        },
+        "first" : {
+          "type" : "boolean"
+        },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "last" : {
+          "type" : "boolean"
+        },
         "size" : {
           "type" : "integer",
           "format" : "int32"
@@ -7513,19 +7532,6 @@
           }
         },
         "number" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-        "sort" : {
-          "$ref" : "#/definitions/Sort"
-        },
-        "last" : {
-          "type" : "boolean"
-        },
-        "first" : {
-          "type" : "boolean"
-        },
-        "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
         }
@@ -7542,6 +7548,19 @@
           "type" : "integer",
           "format" : "int64"
         },
+        "sort" : {
+          "$ref" : "#/definitions/Sort"
+        },
+        "first" : {
+          "type" : "boolean"
+        },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "last" : {
+          "type" : "boolean"
+        },
         "size" : {
           "type" : "integer",
           "format" : "int32"
@@ -7553,19 +7572,6 @@
           }
         },
         "number" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-        "sort" : {
-          "$ref" : "#/definitions/Sort"
-        },
-        "last" : {
-          "type" : "boolean"
-        },
-        "first" : {
-          "type" : "boolean"
-        },
-        "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
         }
@@ -7582,6 +7588,19 @@
           "type" : "integer",
           "format" : "int64"
         },
+        "sort" : {
+          "$ref" : "#/definitions/Sort"
+        },
+        "first" : {
+          "type" : "boolean"
+        },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "last" : {
+          "type" : "boolean"
+        },
         "size" : {
           "type" : "integer",
           "format" : "int32"
@@ -7593,19 +7612,6 @@
           }
         },
         "number" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-        "sort" : {
-          "$ref" : "#/definitions/Sort"
-        },
-        "last" : {
-          "type" : "boolean"
-        },
-        "first" : {
-          "type" : "boolean"
-        },
-        "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
         }
@@ -7622,6 +7628,19 @@
           "type" : "integer",
           "format" : "int64"
         },
+        "sort" : {
+          "$ref" : "#/definitions/Sort"
+        },
+        "first" : {
+          "type" : "boolean"
+        },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "last" : {
+          "type" : "boolean"
+        },
         "size" : {
           "type" : "integer",
           "format" : "int32"
@@ -7633,19 +7652,6 @@
           }
         },
         "number" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-        "sort" : {
-          "$ref" : "#/definitions/Sort"
-        },
-        "last" : {
-          "type" : "boolean"
-        },
-        "first" : {
-          "type" : "boolean"
-        },
-        "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
         }
