@@ -81,6 +81,8 @@ jobs:
   build-and-test-eperusteet-amosaa-ui:
     needs: [generate-spec-file]
     runs-on: ubuntu-latest
+    env:
+        EPERUSTEET_AMOSAA_SPECFILE: https://raw.githubusercontent.com/Opetushallitus/eperusteet-amosaa/${{ github.ref_name }}/generated/amosaa.spec.json
     steps:
       - uses: actions/checkout@v3
 
@@ -143,7 +145,6 @@ jobs:
 
       - name: Build with Maven
         run: |
-          echo "EPERUSTEET_AMOSAA_SPECFILE=https://raw.githubusercontent.com/Opetushallitus/eperusteet-amosaa/${{ github.ref_name }}/generated/amosaa.spec.json" >> $GITHUB_ENV
           git clone ${{ env.EPERUSTEET_AMOSAA_UI_GIT_BRANCH }} --recurse-submodules --depth 1 https://github.com/Opetushallitus/eperusteet-amosaa-ui.git
             
           cd eperusteet-amosaa-ui
