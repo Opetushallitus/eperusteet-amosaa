@@ -7224,13 +7224,13 @@
             "$ref" : "#/definitions/JulkaisuKevytDto"
           }
         },
-        "koulutustyyppi" : {
-          "type" : "string",
-          "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO", "MAAHANMUUTTAJIENKOTOUTUMISKOULUTUS", "VAPAASIVISTYSTYOLUKUTAITO", "TUTKINTOONVALMENTAVA" ]
-        },
         "perusteId" : {
           "type" : "integer",
           "format" : "int64"
+        },
+        "koulutustyyppi" : {
+          "type" : "string",
+          "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO", "MAAHANMUUTTAJIENKOTOUTUMISKOULUTUS", "VAPAASIVISTYSTYOLUKUTAITO", "TUTKINTOONVALMENTAVA" ]
         },
         "perusteNimi" : {
           "type" : "object",
