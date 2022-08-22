@@ -58,5 +58,9 @@ public class SisaltoViiteExportDto extends SisaltoViiteExportBaseDto {
         if (kotoLaajaAlainenOsaaminen != null && perusteenOsaDto instanceof fi.vm.sade.eperusteet.amosaa.dto.peruste.KotoLaajaAlainenOsaaminenDto) {
             kotoLaajaAlainenOsaaminen.setPerusteenOsa((fi.vm.sade.eperusteet.amosaa.dto.peruste.KotoLaajaAlainenOsaaminenDto) perusteenOsaDto);
         }
+
+        if (perusteenOsaDto instanceof fi.vm.sade.eperusteet.amosaa.dto.peruste.TekstiKappaleDto) {
+            perusteteksti = ((fi.vm.sade.eperusteet.amosaa.dto.peruste.TekstiKappaleDto) perusteenOsaDto).getTeksti();
+        }
     }
 }
