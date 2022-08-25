@@ -71,6 +71,9 @@ public interface KayttajanTietoService {
     List<KayttajaKtoDto> getKaikkiKayttajat(@P("ktId") Long ktId);
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
+    List<KayttajaKtoDto> getYstavaOrganisaatioKayttajat(@P("ktId") Long ktId);
+
+    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
     KayttajanTietoDto getKayttaja(@P("ktId") Long ktId, String oid);
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")

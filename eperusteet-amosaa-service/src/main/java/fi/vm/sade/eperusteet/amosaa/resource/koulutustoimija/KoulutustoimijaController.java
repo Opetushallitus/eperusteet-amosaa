@@ -131,6 +131,16 @@ public class KoulutustoimijaController extends KoulutustoimijaIdGetterAbstractCo
     @ApiImplicitParams({
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
+    @RequestMapping(value = "/{ktId}/ystavaOrganisaatioKayttajat", method = RequestMethod.GET)
+    public ResponseEntity<List<KayttajaKtoDto>> getYstavaOrganisaatioKayttajat(
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId
+    ) {
+        return new ResponseEntity<>(kayttajaTietoService.getYstavaOrganisaatioKayttajat(ktId), HttpStatus.OK);
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
     @RequestMapping(value = "/{ktId}/kayttajat/{kayttajaOid}", method = RequestMethod.GET)
     public ResponseEntity<KayttajanTietoDto> getKoulutustoimijaKayttaja(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,

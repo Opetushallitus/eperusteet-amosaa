@@ -274,23 +274,29 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
                 result.putAll(getOrganisaatioVirkailijatAsKayttajat(ystavaorganisaatiot.stream()
                         .map(KoulutustoimijaYstavaDto::getOrganisaatio).collect(Collectors.toList())).stream()
                         .collect(Collectors.toMap(KayttajaDto::getOid, kayttaja -> kayttaja, (kayttaja1, kayttaja2) -> kayttaja1)));
-            }
-            catch (RuntimeException ignored) {
+            } catch (RuntimeException ignored) {
             }
         }
 
         return new ArrayList<>(result.values());
     }
 
+    @Override
+    public List<KayttajaKtoDto> getYstavaOrganisaatioKayttajat(Long kOid) {
+        Koulutustoimija self = koulutustoimijaRepository.findOne(kOid);
+        List<KoulutustoimijaYstavaDto> ystavaorganisaatiot = koulutustoimijaService.getOmatYstavat(self.getId());
+        return getOrganisaatioVirkailijatAsKayttajat(ystavaorganisaatiot.stream().map(KoulutustoimijaYstavaDto::getOrganisaatio).collect(Collectors.toList()));
+    }
+
     private List<KayttajaKtoDto> getOrganisaatioVirkailijatAsKayttajat(List<String> organisaatioOids) {
 
-        if(organisaatioOids.isEmpty()) {
+        if (organisaatioOids.isEmpty()) {
             return Collections.emptyList();
         }
 
         Map<String, KayttajaKtoDto> kayttajaMap = organisaatioOids.stream()
-            .flatMap(organisaatioOid -> kayttooikeusService.getOrganisaatioVirkailijat(organisaatioOid).stream()
-                    .map(kayttooikeusKayttajaDto -> mapper.map(kayttooikeusKayttajaDto, KayttajaKtoDto.class).withOrganisaatioOid(organisaatioOid)
+                .flatMap(organisaatioOid -> kayttooikeusService.getOrganisaatioVirkailijat(organisaatioOid).stream()
+                        .map(kayttooikeusKayttajaDto -> mapper.map(kayttooikeusKayttajaDto, KayttajaKtoDto.class).withOrganisaatioOid(organisaatioOid)
                     ))
                 .collect(Collectors.toMap(KayttajaDto::getOid, kayttaja -> kayttaja, (kayttaja1, kayttaja2) -> kayttaja1));
 

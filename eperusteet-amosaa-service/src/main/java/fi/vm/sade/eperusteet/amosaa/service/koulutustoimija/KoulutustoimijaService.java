@@ -92,7 +92,5 @@ public interface KoulutustoimijaService {
 
     @PreAuthorize("permitAll()")
     List<KoulutustoimijaJulkinenDto> findKoulutusatyypinKoulutustoimijat(Set<KoulutusTyyppi> koulutustyypit);
-
-//    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'HALLINTA')")
-//    OpetussuunnitelmaBaseDto moveOpetussuunnitelma(Long ktId, Long opsId, KoulutustoimijaBaseDto body);
+    
 }
