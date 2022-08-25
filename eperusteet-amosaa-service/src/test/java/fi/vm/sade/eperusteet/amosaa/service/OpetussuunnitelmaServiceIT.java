@@ -273,11 +273,13 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
         KoulutustoimijaDto tmpr = koulutustoimijaService.getKoulutustoimija(getKoulutustoimijaId());
 
         tmpr.setSalliystavat(true);
+        tmpr.setYstavat(new HashSet<>());
         tmpr = koulutustoimijaService.updateKoulutustoimija(tmpr.getId(), tmpr);
         tmpr.getYstavat().add(Reference.of(kp2.getId()));
         tmpr = koulutustoimijaService.updateKoulutustoimija(tmpr.getId(), tmpr);
 
         useProfileKP2();
+        kp2.setYstavat(new HashSet<>());
         kp2.getYstavat().add(Reference.of(tmpr.getId()));
         kp2 = koulutustoimijaService.updateKoulutustoimija(kp2.getId(), kp2);
 
@@ -308,7 +310,7 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
 
     @Test
     @Rollback
-    public void testKoulutustoimijaKayttajaoikeudetYstavaorganisaatiolla() {
+    public void testKoulutustoimijaKayttajaoikeudetKaikkiJaYstavaorganisaatiolla() {
         regAllProfiles();
         makeFriendsWithTmpr();
         useProfileKP2();
@@ -316,6 +318,18 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
         assertThat(kaikki)
                 .extracting(KayttajaDto::getOid)
                 .containsExactlyInAnyOrder("kp1", "kp2", "tmpr", "1.22.3.4.5.kp2", "1.2.3.4.5.kp1", "1.22.3.4.5.TMPR");
+    }
+
+    @Test
+    @Rollback
+    public void testKoulutustoimijaKayttajaoikeudetYstavaorganisaatiolla() {
+        regAllProfiles();
+        makeFriendsWithTmpr();
+        useProfileKP2();
+        List<KayttajaKtoDto> ystavat = kayttajanTietoService.getYstavaOrganisaatioKayttajat(getKoulutustoimijaId());
+        assertThat(ystavat)
+                .extracting(KayttajaDto::getOid)
+                .containsExactlyInAnyOrder("kp1", "1.2.3.4.5.kp1", "1.22.3.4.5.TMPR");
     }
 
     @Test
