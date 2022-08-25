@@ -1,6 +1,7 @@
 package fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.KotoKielitaitotasoDto;
@@ -18,10 +19,11 @@ import lombok.Data;
 public class SisaltoviiteLaajaDto {
     private Long id;
     private TekstiKappaleDto tekstiKappale;
+    private SisaltoTyyppi tyyppi;
     @JsonIgnore
     private OpetussuunnitelmaDto owner;
+
     private CachedPerusteBaseDto peruste;
-    private SisaltoTyyppi tyyppi;
     private TutkinnonosaDto tosa;
     private SuorituspolkuDto suorituspolku;
     private OpintokokonaisuusDto opintokokonaisuus;

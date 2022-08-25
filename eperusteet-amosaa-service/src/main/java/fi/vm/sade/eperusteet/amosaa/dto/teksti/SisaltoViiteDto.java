@@ -18,14 +18,20 @@ package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaOsaAlue;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteBaseDto;
+
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import javax.persistence.CascadeType;
+import javax.persistence.OneToMany;
 
 /**
  * @author nkala
@@ -61,6 +67,8 @@ public class SisaltoViiteDto {
     private Long perusteenOsaId;
     private String kommentti;
     private boolean naytaPerusteenTeksti;
+    private Reference linkkiSisaltoViiteId;
+    private List<OmaOsaAlueDto> osaAlueet = new ArrayList<>();
 
     @JsonProperty("_tekstiKappale")
     private Reference tekstiKappaleRef;

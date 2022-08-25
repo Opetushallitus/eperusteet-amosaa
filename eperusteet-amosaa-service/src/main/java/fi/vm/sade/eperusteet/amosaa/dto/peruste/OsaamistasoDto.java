@@ -28,4 +28,5 @@ import lombok.Setter;
 public class OsaamistasoDto {
     private Long id;
     private LokalisoituTekstiDto otsikko;
+    private KoodiDto koodi;
 }

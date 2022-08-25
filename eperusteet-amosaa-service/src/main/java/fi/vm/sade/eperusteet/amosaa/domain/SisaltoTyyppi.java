@@ -38,7 +38,10 @@ public enum SisaltoTyyppi {
     LAAJAALAINENOSAAMINEN("laajaalainenosaaminen"),
     KOTO_KIELITAITOTASO("koto_kielitaitotaso"),
     KOTO_OPINTO("koto_opinto"),
-    KOTO_LAAJAALAINENOSAAMINEN("koto_laajaalainenosaaminen");
+    KOTO_LAAJAALAINENOSAAMINEN("koto_laajaalainenosaaminen"),
+
+    // Linkki toiseen minkä läpi voi vain lukea
+    LINKKI("linkki");
 
     private final String tyyppi;
 
