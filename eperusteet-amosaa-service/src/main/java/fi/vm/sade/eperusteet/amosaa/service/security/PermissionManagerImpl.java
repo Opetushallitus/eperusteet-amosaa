@@ -184,7 +184,8 @@ public class PermissionManagerImpl extends AbstractPermissionManager {
             if (!hasAnyRole(authentication, RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA, permissions, organisaatio)) {
                 if (perm == Permission.LUKU) {
                     final Koulutustoimija kohdeKt = koulutustoimija;
-                    return kayttajanKoulutustoimijat().stream().anyMatch(kayttajanKt -> areFriends(kayttajanKt, kohdeKt));
+                    return kayttajanKoulutustoimijat().stream()
+                            .anyMatch(kayttajanKt -> areFriends(kayttajanKt, kohdeKt));
                 } else {
                     return false;
                 }

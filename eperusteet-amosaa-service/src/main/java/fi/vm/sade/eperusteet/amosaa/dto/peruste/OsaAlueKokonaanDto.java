@@ -17,7 +17,11 @@ package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -25,6 +29,17 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class OsaAlueKokonaanDto extends OsaAlueDto {
+
+    private Arviointi2020Dto arviointi;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Osaamistavoite2020Dto pakollisetOsaamistavoitteet;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Osaamistavoite2020Dto valinnaisetOsaamistavoitteet;
+
     private List<OsaamistavoiteLaajaDto> osaamistavoitteet;
 }

@@ -41,14 +41,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
-import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.KotoTaitotaso;
-import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Koulutuksenosa;
-import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OpintokokonaisuusArviointi;
-import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OpintokokonaisuusTavoite;
-import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OpintokokonaisuusTyyppi;
-import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Tutkinnonosa;
-import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
-import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TuvaLaajaAlainenOsaaminen;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.*;
 import fi.vm.sade.eperusteet.amosaa.dto.NavigationNodeDto;
 import fi.vm.sade.eperusteet.amosaa.dto.NavigationType;
 import fi.vm.sade.eperusteet.amosaa.dto.OpsHakuDto;
@@ -68,23 +61,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaTilasto
 import fi.vm.sade.eperusteet.amosaa.dto.ops.VanhentunutPohjaperusteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHistoriaLiitosDto;
 import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioStatus;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.AbstractRakenneOsaDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteBaseDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.KotoKielitaitotasoDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.KotoLaajaAlainenOsaaminenDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.KotoOpintoDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.KoulutuksenOsaDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.KoulutusDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.OpintokokonaisuusDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKaikkiDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteenOsaDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteenOsaViiteDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.Suoritustapakoodi;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.TekstiKappaleDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonosaExportDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonosaKaikkiDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.TuvaLaajaAlainenOsaaminenDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.*;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteExportDto;
@@ -718,6 +695,30 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                 uusiTosa.setTyyppi(TutkinnonosaTyyppi.PERUSTEESTA);
                 uusiTosa.setPerusteentutkinnonosa(tosa.getId());
                 uusiTosa.setKoodi(tosa.getKoodiUri());
+
+                for (OsaAlueKokonaanDto perusteenOsaAlue : tosa.getOsaAlueet()) {
+                    Osaamistavoite2020Dto pakolliset = perusteenOsaAlue.getPakollisetOsaamistavoitteet();
+                    Osaamistavoite2020Dto valinnaiset = perusteenOsaAlue.getValinnaisetOsaamistavoitteet();
+
+                    if (pakolliset != null) {
+                        OmaOsaAlue oa = new OmaOsaAlue();
+                        oa.setTyyppi(OmaOsaAlueTyyppi.PAKOLLINEN);
+                        oa.setPiilotettu(false);
+                        oa.setPerusteenOsaAlueKoodi(perusteenOsaAlue.getKoodiUri());
+                        oa.setPerusteenOsaAlueId(perusteenOsaAlue.getId());
+                        uusi.getOsaAlueet().add(oa);
+                    }
+
+                    if (valinnaiset != null) {
+                        OmaOsaAlue oa = new OmaOsaAlue();
+                        oa.setTyyppi(OmaOsaAlueTyyppi.VALINNAINEN);
+                        oa.setPiilotettu(false);
+                        oa.setPerusteenOsaAlueKoodi(perusteenOsaAlue.getKoodiUri());
+                        oa.setPerusteenOsaAlueId(perusteenOsaAlue.getId());
+                        uusi.getOsaAlueet().add(oa);
+                    }
+                }
+
                 tkvRepository.save(uusi);
             }
         }

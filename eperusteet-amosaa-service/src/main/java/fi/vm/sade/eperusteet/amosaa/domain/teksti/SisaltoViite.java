@@ -19,15 +19,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
-import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.KotoKielitaitotaso;
-import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.KotoLaajaAlainenOsaaminen;
-import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.KotoOpinto;
-import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Koulutuksenosa;
-import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Opintokokonaisuus;
-import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.KoulutuksenosanPaikallinenTarkennus;
-import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Suorituspolku;
-import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Tutkinnonosa;
-import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TuvaLaajaAlainenOsaaminen;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.*;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 
 import java.io.Serializable;
@@ -180,10 +172,20 @@ public class SisaltoViite implements ReferenceableEntity, Serializable, Copyable
     @Setter
     private KotoLaajaAlainenOsaaminen kotoLaajaAlainenOsaaminen;
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @Getter
+    @Setter
+    private List<OmaOsaAlue> osaAlueet = new ArrayList<>();
+
     @Getter
     @Setter
     @Column(updatable = false)
     private Long perusteenOsaId;
+
+    @ManyToOne
+    @Getter
+    @Setter
+    private SisaltoViite linkkiSisaltoViite;
 
     @OneToMany(mappedBy = "vanhempi", fetch = FetchType.LAZY)
     @OrderColumn
@@ -226,6 +228,11 @@ public class SisaltoViite implements ReferenceableEntity, Serializable, Copyable
 
     public static SisaltoViite copy(SisaltoViite original, boolean copyChildren, boolean copyText) {
         if (original != null) {
+            if (SisaltoTyyppi.LINKKI.equals(original.getTyyppi())) {
+                SisaltoViite result = SisaltoViite.copy(original.getLinkkiSisaltoViite(), copyChildren, copyText);
+                return result;
+            }
+
             SisaltoViite result = new SisaltoViite();
             result.setLiikkumaton(original.isLiikkumaton());
             result.setPakollinen(original.isPakollinen());
@@ -353,5 +360,160 @@ public class SisaltoViite implements ReferenceableEntity, Serializable, Copyable
         }
 
         return null;
+    }
+
+
+    public boolean isPakollinen() {
+        if (SisaltoTyyppi.LINKKI.equals(tyyppi)) {
+            return this.linkkiSisaltoViite.pakollinen;
+        }
+        return pakollinen;
+    }
+
+    public boolean isValmis() {
+        if (SisaltoTyyppi.LINKKI.equals(tyyppi)) {
+            return this.linkkiSisaltoViite.valmis;
+        }
+        return valmis;
+    }
+
+    public boolean isLiikkumaton() {
+        if (SisaltoTyyppi.LINKKI.equals(tyyppi)) {
+            return this.linkkiSisaltoViite.liikkumaton;
+        }
+        return liikkumaton;
+    }
+
+    public Long getVersio() {
+        if (SisaltoTyyppi.LINKKI.equals(tyyppi)) {
+            return this.linkkiSisaltoViite.versio;
+        }
+        return versio;
+    }
+
+    public TekstiKappale getTekstiKappale() {
+        if (SisaltoTyyppi.LINKKI.equals(tyyppi)) {
+            return this.linkkiSisaltoViite.tekstiKappale;
+        }
+        return tekstiKappale;
+    }
+
+    public TekstiKappale getPohjanTekstikappale() {
+        if (SisaltoTyyppi.LINKKI.equals(tyyppi)) {
+            return this.linkkiSisaltoViite.pohjanTekstikappale;
+        }
+        return pohjanTekstikappale;
+    }
+
+    public boolean isNaytaPohjanTeksti() {
+        if (SisaltoTyyppi.LINKKI.equals(tyyppi)) {
+            return this.linkkiSisaltoViite.naytaPohjanTeksti;
+        }
+        return naytaPohjanTeksti;
+    }
+
+    public LokalisoituTeksti getOhjeteksti() {
+        if (SisaltoTyyppi.LINKKI.equals(tyyppi)) {
+            return this.linkkiSisaltoViite.ohjeteksti;
+        }
+        return ohjeteksti;
+    }
+
+    public LokalisoituTeksti getPerusteteksti() {
+        if (SisaltoTyyppi.LINKKI.equals(tyyppi)) {
+            return this.linkkiSisaltoViite.perusteteksti;
+        }
+        return perusteteksti;
+    }
+
+    public boolean isNaytaPerusteenTeksti() {
+        if (SisaltoTyyppi.LINKKI.equals(tyyppi)) {
+            return this.linkkiSisaltoViite.naytaPerusteenTeksti;
+        }
+        return naytaPerusteenTeksti;
+    }
+
+    public CachedPeruste getPeruste() {
+        if (SisaltoTyyppi.LINKKI.equals(tyyppi)) {
+            return this.linkkiSisaltoViite.peruste;
+        }
+        return peruste;
+    }
+
+    public Tutkinnonosa getTosa() {
+        if (SisaltoTyyppi.LINKKI.equals(tyyppi)) {
+            return this.linkkiSisaltoViite.tosa;
+        }
+        return tosa;
+    }
+
+    public Suorituspolku getSuorituspolku() {
+        if (SisaltoTyyppi.LINKKI.equals(tyyppi)) {
+            return this.linkkiSisaltoViite.suorituspolku;
+        }
+        return suorituspolku;
+    }
+
+    public Opintokokonaisuus getOpintokokonaisuus() {
+        if (SisaltoTyyppi.LINKKI.equals(tyyppi)) {
+            return this.linkkiSisaltoViite.opintokokonaisuus;
+        }
+        return opintokokonaisuus;
+    }
+
+    public Koulutuksenosa getKoulutuksenosa() {
+        if (SisaltoTyyppi.LINKKI.equals(tyyppi)) {
+            return this.linkkiSisaltoViite.koulutuksenosa;
+        }
+        return koulutuksenosa;
+    }
+
+    public TuvaLaajaAlainenOsaaminen getTuvaLaajaAlainenOsaaminen() {
+        if (SisaltoTyyppi.LINKKI.equals(tyyppi)) {
+            return this.linkkiSisaltoViite.tuvaLaajaAlainenOsaaminen;
+        }
+        return tuvaLaajaAlainenOsaaminen;
+    }
+
+    public KotoKielitaitotaso getKotoKielitaitotaso() {
+        if (SisaltoTyyppi.LINKKI.equals(tyyppi)) {
+            return this.linkkiSisaltoViite.kotoKielitaitotaso;
+        }
+        return kotoKielitaitotaso;
+    }
+
+    public KotoOpinto getKotoOpinto() {
+        if (SisaltoTyyppi.LINKKI.equals(tyyppi)) {
+            return this.linkkiSisaltoViite.kotoOpinto;
+        }
+        return kotoOpinto;
+    }
+
+    public KotoLaajaAlainenOsaaminen getKotoLaajaAlainenOsaaminen() {
+        if (SisaltoTyyppi.LINKKI.equals(tyyppi)) {
+            return this.linkkiSisaltoViite.kotoLaajaAlainenOsaaminen;
+        }
+        return kotoLaajaAlainenOsaaminen;
+    }
+
+    public List<OmaOsaAlue> getOsaAlueet() {
+        if (SisaltoTyyppi.LINKKI.equals(tyyppi)) {
+            return this.linkkiSisaltoViite.osaAlueet;
+        }
+        return osaAlueet;
+    }
+
+    public Long getPerusteenOsaId() {
+        if (SisaltoTyyppi.LINKKI.equals(tyyppi)) {
+            return this.linkkiSisaltoViite.perusteenOsaId;
+        }
+        return perusteenOsaId;
+    }
+
+    public List<SisaltoViite> getLapset() {
+        if (SisaltoTyyppi.LINKKI.equals(tyyppi)) {
+            return this.linkkiSisaltoViite.lapset;
+        }
+        return lapset;
     }
 }
