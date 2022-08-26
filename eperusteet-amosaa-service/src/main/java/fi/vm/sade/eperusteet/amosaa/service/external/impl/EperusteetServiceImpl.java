@@ -67,7 +67,7 @@ import static java.util.Collections.singletonList;
  * @author nkala
  */
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class EperusteetServiceImpl implements EperusteetService {
     private static final Logger logger = LoggerFactory.getLogger(EperusteetServiceImpl.class);
 
