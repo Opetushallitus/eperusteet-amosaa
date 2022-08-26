@@ -201,6 +201,29 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
 
     @Test
     @Rollback
+    public void testSuorituspolkuU_update() {
+        useProfileKP2();
+        OpetussuunnitelmaBaseDto ops = createOpetussuunnitelma();
+        SisaltoViiteDto.Matala root = sisaltoViiteService.getSisaltoRoot(getKoulutustoimijaId(), ops.getId());
+        List<SisaltoViiteDto> suorituspolut = sisaltoViiteService.getSisaltoviitteet(getKoulutustoimijaId(), ops.getId(), SisaltoTyyppi.SUORITUSPOLUT);
+        SisaltoViiteDto.Matala added = sisaltoViiteService.addSisaltoViite(getKoulutustoimijaId(), ops.getId(), suorituspolut.get(0).getId(), createSisalto(sisaltoViiteDto -> {
+            sisaltoViiteDto.setTyyppi(SisaltoTyyppi.SUORITUSPOLKU);
+            sisaltoViiteDto.setSuorituspolku(new SuorituspolkuDto());
+            sisaltoViiteDto.getSuorituspolku().getRivit().add(SuorituspolkuRiviDto.of("76044b5b-1f4b-4587-b30d-23b7d3c2608d", true, null));
+            sisaltoViiteDto.getSuorituspolku().getRivit().add(SuorituspolkuRiviDto.of("428e7f22-0a69-43c5-baa5-520296f71169", false, LokalisoituTekstiDto.of("foo")));
+        }));
+
+        SisaltoViiteDto suorituspolku = service.getSisaltoViite(getKoulutustoimijaId(), ops.getId(), added.getId());
+        assertThat(suorituspolku.getSuorituspolku().getPiilotaPerusteenTeksti()).isNull();
+        suorituspolku.getSuorituspolku().setPiilotaPerusteenTeksti(true);
+        sisaltoViiteService.updateSisaltoViite(getKoulutustoimijaId(), ops.getId(), suorituspolku.getId(), suorituspolku);
+
+        suorituspolku = service.getSisaltoViite(getKoulutustoimijaId(), ops.getId(), added.getId());
+        assertThat(suorituspolku.getSuorituspolku().getPiilotaPerusteenTeksti()).isTrue();
+    }
+
+    @Test
+    @Rollback
     public void testOpsinSisallonUudelleenjarjestaminen() {
         useProfileKP2();
         OpetussuunnitelmaBaseDto ops = createOpetussuunnitelma();

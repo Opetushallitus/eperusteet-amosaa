@@ -381,6 +381,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
         }
 
         viite.setSuorituspolku(sp);
+        repository.save(viite);
     }
 
     @Transactional
