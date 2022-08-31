@@ -29,7 +29,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DirtiesContext
 @Transactional
-@TestPropertySource(properties = {"test.perusteJsonFile: /perusteet/kotoPeruste.json"})
 public class KotoOpsitIt extends AbstractIntegrationTest {
 
     @Autowired

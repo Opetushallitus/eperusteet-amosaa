@@ -37,6 +37,7 @@ import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttooikeusService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
+import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.RolePermission;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 import fi.vm.sade.eperusteet.utils.client.OphClientHelper;
@@ -230,15 +231,15 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
     }
 
     @Override
-    public boolean updateKoulutustoimijat() {
-        koulutustoimijaService.initKoulutustoimijat(getUserOrganizations());
+    public boolean updateKoulutustoimijat(PermissionEvaluator.RolePrefix rolePrefix) {
+        koulutustoimijaService.initKoulutustoimijat(getUserOrganizations(rolePrefix));
         return true;
     }
 
     @Override
-    public List<KoulutustoimijaBaseDto> koulutustoimijat() {
+    public List<KoulutustoimijaBaseDto> koulutustoimijat(PermissionEvaluator.RolePrefix rolePrefix) {
         List<KoulutustoimijaBaseDto> koulutustoimijat = SecurityUtil.isUserOphAdmin() ?
-                koulutustoimijaService.getKoulutustoimijat() : koulutustoimijaService.getKoulutustoimijat(getUserOrganizations());
+                koulutustoimijaService.getKoulutustoimijat() : koulutustoimijaService.getKoulutustoimijat(getUserOrganizations(rolePrefix));
 
         return koulutustoimijat.stream()
                 .filter(ktDto -> ktDto != null && ktDto.getId() != null)
@@ -313,8 +314,8 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
     }
     
     @Override
-    public Set<String> getUserOrganizations() {
-        return SecurityUtil.getOrganizations(EnumSet.allOf(RolePermission.class));
+    public Set<String> getUserOrganizations(PermissionEvaluator.RolePrefix rolePrefix) {
+        return SecurityUtil.getOrganizations(EnumSet.allOf(RolePermission.class), rolePrefix);
     }
 
     @Override
@@ -337,9 +338,9 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
     }
 
     @Override
-    public EtusivuDto haeKayttajanEtusivu() {
+    public EtusivuDto haeKayttajanEtusivu(PermissionEvaluator.RolePrefix rolePrefix) {
         EtusivuDto result = new EtusivuDto();
-        List<Koulutustoimija> koulutustoimijat = mapper.mapAsList(koulutustoimijat(), Koulutustoimija.class);
+        List<Koulutustoimija> koulutustoimijat = mapper.mapAsList(koulutustoimijat(rolePrefix), Koulutustoimija.class);
         if (ObjectUtils.isEmpty(koulutustoimijat)) {
             result.setToteutussuunnitelmatKeskeneraiset(0L);
             result.setToteutussuunnitelmatJulkaistut(0L);

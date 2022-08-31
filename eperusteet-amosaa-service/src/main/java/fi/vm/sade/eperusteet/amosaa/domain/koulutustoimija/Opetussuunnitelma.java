@@ -247,4 +247,16 @@ public class Opetussuunnitelma extends AbstractAuditedEntity implements Serializ
     public NavigationType getNavigationType() {
         return NavigationType.opetussuunnitelma;
     }
+
+    public KoulutusTyyppi getOpsKoulutustyyppi() {
+        if (koulutustyyppi != null) {
+            return koulutustyyppi;
+        }
+
+        if (peruste != null) {
+            return peruste.getKoulutustyyppi();
+        }
+
+        return null;
+    }
 }

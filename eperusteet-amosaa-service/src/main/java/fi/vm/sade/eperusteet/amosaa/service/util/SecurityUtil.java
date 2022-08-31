@@ -58,22 +58,22 @@ public final class SecurityUtil {
         }
     }
 
-    public static Set<String> getOrganizations(Set<RolePermission> permissions) {
-        return getOrganizations(SecurityContextHolder.getContext().getAuthentication(), permissions);
+    public static Set<String> getOrganizations(Set<RolePermission> permissions, RolePrefix rolePrefix) {
+        return getOrganizations(SecurityContextHolder.getContext().getAuthentication(), permissions, rolePrefix);
     }
 
-    public static Set<String> getOrganizations() {
-        return getOrganizations(SecurityContextHolder.getContext().getAuthentication());
+    public static Set<String> getOrganizations(RolePrefix rolePrefix) {
+        return getOrganizations(SecurityContextHolder.getContext().getAuthentication(), rolePrefix);
     }
 
-    public static Set<String> getOrganizations(Authentication authentication) {
-        return getOrganizations(authentication, new HashSet<>(Arrays.asList(RolePermission.values())));
+    public static Set<String> getOrganizations(Authentication authentication, RolePrefix rolePrefix) {
+        return getOrganizations(authentication, new HashSet<>(Arrays.asList(RolePermission.values())), rolePrefix);
     }
 
-    public static Set<String> getOrganizations(Authentication authentication, Set<RolePermission> permissions) {
+    public static Set<String> getOrganizations(Authentication authentication, Set<RolePermission> permissions, RolePrefix rolePrefix) {
         return authentication.getAuthorities().stream()
                 .map(grantedAuthority -> parseOid(grantedAuthority.getAuthority(),
-                        RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA,
+                        rolePrefix,
                         permissions))
                 .filter(Optional::isPresent)
                 .map(Optional::get)

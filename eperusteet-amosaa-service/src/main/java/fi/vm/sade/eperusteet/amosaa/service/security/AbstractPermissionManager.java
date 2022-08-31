@@ -39,9 +39,9 @@ public abstract class AbstractPermissionManager implements PermissionManager {
     protected KayttajaoikeusRepository kayttajaoikeusRepository;
 
     @Transactional(readOnly = true)
-    public Map<PermissionEvaluator.RolePermission, Set<Long>> getOrganisaatioOikeudet() {
+    public Map<PermissionEvaluator.RolePermission, Set<Long>> getOrganisaatioOikeudet(PermissionEvaluator.RolePrefix rolePrefix) {
         return EnumSet.allOf(PermissionEvaluator.RolePermission.class).stream()
-                .map(r -> new Pair<>(r, SecurityUtil.getOrganizations(Collections.singleton(r)).stream()
+                .map(r -> new Pair<>(r, SecurityUtil.getOrganizations(Collections.singleton(r), rolePrefix).stream()
                         .map(oid -> koulutustoimijaRepository.findOneByOrganisaatio(oid))
                         .filter(kt -> kt != null)
                         .map(Koulutustoimija::getId)
@@ -50,9 +50,9 @@ public abstract class AbstractPermissionManager implements PermissionManager {
     }
 
     @Transactional(readOnly = true)
-    public Map<PermissionEvaluator.RolePermission, Set<Koulutustoimija>> getKoulutustoimijaOikeudet() {
+    public Map<PermissionEvaluator.RolePermission, Set<Koulutustoimija>> getKoulutustoimijaOikeudet(PermissionEvaluator.RolePrefix rolePrefix) {
         Map<PermissionEvaluator.RolePermission, Set<Koulutustoimija>> permMap = EnumSet.allOf(PermissionEvaluator.RolePermission.class).stream()
-                .map(r -> new Pair<>(r, SecurityUtil.getOrganizations(Collections.singleton(r)).stream()
+                .map(r -> new Pair<>(r, SecurityUtil.getOrganizations(Collections.singleton(r), rolePrefix).stream()
                         .map(oid -> koulutustoimijaRepository.findOneByOrganisaatio(oid))
                         .filter(kt -> kt != null)
                         .collect(Collectors.toSet())))
@@ -65,8 +65,8 @@ public abstract class AbstractPermissionManager implements PermissionManager {
         return permMap;
     }
 
-    public List<Koulutustoimija> kayttajanKoulutustoimijat() {
-        return koulutustoimijaRepository.findAll(kayttajanTietoService.koulutustoimijat().stream().map(KoulutustoimijaBaseDto::getId).collect(Collectors.toList()));
+    public List<Koulutustoimija> kayttajanKoulutustoimijat(PermissionEvaluator.RolePrefix rolePrefix) {
+        return koulutustoimijaRepository.findAll(kayttajanTietoService.koulutustoimijat(rolePrefix).stream().map(KoulutustoimijaBaseDto::getId).collect(Collectors.toList()));
     }
 
     @Transactional(readOnly = true)

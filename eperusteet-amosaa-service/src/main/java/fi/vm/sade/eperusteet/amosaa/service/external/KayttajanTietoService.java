@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Future;
 
+import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -59,13 +60,13 @@ public interface KayttajanTietoService {
     KayttajanTietoDto haeNimi(Long id);
 
     @PreAuthorize("isAuthenticated()")
-    List<KoulutustoimijaBaseDto> koulutustoimijat();
+    List<KoulutustoimijaBaseDto> koulutustoimijat(PermissionEvaluator.RolePrefix rolePrefix);
 
     @PreAuthorize("isAuthenticated()")
-    boolean updateKoulutustoimijat();
+    boolean updateKoulutustoimijat(PermissionEvaluator.RolePrefix rolePrefix);
 
     @PreAuthorize("isAuthenticated()")
-    Set<String> getUserOrganizations();
+    Set<String> getUserOrganizations(PermissionEvaluator.RolePrefix rolePrefix);
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
     List<KayttajaKtoDto> getKaikkiKayttajat(@P("ktId") Long ktId);
@@ -95,7 +96,7 @@ public interface KayttajanTietoService {
     KayttajaDto saveKayttaja(String oid);
 
     @PreAuthorize("isAuthenticated()")
-    EtusivuDto haeKayttajanEtusivu();
+    EtusivuDto haeKayttajanEtusivu(PermissionEvaluator.RolePrefix rolePrefix);
 
     @PreAuthorize("isAuthenticated()")
     List<KayttajanTietoDto> haeKayttajatiedot(List<String> oid);

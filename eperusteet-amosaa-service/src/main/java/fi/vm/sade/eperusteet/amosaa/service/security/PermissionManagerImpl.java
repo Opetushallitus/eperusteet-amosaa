@@ -73,8 +73,22 @@ public class PermissionManagerImpl extends AbstractPermissionManager {
             targetId = (Long) arr[1];
         }
 
+        List<RolePrefix> rolePrefixes = Arrays.asList(
+                RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA,
+                RolePrefix.ROLE_APP_EPERUSTEET_VST,
+                RolePrefix.ROLE_APP_EPERUSTEET_TUVA,
+                RolePrefix.ROLE_APP_EPERUSTEET_KOTO);
+        if (targetId != null && target.equals(TargetType.OPETUSSUUNNITELMA)) {
+            Opetussuunnitelma ops = opsRepository.findOne(targetId);
+            if (ops == null) {
+                return false;
+            }
+            rolePrefixes = Arrays.asList(KoulutustyyppiRolePrefix.of(ops.getOpsKoulutustyyppi()));
+        }
+
+
         if (perm == Permission.HALLINTA && targetId == null && target == TargetType.TARKASTELU &&
-                hasRole(authentication, RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA, RolePermission.CRUD, Organization.OPH)) {
+                hasRole(authentication, rolePrefixes, RolePermission.CRUD, Organization.OPH)) {
             return true;
         }
 
@@ -83,16 +97,16 @@ public class PermissionManagerImpl extends AbstractPermissionManager {
             return true;
         }
 
-        // Käyttäjän luonti mahdollista vain jos käyttäjällä on AMOSAA-rooli
+        // Käyttäjän luonti mahdollista vain jos käyttäjällä on AMOSAA/VST/TUVA/KOTO-rooli
         if (perm == Permission.LUKU && targetId == null && target == TargetType.KOULUTUSTOIMIJA &&
-                hasAmosaaRole(authentication)) {
+                hasAppRole(authentication, rolePrefixes)) {
             return true;
         }
 
         if (perm == Permission.HALLINTA
                 && target == TargetType.OPH
                 && hasRole(authentication,
-                RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA,
+                rolePrefixes,
                 RolePermission.ADMIN,
                 Organization.OPH)) {
             return true;
@@ -170,22 +184,24 @@ public class PermissionManagerImpl extends AbstractPermissionManager {
 
         // Jos käyttäjällä on jokin rooli organisaatiossa niin on lupa lukea
         if ((perm == Permission.ESITYS || perm == Permission.LUKU || perm == Permission.KOMMENTOINTI)
-                && hasAnyRole(authentication, RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA, permissions, organisaatio)) {
+                && hasAnyRole(authentication, rolePrefixes, permissions, organisaatio)) {
             return true;
         }
 
         // Jos käyttäjällä on organisaatiossa hallintaoikeus
-        if (hasRole(authentication, RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA, RolePermission.ADMIN, organisaatio)) {
+        if (hasRole(authentication, rolePrefixes, RolePermission.ADMIN, organisaatio)) {
             return true;
         }
 
         // Koulutustoimijan oikeus
         if (target == TargetType.KOULUTUSTOIMIJA) {
-            if (!hasAnyRole(authentication, RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA, permissions, organisaatio)) {
+            if (!hasAnyRole(authentication, rolePrefixes, permissions, organisaatio)) {
                 if (perm == Permission.LUKU) {
                     final Koulutustoimija kohdeKt = koulutustoimija;
-                    return kayttajanKoulutustoimijat().stream()
-                            .anyMatch(kayttajanKt -> areFriends(kayttajanKt, kohdeKt));
+                    return rolePrefixes.stream()
+                            .anyMatch(rolePrefix ->
+                                kayttajanKoulutustoimijat(rolePrefix).stream()
+                                        .anyMatch(kayttajanKt -> areFriends(kayttajanKt, kohdeKt)));
                 } else {
                     return false;
                 }
@@ -195,7 +211,7 @@ public class PermissionManagerImpl extends AbstractPermissionManager {
         }
         // Opetussuunnitelmien oikeudet
         else if (target == TargetType.OPETUSSUUNNITELMA) {
-            if (hasAnyRole(authentication, RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA, permissions, organisaatio)) {
+            if (hasAnyRole(authentication, rolePrefixes, permissions, organisaatio)) {
                 return true;
             }
 
@@ -241,23 +257,30 @@ public class PermissionManagerImpl extends AbstractPermissionManager {
                 && b.getYstavat().contains(a);
     }
 
-    private static boolean hasRole(Authentication authentication, RolePrefix prefix,
+    private static boolean hasRole(Authentication authentication, List<RolePrefix> prefixes,
                                    RolePermission permission, Organization org) {
-        return hasAnyRole(authentication, prefix, Collections.singleton(permission), org);
+        return hasAnyRole(authentication, prefixes, Collections.singleton(permission), org);
     }
 
-    private static boolean hasAnyRole(Authentication authentication, RolePrefix prefix,
+    private static boolean hasAnyRole(Authentication authentication, List<RolePrefix> prefixes,
                                       Set<RolePermission> permission, Organization org) {
         return authentication.getAuthorities().stream()
-                .anyMatch(a -> permission.stream().anyMatch(p -> roleEquals(a.getAuthority(), prefix, p, org)));
+                .anyMatch(a -> permission.stream().anyMatch(p -> prefixes.stream().anyMatch(prefix -> roleEquals(a.getAuthority(), prefix, p, org))));
     }
 
     private static boolean hasAmosaaRole(Authentication authentication) {
-//        RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA
         return authentication.getAuthorities().stream()
                 .anyMatch(a -> {
                     String authority = a.getAuthority();
                     return authority.startsWith(RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA.toString());
+                });
+    }
+
+    private static boolean hasAppRole(Authentication authentication, List<RolePrefix> rolePrefixes) {
+        return authentication.getAuthorities().stream()
+                .anyMatch(a -> {
+                    String authority = a.getAuthority();
+                    return rolePrefixes.stream().anyMatch(rolePrefix -> authority.startsWith(rolePrefix.toString()));
                 });
     }
 
