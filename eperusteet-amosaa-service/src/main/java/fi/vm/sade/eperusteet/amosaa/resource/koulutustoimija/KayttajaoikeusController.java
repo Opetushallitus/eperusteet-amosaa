@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -51,12 +52,14 @@ public class KayttajaoikeusController {
     }
 
     @RequestMapping(value = "/organisaatiooikeudet", method = RequestMethod.GET)
-    public ResponseEntity<Map<PermissionEvaluator.RolePermission, Set<Long>>> getOikeudet() {
-        return service.getOrganisaatiooikeudet();
+    public ResponseEntity<Map<PermissionEvaluator.RolePermission, Set<Long>>> getOikeudet(
+            @RequestParam(value = "app", required = false, defaultValue="ROLE_APP_EPERUSTEET_AMOSAA") final String app) {
+        return service.getOrganisaatiooikeudet(PermissionEvaluator.RolePrefix.valueOf(app));
     }
 
     @RequestMapping(value = "/koulutustoimijaoikeudet", method = RequestMethod.GET)
-    public ResponseEntity<Map<PermissionEvaluator.RolePermission, Set<KoulutustoimijaBaseDto>>> getKoulutustoimijaOikeudet() {
-        return service.getKoulutustoimijaOikeudet();
+    public ResponseEntity<Map<PermissionEvaluator.RolePermission, Set<KoulutustoimijaBaseDto>>> getKoulutustoimijaOikeudet(
+            @RequestParam(value = "app", required = false, defaultValue="ROLE_APP_EPERUSTEET_AMOSAA") final String app) {
+        return service.getKoulutustoimijaOikeudet(PermissionEvaluator.RolePrefix.valueOf(app));
     }
 }

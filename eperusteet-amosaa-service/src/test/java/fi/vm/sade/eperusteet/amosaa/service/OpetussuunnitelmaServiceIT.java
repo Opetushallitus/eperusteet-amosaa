@@ -381,7 +381,7 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
                 .hasFieldOrPropertyWithValue("oikeus", KayttajaoikeusTyyppi.LUKU);
 
         // Käyttäjän organisaatio-oikeudet
-        ResponseEntity<Map<PermissionEvaluator.RolePermission, Set<Long>>> organisaatiooikeudet = kayttajaoikeusService.getOrganisaatiooikeudet();
+        ResponseEntity<Map<PermissionEvaluator.RolePermission, Set<Long>>> organisaatiooikeudet = kayttajaoikeusService.getOrganisaatiooikeudet(PermissionEvaluator.RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA);
         assertThat(organisaatiooikeudet.getBody()).containsKeys(PermissionEvaluator.RolePermission.ADMIN, PermissionEvaluator.RolePermission.CRUD, PermissionEvaluator.RolePermission.READ_UPDATE, PermissionEvaluator.RolePermission.READ);
         assertThat(organisaatiooikeudet.getBody()).hasSize(4);
 

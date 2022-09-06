@@ -16,6 +16,7 @@
 package fi.vm.sade.eperusteet.amosaa.test;
 
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetClient;
+import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator;
 import fi.vm.sade.eperusteet.amosaa.service.util.EperusteetClientMock;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -209,12 +210,16 @@ public abstract class AbstractIntegrationTest {
     }
 
     private void updateProfile(String username) {
+        updateProfile(username, PermissionEvaluator.RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA);
+    }
+
+    private void updateProfile(String username, PermissionEvaluator.RolePrefix rolePrefix) {
         SecurityContext ctx = SecurityContextHolder.createEmptyContext();
         ctx.setAuthentication(new UsernamePasswordAuthenticationToken(username, "test"));
         SecurityContextHolder.setContext(ctx);
-        kayttajanTietoService.updateKoulutustoimijat();
-        String userOrgOid = kayttajanTietoService.getUserOrganizations().stream().findFirst().get();
-        this.koulutustoimijat = kayttajanTietoService.koulutustoimijat();
+        kayttajanTietoService.updateKoulutustoimijat(rolePrefix);
+        String userOrgOid = kayttajanTietoService.getUserOrganizations(rolePrefix).stream().findFirst().get();
+        this.koulutustoimijat = kayttajanTietoService.koulutustoimijat(rolePrefix);
         this.toimija = this.koulutustoimijat.stream().filter(kt -> kt.getOrganisaatio().equals(userOrgOid)).findFirst().get();
         kayttaja = kayttajanTietoService.getKayttaja();
     }
@@ -244,7 +249,15 @@ public abstract class AbstractIntegrationTest {
     }
 
     protected void useProfileTuva() {
-        updateProfile("tuva");
+        updateProfile("tuva", PermissionEvaluator.RolePrefix.ROLE_APP_EPERUSTEET_TUVA);
+    }
+
+    protected void useProfileVst() {
+        updateProfile("vst", PermissionEvaluator.RolePrefix.ROLE_APP_EPERUSTEET_VST);
+    }
+
+    protected void useProfileKoto() {
+        updateProfile("koto", PermissionEvaluator.RolePrefix.ROLE_APP_EPERUSTEET_KOTO);
     }
 
     protected void regAllProfiles() {

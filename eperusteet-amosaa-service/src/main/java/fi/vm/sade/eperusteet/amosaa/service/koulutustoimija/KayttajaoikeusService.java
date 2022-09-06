@@ -34,7 +34,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 public interface KayttajaoikeusService {
     List<KayttajaoikeusDto> getKayttooikeudet();
 
-    ResponseEntity<Map<PermissionEvaluator.RolePermission, Set<Long>>> getOrganisaatiooikeudet();
+    ResponseEntity<Map<PermissionEvaluator.RolePermission, Set<Long>>> getOrganisaatiooikeudet(PermissionEvaluator.RolePrefix rolePrefix);
 
-    ResponseEntity<Map<PermissionEvaluator.RolePermission, Set<KoulutustoimijaBaseDto>>> getKoulutustoimijaOikeudet();
+    ResponseEntity<Map<PermissionEvaluator.RolePermission, Set<KoulutustoimijaBaseDto>>> getKoulutustoimijaOikeudet(PermissionEvaluator.RolePrefix rolePrefix);
 }

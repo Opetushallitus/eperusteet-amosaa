@@ -19,7 +19,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.JsonObject;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.PalauteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.AbstractRakenneOsaDto;
@@ -31,22 +30,18 @@ import fi.vm.sade.eperusteet.amosaa.resource.config.MappingModule;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetClient;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
-import java.util.Date;
+
+import java.util.*;
+
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
-import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * @author nkala
@@ -58,12 +53,10 @@ import java.util.Set;
 public class EperusteetClientMock implements EperusteetClient {
 
     private ObjectMapper objectMapper;
+    private List<JsonNode> perusteet = new ArrayList<>();
 
     @Autowired
     private ApplicationContext applicationContext;
-
-    @Value("${test.perusteJsonFile:/perusteet/testiperuste.json}")
-    private String perusteJsonFile;
 
     @PostConstruct
     protected void init() {
@@ -72,9 +65,23 @@ public class EperusteetClientMock implements EperusteetClient {
         module.addDeserializer(AbstractRakenneOsaDto.class, new AbstractRakenneOsaDeserializer());
         objectMapper.registerModule(module);
         objectMapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
+        perusteet.add(openFakeData("/perusteet/kotoPeruste.json"));
+        perusteet.add(openFakeData("/perusteet/amosaaPeruste.json"));
+        perusteet.add(openFakeData("/perusteet/tuvaPeruste.json"));
+        perusteet.add(openFakeData("/perusteet/vstPeruste.json"));
+        perusteet.add(openFakeData("/perusteet/amosaaPeruste2.json"));
     }
 
     public static final String DIAARINUMERO = "mock-diaarinumero";
+
+    private JsonNode openFakeData(String file) {
+        try {
+            JsonNode result = objectMapper.readTree(getClass().getResourceAsStream(file));
+            return result;
+        } catch (IOException e) {
+            throw new BusinessRuleViolationException("datan-hakeminen-epaonnistui", e);
+        }
+    }
 
     @Override
     public ArviointiasteikkoDto getArviointiasteikko(Long id) {
@@ -100,21 +107,14 @@ public class EperusteetClientMock implements EperusteetClient {
     @Autowired
     private DtoMapper mapper;
 
-    private JsonNode getMockPeruste() {
-        try {
-            File file = applicationContext.getResource(perusteJsonFile).getFile();
-            JsonNode peruste = objectMapper.readTree(file);
-            return peruste;
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new BusinessRuleViolationException("tiedostoa ei löytynyt");
-        }
+    private JsonNode getMockPeruste(Long id) {
+        return perusteet.stream().filter(p -> Objects.equals(p.get("id").asLong(), id)).findFirst().orElseThrow(() -> new BusinessRuleViolationException("tiedostoa ei löytynyt"));
     }
 
     @Override
     public String getPerusteData(Long id) {
         try {
-            JsonNode node = getMockPeruste();
+            JsonNode node = getMockPeruste(id);
             Object perusteObj = objectMapper.treeToValue(node, Object.class);
             String json = objectMapper.writeValueAsString(perusteObj);
             return json;
@@ -143,7 +143,7 @@ public class EperusteetClientMock implements EperusteetClient {
     @Override
     public <T> T getPeruste(Long id, Class<T> type) {
         try {
-            JsonNode perusteJson = getMockPeruste();
+            JsonNode perusteJson = getMockPeruste(id);
             T result = objectMapper.treeToValue(perusteJson, type);
             return result;
         } catch (IOException e) {

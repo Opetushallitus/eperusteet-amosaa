@@ -12,10 +12,10 @@ public interface PermissionManager {
     boolean hasPermission(Authentication authentication, Serializable targetObject, TargetType target, Permission perm);
 
     @PreAuthorize("isAuthenticated()")
-    Map<PermissionEvaluator.RolePermission, Set<Long>> getOrganisaatioOikeudet();
+    Map<PermissionEvaluator.RolePermission, Set<Long>> getOrganisaatioOikeudet(PermissionEvaluator.RolePrefix rolePrefix);
 
     @PreAuthorize("isAuthenticated()")
-    Map<PermissionEvaluator.RolePermission, Set<Koulutustoimija>> getKoulutustoimijaOikeudet();
+    Map<PermissionEvaluator.RolePermission, Set<Koulutustoimija>> getKoulutustoimijaOikeudet(PermissionEvaluator.RolePrefix rolePrefix);
 
     @PreAuthorize("isAuthenticated()")
     boolean hasOphAdminPermission();

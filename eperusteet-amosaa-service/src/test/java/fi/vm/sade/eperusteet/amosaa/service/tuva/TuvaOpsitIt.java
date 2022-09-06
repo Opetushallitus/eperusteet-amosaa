@@ -34,7 +34,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DirtiesContext
 @Transactional
-@TestPropertySource(properties = {"test.perusteJsonFile: /perusteet/tuvaPeruste.json"})
 public class TuvaOpsitIt extends AbstractIntegrationTest {
 
     private ObjectMapper objectMapper;

@@ -15,6 +15,7 @@ import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoviiteServiceProvider;
 import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
@@ -31,7 +32,6 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 
 @DirtiesContext
 @Transactional
-@TestPropertySource(properties = {"test.perusteJsonFile: /perusteet/vstPeruste.json"})
 public class VapaasivistystyoOpsIT extends AbstractIntegrationTest {
 
     @Autowired
@@ -42,6 +42,11 @@ public class VapaasivistystyoOpsIT extends AbstractIntegrationTest {
 
     @Autowired
     private SisaltoviiteRepository sisaltoviiteRepository;
+
+    @Before
+    public void setup(){
+        useProfileVst();
+    }
 
     @Test
     @Rollback

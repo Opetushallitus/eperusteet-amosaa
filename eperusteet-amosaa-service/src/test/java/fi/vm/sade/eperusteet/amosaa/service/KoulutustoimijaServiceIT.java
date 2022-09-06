@@ -9,6 +9,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.*;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
+import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator;
 import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
 import java.util.Date;
 import java.util.HashSet;
@@ -34,7 +35,7 @@ public class KoulutustoimijaServiceIT extends AbstractIntegrationTest {
     @Test
     @Rollback
     public void testKoulutustoimijoidenLuonti() {
-        kayttajanTietoService.updateKoulutustoimijat();
+        kayttajanTietoService.updateKoulutustoimijat(PermissionEvaluator.RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA);
         assertThat(kayttaja).isNotNull();
         assertThat(koulutustoimijat).isNotEmpty();
     }
@@ -145,7 +146,7 @@ public class KoulutustoimijaServiceIT extends AbstractIntegrationTest {
     @Test
     @Rollback
     public void testKoulutustoimijaHakuKielirajaus() {
-        kayttajanTietoService.updateKoulutustoimijat();
+        kayttajanTietoService.updateKoulutustoimijat(PermissionEvaluator.RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA);
 
         {
             OpetussuunnitelmaBaseDto dto = createOpetussuunnitelma();
@@ -181,7 +182,7 @@ public class KoulutustoimijaServiceIT extends AbstractIntegrationTest {
     @Rollback
     public void testKoulutustoimijaHakuOrganisaatioRyhma() {
         useProfileKP1();
-        kayttajanTietoService.updateKoulutustoimijat();
+        kayttajanTietoService.updateKoulutustoimijat(PermissionEvaluator.RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA);
 
         {
             OpetussuunnitelmaBaseDto dto = createOpetussuunnitelma();
