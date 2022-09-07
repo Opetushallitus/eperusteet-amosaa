@@ -27,7 +27,9 @@ public interface JulkaisuRepository extends JpaRepository<Julkaisu, Long> {
             "   FROM julkaistu_opetussuunnitelma_Data_view data" +
             "   WHERE 1 = 1 " +
             "   AND (COALESCE(:koulutustyypit, NULL) = '' OR koulutustyyppi IN (:koulutustyypit) OR peruste->>'koulutustyyppi' IN (:koulutustyypit))" +
-            "   AND (:nimi LIKE '' OR LOWER(nimi->>:kieli) LIKE LOWER(CONCAT('%',:nimi,'%'))) " +
+            "   AND (:nimi LIKE '' " +
+            "       OR LOWER(nimi->>:kieli) LIKE LOWER(CONCAT('%',:nimi,'%'))" +
+            "       OR LOWER(koulutustoimija->'nimi'->>:kieli) LIKE LOWER(CONCAT('%',:nimi,'%'))) " +
             "   AND (:organisaatioRyhma = false OR cast(koulutustoimija->>'organisaatioRyhma' as boolean) = true) " +
             "   AND (:oppilaitosTyyppiKoodiUri = '' OR :oppilaitosTyyppiKoodiUri = data.\"oppilaitosTyyppiKoodiUri\")" +
             "   AND tyyppi IN (:tyyppi) " +
