@@ -218,4 +218,10 @@ public class LokalisoituTeksti implements Serializable {
             validointi.virhe(syy, parents);
         }
     }
+
+    static public void validoi(String syy, Validointi validointi, Opetussuunnitelma ops, LokalisoituTeksti teksti) {
+        if (teksti == null || !teksti.hasKielet(ops.getJulkaisukielet())) {
+            validointi.virhe(syy);
+        }
+    }
 }
