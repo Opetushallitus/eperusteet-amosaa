@@ -7372,6 +7372,10 @@
             "$ref" : "#/definitions/JulkaisuKevytDto"
           }
         },
+        "perusteId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
         "koulutustyyppi" : {
           "type" : "string",
           "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO", "MAAHANMUUTTAJIENKOTOUTUMISKOULUTUS", "VAPAASIVISTYSTYOLUKUTAITO", "TUTKINTOONVALMENTAVA" ]
@@ -7385,10 +7389,6 @@
           "additionalProperties" : {
             "type" : "string"
           }
-        },
-        "perusteId" : {
-          "type" : "integer",
-          "format" : "int64"
         }
       }
     },
