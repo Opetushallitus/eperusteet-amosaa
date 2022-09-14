@@ -55,6 +55,8 @@ public interface KoulutustoimijaRepository extends JpaWithVersioningRepository<K
             "FROM Opetussuunnitelma o " +
             "JOIN o.koulutustoimija kt " +
             "LEFT JOIN o.peruste p " +
-            "WHERE p.koulutustyyppi IN (:koulutustyypit) OR o.koulutustyyppi IN (:koulutustyypit)")
+            "WHERE p.koulutustyyppi IN (:koulutustyypit) OR o.koulutustyyppi IN (:koulutustyypit) " +
+            "AND tila != 'POISTETTU' " +
+            "AND (o.julkaisut IS NOT EMPTY OR o.tila = 'JULKAISTU')")
     List<Koulutustoimija> findByKoulutustyypit(@Param("koulutustyypit") Set<KoulutusTyyppi> koulutustyypit);
 }
