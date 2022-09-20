@@ -23,6 +23,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.koodisto.KoodistoKoodiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.liite.LiiteDto;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
@@ -49,4 +50,5 @@ public class OpetussuunnitelmaDto extends OpetussuunnitelmaBaseDto {
     private String oppilaitosTyyppiKoodiUri;
     private KoodistoKoodiDto oppilaitosTyyppiKoodi;
     private KoulutusTyyppi koulutustyyppi;
+    private Date viimeisinJulkaisuAika;
 }

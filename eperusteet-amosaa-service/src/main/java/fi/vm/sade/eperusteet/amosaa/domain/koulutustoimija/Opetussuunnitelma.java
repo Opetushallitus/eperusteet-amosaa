@@ -18,6 +18,7 @@ package fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija;
 
 import fi.vm.sade.eperusteet.amosaa.domain.AbstractAuditedEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.HistoriaTapahtuma;
+import fi.vm.sade.eperusteet.amosaa.domain.JotpaTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
@@ -30,9 +31,11 @@ import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 
 import fi.vm.sade.eperusteet.amosaa.dto.NavigationType;
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -57,6 +60,7 @@ import javax.validation.constraints.NotNull;
 import fi.vm.sade.eperusteet.amosaa.service.util.Copyable;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.collections.CollectionUtils;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 import org.hibernate.envers.RelationTargetAuditMode;
@@ -190,6 +194,11 @@ public class Opetussuunnitelma extends AbstractAuditedEntity implements Serializ
     @Setter
     private String oppilaitosTyyppiKoodiUri;
 
+    @Getter
+    @Setter
+    @Enumerated(EnumType.STRING)
+    private JotpaTyyppi jotpatyyppi;
+
     @NotAudited
     @Getter
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "opetussuunnitelma")
@@ -255,6 +264,17 @@ public class Opetussuunnitelma extends AbstractAuditedEntity implements Serializ
 
         if (peruste != null) {
             return peruste.getKoulutustyyppi();
+        }
+
+        return null;
+    }
+
+    public Date getViimeisinJulkaisuAika() {
+        if (CollectionUtils.isNotEmpty(julkaisut)) {
+            return julkaisut.stream()
+                    .sorted(Comparator.comparing(Julkaisu::getLuotu).reversed())
+                    .map(Julkaisu::getLuotu)
+                    .findFirst().get();
         }
 
         return null;
