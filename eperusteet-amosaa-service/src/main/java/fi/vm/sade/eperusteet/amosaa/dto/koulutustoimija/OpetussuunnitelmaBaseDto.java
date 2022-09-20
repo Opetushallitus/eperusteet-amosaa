@@ -17,6 +17,7 @@
 package fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import fi.vm.sade.eperusteet.amosaa.domain.JotpaTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
@@ -57,4 +58,7 @@ public class OpetussuunnitelmaBaseDto {
     @Deprecated
     @ApiModelProperty(hidden = true)
     private Tila tila2016;
+
+    private JotpaTyyppi jotpatyyppi;
+
 }
