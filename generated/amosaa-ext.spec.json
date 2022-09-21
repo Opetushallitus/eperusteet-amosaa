@@ -129,6 +129,15 @@
           "in" : "query",
           "required" : false,
           "type" : "boolean"
+        }, {
+          "name" : "jotpatyyppi",
+          "in" : "query",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi"
         } ],
         "responses" : {
           "200" : {
@@ -1504,14 +1513,14 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
+        "first" : {
+          "type" : "boolean"
+        },
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
         },
         "last" : {
-          "type" : "boolean"
-        },
-        "first" : {
           "type" : "boolean"
         },
         "size" : {
@@ -1544,14 +1553,14 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
+        "first" : {
+          "type" : "boolean"
+        },
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
         },
         "last" : {
-          "type" : "boolean"
-        },
-        "first" : {
           "type" : "boolean"
         },
         "size" : {
