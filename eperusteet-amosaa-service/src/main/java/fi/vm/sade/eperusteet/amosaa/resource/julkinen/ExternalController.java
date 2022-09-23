@@ -44,6 +44,7 @@ public class ExternalController {
             @ApiImplicitParam(name = "tuleva", dataType = "boolean", paramType = "query"),
             @ApiImplicitParam(name = "voimassaolo", dataType = "boolean", paramType = "query"),
             @ApiImplicitParam(name = "poistunut", dataType = "boolean", paramType = "query"),
+            @ApiImplicitParam(name = "jotpatyyppi", dataType = "string", paramType = "query", allowMultiple = true),
     })
     @RequestMapping(value = "/opetussuunnitelmat", method = RequestMethod.GET)
     @Description("Opetussuunnitelmien haku.")

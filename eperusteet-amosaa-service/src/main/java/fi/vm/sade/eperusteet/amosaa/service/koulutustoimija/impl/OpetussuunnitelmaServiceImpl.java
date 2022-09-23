@@ -1154,7 +1154,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         List<String> koulutustyypit = pquery.getKoulutustyyppi().stream().map(KoulutusTyyppi::toString).collect(Collectors.toList());
         koulutustyypit.addAll(pquery.getKoulutustyyppi().stream().map(KoulutusTyyppi::name).collect(Collectors.toList()));
 
-        if (CollectionUtils.isNotEmpty(pquery.getTyyppi()) && pquery.getTyyppi().contains(OpsTyyppi.YHTEINEN.toString())) {
+        if (CollectionUtils.isEmpty(koulutustyypit) || (CollectionUtils.isNotEmpty(pquery.getTyyppi()) && pquery.getTyyppi().contains(OpsTyyppi.YHTEINEN.toString()))) {
             koulutustyypit = Arrays.asList("");
         }
 
@@ -1171,6 +1171,8 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                 pquery.isTuleva(),
                 pquery.isVoimassaolo(),
                 pquery.isPoistunut(),
+                pquery.getJotpatyyppi(),
+                pquery.getJotpatyyppi().contains("NULL"),
                 DateTime.now().getMillis(),
                 pageable)
                 .map(obj -> {

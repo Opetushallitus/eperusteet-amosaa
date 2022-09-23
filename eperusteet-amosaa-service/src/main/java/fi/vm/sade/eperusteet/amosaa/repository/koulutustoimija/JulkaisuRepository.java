@@ -1,5 +1,6 @@
 package fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija;
 
+import fi.vm.sade.eperusteet.amosaa.domain.JotpaTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Julkaisu;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 
@@ -44,6 +45,10 @@ public interface JulkaisuRepository extends JpaRepository<Julkaisu, Long> {
             "       OR (:voimassa = true " +
             "                       AND (data.\"voimaantulo\" IS NULL OR CAST(data.\"voimaantulo\" as bigint) < :nykyhetki) " +
             "                           AND (data.\"voimassaoloLoppuu\" IS NULL OR CAST(data.\"voimassaoloLoppuu\" as bigint) > :nykyhetki))) " +
+            "   AND (COALESCE(:jotpatyypit, NULL) = '' " +
+            "       OR ( " +
+            "            (:jotpattomat = false AND jotpatyyppi IN (:jotpatyypit)) " +
+            "            OR (:jotpattomat = true AND (jotpatyyppi IS NULL OR jotpatyyppi IN (:jotpatyypit)))))" +
             "   order by nimi->>:kieli asc, ?#{#pageable} " +
             ") t";
 
@@ -64,6 +69,8 @@ public interface JulkaisuRepository extends JpaRepository<Julkaisu, Long> {
             @Param("tulevat") boolean tulevat,
             @Param("voimassa") boolean voimassa,
             @Param("poistuneet") boolean poistuneet,
+            @Param("jotpatyypit") List<String> jotpatyypit,
+            @Param("jotpattomat") boolean jotpattomat,
             @Param("nykyhetki") Long nykyhetki,
             Pageable pageable
     );

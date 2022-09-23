@@ -16,6 +16,7 @@
 
 package fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija;
 
+import fi.vm.sade.eperusteet.amosaa.domain.JotpaTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.Tyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
@@ -26,6 +27,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.collections.CollectionUtils;
 
 /**
  * @author nkala
@@ -42,6 +44,7 @@ public class OpetussuunnitelmaJulkaistuQueryDto extends QueryDto {
     private List<KoulutusTyyppi> koulutustyyppi = new ArrayList<>();
     private String nimi = "";
     private int sivukoko = 10;
+    private List<String> jotpatyyppi = new ArrayList<>();
 
     public List<String> getTyyppi() {
         if (tyyppi == null) {
@@ -49,6 +52,14 @@ public class OpetussuunnitelmaJulkaistuQueryDto extends QueryDto {
         }
 
         return tyyppi;
+    }
+
+    public List<String> getJotpatyyppi() {
+        if (CollectionUtils.isEmpty(jotpatyyppi)) {
+            return Arrays.asList("");
+        }
+
+        return jotpatyyppi;
     }
 
 }
