@@ -67,6 +67,16 @@ public class OmaTutkinnonosa extends AbstractAuditedEntity implements Serializab
     @Setter
     private String koodi;
 
+    @Getter
+    @Setter
+    private Long geneerinenarviointi;
+
+    @OneToOne(cascade = {CascadeType.ALL}, orphanRemoval = true)
+    @Getter
+    @Setter
+    private Ammattitaitovaatimukset2019 ammattitaitovaatimukset;
+
+    @Deprecated
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @JoinTable(name = "ammattitaitovaatimuksenkohdealue_omatutkinnonosa",
             joinColumns = @JoinColumn(name = "omatutkinnonosa_id"),

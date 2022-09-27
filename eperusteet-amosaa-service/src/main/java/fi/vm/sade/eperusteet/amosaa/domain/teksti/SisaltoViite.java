@@ -172,7 +172,7 @@ public class SisaltoViite implements ReferenceableEntity, Serializable, Copyable
     @Setter
     private KotoLaajaAlainenOsaaminen kotoLaajaAlainenOsaaminen;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(orphanRemoval = true, cascade = {CascadeType.PERSIST, CascadeType.PERSIST }, fetch = FetchType.LAZY)
     @Getter
     @Setter
     private List<OmaOsaAlue> osaAlueet = new ArrayList<>();
@@ -362,7 +362,6 @@ public class SisaltoViite implements ReferenceableEntity, Serializable, Copyable
         return null;
     }
 
-
     public boolean isPakollinen() {
         if (SisaltoTyyppi.LINKKI.equals(tyyppi)) {
             return this.linkkiSisaltoViite.pakollinen;
@@ -515,5 +514,10 @@ public class SisaltoViite implements ReferenceableEntity, Serializable, Copyable
             return this.linkkiSisaltoViite.lapset;
         }
         return lapset;
+    }
+
+    public void asetOsaAlueet(List<OmaOsaAlue> paivitetyt) {
+        this.osaAlueet.clear();
+        this.osaAlueet.addAll(paivitetyt);
     }
 }

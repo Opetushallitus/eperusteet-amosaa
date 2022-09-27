@@ -8,5 +8,5 @@ import lombok.Setter;
 @Setter
 public class YtoOsaamistavoiteDto {
     private Long id;
-    private LokalisoituTeksti selite;
+    private LokalisoituTekstiDto selite;
 }

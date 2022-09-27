@@ -16,6 +16,7 @@ import java.util.List;
 public class OmaOsaAlueDto {
     private Long id;
     private OmaOsaAlueTyyppi tyyppi;
+    private LokalisoituTekstiDto nimi;
     private String perusteenOsaAlueKoodi;
     private Long perusteenOsaAlueId;
     private LokalisoituTekstiDto tavatjaymparisto;

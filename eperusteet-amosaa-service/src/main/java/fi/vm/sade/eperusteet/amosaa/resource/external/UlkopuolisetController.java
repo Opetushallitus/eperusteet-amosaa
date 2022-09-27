@@ -85,6 +85,11 @@ public class UlkopuolisetController {
         return new ResponseEntity<>(eperusteetService.getTiedotteet(jalkeen), HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/geneerisetArvioinnit", method = GET)
+    public ResponseEntity<JsonNode> getGeneerisetArvioinnit() {
+        return new ResponseEntity<>(eperusteetService.getGeneeriset(), HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/tiedotteet/haku", method = GET)
     @ResponseBody
     @ApiOperation(value = "tiedotteiden haku")
