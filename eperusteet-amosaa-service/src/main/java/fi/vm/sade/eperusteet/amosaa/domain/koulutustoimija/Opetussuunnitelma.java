@@ -249,6 +249,7 @@ public class Opetussuunnitelma extends AbstractAuditedEntity implements Serializ
         result.setPohja(this.getPohja());
         result.setTila(Tila.LUONNOS);
         result.setKoulutustyyppi(this.getKoulutustyyppi());
+        result.setJotpatyyppi(this.jotpatyyppi);
         return result;
     }
 
