@@ -3,10 +3,7 @@ package fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
-import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Julkaisu;
-import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteKevytDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import java.text.SimpleDateFormat;
@@ -27,6 +24,7 @@ public class OpetussuunnitelmaTilastoDto {
     private KoulutustoimijaBaseDto koulutustoimija;
     private Set<Kieli> julkaisukielet;
     private Set<JulkaisuKevytDto> julkaisut;
+    private KoulutusTyyppi koulutustyyppi;
 
     @JsonIgnore
     private CachedPerusteKevytDto peruste;
@@ -35,8 +33,7 @@ public class OpetussuunnitelmaTilastoDto {
         if (peruste != null) {
             return peruste.getKoulutustyyppi();
         }
-
-        return null;
+        return koulutustyyppi;
     }
 
     public LokalisoituTekstiDto getPerusteNimi() {
