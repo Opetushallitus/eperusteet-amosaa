@@ -1,6 +1,9 @@
 package fi.vm.sade.eperusteet.amosaa.service.vst;
 
+import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
+import fi.vm.sade.eperusteet.amosaa.domain.Tila;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OpintokokonaisuusTavoite;
@@ -11,6 +14,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.OpintokokonaisuusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.OpintokokonaisuusTavoiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.TekstiKappaleDto;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoviiteServiceProvider;
@@ -20,7 +24,6 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -158,5 +161,62 @@ public class VapaasivistystyoOpsIT extends AbstractIntegrationTest {
     public void test_EP_2941() {
         OpintokokonaisuusTavoite tavoite = new OpintokokonaisuusTavoite();
         assertThatCode(() -> OpintokokonaisuusTavoite.copy(tavoite)).doesNotThrowAnyException();
+    }
+
+    @Test
+    @Rollback
+    public void test_ops_pohjasta_tekstien_sailyvyys() {
+        OpetussuunnitelmaBaseDto pohjaOps = createOpetussuunnitelma(ops -> {
+            ops.setTyyppi(OpsTyyppi.OPSPOHJA);
+            ops.setKoulutustyyppi(KoulutusTyyppi.VAPAASIVISTYSTYO);
+        });
+        SisaltoViiteDto.Matala root = sisaltoViiteService.getSisaltoRoot(getKoulutustoimijaId(), pohjaOps.getId());
+        sisaltoViiteService.addSisaltoViite(getKoulutustoimijaId(), pohjaOps.getId(), root.getId(), createSisalto(sisaltoViiteDto -> {
+            sisaltoViiteDto.setTyyppi(SisaltoTyyppi.TEKSTIKAPPALE);
+            sisaltoViiteDto.setTekstiKappale(
+                    new TekstiKappaleDto(LokalisoituTekstiDto.of("pohjanotsikko"), LokalisoituTekstiDto.of("pohjanteksti"), Tila.LUONNOS));
+        }));
+
+        OpetussuunnitelmaBaseDto ops1 = createOpetussuunnitelma(ops -> {
+            ops.setKoulutustyyppi(KoulutusTyyppi.VAPAASIVISTYSTYO);
+            ops.setPerusteDiaarinumero(null);
+            ops.setPerusteId(null);
+            ops.setOpsId(pohjaOps.getId());
+        });
+
+        List<SisaltoViiteDto> sisaltoviitteet = sisaltoViiteService.getSisaltoViitteet(ops1.getKoulutustoimija().getId(), ops1.getId(), SisaltoViiteDto.class);
+        List<SisaltoViiteDto> tekstikappaleet1 = sisaltoviitteet.stream().filter(viite -> SisaltoTyyppi.TEKSTIKAPPALE.equals(viite.getTyyppi()) && viite.getTekstiKappale() != null).collect(Collectors.toList());
+
+        assertThat(tekstikappaleet1).hasSize(1);
+        assertThat(tekstikappaleet1.get(0).getPohjanTekstikappale()).isNotNull();
+        assertThat(tekstikappaleet1.get(0).getTekstiKappale().getTeksti()).isNull();
+
+        tekstikappaleet1.get(0).getTekstiKappale().setTeksti(LokalisoituTekstiDto.of("opsinteksti"));
+        sisaltoViiteService.updateSisaltoViite(getKoulutustoimijaId(), ops1.getId(), tekstikappaleet1.get(0).getId(), tekstikappaleet1.get(0));
+
+        OpetussuunnitelmaBaseDto ops2 = createOpetussuunnitelma(ops -> {
+            ops.setKoulutustyyppi(KoulutusTyyppi.VAPAASIVISTYSTYO);
+            ops.setPerusteDiaarinumero(null);
+            ops.setPerusteId(null);
+            ops.setOpsId(ops1.getId());
+        });
+
+        sisaltoviitteet = sisaltoViiteService.getSisaltoViitteet(ops2.getKoulutustoimija().getId(), ops2.getId(), SisaltoViiteDto.class);
+        List<SisaltoViiteDto> tekstikappaleet2 = sisaltoviitteet.stream().filter(viite -> SisaltoTyyppi.TEKSTIKAPPALE.equals(viite.getTyyppi()) && viite.getTekstiKappale() != null).collect(Collectors.toList());
+
+        assertThat(tekstikappaleet2).hasSize(1);
+        assertThat(tekstikappaleet2.get(0).getPohjanTekstikappale()).isNotNull();
+        assertThat(tekstikappaleet2.get(0).getPohjanTekstikappale().getTeksti().get(Kieli.FI)).isEqualTo("pohjanteksti");
+        assertThat(tekstikappaleet2.get(0).getTekstiKappale().getTeksti()).isNotNull();
+        assertThat(tekstikappaleet2.get(0).getTekstiKappale().getTeksti().get(Kieli.FI)).isEqualTo("opsinteksti");
+
+        tekstikappaleet2.get(0).getTekstiKappale().setTeksti(LokalisoituTekstiDto.of("opsinteksti2"));
+        sisaltoViiteService.updateSisaltoViite(getKoulutustoimijaId(), ops2.getId(), tekstikappaleet2.get(0).getId(), tekstikappaleet2.get(0));
+
+        sisaltoviitteet = sisaltoViiteService.getSisaltoViitteet(ops1.getKoulutustoimija().getId(), ops1.getId(), SisaltoViiteDto.class);
+        tekstikappaleet1 = sisaltoviitteet.stream().filter(viite -> SisaltoTyyppi.TEKSTIKAPPALE.equals(viite.getTyyppi()) && viite.getTekstiKappale() != null).collect(Collectors.toList());
+
+        assertThat(tekstikappaleet1.get(0).getTekstiKappale().getTeksti().get(Kieli.FI)).isEqualTo("opsinteksti");
+
     }
 }

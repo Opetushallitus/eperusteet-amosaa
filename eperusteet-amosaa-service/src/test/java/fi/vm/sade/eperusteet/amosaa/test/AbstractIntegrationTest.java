@@ -15,7 +15,9 @@
  */
 package fi.vm.sade.eperusteet.amosaa.test;
 
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetClient;
+import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator;
 import fi.vm.sade.eperusteet.amosaa.service.util.EperusteetClientMock;
 import java.util.ArrayList;
@@ -25,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import org.junit.Before;
 import org.junit.runner.RunWith;
