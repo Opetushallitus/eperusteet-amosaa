@@ -250,8 +250,11 @@ public class SisaltoViite implements ReferenceableEntity, Serializable, Copyable
             result.setKotoLaajaAlainenOsaaminen(KotoLaajaAlainenOsaaminen.copy(original.getKotoLaajaAlainenOsaaminen()));
             result.setPeruste(original.getPeruste());
             result.setPerusteenOsaId(original.getPerusteenOsaId());
-
             result.setTekstiKappale(TekstiKappale.copy(original.getTekstiKappale()));
+
+            result.setNaytaPohjanTeksti(original.isNaytaPohjanTeksti());
+            result.updatePohjanTekstikappale(original.getPohjanTekstikappale());
+
             if (!copyText
                     && original.getTekstiKappale() != null
                     && original.getTyyppi().equals(SisaltoTyyppi.TEKSTIKAPPALE)) {
@@ -263,7 +266,7 @@ public class SisaltoViite implements ReferenceableEntity, Serializable, Copyable
             if (copyChildren) {
                 result.setLapset(new ArrayList<>());
                 for (SisaltoViite lapsi : original.getLapset()) {
-                    result.getLapset().add(copy(lapsi));
+                    result.getLapset().add(copy(lapsi, copyChildren, copyText));
                 }
             }
             return result;

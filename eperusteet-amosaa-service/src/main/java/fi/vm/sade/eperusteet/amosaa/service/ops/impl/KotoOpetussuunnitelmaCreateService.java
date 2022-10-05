@@ -55,7 +55,7 @@ public class KotoOpetussuunnitelmaCreateService implements OpetussuunnitelmaCrea
         ops.setPohja(pohja);
         ops.setNimi(mapper.map(opsDto.getNimi(), LokalisoituTeksti.class));
         ops = repository.save(ops);
-        SisaltoViite root = tkvService.kopioiHierarkia(sisaltoRoot, ops, Collections.emptyMap(), false);
+        SisaltoViite root = tkvService.kopioiHierarkia(sisaltoRoot, ops, Collections.emptyMap(), !pohja.getTyyppi().equals(OpsTyyppi.OPSPOHJA));
         tkvRepository.save(root);
         return mapper.map(ops, OpetussuunnitelmaBaseDto.class);
     }
