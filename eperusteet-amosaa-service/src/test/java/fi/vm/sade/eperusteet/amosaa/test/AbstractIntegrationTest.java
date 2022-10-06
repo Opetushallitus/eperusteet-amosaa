@@ -247,6 +247,10 @@ public abstract class AbstractIntegrationTest {
         updateProfile("oph");
     }
 
+    protected void useProfileOPH(PermissionEvaluator.RolePrefix rolePrefix) {
+        updateProfile("oph", rolePrefix);
+    }
+
     protected void useProfileTmpr() {
         updateProfile("tmpr");
     }
