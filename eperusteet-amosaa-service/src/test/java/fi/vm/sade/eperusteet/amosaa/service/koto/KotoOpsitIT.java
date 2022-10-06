@@ -1,9 +1,7 @@
 package fi.vm.sade.eperusteet.amosaa.service.koto;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
-import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.SisaltoviiteLaajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.KotoTaitotasoDto;
@@ -11,7 +9,6 @@ import fi.vm.sade.eperusteet.amosaa.dto.teksti.KotoTaitotasoLaajaAlainenOsaamine
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
-import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoviiteServiceProvider;
 import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
@@ -20,16 +17,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DirtiesContext
 @Transactional
-public class KotoOpsitIt extends AbstractIntegrationTest {
+public class KotoOpsitIT extends AbstractIntegrationTest {
 
     @Autowired
     private SisaltoViiteService sisaltoViiteService;
@@ -65,6 +60,7 @@ public class KotoOpsitIt extends AbstractIntegrationTest {
 
     @Test
     public void testOpetussuunnitelmaPohjastaCreate() {
+        useProfileKP2();
         OpetussuunnitelmaBaseDto pohja = createOpetussuunnitelma(opetussuunnitelma -> opetussuunnitelma.setPerusteId(99860L));
         {
             List<SisaltoViiteDto> sisaltoviitteet = sisaltoViiteService.getSisaltoViitteet(pohja.getKoulutustoimija().getId(), pohja.getId(), SisaltoViiteDto.class);
