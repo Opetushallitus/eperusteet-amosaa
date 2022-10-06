@@ -14,6 +14,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
+import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator;
 import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -68,7 +69,7 @@ public class TuvaOpsitIT extends AbstractIntegrationTest {
             ops.setKoulutustyyppi(KoulutusTyyppi.TUTKINTOONVALMENTAVA);
         });
 
-        useProfileKP1();
+        useProfileTuva();
         OpetussuunnitelmaBaseDto tuvaOps = createOpetussuunnitelma(ops -> {
             ops.setPerusteId(null);
             ops.setTyyppi(OpsTyyppi.OPS);
@@ -105,12 +106,12 @@ public class TuvaOpsitIT extends AbstractIntegrationTest {
                         "tutkintokoulutukseenvalmentavakoulutuslaajaalainenosaaminen_005");
         assertThat(koulutuksenosat).extracting("koulutuksenosa.nimi.tekstit")
                 .containsExactlyInAnyOrder(
-                        null,
+                        LokalisoituTekstiDto.of("Opiskelu- ja urasuunnittelutaidot").getTeksti(),
                         LokalisoituTekstiDto.of("Henkilökohtainen opiskelusuunnitelma").getTeksti(),
                         LokalisoituTekstiDto.of("Erityinen tuki").getTeksti(),
                         LokalisoituTekstiDto.of("opiskeluhuolto").getTeksti(),
                         LokalisoituTekstiDto.of("koulutuksen järjestäjän suunnitelmaa").getTeksti(),
-                        null);
+                        LokalisoituTekstiDto.of("Valinnaiset koulutuksen osat").getTeksti());
 
         assertThat(koulutuksenosat).extracting("koulutuksenosa.nimiKoodi")
                 .containsExactlyInAnyOrder(
@@ -122,7 +123,9 @@ public class TuvaOpsitIT extends AbstractIntegrationTest {
                         "koulutuksenosattuva_104");
 
 
-        KoulutuksenOsaDto koulutuksenosa = koulutuksenosat.get(0).getKoulutuksenosa();
+        KoulutuksenOsaDto koulutuksenosa = koulutuksenosat.stream()
+                .filter(ko -> ko.getKoulutuksenosa().getNimi().getTeksti().get(Kieli.FI).equals("Opiskelu- ja urasuunnittelutaidot"))
+                .findFirst().get().getKoulutuksenosa();
         assertThat(koulutuksenosa.getKuvaus().get(Kieli.FI)).isEqualTo(LokalisoituTekstiDto.of("<p>kuvausteksti</p>").get(Kieli.FI));
         assertThat(koulutuksenosa.getLaajuusMinimi()).isEqualTo(1);
         assertThat(koulutuksenosa.getLaajuusMaksimi()).isEqualTo(5);

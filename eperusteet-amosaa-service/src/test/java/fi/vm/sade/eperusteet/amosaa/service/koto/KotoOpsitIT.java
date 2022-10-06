@@ -37,6 +37,7 @@ public class KotoOpsitIT extends AbstractIntegrationTest {
 
     @Test
     public void testOpetussuunnitelmaCreate() {
+        useProfileKoto();
         OpetussuunnitelmaBaseDto ops = createOpetussuunnitelma(opetussuunnitelma -> opetussuunnitelma.setPerusteId(99860L));
         assertThat(ops.getPeruste().getKoulutustyyppi()).isEqualTo(KoulutusTyyppi.MAAHANMUUTTAJIENKOTOUTUMISKOULUTUS);
         List<SisaltoviiteLaajaDto> sisaltoviitteet = sisaltoViiteService.getSisaltoViitteet(ops.getKoulutustoimija().getId(), ops.getId(), SisaltoviiteLaajaDto.class);
@@ -60,7 +61,7 @@ public class KotoOpsitIT extends AbstractIntegrationTest {
 
     @Test
     public void testOpetussuunnitelmaPohjastaCreate() {
-        useProfileKP2();
+        useProfileKoto();
         OpetussuunnitelmaBaseDto pohja = createOpetussuunnitelma(opetussuunnitelma -> opetussuunnitelma.setPerusteId(99860L));
         {
             List<SisaltoViiteDto> sisaltoviitteet = sisaltoViiteService.getSisaltoViitteet(pohja.getKoulutustoimija().getId(), pohja.getId(), SisaltoViiteDto.class);
