@@ -13,7 +13,7 @@ import fi.vm.sade.eperusteet.amosaa.service.ops.OpetussuunnitelmaValidationServi
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.method.P;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 @Service

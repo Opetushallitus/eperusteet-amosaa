@@ -2,7 +2,7 @@ package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija;
 
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaAikatauluDto;
 import java.util.List;
-import org.springframework.security.access.method.P;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 

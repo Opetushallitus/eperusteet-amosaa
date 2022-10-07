@@ -686,6 +686,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
     @Override
     @Transactional
     public SisaltoViite kopioiHierarkia(SisaltoViite original, Opetussuunnitelma owner, Map<SisaltoTyyppi, Set<String>> sisaltotyyppiIncludes, boolean copyTekstikappaleet) {
+        log.info("copyTekstikappaleet " + copyTekstikappaleet);
         if (sisaltotyyppiIncludes != null && CollectionUtils.isNotEmpty(sisaltotyyppiIncludes.get(original.getTyyppi()))) {
             if (original.getTyyppi().equals((SisaltoTyyppi.TUTKINNONOSA)) && !sisaltotyyppiIncludes.get(SisaltoTyyppi.TUTKINNONOSA).contains(original.getTosa().getKoodi())) {
                 return null;

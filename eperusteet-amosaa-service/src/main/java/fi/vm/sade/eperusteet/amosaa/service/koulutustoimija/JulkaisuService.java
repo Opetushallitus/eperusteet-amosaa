@@ -3,10 +3,9 @@ package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.JulkaistuOpetussuunnitelmaTila;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.JulkaisuTila;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.JulkaisuBaseDto;
-import org.springframework.security.access.method.P;
-import org.springframework.security.access.prepost.PreAuthorize;
-
 import java.util.List;
+import org.springframework.security.core.parameters.P;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface JulkaisuService {
     @PreAuthorize("permitAll()")

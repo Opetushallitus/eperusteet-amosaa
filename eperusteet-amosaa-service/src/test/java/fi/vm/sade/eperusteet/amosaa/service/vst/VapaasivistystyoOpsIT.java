@@ -19,6 +19,7 @@ import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoviiteServiceProvider;
 import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +34,9 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
-@DirtiesContext
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS, methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
 @Transactional
+@Slf4j
 public class VapaasivistystyoOpsIT extends AbstractIntegrationTest {
 
     @Autowired
@@ -177,6 +179,7 @@ public class VapaasivistystyoOpsIT extends AbstractIntegrationTest {
                     new TekstiKappaleDto(LokalisoituTekstiDto.of("pohjanotsikko"), LokalisoituTekstiDto.of("pohjanteksti"), Tila.LUONNOS));
         }));
 
+        log.info("luodaan ops 2");
         OpetussuunnitelmaBaseDto ops1 = createOpetussuunnitelma(ops -> {
             ops.setKoulutustyyppi(KoulutusTyyppi.VAPAASIVISTYSTYO);
             ops.setPerusteDiaarinumero(null);
@@ -187,12 +190,16 @@ public class VapaasivistystyoOpsIT extends AbstractIntegrationTest {
         List<SisaltoViiteDto> sisaltoviitteet = sisaltoViiteService.getSisaltoViitteet(ops1.getKoulutustoimija().getId(), ops1.getId(), SisaltoViiteDto.class);
         List<SisaltoViiteDto> tekstikappaleet1 = sisaltoviitteet.stream().filter(viite -> SisaltoTyyppi.TEKSTIKAPPALE.equals(viite.getTyyppi()) && viite.getTekstiKappale() != null).collect(Collectors.toList());
 
+        log.info("ops 1 sisaltoviitteet --------------");
+        sisaltoviitteet.forEach(sv -> log.info(sv.toString()));
+
         assertThat(tekstikappaleet1).hasSize(1);
         assertThat(tekstikappaleet1.get(0).getPohjanTekstikappale()).isNotNull();
         assertThat(tekstikappaleet1.get(0).getTekstiKappale().getTeksti()).isNull();
 
         tekstikappaleet1.get(0).getTekstiKappale().setTeksti(LokalisoituTekstiDto.of("opsinteksti"));
         sisaltoViiteService.updateSisaltoViite(getKoulutustoimijaId(), ops1.getId(), tekstikappaleet1.get(0).getId(), tekstikappaleet1.get(0));
+
 
         OpetussuunnitelmaBaseDto ops2 = createOpetussuunnitelma(ops -> {
             ops.setKoulutustyyppi(KoulutusTyyppi.VAPAASIVISTYSTYO);
@@ -203,6 +210,9 @@ public class VapaasivistystyoOpsIT extends AbstractIntegrationTest {
 
         sisaltoviitteet = sisaltoViiteService.getSisaltoViitteet(ops2.getKoulutustoimija().getId(), ops2.getId(), SisaltoViiteDto.class);
         List<SisaltoViiteDto> tekstikappaleet2 = sisaltoviitteet.stream().filter(viite -> SisaltoTyyppi.TEKSTIKAPPALE.equals(viite.getTyyppi()) && viite.getTekstiKappale() != null).collect(Collectors.toList());
+
+        log.info("ops 2 sisaltoviitteet --------------");
+        sisaltoviitteet.forEach(sv -> log.info(sv.toString()));
 
         assertThat(tekstikappaleet2).hasSize(1);
         assertThat(tekstikappaleet2.get(0).getPohjanTekstikappale()).isNotNull();

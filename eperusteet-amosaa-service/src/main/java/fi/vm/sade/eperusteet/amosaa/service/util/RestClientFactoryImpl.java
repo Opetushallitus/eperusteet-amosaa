@@ -16,16 +16,14 @@
 package fi.vm.sade.eperusteet.amosaa.service.util;
 
 
-import com.google.common.collect.Maps;
 import fi.vm.sade.eperusteet.utils.client.RestClientFactory;
 import fi.vm.sade.javautils.http.OphHttpClient;
 import fi.vm.sade.javautils.http.auth.CasAuthenticator;
-import java.util.HashMap;
-import java.util.Map;
-import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -35,7 +33,9 @@ import java.util.concurrent.ConcurrentMap;
 @Component
 public class RestClientFactoryImpl implements RestClientFactory {
 
-    private static final String CALLER_ID = "1.2.246.562.10.00000000001.eperusteet-amosaa";
+    public static final String CALLER_ID = "1.2.246.562.10.00000000001.eperusteet-amosaa";
+    public static final String CSRF = "1.2.246.562.10.00000000001.eperusteet-amosaa";
+    public static final String CSRF_VALUE = "CSRF";
 
     private static final int TIMEOUT = 60000;
 
