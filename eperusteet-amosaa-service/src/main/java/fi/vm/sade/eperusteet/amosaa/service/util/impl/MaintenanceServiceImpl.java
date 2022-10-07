@@ -18,10 +18,7 @@ import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaSer
 import fi.vm.sade.eperusteet.amosaa.service.util.JsonMapper;
 import fi.vm.sade.eperusteet.amosaa.service.util.MaintenanceService;
 import java.io.IOException;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +27,7 @@ import org.springframework.batch.core.JobParameter;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -68,6 +66,9 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 
     @Autowired()
     private List<? extends Job> jobs;
+
+    @Autowired
+    private CacheManager cacheManager;
 
     @Deprecated
     @Override
@@ -136,5 +137,10 @@ public class MaintenanceServiceImpl implements MaintenanceService {
             }
             return true;
         });
+    }
+
+    @Override
+    public void clearCache(String cache) {
+        Objects.requireNonNull(cacheManager.getCache(cache)).clear();
     }
 }
