@@ -11,7 +11,9 @@
     "dev": "gulp",
     "build": "gulp build",
     "prettier": "./node_modules/prettier/bin/prettier.js --config .prettierrc --write \"src/**/*.{ts,json,scss}\"",
-    "copy": "cp -R ../eperusteet-amosaa-ui/dist/ ./target/dist/uusi/"
+    "copy": "cp -R ../eperusteet-amosaa-ui/dist/ ./target/dist/uusi/",
+    "prepare": "npm run snyk-protect",
+    "snyk-protect": "snyk-protect"
   },
   "devDependencies": {
     "event-stream": "3.3.2",
@@ -42,7 +44,7 @@
     "typescript": "2.5.2"
   },
   "dependencies": {
-    "angular": "1.4.7",
+    "angular": "1.8.0",
     "angular-animate": "1.4.8",
     "angular-cache": "4.4.2",
     "angular-cookies": "1.6.0",
@@ -50,7 +52,7 @@
     "angular-file-upload": "2.2.0",
     "angular-i18n": "1.4.8",
     "angular-loading-bar": "0.8.0",
-    "angular-moment": "1.0.0-beta.3",
+    "angular-moment": "1.0.0",
     "angular-resource": "1.4.7",
     "angular-route": "1.4.8",
     "angular-sanitize": "1.4.8",
@@ -63,19 +65,21 @@
     "angular-ui-sortable": "0.13.4",
     "angular-ui-utils": "0.1.1",
     "angularjs-slider": "5.8.7",
-    "bootstrap-sass": "3.3.6",
-    "chart.js": "2.1.3",
-    "ckeditor": "4.5.9",
+    "bootstrap-sass": "3.4.0",
+    "chart.js": "2.9.4",
+    "ckeditor": "4.11.0",
     "d3": "3.5.14",
-    "diff": "3.0.1",
+    "diff": "3.5.0",
     "eperusteet-frontend-utils": "git+https://github.com/Opetushallitus/eperusteet-frontend-utils.git#master",
     "es6-promise": "4.2.5",
     "font-awesome": "4.5.0",
     "jquery-sticky": "1.0.3",
-    "moment": "2.22.2",
+    "moment": "2.29.4",
     "restangular": "1.5.1",
     "spin.js": "2.3.2",
     "string": "3.3.3",
-    "striptags": "2.1.1"
-  }
+    "striptags": "3.2.0",
+    "@snyk/protect": "latest"
+  },
+  "snyk": true
 }
