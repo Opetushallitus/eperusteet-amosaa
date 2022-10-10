@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,20 +28,17 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 public class MaintenanceController {
 
     @Autowired
-    CacheManager cacheManager;
-
-    @Autowired
     private MaintenanceService maintenanceService;
 
     private static final Logger logger = LoggerFactory.getLogger(MaintenanceController.class);
 
     @RequestMapping(value = "/cacheclear/{cache}", method = GET)
     public ResponseEntity clearCache(@PathVariable final String cache) {
-        cacheManager.getCache(cache).clear();
+        maintenanceService.clearCache(cache);
         return ResponseEntity.status(HttpStatus.OK)
                 .build();
     }
-    
+
     @RequestMapping(value = "/julkaisut", method = GET)
     public void teeJulkaisut(
             @RequestParam(value = "julkaisekaikki", required = false, defaultValue = "false") boolean julkaiseKaikki,
@@ -55,5 +51,4 @@ public class MaintenanceController {
                 koulutustyypit != null ? koulutustyypit.stream().map(KoulutusTyyppi::of).collect(Collectors.toSet()) : null,
                 OpsTyyppi.of(opstyyppi));
     }
-
 }

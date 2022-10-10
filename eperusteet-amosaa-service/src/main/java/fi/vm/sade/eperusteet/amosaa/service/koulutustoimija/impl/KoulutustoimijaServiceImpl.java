@@ -20,7 +20,6 @@ import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
-import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.EtusivuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
@@ -51,15 +50,15 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import org.apache.commons.collections.CollectionUtils;
+
+import fi.vm.sade.eperusteet.amosaa.service.util.MaintenanceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -88,6 +87,10 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     private OpetussuunnitelmaRepository opetussuunnitelmaRepository;
 
     @Autowired
+    @Lazy
+    private MaintenanceService maintenanceService;
+
+    @Autowired
     private DtoMapper mapper;
 
     @PersistenceContext
@@ -97,32 +100,35 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
 
     @Transactional
     private Koulutustoimija initialize(String kOid) {
-
         Koulutustoimija koulutustoimija = repository.findOneByOrganisaatio(kOid);
         if (koulutustoimija != null) {
             return koulutustoimija;
         }
+        return createKoulutustoimija(kOid);
+    }
 
+    private Koulutustoimija createKoulutustoimija(String kOid) {
         LOG.info("Luodaan uusi organisaatiota vastaava koulutustoimija ensimmäistä kertaa", kOid);
         JsonNode organisaatio = organisaatioService.getOrganisaatio(kOid);
         if (organisaatio == null) {
             return null;
         }
 
-        koulutustoimija = new Koulutustoimija();
-        koulutustoimija.setNimi(LokalisoituTeksti.of(organisaatio.get("nimi")));
-        koulutustoimija.setOrganisaatio(kOid);
+        Koulutustoimija uusiKoulutustoimija = new Koulutustoimija();
+        uusiKoulutustoimija.setNimi(LokalisoituTeksti.of(organisaatio.get("nimi")));
+        uusiKoulutustoimija.setOrganisaatio(kOid);
 
         if (organisaatio.get("tyypit") != null && organisaatio.get("tyypit").isArray()) {
             for (final JsonNode objNode : organisaatio.get("tyypit")) {
                 if ("Ryhma".equals(objNode.asText())) {
-                    koulutustoimija.setOrganisaatioRyhma(true);
+                    uusiKoulutustoimija.setOrganisaatioRyhma(true);
                 }
             }
         }
-
-        koulutustoimija = repository.save(koulutustoimija);
-        return koulutustoimija;
+        uusiKoulutustoimija = repository.save(uusiKoulutustoimija);
+        // nollaa cache, jotta lisätty koulutustoimija on jatkossa saatavilla
+        maintenanceService.clearCache("koulutustoimijat");
+        return uusiKoulutustoimija;
     }
 
     @Override

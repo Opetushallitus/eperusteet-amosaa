@@ -28,10 +28,7 @@ import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionManager;
 
-import java.util.AbstractMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,11 +72,6 @@ public class KayttajaoikeusServiceImpl implements KayttajaoikeusService {
 
     @Override
     public ResponseEntity<Map<PermissionEvaluator.RolePermission, Set<KoulutustoimijaBaseDto>>> getKoulutustoimijaOikeudet(PermissionEvaluator.RolePrefix rolePrefix) {
-        return ResponseEntity.ok(
-                permissionManager.getKoulutustoimijaOikeudet(rolePrefix).entrySet()
-                        .stream()
-                        .map(e -> new AbstractMap.SimpleEntry<>(e.getKey(), e.getValue().stream().map(en -> mapper.map(en, KoulutustoimijaBaseDto.class)).collect(Collectors.toSet())))
-                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
+        return ResponseEntity.ok(permissionManager.getKoulutustoimijaOikeudet(rolePrefix));
     }
-
 }

@@ -8,13 +8,12 @@ import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.JulkaisuRepositor
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
+import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
+import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.util.Pair;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+
+import java.util.*;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -25,6 +24,9 @@ public abstract class AbstractPermissionManager implements PermissionManager {
 
     @Autowired
     private KayttajanTietoService kayttajanTietoService;
+
+    @Autowired
+    private KoulutustoimijaService koulutustoimijaService;
 
     @Autowired
     protected KoulutustoimijaRepository koulutustoimijaRepository;
@@ -38,6 +40,10 @@ public abstract class AbstractPermissionManager implements PermissionManager {
     @Autowired
     protected KayttajaoikeusRepository kayttajaoikeusRepository;
 
+    @Autowired
+    private DtoMapper mapper;
+
+
     @Transactional(readOnly = true)
     public Map<PermissionEvaluator.RolePermission, Set<Long>> getOrganisaatioOikeudet(PermissionEvaluator.RolePrefix rolePrefix) {
         return EnumSet.allOf(PermissionEvaluator.RolePermission.class).stream()
@@ -50,16 +56,16 @@ public abstract class AbstractPermissionManager implements PermissionManager {
     }
 
     @Transactional(readOnly = true)
-    public Map<PermissionEvaluator.RolePermission, Set<Koulutustoimija>> getKoulutustoimijaOikeudet(PermissionEvaluator.RolePrefix rolePrefix) {
-        Map<PermissionEvaluator.RolePermission, Set<Koulutustoimija>> permMap = EnumSet.allOf(PermissionEvaluator.RolePermission.class).stream()
+    public Map<PermissionEvaluator.RolePermission, Set<KoulutustoimijaBaseDto>> getKoulutustoimijaOikeudet(PermissionEvaluator.RolePrefix rolePrefix) {
+        Map<PermissionEvaluator.RolePermission, Set<KoulutustoimijaBaseDto>> permMap = EnumSet.allOf(PermissionEvaluator.RolePermission.class).stream()
                 .map(r -> new Pair<>(r, SecurityUtil.getOrganizations(Collections.singleton(r), rolePrefix).stream()
-                        .map(oid -> koulutustoimijaRepository.findOneByOrganisaatio(oid))
-                        .filter(kt -> kt != null)
+                        .map(oid -> mapper.map(koulutustoimijaRepository.findOneByOrganisaatio(oid), KoulutustoimijaBaseDto.class))
+                        .filter(Objects::nonNull)
                         .collect(Collectors.toSet())))
                 .collect(Collectors.toMap(Pair::getFirst, Pair::getSecond));
 
         if (SecurityUtil.isUserOphAdmin()) {
-            permMap.put(PermissionEvaluator.RolePermission.READ, Sets.newHashSet(koulutustoimijaRepository.findAll()));
+            permMap.put(PermissionEvaluator.RolePermission.READ, Sets.newHashSet(koulutustoimijaService.getKoulutustoimijat()));
         }
 
         return permMap;
