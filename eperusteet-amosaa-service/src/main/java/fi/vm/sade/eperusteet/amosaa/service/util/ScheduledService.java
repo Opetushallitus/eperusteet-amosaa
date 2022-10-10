@@ -32,6 +32,7 @@ public class ScheduledService {
         log.info("Starting scheduled run to cache all koulutustoimijat.");
         SecurityContextHolder.getContext().setAuthentication(useAdminAuth());
 
+        maintenanceService.clearCache("organisaationimi");
         maintenanceService.clearCache("koulutustoimijat");
         List<KoulutustoimijaBaseDto> kaikkiKoulutustoimijat = koulutustoimijaService.getKoulutustoimijat();
 

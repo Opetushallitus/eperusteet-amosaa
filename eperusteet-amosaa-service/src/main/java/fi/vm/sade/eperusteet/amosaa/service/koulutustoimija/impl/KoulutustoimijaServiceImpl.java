@@ -51,12 +51,12 @@ import java.util.stream.Stream;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import fi.vm.sade.eperusteet.amosaa.service.util.MaintenanceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.Cache;
-import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.method.P;
@@ -87,13 +87,14 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     private OpetussuunnitelmaRepository opetussuunnitelmaRepository;
 
     @Autowired
+    @Lazy
+    private MaintenanceService maintenanceService;
+
+    @Autowired
     private DtoMapper mapper;
 
     @PersistenceContext
     private EntityManager em;
-
-    @Autowired
-    private CacheManager cacheManager;
 
     private static String OPH = "1.2.246.562.10.00000000001";
 
@@ -126,10 +127,7 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
         }
         uusiKoulutustoimija = repository.save(uusiKoulutustoimija);
         // nollaa cache, jotta lisätty koulutustoimija on jatkossa saatavilla
-        Cache cache = cacheManager.getCache("koulutustoimijat");
-        if (cache != null) {
-            cache.clear();
-        }
+        maintenanceService.clearCache("koulutustoimijat");
         return uusiKoulutustoimija;
     }
 

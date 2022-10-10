@@ -72,9 +72,6 @@ public class KayttajaoikeusServiceImpl implements KayttajaoikeusService {
 
     @Override
     public ResponseEntity<Map<PermissionEvaluator.RolePermission, Set<KoulutustoimijaBaseDto>>> getKoulutustoimijaOikeudet(PermissionEvaluator.RolePrefix rolePrefix) {
-        return ResponseEntity.ok(
-                permissionManager.getKoulutustoimijaOikeudet(rolePrefix).entrySet().stream()
-                        .map(e -> new AbstractMap.SimpleEntry<>(e.getKey(), new HashSet<>(e.getValue())))
-                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
+        return ResponseEntity.ok(permissionManager.getKoulutustoimijaOikeudet(rolePrefix));
     }
 }
