@@ -14,6 +14,6 @@ public interface MaintenanceService {
     @PreAuthorize("hasPermission(null, 'oph', 'HALLINTA')")
     void kaynnistaJob(String job, Map<String, String> parametrit) throws Exception;
 
-    @PreAuthorize("hasPermission(null, 'oph', 'HALLINTA')")
+    @PreAuthorize("isAuthenticated()")
     void clearCache(String cache);
 }
