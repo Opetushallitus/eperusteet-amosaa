@@ -121,12 +121,8 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -308,7 +304,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
     @Override
     public Page<OpetussuunnitelmaTilastoDto> getOpetussuunnitelmaTilastot(Integer sivu, Integer sivukoko) {
-        Page<Opetussuunnitelma> opetussuunnitelmat = repository.findAll(new PageRequest(sivu, sivukoko));
+        Page<Opetussuunnitelma> opetussuunnitelmat = repository.findAll(new PageRequest(sivu, sivukoko, Sort.Direction.ASC, "id"));
         return new PageImpl(opetussuunnitelmat.getContent().stream()
                 .map(t -> mapper.map(t, OpetussuunnitelmaTilastoDto.class))
                 .collect(Collectors.toList()), null, opetussuunnitelmat.getTotalElements());
@@ -385,7 +381,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                 .map(ops -> mapper.map(ops, OpetussuunnitelmaDto.class))
                 .collect(Collectors.toList());
     }
-    
+
     @Override
     public List<OpetussuunnitelmaDto> getOpetussuunnitelmatOrganisaatioista(String organisaatioId) {
         return repository.findByKoulutustoimijaOrganisaatio(organisaatioId).stream()
