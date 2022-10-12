@@ -61,7 +61,7 @@ public class OpetussuunnitelmaTilastoDto {
                     .orElse(null);
         }
 
-        if (tila.equals(Tila.JULKAISTU)) {
+        if (tila.equals(Tila.JULKAISTU) && voimaantulo != null) {
             return Integer.parseInt(getYearFormat.format(voimaantulo));
         }
 
