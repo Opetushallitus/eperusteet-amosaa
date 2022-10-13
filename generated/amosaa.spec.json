@@ -6385,7 +6385,7 @@
         },
         "yksikko" : {
           "type" : "string",
-          "enum" : [ "OPINTOVIIKKO", "OSAAMISPISTE", "KURSSI" ]
+          "enum" : [ "OPINTOVIIKKO", "OPINTOPISTE", "OSAAMISPISTE", "KURSSI", "TUNTI", "VIIKKO", "VUOSIVIIKKOTUNTI", "VUOSI" ]
         }
       }
     },
@@ -7444,23 +7444,23 @@
             "$ref" : "#/definitions/JulkaisuKevytDto"
           }
         },
-        "perusteId" : {
-          "type" : "integer",
-          "format" : "int64"
-        },
         "koulutustyyppi" : {
           "type" : "string",
           "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO", "MAAHANMUUTTAJIENKOTOUTUMISKOULUTUS", "VAPAASIVISTYSTYOLUKUTAITO", "TUTKINTOONVALMENTAVA" ]
         },
-        "julkaisuVuosi" : {
+        "perusteId" : {
           "type" : "integer",
-          "format" : "int32"
+          "format" : "int64"
         },
         "perusteNimi" : {
           "type" : "object",
           "additionalProperties" : {
             "type" : "string"
           }
+        },
+        "julkaisuVuosi" : {
+          "type" : "integer",
+          "format" : "int32"
         }
       }
     },
@@ -7503,6 +7503,10 @@
         },
         "laajuus" : {
           "type" : "number"
+        },
+        "laajuusYksikko" : {
+          "type" : "string",
+          "enum" : [ "OPINTOVIIKKO", "OPINTOPISTE", "OSAAMISPISTE", "KURSSI", "TUNTI", "VIIKKO", "VUOSIVIIKKOTUNTI", "VUOSI" ]
         },
         "minimilaajuus" : {
           "type" : "integer",
@@ -7709,19 +7713,6 @@
           "type" : "integer",
           "format" : "int64"
         },
-        "sort" : {
-          "$ref" : "#/definitions/Sort"
-        },
-        "first" : {
-          "type" : "boolean"
-        },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-        "last" : {
-          "type" : "boolean"
-        },
         "size" : {
           "type" : "integer",
           "format" : "int32"
@@ -7733,6 +7724,19 @@
           }
         },
         "number" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "sort" : {
+          "$ref" : "#/definitions/Sort"
+        },
+        "first" : {
+          "type" : "boolean"
+        },
+        "last" : {
+          "type" : "boolean"
+        },
+        "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
         }
@@ -7749,19 +7753,6 @@
           "type" : "integer",
           "format" : "int64"
         },
-        "sort" : {
-          "$ref" : "#/definitions/Sort"
-        },
-        "first" : {
-          "type" : "boolean"
-        },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-        "last" : {
-          "type" : "boolean"
-        },
         "size" : {
           "type" : "integer",
           "format" : "int32"
@@ -7773,6 +7764,19 @@
           }
         },
         "number" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "sort" : {
+          "$ref" : "#/definitions/Sort"
+        },
+        "first" : {
+          "type" : "boolean"
+        },
+        "last" : {
+          "type" : "boolean"
+        },
+        "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
         }
@@ -7789,19 +7793,6 @@
           "type" : "integer",
           "format" : "int64"
         },
-        "sort" : {
-          "$ref" : "#/definitions/Sort"
-        },
-        "first" : {
-          "type" : "boolean"
-        },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-        "last" : {
-          "type" : "boolean"
-        },
         "size" : {
           "type" : "integer",
           "format" : "int32"
@@ -7813,6 +7804,19 @@
           }
         },
         "number" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "sort" : {
+          "$ref" : "#/definitions/Sort"
+        },
+        "first" : {
+          "type" : "boolean"
+        },
+        "last" : {
+          "type" : "boolean"
+        },
+        "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
         }
@@ -7829,19 +7833,6 @@
           "type" : "integer",
           "format" : "int64"
         },
-        "sort" : {
-          "$ref" : "#/definitions/Sort"
-        },
-        "first" : {
-          "type" : "boolean"
-        },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-        "last" : {
-          "type" : "boolean"
-        },
         "size" : {
           "type" : "integer",
           "format" : "int32"
@@ -7853,6 +7844,19 @@
           }
         },
         "number" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "sort" : {
+          "$ref" : "#/definitions/Sort"
+        },
+        "first" : {
+          "type" : "boolean"
+        },
+        "last" : {
+          "type" : "boolean"
+        },
+        "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
         }
@@ -7869,19 +7873,6 @@
           "type" : "integer",
           "format" : "int64"
         },
-        "sort" : {
-          "$ref" : "#/definitions/Sort"
-        },
-        "first" : {
-          "type" : "boolean"
-        },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-        "last" : {
-          "type" : "boolean"
-        },
         "size" : {
           "type" : "integer",
           "format" : "int32"
@@ -7893,6 +7884,19 @@
           }
         },
         "number" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "sort" : {
+          "$ref" : "#/definitions/Sort"
+        },
+        "first" : {
+          "type" : "boolean"
+        },
+        "last" : {
+          "type" : "boolean"
+        },
+        "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
         }
@@ -8865,7 +8869,7 @@
         },
         "laajuusYksikko" : {
           "type" : "string",
-          "enum" : [ "OPINTOVIIKKO", "OSAAMISPISTE", "KURSSI" ]
+          "enum" : [ "OPINTOVIIKKO", "OPINTOPISTE", "OSAAMISPISTE", "KURSSI", "TUNTI", "VIIKKO", "VUOSIVIIKKOTUNTI", "VUOSI" ]
         }
       }
     },

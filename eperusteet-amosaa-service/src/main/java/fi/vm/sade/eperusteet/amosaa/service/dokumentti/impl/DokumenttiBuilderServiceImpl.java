@@ -353,7 +353,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
             }
 
             if (lapsi.getTyyppi().equals(SisaltoTyyppi.OPINTOKOKONAISUUS) && lapsi.getOpintokokonaisuus() != null && lapsi.getOpintokokonaisuus().getLaajuus() != null) {
-                otsikkoBuilder.append(", " + lapsi.getOpintokokonaisuus().getLaajuus() + " " + messages.translate("docgen.laajuus.op", docBase.getKieli()));
+                otsikkoBuilder.append(", " + lapsi.getOpintokokonaisuus().getLaajuus() + " " + messages.translate(selectLaajuusYksikkoMessage(lapsi.getOpintokokonaisuus().getLaajuusYksikko()), docBase.getKieli()));
             }
 
             if (lapsi.getTyyppi().equals(SisaltoTyyppi.KOULUTUKSENOSA)) {

@@ -4,6 +4,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.Dokumentti;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.LaajuusYksikko;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import org.apache.commons.lang.time.DateUtils;
 import org.jsoup.Jsoup;
@@ -124,5 +125,28 @@ public class DokumenttiUtils {
 
         Date newDate = DateUtils.addMinutes(date, MAX_TIME_IN_MINUTES);
         return newDate.before(new Date());
+    }
+
+    public static String selectLaajuusYksikkoMessage(LaajuusYksikko laajuusYksikko) {
+        switch (laajuusYksikko) {
+            case OPINTOVIIKKO:
+                return "docgen.laajuus.ov";
+            case OPINTOPISTE:
+                return "docgen.laajuus.op";
+            case OSAAMISPISTE:
+                return "docgen.laajuus.osp";
+            case KURSSI:
+                return "docgen.laajuus.kurssi";
+            case TUNTI:
+                return "docgen.laajuus.tunti";
+            case VIIKKO:
+                return "docgen.laajuus.viikkoa";
+            case VUOSIVIIKKOTUNTI:
+                return "docgen.laajuus.vuosiviikkotunti";
+            case VUOSI:
+                return "docgen.laajuus.vuosi";
+            default:
+                return "docgen.laajuus.op"; // palautetaan 'op', joka oli default ennen laajuusyksikön tuloa
+        }
     }
 }
