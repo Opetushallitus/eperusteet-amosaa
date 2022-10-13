@@ -21,6 +21,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
+
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.LaajuusYksikko;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
@@ -49,6 +51,9 @@ public class Opintokokonaisuus extends AbstractAuditedEntity implements Serializ
 
     @Column(precision = 10, scale = 2)
     private BigDecimal laajuus;
+
+    @Enumerated(EnumType.STRING)
+    private LaajuusYksikko laajuusYksikko;
 
     private Integer minimilaajuus;
 
@@ -86,6 +91,7 @@ public class Opintokokonaisuus extends AbstractAuditedEntity implements Serializ
             result.setTyyppi(original.getTyyppi());
             result.setNimiKoodi(original.getNimiKoodi());
             result.setLaajuus(original.getLaajuus());
+            result.setLaajuusYksikko(original.getLaajuusYksikko());
             result.setMinimilaajuus(original.getMinimilaajuus());
             if (original.getKuvaus() != null) {
                 result.setKuvaus(LokalisoituTeksti.of(original.getKuvaus().getTeksti()));

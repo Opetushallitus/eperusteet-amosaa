@@ -5,6 +5,8 @@ import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OpintokokonaisuusTyyppi;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.LaajuusYksikko;
 import lombok.Data;
 
 @Data
@@ -15,6 +17,7 @@ public class OpintokokonaisuusDto {
     private String koodi;
     private LokalisoituTekstiDto kuvaus;
     private BigDecimal laajuus;
+    private LaajuusYksikko laajuusYksikko;
     private Integer minimilaajuus;
     private OpintokokonaisuusTyyppi tyyppi;
     private LokalisoituTekstiDto opetuksenTavoiteOtsikko;

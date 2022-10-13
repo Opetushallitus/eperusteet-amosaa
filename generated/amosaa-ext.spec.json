@@ -1032,7 +1032,7 @@
         },
         "yksikko" : {
           "type" : "string",
-          "enum" : [ "OPINTOVIIKKO", "OSAAMISPISTE", "KURSSI" ]
+          "enum" : [ "OPINTOVIIKKO", "OPINTOPISTE", "OSAAMISPISTE", "KURSSI", "TUNTI", "VIIKKO", "VUOSIVIIKKOTUNTI", "VUOSI" ]
         }
       }
     },
@@ -1416,6 +1416,10 @@
         },
         "laajuus" : {
           "type" : "number"
+        },
+        "laajuusYksikko" : {
+          "type" : "string",
+          "enum" : [ "OPINTOVIIKKO", "OPINTOPISTE", "OSAAMISPISTE", "KURSSI", "TUNTI", "VIIKKO", "VUOSIVIIKKOTUNTI", "VUOSI" ]
         },
         "minimilaajuus" : {
           "type" : "integer",

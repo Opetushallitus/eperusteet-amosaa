@@ -18,6 +18,7 @@ public class OpintokokonaisuusDto extends PerusteenOsaDto.Laaja {
     private LokalisoituTekstiDto opetuksenTavoiteOtsikko;
     private List<KoodiDto> opetuksenTavoitteet = new ArrayList<>();
     private List<LokalisoituTekstiDto> arvioinnit;
+    private LaajuusYksikko laajuusYksikko;
 
     public String getOsanTyyppi() {
         return "opintokokonaisuus";
