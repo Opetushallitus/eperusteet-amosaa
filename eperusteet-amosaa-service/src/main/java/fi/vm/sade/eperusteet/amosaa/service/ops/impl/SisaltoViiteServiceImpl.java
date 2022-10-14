@@ -180,7 +180,12 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
     @Override
     public <T> List<T> getSisaltoViitteet(Long ktId, Long opsId, Class<T> t) {
         List<SisaltoViite> tkvs = repository.findAllByOwnerId(opsId);
-        return mapper.mapAsList(tkvs, t);
+        return tkvs.stream().map(sv ->  {
+            log.info("sv : {}" , sv.getPohjanTekstikappale());
+            SisaltoViiteDto tu = mapper.map(sv, SisaltoViiteDto.class);
+            log.info("tulos : {}", tu.getPohjanTekstikappale() );
+            return mapper.map(sv, t);
+        }).collect(Collectors.toList());
     }
 
     @Override
@@ -686,7 +691,6 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
     @Override
     @Transactional
     public SisaltoViite kopioiHierarkia(SisaltoViite original, Opetussuunnitelma owner, Map<SisaltoTyyppi, Set<String>> sisaltotyyppiIncludes, boolean copyTekstikappaleet) {
-        log.info("copyTekstikappaleet " + copyTekstikappaleet);
         if (sisaltotyyppiIncludes != null && CollectionUtils.isNotEmpty(sisaltotyyppiIncludes.get(original.getTyyppi()))) {
             if (original.getTyyppi().equals((SisaltoTyyppi.TUTKINNONOSA)) && !sisaltotyyppiIncludes.get(SisaltoTyyppi.TUTKINNONOSA).contains(original.getTosa().getKoodi())) {
                 return null;

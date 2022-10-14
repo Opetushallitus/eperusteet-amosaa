@@ -48,6 +48,7 @@ import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationExcep
 import fi.vm.sade.eperusteet.amosaa.service.util.Copyable;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.envers.Audited;
@@ -273,13 +274,6 @@ public class SisaltoViite extends AbstractAuditedEntity implements Referenceable
 
             result.setNaytaPohjanTeksti(original.isNaytaPohjanTeksti());
             result.updatePohjanTekstikappale(original.getPohjanTekstikappale());
-
-            if (original.getPohjanTekstikappale() != null && original.getPohjanTekstikappale().getTeksti() != null
-                && original.getPohjanTekstikappale().getTeksti().getTeksti() != null) {
-                log.info("original.getPohjanTekstikappale() " + original.getPohjanTekstikappale().getTeksti().getTeksti().get(Kieli.FI));
-            }
-
-            log.info("copy text " +copyText);
 
             if (!copyText
                     && original.getTekstiKappale() != null

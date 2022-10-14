@@ -40,6 +40,7 @@ import javax.validation.constraints.NotNull;
 import fi.vm.sade.eperusteet.amosaa.service.util.Copyable;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
@@ -49,6 +50,7 @@ import org.hibernate.envers.RelationTargetAuditMode;
 @Entity
 @Table(name = "tekstikappale")
 @Audited
+@ToString
 public class TekstiKappale extends AbstractAuditedEntity
         implements Serializable, ReferenceableEntity, Copyable<TekstiKappale>, HistoriaTapahtuma {
 

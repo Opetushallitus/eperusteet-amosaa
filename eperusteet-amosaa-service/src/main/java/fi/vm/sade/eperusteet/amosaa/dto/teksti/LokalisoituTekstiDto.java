@@ -32,7 +32,6 @@ import lombok.ToString;
 /**
  * @author jhyoty
  */
-@ToString
 public class LokalisoituTekstiDto {
 
     @Getter
