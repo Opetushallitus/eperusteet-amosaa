@@ -16,6 +16,7 @@
 
 package fi.vm.sade.eperusteet.amosaa.dto.ops;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import java.util.Set;
 import java.util.UUID;
@@ -27,6 +28,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SuorituspolkuRiviDto extends SuorituspolkuRiviJulkinenDto {
     private UUID rakennemoduuli;
     private Long jrno;
