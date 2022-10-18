@@ -68,8 +68,8 @@ public class SisaltoViiteDto {
     private Long linkattuPeruste;
     private SisaltoTyyppi linkattuTyyppi;
 
-    @JsonProperty("_tekstiKappale")
-    private Reference tekstiKappaleRef;
+//    @JsonProperty("_tekstiKappale")
+//    private Reference tekstiKappaleRef;
 
     public SisaltoViiteDto(TekstiKappaleDto tekstiKappale) {
         this.tekstiKappale = tekstiKappale;

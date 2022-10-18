@@ -169,11 +169,6 @@ public class VapaasivistystyoOpsIT extends AbstractIntegrationTest {
     @Test
     @Rollback
     public void test_ops_pohjasta_tekstien_sailyvyys() {
-
-
-        TestTransaction.end();
-        TestTransaction.start();
-        TestTransaction.flagForCommit();
         useProfileVst();
 
         OpetussuunnitelmaBaseDto pohjaOps = createOpetussuunnitelma(ops -> {
@@ -187,11 +182,9 @@ public class VapaasivistystyoOpsIT extends AbstractIntegrationTest {
                     new TekstiKappaleDto(LokalisoituTekstiDto.of("pohjanotsikko"), LokalisoituTekstiDto.of("pohjanteksti"), Tila.LUONNOS));
         }));
 
+        log.info("pohjan viitteet");
         List<SisaltoViiteDto> pohjaviitteet1 = sisaltoViiteService.getSisaltoViitteet(pohjaOps.getKoulutustoimija().getId(), pohjaOps.getId(), SisaltoViiteDto.class);
 
-        TestTransaction.end();
-        TestTransaction.start();
-        TestTransaction.flagForCommit();
 
         OpetussuunnitelmaBaseDto ops1 = createOpetussuunnitelma(ops -> {
             ops.setKoulutustyyppi(KoulutusTyyppi.VAPAASIVISTYSTYO);
@@ -199,10 +192,6 @@ public class VapaasivistystyoOpsIT extends AbstractIntegrationTest {
             ops.setPerusteId(null);
             ops.setOpsId(pohjaOps.getId());
         });
-
-        TestTransaction.end();
-        TestTransaction.start();
-        TestTransaction.flagForCommit();
 
 //        pohjaviitteet1 = sisaltoViiteService.getSisaltoViitteet(pohjaOps.getKoulutustoimija().getId(), pohjaOps.getId(), SisaltoViiteDto.class);
 
@@ -213,6 +202,8 @@ public class VapaasivistystyoOpsIT extends AbstractIntegrationTest {
 //                log.info(tk.getPohjanTekstikappale().toString());
 //            }
 //                });
+
+        log.info("opsin1 viitteet");
         List<SisaltoViiteDto> sisaltoviitteet = sisaltoViiteService.getSisaltoViitteet(ops1.getKoulutustoimija().getId(), ops1.getId(), SisaltoViiteDto.class);
         List<SisaltoViiteDto> tekstikappaleet1 = sisaltoviitteet.stream().filter(viite -> SisaltoTyyppi.TEKSTIKAPPALE.equals(viite.getTyyppi()) && viite.getTekstiKappale() != null).collect(Collectors.toList());
 
@@ -231,10 +222,6 @@ public class VapaasivistystyoOpsIT extends AbstractIntegrationTest {
         tekstikappaleet1.get(0).getTekstiKappale().setTeksti(LokalisoituTekstiDto.of("opsinteksti"));
         sisaltoViiteService.updateSisaltoViite(getKoulutustoimijaId(), ops1.getId(), tekstikappaleet1.get(0).getId(), tekstikappaleet1.get(0));
 
-        TestTransaction.end();
-        TestTransaction.start();
-        TestTransaction.flagForCommit();
-
         OpetussuunnitelmaBaseDto ops2 = createOpetussuunnitelma(ops -> {
             ops.setKoulutustyyppi(KoulutusTyyppi.VAPAASIVISTYSTYO);
             ops.setPerusteDiaarinumero(null);
@@ -242,6 +229,7 @@ public class VapaasivistystyoOpsIT extends AbstractIntegrationTest {
             ops.setOpsId(ops1.getId());
         });
 
+        log.info("opsin2 viitteet");
         sisaltoviitteet = sisaltoViiteService.getSisaltoViitteet(ops2.getKoulutustoimija().getId(), ops2.getId(), SisaltoViiteDto.class);
         List<SisaltoViiteDto> tekstikappaleet2 = sisaltoviitteet.stream().filter(viite -> SisaltoTyyppi.TEKSTIKAPPALE.equals(viite.getTyyppi()) && viite.getTekstiKappale() != null).collect(Collectors.toList());
 
@@ -254,11 +242,11 @@ public class VapaasivistystyoOpsIT extends AbstractIntegrationTest {
         tekstikappaleet2.get(0).getTekstiKappale().setTeksti(LokalisoituTekstiDto.of("opsinteksti2"));
         sisaltoViiteService.updateSisaltoViite(getKoulutustoimijaId(), ops2.getId(), tekstikappaleet2.get(0).getId(), tekstikappaleet2.get(0));
 
+        log.info("opsin1 viitteet");
         sisaltoviitteet = sisaltoViiteService.getSisaltoViitteet(ops1.getKoulutustoimija().getId(), ops1.getId(), SisaltoViiteDto.class);
         tekstikappaleet1 = sisaltoviitteet.stream().filter(viite -> SisaltoTyyppi.TEKSTIKAPPALE.equals(viite.getTyyppi()) && viite.getTekstiKappale() != null).collect(Collectors.toList());
 
         assertThat(tekstikappaleet1.get(0).getTekstiKappale().getTeksti().get(Kieli.FI)).isEqualTo("opsinteksti");
 
-        TestTransaction.end();
     }
 }
