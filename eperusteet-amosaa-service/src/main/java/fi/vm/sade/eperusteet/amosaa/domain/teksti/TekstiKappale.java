@@ -38,6 +38,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import fi.vm.sade.eperusteet.amosaa.service.util.Copyable;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

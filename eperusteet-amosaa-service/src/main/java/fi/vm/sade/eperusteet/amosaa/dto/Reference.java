@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import java.util.UUID;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Kuvaa viitettä toiseen entiteettiin.
@@ -27,6 +28,7 @@ import lombok.EqualsAndHashCode;
  * @author jhyoty
  */
 @EqualsAndHashCode
+@ToString
 public class Reference {
 
     private final String id;

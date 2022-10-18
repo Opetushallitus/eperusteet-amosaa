@@ -42,9 +42,6 @@ public class TekstiKappaleDto {
     private Boolean pakollinen;
     private Boolean valmis;
 
-    public TekstiKappaleDto() {
-    }
-
     public TekstiKappaleDto(LokalisoituTekstiDto nimi, LokalisoituTekstiDto teksti, Tila tila) {
         this.nimi = nimi;
         this.teksti = teksti;
