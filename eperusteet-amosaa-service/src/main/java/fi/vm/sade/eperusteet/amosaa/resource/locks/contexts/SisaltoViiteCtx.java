@@ -19,6 +19,7 @@ package fi.vm.sade.eperusteet.amosaa.resource.locks.contexts;
 import fi.vm.sade.eperusteet.amosaa.service.locking.OpsCtx;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,6 +28,7 @@ import lombok.Setter;
  * @author nkala
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class SisaltoViiteCtx extends OpsCtx {

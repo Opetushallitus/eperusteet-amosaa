@@ -17,6 +17,7 @@ package fi.vm.sade.eperusteet.amosaa.service.locking;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

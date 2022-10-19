@@ -3,6 +3,7 @@ package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data

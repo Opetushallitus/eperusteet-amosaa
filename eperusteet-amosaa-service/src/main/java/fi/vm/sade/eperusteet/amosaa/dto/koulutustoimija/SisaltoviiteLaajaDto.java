@@ -15,6 +15,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.teksti.TutkinnonosaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.TuvaLaajaAlainenOsaaminenDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data

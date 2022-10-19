@@ -23,6 +23,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -36,6 +37,7 @@ import java.util.UUID;
  * @author jhyoty
  */
 @Data
+@EqualsAndHashCode
 public class LokalisoituTekstiDto {
 
     @Getter
