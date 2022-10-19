@@ -24,8 +24,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Slf4j
+@EqualsAndHashCode
 public class SisaltoViiteDto {
     private Long id;
     private TekstiKappaleDto tekstiKappale;
@@ -74,10 +75,6 @@ public class SisaltoViiteDto {
     @JsonProperty("_tekstiKappale")
     private Reference tekstiKappaleRef;
 
-//    public SisaltoViiteDto(TekstiKappaleDto tekstiKappale) {
-//        this.tekstiKappale = tekstiKappale;
-//    }
-
     @Data
     @EqualsAndHashCode(callSuper = true)
     public static class Matala extends SisaltoViiteDto {
@@ -86,9 +83,6 @@ public class SisaltoViiteDto {
         public Matala() {
         }
 
-//        public Matala(TekstiKappaleDto tekstiKappale) {
-//            super(tekstiKappale);
-//        }
     }
 
     @Data

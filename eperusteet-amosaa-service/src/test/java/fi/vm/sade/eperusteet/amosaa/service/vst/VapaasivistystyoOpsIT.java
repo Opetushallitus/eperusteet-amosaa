@@ -38,7 +38,6 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 
 @DirtiesContext
 @Transactional
-@Slf4j
 public class VapaasivistystyoOpsIT extends AbstractIntegrationTest {
 
     @Autowired
@@ -171,8 +170,6 @@ public class VapaasivistystyoOpsIT extends AbstractIntegrationTest {
     @Test
     @Rollback
     public void test_ops_pohjasta_tekstien_sailyvyys() {
-        useProfileVst();
-
         OpetussuunnitelmaBaseDto pohjaOps = createOpetussuunnitelma(ops -> {
             ops.setTyyppi(OpsTyyppi.OPSPOHJA);
             ops.setKoulutustyyppi(KoulutusTyyppi.VAPAASIVISTYSTYO);
@@ -183,8 +180,6 @@ public class VapaasivistystyoOpsIT extends AbstractIntegrationTest {
             sisaltoViiteDto.setTekstiKappale(
                     new TekstiKappaleDto(LokalisoituTekstiDto.of("pohjanotsikko"), LokalisoituTekstiDto.of("pohjanteksti"), Tila.LUONNOS));
         }));
-
-        List<SisaltoViiteDto> pohjaviitteet1 = sisaltoViiteService.getSisaltoViitteet(pohjaOps.getKoulutustoimija().getId(), pohjaOps.getId(), SisaltoViiteDto.class);
 
         OpetussuunnitelmaBaseDto ops1 = createOpetussuunnitelma(ops -> {
             ops.setKoulutustyyppi(KoulutusTyyppi.VAPAASIVISTYSTYO);

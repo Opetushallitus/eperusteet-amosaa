@@ -180,15 +180,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
     @Override
     public <T> List<T> getSisaltoViitteet(Long ktId, Long opsId, Class<T> t) {
         List<SisaltoViite> tkvs = repository.findAllByOwnerId(opsId);
-        log.info("sisaltoviite count {}", tkvs.size());
-        return tkvs.stream().map(sv ->  {
-            if (sv.getPohjanTekstikappale() != null) {
-                log.info("id: " + sv.getId() + " sv : {}" , sv.getPohjanTekstikappale());
-                SisaltoViiteDto tu = mapper.map(sv, SisaltoViiteDto.class);
-                log.info("tulos : {}", tu );
-            }
-            return mapper.map(sv, t);
-        }).collect(Collectors.toList());
+        return mapper.mapAsList(tkvs, t);
     }
 
     @Override

@@ -138,6 +138,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliRooli.VIRTUAALINEN;
+import static fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils.*;
 import static fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils.addHeader;
 import static fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils.addLokalisoituteksti;
 import static fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils.addTeksti;
@@ -241,7 +242,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
         buildAlatunniste(docBase);
 
         DokumenttiMetaDto meta = DokumenttiMetaDto.builder()
-                .title(DokumenttiUtils.getTextString(docBase, ops.getNimi()))
+                .title(getTextString(docBase, ops.getNimi()))
                 .subject(messages.translate("docgen.meta.subject.ops", kieli))
                 .build();
 
