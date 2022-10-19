@@ -10,10 +10,15 @@ import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Set;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.apache.commons.collections.CollectionUtils;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class OpetussuunnitelmaTilastoDto {
     public static SimpleDateFormat getYearFormat = new SimpleDateFormat("yyyy");
 

@@ -17,23 +17,20 @@
 package fi.vm.sade.eperusteet.amosaa.resource.locks.contexts;
 
 import fi.vm.sade.eperusteet.amosaa.service.locking.OpsCtx;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
  * @author nkala
  */
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class SisaltoViiteCtx extends OpsCtx {
     Long svId;
-
-    public SisaltoViiteCtx() {
-    }
-
-    public SisaltoViiteCtx(Long svId) {
-        this.svId = svId;
-    }
 
     public SisaltoViiteCtx(Long ktId, Long opsId, Long svId) {
         super(ktId, opsId);

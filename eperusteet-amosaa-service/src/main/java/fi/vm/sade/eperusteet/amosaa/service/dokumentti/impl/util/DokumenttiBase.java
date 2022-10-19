@@ -20,7 +20,10 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -28,8 +31,9 @@ import org.w3c.dom.Element;
 /**
  * @author isaul
  */
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class DokumenttiBase {
     Document document;
     Element headElement;

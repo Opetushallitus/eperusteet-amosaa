@@ -21,7 +21,10 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.JsonNode;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -32,6 +35,7 @@ import java.util.UUID;
 /**
  * @author jhyoty
  */
+@Data
 public class LokalisoituTekstiDto {
 
     @Getter
