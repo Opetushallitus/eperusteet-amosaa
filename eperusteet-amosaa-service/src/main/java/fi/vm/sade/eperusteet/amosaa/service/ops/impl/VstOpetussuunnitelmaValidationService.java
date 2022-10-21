@@ -1,6 +1,5 @@
 package fi.vm.sade.eperusteet.amosaa.service.ops.impl;
 
-
 import com.google.common.collect.Sets;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
@@ -14,9 +13,8 @@ import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 
-import java.util.Objects;
+import java.math.BigDecimal;
 import java.util.Set;
 
 @Service
@@ -69,6 +67,12 @@ public class VstOpetussuunnitelmaValidationService implements OpetussuunnitelmaV
                 && (viite.getTekstiKappale().getNimi() == null
                     || viite.getTekstiKappale().getNimi().getTeksti().isEmpty())) {
                 validointi.virhe(SISALLOSSA_NIMETTOMIA_OPINTOKOKONAISUUKSIA);
+            }
+            if (viite.getOpintokokonaisuus().getLaajuus() == null || viite.getOpintokokonaisuus().getLaajuus().compareTo(BigDecimal.ZERO) == 0) {
+                validointi.virhe("sisallossa-opintokokonaisuuksia-ilman-laajuutta");
+            }
+            if (viite.getOpintokokonaisuus().getLaajuusYksikko() == null) {
+                validointi.virhe("sisallossa-opintokokonaisuuksia-ilman-laajuusyksikkoa");
             }
         }
 
