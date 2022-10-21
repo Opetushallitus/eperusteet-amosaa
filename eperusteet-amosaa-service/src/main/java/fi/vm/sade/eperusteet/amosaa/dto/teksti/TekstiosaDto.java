@@ -17,22 +17,25 @@ package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 
 import java.util.Optional;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * @author mikkom
  */
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class TekstiosaDto {
-    private Optional<Long> id;
-    private Optional<LokalisoituTekstiDto> otsikko;
-    private Optional<LokalisoituTekstiDto> teksti;
+    private Long id;
+    private LokalisoituTekstiDto otsikko;
+    private LokalisoituTekstiDto teksti;
 
-    public TekstiosaDto() {
-    }
-
-    public TekstiosaDto(Optional<LokalisoituTekstiDto> otsikko, Optional<LokalisoituTekstiDto> teksti) {
+    public TekstiosaDto(LokalisoituTekstiDto otsikko, LokalisoituTekstiDto teksti) {
         this.otsikko = otsikko;
         this.teksti = teksti;
     }
