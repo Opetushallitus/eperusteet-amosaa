@@ -1,9 +1,10 @@
 package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija;
 
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.JulkaisuBaseDto;
-import java.util.List;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
+
+import java.util.List;
 
 public interface JulkaisuService {
     @PreAuthorize("permitAll()")
@@ -17,4 +18,7 @@ public interface JulkaisuService {
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS') or hasPermission(null, 'oph', 'HALLINTA')")
     void kooditaSisaltoviitteet(@P("ktId") long ktId, @P("opsId") long opsId);
+
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
+    boolean onkoMuutoksia(long ktId, long opsId);
 }

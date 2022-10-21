@@ -1,5 +1,6 @@
 package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Sets;
@@ -19,6 +20,7 @@ import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.JulkaisuDataRepos
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.JulkaisuRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
+import fi.vm.sade.eperusteet.amosaa.resource.config.InitJacksonConverter;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiService;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
@@ -93,6 +95,8 @@ public class JulkaisuServiceImpl implements JulkaisuService {
     @Autowired
     private SisaltoviiteRepository sisaltoviiteRepository;
 
+    private ObjectMapper objectMapper = InitJacksonConverter.createMapper();
+
     @Override
     @Transactional(readOnly = true)
     public List<JulkaisuBaseDto> getJulkaisut(long ktIds, long opsId) {
@@ -130,17 +134,12 @@ public class JulkaisuServiceImpl implements JulkaisuService {
         try {
             kooditaSisaltoviitteet(ktId, opsId);
 
-            Julkaisu viimeisinJulkaisu = julkaisuRepository.findFirstByOpetussuunnitelmaOrderByRevisionDesc(opetussuunnitelma);
             OpetussuunnitelmaKaikkiDto opetussuunnitelmaKaikki = opetussuunnitelmaService.getOpetussuunnitelmaKaikki(ktId, opsId);
             ObjectNode dataJson = (ObjectNode) jsonMapper.toJson(opetussuunnitelmaKaikki);
             List<Julkaisu> vanhatJulkaisut = julkaisuRepository.findAllByOpetussuunnitelma(opetussuunnitelma);
 
-            if (viimeisinJulkaisu != null) {
-                int lastHash = viimeisinJulkaisu.getData().getHash();
-                int currentHash = dataJson.hashCode();
-                if (lastHash == currentHash) {
-                    throw new BusinessRuleViolationException("ei-muuttunut-viime-julkaisun-jalkeen");
-                }
+            if (vanhatJulkaisut.size() > 0 && !onkoMuutoksia(ktId, opsId)) {
+                throw new BusinessRuleViolationException("ei-muuttunut-viime-julkaisun-jalkeen");
             }
 
             for (Kieli kieli : opetussuunnitelma.getJulkaisukielet()) {
@@ -149,7 +148,7 @@ public class JulkaisuServiceImpl implements JulkaisuService {
                     dokumenttiService.setStarted(ktId, opsId, dokumenttiDto);
                     dokumenttiService.generateWithDto(ktId, opsId, dokumenttiDto);
                 } catch (DokumenttiException e) {
-                    log.error(e.getLocalizedMessage(), e.getCause());
+                    log.error(Throwables.getStackTraceAsString(e));
                 }
             }
 
@@ -170,7 +169,7 @@ public class JulkaisuServiceImpl implements JulkaisuService {
             julkaisu = julkaisuRepository.save(julkaisu);
             muokkausTietoService.addOpsMuokkausTieto(opsId, opetussuunnitelma, MuokkausTapahtuma.JULKAISU);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(Throwables.getStackTraceAsString(e));
             throw new BusinessRuleViolationException("julkaisun-tallennus-epaonnistui");
         }
 
@@ -211,6 +210,34 @@ public class JulkaisuServiceImpl implements JulkaisuService {
     public void kooditaSisaltoviitteet(long ktId, long opsId) {
         SisaltoViiteRakenneDto sisaltoViiteRakenneDto = sisaltoViiteService.getRakenne(ktId, opsId);
         kooditaSisaltoviite(sisaltoviiteRepository.findOneByOwnerIdAndId(opsId, sisaltoViiteRakenneDto.getId()));
+    }
+
+    @Override
+    public boolean onkoMuutoksia(long ktId, long opsId) {
+        try {
+            Opetussuunnitelma opetussuunnitelma = opetussuunnitelmaRepository.findOne(opsId);
+            Julkaisu viimeisinJulkaisu = julkaisuRepository.findFirstByOpetussuunnitelmaOrderByRevisionDesc(opetussuunnitelma);
+
+            if (viimeisinJulkaisu == null) {
+                return false;
+            }
+
+            ObjectNode data = viimeisinJulkaisu.getData().getData();
+            int julkaistavaHash = generoiOpetussuunnitelmaKaikkiDtoHash(objectMapper.treeToValue(data, OpetussuunnitelmaKaikkiDto.class));
+            int nykyinenHash = generoiOpetussuunnitelmaKaikkiDtoHash(opetussuunnitelmaService.getOpetussuunnitelmaKaikki(ktId, opsId));
+
+            log.info("nykyinen: {} vs julkaistava {}", nykyinenHash, julkaistavaHash);
+            return nykyinenHash != julkaistavaHash;
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new BusinessRuleViolationException("onko-muutoksia-julkaisuun-verrattuna-tarkistus-epaonnistui");
+        }
+    }
+
+    private int generoiOpetussuunnitelmaKaikkiDtoHash(OpetussuunnitelmaKaikkiDto opetussuunnitelmaKaikki) throws IOException {
+        opetussuunnitelmaKaikki.setViimeisinJulkaisuAika(null);
+        ObjectNode dataJson = (ObjectNode) jsonMapper.toJson(opetussuunnitelmaKaikki);
+        return dataJson.hashCode();
     }
 
     private void kooditaSisaltoviite(SisaltoViite sisaltoViite) {
