@@ -28,4 +28,10 @@ public class JulkaisuServiceMock implements JulkaisuService {
     public void kooditaSisaltoviitteet(long ktId, long opsId) {
         
     }
+
+    @Override
+    public boolean onkoMuutoksia(long ktId, long opsId) {
+        return false;
+    }
+
 }
