@@ -226,7 +226,7 @@ public class JulkaisuServiceImpl implements JulkaisuService {
             int julkaistavaHash = generoiOpetussuunnitelmaKaikkiDtoHash(objectMapper.treeToValue(data, OpetussuunnitelmaKaikkiDto.class));
             int nykyinenHash = generoiOpetussuunnitelmaKaikkiDtoHash(opetussuunnitelmaService.getOpetussuunnitelmaKaikki(ktId, opsId));
 
-            log.info("nykyinen: {} vs julkaistava {}", nykyinenHash, julkaistavaHash);
+            log.debug("nykyinen: {} vs julkaistava {}", nykyinenHash, julkaistavaHash);
             return nykyinenHash != julkaistavaHash;
         } catch (IOException e) {
             e.printStackTrace();
