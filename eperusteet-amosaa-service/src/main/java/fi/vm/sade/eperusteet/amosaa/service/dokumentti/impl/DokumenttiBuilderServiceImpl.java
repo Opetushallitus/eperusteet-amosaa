@@ -51,7 +51,6 @@ import fi.vm.sade.eperusteet.amosaa.dto.teksti.OpintokokonaisuusTavoiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteKevytDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.TuvaLaajaAlainenOsaaminenDto;
-import fi.vm.sade.eperusteet.amosaa.repository.dokumentti.DokumenttiRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiBuilderService;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.LocalizedMessagesService;
@@ -115,9 +114,6 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
 
     @Autowired
     private LiiteService liiteService;
-
-    @Autowired
-    private DokumenttiRepository dokumenttiRepository;
 
     @Autowired
     private SisaltoviiteRepository tkvRepository;
@@ -1062,9 +1058,13 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
         addTeksti(docBase, getTextString(docBase, opintokokonaisuus.getKuvaus()), "div");
 
         addTeksti(docBase, messages.translate("docgen.opetuksen-tavoitteet.title", docBase.getKieli()), "h5");
-        addTeksti(docBase, getTextString(docBase, opintokokonaisuus.getOpetuksenTavoiteOtsikko()), "h6");
-        addTeksti(docBase, getTextString(docBase, opintokokonaisuus.getTavoitteidenKuvaus()), "p");
 
+        if (opintokokonaisuus.getTavoitteidenKuvaus() != null) {
+            addTeksti(docBase, messages.translate("docgen.tavoitteiden-kuvaus", docBase.getKieli()), "h6");
+            addTeksti(docBase, getTextString(docBase, opintokokonaisuus.getTavoitteidenKuvaus()), "div");
+        }
+
+        addTeksti(docBase, getTextString(docBase, opintokokonaisuus.getOpetuksenTavoiteOtsikko()), "h6");
         Element tavoitteetEl = docBase.getDocument().createElement("ul");
 
         opintokokonaisuus.getTavoitteet().forEach(tavoite -> {
@@ -1080,8 +1080,13 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
         addTeksti(docBase, getTextString(docBase, opintokokonaisuus.getKeskeisetSisallot()), "div");
 
         addTeksti(docBase, messages.translate("docgen.arviointi.title", docBase.getKieli()), "h5");
-        addTeksti(docBase, getTextString(docBase, opintokokonaisuus.getArvioinninKuvaus()), "div");
 
+        if (opintokokonaisuus.getArvioinninKuvaus() != null) {
+            addTeksti(docBase, messages.translate("docgen.arvioinnin-kuvaus", docBase.getKieli()), "h6");
+            addTeksti(docBase, getTextString(docBase, opintokokonaisuus.getArvioinninKuvaus()), "div");
+        }
+
+        addTeksti(docBase, messages.translate("docgen.osaamisen-arvioinnin-kriteerit", docBase.getKieli()), "h6");
         Element arvioinnitEl = docBase.getDocument().createElement("ul");
 
         opintokokonaisuus.getArvioinnit().forEach(arviointi -> {
