@@ -41,6 +41,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
+import org.json.JSONException;
+import org.skyscreamer.jsonassert.JSONCompare;
+import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
@@ -223,21 +226,20 @@ public class JulkaisuServiceImpl implements JulkaisuService {
             }
 
             ObjectNode data = viimeisinJulkaisu.getData().getData();
-            int julkaistavaHash = generoiOpetussuunnitelmaKaikkiDtoHash(objectMapper.treeToValue(data, OpetussuunnitelmaKaikkiDto.class));
-            int nykyinenHash = generoiOpetussuunnitelmaKaikkiDtoHash(opetussuunnitelmaService.getOpetussuunnitelmaKaikki(ktId, opsId));
+            String julkaistu = generoiOpetussuunnitelmaKaikkiDtotoString(objectMapper.treeToValue(data, OpetussuunnitelmaKaikkiDto.class));
+            String nykyinen = generoiOpetussuunnitelmaKaikkiDtotoString(opetussuunnitelmaService.getOpetussuunnitelmaKaikki(ktId, opsId));
 
-            log.debug("nykyinen: {} vs julkaistava {}", nykyinenHash, julkaistavaHash);
-            return nykyinenHash != julkaistavaHash;
-        } catch (IOException e) {
-            e.printStackTrace();
+            return JSONCompare.compareJSON(julkaistu, nykyinen, JSONCompareMode.LENIENT).failed();
+        } catch (IOException | JSONException e) {
+            log.error(Throwables.getStackTraceAsString(e));
             throw new BusinessRuleViolationException("onko-muutoksia-julkaisuun-verrattuna-tarkistus-epaonnistui");
         }
     }
 
-    private int generoiOpetussuunnitelmaKaikkiDtoHash(OpetussuunnitelmaKaikkiDto opetussuunnitelmaKaikki) throws IOException {
+    private String generoiOpetussuunnitelmaKaikkiDtotoString(OpetussuunnitelmaKaikkiDto opetussuunnitelmaKaikki) throws IOException {
         opetussuunnitelmaKaikki.setViimeisinJulkaisuAika(null);
-        ObjectNode dataJson = (ObjectNode) jsonMapper.toJson(opetussuunnitelmaKaikki);
-        return dataJson.hashCode();
+        opetussuunnitelmaKaikki.setTila(null);
+        return objectMapper.writeValueAsString(opetussuunnitelmaKaikki);
     }
 
     private void kooditaSisaltoviite(SisaltoViite sisaltoViite) {
