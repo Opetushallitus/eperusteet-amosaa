@@ -6,10 +6,12 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpetussuunnitelmaMuok
 import fi.vm.sade.eperusteet.amosaa.dto.NavigationType;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaMuokkaustietoDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaMuokkaustietoRepository;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaMuokkaustietoService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
+import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 import java.util.Date;
 import java.util.List;
@@ -33,6 +35,9 @@ public class OpetussuunnitelmaMuokkaustietoServiceImpl implements Opetussuunnite
     private KayttajanTietoService kayttajanTietoService;
 
     @Autowired
+    private SisaltoViiteService sisaltoViiteService;
+
+    @Autowired
     private DtoMapper mapper;
 
     @Override
@@ -45,9 +50,34 @@ public class OpetussuunnitelmaMuokkaustietoServiceImpl implements Opetussuunnite
                 .haeKayttajatiedot(muokkaustiedot.stream().map(OpetussuunnitelmaMuokkaustietoDto::getMuokkaaja).collect(Collectors.toList()))
                 .stream().collect(Collectors.toMap(kayttajanTieto -> kayttajanTieto.getOidHenkilo(), kayttajanTieto -> kayttajanTieto));
 
-        muokkaustiedot.forEach(muokkaustieto -> muokkaustieto.setKayttajanTieto(kayttajatiedot.get(muokkaustieto.getMuokkaaja())));
+        List<SisaltoViiteDto> viitteet = getRelevantViitteetByKohdeIds(muokkaustiedot);
+
+        muokkaustiedot.forEach(muokkaustieto -> {
+            muokkaustieto.setKayttajanTieto(kayttajatiedot.get(muokkaustieto.getMuokkaaja()));
+            replaceKohdeId(viitteet, muokkaustieto);
+        });
 
         return muokkaustiedot;
+    }
+
+    private List<SisaltoViiteDto> getRelevantViitteetByKohdeIds(List<OpetussuunnitelmaMuokkaustietoDto> muokkaustiedot) {
+        List<Long> kohdeIds = muokkaustiedot.stream()
+                .map(OpetussuunnitelmaMuokkaustietoDto::getKohdeId)
+                .distinct()
+                .collect(Collectors.toList());
+
+        return sisaltoViiteService.getSisaltoViiteetByTekstikappaleIds(kohdeIds).stream()
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+    private void replaceKohdeId(List<SisaltoViiteDto> viitteet, OpetussuunnitelmaMuokkaustietoDto muokkaustieto) {
+        // korvataan kohdeId sisältöviitteen id:llä
+        viitteet.stream()
+                .filter(viite -> viite.getTekstiKappale().getId().equals(muokkaustieto.getKohdeId()))
+                .map(SisaltoViiteDto::getId)
+                .findFirst()
+                .ifPresent(muokkaustieto::setKohdeId);
     }
 
     @Override
@@ -82,7 +112,7 @@ public class OpetussuunnitelmaMuokkaustietoServiceImpl implements Opetussuunnite
                 muokkausTietoRepository.save(aiemminTapahtumat);
             }
 
-            // Lisäään uusi tapahtuma
+            // Lisätään uusi tapahtuma
             OpetussuunnitelmaMuokkaustieto muokkaustieto = OpetussuunnitelmaMuokkaustieto.builder()
                     .opetussuunnitelmaId(opsId)
                     .nimi(historiaTapahtuma.getNimi())
@@ -90,7 +120,7 @@ public class OpetussuunnitelmaMuokkaustietoServiceImpl implements Opetussuunnite
                     .muokkaaja(muokkaaja)
                     .kohde(navigationType)
                     .kohdeId(historiaTapahtuma.getId())
-                    .luotu(historiaTapahtuma.getMuokattu())
+                    .luotu(new Date())
                     .lisatieto(lisatieto)
                     .poistettu(Objects.equals(muokkausTapahtuma.getTapahtuma(), MuokkausTapahtuma.POISTO.toString()))
                     .build();

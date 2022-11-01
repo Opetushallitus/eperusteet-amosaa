@@ -49,6 +49,8 @@ public interface SisaltoviiteRepository extends JpaWithVersioningRepository<Sisa
             "WHERE sv.owner.id = ?1")
     List<SisaltoViite> findAllByOwnerId(Long owner);
 
+    List<SisaltoViite> findByTekstiKappaleIdIn(List<Long> tekstiKappaleIds);
+
     SisaltoViite findOneByOwnerAndId(Opetussuunnitelma owner, Long id);
 
     SisaltoViite findOneByOwnerIdAndId(Long owner, Long id);

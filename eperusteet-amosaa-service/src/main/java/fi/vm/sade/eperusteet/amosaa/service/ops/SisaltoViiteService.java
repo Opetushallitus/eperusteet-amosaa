@@ -54,6 +54,9 @@ public interface SisaltoViiteService extends LockService<SisaltoViiteCtx> {
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
     <T> T getSisaltoViite(@P("ktId") Long ktId, @P("opsId") Long opsId, Long viiteId, Class<T> t);
 
+    @PreAuthorize("isAuthenticated()")
+    List<SisaltoViiteDto> getSisaltoViiteetByTekstikappaleIds(List<Long> tekstiKappaleIds);
+
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'ESITYS')")
     <T> List<T> getSisaltoViitteet(@P("ktId") Long ktId, @P("opsId") Long opsId, Class<T> t);
 
@@ -128,6 +131,6 @@ public interface SisaltoViiteService extends LockService<SisaltoViiteCtx> {
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'ESITYS')")
     List<SisaltoViiteDto> getOpetussuunnitelmanPohjanSisaltoviitteet(Long ktId, Long opsId, SisaltoTyyppi tyyppi);
-    
+
 }
 

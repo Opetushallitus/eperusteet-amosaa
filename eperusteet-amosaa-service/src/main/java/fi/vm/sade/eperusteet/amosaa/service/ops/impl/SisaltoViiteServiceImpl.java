@@ -194,6 +194,12 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
     }
 
     @Override
+    public List<SisaltoViiteDto> getSisaltoViiteetByTekstikappaleIds(List<Long> tekstiKappaleIds) {
+        List<SisaltoViite> viite = repository.findByTekstiKappaleIdIn(tekstiKappaleIds);
+        return mapper.mapAsList(viite, SisaltoViiteDto.class);
+    }
+
+    @Override
     public SisaltoViiteRakenneDto getRakenne(Long ktId, Long opsId) {
         Opetussuunnitelma ops = opsRepository.findOne(opsId);
         SisaltoViite root = repository.findOneRoot(ops);
@@ -458,7 +464,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
     public void updateSisaltoViite(Long ktId, Long opsId, Long viiteId, SisaltoViiteDto uusi) {
         SisaltoViite viite = findViite(opsId, viiteId);
         Opetussuunnitelma ops = opsRepository.findOne(opsId);
-        
+
         if (viite.getOwner() != ops) {
             throw new BusinessRuleViolationException("vain-oman-editointi-sallittu");
         }
