@@ -42,8 +42,10 @@ public class OpetussuunnitelmaMuokkaustietoServiceImpl implements Opetussuunnite
                 .mapAsList(muokkausTietoRepository.findTop10ByOpetussuunnitelmaIdAndLuotuBeforeOrderByLuotuDesc(opsId, viimeisinLuontiaika, lukumaara), OpetussuunnitelmaMuokkaustietoDto.class);
 
         Map<String, KayttajanTietoDto> kayttajatiedot = kayttajanTietoService
-                .haeKayttajatiedot(muokkaustiedot.stream().map(OpetussuunnitelmaMuokkaustietoDto::getMuokkaaja).collect(Collectors.toList()))
-                .stream().collect(Collectors.toMap(kayttajanTieto -> kayttajanTieto.getOidHenkilo(), kayttajanTieto -> kayttajanTieto));
+                .haeKayttajatiedot(muokkaustiedot.stream()
+                        .map(OpetussuunnitelmaMuokkaustietoDto::getMuokkaaja)
+                        .collect(Collectors.toList())).stream()
+                .collect(Collectors.toMap(KayttajanTietoDto::getOidHenkilo, kayttajanTieto -> kayttajanTieto));
 
         muokkaustiedot.forEach(muokkaustieto -> muokkaustieto.setKayttajanTieto(kayttajatiedot.get(muokkaustieto.getMuokkaaja())));
 
@@ -82,7 +84,7 @@ public class OpetussuunnitelmaMuokkaustietoServiceImpl implements Opetussuunnite
                 muokkausTietoRepository.save(aiemminTapahtumat);
             }
 
-            // Lisäään uusi tapahtuma
+            // Lisätään uusi tapahtuma
             OpetussuunnitelmaMuokkaustieto muokkaustieto = OpetussuunnitelmaMuokkaustieto.builder()
                     .opetussuunnitelmaId(opsId)
                     .nimi(historiaTapahtuma.getNimi())
@@ -90,7 +92,7 @@ public class OpetussuunnitelmaMuokkaustietoServiceImpl implements Opetussuunnite
                     .muokkaaja(muokkaaja)
                     .kohde(navigationType)
                     .kohdeId(historiaTapahtuma.getId())
-                    .luotu(historiaTapahtuma.getMuokattu())
+                    .luotu(new Date())
                     .lisatieto(lisatieto)
                     .poistettu(Objects.equals(muokkausTapahtuma.getTapahtuma(), MuokkausTapahtuma.POISTO.toString()))
                     .build();

@@ -15,6 +15,7 @@
  */
 package fi.vm.sade.eperusteet.amosaa.domain.teksti;
 
+import fi.vm.sade.eperusteet.amosaa.domain.HistoriaTapahtuma;
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
@@ -24,6 +25,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -40,6 +42,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
+import fi.vm.sade.eperusteet.amosaa.dto.NavigationType;
 import fi.vm.sade.eperusteet.amosaa.service.util.Copyable;
 import lombok.Getter;
 import lombok.Setter;
@@ -53,7 +56,8 @@ import org.hibernate.envers.RelationTargetAuditMode;
 @Entity
 @Audited
 @Table(name = "sisaltoviite")
-public class SisaltoViite implements ReferenceableEntity, Serializable, Copyable<SisaltoViite> {
+public class SisaltoViite implements ReferenceableEntity, Serializable, Copyable<SisaltoViite>, HistoriaTapahtuma {
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Getter
@@ -518,5 +522,50 @@ public class SisaltoViite implements ReferenceableEntity, Serializable, Copyable
             return this.linkkiSisaltoViite.lapset;
         }
         return lapset;
+    }
+
+    @Override
+    public Date getLuotu() {
+        if (tekstiKappale != null) {
+            return tekstiKappale.getLuotu();
+        }
+        return null;
+    }
+
+    @Override
+    public Date getMuokattu() {
+        if (tekstiKappale != null) {
+            return tekstiKappale.getMuokattu();
+        }
+        return null;
+    }
+
+    @Override
+    public String getLuoja() {
+        if (tekstiKappale != null) {
+            return tekstiKappale.getLuoja();
+        }
+        return null;
+    }
+
+    @Override
+    public String getMuokkaaja() {
+        if (tekstiKappale != null) {
+            return tekstiKappale.getMuokkaaja();
+        }
+        return null;
+    }
+
+    @Override
+    public LokalisoituTeksti getNimi() {
+        if (tekstiKappale != null) {
+            return tekstiKappale.getNimi();
+        }
+        return null;
+    }
+
+    @Override
+    public NavigationType getNavigationType() {
+        return NavigationType.of(String.valueOf(tyyppi));
     }
 }
