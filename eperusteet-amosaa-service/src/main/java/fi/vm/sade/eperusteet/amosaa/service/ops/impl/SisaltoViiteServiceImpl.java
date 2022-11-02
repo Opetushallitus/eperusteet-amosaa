@@ -316,6 +316,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
         }
 
         uusiViite = repository.save(uusiViite);
+        opetussuunnitelmaMuokkaustietoService.addOpsMuokkausTieto(opsId, uusiViite, MuokkausTapahtuma.LUONTI);
         return mapper.map(uusiViite, SisaltoViiteDto.Matala.class);
     }
 
@@ -458,7 +459,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
     public void updateSisaltoViite(Long ktId, Long opsId, Long viiteId, SisaltoViiteDto uusi) {
         SisaltoViite viite = findViite(opsId, viiteId);
         Opetussuunnitelma ops = opsRepository.findOne(opsId);
-        
+
         if (viite.getOwner() != ops) {
             throw new BusinessRuleViolationException("vain-oman-editointi-sallittu");
         }
@@ -506,6 +507,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
         viite.setValmis(uusi.isValmis());
         viite.setVersio((viite.getVersio() != null ? viite.getVersio() : 0) + 1);
         repository.save(viite);
+        opetussuunnitelmaMuokkaustietoService.addOpsMuokkausTieto(opsId, mapper.map(uusi, SisaltoViite.class), MuokkausTapahtuma.PAIVITYS);
     }
 
     @Override
@@ -584,6 +586,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
         poistetutService.lisaaPoistettu(ktId, ops, viite);
 
         viite.getVanhempi().getLapset().remove(viite);
+        opetussuunnitelmaMuokkaustietoService.addOpsMuokkausTieto(opsId, viite, MuokkausTapahtuma.POISTO);
         repository.delete(viite);
     }
 

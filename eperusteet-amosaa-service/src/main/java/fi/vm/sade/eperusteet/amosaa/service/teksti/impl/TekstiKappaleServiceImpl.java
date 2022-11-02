@@ -15,13 +15,11 @@
  */
 package fi.vm.sade.eperusteet.amosaa.service.teksti.impl;
 
-import fi.vm.sade.eperusteet.amosaa.domain.MuokkausTapahtuma;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.TekstiKappaleDto;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.TekstiKappaleRepository;
-import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaMuokkaustietoService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.teksti.TekstiKappaleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,9 +41,6 @@ public class TekstiKappaleServiceImpl implements TekstiKappaleService {
     @Autowired
     private TekstiKappaleRepository repository;
 
-    @Autowired
-    private OpetussuunnitelmaMuokkaustietoService opetussuunnitelmaMuokkaustietoService;
-
     @Override
     public TekstiKappaleDto add(Long opsId, SisaltoViite viite, TekstiKappaleDto tekstiKappaleInDto) {
         TekstiKappaleDto tekstiKappaleDto = tekstiKappaleInDto != null
@@ -55,7 +50,6 @@ public class TekstiKappaleServiceImpl implements TekstiKappaleService {
         tekstiKappale.setTila(Tila.LUONNOS);
         viite.setTekstiKappale(tekstiKappale);
         tekstiKappale = repository.saveAndFlush(tekstiKappale);
-        opetussuunnitelmaMuokkaustietoService.addOpsMuokkausTieto(opsId, tekstiKappale, MuokkausTapahtuma.LUONTI);
         mapper.map(tekstiKappale, tekstiKappaleDto);
 
         return tekstiKappaleDto;
@@ -69,7 +63,6 @@ public class TekstiKappaleServiceImpl implements TekstiKappaleService {
         mapper.map(tekstiKappaleDto, current);
 
         TekstiKappale paivitetty = repository.save(current);
-        opetussuunnitelmaMuokkaustietoService.addOpsMuokkausTieto(opsId, paivitetty, MuokkausTapahtuma.PAIVITYS);
         return mapper.map(paivitetty, TekstiKappaleDto.class);
     }
 
