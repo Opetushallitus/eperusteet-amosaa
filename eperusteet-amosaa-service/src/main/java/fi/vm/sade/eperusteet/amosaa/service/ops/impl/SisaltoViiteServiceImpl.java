@@ -80,6 +80,7 @@ import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoviiteServiceProvider;
 import fi.vm.sade.eperusteet.amosaa.service.peruste.PerusteCacheService;
+import fi.vm.sade.eperusteet.amosaa.service.security.PermissionManager;
 import fi.vm.sade.eperusteet.amosaa.service.teksti.TekstiKappaleService;
 import fi.vm.sade.eperusteet.amosaa.service.util.PoistettuService;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
@@ -168,6 +169,9 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
 
     @Autowired
     OpetussuunnitelmaMuokkaustietoService opetussuunnitelmaMuokkaustietoService;
+
+    @Autowired
+    private PermissionManager permissionManager;
 
     @Autowired
     private LockManager lockMgr;
@@ -577,7 +581,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
             throw new BusinessRuleViolationException("Pakollisia sisältöjä ei voi poistaa");
         }
 
-        if (viite.getTyyppi().equals(SisaltoTyyppi.OPINTOKOKONAISUUS)
+        if (!permissionManager.hasOphAdminPermission() && viite.getTyyppi().equals(SisaltoTyyppi.OPINTOKOKONAISUUS)
                 && CollectionUtils.isNotEmpty(ops.getJulkaisut())
                 && !ops.getTila().equals(Tila.POISTETTU)) {
             throw new BusinessRuleViolationException("Julkaistuja sisältöjä ei voi poistaa");

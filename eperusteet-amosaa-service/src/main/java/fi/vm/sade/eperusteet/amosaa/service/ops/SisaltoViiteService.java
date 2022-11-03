@@ -67,7 +67,7 @@ public interface SisaltoViiteService extends LockService<SisaltoViiteCtx> {
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
     void updateSisaltoViite(@P("ktId") Long ktId, @P("opsId") Long opsId, Long viiteId, SisaltoViiteDto uusi);
 
-    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS') or hasPermission(null, 'OPH','HALLINTA')")
     void removeSisaltoViite(@P("ktId") Long ktId, @P("opsId") Long opsId, Long viiteId);
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
