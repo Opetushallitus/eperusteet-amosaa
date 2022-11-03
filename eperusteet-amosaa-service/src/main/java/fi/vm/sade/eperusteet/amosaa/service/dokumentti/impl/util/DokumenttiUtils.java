@@ -7,6 +7,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.LaajuusYksikko;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.helper.W3CDom;
 import org.w3c.dom.Document;
@@ -88,7 +89,7 @@ public class DokumenttiUtils {
     }
 
     public static String unescapeHtml5(String string) {
-        return Jsoup.clean(stripNonValidXMLCharacters(string), ValidHtml.WhitelistType.NORMAL.getWhitelist());
+        return StringEscapeUtils.unescapeHtml4(Jsoup.clean(stripNonValidXMLCharacters(string), ValidHtml.WhitelistType.NORMAL.getWhitelist()));
     }
 
     public static String stripNonValidXMLCharacters(String in) {
