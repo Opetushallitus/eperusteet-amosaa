@@ -24,7 +24,7 @@ import java.util.EnumSet;
 /**
  * @author nkala
  */
-public enum SisaltoTyyppi {
+public enum  SisaltoTyyppi {
     TEKSTIKAPPALE("tekstikappale"),
     TUTKINNONOSAT("tutkinnonosat"),
     TUTKINNONOSA("tutkinnonosa"),
