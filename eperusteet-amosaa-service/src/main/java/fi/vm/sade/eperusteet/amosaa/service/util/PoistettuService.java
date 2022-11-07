@@ -29,7 +29,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
  * @author nkala
  */
 public interface PoistettuService {
-    @PreAuthorize("hasPermission({#ktId, #ops.id}, 'opetussuunnitelma', 'POISTO')")
+    @PreAuthorize("hasPermission({#ktId, #ops.id}, 'opetussuunnitelma', 'POISTO') or hasPermission(null, 'OPH','HALLINTA')")
     PoistettuDto lisaaPoistettu(@P("ktId") Long koulutustoimija, @P("ops") Opetussuunnitelma ops, SisaltoViite osa);
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
