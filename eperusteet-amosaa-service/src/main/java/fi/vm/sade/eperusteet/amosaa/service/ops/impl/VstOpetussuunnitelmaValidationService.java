@@ -27,7 +27,6 @@ public class VstOpetussuunnitelmaValidationService implements OpetussuunnitelmaV
     private OpetussuunnitelmaRepository opetussuunnitelmaRepository;
 
     public static final String SISALLOSSA_NIMETTOMIA_OPINTOKOKONAISUUKSIA = "sisallossa-opintokokonaisuuksia-ilman-nimea";
-    public static final String TEKSTIKAPPALEELLA_EI_SISALTOA = "tekstikappaleella-ei-lainkaan-sisaltoa";
 
     @Override
     public Set<KoulutusTyyppi> getTyypit() {
@@ -63,15 +62,15 @@ public class VstOpetussuunnitelmaValidationService implements OpetussuunnitelmaV
         }
 
         if (viite.getTyyppi().equals(SisaltoTyyppi.OPINTOKOKONAISUUS)) {
-            if (validointi.getVirheet().stream().map(virhe -> virhe.getSyy()).noneMatch(syy -> syy.equals(SISALLOSSA_NIMETTOMIA_OPINTOKOKONAISUUKSIA))
+            if (validointi.getVirheet().stream().map(Validointi.Virhe::getSyy).noneMatch(syy -> syy.equals(SISALLOSSA_NIMETTOMIA_OPINTOKOKONAISUUKSIA))
                 && (viite.getTekstiKappale().getNimi() == null
                     || viite.getTekstiKappale().getNimi().getTeksti().isEmpty())) {
                 validointi.virhe(SISALLOSSA_NIMETTOMIA_OPINTOKOKONAISUUKSIA);
             }
-            if (viite.getOpintokokonaisuus().getLaajuus() == null || viite.getOpintokokonaisuus().getLaajuus().compareTo(BigDecimal.ZERO) == 0) {
-                validointi.virhe("sisallossa-opintokokonaisuuksia-ilman-laajuutta");
+            if (hasEmptyLaajuus(viite)) {
+                validointi.varoitus("sisallossa-opintokokonaisuuksia-ilman-laajuutta");
             }
-            if (viite.getOpintokokonaisuus().getLaajuusYksikko() == null) {
+            if (!hasEmptyLaajuus(viite) && viite.getOpintokokonaisuus().getLaajuusYksikko() == null) {
                 validointi.virhe("sisallossa-opintokokonaisuuksia-ilman-laajuusyksikkoa");
             }
         }
@@ -81,5 +80,9 @@ public class VstOpetussuunnitelmaValidationService implements OpetussuunnitelmaV
                 validoi(validointi, lapsi, ops);
             }
         }
+    }
+
+    private boolean hasEmptyLaajuus(SisaltoViite viite) {
+        return viite.getOpintokokonaisuus().getLaajuus() == null || viite.getOpintokokonaisuus().getLaajuus().compareTo(BigDecimal.ZERO) == 0;
     }
 }

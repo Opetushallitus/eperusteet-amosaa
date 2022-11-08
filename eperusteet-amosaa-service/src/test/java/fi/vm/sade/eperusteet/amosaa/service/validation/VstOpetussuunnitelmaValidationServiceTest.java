@@ -70,8 +70,10 @@ public class VstOpetussuunnitelmaValidationServiceTest extends AbstractIntegrati
         // validoidaan vstOps:n defaultina luotu opintokokonaisuus
         Validointi validointi = vstOpetussuunnitelmaValidationService.validoi(getKoulutustoimijaId(), vstOps.getId());
         assertThat(validointi.getVirheet()).extracting(Validointi.Virhe::getSyy)
-                .contains("sisallossa-opintokokonaisuuksia-ilman-laajuutta")
-                .contains("sisallossa-opintokokonaisuuksia-ilman-laajuusyksikkoa");
+                .doesNotContain("sisallossa-opintokokonaisuuksia-ilman-laajuutta")
+                .doesNotContain("sisallossa-opintokokonaisuuksia-ilman-laajuusyksikkoa");
+        assertThat(validointi.getVaroitukset()).extracting(Validointi.Virhe::getSyy)
+                .contains("sisallossa-opintokokonaisuuksia-ilman-laajuutta");
 
         SisaltoViiteDto viite = sisaltoViiteService.getSisaltoviitteet(getKoulutustoimijaId(), vstOps.getId(), SisaltoTyyppi.OPINTOKOKONAISUUS).get(0);
 
