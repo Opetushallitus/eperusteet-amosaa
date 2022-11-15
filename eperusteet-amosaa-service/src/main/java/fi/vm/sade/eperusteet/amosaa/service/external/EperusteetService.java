@@ -71,6 +71,8 @@ public interface EperusteetService {
 
     JsonNode getTiedotteet(Long jalkeen);
 
+    JsonNode getGeneeriset();
+
     JsonNode getTiedotteetHaku(TiedoteQueryDto queryDto);
 
     byte[] getLiite(Long perusteId, UUID id);

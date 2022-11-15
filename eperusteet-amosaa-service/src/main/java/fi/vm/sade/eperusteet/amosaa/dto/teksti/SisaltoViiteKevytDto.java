@@ -51,6 +51,7 @@ public class SisaltoViiteKevytDto {
     private List<Reference> lapset;
     private KoulutuksenOsaKevytDto koulutuksenosa;
     private TuvaLaajaAlainenOsaaminenDto tuvaLaajaAlainenOsaaminen;
+    private SisaltoTyyppi linkattuTyyppi;
 
     public LokalisoituTekstiDto getNimi() {
         if (koulutuksenosa != null) {

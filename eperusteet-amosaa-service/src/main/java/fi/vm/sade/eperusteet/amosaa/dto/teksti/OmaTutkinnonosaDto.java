@@ -17,6 +17,7 @@
 package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.Ammattitaitovaatimukset2019Dto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.ArviointiDto;
 import java.math.BigDecimal;
 import java.util.List;
@@ -39,8 +40,14 @@ public class OmaTutkinnonosaDto {
     private Long id;
     private String koodi;
     private BigDecimal laajuus;
-    private LokalisoituTekstiDto tavoitteet;
-    private List<AmmattitaitovaatimuksenKohdealueDto> ammattitaitovaatimuksetLista;
     private ArviointiDto arviointi;
+    private Long geneerinenarviointi;
+    private PaikallisetAmmattitaitovaatimukset2019Dto ammattitaitovaatimukset;
     private LokalisoituTekstiDto ammattitaidonOsoittamistavat;
+
+    @Deprecated
+    private List<AmmattitaitovaatimuksenKohdealueDto> ammattitaitovaatimuksetLista;
+
+    @Deprecated
+    private LokalisoituTekstiDto tavoitteet;
 }

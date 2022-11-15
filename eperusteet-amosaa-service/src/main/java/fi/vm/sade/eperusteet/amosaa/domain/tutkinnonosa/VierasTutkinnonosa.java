@@ -35,6 +35,7 @@ import org.hibernate.envers.RelationTargetAuditMode;
  */
 @Entity
 @Audited
+@Deprecated
 @Table(name = "vierastutkinnonosa")
 public class VierasTutkinnonosa extends AbstractAuditedEntity implements Serializable, ReferenceableEntity, Copyable<VierasTutkinnonosa> {
     @Id

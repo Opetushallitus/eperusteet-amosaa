@@ -43,6 +43,7 @@ import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import fi.vm.sade.eperusteet.amosaa.dto.NavigationType;
+import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.util.Copyable;
 import lombok.Getter;
 import lombok.Setter;
@@ -64,16 +65,16 @@ public class SisaltoViite implements ReferenceableEntity, Serializable, Copyable
     @Setter
     private Long id;
 
-    @Getter
     @Setter
+    @Getter
     private boolean pakollinen;
 
-    @Getter
     @Setter
+    @Getter
     private boolean valmis;
 
-    @Getter
     @Setter
+    @Getter
     private boolean liikkumaton; // Jos tosi, solmun paikkaa ei voi vaihtaa rakennepuussa
 
     @Getter
@@ -176,7 +177,7 @@ public class SisaltoViite implements ReferenceableEntity, Serializable, Copyable
     @Setter
     private KotoLaajaAlainenOsaaminen kotoLaajaAlainenOsaaminen;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(orphanRemoval = true, cascade = {CascadeType.PERSIST, CascadeType.PERSIST }, fetch = FetchType.LAZY)
     @Getter
     @Setter
     private List<OmaOsaAlue> osaAlueet = new ArrayList<>();
@@ -211,6 +212,17 @@ public class SisaltoViite implements ReferenceableEntity, Serializable, Copyable
             root = root.getVanhempi();
         }
         return root;
+    }
+
+    public static SisaltoViite createLink(Opetussuunnitelma owner, SisaltoViite original) {
+        if (!SisaltoTyyppi.isLinkable(original.getTyyppi())) {
+            throw new BusinessRuleViolationException("tyyppi ei linkattava");
+        }
+        SisaltoViite result = new SisaltoViite(owner);
+        result.setTekstiKappale(TekstiKappale.copy(original.getTekstiKappale()));
+        result.tyyppi = SisaltoTyyppi.LINKKI;
+        result.linkkiSisaltoViite = original;
+        return result;
     }
 
     @Override
@@ -568,4 +580,40 @@ public class SisaltoViite implements ReferenceableEntity, Serializable, Copyable
     public NavigationType getNavigationType() {
         return NavigationType.of(String.valueOf(tyyppi));
     }
+
+    public SisaltoTyyppi getLinkattuTyyppi() {
+        if (this.linkkiSisaltoViite != null) {
+            return this.linkkiSisaltoViite.tyyppi;
+        }
+        return this.tyyppi;
+    }
+
+    public Long getLinkattuPeruste() {
+        if (this.linkkiSisaltoViite != null) {
+            if (this.linkkiSisaltoViite.tyyppi.equals(SisaltoTyyppi.TUTKINNONOSA)) {
+                return this.linkkiSisaltoViite.getOwner().getPeruste().getId();
+            }
+        }
+        return null;
+    }
+
+    public Long getLinkattuSisaltoViiteId() {
+        if (this.linkkiSisaltoViite != null) {
+            return this.linkkiSisaltoViite.getId();
+        }
+        return null;
+    }
+
+    public Long getLinkattuOps() {
+        if (this.linkkiSisaltoViite != null) {
+            return this.linkkiSisaltoViite.getOwner().getId();
+        }
+        return null;
+    }
+
+    public void asetOsaAlueet(List<OmaOsaAlue> paivitetyt) {
+        this.osaAlueet.clear();
+        this.osaAlueet.addAll(paivitetyt);
+    }
+
 }

@@ -67,7 +67,7 @@ public class LokalisoituTeksti implements Serializable {
     @Immutable
     @CollectionTable(name = "lokalisoituteksti_teksti")
     @ElementCollection(fetch = FetchType.EAGER)
-    private Set<Teksti> teksti;
+    private Set<Teksti> teksti = new HashSet<>();
 
     protected LokalisoituTeksti() {
     }

@@ -31,13 +31,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.VapaaTeksti;
-import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaTutkinnonosa;
-import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Suorituspolku;
-import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.SuorituspolkuRivi;
-import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Tutkinnonosa;
-import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaToteutus;
-import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
-import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.VierasTutkinnonosa;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.*;
 import fi.vm.sade.eperusteet.amosaa.dto.NavigationType;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import fi.vm.sade.eperusteet.amosaa.dto.RevisionDto;
@@ -63,6 +57,7 @@ import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRe
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.PoistettuRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.peruste.CachedPerusteRepository;
+import fi.vm.sade.eperusteet.amosaa.repository.teksti.OmaOsaAlueRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.TekstiKappaleRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.tutkinnonosa.TutkinnonosaRepository;
@@ -127,6 +122,9 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
 
     @Autowired
     private KoulutustoimijaRepository koulutustoimijaRepository;
+
+    @Autowired
+    private OmaOsaAlueRepository omaOsaAlueRepository;
 
     @Autowired
     private OpetussuunnitelmaRepository opsRepository;
@@ -456,6 +454,32 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
 
         mapTutkinnonParts(mappedTosa);
         viite.setTosa(mappedTosa);
+
+        Set<Long> vanhatIdt = viite.getOsaAlueet().stream()
+                .filter(oa -> oa.getPerusteenOsaAlueId() != null)
+                .map(OmaOsaAlue::getId)
+                .collect(Collectors.toSet());
+
+        List<OmaOsaAlue> paivitetyt = uusi.getOsaAlueet().stream()
+                .map(oa -> mapper.map(oa, OmaOsaAlue.class))
+                .map(oa -> omaOsaAlueRepository.save(oa))
+                .collect(Collectors.toList());
+
+        viite.asetOsaAlueet(paivitetyt);
+
+        List<OmaOsaAlue> uudet = uusi.getOsaAlueet().stream()
+                .map(oa -> mapper.map(oa, OmaOsaAlue.class))
+                .collect(Collectors.toList());
+
+        Set<Long> uudetIdt = uudet.stream()
+                .map(OmaOsaAlue::getId)
+                .collect(Collectors.toSet());
+
+        if (!uudetIdt.containsAll(vanhatIdt)) {
+            throw new BusinessRuleViolationException("perusteen-sisaltoa-ei-saa-poistaa");
+        }
+
+        viite.setOsaAlueet(uudet);
     }
 
     @Override
@@ -1050,6 +1074,9 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
     public <T> List<T> getTutkinnonOsaViitteet(Long ktId, Long opsId, Class<T> aClass) {
         Opetussuunnitelma ops = opsRepository.findOne(opsId);
         List<SisaltoViite> tosat = repository.findTutkinnonosat(ops);
+        tosat.addAll(repository.findLinkit(ops).stream()
+                .filter(sv -> sv.getLinkkiSisaltoViite().getTyyppi().equals(SisaltoTyyppi.TUTKINNONOSA))
+                .collect(Collectors.toList()));
         return mapper.mapAsList(tosat, aClass);
     }
 
@@ -1077,6 +1104,37 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
             return null;
         }
         return getSisaltoviitteet(ops.getPohja().getKoulutustoimija().getId(), ops.getPohja().getId(), tyyppi);
+    }
+
+    @Transactional(readOnly = false)
+    @Override
+    public void linkSisaltoViiteet(Long ktId, Long opsId, List<Long> viiteIds) {
+        Opetussuunnitelma ops = opsRepository.findOne(opsId);
+        SisaltoViite root = repository.findOneRoot(ops);
+        SisaltoViite rootTutkinnonosat = root.getLapset().stream()
+                .filter(ch -> ch.getTyyppi().equals(SisaltoTyyppi.TUTKINNONOSAT))
+                .findFirst()
+                .get();
+
+        List<SisaltoViite> viitteet = viiteIds.stream()
+                .map(viiteId -> repository.findOne(viiteId))
+                .map(viite -> {
+                    SisaltoViite linkattu = SisaltoViite.createLink(ops, viite);
+                    if (linkattu.getLinkkiSisaltoViite().getTyyppi().equals(SisaltoTyyppi.TUTKINNONOSA)) {
+                        rootTutkinnonosat.getLapset().add(linkattu);
+                        linkattu.setVanhempi(rootTutkinnonosat);
+                    }
+                    else {
+                        linkattu.setVanhempi(root);
+                        root.getLapset().add(linkattu);
+                    }
+                    return linkattu;
+                })
+                .map(repository::save)
+                .collect(Collectors.toList());
+
+        repository.save(rootTutkinnonosat);
+        repository.save(root);
     }
 
     @Override

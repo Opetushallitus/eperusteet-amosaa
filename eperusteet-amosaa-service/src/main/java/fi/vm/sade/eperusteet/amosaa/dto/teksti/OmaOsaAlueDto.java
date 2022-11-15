@@ -1,3 +1,4 @@
+
 package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaOsaAlueTyyppi;
@@ -16,6 +17,7 @@ import java.util.List;
 public class OmaOsaAlueDto {
     private Long id;
     private OmaOsaAlueTyyppi tyyppi;
+    private LokalisoituTekstiDto nimi;
     private String perusteenOsaAlueKoodi;
     private Long perusteenOsaAlueId;
     private LokalisoituTekstiDto tavatjaymparisto;

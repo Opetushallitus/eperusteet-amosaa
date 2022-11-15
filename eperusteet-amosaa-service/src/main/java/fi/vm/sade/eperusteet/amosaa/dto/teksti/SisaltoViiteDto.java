@@ -67,8 +67,11 @@ public class SisaltoViiteDto {
     private Long perusteenOsaId;
     private String kommentti;
     private boolean naytaPerusteenTeksti;
-    private Reference linkkiSisaltoViiteId;
     private List<OmaOsaAlueDto> osaAlueet = new ArrayList<>();
+    private Long linkattuOps;
+    private Long linkattuSisaltoViiteId;
+    private Long linkattuPeruste;
+    private SisaltoTyyppi linkattuTyyppi;
 
     @JsonProperty("_tekstiKappale")
     private Reference tekstiKappaleRef;
