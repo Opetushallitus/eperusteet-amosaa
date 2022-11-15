@@ -9,6 +9,9 @@ public enum NavigationType {
     opetussuunnitelma,
     tekstikappale,
     tutkinnonosat,
+    tutkinnonosat_pakolliset,
+    tutkinnonosat_paikalliset,
+    tutkinnonosat_tuodut,
     valmatelmaKoulutuksenosat,
     tutkinnonosa,
     tosaryhma,
@@ -22,7 +25,8 @@ public enum NavigationType {
     koto_kielitaitotaso,
     koto_opinto,
     koto_laajaalainenosaaminen,
-    opetussuunnitelma_rakenne;
+    opetussuunnitelma_rakenne,
+    linkki;
 
     public static NavigationType of(String type) {
         for (NavigationType t : values()) {

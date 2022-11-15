@@ -278,6 +278,13 @@ public class EperusteetServiceImpl implements EperusteetService {
     }
 
     @Override
+    public JsonNode getGeneeriset() {
+        String url = eperusteetServiceUrl + "/api/geneerinenarviointi/julkaistu";
+        JsonNode result = client.exchange(url, HttpMethod.GET, httpEntity, JsonNode.class).getBody();
+        return result;
+    }
+
+    @Override
     public Set<UUID> getRakenneTunnisteet(Long id, String suoritustapa) {
         JsonNode st = getSuoritustapa(id, suoritustapa);
         if (st == null) {

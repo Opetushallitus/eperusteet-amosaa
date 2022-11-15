@@ -24,9 +24,10 @@ import java.util.EnumSet;
 /**
  * @author nkala
  */
-public enum  SisaltoTyyppi {
+public enum SisaltoTyyppi {
     TEKSTIKAPPALE("tekstikappale"),
     TUTKINNONOSAT("tutkinnonosat"),
+
     TUTKINNONOSA("tutkinnonosa"),
     TOSARYHMA("tutkinnonosaryhma"),
     SUORITUSPOLUT("suorituspolut"),
@@ -61,7 +62,7 @@ public enum  SisaltoTyyppi {
                 return s;
             }
         }
-        throw new IllegalArgumentException(tila + " ei ole kelvollinen tila");
+        throw new IllegalArgumentException(tila + " ei ole kelvollinen SisaltoTyyppi");
     }
 
     public boolean isOneOf(SisaltoTyyppi... tyypit) {
@@ -73,8 +74,12 @@ public enum  SisaltoTyyppi {
         return false;
     }
 
+    public static boolean isLinkable(SisaltoTyyppi tyyppi) {
+        return EnumSet.of(TUTKINNONOSA).contains(tyyppi);
+    }
+
     public static boolean isCopyable(SisaltoTyyppi tyyppi) {
-        return EnumSet.of(SUORITUSPOLKU, TUTKINNONOSA, TEKSTIKAPPALE).contains(tyyppi);
+        return EnumSet.of(SUORITUSPOLKU, TUTKINNONOSA, TEKSTIKAPPALE, LINKKI).contains(tyyppi);
     }
 
     public static boolean salliLuonti(SisaltoTyyppi tyyppi) {

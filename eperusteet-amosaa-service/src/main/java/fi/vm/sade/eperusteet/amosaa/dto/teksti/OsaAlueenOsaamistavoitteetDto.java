@@ -12,6 +12,6 @@ import java.util.List;
 @Setter
 public class OsaAlueenOsaamistavoitteetDto {
     private Long id;
-    private LokalisoituTeksti otsikko;
+    private LokalisoituTekstiDto otsikko;
     private List<YtoOsaamistavoiteDto> osaamistavoitteet = new ArrayList<>();
 }
