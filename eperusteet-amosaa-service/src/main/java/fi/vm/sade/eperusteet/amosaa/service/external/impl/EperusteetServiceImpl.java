@@ -309,11 +309,9 @@ public class EperusteetServiceImpl implements EperusteetService {
         try {
             JsonNode node = mapper.readTree(cperuste.getPeruste());
             for (JsonNode suoritustapa : node.get("suoritustavat")) {
-                if (suoritustapa.get("suoritustapakoodi").asText().equals(tyyppi)) {
-                    for (JsonNode viite : suoritustapa.get("tutkinnonOsaViitteet")) {
-                        if (tosaId.equals(viite.get("_tutkinnonOsa").asLong())) {
-                            return viite;
-                        }
+                for (JsonNode viite : suoritustapa.get("tutkinnonOsaViitteet")) {
+                    if (tosaId.equals(viite.get("_tutkinnonOsa").asLong())) {
+                        return viite;
                     }
                 }
             }
