@@ -16,14 +16,14 @@
 
 package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * @author nkala
  */
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class TekstiKappaleNimiDto {
     private Long id;
     private LokalisoituTekstiDto nimi;

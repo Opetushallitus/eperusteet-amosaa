@@ -17,6 +17,7 @@ package fi.vm.sade.eperusteet.amosaa.dto.kayttaja;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.JsonNode;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,8 +25,7 @@ import lombok.Setter;
 /**
  * @author nkala
  */
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class KayttajanTietoDto {

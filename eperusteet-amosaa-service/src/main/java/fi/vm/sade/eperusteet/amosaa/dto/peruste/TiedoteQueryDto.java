@@ -1,8 +1,7 @@
 package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -10,8 +9,9 @@ import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.List;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class TiedoteQueryDto {
     private int sivu = 0;
     private int sivukoko = 25;

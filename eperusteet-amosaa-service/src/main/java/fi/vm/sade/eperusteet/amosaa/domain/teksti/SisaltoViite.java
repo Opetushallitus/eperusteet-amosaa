@@ -15,6 +15,7 @@
  */
 package fi.vm.sade.eperusteet.amosaa.domain.teksti;
 
+import fi.vm.sade.eperusteet.amosaa.domain.AbstractAuditedEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.HistoriaTapahtuma;
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
@@ -57,7 +58,7 @@ import org.hibernate.envers.RelationTargetAuditMode;
 @Entity
 @Audited
 @Table(name = "sisaltoviite")
-public class SisaltoViite implements ReferenceableEntity, Serializable, Copyable<SisaltoViite>, HistoriaTapahtuma {
+public class SisaltoViite extends AbstractAuditedEntity implements ReferenceableEntity, Serializable, Copyable<SisaltoViite>, HistoriaTapahtuma {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -548,22 +549,6 @@ public class SisaltoViite implements ReferenceableEntity, Serializable, Copyable
     public Date getMuokattu() {
         if (tekstiKappale != null) {
             return tekstiKappale.getMuokattu();
-        }
-        return null;
-    }
-
-    @Override
-    public String getLuoja() {
-        if (tekstiKappale != null) {
-            return tekstiKappale.getLuoja();
-        }
-        return null;
-    }
-
-    @Override
-    public String getMuokkaaja() {
-        if (tekstiKappale != null) {
-            return tekstiKappale.getMuokkaaja();
         }
         return null;
     }

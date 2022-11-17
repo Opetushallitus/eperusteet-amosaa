@@ -18,14 +18,14 @@ package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * @author nkala
  */
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class VierasTutkinnonosaDto {
     private Long id;

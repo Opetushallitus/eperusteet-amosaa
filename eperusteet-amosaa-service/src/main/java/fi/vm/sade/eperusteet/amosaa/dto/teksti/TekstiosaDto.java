@@ -16,14 +16,14 @@
 package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 
 import java.util.Optional;
-import lombok.Getter;
-import lombok.Setter;
+
+import lombok.*;
 
 /**
  * @author mikkom
  */
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
 public class TekstiosaDto {
     private Optional<Long> id;
     private Optional<LokalisoituTekstiDto> otsikko;

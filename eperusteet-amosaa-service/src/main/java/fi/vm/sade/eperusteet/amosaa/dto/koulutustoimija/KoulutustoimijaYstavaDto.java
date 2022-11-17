@@ -16,14 +16,15 @@
 
 package fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * @author nkala
  */
-@Getter
-@Setter
+@Data
+@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class KoulutustoimijaYstavaDto extends KoulutustoimijaBaseDto {
     YstavaStatus status;
 }

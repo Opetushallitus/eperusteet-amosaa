@@ -17,14 +17,14 @@ package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 
 import java.util.List;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * @author jhyoty
  */
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class PerusteTekstiKappaleViiteDto {
     private Long id;
     private PerusteTekstiKappaleDto tesktiKappale;

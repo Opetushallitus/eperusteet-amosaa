@@ -17,14 +17,15 @@
 package fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija;
 
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * @author nkala
  */
-@Getter
-@Setter
+@Data
+@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class KoulutustoimijaJulkinenDto extends KoulutustoimijaBaseDto {
     LokalisoituTekstiDto kuvaus;
     private boolean salliystavat;

@@ -23,14 +23,15 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * @author nkala
  */
-@Getter
-@Setter
+@Data
+@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class OpetussuunnitelmaJulkinenDto extends OpetussuunnitelmaBaseDto {
     private String kommentti;
     private Set<Kieli> julkaisukielet;

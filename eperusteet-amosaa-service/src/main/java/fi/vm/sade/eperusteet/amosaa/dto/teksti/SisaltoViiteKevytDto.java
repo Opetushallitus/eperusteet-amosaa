@@ -22,17 +22,12 @@ import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import java.util.List;
 
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteBaseDto;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * @author nkala
  */
-@Getter
-@Setter
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

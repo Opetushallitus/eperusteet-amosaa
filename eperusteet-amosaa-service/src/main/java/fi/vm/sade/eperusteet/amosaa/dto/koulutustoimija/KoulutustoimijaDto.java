@@ -21,14 +21,15 @@ import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 
 import java.util.Set;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * @author nkala
  */
-@Getter
-@Setter
+@Data
+@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class KoulutustoimijaDto extends KoulutustoimijaBaseDto {
     LokalisoituTekstiDto kuvaus;
     private Set<Reference> ystavat;

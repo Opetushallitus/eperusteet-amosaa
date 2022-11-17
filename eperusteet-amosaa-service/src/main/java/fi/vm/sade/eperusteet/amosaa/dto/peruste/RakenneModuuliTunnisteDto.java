@@ -3,17 +3,17 @@ package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 import java.util.ArrayList;
 import java.util.Set;
 
+import lombok.*;
 import org.springframework.beans.BeanUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import fi.vm.sade.eperusteet.amosaa.dto.ops.SuorituspolkuRiviDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RakenneModuuliTunnisteDto extends RakenneModuuliDto{
 

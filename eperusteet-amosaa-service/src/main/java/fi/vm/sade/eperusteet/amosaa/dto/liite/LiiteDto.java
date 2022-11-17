@@ -17,14 +17,15 @@ package fi.vm.sade.eperusteet.amosaa.dto.liite;
 
 import java.util.Date;
 import java.util.UUID;
-import lombok.Getter;
-import lombok.Setter;
+
+import lombok.*;
 
 /**
  * @author jhyoty
  */
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class LiiteDto {
     private UUID id;
     private String tyyppi;

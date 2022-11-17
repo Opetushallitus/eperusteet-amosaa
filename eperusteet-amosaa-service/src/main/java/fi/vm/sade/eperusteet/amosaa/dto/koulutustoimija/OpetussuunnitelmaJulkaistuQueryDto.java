@@ -25,15 +25,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import lombok.Getter;
-import lombok.Setter;
+
+import lombok.*;
 import org.apache.commons.collections.CollectionUtils;
 
 /**
  * @author nkala
  */
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class OpetussuunnitelmaJulkaistuQueryDto extends QueryDto {
     private String perusteenDiaarinumero = "";
     private Long perusteId = 0l;

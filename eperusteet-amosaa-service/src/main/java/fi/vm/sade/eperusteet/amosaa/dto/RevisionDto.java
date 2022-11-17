@@ -17,14 +17,15 @@
 package fi.vm.sade.eperusteet.amosaa.dto;
 
 import java.util.Date;
-import lombok.Getter;
-import lombok.Setter;
+
+import lombok.*;
 
 /**
  * @author nkala
  */
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class RevisionDto {
     private Integer numero;
     private Date pvm;

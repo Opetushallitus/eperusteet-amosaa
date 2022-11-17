@@ -1,16 +1,16 @@
 package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class PerusteQueryDto {
     private int sivu = 0;
     private int sivukoko = 25;

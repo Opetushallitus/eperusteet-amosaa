@@ -17,8 +17,7 @@
 package fi.vm.sade.eperusteet.amosaa.dto.kayttaja;
 
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.beans.BeanUtils;
 
 import java.util.Date;
@@ -27,8 +26,10 @@ import java.util.Set;
 /**
  * @author nkala
  */
-@Getter
-@Setter
+@Data
+@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class KayttajaDto extends KayttajaBaseDto {
     private String etunimet;
     private String kutsumanimi;

@@ -17,16 +17,15 @@
 package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 
 import java.util.Date;
-import lombok.Getter;
-import lombok.Setter;
+
+import lombok.*;
 
 /**
  * User: tommiratamaa
  * Date: 12.11.2015
  * Time: 20.04
  */
-@Getter
-@Setter
+@Data
 public class PerusteVersionDto {
     private Date aikaleima;
 
