@@ -26,6 +26,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.ietf.jgss.GSSException;
+import org.ietf.jgss.Oid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.AccessDeniedException;
@@ -89,11 +91,21 @@ public final class SecurityUtil {
                 })
                 .filter(Optional::isPresent)
                 .map(Optional::get)
+                .filter(SecurityUtil::checkOid)
                 .findAny();
     }
 
     public static boolean isUserOphAdmin() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).anyMatch(authority -> authority.equals(OPH_ADMIN));
+    }
+
+    public static boolean checkOid(String oid) {
+        try {
+            new Oid(oid);
+        } catch (GSSException e) {
+            return false;
+        }
+        return true;
     }
 }
