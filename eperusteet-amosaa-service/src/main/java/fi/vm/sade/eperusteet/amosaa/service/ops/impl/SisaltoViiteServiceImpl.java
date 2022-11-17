@@ -250,7 +250,6 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
         }
 
         // TODO: Tarkistetaan onko sisältö lisätty oikeantyyppiseen sisältöelementtiin
-
         SisaltoViite parentViite = findViite(opsId, viiteId);
         SisaltoViite uusiViite = mapper.map(viiteDto, SisaltoViite.class);
         uusiViite.setVersio(0L);
@@ -465,13 +464,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
                 .map(oa -> omaOsaAlueRepository.save(oa))
                 .collect(Collectors.toList());
 
-        viite.asetOsaAlueet(paivitetyt);
-
-        List<OmaOsaAlue> uudet = uusi.getOsaAlueet().stream()
-                .map(oa -> mapper.map(oa, OmaOsaAlue.class))
-                .collect(Collectors.toList());
-
-        Set<Long> uudetIdt = uudet.stream()
+        Set<Long> uudetIdt = paivitetyt.stream()
                 .map(OmaOsaAlue::getId)
                 .collect(Collectors.toSet());
 
@@ -479,7 +472,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
             throw new BusinessRuleViolationException("perusteen-sisaltoa-ei-saa-poistaa");
         }
 
-        viite.setOsaAlueet(uudet);
+        viite.asetOsaAlueet(paivitetyt);
     }
 
     @Override

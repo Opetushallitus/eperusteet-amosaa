@@ -16,14 +16,15 @@
 package fi.vm.sade.eperusteet.amosaa.dto;
 
 import java.util.List;
-import lombok.Getter;
-import lombok.Setter;
+
+import lombok.*;
 
 /**
  * @author nkala
  */
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class JarjestysDto {
     Long id;
     List<Long> lisaIdt;

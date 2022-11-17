@@ -17,14 +17,14 @@
 package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * @author nkala
  */
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class SisaltoViitePaikallinenIntegrationDto {
     private Long id;
     private TekstiKappaleNimiDto tekstiKappale;

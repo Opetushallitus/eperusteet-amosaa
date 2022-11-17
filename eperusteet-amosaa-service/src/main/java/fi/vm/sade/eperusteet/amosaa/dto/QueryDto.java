@@ -16,14 +16,14 @@
 
 package fi.vm.sade.eperusteet.amosaa.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * @author nkala
  */
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class QueryDto {
     private int sivu = 0;
     private int sivukoko = 25;

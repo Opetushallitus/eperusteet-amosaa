@@ -24,11 +24,8 @@ import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteBaseDto;
 
 import java.util.ArrayList;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+
+import lombok.*;
 
 import javax.persistence.CascadeType;
 import javax.persistence.OneToMany;
@@ -36,8 +33,7 @@ import javax.persistence.OneToMany;
 /**
  * @author nkala
  */
-@Getter
-@Setter
+@Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @NoArgsConstructor
 @AllArgsConstructor
@@ -80,8 +76,8 @@ public class SisaltoViiteDto {
         this.tekstiKappale = tekstiKappale;
     }
 
-    @Getter
-    @Setter
+    @Data
+    @EqualsAndHashCode(callSuper = true)
     public static class Matala extends SisaltoViiteDto {
         private List<Reference> lapset;
 
@@ -93,8 +89,10 @@ public class SisaltoViiteDto {
         }
     }
 
-    @Getter
-    @Setter
+    @Data
+    @EqualsAndHashCode(callSuper = true)
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Puu extends SisaltoViiteDto {
         private List<Puu> lapset;
     }

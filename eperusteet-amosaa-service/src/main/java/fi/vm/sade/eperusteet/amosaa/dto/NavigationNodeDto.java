@@ -9,13 +9,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
+import lombok.*;
+
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class NavigationNodeDto {

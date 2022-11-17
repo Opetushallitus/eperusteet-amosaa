@@ -1,13 +1,13 @@
 package fi.vm.sade.eperusteet.amosaa.dto.tilastot;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ToimijaTilastotDto {
     List<ToimijanTilastoDto> toimijat = new ArrayList<>();
 }

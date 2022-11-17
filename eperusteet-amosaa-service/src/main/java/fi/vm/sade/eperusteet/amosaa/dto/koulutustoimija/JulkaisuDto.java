@@ -1,10 +1,11 @@
 package fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
+@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class JulkaisuDto extends JulkaisuBaseDto {
     private JulkaisuDataDto data;
 }

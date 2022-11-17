@@ -3,8 +3,7 @@ package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 import fi.vm.sade.eperusteet.utils.dto.utils.LokalisoituTekstiDto;
 import lombok.*;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Ammattitaitovaatimus2019Dto {

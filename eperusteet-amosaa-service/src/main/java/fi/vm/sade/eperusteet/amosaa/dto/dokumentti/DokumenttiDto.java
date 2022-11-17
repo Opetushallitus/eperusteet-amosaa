@@ -23,14 +23,14 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 
 import java.util.Date;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * @author iSaul
  */
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DokumenttiDto {
     private Long id;

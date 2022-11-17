@@ -1,11 +1,11 @@
 package fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class JulkaisuDataDto {
     private Long id;
     private int hash;

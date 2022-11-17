@@ -17,14 +17,14 @@
 package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * @author nkala
  */
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class TutkinnonOsaIntegrationDto {
     private Long id;
     private TutkinnonosaTyyppi tyyppi;

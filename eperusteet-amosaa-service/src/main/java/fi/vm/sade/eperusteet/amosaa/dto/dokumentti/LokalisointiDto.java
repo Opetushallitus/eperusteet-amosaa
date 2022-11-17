@@ -17,16 +17,16 @@
 package fi.vm.sade.eperusteet.amosaa.dto.dokumentti;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 
 /**
  * @author iSaul
  */
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LokalisointiDto {
     String value;

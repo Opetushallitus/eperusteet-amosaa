@@ -15,16 +15,16 @@
  */
 package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
 /**
  * Created by autio on 19.10.2015.
  */
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class AmmattitaitovaatimusKohdealueetDto {
     private Long id;
     private LokalisoituTekstiDto otsikko;

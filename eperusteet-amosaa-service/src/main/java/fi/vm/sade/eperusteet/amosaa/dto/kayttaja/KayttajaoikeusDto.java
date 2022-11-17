@@ -18,14 +18,14 @@ package fi.vm.sade.eperusteet.amosaa.dto.kayttaja;
 
 import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.KayttajaoikeusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * @author nkala
  */
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class KayttajaoikeusDto {
     private Long id;
     private Reference kayttaja;

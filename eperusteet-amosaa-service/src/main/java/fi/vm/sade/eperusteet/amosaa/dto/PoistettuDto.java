@@ -19,14 +19,15 @@ package fi.vm.sade.eperusteet.amosaa.dto;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import java.util.Date;
-import lombok.Getter;
-import lombok.Setter;
+
+import lombok.*;
 
 /**
  * @author nkala
  */
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class PoistettuDto extends RevisionDto {
     private Long id;
     private LokalisoituTekstiDto nimi;

@@ -22,14 +22,14 @@ import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 
 import java.math.BigDecimal;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 /**
  * @author harrik
  */
-@Getter
-@Setter
+@Data
 public class OsaamistavoiteDto {
     private Long id;
     private LokalisoituTekstiDto nimi;

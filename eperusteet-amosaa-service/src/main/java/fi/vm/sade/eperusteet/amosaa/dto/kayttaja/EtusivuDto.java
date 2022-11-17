@@ -1,10 +1,10 @@
 package fi.vm.sade.eperusteet.amosaa.dto.kayttaja;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class EtusivuDto {
     private Long toteutussuunnitelmatKeskeneraiset = 0l;
     private Long toteutussuunnitelmatJulkaistut = 0l;

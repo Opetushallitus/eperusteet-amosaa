@@ -18,14 +18,14 @@ package fi.vm.sade.eperusteet.amosaa.dto.ops;
 
 import java.util.Date;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * @author nkala
  */
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class TiedoteDto {
     private Long id;
     private String otsikko;

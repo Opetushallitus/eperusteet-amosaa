@@ -62,12 +62,12 @@ public class NavigationBuilderDefault implements NavigationBuilder {
 
     private NavigationNodeDto sisaltoviiteToNavigationNode(SisaltoViiteKevytDto sisaltoviite, Map<Long, SisaltoViiteKevytDto> sisaltoViitteetIdMap) {
         NavigationNodeDto result = NavigationNodeDto.of(
-                        NavigationType.of(sisaltoviite.getLinkattuTyyppi().toString()),
+                        NavigationType.of(sisaltoviite.getTyyppi().toString()),
                         sisaltoviite.getNimi(),
                         sisaltoviite.getId())
                     .meta("koodi", getSisaltoviiteMetaKoodi(sisaltoviite));
 
-        if (sisaltoviite.getLinkattuTyyppi().equals(SisaltoTyyppi.TUTKINNONOSAT)) {
+        if (sisaltoviite.getTyyppi().equals(SisaltoTyyppi.TUTKINNONOSAT)) {
             List<NavigationNodeDto> pakolliset = new ArrayList<>();
             List<NavigationNodeDto> paikalliset = new ArrayList<>();
             List<NavigationNodeDto> tuodut = new ArrayList<>();
@@ -109,6 +109,12 @@ public class NavigationBuilderDefault implements NavigationBuilder {
                 result.add(NavigationNodeDto.of(NavigationType.tutkinnonosat_tuodut).addAll(tuodut));
             }
             result.addAll(muut);
+        }
+        else {
+            result.addAll(sisaltoviite.getLapset() != null ? sisaltoviite.getLapset().stream()
+                        .map(lapsi -> sisaltoviiteToNavigationNode(sisaltoViitteetIdMap.get(lapsi.getIdLong()), sisaltoViitteetIdMap))
+                        .collect(Collectors.toList())
+                        : Collections.emptyList());
         }
         return result;
     }

@@ -19,14 +19,14 @@ package fi.vm.sade.eperusteet.amosaa.dto.ops;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.TekstiKappaleNimiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.TutkinnonOsaSijaintiDto;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * @author nkala
  */
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class SisaltoViiteSijaintiDto {
     private Long id;
     private TekstiKappaleNimiDto tekstiKappale;

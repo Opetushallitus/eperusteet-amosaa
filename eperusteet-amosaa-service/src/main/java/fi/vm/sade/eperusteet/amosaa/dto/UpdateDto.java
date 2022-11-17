@@ -16,14 +16,14 @@
 
 package fi.vm.sade.eperusteet.amosaa.dto;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 /**
  * @author nkala
  */
-@Getter
-@Setter
+@Data
 public class UpdateDto {
 
 }

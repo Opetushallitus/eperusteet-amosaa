@@ -17,11 +17,11 @@
 package fi.vm.sade.eperusteet.amosaa.dto.ops;
 
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class TermiDto {
     private Long id;
     private String avain;

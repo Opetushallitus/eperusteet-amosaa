@@ -15,11 +15,9 @@
  */
 package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
 public class MuodostumisSaantoDto {
 
     private Laajuus laajuus;

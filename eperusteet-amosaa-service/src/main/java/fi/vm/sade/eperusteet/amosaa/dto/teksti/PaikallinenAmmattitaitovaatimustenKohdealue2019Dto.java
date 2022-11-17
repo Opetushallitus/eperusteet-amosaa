@@ -1,15 +1,11 @@
 package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class PaikallinenAmmattitaitovaatimustenKohdealue2019Dto {

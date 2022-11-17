@@ -5,6 +5,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaOsaAlueTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
@@ -34,6 +35,7 @@ import javax.validation.ConstraintViolationException;
 import java.io.ByteArrayInputStream;
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.*;
@@ -492,6 +494,77 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
         assertThat(liiteService.getAll(getKoulutustoimijaId(), ops2.getId())).hasSize(1);
     }
 
+    @Test
+    @Rollback
+    public void testPaikallisetYhteisetLisaykset() {
+        useProfileKP2();
+        Opetussuunnitelma ops = createOpetussuunnitelmaJulkaistu();
+        SisaltoViiteDto.Matala root = sisaltoViiteService.getSisaltoRoot(ops.getKoulutustoimija().getId(), ops.getId());
+
+        SisaltoViiteKevytDto tutkinnonosat = getFirstOfType(getKoulutustoimijaId(), ops.getId(), SisaltoTyyppi.TUTKINNONOSAT);
+
+        SisaltoViiteDto uusi = sisaltoViiteService.addSisaltoViite(
+                ops.getKoulutustoimija().getId(),
+                ops.getId(),
+                tutkinnonosat.getId(), createSisalto(viite -> {
+            viite.setTyyppi(SisaltoTyyppi.TUTKINNONOSA);
+            viite.setTosa(TutkinnonosaDto.builder()
+                    .build());
+        }));
+
+        Function<String, OmaOsaAlueDto> createOsaalue = (String id) -> {
+            OmaOsaAlueDto paikallinen = new OmaOsaAlueDto();
+            paikallinen.setNimi(LokalisoituTekstiDto.of("nimi-" + id));
+            paikallinen.setTyyppi(OmaOsaAlueTyyppi.PAIKALLINEN);
+            paikallinen.setPerusteenOsaAlueKoodi("1234-" + id);
+            paikallinen.setArvioinnista(LokalisoituTekstiDto.of("arvioinnista-" + id));
+            paikallinen.setTavatjaymparisto(LokalisoituTekstiDto.of("tavatjaymparisto-" + id));
+            {
+                OsaAlueenOsaamistavoitteetDto ot = new OsaAlueenOsaamistavoitteetDto();
+                ot.setOtsikko(LokalisoituTekstiDto.of("otsikko1-" + id));
+                YtoOsaamistavoiteDto yot = new YtoOsaamistavoiteDto();
+                yot.setSelite(LokalisoituTekstiDto.of("selite1-" + id));
+                ot.getOsaamistavoitteet().add(yot);
+                paikallinen.getAmmattitaitovaatimukset().add(ot);
+            }
+            return paikallinen;
+        };
+
+        assertThat(uusi).isNotNull();
+
+        { // Adding osa alueet
+            uusi.getOsaAlueet().add(createOsaalue.apply("a"));
+            uusi.getOsaAlueet().add(createOsaalue.apply("b"));
+
+            sisaltoViiteService.updateSisaltoViite(
+                    ops.getKoulutustoimija().getId(),
+                    ops.getId(),
+                    uusi.getId(),
+                    uusi);
+
+            SisaltoViiteDto.Matala updated = sisaltoViiteService.getSisaltoViite(
+                    ops.getKoulutustoimija().getId(),
+                    ops.getId(),
+                    uusi.getId());
+
+            assertThat(updated.getOsaAlueet()).hasSize(2);
+            assertThat(updated.getOsaAlueet().get(0).getNimi().get(Kieli.FI)).isEqualTo("nimi-a");
+            assertThat(updated.getOsaAlueet().get(1).getNimi().get(Kieli.FI)).isEqualTo("nimi-b");
+        }
+
+        { // Editing osa alueet
+            SisaltoViiteDto.Matala updated = sisaltoViiteService.getSisaltoViite(
+                    ops.getKoulutustoimija().getId(),
+                    ops.getId(),
+                    uusi.getId());
+
+            Collections.swap(updated.getOsaAlueet(), 0, 1);
+
+            assertThat(updated.getOsaAlueet()).hasSize(2);
+            assertThat(updated.getOsaAlueet().get(0).getNimi().get(Kieli.FI)).isEqualTo("nimi-b");
+            assertThat(updated.getOsaAlueet().get(1).getNimi().get(Kieli.FI)).isEqualTo("nimi-a");
+        }
+    }
 
     @Test
     @Rollback
@@ -525,7 +598,6 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
 
         addOsaWithKoodi.apply(new Object[]{ops2.getId(), "tutkinnonosa_21"});
         addOsaWithKoodi.apply(new Object[]{ops2.getId(), "tutkinnonosa_22"});
-
 
         SisaltoviiteQueryDto query = new SisaltoviiteQueryDto();
         query.setTyyppi(SisaltoTyyppi.TUTKINNONOSA);

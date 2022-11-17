@@ -23,14 +23,15 @@ import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 
 import java.util.List;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * @author jhyoty
  */
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
 @JsonTypeName("tutkinnonosa")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TutkinnonOsaDto extends PerusteenOsaDto.Laaja {

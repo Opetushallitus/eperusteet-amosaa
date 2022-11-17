@@ -34,8 +34,7 @@ import org.hibernate.annotations.SQLInsert;
  *
  * @author nkala
  */
-@Getter
-@Setter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

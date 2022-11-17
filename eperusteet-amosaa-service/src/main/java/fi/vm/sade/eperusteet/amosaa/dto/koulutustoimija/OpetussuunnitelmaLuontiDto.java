@@ -1,11 +1,13 @@
 package fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija;
 
 import java.util.Set;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
+import lombok.*;
+
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class OpetussuunnitelmaLuontiDto extends OpetussuunnitelmaDto {
     private Long opsId;
     private Set<String> tutkinnonOsaKoodiIncludes;

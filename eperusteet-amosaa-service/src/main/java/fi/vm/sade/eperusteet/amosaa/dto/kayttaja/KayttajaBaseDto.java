@@ -16,14 +16,14 @@
 
 package fi.vm.sade.eperusteet.amosaa.dto.kayttaja;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * @author nkala
  */
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class KayttajaBaseDto {
     private Long id;
     private String oid;
