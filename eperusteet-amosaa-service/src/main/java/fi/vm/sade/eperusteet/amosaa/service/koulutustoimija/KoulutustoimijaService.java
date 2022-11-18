@@ -17,6 +17,7 @@
 package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija;
 
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.EtusivuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.*;
 import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHierarkiaDto;
@@ -92,5 +93,7 @@ public interface KoulutustoimijaService {
 
     @PreAuthorize("permitAll()")
     List<KoulutustoimijaJulkinenDto> findKoulutusatyypinKoulutustoimijat(Set<KoulutusTyyppi> koulutustyypit);
-    
+
+    @PreAuthorize("permitAll()")
+    List<KoulutustoimijaJulkinenDto> findKoulutusTyypinJaOpsTyypinKoulutustoimijat(Set<KoulutusTyyppi> koulutustyypit, OpsTyyppi opsTyyppi);
 }

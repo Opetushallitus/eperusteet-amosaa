@@ -18,7 +18,7 @@ package fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija;
 
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
-import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.repository.version.JpaWithVersioningRepository;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 import org.springframework.data.jpa.repository.Query;
@@ -59,4 +59,12 @@ public interface KoulutustoimijaRepository extends JpaWithVersioningRepository<K
             "AND tila != 'POISTETTU' " +
             "AND (o.julkaisut IS NOT EMPTY OR o.tila = 'JULKAISTU')")
     List<Koulutustoimija> findByKoulutustyypit(@Param("koulutustyypit") Set<KoulutusTyyppi> koulutustyypit);
+
+    @Query(value = "SELECT DISTINCT kt " +
+            "FROM Opetussuunnitelma o " +
+            "JOIN o.koulutustoimija kt " +
+            "WHERE o.koulutustyyppi IN (:koulutustyypit) " +
+            "AND tila != 'POISTETTU' " +
+            "AND o.tyyppi = :tyyppi")
+    List<Koulutustoimija> findByKoulutustyypitAndOpsTyyppi(@Param("koulutustyypit") Set<KoulutusTyyppi> koulutustyypit, @Param("tyyppi") OpsTyyppi tyyppi);
 }

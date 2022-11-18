@@ -135,8 +135,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     static private final Logger LOG = LoggerFactory.getLogger(OpetussuunnitelmaServiceImpl.class);
 
-    private ObjectMapper jsonMapper = InitJacksonConverter.createMapper();
-
     @Autowired
     private DtoMapper mapper;
 
@@ -189,10 +187,6 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         this.koulutustoimijaService = kts;
     }
 
-    public KoulutustoimijaService getKoulutustoimijaService() {
-        return this.koulutustoimijaService;
-    }
-
     @Autowired
     private LocalizedMessagesService messages;
 
@@ -203,9 +197,6 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
     @Autowired
     private OpetussuunnitelmaMuokkaustietoService muokkausTietoService;
-
-    @Autowired
-    private OpetussuunnitelmaService self;
 
     @Autowired
     private JulkaisuRepository julkaisuRepository;
@@ -334,6 +325,13 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     @Override
     public List<OpetussuunnitelmaDto> getOpetussuunnitelmat(Long ktId, Set<String> koulutustyypit, OpsTyyppi tyyppi) {
         return repository.findByKoulutustoimijaIdAndPerusteKoulutustyyppiIn(ktId, koulutustyypit.stream().map(KoulutusTyyppi::of).collect(Collectors.toSet()), tyyppi).stream()
+                .map(ops -> mapper.map(ops, OpetussuunnitelmaDto.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OpetussuunnitelmaDto> getOpetussuunnitelmat(Set<String> koulutustyypit, OpsTyyppi tyyppi) {
+        return repository.findByPerusteKoulutustyyppiIn(koulutustyypit.stream().map(KoulutusTyyppi::of).collect(Collectors.toSet()), tyyppi).stream()
                 .map(ops -> mapper.map(ops, OpetussuunnitelmaDto.class))
                 .collect(Collectors.toList());
     }

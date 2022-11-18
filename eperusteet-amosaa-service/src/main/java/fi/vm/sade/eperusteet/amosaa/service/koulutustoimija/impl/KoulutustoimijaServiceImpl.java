@@ -52,6 +52,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import fi.vm.sade.eperusteet.amosaa.service.util.MaintenanceService;
+import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -319,8 +320,13 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
 
         if (koulutustoimija != null) {
             Set<Koulutustoimija> koulutustoimijat = Collections.singleton(koulutustoimija);
-            result.setToteutussuunnitelmatKeskeneraiset(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.OPS, false, koulutustoimijat, koulutustyypit));
-            result.setToteutussuunnitelmatJulkaistut(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.OPS, true, koulutustoimijat, koulutustyypit));
+            if (SecurityUtil.isUserOphAdmin()) {
+                result.setToteutussuunnitelmatKeskeneraiset(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.OPS, koulutustyypit, false));
+                result.setToteutussuunnitelmatJulkaistut(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.OPS, koulutustyypit, false));
+            } else {
+                result.setToteutussuunnitelmatKeskeneraiset(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.OPS, false, koulutustoimijat, koulutustyypit));
+                result.setToteutussuunnitelmatJulkaistut(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.OPS, true, koulutustoimijat, koulutustyypit));
+            }
 
             if (koulutustyypit.contains(KoulutusTyyppi.VAPAASIVISTYSTYO) || koulutustyypit.contains(KoulutusTyyppi.TUTKINTOONVALMENTAVA)) {
                 result.setToteutussuunnitelmaPohjatKeskeneraiset(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.OPSPOHJA, Collections.singleton(Tila.LUONNOS), koulutustoimijat, koulutustyypit));
@@ -341,6 +347,11 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     @Override
     public List<KoulutustoimijaJulkinenDto> findKoulutusatyypinKoulutustoimijat(Set<KoulutusTyyppi> koulutustyypit) {
         return mapper.mapAsList(repository.findByKoulutustyypit(koulutustyypit), KoulutustoimijaJulkinenDto.class);
+    }
+
+    @Override
+    public List<KoulutustoimijaJulkinenDto> findKoulutusTyypinJaOpsTyypinKoulutustoimijat(Set<KoulutusTyyppi> koulutustyypit, OpsTyyppi opsTyyppi) {
+        return mapper.mapAsList(repository.findByKoulutustyypitAndOpsTyyppi(koulutustyypit, opsTyyppi), KoulutustoimijaJulkinenDto.class);
     }
 
 }

@@ -189,6 +189,9 @@ public interface OpetussuunnitelmaService extends RevisionService {
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
     List<OpetussuunnitelmaDto> getOpetussuunnitelmat(@P("ktId") Long ktId, Set<String> koulutustyypit, OpsTyyppi opsTyyppi);
 
+    @PreAuthorize("hasPermission(null, 'OPH','HALLINTA')")
+    List<OpetussuunnitelmaDto> getOpetussuunnitelmat(Set<String> koulutustyypit, OpsTyyppi opsTyyppi);
+
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
     List<OpetussuunnitelmaBaseDto> getPohjat(Long ktId, Set<Tila> tilat, Set<KoulutusTyyppi> koulutustyypit, OpsTyyppi opsTyyppi);
 

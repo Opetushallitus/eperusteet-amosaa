@@ -35,10 +35,10 @@ import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliTunnisteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
-import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.util.PoistettuService;
+import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -75,14 +75,11 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
     private OpetussuunnitelmaService service;
 
     @Autowired
-    private KoulutustoimijaService koulutustoimijaService;
-
-    @Autowired
     private PoistettuService poistetutService;
 
     @Autowired
     private SisaltoViiteService sisaltoviiteService;
-    
+
     @Autowired
     private EperusteetService eperusteetService;
 
@@ -361,7 +358,6 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
     ) {
         return service.updateKoulutustoimija(ktId, opsId, body);
     }
-    
 
     @ApiImplicitParams({
         @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
@@ -373,7 +369,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
     ) {
         return service.updateKoulutustoimijaPassivoidusta(ktId, opsId);
     }
-    
+
     @ApiImplicitParams({
         @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
@@ -435,7 +431,9 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
             @RequestParam(value = "koulutustyypit", required = false) final Set<String> koulutustyypit,
             @RequestParam(value = "tyyppi", required = false) final OpsTyyppi tyyppi
     ) {
-        if (CollectionUtils.isNotEmpty(koulutustyypit) && !ObjectUtils.isEmpty(tyyppi)) {
+        if (SecurityUtil.isUserOphAdmin()) {
+            return service.getOpetussuunnitelmat(koulutustyypit, tyyppi);
+        } else if (CollectionUtils.isNotEmpty(koulutustyypit) && !ObjectUtils.isEmpty(tyyppi)) {
             return service.getOpetussuunnitelmat(ktId, koulutustyypit, tyyppi);
         } else if (CollectionUtils.isNotEmpty(koulutustyypit)) {
             return service.getOpetussuunnitelmat(ktId, koulutustyypit);

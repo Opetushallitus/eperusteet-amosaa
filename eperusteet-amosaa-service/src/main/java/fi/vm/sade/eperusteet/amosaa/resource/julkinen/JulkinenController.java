@@ -17,6 +17,7 @@
 package fi.vm.sade.eperusteet.amosaa.resource.julkinen;
 
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaJulkinenDto;
@@ -342,5 +343,13 @@ public class JulkinenController {
             @RequestParam(value = "koulutustyypit") final Set<String> koulutustyypit
     ) {
         return ktService.findKoulutusatyypinKoulutustoimijat(koulutustyypit.stream().map(KoulutusTyyppi::of).collect(Collectors.toSet()));
+    }
+
+    @RequestMapping(value = "/koulutustoimijat/koulutustyypilla-ja-opstyypilla", method = RequestMethod.GET)
+    public List<KoulutustoimijaJulkinenDto> findKoulutusTyypinJaOpsTyypinKoulutustoimijat(
+            @RequestParam(value = "koulutustyypit") final Set<String> koulutustyypit,
+            @RequestParam(value = "opstyyppi") final OpsTyyppi opstyyppi
+    ) {
+        return ktService.findKoulutusTyypinJaOpsTyypinKoulutustoimijat(koulutustyypit.stream().map(KoulutusTyyppi::of).collect(Collectors.toSet()), opstyyppi);
     }
 }

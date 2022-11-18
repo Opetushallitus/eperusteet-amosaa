@@ -39,23 +39,10 @@ import java.util.List;
  */
 @Repository
 public interface OpetussuunnitelmaRepository extends JpaWithVersioningRepository<Opetussuunnitelma, Long>, OpetussuunnitelmaCustomRepository {
-    @Query("SELECT o FROM Opetussuunnitelma o WHERE o.koulutustoimija = ?1 AND o.peruste.perusteId = ?2")
-    Page<Opetussuunnitelma> findAllByKoulutustoimijaAndPerusteId(Koulutustoimija koulutustoimija, Long perusteId, Pageable pageable);
-
-    @Query("SELECT o FROM Opetussuunnitelma o WHERE o.koulutustoimija = ?1 AND (o.peruste.koulutustyyppi = ?2 OR o.peruste IS NULL)")
-    Page<Opetussuunnitelma> findAllByKoulutustoimijaAndKoulutustyyppiOrPerusteNull(Koulutustoimija koulutustoimija, KoulutusTyyppi koulutusTyyppi, Pageable pageable);
-
-    Page<Opetussuunnitelma> findAllByKoulutustoimija(Koulutustoimija koulutustoimija, Pageable pageable);
 
     Page<Opetussuunnitelma> findAll(Pageable pageable);
 
-    long countByKoulutustoimija(Koulutustoimija koulutustoimija);
-
     long countByKoulutustoimijaAndTila(Koulutustoimija koulutustoimija, Tila tila);
-
-    long countByKoulutustoimijaInAndTila(List<Koulutustoimija> koulutustoimija, Tila tila);
-
-    long countByPaatosnumeroAndIdNot(String paatosnumero, Long opsId);
 
     @Query(value = "SELECT COUNT(DISTINCT o) FROM Opetussuunnitelma o JOIN o.koulutustoimija kt " +
             "WHERE kt IN (:koulutustoimijat) " +
@@ -95,11 +82,18 @@ public interface OpetussuunnitelmaRepository extends JpaWithVersioningRepository
                        @Param("koulutustoimijat") Collection<Koulutustoimija> koulutustoimijat,
                        @Param("koulutustyypit") Collection<KoulutusTyyppi> koulutustyypit);
 
+    @Query(value = "SELECT COUNT(DISTINCT o) FROM Opetussuunnitelma o JOIN o.koulutustoimija kt LEFT JOIN o.peruste p " +
+            "WHERE o.tyyppi = :tyyppi " +
+            "AND ( (:julkaistu = false AND o.julkaisut IS EMPTY AND o.tila = 'LUONNOS') " +
+            "       or (:julkaistu = true AND tila != 'POISTETTU' AND (o.julkaisut IS NOT EMPTY OR o.tila = 'JULKAISTU')) )" +
+            "AND (p.koulutustyyppi IN (:koulutustyypit) or o.koulutustyyppi IN (:koulutustyypit))")
+    long countByTyyppi(@Param("tyyppi") OpsTyyppi tyyppi,
+                       @Param("koulutustyypit") Collection<KoulutusTyyppi> koulutustyypit,
+                       @Param("julkaistu") boolean julkaistu);
+
     List<Opetussuunnitelma> findAllByKoulutustoimijaAndTila(Koulutustoimija koulutustoimija, Tila tila);
 
     List<Opetussuunnitelma> findAllByKoulutustoimijaAndTyyppi(Koulutustoimija koulutustoimija, OpsTyyppi tyyppi);
-
-    List<Opetussuunnitelma> findAllByTyyppi(OpsTyyppi tyyppi);
 
     List<Opetussuunnitelma> findAllByTyyppiAndTila(OpsTyyppi tyyppi, Tila tila);
 
@@ -134,6 +128,12 @@ public interface OpetussuunnitelmaRepository extends JpaWithVersioningRepository
             "LEFT OUTER JOIN o.peruste p " +
             "WHERE kt.id = :koulutustoimija AND (p.koulutustyyppi IN (:koulutustyyppi) OR o.koulutustyyppi IN (:koulutustyyppi)) AND o.tyyppi = :tyyppi")
     List<Opetussuunnitelma> findByKoulutustoimijaIdAndPerusteKoulutustyyppiIn(@Param("koulutustoimija") Long ktId, @Param("koulutustyyppi") Set<KoulutusTyyppi> koulutusTyyppi, @Param("tyyppi") OpsTyyppi tyyppi);
+
+    @Query(value = "SELECT o " +
+            "FROM Opetussuunnitelma o " +
+            "LEFT OUTER JOIN o.peruste p " +
+            "WHERE (p.koulutustyyppi IN (:koulutustyyppi) OR o.koulutustyyppi IN (:koulutustyyppi)) AND o.tyyppi = :tyyppi")
+    List<Opetussuunnitelma> findByPerusteKoulutustyyppiIn(@Param("koulutustyyppi") Set<KoulutusTyyppi> koulutusTyyppi, @Param("tyyppi") OpsTyyppi tyyppi);
 
     @Query(value = "SELECT o " +
             "FROM Opetussuunnitelma o " +
