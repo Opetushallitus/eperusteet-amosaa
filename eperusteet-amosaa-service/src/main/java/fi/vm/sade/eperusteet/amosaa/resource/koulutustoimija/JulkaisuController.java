@@ -1,5 +1,6 @@
 package fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija;
 
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.JulkaisuTila;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.JulkaisuBaseDto;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.JulkaisuService;
 import io.swagger.annotations.Api;
@@ -40,11 +41,11 @@ public class JulkaisuController extends KoulutustoimijaIdGetterAbstractControlle
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(method = POST, value = "/julkaisu")
-    public JulkaisuBaseDto teeJulkaisu(
+    public void teeJulkaisu(
             @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable("opsId") final long opsId,
             @RequestBody JulkaisuBaseDto julkaisuBaseDto) {
-        return julkaisutService.teeJulkaisu(ktId, opsId, julkaisuBaseDto);
+        julkaisutService.teeJulkaisu(ktId, opsId, julkaisuBaseDto);
     }
 
     @ApiImplicitParams({
@@ -66,6 +67,16 @@ public class JulkaisuController extends KoulutustoimijaIdGetterAbstractControlle
             @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable("opsId") final long opsId) {
         return julkaisutService.onkoMuutoksia(ktId, opsId);
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
+    @RequestMapping(method = GET, value = "/viimeisinjulkaisutila")
+    public JulkaisuTila viimeisinJulkaisuTila(
+            @ModelAttribute("solvedKtId") final Long ktId,
+            @PathVariable("opsId") final long opsId) {
+        return julkaisutService.viimeisinJulkaisuTila(ktId, opsId);
     }
 
 }

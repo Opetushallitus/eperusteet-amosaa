@@ -5,8 +5,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Sets;
 import fi.vm.sade.eperusteet.amosaa.domain.MuokkausTapahtuma;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.JulkaistuOpetussuunnitelmaTila;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Julkaisu;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.JulkaisuData;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.JulkaisuTila;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
@@ -16,6 +18,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.JulkaisuBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteRakenneDto;
+import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.JulkaistuOpetussuunnitelmaTilaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.JulkaisuDataRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.JulkaisuRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
@@ -37,6 +40,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
@@ -46,9 +50,12 @@ import org.skyscreamer.jsonassert.JSONCompare;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Profile;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import static java.util.stream.Collectors.toSet;
@@ -98,6 +105,13 @@ public class JulkaisuServiceImpl implements JulkaisuService {
     @Autowired
     private SisaltoviiteRepository sisaltoviiteRepository;
 
+    @Autowired
+    private JulkaistuOpetussuunnitelmaTilaRepository julkaistuOpetussuunnitelmaTilaRepository;
+
+    @Autowired
+    @Lazy
+    private JulkaisuService self;
+
     private ObjectMapper objectMapper = InitJacksonConverter.createMapper();
 
     @Override
@@ -110,40 +124,70 @@ public class JulkaisuServiceImpl implements JulkaisuService {
 
         List<JulkaisuBaseDto> julkaisut = mapper.mapAsList(julkaisuRepository.findAllByOpetussuunnitelma(opetussuunnitelma), JulkaisuBaseDto.class);
 
-        try {
-            julkaisut = taytaKayttajaTiedot(julkaisut);
-        } catch (Exception e) {
-            log.error(Throwables.getStackTraceAsString(e));
+        JulkaistuOpetussuunnitelmaTila julkaistuOpetussuunnitelmaTila = julkaistuOpetussuunnitelmaTilaRepository.findOne(opsId);
+        if (julkaistuOpetussuunnitelmaTila != null && !julkaistuOpetussuunnitelmaTila.getJulkaisutila().equals(JulkaisuTila.JULKAISTU)) {
+            julkaisut.add(JulkaisuBaseDto.builder()
+                    .tila(julkaistuOpetussuunnitelmaTila.getJulkaisutila())
+                    .luotu(julkaistuOpetussuunnitelmaTila.getMuokattu())
+                    .revision(julkaisut.stream().mapToInt(JulkaisuBaseDto::getRevision).max().orElse(0) + 1)
+                    .build());
         }
 
-        return julkaisut;
+        return taytaKayttajaTiedot(julkaisut);
     }
 
     @Override
-    public JulkaisuBaseDto teeJulkaisu(long ktId, long opsId, JulkaisuBaseDto julkaisuBaseDto) {
+    public void teeJulkaisu(long ktId, long opsId, JulkaisuBaseDto julkaisuBaseDto) {
         Opetussuunnitelma opetussuunnitelma = opetussuunnitelmaRepository.findOne(opsId);
 
         if (opetussuunnitelma == null) {
             throw new BusinessRuleViolationException("opetussuunnitelmaa-ei-loytynyt");
         }
 
-        Validointi validointi = opetussuunnitelmaService.validoi(ktId, opsId);
+        List<Julkaisu> vanhatJulkaisut = julkaisuRepository.findAllByOpetussuunnitelma(opetussuunnitelma);
 
-        if (!salliVirheelliset && CollectionUtils.isNotEmpty(validointi.getVirheet())) {
-            throw new BusinessRuleViolationException("opetussuunnitelma-ei-validi");
+        if (vanhatJulkaisut.size() > 0 && !onkoMuutoksia(ktId, opsId)) {
+            throw new BusinessRuleViolationException("ei-muuttunut-viime-julkaisun-jalkeen");
         }
 
-        Julkaisu julkaisu = new Julkaisu();
+        JulkaistuOpetussuunnitelmaTila julkaistuOpetussuunnitelmaTila = julkaistuOpetussuunnitelmaTilaRepository.findOne(opsId);
+        if (julkaistuOpetussuunnitelmaTila == null) {
+            julkaistuOpetussuunnitelmaTila = new JulkaistuOpetussuunnitelmaTila();
+            julkaistuOpetussuunnitelmaTila.setOpsId(opsId);
+        }
+
+        julkaistuOpetussuunnitelmaTila.setJulkaisutila(JulkaisuTila.KESKEN);
+        saveJulkaistuOpetussuunnitelmaTila(julkaistuOpetussuunnitelmaTila);
+
+        self.teeJulkaisuAsync(ktId, opsId, julkaisuBaseDto);
+    }
+
+    @Override
+    @Async("julkaisuTaskExecutor")
+    public void teeJulkaisuAsync(long ktId, long opsId, JulkaisuBaseDto julkaisuBaseDto) {
+        log.debug("teeJulkaisu: {}", opsId);
+
+        JulkaistuOpetussuunnitelmaTila julkaistuOpetussuunnitelmaTila = julkaistuOpetussuunnitelmaTilaRepository.findOne(opsId);
+
         try {
+            Opetussuunnitelma opetussuunnitelma = opetussuunnitelmaRepository.findOne(opsId);
+
+            if (opetussuunnitelma == null) {
+                throw new BusinessRuleViolationException("opetussuunnitelmaa-ei-loytynyt");
+            }
+
+            Validointi validointi = opetussuunnitelmaService.validoi(ktId, opsId);
+
+            if (!salliVirheelliset && CollectionUtils.isNotEmpty(validointi.getVirheet())) {
+                throw new BusinessRuleViolationException("opetussuunnitelma-ei-validi");
+            }
+
+            Julkaisu julkaisu = new Julkaisu();
             kooditaSisaltoviitteet(ktId, opsId);
 
             OpetussuunnitelmaKaikkiDto opetussuunnitelmaKaikki = opetussuunnitelmaService.getOpetussuunnitelmaKaikki(ktId, opsId);
             ObjectNode dataJson = (ObjectNode) jsonMapper.toJson(opetussuunnitelmaKaikki);
             List<Julkaisu> vanhatJulkaisut = julkaisuRepository.findAllByOpetussuunnitelma(opetussuunnitelma);
-
-            if (vanhatJulkaisut.size() > 0 && !onkoMuutoksia(ktId, opsId)) {
-                throw new BusinessRuleViolationException("ei-muuttunut-viime-julkaisun-jalkeen");
-            }
 
             for (Kieli kieli : opetussuunnitelma.getJulkaisukielet()) {
                 try {
@@ -171,12 +215,21 @@ public class JulkaisuServiceImpl implements JulkaisuService {
             julkaisu.setData(julkaisuData);
             julkaisu = julkaisuRepository.save(julkaisu);
             muokkausTietoService.addOpsMuokkausTieto(opsId, opetussuunnitelma, MuokkausTapahtuma.JULKAISU);
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error(Throwables.getStackTraceAsString(e));
+            julkaistuOpetussuunnitelmaTila.setJulkaisutila(JulkaisuTila.VIRHE);
+            self.saveJulkaistuOpetussuunnitelmaTila(julkaistuOpetussuunnitelmaTila);
             throw new BusinessRuleViolationException("julkaisun-tallennus-epaonnistui");
         }
 
-        return taytaKayttajaTiedot(mapper.map(julkaisu, JulkaisuBaseDto.class));
+        julkaistuOpetussuunnitelmaTila.setJulkaisutila(JulkaisuTila.JULKAISTU);
+        self.saveJulkaistuOpetussuunnitelmaTila(julkaistuOpetussuunnitelmaTila);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void saveJulkaistuOpetussuunnitelmaTila(JulkaistuOpetussuunnitelmaTila julkaistuOpetussuunnitelmaTila) {
+        julkaistuOpetussuunnitelmaTilaRepository.save(julkaistuOpetussuunnitelmaTila);
     }
 
     @Override
@@ -199,7 +252,7 @@ public class JulkaisuServiceImpl implements JulkaisuService {
 
     private List<JulkaisuBaseDto> taytaKayttajaTiedot(List<JulkaisuBaseDto> julkaisut) {
         Map<String, KayttajanTietoDto> kayttajatiedot = kayttajanTietoService
-                .haeKayttajatiedot(julkaisut.stream().map(JulkaisuBaseDto::getLuoja).collect(Collectors.toList()))
+                .haeKayttajatiedot(julkaisut.stream().map(JulkaisuBaseDto::getLuoja).filter(Objects::nonNull).collect(Collectors.toList()))
                 .stream().collect(Collectors.toMap(kayttajanTieto -> kayttajanTieto.getOidHenkilo(), kayttajanTieto -> kayttajanTieto));
         julkaisut.forEach(julkaisu -> julkaisu.setKayttajanTieto(kayttajatiedot.get(julkaisu.getLuoja())));
         return julkaisut;
@@ -234,6 +287,12 @@ public class JulkaisuServiceImpl implements JulkaisuService {
             log.error(Throwables.getStackTraceAsString(e));
             throw new BusinessRuleViolationException("onko-muutoksia-julkaisuun-verrattuna-tarkistus-epaonnistui");
         }
+    }
+
+    @Override
+    public JulkaisuTila viimeisinJulkaisuTila(long ktId, long opsId) {
+        JulkaistuOpetussuunnitelmaTila julkaistuOpetussuunnitelmaTila = julkaistuOpetussuunnitelmaTilaRepository.findOne(opsId);
+        return julkaistuOpetussuunnitelmaTila != null ? julkaistuOpetussuunnitelmaTila.getJulkaisutila() : JulkaisuTila.JULKAISEMATON;
     }
 
     private String generoiOpetussuunnitelmaKaikkiDtotoString(OpetussuunnitelmaKaikkiDto opetussuunnitelmaKaikki) throws IOException {
