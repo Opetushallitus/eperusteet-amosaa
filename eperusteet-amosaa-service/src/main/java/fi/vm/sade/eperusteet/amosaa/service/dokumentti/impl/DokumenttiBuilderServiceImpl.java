@@ -64,6 +64,9 @@ import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.TermistoService;
 import fi.vm.sade.eperusteet.amosaa.service.util.KoodistoClient;
 import fi.vm.sade.eperusteet.utils.dto.dokumentti.DokumenttiMetaDto;
+
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.stream.Stream;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -111,6 +114,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
     private static final Logger LOG = LoggerFactory.getLogger(DokumenttiBuilderServiceImpl.class);
 
     private static final float COMPRESSION_LEVEL = 0.9f;
+    private static final DecimalFormat df2 = new DecimalFormat("0.##");
 
     @Autowired
     private LiiteService liiteService;
@@ -191,12 +195,6 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
 
         // Alaviitteet
         buildFootnotes(docBase);
-
-        try {
-            Thread.sleep(4000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
         // Kuvat
         buildImages(docBase);
@@ -348,8 +346,11 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
                 }
             }
 
-            if (lapsi.getTyyppi().equals(SisaltoTyyppi.OPINTOKOKONAISUUS) && lapsi.getOpintokokonaisuus() != null && lapsi.getOpintokokonaisuus().getLaajuus() != null) {
-                otsikkoBuilder.append(", " + lapsi.getOpintokokonaisuus().getLaajuus() + " " + messages.translate(selectLaajuusYksikkoMessage(lapsi.getOpintokokonaisuus().getLaajuusYksikko()), docBase.getKieli()));
+            if (lapsi.getTyyppi().equals(SisaltoTyyppi.OPINTOKOKONAISUUS)
+                    && lapsi.getOpintokokonaisuus() != null
+                    && lapsi.getOpintokokonaisuus().getLaajuus() != null && lapsi.getOpintokokonaisuus().getLaajuus().compareTo(BigDecimal.ZERO) > 0
+                    && lapsi.getOpintokokonaisuus().getLaajuusYksikko() != null) {
+                otsikkoBuilder.append(", " + df2.format(lapsi.getOpintokokonaisuus().getLaajuus()) + " " + messages.translate(selectLaajuusYksikkoMessage(lapsi.getOpintokokonaisuus().getLaajuusYksikko()), docBase.getKieli()));
             }
 
             if (lapsi.getTyyppi().equals(SisaltoTyyppi.KOULUTUKSENOSA)) {
