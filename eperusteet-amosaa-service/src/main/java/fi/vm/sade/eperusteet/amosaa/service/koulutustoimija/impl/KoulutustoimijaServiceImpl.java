@@ -322,7 +322,7 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
             Set<Koulutustoimija> koulutustoimijat = Collections.singleton(koulutustoimija);
             if (SecurityUtil.isUserOphAdmin()) {
                 result.setToteutussuunnitelmatKeskeneraiset(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.OPS, koulutustyypit, false));
-                result.setToteutussuunnitelmatJulkaistut(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.OPS, koulutustyypit, false));
+                result.setToteutussuunnitelmatJulkaistut(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.OPS, koulutustyypit, true));
             } else {
                 result.setToteutussuunnitelmatKeskeneraiset(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.OPS, false, koulutustoimijat, koulutustyypit));
                 result.setToteutussuunnitelmatJulkaistut(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.OPS, true, koulutustoimijat, koulutustyypit));
@@ -338,9 +338,7 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
                 result.setKtYhteinenOsuusKeskeneraiset(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.YHTEINEN, false, koulutustoimijat, koulutustyypit));
                 result.setKtYhteinenOsuusJulkaistut(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.YHTEINEN, true, koulutustoimijat, koulutustyypit));
             }
-
         }
-
         return result;
     }
 

@@ -113,7 +113,11 @@ public interface OpetussuunnitelmaRepository extends JpaWithVersioningRepository
 
     List<Opetussuunnitelma> findAllByKoulutustoimijaId(Long ktId);
 
+    Page<Opetussuunnitelma> findAllByKoulutustoimijaIdAndTila(Long ktId, Tila tila, Pageable pageable);
+
     List<Opetussuunnitelma> findAllByKoulutustoimijaIdAndTyyppi(Long ktId, OpsTyyppi tyyppi);
+
+    Page<Opetussuunnitelma> findAllByKoulutustoimijaIdAndTyyppiAndTila(Long ktId, OpsTyyppi tyyppi, Tila tila, Pageable pageable);
 
     @Query(value = "SELECT o " +
             "FROM Opetussuunnitelma o " +
@@ -126,14 +130,35 @@ public interface OpetussuunnitelmaRepository extends JpaWithVersioningRepository
             "FROM Opetussuunnitelma o " +
             "JOIN o.koulutustoimija kt " +
             "LEFT OUTER JOIN o.peruste p " +
+            "WHERE kt.id = :koulutustoimija " +
+            "AND (p.koulutustyyppi IN (:koulutustyyppi) OR o.koulutustyyppi IN (:koulutustyyppi)) " +
+            "AND (o.julkaisut IS NOT EMPTY OR o.tila = (:tila))")
+    Page<Opetussuunnitelma> findByKoulutustoimijaIdAndPerusteKoulutustyyppiIn(@Param("koulutustoimija") Long ktId, @Param("koulutustyyppi") Set<KoulutusTyyppi> koulutusTyyppi, @Param("tila") Tila tila, Pageable pageable);
+
+    @Query(value = "SELECT o " +
+            "FROM Opetussuunnitelma o " +
+            "JOIN o.koulutustoimija kt " +
+            "LEFT OUTER JOIN o.peruste p " +
             "WHERE kt.id = :koulutustoimija AND (p.koulutustyyppi IN (:koulutustyyppi) OR o.koulutustyyppi IN (:koulutustyyppi)) AND o.tyyppi = :tyyppi")
     List<Opetussuunnitelma> findByKoulutustoimijaIdAndPerusteKoulutustyyppiIn(@Param("koulutustoimija") Long ktId, @Param("koulutustyyppi") Set<KoulutusTyyppi> koulutusTyyppi, @Param("tyyppi") OpsTyyppi tyyppi);
 
     @Query(value = "SELECT o " +
             "FROM Opetussuunnitelma o " +
+            "JOIN o.koulutustoimija kt " +
             "LEFT OUTER JOIN o.peruste p " +
-            "WHERE (p.koulutustyyppi IN (:koulutustyyppi) OR o.koulutustyyppi IN (:koulutustyyppi)) AND o.tyyppi = :tyyppi")
-    List<Opetussuunnitelma> findByPerusteKoulutustyyppiIn(@Param("koulutustyyppi") Set<KoulutusTyyppi> koulutusTyyppi, @Param("tyyppi") OpsTyyppi tyyppi);
+            "WHERE kt.id = :koulutustoimija " +
+            "AND (p.koulutustyyppi IN (:koulutustyyppi) OR o.koulutustyyppi IN (:koulutustyyppi)) " +
+            "AND o.tyyppi = :tyyppi " +
+            "AND (o.julkaisut IS NOT EMPTY OR o.tila = (:tila))")
+    Page<Opetussuunnitelma> findByKoulutustoimijaIdAndPerusteKoulutustyyppiIn(@Param("koulutustoimija") Long ktId, @Param("koulutustyyppi") Set<KoulutusTyyppi> koulutusTyyppi, @Param("tyyppi") OpsTyyppi tyyppi, @Param("tila") Tila tila, Pageable pageable);
+
+    @Query(value = "SELECT o " +
+            "FROM Opetussuunnitelma o " +
+            "LEFT OUTER JOIN o.peruste p " +
+            "WHERE (p.koulutustyyppi IN (:koulutustyyppi) OR o.koulutustyyppi IN (:koulutustyyppi)) " +
+            "AND o.tyyppi = :tyyppi " +
+            "AND (o.julkaisut IS NOT EMPTY OR o.tila = (:tila))")
+    Page<Opetussuunnitelma> findByPerusteKoulutustyyppiIn(@Param("koulutustyyppi") Set<KoulutusTyyppi> koulutusTyyppi, @Param("tyyppi") OpsTyyppi tyyppi, @Param("tila") Tila tila, Pageable pageable);
 
     @Query(value = "SELECT o " +
             "FROM Opetussuunnitelma o " +

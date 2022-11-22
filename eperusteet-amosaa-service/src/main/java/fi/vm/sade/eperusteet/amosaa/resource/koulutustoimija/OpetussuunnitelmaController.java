@@ -38,7 +38,6 @@ import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.util.PoistettuService;
-import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -431,9 +430,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
             @RequestParam(value = "koulutustyypit", required = false) final Set<String> koulutustyypit,
             @RequestParam(value = "tyyppi", required = false) final OpsTyyppi tyyppi
     ) {
-        if (SecurityUtil.isUserOphAdmin()) {
-            return service.getOpetussuunnitelmat(koulutustyypit, tyyppi);
-        } else if (CollectionUtils.isNotEmpty(koulutustyypit) && !ObjectUtils.isEmpty(tyyppi)) {
+        if (CollectionUtils.isNotEmpty(koulutustyypit) && !ObjectUtils.isEmpty(tyyppi)) {
             return service.getOpetussuunnitelmat(ktId, koulutustyypit, tyyppi);
         } else if (CollectionUtils.isNotEmpty(koulutustyypit)) {
             return service.getOpetussuunnitelmat(ktId, koulutustyypit);
@@ -442,6 +439,42 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
         }
 
         return service.getOpetussuunnitelmat(ktId);
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
+    @RequestMapping(value = "/koulutustoimija-sivutettu", method = RequestMethod.GET)
+    public Page<OpetussuunnitelmaDto> getKoulutustoimijaOpetussuunnitelmatSivutettu(
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @RequestParam(value = "koulutustyypit", required = false) final Set<String> koulutustyypit,
+            @RequestParam(value = "tyyppi", required = false) final OpsTyyppi tyyppi,
+            @RequestParam(value = "tila", required = false) final String tila,
+            @ApiIgnore OpsHakuDto query
+    ) {
+        PageRequest pageRequest = new PageRequest(query.getSivu(), Math.min(query.getSivukoko(), 25));
+
+        if (CollectionUtils.isNotEmpty(koulutustyypit) && !ObjectUtils.isEmpty(tyyppi)) {
+            return service.getOpetussuunnitelmatSivutettu(ktId, koulutustyypit, tyyppi, Tila.of(tila), pageRequest);
+        } else if (CollectionUtils.isNotEmpty(koulutustyypit)) {
+            return service.getOpetussuunnitelmatSivutettu(ktId, koulutustyypit, Tila.of(tila), pageRequest);
+        } else if (!ObjectUtils.isEmpty(tyyppi)) {
+            return service.getOpetussuunnitelmatSivutettu(ktId, tyyppi, Tila.of(tila), pageRequest);
+        }
+        return service.getOpetussuunnitelmatSivutettu(ktId, Tila.of(tila), pageRequest);
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
+    @RequestMapping(value = "/kaikki-sivutettu", method = RequestMethod.GET)
+    public Page<OpetussuunnitelmaDto> getAllOpetussuunnitelmatForOphSivutettu(
+            @RequestParam(value = "koulutustyypit", required = false) final Set<String> koulutustyypit,
+            @RequestParam(value = "tyyppi", required = false) final OpsTyyppi tyyppi,
+            @RequestParam(value = "tila", required = false) final String tila,
+            @ApiIgnore OpsHakuDto query
+    ) {
+        return service.getKaikkiOpetussuunnitelmatSivutettu(koulutustyypit, tyyppi, Tila.of(tila) ,new PageRequest(query.getSivu(), Math.min(query.getSivukoko(), 25)));
     }
 
     @ApiImplicitParams({

@@ -1557,11 +1557,11 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "last" : {
-          "type" : "boolean"
-        },
         "sort" : {
           "$ref" : "#/definitions/Sort"
+        },
+        "last" : {
+          "type" : "boolean"
         },
         "first" : {
           "type" : "boolean"
@@ -1597,11 +1597,11 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "last" : {
-          "type" : "boolean"
-        },
         "sort" : {
           "$ref" : "#/definitions/Sort"
+        },
+        "last" : {
+          "type" : "boolean"
         },
         "first" : {
           "type" : "boolean"

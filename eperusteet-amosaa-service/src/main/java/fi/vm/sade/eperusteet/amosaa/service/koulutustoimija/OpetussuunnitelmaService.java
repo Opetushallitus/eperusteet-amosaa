@@ -181,16 +181,28 @@ public interface OpetussuunnitelmaService extends RevisionService {
     List<OpetussuunnitelmaDto> getOpetussuunnitelmat(@P("ktId") Long ktId);
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
+    Page<OpetussuunnitelmaDto> getOpetussuunnitelmatSivutettu(@P("ktId") Long ktId, Tila tila, PageRequest page);
+
+    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
     List<OpetussuunnitelmaDto> getOpetussuunnitelmat(@P("ktId") Long ktId, OpsTyyppi tyyppi);
+
+    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
+    Page<OpetussuunnitelmaDto> getOpetussuunnitelmatSivutettu(@P("ktId") Long ktId, OpsTyyppi tyyppi, Tila tila, PageRequest page);
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
     List<OpetussuunnitelmaDto> getOpetussuunnitelmat(@P("ktId") Long ktId, Set<String> koulutustyypit);
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
+    Page<OpetussuunnitelmaDto> getOpetussuunnitelmatSivutettu(@P("ktId") Long ktId, Set<String> koulutustyypit, Tila tila, PageRequest page);
+
+    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
     List<OpetussuunnitelmaDto> getOpetussuunnitelmat(@P("ktId") Long ktId, Set<String> koulutustyypit, OpsTyyppi opsTyyppi);
 
+    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
+    Page<OpetussuunnitelmaDto> getOpetussuunnitelmatSivutettu(@P("ktId") Long ktId, Set<String> koulutustyypit, OpsTyyppi opsTyyppi, Tila tila, PageRequest page);
+
     @PreAuthorize("hasPermission(null, 'OPH','HALLINTA')")
-    List<OpetussuunnitelmaDto> getOpetussuunnitelmat(Set<String> koulutustyypit, OpsTyyppi opsTyyppi);
+    Page<OpetussuunnitelmaDto> getKaikkiOpetussuunnitelmatSivutettu(Set<String> koulutustyypit, OpsTyyppi opsTyyppi, Tila tila, PageRequest page);
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
     List<OpetussuunnitelmaBaseDto> getPohjat(Long ktId, Set<Tila> tilat, Set<KoulutusTyyppi> koulutustyypit, OpsTyyppi opsTyyppi);

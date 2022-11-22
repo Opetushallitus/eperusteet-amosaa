@@ -309,10 +309,22 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     }
 
     @Override
+    public Page<OpetussuunnitelmaDto> getOpetussuunnitelmatSivutettu(Long ktId, Tila tila, PageRequest page) {
+        Page<Opetussuunnitelma> opetussuunnitelmat = repository.findAllByKoulutustoimijaIdAndTila(ktId, tila, page);
+        return mapToPageImpl(opetussuunnitelmat);
+    }
+
+    @Override
     public List<OpetussuunnitelmaDto> getOpetussuunnitelmat(Long ktId, OpsTyyppi tyyppi) {
         return repository.findAllByKoulutustoimijaIdAndTyyppi(ktId, tyyppi).stream()
                 .map(ops -> mapper.map(ops, OpetussuunnitelmaDto.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<OpetussuunnitelmaDto> getOpetussuunnitelmatSivutettu(Long ktId, OpsTyyppi tyyppi, Tila tila, PageRequest page) {
+        Page<Opetussuunnitelma> opetussuunnitelmat = repository.findAllByKoulutustoimijaIdAndTyyppiAndTila(ktId, tyyppi, tila, page);
+        return mapToPageImpl(opetussuunnitelmat);
     }
 
     @Override
@@ -323,6 +335,12 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     }
 
     @Override
+    public Page<OpetussuunnitelmaDto> getOpetussuunnitelmatSivutettu(Long ktId, Set<String> koulutustyypit, Tila tila, PageRequest page) {
+        Page<Opetussuunnitelma> opetussuunnitelmat = repository.findByKoulutustoimijaIdAndPerusteKoulutustyyppiIn(ktId, koulutustyypit.stream().map(KoulutusTyyppi::of).collect(Collectors.toSet()), tila, page);
+        return mapToPageImpl(opetussuunnitelmat);
+    }
+
+    @Override
     public List<OpetussuunnitelmaDto> getOpetussuunnitelmat(Long ktId, Set<String> koulutustyypit, OpsTyyppi tyyppi) {
         return repository.findByKoulutustoimijaIdAndPerusteKoulutustyyppiIn(ktId, koulutustyypit.stream().map(KoulutusTyyppi::of).collect(Collectors.toSet()), tyyppi).stream()
                 .map(ops -> mapper.map(ops, OpetussuunnitelmaDto.class))
@@ -330,10 +348,27 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     }
 
     @Override
-    public List<OpetussuunnitelmaDto> getOpetussuunnitelmat(Set<String> koulutustyypit, OpsTyyppi tyyppi) {
-        return repository.findByPerusteKoulutustyyppiIn(koulutustyypit.stream().map(KoulutusTyyppi::of).collect(Collectors.toSet()), tyyppi).stream()
-                .map(ops -> mapper.map(ops, OpetussuunnitelmaDto.class))
-                .collect(Collectors.toList());
+    public Page<OpetussuunnitelmaDto> getOpetussuunnitelmatSivutettu(Long ktId, Set<String> koulutustyypit, OpsTyyppi tyyppi, Tila tila, PageRequest page) {
+        Page<Opetussuunnitelma> opetussuunnitelmat = repository.findByKoulutustoimijaIdAndPerusteKoulutustyyppiIn(ktId, koulutustyypit.stream()
+                        .map(KoulutusTyyppi::of)
+                        .collect(Collectors.toSet()), tyyppi, tila, page);
+
+        return mapToPageImpl(opetussuunnitelmat);
+    }
+
+    @Override
+    public Page<OpetussuunnitelmaDto> getKaikkiOpetussuunnitelmatSivutettu(Set<String> koulutustyypit, OpsTyyppi tyyppi, Tila tila, PageRequest pageRequest) {
+        Page<Opetussuunnitelma> opetussuunnitelmat = repository.findByPerusteKoulutustyyppiIn(koulutustyypit.stream()
+                        .map(KoulutusTyyppi::of)
+                        .collect(Collectors.toSet()), tyyppi, tila, pageRequest);
+
+        return mapToPageImpl(opetussuunnitelmat);
+    }
+
+    private PageImpl mapToPageImpl(Page<Opetussuunnitelma> opetussuunnitelmat) {
+        return new PageImpl(opetussuunnitelmat.getContent().stream()
+                .map(t -> mapper.map(t, OpetussuunnitelmaDto.class))
+                .collect(Collectors.toList()), null, opetussuunnitelmat.getTotalElements());
     }
 
     @Override
