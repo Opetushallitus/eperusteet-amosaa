@@ -125,7 +125,8 @@ public class JulkaisuServiceImpl implements JulkaisuService {
         List<JulkaisuBaseDto> julkaisut = mapper.mapAsList(julkaisuRepository.findAllByOpetussuunnitelma(opetussuunnitelma), JulkaisuBaseDto.class);
 
         JulkaistuOpetussuunnitelmaTila julkaistuOpetussuunnitelmaTila = julkaistuOpetussuunnitelmaTilaRepository.findOne(opsId);
-        if (julkaistuOpetussuunnitelmaTila != null && !julkaistuOpetussuunnitelmaTila.getJulkaisutila().equals(JulkaisuTila.JULKAISTU)) {
+        if (julkaistuOpetussuunnitelmaTila != null
+                && (julkaistuOpetussuunnitelmaTila.getJulkaisutila().equals(JulkaisuTila.KESKEN) || julkaistuOpetussuunnitelmaTila.getJulkaisutila().equals(JulkaisuTila.VIRHE))) {
             julkaisut.add(JulkaisuBaseDto.builder()
                     .tila(julkaistuOpetussuunnitelmaTila.getJulkaisutila())
                     .luotu(julkaistuOpetussuunnitelmaTila.getMuokattu())
@@ -150,16 +151,22 @@ public class JulkaisuServiceImpl implements JulkaisuService {
             throw new BusinessRuleViolationException("ei-muuttunut-viime-julkaisun-jalkeen");
         }
 
-        JulkaistuOpetussuunnitelmaTila julkaistuOpetussuunnitelmaTila = julkaistuOpetussuunnitelmaTilaRepository.findOne(opsId);
-        if (julkaistuOpetussuunnitelmaTila == null) {
-            julkaistuOpetussuunnitelmaTila = new JulkaistuOpetussuunnitelmaTila();
-            julkaistuOpetussuunnitelmaTila.setOpsId(opsId);
-        }
-
+        JulkaistuOpetussuunnitelmaTila julkaistuOpetussuunnitelmaTila = getOrCreateTila(opsId);
         julkaistuOpetussuunnitelmaTila.setJulkaisutila(JulkaisuTila.KESKEN);
         saveJulkaistuOpetussuunnitelmaTila(julkaistuOpetussuunnitelmaTila);
 
         self.teeJulkaisuAsync(ktId, opsId, julkaisuBaseDto);
+    }
+
+    private JulkaistuOpetussuunnitelmaTila getOrCreateTila(Long opsId) {
+        JulkaistuOpetussuunnitelmaTila julkaistuOpetussuunnitelmaTila = julkaistuOpetussuunnitelmaTilaRepository.findOne(opsId);
+        if (julkaistuOpetussuunnitelmaTila == null) {
+            julkaistuOpetussuunnitelmaTila = new JulkaistuOpetussuunnitelmaTila();
+            julkaistuOpetussuunnitelmaTila.setOpsId(opsId);
+            julkaistuOpetussuunnitelmaTila.setJulkaisutila(JulkaisuTila.JULKAISEMATON);
+        }
+
+        return julkaistuOpetussuunnitelmaTila;
     }
 
     @Override
@@ -167,7 +174,7 @@ public class JulkaisuServiceImpl implements JulkaisuService {
     public void teeJulkaisuAsync(long ktId, long opsId, JulkaisuBaseDto julkaisuBaseDto) {
         log.debug("teeJulkaisu: {}", opsId);
 
-        JulkaistuOpetussuunnitelmaTila julkaistuOpetussuunnitelmaTila = julkaistuOpetussuunnitelmaTilaRepository.findOne(opsId);
+        JulkaistuOpetussuunnitelmaTila julkaistuOpetussuunnitelmaTila = getOrCreateTila(opsId);
 
         try {
             Opetussuunnitelma opetussuunnitelma = opetussuunnitelmaRepository.findOne(opsId);
@@ -213,7 +220,7 @@ public class JulkaisuServiceImpl implements JulkaisuService {
             julkaisu.setLuotu(opetussuunnitelma.getMuokattu());
             julkaisu.setOpetussuunnitelma(opetussuunnitelma);
             julkaisu.setData(julkaisuData);
-            julkaisu = julkaisuRepository.save(julkaisu);
+            julkaisu = julkaisuRepository.saveAndFlush(julkaisu);
             muokkausTietoService.addOpsMuokkausTieto(opsId, opetussuunnitelma, MuokkausTapahtuma.JULKAISU);
         } catch (Exception e) {
             log.error(Throwables.getStackTraceAsString(e));
