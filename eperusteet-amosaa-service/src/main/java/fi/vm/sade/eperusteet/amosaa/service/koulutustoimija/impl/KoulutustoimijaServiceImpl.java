@@ -51,7 +51,10 @@ import java.util.stream.Stream;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import fi.vm.sade.eperusteet.amosaa.service.security.KoulutustyyppiRolePrefix;
 import fi.vm.sade.eperusteet.amosaa.service.util.MaintenanceService;
+import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -319,6 +322,10 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
 
         if (koulutustoimija != null) {
             Set<Koulutustoimija> koulutustoimijat = Collections.singleton(koulutustoimija);
+            if (koulutustyypit.stream().anyMatch(kt -> SecurityUtil.isUserOphAdmin(KoulutustyyppiRolePrefix.of(kt)))) {
+                koulutustoimijat = null;
+            }
+
             result.setToteutussuunnitelmatKeskeneraiset(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.OPS, false, koulutustoimijat, koulutustyypit));
             result.setToteutussuunnitelmatJulkaistut(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.OPS, true, koulutustoimijat, koulutustyypit));
 

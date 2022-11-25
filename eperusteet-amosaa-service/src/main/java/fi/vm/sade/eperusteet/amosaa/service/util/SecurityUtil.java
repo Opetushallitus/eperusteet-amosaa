@@ -16,6 +16,7 @@
 
 package fi.vm.sade.eperusteet.amosaa.service.util;
 
+import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.RolePermission;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.RolePrefix;
 
@@ -95,9 +96,13 @@ public final class SecurityUtil {
                 .findAny();
     }
 
-    public static boolean isUserOphAdmin() {
+    public static boolean isUserOphAdmin(PermissionEvaluator.RolePrefix rolePrefix) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).anyMatch(authority -> authority.equals(OPH_ADMIN));
+        return authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).anyMatch(authority -> authority.equals(rolePrefixToOphAdmin(rolePrefix)));
+    }
+
+    private static String rolePrefixToOphAdmin(PermissionEvaluator.RolePrefix rolePrefix) {
+        return rolePrefix.toString() + "_ADMIN_" + OPH_OID;
     }
 
     public static boolean checkOid(String oid) {

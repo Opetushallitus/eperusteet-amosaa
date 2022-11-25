@@ -22,6 +22,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.Tyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.repository.version.JpaWithVersioningRepository;
 import fi.vm.sade.eperusteet.amosaa.service.util.Pair;
 import java.util.Set;
@@ -66,7 +67,7 @@ public interface OpetussuunnitelmaRepository extends JpaWithVersioningRepository
                        @Param("koulutustoimijat") Collection<Koulutustoimija> koulutustoimijat);
 
     @Query(value = "SELECT COUNT(DISTINCT o) FROM Opetussuunnitelma o JOIN o.koulutustoimija kt LEFT JOIN o.peruste p " +
-            "WHERE kt IN (:koulutustoimijat) " +
+            "WHERE (COALESCE(:koulutustoimijat, null) IS NULL OR kt in (:koulutustoimijat)) " +
             "AND o.tyyppi = :tyyppi " +
             "AND o.tila IN (:tilat) " +
             "AND (p.koulutustyyppi IN (:koulutustyypit) or o.koulutustyyppi IN (:koulutustyypit))")
@@ -76,7 +77,7 @@ public interface OpetussuunnitelmaRepository extends JpaWithVersioningRepository
                        @Param("koulutustyypit") Collection<KoulutusTyyppi> koulutustyypit);
 
     @Query(value = "SELECT COUNT(DISTINCT o) FROM Opetussuunnitelma o JOIN o.koulutustoimija kt " +
-            "WHERE kt IN (:koulutustoimijat) " +
+            "WHERE (COALESCE(:koulutustoimijat, null) IS NULL OR kt in (:koulutustoimijat)) " +
             "AND o.tyyppi = :tyyppi " +
             "AND ( (:julkaistu = false AND o.julkaisut IS EMPTY AND o.tila = 'LUONNOS') " +
             "       or (:julkaistu = true AND tila != 'POISTETTU' AND (o.julkaisut IS NOT EMPTY OR o.tila = 'JULKAISTU')) )")
@@ -85,7 +86,7 @@ public interface OpetussuunnitelmaRepository extends JpaWithVersioningRepository
                        @Param("koulutustoimijat") Collection<Koulutustoimija> koulutustoimijat);
 
     @Query(value = "SELECT COUNT(DISTINCT o) FROM Opetussuunnitelma o JOIN o.koulutustoimija kt LEFT JOIN o.peruste p " +
-            "WHERE kt IN (:koulutustoimijat) " +
+            "WHERE (COALESCE(:koulutustoimijat, null) IS NULL OR kt in (:koulutustoimijat)) " +
             "AND o.tyyppi = :tyyppi " +
             "AND ( (:julkaistu = false AND o.julkaisut IS EMPTY AND o.tila = 'LUONNOS') " +
             "       or (:julkaistu = true AND tila != 'POISTETTU' AND (o.julkaisut IS NOT EMPTY OR o.tila = 'JULKAISTU')) )" +
@@ -120,6 +121,31 @@ public interface OpetussuunnitelmaRepository extends JpaWithVersioningRepository
     List<Opetussuunnitelma> findAllByKoulutustoimijaId(Long ktId);
 
     List<Opetussuunnitelma> findAllByKoulutustoimijaIdAndTyyppi(Long ktId, OpsTyyppi tyyppi);
+
+    @Query(value = "SELECT o " +
+            "FROM Opetussuunnitelma o " +
+            "LEFT JOIN o.nimi onimi " +
+            "LEFT JOIN onimi.teksti nimi " +
+            "JOIN o.koulutustoimija kt " +
+            "LEFT OUTER JOIN o.peruste p " +
+            "WHERE (COALESCE(:koulutustoimijat, null) IS NULL OR kt.id in (:koulutustoimijat)) " +
+            "AND (p.koulutustyyppi IN (:koulutustyyppi) OR o.koulutustyyppi IN (:koulutustyyppi)) " +
+            "AND nimi.kieli = :kieli " +
+            "AND (:nimi IS NULL OR LOWER(nimi.teksti) LIKE LOWER(CONCAT('%', :nimi,'%'))) " +
+            "AND (:jotpa = false OR o.jotpatyyppi IS NOT NULL) " +
+            "AND ((:poistettu = false AND tila != 'POISTETTU' AND ((:julkaistu = false AND o.julkaisut IS EMPTY) OR (:julkaistu = true AND o.julkaisut IS NOT EMPTY))) " +
+            "    OR (:poistettu = true AND tila = 'POISTETTU')) "+
+            "AND o.tyyppi = :tyyppi ")
+    Page<Opetussuunnitelma> findByKoulutustoimijaInAndPerusteKoulutustyyppiInAndOpsTyyppi(
+            @Param("koulutustoimijat") List<Long> ktId,
+            @Param("koulutustyyppi") List<KoulutusTyyppi> koulutusTyyppi,
+            @Param("nimi") String nimi,
+            @Param("kieli") Kieli kieli,
+            @Param("jotpa") Boolean jotpa,
+            @Param("julkaistu") Boolean julkaistu,
+            @Param("tyyppi") OpsTyyppi tyyppi,
+            @Param("poistettu") Boolean poistettu,
+            Pageable pageable);
 
     @Query(value = "SELECT o " +
             "FROM Opetussuunnitelma o " +

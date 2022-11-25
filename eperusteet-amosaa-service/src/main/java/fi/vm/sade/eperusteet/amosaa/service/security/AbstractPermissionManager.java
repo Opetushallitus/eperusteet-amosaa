@@ -64,7 +64,7 @@ public abstract class AbstractPermissionManager implements PermissionManager {
                         .collect(Collectors.toSet())))
                 .collect(Collectors.toMap(Pair::getFirst, Pair::getSecond));
 
-        if (SecurityUtil.isUserOphAdmin()) {
+        if (SecurityUtil.isUserOphAdmin(rolePrefix)) {
             permMap.put(PermissionEvaluator.RolePermission.READ, Sets.newHashSet(koulutustoimijaService.getKoulutustoimijat()));
         }
 

@@ -86,14 +86,13 @@ public class PermissionManagerImpl extends AbstractPermissionManager {
             rolePrefixes = Arrays.asList(KoulutustyyppiRolePrefix.of(ops.getOpsKoulutustyyppi()));
         }
 
-
         if (perm == Permission.HALLINTA && targetId == null && target == TargetType.TARKASTELU &&
                 hasRole(authentication, rolePrefixes, RolePermission.CRUD, Organization.OPH)) {
             return true;
         }
 
         // OPH admin oikeuksilla lukuoikeudet
-        if ((perm == Permission.LUKU || perm == Permission.ESITYS) && SecurityUtil.isUserOphAdmin()) {
+        if ((perm == Permission.LUKU || perm == Permission.ESITYS) && rolePrefixes.stream().anyMatch(rolePrefix -> SecurityUtil.isUserOphAdmin(rolePrefix))) {
             return true;
         }
 

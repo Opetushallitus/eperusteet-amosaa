@@ -45,6 +45,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.*;
 import fi.vm.sade.eperusteet.amosaa.dto.NavigationNodeDto;
 import fi.vm.sade.eperusteet.amosaa.dto.NavigationType;
 import fi.vm.sade.eperusteet.amosaa.dto.OpsHakuDto;
+import fi.vm.sade.eperusteet.amosaa.dto.OpsHakuInternalDto;
 import fi.vm.sade.eperusteet.amosaa.dto.PoistettuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.external.SisaltoviiteOpintokokonaisuusExternalDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
@@ -97,8 +98,10 @@ import fi.vm.sade.eperusteet.amosaa.service.ops.OpetussuunnitelmaPohjaCreateServ
 import fi.vm.sade.eperusteet.amosaa.service.ops.OpetussuunnitelmaValidationService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.ValidointiService;
+import fi.vm.sade.eperusteet.amosaa.service.security.KoulutustyyppiRolePrefix;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionManager;
 import fi.vm.sade.eperusteet.amosaa.service.util.CollectionUtil;
+import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -123,6 +126,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.*;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -322,6 +327,31 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         return repository.findAllByKoulutustoimijaIdAndTyyppi(ktId, tyyppi).stream()
                 .map(ops -> mapper.map(ops, OpetussuunnitelmaDto.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<OpetussuunnitelmaDto> getOpetussuunnitelmat(Long ktId, OpsHakuInternalDto query) {
+        PageRequest pageRequest = new PageRequest(query.getSivu(), query.getSivukoko(), new Sort(Sort.Direction.fromString("ASC"), "nimi.teksti"));
+
+        if (query.getKoulutustyyppi().stream().noneMatch(kt -> SecurityUtil.isUserOphAdmin(KoulutustyyppiRolePrefix.of(KoulutusTyyppi.of(kt))))) {
+            query.setKoulutustoimijat(Arrays.asList(ktId));
+        }
+
+        if (CollectionUtils.isEmpty(query.getKoulutustoimijat())) {
+            query.setKoulutustoimijat(null);
+        }
+
+        return repository.findByKoulutustoimijaInAndPerusteKoulutustyyppiInAndOpsTyyppi(
+                        query.getKoulutustoimijat(),
+                        query.getKoulutustyyppi().stream().map(KoulutusTyyppi::of).collect(Collectors.toList()),
+                        query.getNimi(),
+                        Kieli.of(query.getKieli()),
+                        query.getJotpa(),
+                        query.getJulkaistu(),
+                        query.getTyyppi(),
+                        query.isPoistunut(),
+                        pageRequest)
+                .map(ops -> mapper.map(ops, OpetussuunnitelmaDto.class));
     }
 
     @Override

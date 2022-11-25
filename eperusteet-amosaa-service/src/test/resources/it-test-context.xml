@@ -129,7 +129,7 @@
             <security:authentication-provider>
                 <security:user-service>
                     <security:user name="oph" password="{noop}test"
-                                   authorities="ROLE_USER, ROLE_APP_EPERUSTEET_AMOSAA, ROLE_APP_EPERUSTEET_VST, ROLE_APP_EPERUSTEET_TUVA, ROLE_APP_EPERUSTEET_AMOSAA_ADMIN_1.2.246.562.10.00000000001, ROLE_APP_EPERUSTEET_TUVA_ADMIN_1.2.246.562.10.00000000001, ROLE_APP_EPERUSTEET_VST_ADMIN_1.2.246.562.10.00000000001"/>
+                                   authorities="ROLE_USER, ROLE_APP_EPERUSTEET_AMOSAA, ROLE_APP_EPERUSTEET_VST, ROLE_APP_EPERUSTEET_TUVA, ROLE_APP_EPERUSTEET_AMOSAA_ADMIN_1.2.246.562.10.00000000001, ROLE_APP_EPERUSTEET_TUVA_ADMIN_1.2.246.562.10.00000000001, ROLE_APP_EPERUSTEET_VST_ADMIN_1.2.246.562.10.00000000001, ROLE_APP_EPERUSTEET_KOTO_ADMIN_1.2.246.562.10.00000000001"/>
                     <security:user name="kp1" password="{noop}test"
                                    authorities="ROLE_USER, ROLE_APP_EPERUSTEET_AMOSAA, ROLE_APP_EPERUSTEET_AMOSAA_ADMIN_1.2.246.562.10.54645809036"/>
                     <security:user name="kp2" password="{noop}test"
