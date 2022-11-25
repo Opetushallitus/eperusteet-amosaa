@@ -23,6 +23,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.revision.Revision;
 import fi.vm.sade.eperusteet.amosaa.dto.NavigationNodeDto;
 import fi.vm.sade.eperusteet.amosaa.dto.OpsHakuDto;
+import fi.vm.sade.eperusteet.amosaa.dto.OpsHakuInternalDto;
 import fi.vm.sade.eperusteet.amosaa.dto.PoistettuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
@@ -444,6 +445,17 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
         }
 
         return service.getOpetussuunnitelmat(ktId);
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
+    @RequestMapping(value = "/kaikki", method = RequestMethod.GET)
+    public Page<OpetussuunnitelmaDto> getKaikkiOpetussuunnitelmat(
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @ApiIgnore OpsHakuInternalDto query
+    ) {
+        return service.getOpetussuunnitelmat(ktId, query);
     }
 
     @ApiImplicitParams({

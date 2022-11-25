@@ -1,6 +1,7 @@
 package fi.vm.sade.eperusteet.amosaa.service;
 
 import com.google.common.collect.Sets;
+import fi.vm.sade.eperusteet.amosaa.domain.JotpaTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
@@ -10,6 +11,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.OpsHakuDto;
+import fi.vm.sade.eperusteet.amosaa.dto.OpsHakuInternalDto;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaKtoDto;
@@ -713,6 +715,41 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
 
         Validointi validointi = opetussuunnitelmaService.validoi(ops.getKoulutustoimija().getId(), ops.getId());
         assertThat(validointi.getVirheet()).isNotEmpty();
+    }
+
+    @Test
+    public void testGetKoulutustoimijatKaikki() {
+        useProfileKP1();
+        createOpetussuunnitelma();
+        useProfileKP2();
+        createOpetussuunnitelma(ops -> {
+            ops.setNimi(LokalisoituTekstiDto.of("kaikki1"));
+            ops.setJotpatyyppi(JotpaTyyppi.MUU);
+        });
+
+        OpsHakuInternalDto haku = createDefaultOpsHakuInternalDto();
+        haku.setNimi("kaikki");
+        haku.setJotpa(true);
+
+        Page<OpetussuunnitelmaDto> opss = opetussuunnitelmaService.getOpetussuunnitelmat(getKoulutustoimijaId(), haku);
+        assertThat(opss.getTotalElements()).isEqualTo(1l);
+
+        useProfileKP1();
+        opss = opetussuunnitelmaService.getOpetussuunnitelmat(getKoulutustoimijaId(), createDefaultOpsHakuInternalDto());
+        assertThat(opss.getTotalElements()).isEqualTo(1l);
+
+        useProfileOPH();
+        opss = opetussuunnitelmaService.getOpetussuunnitelmat(getKoulutustoimijaId(), createDefaultOpsHakuInternalDto());
+        assertThat(opss.getTotalElements()).isEqualTo(2l);
+    }
+
+    private OpsHakuInternalDto createDefaultOpsHakuInternalDto() {
+        return OpsHakuInternalDto.builder()
+                .koulutustyyppi(Arrays.asList(KoulutusTyyppi.ERIKOISAMMATTITUTKINTO.toString()))
+                .jotpa(false)
+                .tyyppi(OpsTyyppi.OPS)
+                .julkaistu(false)
+                .build();
     }
 
 }

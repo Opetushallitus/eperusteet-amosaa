@@ -238,7 +238,7 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
 
     @Override
     public List<KoulutustoimijaBaseDto> koulutustoimijat(PermissionEvaluator.RolePrefix rolePrefix) {
-        List<KoulutustoimijaBaseDto> koulutustoimijat = SecurityUtil.isUserOphAdmin() ?
+        List<KoulutustoimijaBaseDto> koulutustoimijat = SecurityUtil.isUserOphAdmin(rolePrefix) ?
                 koulutustoimijaService.getKoulutustoimijat() : koulutustoimijaService.getKoulutustoimijat(getUserOrganizations(rolePrefix));
 
         return koulutustoimijat.stream()
