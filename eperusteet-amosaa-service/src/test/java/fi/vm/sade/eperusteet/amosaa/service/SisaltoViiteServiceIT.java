@@ -14,6 +14,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.SisaltoviiteLaajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.SisaltoviiteQueryDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.SuorituspolkuRiviDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.AbstractRakenneOsaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.Ammattitaitovaatimukset2019Dto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.*;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
@@ -520,12 +521,12 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
             paikallinen.setArvioinnista(LokalisoituTekstiDto.of("arvioinnista-" + id));
             paikallinen.setTavatjaymparisto(LokalisoituTekstiDto.of("tavatjaymparisto-" + id));
             {
-                OsaAlueenOsaamistavoitteetDto ot = new OsaAlueenOsaamistavoitteetDto();
-                ot.setOtsikko(LokalisoituTekstiDto.of("otsikko1-" + id));
-                YtoOsaamistavoiteDto yot = new YtoOsaamistavoiteDto();
-                yot.setSelite(LokalisoituTekstiDto.of("selite1-" + id));
-                ot.getOsaamistavoitteet().add(yot);
-                paikallinen.getAmmattitaitovaatimukset().add(ot);
+                PaikallisetAmmattitaitovaatimukset2019Dto ot = new PaikallisetAmmattitaitovaatimukset2019Dto();
+                ot.setKohde(LokalisoituTekstiDto.of("otsikko1-" + id));
+                PaikallinenAmmattitaitovaatimus2019Dto yot = new PaikallinenAmmattitaitovaatimus2019Dto();
+                yot.setVaatimus(LokalisoituTekstiDto.of("selite1-" + id));
+                ot.getVaatimukset().add(yot);
+                paikallinen.setOsaamistavoitteet(ot);
             }
             return paikallinen;
         };

@@ -20,5 +20,5 @@ public class OmaOsaAlueDto {
     private LokalisoituTekstiDto arvioinnista;
     private boolean piilotettu;
     private List<VapaaTekstiDto> vapaat = new ArrayList<>();
-    private List<OsaAlueenOsaamistavoitteetDto> ammattitaitovaatimukset = new ArrayList<>();
+    private PaikallisetAmmattitaitovaatimukset2019Dto osaamistavoitteet = new PaikallisetAmmattitaitovaatimukset2019Dto();
 }

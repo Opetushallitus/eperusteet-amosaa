@@ -63,12 +63,8 @@ public class OmaOsaAlue extends AbstractAuditedEntity implements Serializable, R
     @Setter
     private LokalisoituTeksti arvioinnista;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinTable(name = "osaalueenosaamistavoitteet_omaosaalue",
-            joinColumns = @JoinColumn(name = "omaosaalue_id"),
-            inverseJoinColumns = @JoinColumn(name = "osaalueenosaamistavoitteet_id"))
-    @OrderColumn(name = "jarjestys")
+    @OneToOne(cascade = {CascadeType.ALL}, orphanRemoval = true)
     @Getter
     @Setter
-    private List<OsaAlueenOsaamistavoitteet> ammattitaitovaatimukset = new ArrayList<>();
+    private Ammattitaitovaatimukset2019 osaamistavoitteet;
 }
