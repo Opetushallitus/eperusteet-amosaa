@@ -17,7 +17,10 @@ public class KoodiConverter extends BidirectionalConverter<KoodistoKoodi, KoodiD
             result.setArvo(koodistoKoodi.getKoodiArvo());
             result.setUri(koodistoKoodi.getKoodiUri());
             result.setVersio(null);
-            result.setKoodisto(result.getKoodisto());
+            if (koodistoKoodi.getKoodiUri() != null) {
+                result.setKoodisto(koodistoKoodi.getKoodiUri().split("_")[0]);
+            }
+            return result;
         }
         return null;
     }

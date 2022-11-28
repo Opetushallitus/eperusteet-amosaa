@@ -90,6 +90,7 @@ public class DtoMapperConfig {
     public DtoMapper dtoMapper(
             ReferenceableEntityConverter referenceableEntityConverter,
             LokalisoituTekstiConverter lokalisoituTekstiConverter,
+            KoodiConverter koodiConverter,
             KoodistoKoodiConverter koodistoKoodiConverter) {
         DefaultMapperFactory factory = new DefaultMapperFactory.Builder()
                 .build();
@@ -105,6 +106,7 @@ public class DtoMapperConfig {
 
         factory.getConverterFactory().registerConverter(referenceableEntityConverter);
         factory.getConverterFactory().registerConverter(lokalisoituTekstiConverter);
+        factory.getConverterFactory().registerConverter(koodiConverter);
         factory.getConverterFactory().registerConverter(koodistoKoodiConverter);
         factory.getConverterFactory().registerConverter(new PassThroughConverter(LokalisoituTeksti.class));
         factory.getConverterFactory().registerConverter(new PassThroughConverter(LokalisoituTekstiDto.class));

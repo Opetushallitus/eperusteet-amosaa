@@ -47,12 +47,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliRooli;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.SuoritustapaLaajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.Suoritustapakoodi;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonosaKaikkiDto;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteRakenneDto;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.SuorituspolkuDto;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.SuorituspolkuRakenneDto;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.TekstiKappaleDto;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.VierasTutkinnonosaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.*;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.PoistettuRepository;
@@ -438,6 +433,16 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
                 break;
             default:
                 break;
+        }
+
+        for (OmaOsaAlueDto oa : uusi.getOsaAlueet()) {
+            if (oa.getOsaamistavoitteet() != null) {
+                for (PaikallinenAmmattitaitovaatimus2019Dto vaatimus : oa.getOsaamistavoitteet().getVaatimukset()) {
+                    if (vaatimus.getKoodi() != null) {
+                        vaatimus.setVaatimus(new LokalisoituTekstiDto(vaatimus.getKoodi().getNimi()));
+                    }
+                }
+            }
         }
 
         Tutkinnonosa mappedTosa = mapper.map(uusi.getTosa(), Tutkinnonosa.class);
