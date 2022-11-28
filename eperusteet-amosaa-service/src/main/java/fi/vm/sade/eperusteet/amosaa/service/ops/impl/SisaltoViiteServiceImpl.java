@@ -435,13 +435,13 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
                 break;
         }
 
+        if (uusi.getTosa().getOmatutkinnonosa() != null && uusi.getTosa().getOmatutkinnonosa().getAmmattitaitovaatimukset() != null) {
+            uusi.getTosa().getOmatutkinnonosa().getAmmattitaitovaatimukset().syncKoodiNimet();
+        }
+
         for (OmaOsaAlueDto oa : uusi.getOsaAlueet()) {
             if (oa.getOsaamistavoitteet() != null) {
-                for (PaikallinenAmmattitaitovaatimus2019Dto vaatimus : oa.getOsaamistavoitteet().getVaatimukset()) {
-                    if (vaatimus.getKoodi() != null) {
-                        vaatimus.setVaatimus(new LokalisoituTekstiDto(vaatimus.getKoodi().getNimi()));
-                    }
-                }
+                oa.getOsaamistavoitteet().syncKoodiNimet();
             }
         }
 
