@@ -1,3 +1,5 @@
+drop table if exists julkaistu_opetussuunnitelma_tila;
+
 create table julkaistu_opetussuunnitelma_tila (
     ops_id int8 not null,
     julkaisu_tila varchar(255) not null,
