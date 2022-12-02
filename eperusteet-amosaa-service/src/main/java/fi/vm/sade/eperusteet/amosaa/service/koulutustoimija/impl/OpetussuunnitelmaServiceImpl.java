@@ -815,11 +815,9 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                 .collect(Collectors.toSet());
 
         if (!tunnisteet.containsAll(kaytetytTunnisteet)) {
-            log.error("Opetussuunnitelman perusteen synkronointi epäonnistui",
-                    "\n  ops:", ops.getId(),
-                    "\n  peruste:", perusteDto.getId(),
-                    "\n  old:", ops.getPeruste().getLuotu(),
-                    "\n  new:", newCachedPeruste.getLuotu());
+            log.error("Opetussuunnitelman perusteen synkronointi epäonnistui \nops: {} \nperuste: {} \nold: {} \nnew: {} \ntunnisteet: {} \nnykyisetTunnisteet: {} \ntunniste-ero: {}",
+                    ops.getId(), perusteDto.getId(), ops.getPeruste().getLuotu(),newCachedPeruste.getLuotu(), tunnisteet, kaytetytTunnisteet,
+                    Sets.difference(tunnisteet, kaytetytTunnisteet));
             throw new BusinessRuleViolationException("ei-voi-synkronoida");
         }
 
