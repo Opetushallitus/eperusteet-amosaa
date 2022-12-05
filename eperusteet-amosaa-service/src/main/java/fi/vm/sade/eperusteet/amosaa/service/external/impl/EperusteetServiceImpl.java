@@ -287,6 +287,11 @@ public class EperusteetServiceImpl implements EperusteetService {
     @Override
     public Set<UUID> getRakenneTunnisteet(Long id, String suoritustapa) {
         JsonNode st = getSuoritustapa(id, suoritustapa);
+
+        if (st == null) {
+            st = getSuoritustapa(id, Suoritustapakoodi.REFORMI.toString());
+        }
+
         if (st == null) {
             return Collections.emptySet();
         }
