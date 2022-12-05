@@ -61,6 +61,9 @@ public abstract class PerusteenOsaDto {
             @JsonSubTypes.Type(value = KotoLaajaAlainenOsaaminenDto.class),
             @JsonSubTypes.Type(value = KotoOpintoDto.class),
     })
+    @Data
+    @EqualsAndHashCode(callSuper = true)
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static abstract class Laaja extends PerusteenOsaDto {
         public abstract String getOsanTyyppi();
 
@@ -72,8 +75,9 @@ public abstract class PerusteenOsaDto {
         }
     }
 
-    @Getter
-    @Setter
+    @Data
+    @EqualsAndHashCode(callSuper = true)
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Suppea extends PerusteenOsaDto {
         private String osanTyyppi;
 

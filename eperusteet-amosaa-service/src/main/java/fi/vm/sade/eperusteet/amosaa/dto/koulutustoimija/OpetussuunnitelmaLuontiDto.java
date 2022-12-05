@@ -6,6 +6,7 @@ import lombok.*;
 
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class OpetussuunnitelmaLuontiDto extends OpetussuunnitelmaDto {

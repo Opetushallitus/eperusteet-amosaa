@@ -6,6 +6,7 @@ import lombok.*;
  * Käytetään tutkinnon osien viemiseen kokonaisuudessaan
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class SisaltoViiteExportTutkinnonosaDto extends SisaltoViiteExportBaseDto {

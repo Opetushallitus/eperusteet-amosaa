@@ -11,6 +11,7 @@ import java.util.List;
  * Käytetään sisällön viemiseen rakenteisena
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)

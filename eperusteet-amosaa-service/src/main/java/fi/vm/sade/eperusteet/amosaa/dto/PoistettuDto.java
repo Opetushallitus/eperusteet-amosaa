@@ -26,6 +26,7 @@ import lombok.*;
  * @author nkala
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
 public class PoistettuDto extends RevisionDto {

@@ -12,6 +12,7 @@ import org.jsoup.helper.W3CDom;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.apache.commons.text.StringEscapeUtils;
 
 import java.util.Date;
 

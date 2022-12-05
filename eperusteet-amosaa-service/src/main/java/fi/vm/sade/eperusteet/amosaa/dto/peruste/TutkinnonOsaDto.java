@@ -31,6 +31,7 @@ import javax.validation.constraints.NotNull;
  * @author jhyoty
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @JsonTypeName("tutkinnonosa")
 @JsonIgnoreProperties(ignoreUnknown = true)

@@ -15,6 +15,7 @@
  */
 package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -45,8 +46,9 @@ public class PerusteenOsaViiteDto<R extends PerusteenOsaDto> {
         this.perusteenOsa = perusteenOsa;
     }
 
-    @Getter
-    @Setter
+    @Data
+    @EqualsAndHashCode(callSuper = true)
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Matala extends PerusteenOsaViiteDto<PerusteenOsaDto.Laaja> {
         private List<Reference> lapset;
 
@@ -58,15 +60,22 @@ public class PerusteenOsaViiteDto<R extends PerusteenOsaDto> {
         }
     }
 
-    @Getter
-    @Setter
+    @Data
+    @EqualsAndHashCode(callSuper = true)
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Puu<R extends PerusteenOsaDto, L extends Puu<R, L>> extends PerusteenOsaViiteDto<R> {
         private List<L> lapset;
     }
 
+    @Data
+    @EqualsAndHashCode(callSuper = true)
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Laaja extends Puu<PerusteenOsaDto.Laaja, Laaja> {
     }
 
+    @Data
+    @EqualsAndHashCode(callSuper = true)
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Suppea extends Puu<PerusteenOsaDto.Suppea, Suppea> {
     }
 
