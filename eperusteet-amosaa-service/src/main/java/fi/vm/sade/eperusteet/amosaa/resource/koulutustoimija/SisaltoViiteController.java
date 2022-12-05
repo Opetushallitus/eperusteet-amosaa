@@ -151,6 +151,20 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
             @RequestBody List<Long> viitteet
     ) {
         service.copySisaltoViiteet(ktId, opsId, viitteet);
+
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
+    @RequestMapping(value = "/linkkaa", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void linkkaaUusiSisalto(
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @PathVariable final Long opsId,
+            @RequestBody List<Long> viitteet
+    ) {
+        service.linkSisaltoViiteet(ktId, opsId, viitteet);
     }
 
     @ApiImplicitParams({

@@ -2940,6 +2940,48 @@
         }
       }
     },
+    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/linkkaa" : {
+      "post" : {
+        "tags" : [ "Sisaltoviitteet" ],
+        "operationId" : "linkkaaUusiSisalto",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "name" : "opsId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "type" : "integer",
+              "format" : "int64"
+            }
+          }
+        }, {
+          "name" : "ktId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : ""
+          }
+        }
+      }
+    },
     "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/lisaa" : {
       "post" : {
         "tags" : [ "Sisaltoviitteet" ],
@@ -7567,16 +7609,26 @@
           "type" : "string",
           "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO", "MAAHANMUUTTAJIENKOTOUTUMISKOULUTUS", "VAPAASIVISTYSTYOLUKUTAITO", "TUTKINTOONVALMENTAVA" ]
         },
+<<<<<<< HEAD
+=======
+        "julkaisuVuosi" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+>>>>>>> 0bd4454e (amosaa uudet rakenteet)
         "perusteNimi" : {
           "type" : "object",
           "additionalProperties" : {
             "type" : "string"
           }
         },
+<<<<<<< HEAD
         "julkaisuVuosi" : {
           "type" : "integer",
           "format" : "int32"
         },
+=======
+>>>>>>> 0bd4454e (amosaa uudet rakenteet)
         "perusteId" : {
           "type" : "integer",
           "format" : "int64"
