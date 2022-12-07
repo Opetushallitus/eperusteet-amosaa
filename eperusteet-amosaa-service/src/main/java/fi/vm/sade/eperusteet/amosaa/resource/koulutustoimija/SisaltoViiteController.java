@@ -150,7 +150,7 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
             @PathVariable final Long opsId,
             @RequestBody List<Long> viitteet
     ) {
-        service.linkSisaltoViiteet(ktId, opsId, viitteet);
+        service.copySisaltoViiteet(ktId, opsId, viitteet);
     }
 
     @ApiImplicitParams({
