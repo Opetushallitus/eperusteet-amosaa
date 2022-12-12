@@ -133,8 +133,8 @@ public interface OpetussuunnitelmaRepository extends JpaWithVersioningRepository
             "AND nimi.kieli = :kieli " +
             "AND (:nimi IS NULL OR LOWER(nimi.teksti) LIKE LOWER(CONCAT('%', :nimi,'%'))) " +
             "AND (:jotpa = false OR o.jotpatyyppi IS NOT NULL) " +
-            "AND ((:poistettu = false AND tila != 'POISTETTU' AND ((:julkaistu = false AND o.julkaisut IS EMPTY) OR (:julkaistu = true AND o.julkaisut IS NOT EMPTY))) " +
-            "    OR (:poistettu = true AND tila = 'POISTETTU')) "+
+            "AND ((:poistettu = false AND tila != 'POISTETTU' AND ((:julkaistu = false AND (o.julkaisut IS EMPTY AND o.tila = 'LUONNOS')) OR (:julkaistu = true AND (o.julkaisut IS NOT EMPTY OR o.tila = 'VALMIS')))) " +
+            "    OR (:poistettu = true AND tila = 'POISTETTU')) " +
             "AND o.tyyppi = :tyyppi ")
     Page<Opetussuunnitelma> findByKoulutustoimijaInAndPerusteKoulutustyyppiInAndOpsTyyppi(
             @Param("koulutustoimijat") List<Long> ktId,
