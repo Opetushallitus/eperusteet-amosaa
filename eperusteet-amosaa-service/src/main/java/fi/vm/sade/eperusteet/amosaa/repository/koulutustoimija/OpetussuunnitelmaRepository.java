@@ -131,7 +131,7 @@ public interface OpetussuunnitelmaRepository extends JpaWithVersioningRepository
             "WHERE (COALESCE(:koulutustoimijat, null) IS NULL OR kt.id in (:koulutustoimijat)) " +
             "AND (p.koulutustyyppi IN (:koulutustyyppi) OR o.koulutustyyppi IN (:koulutustyyppi)) " +
             "AND nimi.kieli = :kieli " +
-            "AND (:nimi IS NULL OR LOWER(nimi.teksti) LIKE LOWER(CONCAT('%', :nimi,'%'))) " +
+            "AND (COALESCE(:nimi, '') = '' OR LOWER(nimi.teksti) LIKE LOWER(CONCAT('%', :nimi,'%'))) " +
             "AND (:jotpa = false OR o.jotpatyyppi IS NOT NULL) " +
             "AND ((:poistettu = false AND tila != 'POISTETTU' AND ((:julkaistu = false AND o.julkaisut IS EMPTY) OR (:julkaistu = true AND o.julkaisut IS NOT EMPTY))) " +
             "    OR (:poistettu = true AND tila = 'POISTETTU')) "+
