@@ -347,7 +347,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                         query.getNimi(),
                         Kieli.of(query.getKieli()),
                         query.getJotpa(),
-                        query.getJulkaistu(),
+                        query.getJulkaistuTaiValmis(),
                         query.getTyyppi(),
                         query.isPoistunut(),
                         pageRequest)

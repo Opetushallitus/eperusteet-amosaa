@@ -19,8 +19,6 @@ import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.*;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteKevytDto;
-import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaoikeusRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.peruste.CachedPerusteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KayttajaoikeusService;
@@ -520,25 +518,25 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
 
         assertThat(yhteinen.getPohja().getIdLong()).isEqualTo(pohja.getId());
     }
-    
+
     @Test
     @Rollback
     public void testUpdateKoulutustoimijaPassivoidusta_historialiitos_passiivinen() {
-                 
+
         useProfileKP1();
         OpetussuunnitelmaBaseDto ops = createOpetussuunnitelma();
-        
+
         useProfileKP2();
-        
+
         Opetussuunnitelma opetussuunnitelma = opetussuunnitelmaRepository.findOne(ops.getId());
         assertThat(opetussuunnitelma.getKoulutustoimija().getId()).isNotEqualTo(getKoulutustoimijaId());
-        
+
         opetussuunnitelmaService.updateKoulutustoimijaPassivoidusta(getKoulutustoimijaId(), ops.getId());
-        
+
         opetussuunnitelma = opetussuunnitelmaRepository.findOne(ops.getId());
         assertThat(opetussuunnitelma.getKoulutustoimija().getId()).isEqualTo(getKoulutustoimijaId());
     }
-    
+
     @Test
     @Rollback
     public void testUpdateKoulutustoimijaPassivoidusta_historialiitos_aktiivinen() {
@@ -732,23 +730,23 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
         haku.setJotpa(true);
 
         Page<OpetussuunnitelmaDto> opss = opetussuunnitelmaService.getOpetussuunnitelmat(getKoulutustoimijaId(), haku);
-        assertThat(opss.getTotalElements()).isEqualTo(1l);
+        assertThat(opss.getTotalElements()).isEqualTo(1L);
 
         useProfileKP1();
         opss = opetussuunnitelmaService.getOpetussuunnitelmat(getKoulutustoimijaId(), createDefaultOpsHakuInternalDto());
-        assertThat(opss.getTotalElements()).isEqualTo(1l);
+        assertThat(opss.getTotalElements()).isEqualTo(1L);
 
         useProfileOPH();
         opss = opetussuunnitelmaService.getOpetussuunnitelmat(getKoulutustoimijaId(), createDefaultOpsHakuInternalDto());
-        assertThat(opss.getTotalElements()).isEqualTo(2l);
+        assertThat(opss.getTotalElements()).isEqualTo(2L);
     }
 
     private OpsHakuInternalDto createDefaultOpsHakuInternalDto() {
         return OpsHakuInternalDto.builder()
-                .koulutustyyppi(Arrays.asList(KoulutusTyyppi.ERIKOISAMMATTITUTKINTO.toString()))
+                .koulutustyyppi(Collections.singletonList(KoulutusTyyppi.ERIKOISAMMATTITUTKINTO.toString()))
                 .jotpa(false)
                 .tyyppi(OpsTyyppi.OPS)
-                .julkaistu(false)
+                .julkaistuTaiValmis(false)
                 .build();
     }
 

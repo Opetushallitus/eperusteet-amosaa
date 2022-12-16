@@ -15,8 +15,6 @@
  */
 package fi.vm.sade.eperusteet.amosaa.dto;
 
-import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
-import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,9 +22,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -38,6 +34,6 @@ public class OpsHakuInternalDto extends QueryDto {
     private List<String> koulutustyyppi;
     private OpsTyyppi tyyppi;
     private Boolean jotpa;
-    private Boolean julkaistu;
+    private Boolean julkaistuTaiValmis;
     private boolean poistunut = false;
 }
