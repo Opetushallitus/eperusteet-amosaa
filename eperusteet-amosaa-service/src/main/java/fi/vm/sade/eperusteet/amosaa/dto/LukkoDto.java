@@ -18,16 +18,16 @@ package fi.vm.sade.eperusteet.amosaa.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import fi.vm.sade.eperusteet.amosaa.domain.Lukko;
-import java.time.Instant;
-import java.util.Date;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/**
- * @author jhyoty
- */
-@Getter
+import java.time.Instant;
+import java.util.Date;
+
+@Data
 @EqualsAndHashCode
 public class LukkoDto {
 

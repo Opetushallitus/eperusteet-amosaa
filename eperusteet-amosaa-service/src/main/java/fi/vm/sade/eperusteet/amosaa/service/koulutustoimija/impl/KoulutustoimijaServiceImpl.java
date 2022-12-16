@@ -62,7 +62,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.access.method.P;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -111,7 +111,7 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     }
 
     private Koulutustoimija createKoulutustoimija(String kOid) {
-        LOG.info("Luodaan uusi organisaatiota vastaava koulutustoimija ensimmäistä kertaa", kOid);
+        LOG.debug("Luodaan uusi organisaatiota vastaava koulutustoimija ensimmäistä kertaa", kOid);
         JsonNode organisaatio = organisaatioService.getOrganisaatio(kOid);
         if (organisaatio == null) {
             return null;
@@ -179,7 +179,7 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     public List<KoulutustoimijaBaseDto> getKoulutustoimijat(Set<String> kOid) {
         return kOid.stream()
                 .map(ktId -> {
-                    LOG.info("Käyttäjän koulutustoimija", ktId);
+                    LOG.debug("Käyttäjän koulutustoimija", ktId);
                     Koulutustoimija kt = repository.findOneByOrganisaatio(ktId);
                     return mapper.map(kt, KoulutustoimijaBaseDto.class);
                 })

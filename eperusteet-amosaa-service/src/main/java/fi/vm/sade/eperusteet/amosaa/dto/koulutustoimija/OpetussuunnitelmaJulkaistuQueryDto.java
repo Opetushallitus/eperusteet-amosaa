@@ -33,6 +33,7 @@ import org.apache.commons.collections.CollectionUtils;
  * @author nkala
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class OpetussuunnitelmaJulkaistuQueryDto extends QueryDto {

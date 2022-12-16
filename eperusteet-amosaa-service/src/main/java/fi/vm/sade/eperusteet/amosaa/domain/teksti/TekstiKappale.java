@@ -20,10 +20,13 @@ import fi.vm.sade.eperusteet.amosaa.domain.HistoriaTapahtuma;
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
-
 import fi.vm.sade.eperusteet.amosaa.dto.NavigationType;
-import java.io.Serializable;
-import java.util.UUID;
+import fi.vm.sade.eperusteet.amosaa.service.util.Copyable;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.RelationTargetAuditMode;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -36,12 +39,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-
-import fi.vm.sade.eperusteet.amosaa.service.util.Copyable;
-import lombok.Getter;
-import lombok.Setter;
-import org.hibernate.envers.Audited;
-import org.hibernate.envers.RelationTargetAuditMode;
+import java.io.Serializable;
+import java.util.UUID;
 
 /**
  * @author mikkom

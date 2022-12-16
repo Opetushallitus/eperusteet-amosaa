@@ -25,6 +25,7 @@ import lombok.*;
  * @author harrik
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class OsaAlueKokonaanDto extends OsaAlueDto {

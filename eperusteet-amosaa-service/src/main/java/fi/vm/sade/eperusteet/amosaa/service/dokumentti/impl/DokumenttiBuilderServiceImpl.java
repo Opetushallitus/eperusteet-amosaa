@@ -43,7 +43,25 @@ import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import fi.vm.sade.eperusteet.amosaa.dto.koodisto.KoodistoKoodiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koodisto.KoodistoMetadataDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.TermiDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.*;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.ArvioinninKohdeDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.ArviointiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.ArviointiasteikkoDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.KotoKielitaitotasoDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.KotoLaajaAlainenOsaaminenDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.KotoLaajaAlaisenOsaamisenAlueDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.KotoOpintoDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.KotoTaitotasoDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.MuodostumisSaantoDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.OsaamisenTavoiteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKaikkiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneOsaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.SuoritustapaLaajaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.Suoritustapakoodi;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonOsaTyyppi;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonOsaViiteSuppeaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonosaKaikkiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.ValmaTelmaSisaltoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.AmmattitaitovaatimusKohdealueetDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.KoulutuksenOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
@@ -55,7 +73,11 @@ import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiBuilderService;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.LocalizedMessagesService;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.PdfService;
-import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.*;
+import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.CharapterNumberGenerator;
+import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiBase;
+import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiRivi;
+import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiTaulukko;
+import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils;
 import fi.vm.sade.eperusteet.amosaa.service.external.ArviointiasteikkoService;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
@@ -64,11 +86,10 @@ import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.TermistoService;
 import fi.vm.sade.eperusteet.amosaa.service.util.KoodistoClient;
 import fi.vm.sade.eperusteet.utils.dto.dokumentti.DokumenttiMetaDto;
-
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.stream.Stream;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,7 +111,11 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
-import javax.xml.xpath.*;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -98,12 +123,26 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Base64;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliRooli.VIRTUAALINEN;
 import static fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils.*;
+import static fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils.addHeader;
+import static fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils.addLokalisoituteksti;
+import static fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils.addTeksti;
+import static fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils.getTextString;
 
 /**
  * @author iSaul
@@ -203,7 +242,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
         buildAlatunniste(docBase);
 
         DokumenttiMetaDto meta = DokumenttiMetaDto.builder()
-                .title(DokumenttiUtils.getTextString(docBase, ops.getNimi()))
+                .title(getTextString(docBase, ops.getNimi()))
                 .subject(messages.translate("docgen.meta.subject.ops", kieli))
                 .build();
 

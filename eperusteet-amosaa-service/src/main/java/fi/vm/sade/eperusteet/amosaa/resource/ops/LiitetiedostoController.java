@@ -163,31 +163,19 @@ public class LiitetiedostoController extends KoulutustoimijaIdGetterAbstractCont
             HttpServletResponse response
     ) throws IOException {
         UUID id = UUID.fromString(FilenameUtils.removeExtension(fileName));
-        String extension = FilenameUtils.getExtension(fileName);
-
         LiiteDto dto = liitteet.get(opsId, id);
 
-        boolean isCorrectExtension = true;
-
-        if (!ObjectUtils.isEmpty(extension)) {
-            isCorrectExtension = Objects.equals(dto.getTyyppi(), new MimetypesFileTypeMap().getContentType(fileName));
-        }
-
-        if (isCorrectExtension) {
-            if (dto != null && dto.getId().toString().equals(etag)) {
-                response.setStatus(HttpStatus.NOT_MODIFIED.value());
-            } else {
-                if (dto != null) {
-                    response.setHeader("Content-Type", dto.getTyyppi());
-                }
-                response.setHeader("ETag", id.toString());
-                try (OutputStream os = response.getOutputStream()) {
-                    liitteet.export(opsId, id, os);
-                    os.flush();
-                }
-            }
+        if (dto != null && dto.getId().toString().equals(etag)) {
+            response.setStatus(HttpStatus.NOT_MODIFIED.value());
         } else {
-            response.setStatus(HttpStatus.NOT_FOUND.value());
+            if (dto != null) {
+                response.setHeader("Content-Type", dto.getTyyppi());
+            }
+            response.setHeader("ETag", id.toString());
+            try (OutputStream os = response.getOutputStream()) {
+                liitteet.export(opsId, id, os);
+                os.flush();
+            }
         }
     }
 

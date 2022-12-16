@@ -20,7 +20,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.revision.Revision;
 
 import java.util.List;
 
-import org.springframework.security.access.method.P;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 

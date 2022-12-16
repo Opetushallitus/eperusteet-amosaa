@@ -28,7 +28,6 @@
     <module>eperusteet-amosaa-app</module>
   </modules>
   <properties>
-    <tomcat.version>8.5.69</tomcat.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.build.fileEncoding>UTF-8</project.build.fileEncoding>
   </properties>
@@ -51,7 +50,7 @@
                   <version>[3.1.0,)</version>
                 </requireMavenVersion>
                 <requireJavaVersion>
-                  <version>[1.8,1.9)</version>
+                  <version>[11,)</version>
                 </requireJavaVersion>
               </rules>
               <fail>true</fail>
@@ -64,18 +63,8 @@
       <plugins>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>${compiler.plugin.version}</version>
-          <configuration>
-            <source>1.8</source>
-            <target>1.8</target>
-            <debug>true</debug>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-failsafe-plugin</artifactId>
-          <version>2.19.1</version>
+          <version>2.22.2</version>
           <configuration>
             <encoding>UTF-8</encoding>
             <inputEncoding>UTF-8</inputEncoding>
@@ -94,7 +83,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.19.1</version>
+          <version>2.22.2</version>
           <configuration>
             <encoding>UTF-8</encoding>
             <inputEncoding>UTF-8</inputEncoding>

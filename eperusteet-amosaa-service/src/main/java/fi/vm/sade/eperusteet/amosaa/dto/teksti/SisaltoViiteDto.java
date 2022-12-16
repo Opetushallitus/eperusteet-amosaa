@@ -18,17 +18,19 @@ package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
-import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaOsaAlue;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteBaseDto;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.*;
-
-import javax.persistence.CascadeType;
-import javax.persistence.OneToMany;
 
 /**
  * @author nkala
@@ -38,6 +40,7 @@ import javax.persistence.OneToMany;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode
 public class SisaltoViiteDto {
     private Long id;
     private TekstiKappaleDto tekstiKappale;
@@ -72,10 +75,6 @@ public class SisaltoViiteDto {
     @JsonProperty("_tekstiKappale")
     private Reference tekstiKappaleRef;
 
-    public SisaltoViiteDto(TekstiKappaleDto tekstiKappale) {
-        this.tekstiKappale = tekstiKappale;
-    }
-
     @Data
     @EqualsAndHashCode(callSuper = true)
     public static class Matala extends SisaltoViiteDto {
@@ -84,9 +83,6 @@ public class SisaltoViiteDto {
         public Matala() {
         }
 
-        public Matala(TekstiKappaleDto tekstiKappale) {
-            super(tekstiKappale);
-        }
     }
 
     @Data

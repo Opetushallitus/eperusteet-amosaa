@@ -19,11 +19,14 @@ import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoviiteServiceProvider;
 import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.transaction.TestTransaction;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -163,6 +166,7 @@ public class VapaasivistystyoOpsIT extends AbstractIntegrationTest {
         assertThatCode(() -> OpintokokonaisuusTavoite.copy(tavoite)).doesNotThrowAnyException();
     }
 
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     @Test
     @Rollback
     public void test_ops_pohjasta_tekstien_sailyvyys() {
@@ -189,6 +193,7 @@ public class VapaasivistystyoOpsIT extends AbstractIntegrationTest {
 
         assertThat(tekstikappaleet1).hasSize(1);
         assertThat(tekstikappaleet1.get(0).getPohjanTekstikappale()).isNotNull();
+        assertThat(tekstikappaleet1.get(0).getPohjanTekstikappale().getTeksti().get(Kieli.FI)).isEqualTo("pohjanteksti");
         assertThat(tekstikappaleet1.get(0).getTekstiKappale().getTeksti()).isNull();
 
         tekstikappaleet1.get(0).getTekstiKappale().setTeksti(LokalisoituTekstiDto.of("opsinteksti"));

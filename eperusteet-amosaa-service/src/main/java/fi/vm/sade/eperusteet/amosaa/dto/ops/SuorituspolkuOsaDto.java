@@ -8,6 +8,7 @@ import lombok.*;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class SuorituspolkuOsaDto extends RakenneOsaDto {
     SuorituspolkuRiviJulkinenDto paikallinenKuvaus;
 }

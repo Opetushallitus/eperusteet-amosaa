@@ -20,7 +20,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.ops.SuorituspolkuRiviDto;
 
 import java.util.Set;
 
-import org.springframework.security.access.method.P;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 /**

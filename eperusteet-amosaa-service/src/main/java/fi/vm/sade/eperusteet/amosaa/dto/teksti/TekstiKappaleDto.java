@@ -17,7 +17,9 @@ package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.UUID;
@@ -27,6 +29,7 @@ import java.util.UUID;
  */
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class TekstiKappaleDto {
     private Long id;
     private Date luotu;
@@ -40,9 +43,6 @@ public class TekstiKappaleDto {
     private UUID tunniste;
     private Boolean pakollinen;
     private Boolean valmis;
-
-    public TekstiKappaleDto() {
-    }
 
     public TekstiKappaleDto(LokalisoituTekstiDto nimi, LokalisoituTekstiDto teksti, Tila tila) {
         this.nimi = nimi;

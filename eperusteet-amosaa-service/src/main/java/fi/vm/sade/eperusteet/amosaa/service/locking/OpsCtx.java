@@ -15,23 +15,20 @@
  */
 package fi.vm.sade.eperusteet.amosaa.service.locking;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
  * @author jhyoty
  */
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class OpsCtx {
     private Long ktId;
     private Long opsId;
-
-    public OpsCtx() {
-    }
-
-    public OpsCtx(Long ktId, Long opsId) {
-        this.ktId = ktId;
-        this.opsId = opsId;
-    }
 }

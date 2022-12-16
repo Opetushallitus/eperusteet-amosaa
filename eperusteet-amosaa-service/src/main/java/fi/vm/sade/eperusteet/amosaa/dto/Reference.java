@@ -18,8 +18,9 @@ package fi.vm.sade.eperusteet.amosaa.dto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
-import java.util.UUID;
 import lombok.EqualsAndHashCode;
+
+import java.util.UUID;
 
 /**
  * Kuvaa viitettä toiseen entiteettiin.

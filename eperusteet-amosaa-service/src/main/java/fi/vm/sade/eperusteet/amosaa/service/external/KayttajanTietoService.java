@@ -26,7 +26,7 @@ import java.util.Set;
 import java.util.concurrent.Future;
 
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator;
-import org.springframework.security.access.method.P;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
