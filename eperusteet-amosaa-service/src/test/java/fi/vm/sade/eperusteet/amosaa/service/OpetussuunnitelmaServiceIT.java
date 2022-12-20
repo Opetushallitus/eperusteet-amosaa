@@ -721,15 +721,24 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
         createOpetussuunnitelma();
         useProfileKP2();
         createOpetussuunnitelma(ops -> {
-            ops.setNimi(LokalisoituTekstiDto.of("kaikki1"));
+            Map<String, String> nimet = new HashMap<>();
+            nimet.put("fi", "kaikki");
+            nimet.put("sv", "sv");
+
+            LokalisoituTekstiDto nimi = new LokalisoituTekstiDto(nimet);
+            ops.setNimi(nimi);
             ops.setJotpatyyppi(JotpaTyyppi.MUU);
         });
 
         OpsHakuInternalDto haku = createDefaultOpsHakuInternalDto();
+
+        Page<OpetussuunnitelmaDto> opss = opetussuunnitelmaService.getOpetussuunnitelmat(getKoulutustoimijaId(), haku);
+        assertThat(opss.getTotalElements()).isEqualTo(1L);
+
         haku.setNimi("kaikki");
         haku.setJotpa(true);
 
-        Page<OpetussuunnitelmaDto> opss = opetussuunnitelmaService.getOpetussuunnitelmat(getKoulutustoimijaId(), haku);
+        opss = opetussuunnitelmaService.getOpetussuunnitelmat(getKoulutustoimijaId(), haku);
         assertThat(opss.getTotalElements()).isEqualTo(1L);
 
         useProfileKP1();
