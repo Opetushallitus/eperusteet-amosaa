@@ -1017,7 +1017,8 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
         RakenneModuuliDto perusteenRakenne = peruste.getSuoritustavat().stream()
                 .filter(st -> st.getSuoritustapakoodi().equals(Suoritustapakoodi.of(ops.getSuoritustapa())))
                 .findFirst()
-                .orElseThrow(() -> new BusinessRuleViolationException("Perusteelta ei löydy opetussuunnitelmaa vastaavaa suoritustapaa"))
+                .orElse(peruste.getSuoritustavat().stream().findFirst()
+                        .orElseThrow(() -> new BusinessRuleViolationException("Perusteelta ei löydy opetussuunnitelmaa vastaavaa suoritustapaa")))
                 .getRakenne();
 
         List<SisaltoViiteDto> polut = getSuorituspolut(ktId, opsId, SisaltoViiteDto.class);
