@@ -97,21 +97,14 @@ public class PerusteCacheServiceImpl implements PerusteCacheService {
             }
         }
 
-        throw new BusinessRuleViolationException("opetussuunnitelman-vaatimaa-suoritustapaa-ei-loytynyt");
+        return perusteSisalto.getSuoritustavat().stream()
+                .findFirst()
+                .orElseThrow(() -> new BusinessRuleViolationException("opetussuunnitelman-vaatimaa-suoritustapaa-ei-loytynyt"));
     }
     
     @Override
     public SuoritustapaLaajaDto getSuoritustapa(Long opetussuunnitelmaId, Long perusteId) {
-        
         Opetussuunnitelma opetussuunnitelma = opetussuunnitelmaRepository.findOne(opetussuunnitelmaId);
-        
-        PerusteKaikkiDto perusteSisalto = eperusteetService.getPerusteSisalto(perusteId, PerusteKaikkiDto.class);
-        for (SuoritustapaLaajaDto suoritustapa : perusteSisalto.getSuoritustavat()) {
-            if (suoritustapa.getSuoritustapakoodi() == Suoritustapakoodi.of(opetussuunnitelma.getSuoritustapa())) {
-                return suoritustapa;
-            }
-        }
-
-        throw new BusinessRuleViolationException("opetussuunnitelman-vaatimaa-suoritustapaa-ei-loytynyt");
+        return getSuoritustapa(opetussuunnitelma, perusteId);
     }
 }
