@@ -100,7 +100,7 @@ public interface SisaltoViiteService extends LockService<SisaltoViiteCtx> {
     int getCountByKoodi(Long ktId, String koodi);
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
-    void copySisaltoViiteet(@P("ktId") Long ktId, @P("opsId") Long opsId, List<Long> viitteet);
+    List<SisaltoViiteDto> copySisaltoViiteet(@P("ktId") Long ktId, @P("opsId") Long opsId, List<Long> viitteet);
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'ESITYS')")
     <T> List<T> getTutkinnonOsaViitteet(@P("ktId") Long ktId, @P("opsId") Long opsId, Class<T> aClass);
@@ -131,5 +131,8 @@ public interface SisaltoViiteService extends LockService<SisaltoViiteCtx> {
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
     void linkSisaltoViiteet(Long ktId, Long opsId, List<Long> viitteet);
+
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
+    SisaltoViiteDto kopioiLinkattuSisaltoViiteet(Long ktId, Long opsId, Long viiteId);
 }
 

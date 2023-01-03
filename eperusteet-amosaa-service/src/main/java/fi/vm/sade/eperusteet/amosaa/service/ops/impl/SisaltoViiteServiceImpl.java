@@ -75,6 +75,7 @@ import fi.vm.sade.eperusteet.amosaa.service.teksti.TekstiKappaleService;
 import fi.vm.sade.eperusteet.amosaa.service.util.PoistettuService;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -577,7 +578,16 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
     @Override
     public <T> Page<T> getSisaltoviitteetWithQuery(Long ktId, SisaltoviiteQueryDto query, Class<T> tyyppi) {
         Pageable pageable = new PageRequest(query.getSivu(), query.getSivukoko(), new Sort(Sort.Direction.fromString(query.isSortDesc() ? "DESC" : "ASC"), "nimi.teksti"));
-        return repository.findAllWithPagination(ktId, query.getTyyppi(), Kieli.of(query.getKieli()), query.getNimi(), query.getOpetussuunnitelmaId(), query.getOpsTyyppi(), pageable).map(sisaltoviite -> mapper.map(sisaltoviite, tyyppi));
+        return repository.findAllWithPagination(
+                ktId,
+                query.getTyyppi(),
+                Kieli.of(query.getKieli()),
+                query.getNimi(),
+                query.getOpetussuunnitelmaId(),
+                query.getOpsTyyppi(),
+                query.getNotInOpetussuunnitelmaId(),
+                pageable)
+                .map(sisaltoviite -> mapper.map(sisaltoviite, tyyppi));
     }
 
     @Override
@@ -1138,7 +1148,19 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
 
     @Override
     @Transactional(readOnly = false)
-    public void copySisaltoViiteet(Long ktId, Long opsId, List<Long> viitteet) {
+    public SisaltoViiteDto kopioiLinkattuSisaltoViiteet(Long ktId, Long opsId, Long viiteId) {
+        Opetussuunnitelma ops = opsRepository.findOne(opsId);
+        SisaltoViite viite = repository.findOne(viiteId);
+
+        List<SisaltoViiteDto> kopiot = copySisaltoViiteet(ktId, opsId, Arrays.asList(viite.getLinkattuSisaltoViiteId()));
+        removeSisaltoViite(ktId, opsId, viiteId);
+
+        return kopiot.get(0);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public List<SisaltoViiteDto> copySisaltoViiteet(Long ktId, Long opsId, List<Long> viitteet) {
         Opetussuunnitelma ops = opsRepository.findOne(opsId);
         SisaltoViite root = repository.findOneRoot(ops);
 
@@ -1171,6 +1193,8 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
                 })
                 .collect(Collectors.toList());
 
+        List<SisaltoViiteDto> kopioDtos = mapper.mapAsList(kopiot, SisaltoViiteDto.class);
+
         siirraViitteet(kopiot, root, SisaltoTyyppi.TUTKINNONOSA, SisaltoTyyppi.TUTKINNONOSAT);
         siirraViitteet(kopiot, root, SisaltoTyyppi.SUORITUSPOLKU, SisaltoTyyppi.SUORITUSPOLUT);
 
@@ -1186,6 +1210,8 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
                 .forEach(liite -> ops.attachLiite(liite));
 
         opsRepository.save(ops);
+
+        return kopioDtos;
     }
 
     private void siirraViitteet(List<SisaltoViite> viitteet, SisaltoViite root, SisaltoTyyppi siirrettavat, SisaltoTyyppi rootTyyppi) {
