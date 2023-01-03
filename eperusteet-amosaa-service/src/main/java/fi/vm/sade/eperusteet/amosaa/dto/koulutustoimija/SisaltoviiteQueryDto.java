@@ -17,6 +17,5 @@ public class SisaltoviiteQueryDto extends QueryDto {
     private SisaltoTyyppi tyyppi;
     private OpsTyyppi opsTyyppi;
     private boolean sortDesc = false;
-
-
+    private Long notInOpetussuunnitelmaId;
 }

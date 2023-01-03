@@ -101,13 +101,15 @@ public interface SisaltoviiteRepository extends JpaWithVersioningRepository<Sisa
             "AND nimi.kieli = :kieli " +
             "AND (:opsTyyppi IS NULL OR sv.owner.tyyppi = :opsTyyppi) " +
             "AND (:nimi IS NULL OR LOWER(nimi.teksti) LIKE LOWER(CONCAT('%', :nimi,'%'))) " +
-            "AND (:opsId IS NULL or sv.owner.id = :opsId) ")
+            "AND (:opsId IS NULL or sv.owner.id = :opsId) " +
+            "AND (:notInOpetussuunnitelmaId IS NULL or sv.owner.id <> :notInOpetussuunnitelmaId) ")
     Page<SisaltoViite> findAllWithPagination(@Param("ktId") Long ktId,
                                              @Param("tyyppi") SisaltoTyyppi tyyppi,
                                              @Param("kieli") Kieli kieli,
                                              @Param("nimi") String nimi,
                                              @Param("opsId") Long opsId,
                                              @Param("opsTyyppi") OpsTyyppi opsTyyppi,
+                                             @Param("notInOpetussuunnitelmaId") Long notInOpetussuunnitelmaId,
                                              Pageable pageable);
 
     @Query(value = "SELECT sv " +
