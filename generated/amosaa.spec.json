@@ -2771,6 +2771,48 @@
         }
       }
     },
+    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/kopioiLinkattu" : {
+      "post" : {
+        "tags" : [ "Sisaltoviitteet" ],
+        "operationId" : "kopioiLinkattuSisalto",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "name" : "opsId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "name" : "ktId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/SisaltoViiteDto"
+            }
+          }
+        }
+      }
+    },
     "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/kuvat" : {
       "get" : {
         "tags" : [ "liitetiedostot" ],
@@ -7610,10 +7652,14 @@
           "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO", "MAAHANMUUTTAJIENKOTOUTUMISKOULUTUS", "VAPAASIVISTYSTYOLUKUTAITO", "TUTKINTOONVALMENTAVA" ]
         },
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         "julkaisuVuosi" : {
+=======
+        "perusteId" : {
+>>>>>>> a793780f (spec file)
           "type" : "integer",
-          "format" : "int32"
+          "format" : "int64"
         },
 >>>>>>> 0bd4454e (amosaa uudet rakenteet)
         "perusteNimi" : {
@@ -7623,6 +7669,7 @@
           }
         },
 <<<<<<< HEAD
+<<<<<<< HEAD
         "julkaisuVuosi" : {
           "type" : "integer",
           "format" : "int32"
@@ -7630,8 +7677,11 @@
 =======
 >>>>>>> 0bd4454e (amosaa uudet rakenteet)
         "perusteId" : {
+=======
+        "julkaisuVuosi" : {
+>>>>>>> a793780f (spec file)
           "type" : "integer",
-          "format" : "int64"
+          "format" : "int32"
         }
       }
     },
@@ -7864,10 +7914,17 @@
         "totalPages" : {
           "type" : "integer",
           "format" : "int32"
+<<<<<<< HEAD
         },
         "totalElements" : {
           "type" : "integer",
+<<<<<<< HEAD
           "format" : "int64"
+=======
+          "format" : "int32"
+=======
+>>>>>>> a793780f (spec file)
+>>>>>>> d30a1724 (spec file)
         },
         "size" : {
           "type" : "integer",
@@ -7889,6 +7946,12 @@
         "first" : {
           "type" : "boolean"
         },
+<<<<<<< HEAD
+=======
+        "last" : {
+          "type" : "boolean"
+        },
+>>>>>>> a793780f (spec file)
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
@@ -7904,10 +7967,17 @@
         "totalPages" : {
           "type" : "integer",
           "format" : "int32"
+<<<<<<< HEAD
         },
         "totalElements" : {
           "type" : "integer",
+<<<<<<< HEAD
           "format" : "int64"
+=======
+          "format" : "int32"
+=======
+>>>>>>> a793780f (spec file)
+>>>>>>> d30a1724 (spec file)
         },
         "size" : {
           "type" : "integer",
@@ -7929,6 +7999,12 @@
         "first" : {
           "type" : "boolean"
         },
+<<<<<<< HEAD
+=======
+        "last" : {
+          "type" : "boolean"
+        },
+>>>>>>> a793780f (spec file)
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
@@ -7944,10 +8020,17 @@
         "totalPages" : {
           "type" : "integer",
           "format" : "int32"
+<<<<<<< HEAD
         },
         "totalElements" : {
           "type" : "integer",
+<<<<<<< HEAD
           "format" : "int64"
+=======
+          "format" : "int32"
+=======
+>>>>>>> a793780f (spec file)
+>>>>>>> d30a1724 (spec file)
         },
         "size" : {
           "type" : "integer",
@@ -7969,6 +8052,12 @@
         "first" : {
           "type" : "boolean"
         },
+<<<<<<< HEAD
+=======
+        "last" : {
+          "type" : "boolean"
+        },
+>>>>>>> a793780f (spec file)
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
@@ -7984,10 +8073,17 @@
         "totalPages" : {
           "type" : "integer",
           "format" : "int32"
+<<<<<<< HEAD
         },
         "totalElements" : {
           "type" : "integer",
+<<<<<<< HEAD
           "format" : "int64"
+=======
+          "format" : "int32"
+=======
+>>>>>>> a793780f (spec file)
+>>>>>>> d30a1724 (spec file)
         },
         "size" : {
           "type" : "integer",
@@ -8009,6 +8105,12 @@
         "first" : {
           "type" : "boolean"
         },
+<<<<<<< HEAD
+=======
+        "last" : {
+          "type" : "boolean"
+        },
+>>>>>>> a793780f (spec file)
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
@@ -8024,10 +8126,17 @@
         "totalPages" : {
           "type" : "integer",
           "format" : "int32"
+<<<<<<< HEAD
         },
         "totalElements" : {
           "type" : "integer",
+<<<<<<< HEAD
           "format" : "int64"
+=======
+          "format" : "int32"
+=======
+>>>>>>> a793780f (spec file)
+>>>>>>> d30a1724 (spec file)
         },
         "size" : {
           "type" : "integer",
@@ -8049,6 +8158,12 @@
         "first" : {
           "type" : "boolean"
         },
+<<<<<<< HEAD
+=======
+        "last" : {
+          "type" : "boolean"
+        },
+>>>>>>> a793780f (spec file)
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
