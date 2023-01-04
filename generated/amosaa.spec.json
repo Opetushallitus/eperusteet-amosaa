@@ -7653,6 +7653,7 @@
         },
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         "julkaisuVuosi" : {
 =======
@@ -7662,6 +7663,8 @@
           "format" : "int64"
         },
 >>>>>>> 0bd4454e (amosaa uudet rakenteet)
+=======
+>>>>>>> 9c467261 (toteutussuunnitelma haku oph:lle)
         "perusteNimi" : {
           "type" : "object",
           "additionalProperties" : {
@@ -7674,6 +7677,7 @@
           "type" : "integer",
           "format" : "int32"
         },
+<<<<<<< HEAD
 =======
 >>>>>>> 0bd4454e (amosaa uudet rakenteet)
         "perusteId" : {
@@ -7682,6 +7686,11 @@
 >>>>>>> a793780f (spec file)
           "type" : "integer",
           "format" : "int32"
+=======
+        "perusteId" : {
+          "type" : "integer",
+          "format" : "int64"
+>>>>>>> 9c467261 (toteutussuunnitelma haku oph:lle)
         }
       }
     },
@@ -7947,11 +7956,14 @@
           "type" : "boolean"
         },
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         "last" : {
           "type" : "boolean"
         },
 >>>>>>> a793780f (spec file)
+=======
+>>>>>>> 9c467261 (toteutussuunnitelma haku oph:lle)
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
@@ -8000,11 +8012,14 @@
           "type" : "boolean"
         },
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         "last" : {
           "type" : "boolean"
         },
 >>>>>>> a793780f (spec file)
+=======
+>>>>>>> 9c467261 (toteutussuunnitelma haku oph:lle)
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
@@ -8053,11 +8068,14 @@
           "type" : "boolean"
         },
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         "last" : {
           "type" : "boolean"
         },
 >>>>>>> a793780f (spec file)
+=======
+>>>>>>> 9c467261 (toteutussuunnitelma haku oph:lle)
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
@@ -8106,11 +8124,14 @@
           "type" : "boolean"
         },
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         "last" : {
           "type" : "boolean"
         },
 >>>>>>> a793780f (spec file)
+=======
+>>>>>>> 9c467261 (toteutussuunnitelma haku oph:lle)
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
@@ -8159,11 +8180,14 @@
           "type" : "boolean"
         },
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         "last" : {
           "type" : "boolean"
         },
 >>>>>>> a793780f (spec file)
+=======
+>>>>>>> 9c467261 (toteutussuunnitelma haku oph:lle)
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"

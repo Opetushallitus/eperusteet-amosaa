@@ -294,9 +294,16 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
             Class<T> clazz
     ) {
         Koulutustoimija koulutustoimija = koulutustoimijaRepository.findOne(ktId);
-        if (koulutustoimija != null && query != null) {
-            query.setKoulutustoimija(koulutustoimija.getId());
+
+        List<KoulutusTyyppi> koulutustyyppi = query.getKoulutustyyppi();
+        if (koulutustyyppi == null && query.getTyyppi() != null && query.getTyyppi().equals(OpsTyyppi.YHTEINEN)) {
+            koulutustyyppi = Arrays.asList(KoulutusTyyppi.PERUSTUTKINTO);
         }
+
+        if (query != null && (koulutustyyppi == null || koulutustyyppi.stream().noneMatch(kt -> SecurityUtil.isUserOphAdmin(KoulutustyyppiRolePrefix.of(kt))))) {
+            query.setKoulutustoimijat(Arrays.asList(koulutustoimija.getId()));
+        }
+
         return repository.findBy(page, query)
                 .map(ops -> mapper.map(ops, clazz));
     }
