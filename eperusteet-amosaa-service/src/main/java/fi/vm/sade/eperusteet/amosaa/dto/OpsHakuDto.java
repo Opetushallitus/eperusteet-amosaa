@@ -31,6 +31,7 @@ import java.util.Set;
 @AllArgsConstructor
 public class OpsHakuDto extends QueryDto {
     private Long koulutustoimija;
+    private List<Long> koulutustoimijat;
     private Long peruste;
     private List<KoulutusTyyppi> koulutustyyppi;
     private Set<Tila> tila;
