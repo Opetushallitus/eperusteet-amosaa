@@ -35,6 +35,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale_;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Teksti_;
 import fi.vm.sade.eperusteet.amosaa.dto.OpsHakuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaQueryDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.KoulutusDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaCustomRepository;
 import java.util.ArrayList;
 import java.util.Date;
@@ -298,6 +299,21 @@ public class OpetussuunnitelmaRepositoryImpl implements OpetussuunnitelmaCustomR
             Predicate nimessa = cb.like(cb.lower(opsNimi.get(Teksti_.teksti)), cb.literal(nimi));
 
             Predicate diaarissa = cb.like(cb.lower(root.get(Opetussuunnitelma_.perusteDiaarinumero)), cb.literal(nimi));
+
+//            Join<Opetussuunnitelma, CachedPeruste> peruste = root.join(Opetussuunnitelma_.peruste, JoinType.LEFT);
+//            peruste.get(CachedPeruste_.koulutukset);
+//            SetJoin<CachedPeruste, KoulutusDto> da = peruste.get(CachedPeruste_.koulutukset).;
+//            Predicate ktNimessa = cb.like(cb.lower(ktNimi.get(Teksti_.teksti)), cb.literal(nimi));
+//            Predicate koulutuksessa = cb.like(cb.lower(peruste.get(CachedPeruste_.koulutukset)), cb.literal(nimi));
+//
+//            peruste.get(CachedPeruste_.KOULUTUKSET).
+//
+//            cb.like(cb.literal(nimi), cb.concat(peruste.get(CachedPeruste_.koulutukset), "%"))
+
+
+//            SetJoin<LokalisoituTeksti, Teksti> nimi = koulutustoimija.join(Koulutustoimija_.nimi).join(LokalisoituTeksti_.teksti);
+//            Predicate nimessa = cb.like(cb.lower(nimi.get(Teksti_.teksti)), cb.literal(RepositoryUtil.kuten(queryDto.getNimi())));
+//            pred = cb.and(pred, nimessa);
 
             pred = cb.and(pred, cb.or(nimessa, diaarissa));
         }
