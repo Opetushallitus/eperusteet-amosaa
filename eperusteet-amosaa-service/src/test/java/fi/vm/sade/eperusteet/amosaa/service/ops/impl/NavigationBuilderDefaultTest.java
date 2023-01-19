@@ -173,11 +173,11 @@ public class NavigationBuilderDefaultTest {
         assertThat(navigationNodeDto.getChildren().get(0).getChildren())
                 .extracting(NavigationNodeDto::getType)
                 .containsSequence(
-                        NavigationType.tutkinnonosat_pakolliset,
+                        NavigationType.tutkinnonosa,
                         NavigationType.tutkinnonosat_paikalliset,
                         NavigationType.tekstikappale);
         List<NavigationNodeDto> tosat = navigationNodeDto.getChildren().get(0).getChildren();
-        assertThat(tosat.get(0).getChildren()).extracting(NavigationNodeDto::getId)
+        assertThat(tosat).extracting(NavigationNodeDto::getId)
                 .containsSequence(12L);
         assertThat(tosat.get(1).getChildren()).extracting(NavigationNodeDto::getId)
                 .containsSequence(11L);

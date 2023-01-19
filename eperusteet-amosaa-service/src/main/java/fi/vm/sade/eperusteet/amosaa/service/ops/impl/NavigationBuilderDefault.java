@@ -6,6 +6,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.NavigationNodeDto;
 import fi.vm.sade.eperusteet.amosaa.dto.NavigationType;
+import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteKevytDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
@@ -54,8 +55,8 @@ public class NavigationBuilderDefault implements NavigationBuilder {
         return sisaltoViitteet.stream()
                 .filter(sisaltoViitte -> sisaltoViitte.getVanhempi() == null)
                 .filter(sisaltoviite -> sisaltoviite.getLapset() != null)
-                .map(sisaltoviite -> sisaltoviite.getLapset().stream())
-                .flatMap(lapsiRef -> lapsiRef)
+                .flatMap(sisaltoviite -> sisaltoviite.getLapset().stream())
+                .sorted(Comparator.comparing(Reference::getIdLong, Comparator.comparing(l -> sisaltoViitteetIdMap.get(l).getNavikaatioJarjestys())))
                 .map(sisaltoViite -> sisaltoviiteToNavigationNode(sisaltoViitteetIdMap.get(sisaltoViite.getIdLong()), sisaltoViitteetIdMap))
                 .collect(Collectors.toList());
     }
@@ -99,8 +100,7 @@ public class NavigationBuilderDefault implements NavigationBuilder {
             });
 
             if (!pakolliset.isEmpty()) {
-                result.add(NavigationNodeDto.of(NavigationType.tutkinnonosat_pakolliset)
-                        .addAll(pakolliset));
+                result.addAll(pakolliset);
             }
             if (!paikalliset.isEmpty()) {
                 result.add(NavigationNodeDto.of(NavigationType.tutkinnonosat_paikalliset).addAll(paikalliset));

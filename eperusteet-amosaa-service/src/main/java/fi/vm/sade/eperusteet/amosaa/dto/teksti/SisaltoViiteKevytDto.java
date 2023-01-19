@@ -15,6 +15,7 @@
  */
 package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
@@ -62,5 +63,17 @@ public class SisaltoViiteKevytDto {
         }
 
         return null;
+    }
+
+    @JsonIgnore
+    public Integer getNavikaatioJarjestys() {
+        switch (tyyppi) {
+            case SUORITUSPOLUT:
+                return 1;
+            case TUTKINNONOSAT:
+                return 2;
+            default:
+                return 3;
+        }
     }
 }
