@@ -16,4 +16,7 @@ public interface MaintenanceService {
 
     @PreAuthorize("isAuthenticated()")
     void clearCache(String cache);
+
+    @PreAuthorize("hasPermission(null, 'oph', 'HALLINTA')")
+    void konvertoiPerusteCacheKoulutuskoodit();
 }

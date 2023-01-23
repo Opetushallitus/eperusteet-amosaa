@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
+import fi.vm.sade.eperusteet.amosaa.domain.peruste.Koulutuskoodi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.SuorituspolkuRiviDto;
@@ -130,7 +131,7 @@ public class EperusteetServiceImpl implements EperusteetService {
             cperuste.setLuotu(viimeisinJulkaisu);
             cperuste.setPeruste(eperusteetClient.getPerusteData(peruste.getId()));
             cperuste.setKoulutustyyppi(peruste.getKoulutustyyppi());
-            cperuste.setKoulutukset(peruste.getKoulutukset());
+            cperuste.setKoulutuskooditFromKoulutusDto(peruste.getKoulutukset());
             cperuste = cachedPerusteRepository.save(cperuste);
         }
         return dtoMapper.map(cperuste, CachedPerusteBaseDto.class);
