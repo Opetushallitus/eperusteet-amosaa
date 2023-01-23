@@ -36,6 +36,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
+import fi.vm.sade.eperusteet.amosaa.domain.peruste.Koulutuskoodi;
 import fi.vm.sade.eperusteet.amosaa.domain.revision.Revision;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
@@ -256,22 +257,6 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                 try {
                     JsonNode peruste = eperusteetService.getPerusteSisalto(cperuste, JsonNode.class);
                     cperuste.setKoulutustyyppi(KoulutusTyyppi.of(peruste.get("koulutustyyppi").asText()));
-                } catch (Exception ex) {
-                    LOG.error(ex.getLocalizedMessage());
-                }
-            }
-        }
-    }
-
-    public void mapKoulutukset() {
-        List<CachedPeruste> cperusteet = cachedPerusteRepository.findAll();
-        for (CachedPeruste cperuste : cperusteet) {
-            if (cperuste.getKoulutukset() == null) {
-                try {
-                    JsonNode peruste = eperusteetService.getPerusteSisalto(cperuste, JsonNode.class);
-                    Set<KoulutusDto> koulutukset = objMapper.readValue(peruste.get("koulutukset").toString(),
-                            objMapper.getTypeFactory().constructCollectionType(Set.class, KoulutusDto.class));
-                    cperuste.setKoulutukset(koulutukset);
                 } catch (Exception ex) {
                     LOG.error(ex.getLocalizedMessage());
                 }
@@ -671,7 +656,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                     ? eperusteetClient.getYleinenPohjaSisalto()
                     : eperusteetClient.getPerusteData(peruste.getId()));
             cperuste.setKoulutustyyppi(peruste.getKoulutustyyppi());
-            cperuste.setKoulutukset(peruste.getKoulutukset());
+            cperuste.setKoulutuskooditFromKoulutusDto(peruste.getKoulutukset());
             cperuste = cachedPerusteRepository.save(cperuste);
         }
 

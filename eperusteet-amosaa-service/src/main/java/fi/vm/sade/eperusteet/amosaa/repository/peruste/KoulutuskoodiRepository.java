@@ -16,29 +16,11 @@
 
 package fi.vm.sade.eperusteet.amosaa.repository.peruste;
 
-import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
-import java.util.Date;
-import java.util.List;
+import fi.vm.sade.eperusteet.amosaa.domain.peruste.Koulutuskoodi;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-/**
- * @author nkala
- */
 @Repository
-public interface CachedPerusteRepository extends JpaRepository<CachedPeruste, Long> {
-    List<CachedPeruste> findAllByDiaarinumero(String diaarinumero);
-
-    CachedPeruste findFirstByDiaarinumeroOrderByLuotu(String diaarinumero);
-
-    CachedPeruste findOneByDiaarinumeroAndLuotu(String diaarinumero, Date luotu);
-
-    CachedPeruste findOneByPerusteIdAndLuotu(Long perusteId, Date luotu);
-
-    CachedPeruste findFirstByPerusteIdAndLuotu(Long perusteId, Date luotu);
-
-    CachedPeruste findFirstByPerusteIdOrderByLuotuDesc(Long perusteId);
-
-    List<CachedPeruste> findByKoulutuksetNotNullAndKoulutuskooditIsNull();
+public interface KoulutuskoodiRepository extends JpaRepository<Koulutuskoodi, Long> {
 
 }

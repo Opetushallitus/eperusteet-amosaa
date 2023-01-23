@@ -35,5 +35,11 @@ public class CachedPerusteBaseDto {
     private Long perusteId;
     private LokalisoituTekstiDto nimi;
     private KoulutusTyyppi koulutustyyppi;
-    private Set<KoulutusDto> koulutukset;
+
+    private Set<KoulutusDto> koulutuskoodit;
+
+    @Deprecated
+    public Set<KoulutusDto> getKoulutukset() {
+        return koulutuskoodit;
+    }
 }

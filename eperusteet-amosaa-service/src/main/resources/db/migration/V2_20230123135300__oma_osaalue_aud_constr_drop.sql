@@ -1,0 +1,1 @@
+alter table omaosaalue_aud drop constraint omaosaalue_aud_osaamistavoitteet_id_fkey;

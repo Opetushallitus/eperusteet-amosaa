@@ -24,6 +24,8 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma_;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste_;
+import fi.vm.sade.eperusteet.amosaa.domain.peruste.Koulutuskoodi;
+import fi.vm.sade.eperusteet.amosaa.domain.peruste.Koulutuskoodi_;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti_;
@@ -300,22 +302,11 @@ public class OpetussuunnitelmaRepositoryImpl implements OpetussuunnitelmaCustomR
 
             Predicate diaarissa = cb.like(cb.lower(root.get(Opetussuunnitelma_.perusteDiaarinumero)), cb.literal(nimi));
 
-//            Join<Opetussuunnitelma, CachedPeruste> peruste = root.join(Opetussuunnitelma_.peruste, JoinType.LEFT);
-//            peruste.get(CachedPeruste_.koulutukset);
-//            SetJoin<CachedPeruste, KoulutusDto> da = peruste.get(CachedPeruste_.koulutukset).;
-//            Predicate ktNimessa = cb.like(cb.lower(ktNimi.get(Teksti_.teksti)), cb.literal(nimi));
-//            Predicate koulutuksessa = cb.like(cb.lower(peruste.get(CachedPeruste_.koulutukset)), cb.literal(nimi));
-//
-//            peruste.get(CachedPeruste_.KOULUTUKSET).
-//
-//            cb.like(cb.literal(nimi), cb.concat(peruste.get(CachedPeruste_.koulutukset), "%"))
+            Join<Opetussuunnitelma, CachedPeruste> peruste = root.join(Opetussuunnitelma_.peruste, JoinType.LEFT);
+            SetJoin<CachedPeruste, Koulutuskoodi> koulutuskoodit =  peruste.join(CachedPeruste_.koulutuskoodit);
+            Predicate koulutuskoodiArvossa = cb.like(cb.lower(koulutuskoodit.get(Koulutuskoodi_.koulutuskoodiArvo)), cb.literal(nimi));
 
-
-//            SetJoin<LokalisoituTeksti, Teksti> nimi = koulutustoimija.join(Koulutustoimija_.nimi).join(LokalisoituTeksti_.teksti);
-//            Predicate nimessa = cb.like(cb.lower(nimi.get(Teksti_.teksti)), cb.literal(RepositoryUtil.kuten(queryDto.getNimi())));
-//            pred = cb.and(pred, nimessa);
-
-            pred = cb.and(pred, cb.or(nimessa, diaarissa));
+            pred = cb.and(pred, cb.or(nimessa, diaarissa, koulutuskoodiArvossa));
         }
 
         // Rajataan tilojen mukaan

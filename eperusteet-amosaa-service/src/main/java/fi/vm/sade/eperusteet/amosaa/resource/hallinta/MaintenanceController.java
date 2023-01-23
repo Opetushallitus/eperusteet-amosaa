@@ -51,4 +51,10 @@ public class MaintenanceController {
                 koulutustyypit != null ? koulutustyypit.stream().map(KoulutusTyyppi::of).collect(Collectors.toSet()) : null,
                 OpsTyyppi.of(opstyyppi));
     }
+
+    @RequestMapping(value = "/koulutuskoodiconvert", method = GET)
+    public ResponseEntity<String> koulutuskoodiconvert() {
+        maintenanceService.konvertoiPerusteCacheKoulutuskoodit();
+        return new ResponseEntity<>("Done", HttpStatus.OK);
+    }
 }
