@@ -52,9 +52,4 @@ public class MaintenanceController {
                 OpsTyyppi.of(opstyyppi));
     }
 
-    @RequestMapping(value = "/koulutuskoodiconvert", method = GET)
-    public ResponseEntity<String> koulutuskoodiconvert() {
-        maintenanceService.konvertoiPerusteCacheKoulutuskoodit();
-        return new ResponseEntity<>("Done", HttpStatus.OK);
-    }
 }

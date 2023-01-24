@@ -36,7 +36,6 @@ public class MigrationController {
     @RequestMapping(method = RequestMethod.GET)
     public void migrate() {
         service.mapKoulutustyyppi();
-        maintenanceService.konvertoiPerusteCacheKoulutuskoodit();
     }
 
 }
