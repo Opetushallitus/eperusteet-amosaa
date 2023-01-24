@@ -2,6 +2,8 @@ package fi.vm.sade.eperusteet.amosaa.service.config;
 
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Julkaisu;
 import javax.sql.DataSource;
+
+import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -78,10 +80,35 @@ public class BatchConfig {
                 .build();
     }
 
-    @Bean(name = "julkaisuJob")
-    public Job job(Step julkaisuJobStep) {
+    @Bean
+    public Job julkaisuJob(Step julkaisuJobStep) {
         return jobs.get("julkaisuJob")
                 .start(julkaisuJobStep)
+                .build();
+    }
+
+    @Bean
+    protected Step perusteKoulutuksetMigrateJobStep(
+            ItemReader<Long> koulutuskoodiConvertReader,
+            ItemProcessor<Long, CachedPeruste> koulutuskoodiConvertProcessor,
+            ItemWriter<CachedPeruste> koulutuskoodiConvertWriter) {
+        DefaultTransactionAttribute attribute = new DefaultTransactionAttribute();
+        attribute.setPropagationBehavior(Propagation.NEVER.value());
+
+        return steps.get("perusteKoulutuksetMigrateJobStep")
+                .<Long, CachedPeruste>chunk(10)
+                .reader(koulutuskoodiConvertReader)
+                .processor(koulutuskoodiConvertProcessor)
+                .writer(koulutuskoodiConvertWriter)
+                .transactionAttribute(attribute)
+                .build();
+    }
+
+
+    @Bean
+    public Job perusteKoulutuksetMigrateJob(Step perusteKoulutuksetMigrateJobStep) {
+        return jobs.get("perusteKoulutuksetMigrateJob")
+                .start(perusteKoulutuksetMigrateJobStep)
                 .build();
     }
 }

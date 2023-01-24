@@ -20,6 +20,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import java.util.Date;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -39,6 +40,11 @@ public interface CachedPerusteRepository extends JpaRepository<CachedPeruste, Lo
 
     CachedPeruste findFirstByPerusteIdOrderByLuotuDesc(Long perusteId);
 
-    List<CachedPeruste> findByKoulutuksetNotNullAndKoulutuskooditIsNull();
+    @Query("SELECT p.id " +
+            "FROM CachedPeruste p " +
+            "LEFT JOIN p.koulutuskoodit kk " +
+            "WHERE p.koulutukset IS NOT NULL " +
+            "AND kk IS EMPTY")
+    List<Long> findByKoulutuksetNotNull();
 
 }

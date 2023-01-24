@@ -154,15 +154,4 @@ public class MaintenanceServiceImpl implements MaintenanceService {
         Objects.requireNonNull(cacheManager.getCache(cache)).clear();
     }
 
-    @Override
-    @Transactional(propagation = Propagation.REQUIRED)
-    public void konvertoiPerusteCacheKoulutuskoodit() {
-        List<CachedPeruste> perusteet = cachedPerusteRepository.findByKoulutuksetNotNullAndKoulutuskooditIsNull();
-        perusteet.forEach(peruste -> {
-            if (!CollectionUtils.isEmpty(peruste.getKoulutukset())) {
-                peruste.setKoulutuskooditFromKoulutusDto(peruste.getKoulutukset());
-                cachedPerusteRepository.save(peruste);
-            }
-        });
-    }
 }
