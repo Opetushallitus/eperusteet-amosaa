@@ -81,6 +81,7 @@ import fi.vm.sade.eperusteet.amosaa.resource.config.InitJacksonConverter;
 import fi.vm.sade.eperusteet.amosaa.resource.config.MappingModule;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.LocalizedMessagesService;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
+import fi.vm.sade.eperusteet.amosaa.service.exception.NotExistsException;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetClient;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
@@ -1014,6 +1015,10 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
     @Override
     public OpetussuunnitelmaKaikkiDto getOpetussuunnitelmaJulkaistuSisalto(Long ktId, Long opsId, boolean esikatselu) {
+        Opetussuunnitelma ops = repository.findOne(opsId);
+        if (ops == null || ops.getTila().equals(Tila.POISTETTU)) {
+            throw new NotExistsException("");
+        }
         if (esikatselu) {
             return getOpetussuunnitelmaKaikki(ktId, opsId);
         }
