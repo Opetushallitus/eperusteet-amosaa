@@ -17,6 +17,7 @@
 package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import java.util.Set;
@@ -37,9 +38,7 @@ public class CachedPerusteBaseDto {
     private LokalisoituTekstiDto nimi;
     private KoulutusTyyppi koulutustyyppi;
 
-    @JsonIgnore
+    @JsonProperty("koulutukset")
     private Set<KoulutusDto> koulutuskoodit;
-    public Set<KoulutusDto> getKoulutukset() {
-        return koulutuskoodit;
-    }
+
 }

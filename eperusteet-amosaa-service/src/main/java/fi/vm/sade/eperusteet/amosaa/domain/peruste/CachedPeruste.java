@@ -70,7 +70,7 @@ public class CachedPeruste implements Serializable, ReferenceableEntity {
     @Convert(converter = KoulutuksetConverter.class)
     private Set<KoulutusDto> koulutukset;
 
-    @OneToMany(mappedBy = "cachedPeruste", cascade = {CascadeType.ALL}, orphanRemoval = true)
+    @OneToMany(mappedBy = "cachedPeruste", cascade = {CascadeType.MERGE}, orphanRemoval = true)
     private Set<Koulutuskoodi> koulutuskoodit = new HashSet<>();
 
     public void setKoulutuskoodit(Set<Koulutuskoodi> koulutuskoodit) {

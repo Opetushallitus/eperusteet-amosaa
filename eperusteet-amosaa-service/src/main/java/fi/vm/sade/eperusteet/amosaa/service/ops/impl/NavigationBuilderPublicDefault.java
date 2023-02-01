@@ -2,13 +2,17 @@ package fi.vm.sade.eperusteet.amosaa.service.ops.impl;
 
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.NavigationNodeDto;
 import fi.vm.sade.eperusteet.amosaa.dto.NavigationType;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteExportDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteKevytDto;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.NavigationBuilderPublic;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -45,15 +49,39 @@ public class NavigationBuilderPublicDefault implements NavigationBuilderPublic {
     }
 
     private NavigationNodeDto sisaltoviiteToNavigationNode(SisaltoViiteExportDto sisaltoviite, OpetussuunnitelmaKaikkiDto opetussuunnitelmaKaikkiDto) {
-        return NavigationNodeDto.of(
-                NavigationType.of(sisaltoviite.getTyyppi().equals(SisaltoTyyppi.TUTKINNONOSAT)
-                        && opetussuunnitelmaKaikkiDto.getKoulutustyyppi() != null
-                        && opetussuunnitelmaKaikkiDto.getKoulutustyyppi().isValmaTelma() ?
-                        NavigationType.valmatelmaKoulutuksenosat.toString() : sisaltoviite.getTyyppi().toString()),
-                getSisaltoviiteNimi(sisaltoviite),
-                sisaltoviite.getId())
-                .meta("koodi", getSisaltoviiteMetaKoodi(sisaltoviite))
-                .addAll(sisaltoviite.getLapset() != null ?
+        NavigationNodeDto result = NavigationNodeDto.of(
+                        NavigationType.of(sisaltoviite.getTyyppi().equals(SisaltoTyyppi.TUTKINNONOSAT)
+                                && opetussuunnitelmaKaikkiDto.getKoulutustyyppi() != null
+                                && opetussuunnitelmaKaikkiDto.getKoulutustyyppi().isValmaTelma() ?
+                                NavigationType.valmatelmaKoulutuksenosat.toString() : sisaltoviite.getTyyppi().toString()),
+                        getSisaltoviiteNimi(sisaltoviite),
+                        sisaltoviite.getId())
+                .meta("koodi", getSisaltoviiteMetaKoodi(sisaltoviite));
+
+        if (sisaltoviite.getTyyppi().equals(SisaltoTyyppi.TUTKINNONOSAT)) {
+            List<NavigationNodeDto> pakolliset = new ArrayList<>();
+            List<NavigationNodeDto> paikalliset = new ArrayList<>();
+
+            sisaltoviite.getLapset().forEach(lapsi -> {
+                NavigationNodeDto node = sisaltoviiteToNavigationNode(lapsi, opetussuunnitelmaKaikkiDto);
+                if (SisaltoTyyppi.TUTKINNONOSA.equals(lapsi.getTyyppi()) && lapsi.getTosa().getTyyppi().equals(TutkinnonosaTyyppi.OMA)) {
+                    paikalliset.add(node);
+                } else {
+                    pakolliset.add(node);
+                }
+            });
+
+            if (!pakolliset.isEmpty()) {
+                result.addAll(pakolliset);
+            }
+            if (!paikalliset.isEmpty()) {
+                result.add(NavigationNodeDto.of(NavigationType.tutkinnonosat_paikalliset).addAll(paikalliset));
+            }
+
+            return result;
+        }
+
+        return result.addAll(sisaltoviite.getLapset() != null ?
                         sisaltoviite.getLapset().stream()
                                 .map(lapsi -> sisaltoviiteToNavigationNode(lapsi, opetussuunnitelmaKaikkiDto))
                                 .collect(Collectors.toList())
