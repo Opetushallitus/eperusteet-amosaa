@@ -1079,7 +1079,17 @@
         "laajuus" : {
           "type" : "number"
         },
-        "tavoitteet" : {
+        "arviointi" : {
+          "$ref" : "#/definitions/ArviointiDto"
+        },
+        "geneerinenarviointi" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "ammattitaitovaatimukset" : {
+          "$ref" : "#/definitions/PaikallisetAmmattitaitovaatimukset2019Dto"
+        },
+        "ammattitaidonOsoittamistavat" : {
           "type" : "object",
           "additionalProperties" : {
             "type" : "string"
@@ -1091,10 +1101,7 @@
             "$ref" : "#/definitions/AmmattitaitovaatimuksenKohdealueDto"
           }
         },
-        "arviointi" : {
-          "$ref" : "#/definitions/ArviointiDto"
-        },
-        "ammattitaidonOsoittamistavat" : {
+        "tavoitteet" : {
           "type" : "object",
           "additionalProperties" : {
             "type" : "string"
@@ -1402,8 +1409,11 @@
           "type" : "integer",
           "format" : "int64"
         },
-        "nimiKoodi" : {
-          "type" : "string"
+        "kooditettuNimi" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
         },
         "koodi" : {
           "type" : "string"
@@ -1528,13 +1538,13 @@
     "Page" : {
       "type" : "object",
       "properties" : {
-        "totalPages" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "totalElements" : {
           "type" : "integer",
           "format" : "int64"
+        },
+        "totalPages" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "size" : {
           "type" : "integer",
@@ -1546,10 +1556,6 @@
             "type" : "object"
           }
         },
-        "number" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
@@ -1562,19 +1568,23 @@
         },
         "last" : {
           "type" : "boolean"
+        },
+        "number" : {
+          "type" : "integer",
+          "format" : "int32"
         }
       }
     },
     "PageOpetussuunnitelmaDto" : {
       "type" : "object",
       "properties" : {
-        "totalPages" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "totalElements" : {
           "type" : "integer",
           "format" : "int64"
+        },
+        "totalPages" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "size" : {
           "type" : "integer",
@@ -1586,10 +1596,6 @@
             "$ref" : "#/definitions/OpetussuunnitelmaDto"
           }
         },
-        "number" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
@@ -1602,6 +1608,68 @@
         },
         "last" : {
           "type" : "boolean"
+        },
+        "number" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    },
+    "PaikallinenAmmattitaitovaatimus2019Dto" : {
+      "type" : "object",
+      "properties" : {
+        "koodi" : {
+          "$ref" : "#/definitions/KoodiDto"
+        },
+        "vaatimus" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "PaikallinenAmmattitaitovaatimustenKohdealue2019Dto" : {
+      "type" : "object",
+      "properties" : {
+        "kuvaus" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "vaatimukset" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/PaikallinenAmmattitaitovaatimus2019Dto"
+          }
+        }
+      }
+    },
+    "PaikallisetAmmattitaitovaatimukset2019Dto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "kohde" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "vaatimukset" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/PaikallinenAmmattitaitovaatimus2019Dto"
+          }
+        },
+        "kohdealueet" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/PaikallinenAmmattitaitovaatimustenKohdealue2019Dto"
+          }
         }
       }
     },

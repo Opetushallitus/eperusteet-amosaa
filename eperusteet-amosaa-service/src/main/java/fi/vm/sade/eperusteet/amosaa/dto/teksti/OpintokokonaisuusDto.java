@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import fi.vm.sade.eperusteet.amosaa.dto.KooditettuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.LaajuusYksikko;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,9 +17,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class OpintokokonaisuusDto {
+public class OpintokokonaisuusDto implements KooditettuDto {
     private Long id;
-    private String nimiKoodi;
+    private LokalisoituTekstiDto kooditettuNimi;
     private String koodi;
     private LokalisoituTekstiDto kuvaus;
     private BigDecimal laajuus;
@@ -40,4 +41,8 @@ public class OpintokokonaisuusDto {
         return null;
     }
 
+    @Override
+    public void setKooditettu(LokalisoituTekstiDto kooditettu) {
+        this.kooditettuNimi = kooditettu;
+    }
 }
