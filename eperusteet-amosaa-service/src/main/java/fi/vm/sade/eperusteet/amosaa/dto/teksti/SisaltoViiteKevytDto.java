@@ -47,6 +47,7 @@ public class SisaltoViiteKevytDto {
     private KoulutuksenOsaKevytDto koulutuksenosa;
     private TuvaLaajaAlainenOsaaminenDto tuvaLaajaAlainenOsaaminen;
     private SisaltoTyyppi linkattuTyyppi;
+    private OpintokokonaisuusDto opintokokonaisuus;
 
     public LokalisoituTekstiDto getNimi() {
         if (koulutuksenosa != null) {
@@ -55,6 +56,10 @@ public class SisaltoViiteKevytDto {
 
         if (tuvaLaajaAlainenOsaaminen != null) {
             return tuvaLaajaAlainenOsaaminen.getNimi();
+        }
+
+        if (opintokokonaisuus != null && opintokokonaisuus.getKooditettuNimi() != null) {
+            return opintokokonaisuus.getKooditettuNimi();
         }
 
         if (tekstiKappale != null) {
