@@ -185,7 +185,7 @@ public class SisaltoViite extends AbstractAuditedEntity implements Referenceable
     @Setter
     private KotoLaajaAlainenOsaaminen kotoLaajaAlainenOsaaminen;
 
-    @OneToMany(orphanRemoval = true, cascade = {CascadeType.PERSIST, CascadeType.PERSIST }, fetch = FetchType.LAZY)
+    @OneToMany(orphanRemoval = true, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @Getter
     @Setter
     private List<OmaOsaAlue> osaAlueet = new ArrayList<>();

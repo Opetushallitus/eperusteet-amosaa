@@ -108,14 +108,12 @@ public class NavigationBuilderDefault implements NavigationBuilder {
             if (!tuodut.isEmpty()) {
                 result.add(NavigationNodeDto.of(NavigationType.tutkinnonosat_tuodut).addAll(tuodut));
             }
-            result.addAll(muut);
+            return result.addAll(muut);
         }
-        else {
-            result.addAll(sisaltoviite.getLapset() != null ? sisaltoviite.getLapset().stream()
-                        .map(lapsi -> sisaltoviiteToNavigationNode(sisaltoViitteetIdMap.get(lapsi.getIdLong()), sisaltoViitteetIdMap))
-                        .collect(Collectors.toList())
-                        : Collections.emptyList());
-        }
-        return result;
+
+        return result.addAll(sisaltoviite.getLapset() != null ? sisaltoviite.getLapset().stream()
+                    .map(lapsi -> sisaltoviiteToNavigationNode(sisaltoViitteetIdMap.get(lapsi.getIdLong()), sisaltoViitteetIdMap))
+                    .collect(Collectors.toList())
+                    : Collections.emptyList());
     }
 }

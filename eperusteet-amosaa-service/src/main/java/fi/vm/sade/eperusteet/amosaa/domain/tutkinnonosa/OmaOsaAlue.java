@@ -3,9 +3,11 @@ package fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.domain.AbstractAuditedEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.VapaaTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
@@ -67,4 +69,11 @@ public class OmaOsaAlue extends AbstractAuditedEntity implements Serializable, R
     @Getter
     @Setter
     private Ammattitaitovaatimukset2019 osaamistavoitteet;
+
+    @Getter
+    @Setter
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OrderColumn(name = "jnro")
+    private List<VapaaTeksti> vapaat = new ArrayList<>();
+
 }
