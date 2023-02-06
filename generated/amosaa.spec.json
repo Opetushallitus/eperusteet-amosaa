@@ -6444,6 +6444,10 @@
     "KoulutusDto" : {
       "type" : "object",
       "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
         "nimi" : {
           "type" : "object",
           "additionalProperties" : {
@@ -7654,6 +7658,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         "julkaisuVuosi" : {
 =======
@@ -7665,12 +7670,19 @@
 >>>>>>> 0bd4454e (amosaa uudet rakenteet)
 =======
 >>>>>>> 9c467261 (toteutussuunnitelma haku oph:lle)
+=======
+        "julkaisuVuosi" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+>>>>>>> b99c653f (amosaa-spec)
         "perusteNimi" : {
           "type" : "object",
           "additionalProperties" : {
             "type" : "string"
           }
         },
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
         "julkaisuVuosi" : {
@@ -7687,6 +7699,8 @@
           "type" : "integer",
           "format" : "int32"
 =======
+=======
+>>>>>>> b99c653f (amosaa-spec)
         "perusteId" : {
           "type" : "integer",
           "format" : "int64"
@@ -7921,6 +7935,17 @@
       "type" : "object",
       "properties" : {
         "totalPages" : {
+<<<<<<< HEAD
+=======
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "totalElements" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "number" : {
+>>>>>>> 3e9fc5fb (amosaa-spec)
           "type" : "integer",
           "format" : "int32"
 <<<<<<< HEAD
@@ -7945,10 +7970,14 @@
             "type" : "object"
           }
         },
+<<<<<<< HEAD
         "number" : {
           "type" : "integer",
           "format" : "int32"
         },
+=======
+<<<<<<< HEAD
+>>>>>>> 3e9fc5fb (amosaa-spec)
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
@@ -7964,6 +7993,14 @@
 >>>>>>> a793780f (spec file)
 =======
 >>>>>>> 9c467261 (toteutussuunnitelma haku oph:lle)
+=======
+        "first" : {
+          "type" : "boolean"
+        },
+        "sort" : {
+          "$ref" : "#/definitions/Sort"
+        },
+>>>>>>> b99c653f (amosaa-spec)
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
@@ -7977,6 +8014,17 @@
       "type" : "object",
       "properties" : {
         "totalPages" : {
+<<<<<<< HEAD
+=======
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "totalElements" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "number" : {
+>>>>>>> 3e9fc5fb (amosaa-spec)
           "type" : "integer",
           "format" : "int32"
 <<<<<<< HEAD
@@ -8001,10 +8049,14 @@
             "$ref" : "#/definitions/KoulutustoimijaJulkinenDto"
           }
         },
+<<<<<<< HEAD
         "number" : {
           "type" : "integer",
           "format" : "int32"
         },
+=======
+<<<<<<< HEAD
+>>>>>>> 3e9fc5fb (amosaa-spec)
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
@@ -8020,6 +8072,14 @@
 >>>>>>> a793780f (spec file)
 =======
 >>>>>>> 9c467261 (toteutussuunnitelma haku oph:lle)
+=======
+        "first" : {
+          "type" : "boolean"
+        },
+        "sort" : {
+          "$ref" : "#/definitions/Sort"
+        },
+>>>>>>> b99c653f (amosaa-spec)
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
@@ -8033,6 +8093,17 @@
       "type" : "object",
       "properties" : {
         "totalPages" : {
+<<<<<<< HEAD
+=======
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "totalElements" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "number" : {
+>>>>>>> 3e9fc5fb (amosaa-spec)
           "type" : "integer",
           "format" : "int32"
 <<<<<<< HEAD
@@ -8057,10 +8128,14 @@
             "$ref" : "#/definitions/OpetussuunnitelmaBaseDto"
           }
         },
+<<<<<<< HEAD
         "number" : {
           "type" : "integer",
           "format" : "int32"
         },
+=======
+<<<<<<< HEAD
+>>>>>>> 3e9fc5fb (amosaa-spec)
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
@@ -8076,6 +8151,14 @@
 >>>>>>> a793780f (spec file)
 =======
 >>>>>>> 9c467261 (toteutussuunnitelma haku oph:lle)
+=======
+        "first" : {
+          "type" : "boolean"
+        },
+        "sort" : {
+          "$ref" : "#/definitions/Sort"
+        },
+>>>>>>> b99c653f (amosaa-spec)
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
@@ -8089,6 +8172,17 @@
       "type" : "object",
       "properties" : {
         "totalPages" : {
+<<<<<<< HEAD
+=======
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "totalElements" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "number" : {
+>>>>>>> 3e9fc5fb (amosaa-spec)
           "type" : "integer",
           "format" : "int32"
 <<<<<<< HEAD
@@ -8113,10 +8207,14 @@
             "$ref" : "#/definitions/OpetussuunnitelmaDto"
           }
         },
+<<<<<<< HEAD
         "number" : {
           "type" : "integer",
           "format" : "int32"
         },
+=======
+<<<<<<< HEAD
+>>>>>>> 3e9fc5fb (amosaa-spec)
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
@@ -8132,6 +8230,14 @@
 >>>>>>> a793780f (spec file)
 =======
 >>>>>>> 9c467261 (toteutussuunnitelma haku oph:lle)
+=======
+        "first" : {
+          "type" : "boolean"
+        },
+        "sort" : {
+          "$ref" : "#/definitions/Sort"
+        },
+>>>>>>> b99c653f (amosaa-spec)
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
@@ -8145,6 +8251,17 @@
       "type" : "object",
       "properties" : {
         "totalPages" : {
+<<<<<<< HEAD
+=======
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "totalElements" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "number" : {
+>>>>>>> 3e9fc5fb (amosaa-spec)
           "type" : "integer",
           "format" : "int32"
 <<<<<<< HEAD
@@ -8169,10 +8286,14 @@
             "$ref" : "#/definitions/SisaltoviiteLaajaDto"
           }
         },
+<<<<<<< HEAD
         "number" : {
           "type" : "integer",
           "format" : "int32"
         },
+=======
+<<<<<<< HEAD
+>>>>>>> 3e9fc5fb (amosaa-spec)
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
@@ -8188,6 +8309,14 @@
 >>>>>>> a793780f (spec file)
 =======
 >>>>>>> 9c467261 (toteutussuunnitelma haku oph:lle)
+=======
+        "first" : {
+          "type" : "boolean"
+        },
+        "sort" : {
+          "$ref" : "#/definitions/Sort"
+        },
+>>>>>>> b99c653f (amosaa-spec)
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
