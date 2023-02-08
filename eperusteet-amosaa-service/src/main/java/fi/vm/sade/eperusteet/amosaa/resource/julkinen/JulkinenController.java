@@ -180,7 +180,7 @@ public class JulkinenController {
             @ApiIgnore final KoulutustoimijaQueryDto pquery
     ) {
         // Oletuksena älä palauta pohjia
-        PageRequest p = new PageRequest(pquery.getSivu(), Math.min(pquery.getSivukoko(), 100));
+        PageRequest p = new PageRequest(pquery.getSivu(), Math.min(pquery.getSivukoko(), 1000));
         return ktService.findKoulutustoimijat(p, pquery);
     }
 
