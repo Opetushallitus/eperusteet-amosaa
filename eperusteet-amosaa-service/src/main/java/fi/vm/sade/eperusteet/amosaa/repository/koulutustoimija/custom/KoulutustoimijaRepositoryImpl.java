@@ -21,6 +21,8 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija_;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma_;
+import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
+import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste_;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.*;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaQueryDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaCustomRepository;
@@ -102,6 +104,15 @@ public class KoulutustoimijaRepositoryImpl implements KoulutustoimijaCustomRepos
         Predicate pred = cb.notEqual(koulutustoimija.get(Koulutustoimija_.organisaatio), SecurityUtil.OPH_OID);
         pred = cb.and(pred, cb.or(cb.equal(root.get(Opetussuunnitelma_.tila), Tila.JULKAISTU), cb.isNotEmpty(root.get(Opetussuunnitelma_.julkaisut))));
         pred = cb.and(pred, cb.equal(koulutustoimija.get(Koulutustoimija_.organisaatioRyhma), queryDto.isOrganisaatioRyhma()));
+
+        if (!ObjectUtils.isEmpty(queryDto.getKoulutustyyppi())) {
+            Join<Opetussuunnitelma, CachedPeruste> peruste = root.join(Opetussuunnitelma_.peruste, JoinType.LEFT);
+            Predicate oikeatKoulutustyypit = peruste.get(CachedPeruste_.koulutustyyppi).in(queryDto.getKoulutustyyppi());
+            Predicate koulutustyyppiTaiIlmanPerustetta = cb.or(
+                    oikeatKoulutustyypit,
+                    root.get(Opetussuunnitelma_.koulutustyyppi).in(queryDto.getKoulutustyyppi()));
+            pred = cb.and(pred, koulutustyyppiTaiIlmanPerustetta);
+        }
 
         Kieli kieli = Kieli.of(queryDto.getKieli());
         if (!kieli.equals(Kieli.FI)) {
