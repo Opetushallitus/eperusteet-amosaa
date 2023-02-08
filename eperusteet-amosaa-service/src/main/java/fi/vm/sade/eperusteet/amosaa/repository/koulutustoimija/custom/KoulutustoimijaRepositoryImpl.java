@@ -21,7 +21,6 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija_;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma_;
-import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.*;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaQueryDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaCustomRepository;
@@ -81,8 +80,8 @@ public class KoulutustoimijaRepositoryImpl implements KoulutustoimijaCustomRepos
         Join<Opetussuunnitelma, Koulutustoimija> koulutustoimija = root.join(Opetussuunnitelma_.koulutustoimija);
         SetJoin<LokalisoituTeksti, Teksti> ktNimi = koulutustoimija.join(Koulutustoimija_.nimi).join(LokalisoituTeksti_.teksti);
 
-        Predicate pred = buildPredicate(root, koulutustoimija, cb, queryDto, ktNimi);     
-        
+        Predicate pred = buildPredicate(root, koulutustoimija, cb, queryDto, ktNimi);
+
         query.distinct(true);
         final Expression<String> n = cb.lower(ktNimi.get(Teksti_.teksti));
 
@@ -101,7 +100,7 @@ public class KoulutustoimijaRepositoryImpl implements KoulutustoimijaCustomRepos
             SetJoin<LokalisoituTeksti, Teksti> ktNimi
     ) {
         Predicate pred = cb.notEqual(koulutustoimija.get(Koulutustoimija_.organisaatio), SecurityUtil.OPH_OID);
-        pred = cb.and(pred, cb.equal(root.get(Opetussuunnitelma_.tila), Tila.JULKAISTU));
+        pred = cb.and(pred, cb.or(cb.equal(root.get(Opetussuunnitelma_.tila), Tila.JULKAISTU), cb.isNotEmpty(root.get(Opetussuunnitelma_.julkaisut))));
         pred = cb.and(pred, cb.equal(koulutustoimija.get(Koulutustoimija_.organisaatioRyhma), queryDto.isOrganisaatioRyhma()));
 
         Kieli kieli = Kieli.of(queryDto.getKieli());
@@ -109,12 +108,12 @@ public class KoulutustoimijaRepositoryImpl implements KoulutustoimijaCustomRepos
             SetJoin<Opetussuunnitelma, Kieli> kielet = root.join(Opetussuunnitelma_.julkaisukielet);
             pred = cb.and(pred, kielet.in(kieli));
         }
-        
+
         if (!ObjectUtils.isEmpty(queryDto.getKieli())) {
 	        Predicate koulutustoimijaKielella = cb.equal(ktNimi.get(Teksti_.kieli), Kieli.of(queryDto.getKieli()));
-	        pred = cb.and(pred, koulutustoimijaKielella); 
+	        pred = cb.and(pred, koulutustoimijaKielella);
         }
-        
+
         if (!ObjectUtils.isEmpty(queryDto.getNimi())) {
             SetJoin<LokalisoituTeksti, Teksti> nimi = koulutustoimija.join(Koulutustoimija_.nimi).join(LokalisoituTeksti_.teksti);
             Predicate nimessa = cb.like(cb.lower(nimi.get(Teksti_.teksti)), cb.literal(RepositoryUtil.kuten(queryDto.getNimi())));
