@@ -174,6 +174,7 @@ public class JulkinenController {
             @ApiImplicitParam(name = "sivukoko", dataType = "long", paramType = "query"),
             @ApiImplicitParam(name = "nimi", dataType = "string", paramType = "query"),
             @ApiImplicitParam(name = "organisaatioRyhma", dataType = "boolean", paramType = "query", defaultValue = "false"),
+            @ApiImplicitParam(name = "koulutustyyppi", dataType = "string", paramType = "query", allowMultiple = true),
     })
     @RequestMapping(value = "/koulutustoimijat", method = RequestMethod.GET)
     public Page<KoulutustoimijaJulkinenDto> findKoulutustoimijat(
