@@ -1,5 +1,6 @@
 package fi.vm.sade.eperusteet.amosaa.service.util;
 
+import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiTila;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiService;
@@ -47,5 +48,15 @@ public class DokumenttiServiceMock implements DokumenttiService {
     @Override
     public byte[] get(Long ktId, Long opsId, Kieli kieli) {
         return new byte[0];
+    }
+
+    @Override
+    public void updateDokumenttiPdfData(byte[] pdfData, Long dokumenttiId) {
+
+    }
+
+    @Override
+    public void updateDokumenttiTila(DokumenttiTila tila, Long dokumenttiId) {
+
     }
 }
