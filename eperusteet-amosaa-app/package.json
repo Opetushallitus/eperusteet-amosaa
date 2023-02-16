@@ -69,7 +69,7 @@
     "d3": "3.5.14",
     "diff": "3.0.1",
     "eperusteet-frontend-utils": "git+https://github.com/Opetushallitus/eperusteet-frontend-utils.git#master",
-    "es6-promise": "4.2.5",
+    "es6-promise": "4.2.8",
     "font-awesome": "4.5.0",
     "jquery-sticky": "1.0.3",
     "moment": "2.22.2",
