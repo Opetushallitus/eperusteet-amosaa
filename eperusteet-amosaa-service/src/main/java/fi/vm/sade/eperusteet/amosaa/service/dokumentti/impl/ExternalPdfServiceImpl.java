@@ -16,8 +16,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
-
 @Service
 public class ExternalPdfServiceImpl implements ExternalPdfService {
 
@@ -35,11 +33,10 @@ public class ExternalPdfServiceImpl implements ExternalPdfService {
     @Override
     public void generatePdf(DokumenttiDto dto, Long ktId) throws JsonProcessingException {
         RestTemplate restTemplate = new RestTemplate();
-        OpetussuunnitelmaKaikkiDto sisalto = opetussuunnitelmaService.getOpetussuunnitelmaKaikki(ktId, dto.getOpsId());
-        String json = mapper.writeValueAsString(sisalto);
+        OpetussuunnitelmaKaikkiDto ops = opetussuunnitelmaService.getOpetussuunnitelmaKaikki(ktId, dto.getOpsId());
+        String json = mapper.writeValueAsString(ops);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> entity = new HttpEntity<>(json, headers);
 

@@ -217,6 +217,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
         dokumentti.setData(data);
         dokumentti.setTila(DokumenttiTila.VALMIS);
         dokumentti.setValmistumisaika(new Date());
+        dokumentti.setVirhekoodi(null);
         dokumenttiRepository.save(dokumentti);
     }
 
