@@ -134,5 +134,8 @@ public interface SisaltoViiteService extends LockService<SisaltoViiteCtx> {
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
     SisaltoViiteDto kopioiLinkattuSisaltoViiteet(Long ktId, Long opsId, Long viiteId);
+
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
+    List<SisaltoViiteDto> tutkinnonosienOletusToteutukset(Long ktId, Long opsId);
 }
 

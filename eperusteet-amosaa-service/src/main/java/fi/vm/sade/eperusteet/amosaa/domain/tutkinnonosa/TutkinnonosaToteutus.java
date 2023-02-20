@@ -83,6 +83,10 @@ public class TutkinnonosaToteutus extends AbstractAuditedEntity implements Seria
     @OrderColumn(name = "jnro")
     private List<VapaaTeksti> vapaat = new ArrayList<>();
 
+    @Getter
+    @Setter
+    private boolean oletustoteutus;
+
     @Override
     public TutkinnonosaToteutus copy(boolean deep) {
         TutkinnonosaToteutus result = new TutkinnonosaToteutus();

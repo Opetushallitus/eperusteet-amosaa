@@ -1228,4 +1228,10 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
         }
     }
 
+    @Override
+    public List<SisaltoViiteDto> tutkinnonosienOletusToteutukset(Long ktId, Long opetussuunnitelmaId) {
+        List<SisaltoViite> oletustoteutukset = repository.findTutkinnonosienOletusotetutukset(opetussuunnitelmaId);
+        return mapper.mapAsList(oletustoteutukset, SisaltoViiteDto .class);
+    }
+
 }
