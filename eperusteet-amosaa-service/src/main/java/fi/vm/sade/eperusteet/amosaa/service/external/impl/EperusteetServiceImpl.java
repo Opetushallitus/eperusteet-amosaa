@@ -117,7 +117,7 @@ public class EperusteetServiceImpl implements EperusteetService {
     }
 
     @Override
-    public CachedPerusteBaseDto getCachedPeruste(PerusteDto peruste) {
+    public CachedPerusteBaseDto getCachedPeruste(PerusteBaseDto peruste) {
         Date viimeisinJulkaisu = eperusteetClient.getViimeisinJulkaisuPeruste(peruste.getId());
         CachedPeruste cperuste = cachedPerusteRepository.findFirstByPerusteIdAndLuotu(peruste.getId(), viimeisinJulkaisu);
         if (cperuste == null) {

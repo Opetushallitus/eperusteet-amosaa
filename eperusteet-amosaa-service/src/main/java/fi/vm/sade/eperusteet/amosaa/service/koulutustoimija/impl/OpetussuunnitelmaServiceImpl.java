@@ -100,6 +100,8 @@ import fi.vm.sade.eperusteet.amosaa.service.ops.OpetussuunnitelmaPohjaCreateServ
 import fi.vm.sade.eperusteet.amosaa.service.ops.OpetussuunnitelmaValidationService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.ValidointiService;
+import fi.vm.sade.eperusteet.amosaa.service.ops.impl.OpetussuunnitelmaSisaltoCreateUtil;
+import fi.vm.sade.eperusteet.amosaa.service.peruste.OpetussuunnitelmaPerustePaivitysService;
 import fi.vm.sade.eperusteet.amosaa.service.security.KoulutustyyppiRolePrefix;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionManager;
 import fi.vm.sade.eperusteet.amosaa.service.util.CollectionUtil;
@@ -707,37 +709,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
             SisaltoViite tosat = rootTkv.getLapset().get(0);
             for (TutkinnonosaKaikkiDto tosa : tutkinnonOsat) {
-                SisaltoViite uusi = SisaltoViite.createTutkinnonOsa(tosat);
-                uusi.setPakollinen(false);
-                uusi.getTekstiKappale().setNimi(LokalisoituTeksti.of(tosa.getNimi()));
-                Tutkinnonosa uusiTosa = uusi.getTosa();
-                uusiTosa.setTyyppi(TutkinnonosaTyyppi.PERUSTEESTA);
-                uusiTosa.setPerusteentutkinnonosa(tosa.getId());
-                uusiTosa.setKoodi(tosa.getKoodiUri());
-
-                for (OsaAlueKokonaanDto perusteenOsaAlue : tosa.getOsaAlueet()) {
-                    Osaamistavoite2020Dto pakolliset = perusteenOsaAlue.getPakollisetOsaamistavoitteet();
-                    Osaamistavoite2020Dto valinnaiset = perusteenOsaAlue.getValinnaisetOsaamistavoitteet();
-
-                    if (pakolliset != null) {
-                        OmaOsaAlue oa = new OmaOsaAlue();
-                        oa.setTyyppi(OmaOsaAlueTyyppi.PAKOLLINEN);
-                        oa.setPiilotettu(false);
-                        oa.setPerusteenOsaAlueKoodi(perusteenOsaAlue.getKoodiUri());
-                        oa.setPerusteenOsaAlueId(perusteenOsaAlue.getId());
-                        uusi.getOsaAlueet().add(oa);
-                    }
-
-                    if (valinnaiset != null) {
-                        OmaOsaAlue oa = new OmaOsaAlue();
-                        oa.setTyyppi(OmaOsaAlueTyyppi.VALINNAINEN);
-                        oa.setPiilotettu(false);
-                        oa.setPerusteenOsaAlueKoodi(perusteenOsaAlue.getKoodiUri());
-                        oa.setPerusteenOsaAlueId(perusteenOsaAlue.getId());
-                        uusi.getOsaAlueet().add(oa);
-                    }
-                }
-
+                SisaltoViite uusi = OpetussuunnitelmaSisaltoCreateUtil.perusteenTutkinnonosaToSisaltoviite(tosat, tosa);
                 tkvRepository.save(uusi);
             }
         }
@@ -799,24 +771,30 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     @Override
     public void paivitaPeruste(Long ktId, Long opsId) {
         Opetussuunnitelma ops = repository.getOne(opsId);
-        PerusteDto perusteDto = eperusteetClient.getPeruste(ops.getPeruste().getPerusteId(), PerusteDto.class);
+        PerusteKaikkiDto perusteDto = eperusteetClient.getPeruste(ops.getPeruste().getPerusteId(), PerusteKaikkiDto.class);
         CachedPerusteBaseDto cp = eperusteetService.getCachedPeruste(perusteDto);
         CachedPeruste newCachedPeruste = cachedPerusteRepository.findOne(cp.getId());
-        Set<UUID> tunnisteet = eperusteetService.getRakenneTunnisteet(newCachedPeruste.getId(), ops.getSuoritustapa());
-        if (tunnisteet.isEmpty()) {
-            tunnisteet = eperusteetService.getRakenneTunnisteet(newCachedPeruste.getId(), Suoritustapakoodi.REFORMI.toString());
-        }
+        dispatcher.get(ops.getOpsKoulutustyyppi(), OpetussuunnitelmaPerustePaivitysService.class).paivitaOpetussuunnitelma(opsId, perusteDto);
 
-        Set<UUID> kaytetytTunnisteet = tkvService.getSuorituspolkurakenne(ktId, opsId).stream()
-                .map(AbstractRakenneOsaDto::getTunniste)
-                .collect(Collectors.toSet());
-
-        if (!tunnisteet.containsAll(kaytetytTunnisteet)) {
-            log.error("Opetussuunnitelman perusteen synkronointi epäonnistui \nops: {} \nperuste: {} \nold: {} \nnew: {} \ntunnisteet: {} \nnykyisetTunnisteet: {} \ntunniste-ero: {}",
-                    ops.getId(), perusteDto.getId(), ops.getPeruste().getLuotu(),newCachedPeruste.getLuotu(), tunnisteet, kaytetytTunnisteet,
-                    Sets.difference(tunnisteet, kaytetytTunnisteet));
-            throw new BusinessRuleViolationException("ei-voi-synkronoida");
-        }
+//        Set<UUID> tunnisteet = eperusteetService.getRakenneTunnisteet(newCachedPeruste.getId(), ops.getSuoritustapa());
+//        if (tunnisteet.isEmpty()) {
+//            tunnisteet = eperusteetService.getRakenneTunnisteet(newCachedPeruste.getId(), Suoritustapakoodi.REFORMI.toString());
+//        }
+//
+//        Set<UUID> kaytetytTunnisteet = tkvService.getSuorituspolkurakenne(ktId, opsId).stream()
+//                .map(AbstractRakenneOsaDto::getTunniste)
+//                .collect(Collectors.toSet());
+//
+//        log.info("kaytetytTunnisteet: {}", kaytetytTunnisteet);
+//        log.info("perusteen tunnisteet: {}", tunnisteet);
+//
+//
+//        if (!tunnisteet.containsAll(kaytetytTunnisteet)) {
+//            log.error("Opetussuunnitelman perusteen synkronointi epäonnistui \nops: {} \nperuste: {} \nold: {} \nnew: {} \ntunnisteet: {} \nnykyisetTunnisteet: {} \ntunniste-ero: {}",
+//                    ops.getId(), perusteDto.getId(), ops.getPeruste().getLuotu(),newCachedPeruste.getLuotu(), tunnisteet, kaytetytTunnisteet,
+//                    Sets.difference(tunnisteet, kaytetytTunnisteet));
+//            throw new BusinessRuleViolationException("ei-voi-synkronoida");
+//        }
 
         List<SisaltoViite> tutkinnonOsaViitteet = sisaltoviiteRepository.findTutkinnonosat(ops);
         Set<Long> tutkinnonOsienPerusteIdt = tutkinnonOsaViitteet.stream()

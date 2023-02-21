@@ -35,7 +35,7 @@ import java.util.UUID;
 @PreAuthorize("permitAll()") // OK, koska mäppääntyy julkisiin rajapintoihin
 public interface EperusteetService {
     @PreAuthorize("isAuthenticated()")
-    CachedPerusteBaseDto getCachedPeruste(PerusteDto peruste);
+    CachedPerusteBaseDto getCachedPeruste(PerusteBaseDto peruste);
 
     JsonNode getTutkinnonOsat(Long id);
 
