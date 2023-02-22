@@ -431,6 +431,17 @@ public class EperusteetServiceImpl implements EperusteetService {
         return null;
     }
 
+    @Override
+    public PerusteKaikkiDto getPerusteKaikki(Long perusteCacheId) {
+        try {
+            CachedPeruste cperuste = getMostRecentCachedPerusteByPerusteId(perusteCacheId);
+            JsonNode node = mapper.readTree(cperuste.getPeruste());
+            return mapper.treeToValue(node, PerusteKaikkiDto.class);
+        } catch (IOException ex) {
+            throw new BusinessRuleViolationException("perusteen-parsinta-epaonnistui");
+        }
+    }
+
     private CachedPeruste getMostRecentCachedPerusteByPerusteId(Long perusteCacheId) {
         CachedPeruste cperuste = cachedPerusteRepository.findOne(perusteCacheId);
         return cachedPerusteRepository.findFirstByPerusteIdOrderByLuotuDesc(cperuste.getPerusteId());

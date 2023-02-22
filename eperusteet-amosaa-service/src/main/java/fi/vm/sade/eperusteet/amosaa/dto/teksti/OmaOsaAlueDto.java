@@ -16,9 +16,9 @@ public class OmaOsaAlueDto {
     private LokalisoituTekstiDto nimi;
     private String perusteenOsaAlueKoodi;
     private Long perusteenOsaAlueId;
-    private LokalisoituTekstiDto tavatjaymparisto;
-    private LokalisoituTekstiDto arvioinnista;
     private boolean piilotettu;
-    private List<VapaaTekstiDto> vapaat = new ArrayList<>();
+    private List<OmaOsaAlueToteutusDto> toteutukset = new ArrayList<>();
     private PaikallisetAmmattitaitovaatimukset2019Dto osaamistavoitteet = new PaikallisetAmmattitaitovaatimukset2019Dto();
+    private Long geneerinenarviointi;
+    private Integer laajuus;
 }

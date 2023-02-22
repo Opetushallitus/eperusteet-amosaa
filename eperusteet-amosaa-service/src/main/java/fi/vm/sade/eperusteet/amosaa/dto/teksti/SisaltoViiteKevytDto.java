@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteBaseDto;
@@ -49,6 +50,8 @@ public class SisaltoViiteKevytDto {
     private TuvaLaajaAlainenOsaaminenDto tuvaLaajaAlainenOsaaminen;
     private SisaltoTyyppi linkattuTyyppi;
     private OpintokokonaisuusDto opintokokonaisuus;
+    private Long perusteenOsaId;
+    private List<OmaOsaAlueKevytDto> osaAlueet = new ArrayList<>();
 
     public LokalisoituTekstiDto getNimi() {
         if (koulutuksenosa != null) {

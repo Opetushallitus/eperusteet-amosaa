@@ -26,7 +26,11 @@ public enum NavigationType {
     koto_opinto,
     koto_laajaalainenosaaminen,
     opetussuunnitelma_rakenne,
-    linkki;
+    linkki,
+    pakolliset_osaalueet,
+    valinnaiset_osaalueet,
+    paikalliset_osaalueet,
+    osaalue;
 
     public static NavigationType of(String type) {
         for (NavigationType t : values()) {

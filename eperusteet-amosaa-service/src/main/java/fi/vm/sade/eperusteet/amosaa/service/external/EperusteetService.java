@@ -79,6 +79,8 @@ public interface EperusteetService {
 
     PerusteenOsaDto getPerusteenOsa(Long perusteId, Long perusteenOsaId);
 
+    PerusteKaikkiDto getPerusteKaikki(Long perusteCacheId);
+
 //    <T> T getPeruste(String diaariNumero, Class<T> type);
 //
 //    PerusteDto getYleinenPohja();
