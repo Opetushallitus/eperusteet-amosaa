@@ -370,13 +370,6 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
         }
     }
 
-    private SisaltoViiteKevytDto getFirstOfType(Long ktId, Long opsId, SisaltoTyyppi tyyppi) {
-        List<SisaltoViiteKevytDto> sisaltoViitteet = service.getSisaltoViitteet(ktId, opsId, SisaltoViiteKevytDto.class);
-        return sisaltoViitteet.stream()
-                .filter(sv -> sv.getTyyppi().equals(tyyppi))
-                .findAny().get();
-    }
-
     @Test
     @Rollback
     public void testUpdateOpetussuunnitelmaPiilotetutSisaltoviitteet_ei_piilotuksia() {

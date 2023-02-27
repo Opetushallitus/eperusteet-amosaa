@@ -45,4 +45,6 @@ public interface EperusteetClient {
 
     Date getViimeisinJulkaisuPeruste(Long perusteId);
 
+    List<PerusteDto> findPerusteetByKoulutuskoodit(List<String> koulutuskoodit);
+
 }

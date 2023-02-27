@@ -70,6 +70,9 @@ public class EperusteetClientMock implements EperusteetClient {
         perusteet.add(openFakeData("/perusteet/tuvaPeruste.json"));
         perusteet.add(openFakeData("/perusteet/vstPeruste.json"));
         perusteet.add(openFakeData("/perusteet/amosaaPeruste2.json"));
+        perusteet.add(openFakeData("/perusteet/amosaaPerusteKoulutuskoodiVanha.json"));
+        perusteet.add(openFakeData("/perusteet/amosaaPerusteKoulutuskoodiUusi.json"));
+        perusteet.add(openFakeData("/perusteet/amosaaPerusteKoulutuskoodiUusi2.json"));
     }
 
     public static final String DIAARINUMERO = "mock-diaarinumero";
@@ -165,6 +168,20 @@ public class EperusteetClientMock implements EperusteetClient {
     @Override
     public Date getViimeisinJulkaisuPeruste(Long perusteId) {
         return DateTime.now().toDate();
+    }
+
+    @Override
+    public List<PerusteDto> findPerusteetByKoulutuskoodit(List<String> koulutuskoodit) {
+        if (koulutuskoodit.contains("koulutuskoodi_uusiperuste")) {
+            try {
+                return Arrays.asList(
+                        objectMapper.treeToValue(openFakeData("/perusteet/amosaaPerusteKoulutuskoodiUusi.json"), PerusteDto.class),
+                        objectMapper.treeToValue(openFakeData("/perusteet/amosaaPerusteKoulutuskoodiUusi2.json"), PerusteDto.class));
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return Collections.EMPTY_LIST;
     }
 
     @Override

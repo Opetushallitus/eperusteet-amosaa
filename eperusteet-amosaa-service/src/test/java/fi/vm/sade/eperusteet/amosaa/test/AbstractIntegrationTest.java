@@ -16,6 +16,7 @@
 package fi.vm.sade.eperusteet.amosaa.test;
 
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteKevytDto;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetClient;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator;
@@ -105,6 +106,9 @@ public abstract class AbstractIntegrationTest {
     @Autowired
     protected KoulutustoimijaRepository koulutustoimijaRepository;
 
+    @Autowired
+    protected SisaltoViiteService sisaltoViiteService;
+
     protected List<KoulutustoimijaBaseDto> koulutustoimijat = new ArrayList<>();
     protected KoulutustoimijaBaseDto toimija = null;
     protected Kayttaja kayttaja = null;
@@ -115,6 +119,10 @@ public abstract class AbstractIntegrationTest {
 
     protected KoulutustoimijaBaseDto getKoulutustoimija() {
         return toimija;
+    }
+
+    protected Koulutustoimija koulutustoimija() {
+        return koulutustoimijaRepository.findOne(getKoulutustoimijaId());
     }
 
     protected KayttajaoikeusDto updateUserOikeus(Long ktId, Long opsId, KayttajaoikeusTyyppi oikeus, String kayttajaOid) {
@@ -280,6 +288,20 @@ public abstract class AbstractIntegrationTest {
         Koulutustoimija koulutustoimija = koulutustoimijaRepository.getOne(getKoulutustoimijaId());
         koulutustoimija.setOrganisaatioRyhma(true);
         koulutustoimijaRepository.save(koulutustoimija);
+    }
+
+    public SisaltoViiteKevytDto getFirstOfType(Long ktId, Long opsId, SisaltoTyyppi tyyppi) {
+        List<SisaltoViiteKevytDto> sisaltoViitteet = sisaltoViiteService.getSisaltoViitteet(ktId, opsId, SisaltoViiteKevytDto.class);
+        return sisaltoViitteet.stream()
+                .filter(sv -> sv.getTyyppi().equals(tyyppi))
+                .findAny().get();
+    }
+
+    public List<SisaltoViiteKevytDto> getType(Long ktId, Long opsId, SisaltoTyyppi tyyppi) {
+        List<SisaltoViiteKevytDto> sisaltoViitteet = sisaltoViiteService.getSisaltoViitteet(ktId, opsId, SisaltoViiteKevytDto.class);
+        return sisaltoViitteet.stream()
+                .filter(sv -> sv.getTyyppi().equals(tyyppi))
+                .collect(Collectors.toList());
     }
 
 }

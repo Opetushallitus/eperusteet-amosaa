@@ -16,11 +16,14 @@
 
 package fi.vm.sade.eperusteet.amosaa.resource.peruste;
 
+import fi.vm.sade.eperusteet.amosaa.dto.OpsHakuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteenOsaDto;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -142,6 +145,17 @@ public class PerusteController extends KoulutustoimijaIdGetterAbstractController
     @RequestMapping(value = "/{perusteId}/perusteenosa/{perusteenosaId}", method = RequestMethod.GET)
     public PerusteenOsaDto getPerusteenOsa(@PathVariable Long perusteId, @PathVariable Long perusteenosaId) {
         return service.getPerusteenOsa(perusteId, perusteenosaId);
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
+    @RequestMapping(value = "/koulutustoimija/{ktId}/opetussuunnitelma/{opetussuunnitelmaId}/koulutuskoodillakorvaava", method = RequestMethod.GET)
+    public PerusteDto getKoulutuskoodillaKorvaavaPeruste(
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @PathVariable Long opetussuunnitelmaId
+    ) {
+        return service.getKoulutuskoodillaKorvaavaPeruste(ktId, opetussuunnitelmaId);
     }
     
 //    @RequestMapping(value = "/{perusteId}/tutkintonimikekoodit", method = GET)

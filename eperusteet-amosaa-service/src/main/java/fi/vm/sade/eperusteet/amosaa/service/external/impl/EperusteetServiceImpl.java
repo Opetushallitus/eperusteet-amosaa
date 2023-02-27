@@ -28,6 +28,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.SuorituspolkuRiviDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.*;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
+import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.peruste.CachedPerusteRepository;
 import fi.vm.sade.eperusteet.amosaa.resource.config.AbstractRakenneOsaDeserializer;
 import fi.vm.sade.eperusteet.amosaa.resource.config.MappingModule;
@@ -102,6 +103,9 @@ public class EperusteetServiceImpl implements EperusteetService {
 
     @Autowired
     private HttpEntity httpEntity;
+
+    @Autowired
+    private OpetussuunnitelmaRepository opetussuunnitelmaRepository;
 
     @PostConstruct
     protected void init() {
@@ -445,5 +449,25 @@ public class EperusteetServiceImpl implements EperusteetService {
     private CachedPeruste getMostRecentCachedPerusteByPerusteId(Long perusteCacheId) {
         CachedPeruste cperuste = cachedPerusteRepository.findOne(perusteCacheId);
         return cachedPerusteRepository.findFirstByPerusteIdOrderByLuotuDesc(cperuste.getPerusteId());
+    }
+
+    @Override
+    public PerusteDto getKoulutuskoodillaKorvaavaPeruste(Long ktId, Long opsId) {
+        Opetussuunnitelma opetussuunnitelma = opetussuunnitelmaRepository.findOne(opsId);
+        PerusteDto opetussuunnitelmanPeruste = getPerusteSisalto(opetussuunnitelma.getPeruste(), PerusteDto.class);
+        PerusteDto uusiPeruste = eperusteetClient.findPerusteetByKoulutuskoodit(opetussuunnitelmanPeruste.getKoulutukset().stream()
+                        .map(KoulutusDto::getKoulutuskoodiUri)
+                        .collect(Collectors.toList()))
+                .stream()
+                .sorted(Comparator.comparing(PerusteDto::getVoimassaoloAlkaa, Comparator.reverseOrder()))
+                .findFirst().orElse(null);
+
+        if (uusiPeruste == null
+                || uusiPeruste.getId().equals(opetussuunnitelma.getPeruste().getPerusteId())
+                || uusiPeruste.getVoimassaoloAlkaa().compareTo(opetussuunnitelmanPeruste.getVoimassaoloAlkaa()) <= 0) {
+            return null;
+        }
+
+        return uusiPeruste;
     }
 }

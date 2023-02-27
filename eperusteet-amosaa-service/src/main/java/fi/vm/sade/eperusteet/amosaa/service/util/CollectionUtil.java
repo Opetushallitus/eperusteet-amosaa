@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -40,7 +41,11 @@ public class CollectionUtil {
             final LinkedList<T> stack = new LinkedList<>();
 
             {
-                stack.addAll(roots);
+                roots.forEach(r -> {
+                    if (!stack.contains(r)) {
+                        stack.add(r);
+                    }
+                });
             }
 
             @Override
@@ -51,13 +56,19 @@ public class CollectionUtil {
             @Override
             public T next() {
                 T next = stack.pop();
-                stack.addAll(mapper.apply(next));
+
+                mapper.apply(next).forEach(r -> {
+                    if (!stack.contains(r)) {
+                        stack.add(r);
+                    }
+                });
+
                 return next;
             }
         };
 
         Iterable<T> iterable = () -> iterator;
-        return StreamSupport.stream(iterable.spliterator(), false);
+        return StreamSupport.stream(iterable.spliterator(), false).collect(Collectors.toSet()).stream();
     }
 
     public static <T> Stream<T> treeToStream(T root, Function<T, Collection<T>> mapper) {

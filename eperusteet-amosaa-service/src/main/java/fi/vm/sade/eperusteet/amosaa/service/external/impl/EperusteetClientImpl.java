@@ -1,11 +1,14 @@
 package fi.vm.sade.eperusteet.amosaa.service.external.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.PalauteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttooikeusKayttajaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koodisto.KoodistoKoodiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.AbstractRakenneOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.ArviointiasteikkoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
@@ -14,6 +17,7 @@ import fi.vm.sade.eperusteet.amosaa.resource.config.AbstractRakenneOsaDeserializ
 import fi.vm.sade.eperusteet.amosaa.resource.config.MappingModule;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetClient;
+import fi.vm.sade.eperusteet.amosaa.service.util.JsonMapper;
 import fi.vm.sade.eperusteet.utils.client.OphClientHelper;
 import fi.vm.sade.eperusteet.utils.client.RestClientFactory;
 import fi.vm.sade.javautils.http.OphHttpClient;
@@ -35,10 +39,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import static java.util.Collections.singletonList;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 
 @Service
@@ -60,6 +69,14 @@ public class EperusteetClientImpl implements EperusteetClient {
     @Autowired
     private OphClientHelper ophClientHelper;
 
+    @Autowired
+    private JsonMapper jsonMapper;
+
+    private RestTemplate restTemplate;
+
+    @Autowired
+    private HttpEntity httpEntity;
+
     @PostConstruct
     protected void init() {
         client = restClientFactory.get(eperusteetServiceUrl, false);
@@ -68,6 +85,7 @@ public class EperusteetClientImpl implements EperusteetClient {
         module.addDeserializer(AbstractRakenneOsaDto.class, new AbstractRakenneOsaDeserializer());
         mapper.registerModule(module);
         mapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
+        restTemplate = new RestTemplate(singletonList(jsonMapper.messageConverter().orElseThrow(IllegalStateException::new)));
     }
 
     private <T> T commonGet(String endpoint, Class<T> type) {
@@ -237,5 +255,19 @@ public class EperusteetClientImpl implements EperusteetClient {
     @Transactional(noRollbackFor = BusinessRuleViolationException.class)
     public Date getViimeisinJulkaisuPeruste(Long perusteId) {
         return commonGet(UriComponentsBuilder.fromPath("/api/perusteet/{perusteId}/viimeisinjulkaisuaika").build(perusteId).getPath(), Date.class);
+    }
+
+    @Override
+    public List<PerusteDto> findPerusteetByKoulutuskoodit(List<String> koulutuskoodit) {
+        String url = UriComponentsBuilder
+                .fromHttpUrl(eperusteetServiceUrl + "/api/perusteet/julkaisut")
+                .queryParam("koodi", koulutuskoodit)
+                .queryParam("sivukoko", 100)
+                .build().toUriString();
+        try {
+            return mapper.readValue(restTemplate.exchange(url, HttpMethod.GET, httpEntity, JsonNode.class).getBody().get("data").toString(), new TypeReference<List<PerusteDto>>() {});
+        } catch (JsonProcessingException ex) {
+            throw new BusinessRuleViolationException("Perusteiden haku epäonnistui", ex);
+        }
     }
 }

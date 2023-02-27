@@ -22,6 +22,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.peruste.*;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -80,6 +81,9 @@ public interface EperusteetService {
     PerusteenOsaDto getPerusteenOsa(Long perusteId, Long perusteenOsaId);
 
     PerusteKaikkiDto getPerusteKaikki(Long perusteCacheId);
+
+    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
+    PerusteDto getKoulutuskoodillaKorvaavaPeruste(@P("ktId") Long ktId, Long opsId);
 
 //    <T> T getPeruste(String diaariNumero, Class<T> type);
 //

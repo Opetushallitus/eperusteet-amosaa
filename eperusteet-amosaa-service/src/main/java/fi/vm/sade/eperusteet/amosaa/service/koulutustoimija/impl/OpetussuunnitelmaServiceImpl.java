@@ -111,6 +111,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -703,6 +704,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                                     : -1;
                         })
                         .map(tosa -> idToTosaMap.get(tosa.getTutkinnonOsa()))
+                        .filter(Objects::nonNull)
                         .filter(tutkinnonosa -> CollectionUtils.isEmpty(tutkinnonOsaKoodiIncludes) || tutkinnonOsaKoodiIncludes.contains(tutkinnonosa.getKoodiUri()))
                         .collect(Collectors.toList());
             }
@@ -877,6 +879,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
             if (opsDto.getTyyppi() != OpsTyyppi.YHTEINEN) {
                 rootTkv = new SisaltoViite();
                 rootTkv.setOwner(ops);
+                ops.getSisaltoviitteet().add(rootTkv);
                 rootTkv = tkvRepository.save(rootTkv);
             }
 
