@@ -6,9 +6,11 @@ import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
-import fi.vm.sade.eperusteet.amosaa.domain.peruste.Koulutuskoodi;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
-import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Tutkinnonosa;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaOsaAlue;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaOsaAlueTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaLuontiDto;
@@ -28,7 +30,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -73,13 +74,49 @@ public class AmmatillinenOpetussuunnitelmaCreateService implements Opetussuunnit
         }
 
         Opetussuunnitelma opetussuunnitelma = asetaPerusteenTiedot(koulutustoimija, pohja, uusiPeruste);
-        asetaTutkinnonosatiedotPohjasta(pohja, opetussuunnitelma);
-        kopioiTutkinnonosatPohjasta(pohja, opetussuunnitelma);
+        opetussuunnitelma.setNimi(LokalisoituTeksti.of(opsDto.getNimi().getTeksti()));
+        asetaPerusteenTutkinnonosatiedotPohjasta(pohja, opetussuunnitelma);
+        kopioiPaikallisetTutkinnonosatPohjasta(pohja, opetussuunnitelma);
+        kopioiPaikallisetTekstikappaleetPohjasta(pohja, opetussuunnitelma);
 
         return mapper.map(opetussuunnitelma, OpetussuunnitelmaBaseDto.class);
     }
 
-    private void kopioiTutkinnonosatPohjasta(Opetussuunnitelma pohja, Opetussuunnitelma opetussuunnitelma) {
+    private void kopioiPaikallisetTekstikappaleetPohjasta(Opetussuunnitelma pohja, Opetussuunnitelma opetussuunnitelma) {
+        SisaltoViite rootSisaltoviite = opetussuunnitelma.getSisaltoviitteet().stream().filter(sv -> sv.getVanhempi() == null).findFirst().get();
+        SisaltoViite pohjaRootSisaltoviite = pohja.getSisaltoviitteet().stream().filter(sv -> sv.getVanhempi() == null).findFirst().get();
+
+        pohjaRootSisaltoviite.getLapset().stream().filter(sisaltoviite -> sisaltoviite.getTyyppi().equals(SisaltoTyyppi.TEKSTIKAPPALE))
+                .forEach(sisaltoviite -> {
+                    SisaltoViite uusiTk = kopioiTekstikappaleet(sisaltoviite,opetussuunnitelma);
+                    uusiTk.setVanhempi(rootSisaltoviite);
+                    rootSisaltoviite.getLapset().add(uusiTk);
+                });
+    }
+
+    public SisaltoViite kopioiTekstikappaleet(SisaltoViite original, Opetussuunnitelma owner) {
+        if (!original.getTyyppi().equals(SisaltoTyyppi.TEKSTIKAPPALE)) {
+            return null;
+        }
+
+        SisaltoViite result = original.copy(false, true);
+        result.setOwner(owner);
+        List<SisaltoViite> lapset = original.getLapset();
+
+        if (lapset != null) {
+            for (SisaltoViite lapsi : lapset) {
+                SisaltoViite uusiLapsi = kopioiTekstikappaleet(lapsi, owner);
+                if (uusiLapsi != null) {
+                    uusiLapsi.setVanhempi(result);
+                    result.getLapset().add(uusiLapsi);
+                }
+            }
+        }
+
+        return sisaltoviiteRepository.save(result);
+    }
+
+    private void kopioiPaikallisetTutkinnonosatPohjasta(Opetussuunnitelma pohja, Opetussuunnitelma opetussuunnitelma) {
         List<SisaltoViite> pohjastaKopioitavatPaikallisetTutkinnonOsat = CollectionUtil.treeToStream(pohja.getSisaltoviitteet(), SisaltoViite::getLapset)
                 .filter(sisaltoviite -> sisaltoviite.getTyyppi().equals(SisaltoTyyppi.TUTKINNONOSA)
                         && sisaltoviite.getTosa().getTyyppi().equals(TutkinnonosaTyyppi.OMA))
@@ -98,23 +135,40 @@ public class AmmatillinenOpetussuunnitelmaCreateService implements Opetussuunnit
         });
     }
 
-    private void asetaTutkinnonosatiedotPohjasta(Opetussuunnitelma pohja, Opetussuunnitelma opetussuunnitelma) {
+    private void asetaPerusteenTutkinnonosatiedotPohjasta(Opetussuunnitelma pohja, Opetussuunnitelma opetussuunnitelma) {
         PerusteKaikkiDto perusteKaikkiDto = eperusteetService.getPerusteKaikki(opetussuunnitelma.getPeruste().getId());
         List<String> perusteenTosaKoodit = perusteKaikkiDto.getTutkinnonOsat().stream()
                 .map(TutkinnonosaKaikkiDto::getKoodiUri)
                 .collect(Collectors.toList());
 
-        Map<String, Tutkinnonosa> pohjastaKopioitavatPerusteenTutkinnonOsat = CollectionUtil.treeToStream(pohja.getSisaltoviitteet(), SisaltoViite::getLapset)
+        Map<String, SisaltoViite> pohjastaKopioitavatPerusteenTutkinnonOsat = CollectionUtil.treeToStream(pohja.getSisaltoviitteet(), SisaltoViite::getLapset)
                 .filter(sisaltoviite -> sisaltoviite.getTyyppi().equals(SisaltoTyyppi.TUTKINNONOSA)
                         && perusteenTosaKoodit.contains(sisaltoviite.getTosa().getKoodi()))
-                .collect(Collectors.toMap(viite -> viite.getTosa().getKoodi(), SisaltoViite::getTosa));
+                .collect(Collectors.toMap(viite -> viite.getTosa().getKoodi(), viite -> viite));
 
 
-        CollectionUtil.treeToStream(opetussuunnitelma.getSisaltoviitteet(), SisaltoViite::getLapset).collect(Collectors.toSet()).stream()
+        CollectionUtil.treeToStream(opetussuunnitelma.getSisaltoviitteet(), SisaltoViite::getLapset)
                 .filter(sisaltoviite -> sisaltoviite.getTyyppi().equals(SisaltoTyyppi.TUTKINNONOSA)
                         && pohjastaKopioitavatPerusteenTutkinnonOsat.containsKey(sisaltoviite.getTosa().getKoodi()))
                 .forEach(sisaltoviite -> {
-                    sisaltoviite.getTosa().asetaPaikallisetMaaritykset(pohjastaKopioitavatPerusteenTutkinnonOsat.get(sisaltoviite.getTosa().getKoodi()));
+                    SisaltoViite pohjanSisaltoviite = pohjastaKopioitavatPerusteenTutkinnonOsat.get(sisaltoviite.getTosa().getKoodi());
+                    Map<String, OmaOsaAlue> pohjanOsaAlueet = pohjanSisaltoviite.getOsaAlueet().stream()
+                            .filter(osaalue -> !osaalue.getTyyppi().equals(OmaOsaAlueTyyppi.PAIKALLINEN))
+//                            .collect(Collectors.toMap(OmaOsaAlue::getPerusteenOsaAlueKoodi, omaOsaalue -> omaOsaalue)); // koodia ei voi käyttää koska tekevät useampia samalla koodilla..
+                            .collect(Collectors.toMap(omaOsaAlue -> omaOsaAlue.getNimi().getTeksti().get(Kieli.FI) + omaOsaAlue.getTyyppi(), omaOsaalue -> omaOsaalue));
+                    List<OmaOsaAlue> pohjanPaikallisetOsaAlueet = pohjanSisaltoviite.getOsaAlueet().stream()
+                            .filter(osaalue -> osaalue.getTyyppi().equals(OmaOsaAlueTyyppi.PAIKALLINEN))
+                            .map(OmaOsaAlue::copy)
+                            .collect(Collectors.toList());
+
+                    sisaltoviite.getTosa().asetaPaikallisetMaaritykset(pohjanSisaltoviite.getTosa());
+                    sisaltoviite.getOsaAlueet().addAll(pohjanPaikallisetOsaAlueet);
+                    sisaltoviite.getOsaAlueet().stream()
+                            .filter(osaalue -> pohjanOsaAlueet.containsKey(osaalue.getNimi().getTeksti().get(Kieli.FI) + osaalue.getTyyppi()))
+                            .forEach(osaalue -> {
+                            OmaOsaAlue pohjanOsaAlue = pohjanOsaAlueet.get(osaalue.getNimi().getTeksti().get(Kieli.FI) + osaalue.getTyyppi());
+                            osaalue.asetaPaikallisetMaaritykset(pohjanOsaAlue);
+                    });
                 });
     }
 

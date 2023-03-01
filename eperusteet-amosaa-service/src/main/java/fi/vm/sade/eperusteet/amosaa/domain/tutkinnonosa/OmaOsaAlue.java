@@ -11,12 +11,15 @@ import lombok.Setter;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Audited
@@ -59,5 +62,41 @@ public class OmaOsaAlue extends AbstractAuditedEntity implements Serializable, R
     @Override
     public String getUri() {
         return perusteenOsaAlueKoodi;
+    }
+
+    public OmaOsaAlue copy() {
+        OmaOsaAlue result = new OmaOsaAlue();
+        result.setNimi(getNimi());
+        result.setPiilotettu(isPiilotettu());
+        result.setTyyppi(getTyyppi());
+        result.setLaajuus(getLaajuus());
+        if (osaamistavoitteet != null) {
+            result.setOsaamistavoitteet(new Ammattitaitovaatimukset2019(osaamistavoitteet));
+        }
+        result.setGeneerinenarviointi(getGeneerinenarviointi());
+
+        if (!CollectionUtils.isEmpty(getToteutukset())) {
+            result.toteutukset.addAll(getToteutukset().stream().map(OmaOsaAlueToteutus::copy).collect(Collectors.toList()));
+        }
+        return result;
+    }
+
+    public void asetaPaikallisetMaaritykset(OmaOsaAlue other) {
+        this.setLaajuus(other.getLaajuus());
+
+        List<OmaOsaAlueToteutus> toteutukset = other.getToteutukset();
+        if (!ObjectUtils.isEmpty(toteutukset)) {
+            this.getToteutukset().clear();
+            for (OmaOsaAlueToteutus toteutus : toteutukset) {
+                OmaOsaAlueToteutus copy = toteutus.copy();
+                this.getToteutukset().add(copy);
+            }
+        }
+
+        if (other.getOsaamistavoitteet() != null) {
+            this.setOsaamistavoitteet(new Ammattitaitovaatimukset2019(other.getOsaamistavoitteet()));
+        }
+        this.setGeneerinenarviointi(other.geneerinenarviointi);
+
     }
 }

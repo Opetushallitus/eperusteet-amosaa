@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
+import org.springframework.util.ObjectUtils;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -22,6 +23,7 @@ import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @Entity
@@ -51,6 +53,23 @@ public class OmaOsaAlueToteutus extends AbstractAuditedEntity implements Seriali
     @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @OrderColumn(name = "jnro")
     private List<VapaaTeksti> vapaat = new ArrayList<>();
+
+    public OmaOsaAlueToteutus copy() {
+        OmaOsaAlueToteutus result = new OmaOsaAlueToteutus();
+
+        result.setOtsikko(this.getOtsikko());
+        result.setTavatjaymparisto(this.getTavatjaymparisto());
+        result.setArvioinnista(this.getArvioinnista());
+
+        List<VapaaTeksti> vapaat = this.getVapaat();
+        if (!ObjectUtils.isEmpty(vapaat)) {
+            for (VapaaTeksti vt : vapaat) {
+                result.getVapaat().add(vt.copy());
+            }
+        }
+
+        return result;
+    }
 
 }
 

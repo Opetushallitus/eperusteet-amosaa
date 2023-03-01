@@ -172,7 +172,7 @@ public class EperusteetClientMock implements EperusteetClient {
 
     @Override
     public List<PerusteDto> findPerusteetByKoulutuskoodit(List<String> koulutuskoodit) {
-        if (koulutuskoodit.contains("koulutuskoodi_uusiperuste")) {
+        if (koulutuskoodit.contains("koulutus_381405")) {
             try {
                 return Arrays.asList(
                         objectMapper.treeToValue(openFakeData("/perusteet/amosaaPerusteKoulutuskoodiUusi.json"), PerusteDto.class),

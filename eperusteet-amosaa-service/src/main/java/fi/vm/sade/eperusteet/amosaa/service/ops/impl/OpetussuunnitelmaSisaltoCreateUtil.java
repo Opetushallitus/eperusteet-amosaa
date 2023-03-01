@@ -27,6 +27,7 @@ public class OpetussuunnitelmaSisaltoCreateUtil {
 
             if (pakolliset != null) {
                 OmaOsaAlue oa = new OmaOsaAlue();
+                oa.setNimi(LokalisoituTeksti.of(perusteenOsaAlue.getNimi().getTeksti()));
                 oa.setTyyppi(OmaOsaAlueTyyppi.PAKOLLINEN);
                 oa.setPiilotettu(false);
                 oa.setPerusteenOsaAlueKoodi(perusteenOsaAlue.getKoodiUri());
@@ -36,6 +37,7 @@ public class OpetussuunnitelmaSisaltoCreateUtil {
 
             if (valinnaiset != null) {
                 OmaOsaAlue oa = new OmaOsaAlue();
+                oa.setNimi(LokalisoituTeksti.of(perusteenOsaAlue.getNimi().getTeksti()));
                 oa.setTyyppi(OmaOsaAlueTyyppi.VALINNAINEN);
                 oa.setPiilotettu(false);
                 oa.setPerusteenOsaAlueKoodi(perusteenOsaAlue.getKoodiUri());
