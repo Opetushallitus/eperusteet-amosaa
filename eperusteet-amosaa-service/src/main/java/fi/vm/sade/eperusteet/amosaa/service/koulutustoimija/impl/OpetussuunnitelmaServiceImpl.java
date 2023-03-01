@@ -75,6 +75,7 @@ import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.JulkaisuRepositor
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.peruste.CachedPerusteRepository;
+import fi.vm.sade.eperusteet.amosaa.repository.peruste.KoulutuskoodiRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.TekstiKappaleRepository;
 import fi.vm.sade.eperusteet.amosaa.resource.config.AbstractRakenneOsaDeserializer;
@@ -193,6 +194,9 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
     @Autowired
     private OrganisaatioService organisaatioService;
+
+    @Autowired
+    private KoulutuskoodiRepository koulutuskoodiRepository;
 
     @Autowired
     public void setKoulutustoimijaService(KoulutustoimijaService kts) {
@@ -659,7 +663,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                     ? eperusteetClient.getYleinenPohjaSisalto()
                     : eperusteetClient.getPerusteData(peruste.getId()));
             cperuste.setKoulutustyyppi(peruste.getKoulutustyyppi());
-            cperuste.setKoulutuskooditFromKoulutusDto(peruste.getKoulutukset());
+            cperuste.setKoulutuskoodit(peruste.getKoulutukset().stream().map(koulutusDto ->  koulutuskoodiRepository.save(Koulutuskoodi.of(koulutusDto))).collect(Collectors.toSet()));
             cperuste = cachedPerusteRepository.save(cperuste);
         }
 

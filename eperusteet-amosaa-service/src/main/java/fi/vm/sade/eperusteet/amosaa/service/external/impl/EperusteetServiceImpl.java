@@ -30,6 +30,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.peruste.*;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.peruste.CachedPerusteRepository;
+import fi.vm.sade.eperusteet.amosaa.repository.peruste.KoulutuskoodiRepository;
 import fi.vm.sade.eperusteet.amosaa.resource.config.AbstractRakenneOsaDeserializer;
 import fi.vm.sade.eperusteet.amosaa.resource.config.MappingModule;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
@@ -107,6 +108,9 @@ public class EperusteetServiceImpl implements EperusteetService {
     @Autowired
     private OpetussuunnitelmaRepository opetussuunnitelmaRepository;
 
+    @Autowired
+    private KoulutuskoodiRepository koulutuskoodiRepository;
+
     @PostConstruct
     protected void init() {
         client = new RestTemplate(singletonList(jsonMapper.messageConverter().orElseThrow(IllegalStateException::new)));
@@ -135,7 +139,7 @@ public class EperusteetServiceImpl implements EperusteetService {
             cperuste.setLuotu(viimeisinJulkaisu);
             cperuste.setPeruste(eperusteetClient.getPerusteData(peruste.getId()));
             cperuste.setKoulutustyyppi(peruste.getKoulutustyyppi());
-            cperuste.setKoulutuskooditFromKoulutusDto(peruste.getKoulutukset());
+            cperuste.setKoulutuskoodit(peruste.getKoulutukset().stream().map(koulutusDto ->  koulutuskoodiRepository.save(Koulutuskoodi.of(koulutusDto))).collect(Collectors.toSet()));
             cperuste = cachedPerusteRepository.save(cperuste);
         }
         return dtoMapper.map(cperuste, CachedPerusteBaseDto.class);

@@ -41,9 +41,8 @@ public class Koulutuskoodi implements Serializable {
     @JoinColumn(name = "cached_peruste_id")
     private CachedPeruste cachedPeruste;
 
-    public static Koulutuskoodi of(KoulutusDto koulutusDto, CachedPeruste cachedPeruste) {
+    public static Koulutuskoodi of(KoulutusDto koulutusDto) {
         Koulutuskoodi koulutuskoodi = new Koulutuskoodi();
-        koulutuskoodi.setCachedPeruste(cachedPeruste);
         koulutuskoodi.setKoulutuskoodiArvo(koulutusDto.getKoulutuskoodiArvo());
         koulutuskoodi.setKoulutuskoodiUri(koulutusDto.getKoulutuskoodiUri());
         koulutuskoodi.setKoulutusalakoodi(koulutusDto.getKoulutusalakoodi());
