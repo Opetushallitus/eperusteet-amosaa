@@ -71,6 +71,10 @@ public class LokalisoituTekstiDto {
         }});
     }
 
+    static public LokalisoituTekstiDto of(Map<Kieli, String> values) {
+        return new LokalisoituTekstiDto(null, null, values);
+    }
+
     @JsonCreator
     public LokalisoituTekstiDto(Map<String, String> values) {
         Long tmpId = null;

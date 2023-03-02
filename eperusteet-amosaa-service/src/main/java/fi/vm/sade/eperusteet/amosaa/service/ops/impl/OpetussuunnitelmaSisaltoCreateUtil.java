@@ -33,17 +33,7 @@ public class OpetussuunnitelmaSisaltoCreateUtil {
 
             if (pakolliset != null) {
                 OmaOsaAlue oa = new OmaOsaAlue();
-                if (perusteenOsaAlue.getKoodi() != null && perusteenOsaAlue.getKielikoodi() != null) {
-                    Map<Kieli, String> tekstit = new HashMap<>();
-                    Arrays.stream(Kieli.values()).forEach(kieli -> {
-                        if (perusteenOsaAlue.getKoodi().getNimi().get(kieli.toString()) != null && perusteenOsaAlue.getKielikoodi().getNimi().get(kieli.toString()) != null) {
-                            tekstit.put(kieli, perusteenOsaAlue.getKoodi().getNimi().get(kieli.toString()) + ", " + perusteenOsaAlue.getKielikoodi().getNimi().get(kieli.toString()));
-                        }
-                    });
-                    oa.setNimi(LokalisoituTeksti.of(tekstit));
-                } else {
-                    oa.setNimi(LokalisoituTeksti.of(perusteenOsaAlue.getNimi().getTeksti()));
-                }
+                oa.setNimi(LokalisoituTeksti.of(perusteenOsaAlue.getNimi()));
                 oa.setTyyppi(OmaOsaAlueTyyppi.PAKOLLINEN);
                 oa.setPiilotettu(false);
                 oa.setPerusteenOsaAlueKoodi(perusteenOsaAlue.getKoodiUri());
@@ -53,7 +43,7 @@ public class OpetussuunnitelmaSisaltoCreateUtil {
 
             if (valinnaiset != null) {
                 OmaOsaAlue oa = new OmaOsaAlue();
-                oa.setNimi(LokalisoituTeksti.of(perusteenOsaAlue.getNimi().getTeksti()));
+                oa.setNimi(LokalisoituTeksti.of(perusteenOsaAlue.getNimi()));
                 oa.setTyyppi(OmaOsaAlueTyyppi.VALINNAINEN);
                 oa.setPiilotettu(false);
                 oa.setPerusteenOsaAlueKoodi(perusteenOsaAlue.getKoodiUri());
