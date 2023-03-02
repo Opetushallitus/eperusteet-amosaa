@@ -1,5 +1,6 @@
 package fi.vm.sade.eperusteet.amosaa.service.ops.impl;
 
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaOsaAlue;
@@ -9,6 +10,11 @@ import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.OsaAlueKokonaanDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.Osaamistavoite2020Dto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonosaKaikkiDto;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class OpetussuunnitelmaSisaltoCreateUtil {
 
@@ -27,7 +33,17 @@ public class OpetussuunnitelmaSisaltoCreateUtil {
 
             if (pakolliset != null) {
                 OmaOsaAlue oa = new OmaOsaAlue();
-                oa.setNimi(LokalisoituTeksti.of(perusteenOsaAlue.getNimi().getTeksti()));
+                if (perusteenOsaAlue.getKoodi() != null && perusteenOsaAlue.getKielikoodi() != null) {
+                    Map<Kieli, String> tekstit = new HashMap<>();
+                    Arrays.stream(Kieli.values()).forEach(kieli -> {
+                        if (perusteenOsaAlue.getKoodi().getNimi().get(kieli.toString()) != null && perusteenOsaAlue.getKielikoodi().getNimi().get(kieli.toString()) != null) {
+                            tekstit.put(kieli, perusteenOsaAlue.getKoodi().getNimi().get(kieli.toString()) + ", " + perusteenOsaAlue.getKielikoodi().getNimi().get(kieli.toString()));
+                        }
+                    });
+                    oa.setNimi(LokalisoituTeksti.of(tekstit));
+                } else {
+                    oa.setNimi(LokalisoituTeksti.of(perusteenOsaAlue.getNimi().getTeksti()));
+                }
                 oa.setTyyppi(OmaOsaAlueTyyppi.PAKOLLINEN);
                 oa.setPiilotettu(false);
                 oa.setPerusteenOsaAlueKoodi(perusteenOsaAlue.getKoodiUri());

@@ -40,4 +40,5 @@ public class OsaAlueDto {
     private Kieli kieli;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private ValmaTelmaSisaltoDto valmaTelmaSisalto;
+    private KoodiDto kielikoodi;
 }
