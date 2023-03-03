@@ -15,6 +15,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.teksti.TutkinnonOsaKevytDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -173,14 +174,12 @@ public class NavigationBuilderDefaultTest {
                 .extracting(NavigationNodeDto::getType)
                 .containsSequence(
                         NavigationType.tutkinnonosa,
-                        NavigationType.tutkinnonosat_paikalliset,
+                        NavigationType.tutkinnonosa,
                         NavigationType.tekstikappale);
         List<NavigationNodeDto> tosat = navigationNodeDto.getChildren().get(0).getChildren();
         assertThat(tosat).extracting(NavigationNodeDto::getId)
                 .containsSequence(12L);
-        assertThat(tosat.get(1).getChildren()).extracting(NavigationNodeDto::getId)
-                .containsSequence(11L);
-
+        assertThat(tosat.get(1).getChildren()).isEmpty();
     }
 
     private Opetussuunnitelma opetussuunnitelma() {

@@ -133,6 +133,11 @@ public class OmaTutkinnonosa extends AbstractAuditedEntity implements Serializab
 
             result.setAmmattitaidonOsoittamistavat(original.getAmmattitaidonOsoittamistavat());
 
+            if (original.getAmmattitaitovaatimukset() != null) {
+                result.setAmmattitaitovaatimukset(new Ammattitaitovaatimukset2019(original.getAmmattitaitovaatimukset()));
+            }
+            result.setGeneerinenarviointi(original.geneerinenarviointi);
+
             return result;
         }
         else {

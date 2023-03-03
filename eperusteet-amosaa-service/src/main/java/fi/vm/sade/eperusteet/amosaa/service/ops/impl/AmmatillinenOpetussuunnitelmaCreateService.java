@@ -146,7 +146,6 @@ public class AmmatillinenOpetussuunnitelmaCreateService implements Opetussuunnit
                         && perusteenTosaKoodit.contains(sisaltoviite.getTosa().getKoodi()))
                 .collect(Collectors.toMap(viite -> viite.getTosa().getKoodi(), viite -> viite));
 
-
         CollectionUtil.treeToStream(opetussuunnitelma.getSisaltoviitteet(), SisaltoViite::getLapset)
                 .filter(sisaltoviite -> sisaltoviite.getTyyppi().equals(SisaltoTyyppi.TUTKINNONOSA)
                         && pohjastaKopioitavatPerusteenTutkinnonOsat.containsKey(sisaltoviite.getTosa().getKoodi()))
@@ -154,8 +153,7 @@ public class AmmatillinenOpetussuunnitelmaCreateService implements Opetussuunnit
                     SisaltoViite pohjanSisaltoviite = pohjastaKopioitavatPerusteenTutkinnonOsat.get(sisaltoviite.getTosa().getKoodi());
                     Map<String, OmaOsaAlue> pohjanOsaAlueet = pohjanSisaltoviite.getOsaAlueet().stream()
                             .filter(osaalue -> !osaalue.getTyyppi().equals(OmaOsaAlueTyyppi.PAIKALLINEN))
-//                            .collect(Collectors.toMap(OmaOsaAlue::getPerusteenOsaAlueKoodi, omaOsaalue -> omaOsaalue)); // koodia ei voi käyttää koska tekevät useampia samalla koodilla..
-                            .collect(Collectors.toMap(omaOsaAlue -> omaOsaAlue.getNimi().getTeksti().get(Kieli.FI) + omaOsaAlue.getTyyppi(), omaOsaalue -> omaOsaalue));
+                            .collect(Collectors.toMap(osaalue -> osaalue.getPerusteenOsaAlueId() + "" + osaalue.getTyyppi(), omaOsaalue -> omaOsaalue));
                     List<OmaOsaAlue> pohjanPaikallisetOsaAlueet = pohjanSisaltoviite.getOsaAlueet().stream()
                             .filter(osaalue -> osaalue.getTyyppi().equals(OmaOsaAlueTyyppi.PAIKALLINEN))
                             .map(OmaOsaAlue::copy)
@@ -164,9 +162,9 @@ public class AmmatillinenOpetussuunnitelmaCreateService implements Opetussuunnit
                     sisaltoviite.getTosa().asetaPaikallisetMaaritykset(pohjanSisaltoviite.getTosa());
                     sisaltoviite.getOsaAlueet().addAll(pohjanPaikallisetOsaAlueet);
                     sisaltoviite.getOsaAlueet().stream()
-                            .filter(osaalue -> pohjanOsaAlueet.containsKey(osaalue.getNimi().getTeksti().get(Kieli.FI) + osaalue.getTyyppi()))
-                            .forEach(osaalue -> {
-                            OmaOsaAlue pohjanOsaAlue = pohjanOsaAlueet.get(osaalue.getNimi().getTeksti().get(Kieli.FI) + osaalue.getTyyppi());
+                        .filter(osaalue -> pohjanOsaAlueet.containsKey(osaalue.getPerusteenOsaAlueId() + "" + osaalue.getTyyppi()))
+                        .forEach(osaalue -> {
+                            OmaOsaAlue pohjanOsaAlue = pohjanOsaAlueet.get(osaalue.getPerusteenOsaAlueId() + "" + osaalue.getTyyppi());
                             osaalue.asetaPaikallisetMaaritykset(pohjanOsaAlue);
                     });
                 });

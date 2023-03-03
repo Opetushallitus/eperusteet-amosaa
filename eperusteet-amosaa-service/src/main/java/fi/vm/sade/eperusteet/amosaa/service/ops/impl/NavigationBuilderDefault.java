@@ -95,33 +95,12 @@ public class NavigationBuilderDefault implements NavigationBuilder {
     }
 
     private NavigationNodeDto tutkinnonosatNavigationNode(SisaltoViiteKevytDto sisaltoviite, Map<Long, SisaltoViiteKevytDto> sisaltoViitteetIdMap, NavigationNodeDto result, PerusteKaikkiDto perusteKaikkiDto) {
-        List<NavigationNodeDto> pakolliset = new ArrayList<>();
-        List<NavigationNodeDto> paikalliset = new ArrayList<>();
-        List<NavigationNodeDto> tuodut = new ArrayList<>();
-        List<NavigationNodeDto> muut = new ArrayList<>();
-
         sisaltoviite.getLapset().forEach(viite -> {
             SisaltoViiteKevytDto lapsi = sisaltoViitteetIdMap.get(viite.getIdLong());
             NavigationNodeDto node = sisaltoviiteToNavigationNode(lapsi, sisaltoViitteetIdMap, perusteKaikkiDto);
 
-            if (SisaltoTyyppi.TUTKINNONOSA.equals(lapsi.getTyyppi())) {
-                if (lapsi.getTosa().getTyyppi().equals(TutkinnonosaTyyppi.PERUSTEESTA)
-                    || lapsi.getTosa().getTyyppi().equals(TutkinnonosaTyyppi.YHTEINEN)
-                    || lapsi.getTosa().getTyyppi().equals(TutkinnonosaTyyppi.VIERAS)) {
-                    pakolliset.add(node);
-                }
-                else if (lapsi.getTosa().getTyyppi().equals(TutkinnonosaTyyppi.OMA)) {
-                    paikalliset.add(node);
-                }
-                else {
-                    muut.add(node);
-                }
-            }
-            else if (SisaltoTyyppi.LINKKI.equals(lapsi.getTyyppi())) {
-                tuodut.add(node);
-            }
-            else {
-                muut.add(node);
+            if(lapsi.getTyyppi().equals(SisaltoTyyppi.TUTKINNONOSA) && lapsi.getTosa().getTyyppi().equals(TutkinnonosaTyyppi.OMA)) {
+                node.setIcon("edit_location_alt");
             }
 
             if(!CollectionUtils.isEmpty(lapsi.getOsaAlueet())) {
@@ -150,19 +129,10 @@ public class NavigationBuilderDefault implements NavigationBuilder {
                                     .map(osaalue -> NavigationNodeDto.of(NavigationType.osaalue, osaalue.getNimi(), osaalue.getId())));
                 }
             }
+            result.add(node);
         });
 
-
-        if (!pakolliset.isEmpty()) {
-            result.addAll(pakolliset);
-        }
-        if (!paikalliset.isEmpty()) {
-            result.add(NavigationNodeDto.of(NavigationType.tutkinnonosat_paikalliset).addAll(paikalliset));
-        }
-        if (!tuodut.isEmpty()) {
-            result.add(NavigationNodeDto.of(NavigationType.tutkinnonosat_tuodut).addAll(tuodut));
-        }
-        return result.addAll(muut);
+        return result;
     }
 
     private LokalisoituTekstiDto osaAlueNimi(OmaOsaAlueKevytDto osaAlue, PerusteKaikkiDto perusteKaikkiDto) {

@@ -21,6 +21,7 @@ public class NavigationNodeDto {
     private NavigationType type;
     private Map<String, Object> meta = new HashMap<>();
     private List<NavigationNodeDto> children = new ArrayList<>();
+    private String icon;
 
     static public NavigationNodeDto of(NavigationType type, LokalisoituTekstiDto label, Long id) {
         NavigationNodeDto result = new NavigationNodeDto();

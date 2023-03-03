@@ -44,6 +44,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -259,6 +260,10 @@ public class EperusteetClientImpl implements EperusteetClient {
 
     @Override
     public List<PerusteDto> findPerusteetByKoulutuskoodit(List<String> koulutuskoodit) {
+        if (CollectionUtils.isEmpty(koulutuskoodit)) {
+            return null;
+        }
+
         String url = UriComponentsBuilder
                 .fromHttpUrl(eperusteetServiceUrl + "/api/perusteet/julkaisut")
                 .queryParam("koodi", koulutuskoodit)
