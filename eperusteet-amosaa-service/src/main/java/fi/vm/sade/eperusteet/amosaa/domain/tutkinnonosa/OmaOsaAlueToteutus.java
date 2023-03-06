@@ -3,6 +3,7 @@ package fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.domain.AbstractAuditedEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.Tekstiosa;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.VapaaTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 import lombok.Getter;
@@ -19,6 +20,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import java.io.Serializable;
@@ -42,24 +44,33 @@ public class OmaOsaAlueToteutus extends AbstractAuditedEntity implements Seriali
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     private LokalisoituTeksti otsikko;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
-    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
-    private LokalisoituTeksti tavatjaymparisto;
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @Getter
+    @Setter
+    private Tekstiosa tavatjaymparisto;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
-    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
-    private LokalisoituTeksti arvioinnista;
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @Getter
+    @Setter
+    private Tekstiosa arvioinnista;
 
     @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @OrderColumn(name = "jnro")
     private List<VapaaTeksti> vapaat = new ArrayList<>();
 
+    private boolean oletustoteutus;
+
     public OmaOsaAlueToteutus copy() {
         OmaOsaAlueToteutus result = new OmaOsaAlueToteutus();
 
         result.setOtsikko(this.getOtsikko());
-        result.setTavatjaymparisto(this.getTavatjaymparisto());
-        result.setArvioinnista(this.getArvioinnista());
+        if (this.getTavatjaymparisto() != null) {
+            result.setTavatjaymparisto(this.getTavatjaymparisto().copy());
+        }
+
+        if (this.getArvioinnista() != null) {
+            result.setArvioinnista(this.getArvioinnista().copy());
+        }
 
         List<VapaaTeksti> vapaat = this.getVapaat();
         if (!ObjectUtils.isEmpty(vapaat)) {

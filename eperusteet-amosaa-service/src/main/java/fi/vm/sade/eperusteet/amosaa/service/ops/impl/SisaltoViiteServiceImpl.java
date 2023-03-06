@@ -33,6 +33,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.VapaaTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.*;
 import fi.vm.sade.eperusteet.amosaa.dto.NavigationType;
+import fi.vm.sade.eperusteet.amosaa.dto.OletusToteutusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 import fi.vm.sade.eperusteet.amosaa.dto.RevisionDto;
 import fi.vm.sade.eperusteet.amosaa.dto.RevisionKayttajaDto;
@@ -76,6 +77,7 @@ import fi.vm.sade.eperusteet.amosaa.service.util.PoistettuService;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -1229,9 +1231,15 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
     }
 
     @Override
-    public List<SisaltoViiteDto> tutkinnonosienOletusToteutukset(Long ktId, Long opetussuunnitelmaId) {
-        List<SisaltoViite> oletustoteutukset = repository.findTutkinnonosienOletusotetutukset(opetussuunnitelmaId);
-        return mapper.mapAsList(oletustoteutukset, SisaltoViiteDto .class);
+    public List<OletusToteutusDto> tutkinnonosienOletusToteutukset(Long ktId, Long opetussuunnitelmaId) {
+        List<SisaltoViiteDto> sisaltoviitteet = mapper.mapAsList(repository.findTutkinnonosienOletusotetutukset(opetussuunnitelmaId), SisaltoViiteDto .class);
+        return sisaltoviitteet.stream().map(sisaltoviite -> sisaltoviite.getTosa().getToteutukset().stream().filter(TutkinnonosaToteutusDto::isOletustoteutus)
+                .map(toteutus -> {
+                    OletusToteutusDto oletustoteutus = mapper.map(toteutus, OletusToteutusDto.class);
+                    oletustoteutus.setLahdeNimi(sisaltoviite.getTekstiKappale().getNimi());
+                    return oletustoteutus;
+                }).collect(Collectors.toList())
+        ).flatMap(Collection::stream).collect(Collectors.toList());
     }
 
 }

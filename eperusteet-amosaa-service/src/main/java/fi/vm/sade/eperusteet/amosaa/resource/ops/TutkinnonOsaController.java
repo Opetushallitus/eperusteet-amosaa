@@ -1,6 +1,7 @@
 package fi.vm.sade.eperusteet.amosaa.resource.ops;
 
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Tutkinnonosa;
+import fi.vm.sade.eperusteet.amosaa.dto.OletusToteutusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.TutkinnonosaDto;
 import fi.vm.sade.eperusteet.amosaa.repository.tutkinnonosa.TutkinnonosaRepository;
@@ -60,7 +61,7 @@ public class TutkinnonOsaController extends KoulutustoimijaIdGetterAbstractContr
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(value = "/oletustoteutukset", method = GET)
-    public ResponseEntity<List<SisaltoViiteDto>> haeOletusTutkinnonosaToteutukset(
+    public ResponseEntity<List<OletusToteutusDto>> haeOletusTutkinnonosaToteutukset(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId
     ) {

@@ -867,6 +867,7 @@
                                         <location>${eperusteet.amosaa.resources}.util.KoodistoController</location>
                                         <location>${eperusteet.amosaa.resources}.hallinta.MaintenanceController</location>
                                         <location>${eperusteet.amosaa.resources}.ops.TutkinnonOsaController</location>
+                                        <location>${eperusteet.amosaa.resources}.ops.OsaAlueController</location>
                                     </locations>
                                     <modelSubstitute>/substitutes.map</modelSubstitute>
                                     <info>

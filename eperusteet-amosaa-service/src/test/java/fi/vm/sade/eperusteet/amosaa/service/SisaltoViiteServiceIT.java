@@ -512,8 +512,8 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
             paikallinen.setTyyppi(OmaOsaAlueTyyppi.PAIKALLINEN);
             paikallinen.setPerusteenOsaAlueKoodi("1234-" + id);
             paikallinen.setToteutukset(Arrays.asList(OmaOsaAlueToteutusDto.builder()
-                            .arvioinnista(LokalisoituTekstiDto.of("arvioinnista-" + id))
-                            .tavatjaymparisto(LokalisoituTekstiDto.of("tavatjaymparisto-" + id))
+                            .arvioinnista(TekstiosaDto.of("arvioinnista-" + id))
+                            .tavatjaymparisto(TekstiosaDto.of("tavatjaymparisto-" + id))
                     .build()));
             {
                 PaikallisetAmmattitaitovaatimukset2019Dto ot = new PaikallisetAmmattitaitovaatimukset2019Dto();
@@ -548,8 +548,8 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
             assertThat(updated.getOsaAlueet().get(1).getNimi().get(Kieli.FI)).isEqualTo("nimi-b");
 
             assertThat(updated.getOsaAlueet().get(0).getToteutukset()).hasSize(1);
-            assertThat(updated.getOsaAlueet().get(0).getToteutukset().get(0).getArvioinnista().get(Kieli.FI)).isEqualTo("arvioinnista-a");
-            assertThat(updated.getOsaAlueet().get(0).getToteutukset().get(0).getTavatjaymparisto().get(Kieli.FI)).isEqualTo("tavatjaymparisto-a");;
+            assertThat(updated.getOsaAlueet().get(0).getToteutukset().get(0).getArvioinnista().getTeksti().get(Kieli.FI)).isEqualTo("arvioinnista-a");
+            assertThat(updated.getOsaAlueet().get(0).getToteutukset().get(0).getTavatjaymparisto().getTeksti().get(Kieli.FI)).isEqualTo("tavatjaymparisto-a");;
 
         }
 
