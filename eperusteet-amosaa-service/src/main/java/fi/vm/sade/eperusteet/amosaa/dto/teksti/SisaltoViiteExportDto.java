@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteenOsaDto;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,6 +33,7 @@ public class SisaltoViiteExportDto extends SisaltoViiteExportBaseDto {
     private KotoOpintoExportDto kotoOpinto;
     private KotoLaajaAlainenOsaaminenExportDto kotoLaajaAlainenOsaaminen;
     private Long perusteenOsaId;
+    private List<OmaOsaAlueDto> osaAlueet = new ArrayList<>();
 
     public LokalisoituTekstiDto getNimi() {
         if (koulutuksenosa != null) {
