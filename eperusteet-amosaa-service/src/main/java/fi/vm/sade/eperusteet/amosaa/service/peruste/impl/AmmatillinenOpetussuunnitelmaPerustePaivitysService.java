@@ -5,7 +5,10 @@ import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaOsaAlue;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.OsaAlueDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.OsaAlueKokonaanDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonosaKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
@@ -19,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -41,33 +45,33 @@ public class AmmatillinenOpetussuunnitelmaPerustePaivitysService implements Opet
     public void paivitaOpetussuunnitelma(Long opetussuunnitelmaId, PerusteKaikkiDto perusteKaikkiDto) {
         Opetussuunnitelma opetussuunnitelma = opetussuunnitelmaRepository.findOne(opetussuunnitelmaId);
 
-        List<SisaltoViite> opetussuunnitelmanTutkinnonosaViitteet = CollectionUtil.treeToStream(opetussuunnitelma.getSisaltoviitteet(), SisaltoViite::getLapset)
+        Map<String, SisaltoViite> opetussuunnitelmanTutkinnonosaViitteet = CollectionUtil.treeToStream(opetussuunnitelma.getSisaltoviitteet(), SisaltoViite::getLapset)
                 .filter(sisaltoviite -> sisaltoviite.getTyyppi().equals(SisaltoTyyppi.TUTKINNONOSA) && sisaltoviite.getTosa().getTyyppi().equals(TutkinnonosaTyyppi.PERUSTEESTA))
-                .collect(Collectors.toList());
+                .collect(Collectors.toMap(sisaltoviite -> sisaltoviite.getTosa().getKoodi(), sisaltoviite -> sisaltoviite));
 
-        List<String> opetussuunnitelmanTosaKoodit = opetussuunnitelmanTutkinnonosaViitteet.stream()
-                .map(sisaltoviite -> sisaltoviite.getTosa().getKoodi()).collect(Collectors.toList());
-
-        List<String> perusteenTosaKoodit = perusteKaikkiDto.getTutkinnonOsat().stream()
-                .map(TutkinnonosaKaikkiDto::getKoodiUri)
-                .collect(Collectors.toList());
-
-        List<TutkinnonosaKaikkiDto> lisattavatTutkinnonOsat = perusteKaikkiDto.getTutkinnonOsat().stream()
-                .filter(tosa -> !opetussuunnitelmanTosaKoodit.contains(tosa.getKoodiUri()))
-                .collect(Collectors.toList());
-
-        List<SisaltoViite> poistettavatTutkinnonosat = opetussuunnitelmanTutkinnonosaViitteet.stream()
-                .filter(viite -> !perusteenTosaKoodit.contains(viite.getTosa().getKoodi()))
-                .collect(Collectors.toList());
+        Map<String, TutkinnonosaKaikkiDto> perusteenTosaKoodit = perusteKaikkiDto.getTutkinnonOsat().stream()
+                .collect(Collectors.toMap(TutkinnonosaKaikkiDto::getKoodiUri, tosa -> tosa));
 
         SisaltoViite tutkinnonosatViite = CollectionUtil.treeToStream(opetussuunnitelma.getSisaltoviitteet(), SisaltoViite::getLapset)
                 .filter(sisaltoviite -> sisaltoviite.getTyyppi().equals(SisaltoTyyppi.TUTKINNONOSAT))
                 .findFirst().get();
 
-        for (TutkinnonosaKaikkiDto tosa : lisattavatTutkinnonOsat) {
-            SisaltoViite uusi = OpetussuunnitelmaSisaltoCreateUtil.perusteenTutkinnonosaToSisaltoviite(tutkinnonosatViite, tosa);
-            sisaltoviiteRepository.save(uusi);
-        }
+        perusteKaikkiDto.getTutkinnonOsat().forEach(tutkinnonosaKaikkiDto -> {
+            if (!opetussuunnitelmanTutkinnonosaViitteet.containsKey(tutkinnonosaKaikkiDto.getKoodiUri())) {
+                SisaltoViite uusi = OpetussuunnitelmaSisaltoCreateUtil.perusteenTutkinnonosaToSisaltoviite(tutkinnonosatViite, tutkinnonosaKaikkiDto);
+                sisaltoviiteRepository.save(uusi);
+            } else {
+                paivitaTutkinnonOsaPerusteenTiedoilla(opetussuunnitelmanTutkinnonosaViitteet.get(tutkinnonosaKaikkiDto.getKoodiUri()), tutkinnonosaKaikkiDto);
+            }
+        });
+
+        poistaTutkinnonOsat(opetussuunnitelma, opetussuunnitelmanTutkinnonosaViitteet, perusteenTosaKoodit);
+    }
+
+    private static void poistaTutkinnonOsat(Opetussuunnitelma opetussuunnitelma, Map<String, SisaltoViite> opetussuunnitelmanTutkinnonosaViitteet, Map<String, TutkinnonosaKaikkiDto> perusteenTosaKoodit) {
+        List<SisaltoViite> poistettavatTutkinnonosat = opetussuunnitelmanTutkinnonosaViitteet.values().stream()
+                .filter(viite -> !perusteenTosaKoodit.containsKey(viite.getTosa().getKoodi()))
+                .collect(Collectors.toList());
 
         CollectionUtil.treeToStream(opetussuunnitelma.getSisaltoviitteet(), SisaltoViite::getLapset)
                 .forEach(viite -> {
@@ -79,5 +83,15 @@ public class AmmatillinenOpetussuunnitelmaPerustePaivitysService implements Opet
                                 });
                     }
                 });
+    }
+
+    private void paivitaTutkinnonOsaPerusteenTiedoilla(SisaltoViite sisaltoViite, TutkinnonosaKaikkiDto tutkinnonosaKaikkiDto) {
+        List<Long> perusteenOsaAlueIdt = tutkinnonosaKaikkiDto.getOsaAlueet().stream().map(OsaAlueDto::getId).collect(Collectors.toList());
+        List<Long> opsinPerusteenOsaAlueIdt = sisaltoViite.getOsaAlueet().stream().map(OmaOsaAlue::getPerusteenOsaAlueId).collect(Collectors.toList());
+
+        sisaltoViite.getOsaAlueet().removeAll(sisaltoViite.getOsaAlueet().stream().filter(omaosaalue -> !perusteenOsaAlueIdt.contains(omaosaalue.getPerusteenOsaAlueId())).collect(Collectors.toList()));
+        tutkinnonosaKaikkiDto.getOsaAlueet().stream()
+                .filter(osaalue -> !opsinPerusteenOsaAlueIdt.contains(osaalue.getId()))
+                .forEach(osaalue -> OpetussuunnitelmaSisaltoCreateUtil.addPerusteenOsaAlueToSisaltoViite(sisaltoViite, osaalue));
     }
 }
