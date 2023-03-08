@@ -34,6 +34,7 @@ import lombok.*;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class OsaAlueKokonaanDto extends OsaAlueDto {
 
     private Arviointi2020Dto arviointi;

@@ -782,26 +782,6 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         CachedPeruste newCachedPeruste = cachedPerusteRepository.findOne(cp.getId());
         dispatcher.get(ops.getOpsKoulutustyyppi(), OpetussuunnitelmaPerustePaivitysService.class).paivitaOpetussuunnitelma(opsId, perusteDto);
 
-//        Set<UUID> tunnisteet = eperusteetService.getRakenneTunnisteet(newCachedPeruste.getId(), ops.getSuoritustapa());
-//        if (tunnisteet.isEmpty()) {
-//            tunnisteet = eperusteetService.getRakenneTunnisteet(newCachedPeruste.getId(), Suoritustapakoodi.REFORMI.toString());
-//        }
-//
-//        Set<UUID> kaytetytTunnisteet = tkvService.getSuorituspolkurakenne(ktId, opsId).stream()
-//                .map(AbstractRakenneOsaDto::getTunniste)
-//                .collect(Collectors.toSet());
-//
-//        log.info("kaytetytTunnisteet: {}", kaytetytTunnisteet);
-//        log.info("perusteen tunnisteet: {}", tunnisteet);
-//
-//
-//        if (!tunnisteet.containsAll(kaytetytTunnisteet)) {
-//            log.error("Opetussuunnitelman perusteen synkronointi epäonnistui \nops: {} \nperuste: {} \nold: {} \nnew: {} \ntunnisteet: {} \nnykyisetTunnisteet: {} \ntunniste-ero: {}",
-//                    ops.getId(), perusteDto.getId(), ops.getPeruste().getLuotu(),newCachedPeruste.getLuotu(), tunnisteet, kaytetytTunnisteet,
-//                    Sets.difference(tunnisteet, kaytetytTunnisteet));
-//            throw new BusinessRuleViolationException("ei-voi-synkronoida");
-//        }
-
         List<SisaltoViite> tutkinnonOsaViitteet = sisaltoviiteRepository.findTutkinnonosat(ops);
         Set<Long> tutkinnonOsienPerusteIdt = tutkinnonOsaViitteet.stream()
                 .filter(tov -> tov.getPerusteId() != null)

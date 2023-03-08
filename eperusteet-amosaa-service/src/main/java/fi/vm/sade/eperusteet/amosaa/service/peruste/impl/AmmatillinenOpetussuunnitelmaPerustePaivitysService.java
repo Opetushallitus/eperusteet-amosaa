@@ -68,7 +68,7 @@ public class AmmatillinenOpetussuunnitelmaPerustePaivitysService implements Opet
         poistaTutkinnonOsat(opetussuunnitelma, opetussuunnitelmanTutkinnonosaViitteet, perusteenTosaKoodit);
     }
 
-    private static void poistaTutkinnonOsat(Opetussuunnitelma opetussuunnitelma, Map<String, SisaltoViite> opetussuunnitelmanTutkinnonosaViitteet, Map<String, TutkinnonosaKaikkiDto> perusteenTosaKoodit) {
+    private void poistaTutkinnonOsat(Opetussuunnitelma opetussuunnitelma, Map<String, SisaltoViite> opetussuunnitelmanTutkinnonosaViitteet, Map<String, TutkinnonosaKaikkiDto> perusteenTosaKoodit) {
         List<SisaltoViite> poistettavatTutkinnonosat = opetussuunnitelmanTutkinnonosaViitteet.values().stream()
                 .filter(viite -> !perusteenTosaKoodit.containsKey(viite.getTosa().getKoodi()))
                 .collect(Collectors.toList());
@@ -80,6 +80,8 @@ public class AmmatillinenOpetussuunnitelmaPerustePaivitysService implements Opet
                         poistettavatTutkinnonosat.stream().filter(poistettava -> lapsiIdt.contains(poistettava.getId()))
                                 .forEach(poistettava -> {
                                     viite.getLapset().remove(poistettava);
+                                    sisaltoviiteRepository.save(viite);
+                                    sisaltoviiteRepository.delete(poistettava);
                                 });
                     }
                 });
