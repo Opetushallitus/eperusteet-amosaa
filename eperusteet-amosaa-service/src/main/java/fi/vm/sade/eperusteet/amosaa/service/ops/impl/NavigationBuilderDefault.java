@@ -107,7 +107,8 @@ public class NavigationBuilderDefault implements NavigationBuilder {
                                     .filter(osaalue -> osaalue.getTyyppi().equals(OmaOsaAlueTyyppi.PAKOLLINEN))
                                     .map(osaalue -> NavigationNodeDto
                                             .of(NavigationType.osaalue, osaAlueNimi(osaalue, perusteKaikkiDto), osaalue.getId())
-                                            .meta("koodi", osaalue.getKoodiArvo())));
+                                            .meta("koodi", osaalue.getKoodiArvo())
+                                            .meta("sisaltoviiteId", lapsi.getId())));
                 }
 
                 if (lapsi.getOsaAlueet().stream().anyMatch(osaalue -> osaalue.getTyyppi().equals(OmaOsaAlueTyyppi.VALINNAINEN))) {
@@ -116,14 +117,17 @@ public class NavigationBuilderDefault implements NavigationBuilder {
                                     .filter(osaalue -> osaalue.getTyyppi().equals(OmaOsaAlueTyyppi.VALINNAINEN))
                                     .map(osaalue -> NavigationNodeDto
                                             .of(NavigationType.osaalue, osaAlueNimi(osaalue, perusteKaikkiDto), osaalue.getId())
-                                            .meta("koodi", osaalue.getKoodiArvo())));
+                                            .meta("koodi", osaalue.getKoodiArvo())
+                                            .meta("sisaltoviiteId", lapsi.getId())));
                 }
 
                 if (lapsi.getOsaAlueet().stream().anyMatch(osaalue -> osaalue.getTyyppi().equals(OmaOsaAlueTyyppi.PAIKALLINEN))) {
                     node.add(NavigationNodeDto.of(NavigationType.paikalliset_osaalueet));
                     node.addAll(lapsi.getOsaAlueet().stream()
                                     .filter(osaalue -> osaalue.getTyyppi().equals(OmaOsaAlueTyyppi.PAIKALLINEN))
-                                    .map(osaalue -> NavigationNodeDto.of(NavigationType.osaalue, osaalue.getNimi(), osaalue.getId())));
+                                    .map(osaalue -> NavigationNodeDto
+                                            .of(NavigationType.osaalue, osaalue.getNimi(), osaalue.getId())
+                                            .meta("sisaltoviiteId", lapsi.getId())));
                 }
             }
             result.add(node);
