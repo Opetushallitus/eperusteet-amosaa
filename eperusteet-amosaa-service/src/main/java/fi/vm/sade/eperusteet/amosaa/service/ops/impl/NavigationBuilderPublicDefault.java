@@ -17,6 +17,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteExportDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteKevytDto;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
+import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.ops.NavigationBuilderPublic;
 
 import java.util.ArrayList;
@@ -38,6 +39,9 @@ public class NavigationBuilderPublicDefault implements NavigationBuilderPublic {
 
     @Autowired
     private EperusteetService eperusteetService;
+
+    @Autowired
+    private DtoMapper mapper;
 
     @Override
     public Set<KoulutusTyyppi> getTyypit() {
@@ -69,10 +73,7 @@ public class NavigationBuilderPublicDefault implements NavigationBuilderPublic {
                         getSisaltoviiteNimi(sisaltoviite),
                         sisaltoviite.getId())
                 .meta("koodi", getSisaltoviiteMetaKoodi(sisaltoviite));
-
-        if(sisaltoviite.getTyyppi().equals(SisaltoTyyppi.TUTKINNONOSA) && sisaltoviite.getTosa().getTyyppi().equals(TutkinnonosaTyyppi.OMA)) {
-            result.setIcon("edit_location_alt");
-        }
+        NavigationNodeMetaUtil.asetaMetaTiedot(result, mapper.map(sisaltoviite, SisaltoViiteKevytDto.class));
 
         if(!CollectionUtils.isEmpty(sisaltoviite.getOsaAlueet())) {
             if (sisaltoviite.getOsaAlueet().stream().anyMatch(osaalue -> osaalue.getTyyppi().equals(OmaOsaAlueTyyppi.PAKOLLINEN))) {

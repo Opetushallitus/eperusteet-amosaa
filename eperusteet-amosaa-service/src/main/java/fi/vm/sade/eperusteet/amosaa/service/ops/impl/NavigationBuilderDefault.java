@@ -83,6 +83,7 @@ public class NavigationBuilderDefault implements NavigationBuilder {
                         sisaltoviite.getNimi(),
                         sisaltoviite.getId())
                     .meta("koodi", getSisaltoviiteMetaKoodi(sisaltoviite));
+        NavigationNodeMetaUtil.asetaMetaTiedot(result, sisaltoviite);
 
         if (sisaltoviite.getTyyppi().equals(SisaltoTyyppi.TUTKINNONOSAT)) {
             return tutkinnonosatNavigationNode(sisaltoviite, sisaltoViitteetIdMap, result, perusteKaikkiDto);
@@ -98,10 +99,6 @@ public class NavigationBuilderDefault implements NavigationBuilder {
         sisaltoviite.getLapset().forEach(viite -> {
             SisaltoViiteKevytDto lapsi = sisaltoViitteetIdMap.get(viite.getIdLong());
             NavigationNodeDto node = sisaltoviiteToNavigationNode(lapsi, sisaltoViitteetIdMap, perusteKaikkiDto);
-
-            if(lapsi.getTyyppi().equals(SisaltoTyyppi.TUTKINNONOSA) && lapsi.getTosa().getTyyppi().equals(TutkinnonosaTyyppi.OMA)) {
-                node.setIcon("edit_location_alt");
-            }
 
             if(!CollectionUtils.isEmpty(lapsi.getOsaAlueet())) {
                 if (lapsi.getOsaAlueet().stream().anyMatch(osaalue -> osaalue.getTyyppi().equals(OmaOsaAlueTyyppi.PAKOLLINEN))) {
