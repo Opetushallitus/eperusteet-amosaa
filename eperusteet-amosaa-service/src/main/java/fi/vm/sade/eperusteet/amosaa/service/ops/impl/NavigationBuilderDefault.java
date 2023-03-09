@@ -84,10 +84,11 @@ public class NavigationBuilderDefault implements NavigationBuilder {
                         sisaltoviite.getId())
                     .meta("koodi", getSisaltoviiteMetaKoodi(sisaltoviite));
         NavigationNodeMetaUtil.asetaMetaTiedot(result, sisaltoviite);
+        NavigationNodeMetaUtil.lisaaTutkinnonOsanOsaAlueet(perusteKaikkiDto, sisaltoviite, result);
 
-        if (sisaltoviite.getTyyppi().equals(SisaltoTyyppi.TUTKINNONOSAT)) {
-            return tutkinnonosatNavigationNode(sisaltoviite, sisaltoViitteetIdMap, result, perusteKaikkiDto);
-        }
+//        if (sisaltoviite.getTyyppi().equals(SisaltoTyyppi.TUTKINNONOSAT)) {
+//            return tutkinnonosatNavigationNode(sisaltoviite, sisaltoViitteetIdMap, result, perusteKaikkiDto);
+//        }
 
         return result.addAll(sisaltoviite.getLapset() != null ? sisaltoviite.getLapset().stream()
                     .map(lapsi -> sisaltoviiteToNavigationNode(sisaltoViitteetIdMap.get(lapsi.getIdLong()), sisaltoViitteetIdMap, perusteKaikkiDto))
@@ -95,55 +96,15 @@ public class NavigationBuilderDefault implements NavigationBuilder {
                     : Collections.emptyList());
     }
 
-    private NavigationNodeDto tutkinnonosatNavigationNode(SisaltoViiteKevytDto sisaltoviite, Map<Long, SisaltoViiteKevytDto> sisaltoViitteetIdMap, NavigationNodeDto result, PerusteKaikkiDto perusteKaikkiDto) {
-        sisaltoviite.getLapset().forEach(viite -> {
-            SisaltoViiteKevytDto lapsi = sisaltoViitteetIdMap.get(viite.getIdLong());
-            NavigationNodeDto node = sisaltoviiteToNavigationNode(lapsi, sisaltoViitteetIdMap, perusteKaikkiDto);
-
-            if(!CollectionUtils.isEmpty(lapsi.getOsaAlueet())) {
-                if (lapsi.getOsaAlueet().stream().anyMatch(osaalue -> osaalue.getTyyppi().equals(OmaOsaAlueTyyppi.PAKOLLINEN))) {
-                    node.add(NavigationNodeDto.of(NavigationType.pakolliset_osaalueet));
-                    node.addAll(lapsi.getOsaAlueet().stream()
-                                    .filter(osaalue -> osaalue.getTyyppi().equals(OmaOsaAlueTyyppi.PAKOLLINEN))
-                                    .map(osaalue -> NavigationNodeDto
-                                            .of(NavigationType.osaalue, osaAlueNimi(osaalue, perusteKaikkiDto), osaalue.getId())
-                                            .meta("koodi", osaalue.getKoodiArvo())
-                                            .meta("sisaltoviiteId", lapsi.getId())));
-                }
-
-                if (lapsi.getOsaAlueet().stream().anyMatch(osaalue -> osaalue.getTyyppi().equals(OmaOsaAlueTyyppi.VALINNAINEN))) {
-                    node.add(NavigationNodeDto.of(NavigationType.valinnaiset_osaalueet));
-                    node.addAll(lapsi.getOsaAlueet().stream()
-                                    .filter(osaalue -> osaalue.getTyyppi().equals(OmaOsaAlueTyyppi.VALINNAINEN))
-                                    .map(osaalue -> NavigationNodeDto
-                                            .of(NavigationType.osaalue, osaAlueNimi(osaalue, perusteKaikkiDto), osaalue.getId())
-                                            .meta("koodi", osaalue.getKoodiArvo())
-                                            .meta("sisaltoviiteId", lapsi.getId())));
-                }
-
-                if (lapsi.getOsaAlueet().stream().anyMatch(osaalue -> osaalue.getTyyppi().equals(OmaOsaAlueTyyppi.PAIKALLINEN))) {
-                    node.add(NavigationNodeDto.of(NavigationType.paikalliset_osaalueet));
-                    node.addAll(lapsi.getOsaAlueet().stream()
-                                    .filter(osaalue -> osaalue.getTyyppi().equals(OmaOsaAlueTyyppi.PAIKALLINEN))
-                                    .map(osaalue -> NavigationNodeDto
-                                            .of(NavigationType.osaalue, osaalue.getNimi(), osaalue.getId())
-                                            .meta("sisaltoviiteId", lapsi.getId())));
-                }
-            }
-            result.add(node);
-        });
-
-        return result;
-    }
-
-    private LokalisoituTekstiDto osaAlueNimi(OmaOsaAlueKevytDto osaAlue, PerusteKaikkiDto perusteKaikkiDto) {
-        for(TutkinnonosaKaikkiDto tutkinnonosa : perusteKaikkiDto.getTutkinnonOsat()) {
-            for(OsaAlueKokonaanDto pOsaAlue: tutkinnonosa.getOsaAlueet()) {
-                if (pOsaAlue.getId().equals(osaAlue.getPerusteenOsaAlueId())) {
-                    return new LokalisoituTekstiDto(pOsaAlue.getNimi().asMap());
-                }
-            }
-        }
-        return osaAlue.getNimi();
-    }
+//    private NavigationNodeDto tutkinnonosatNavigationNode(SisaltoViiteKevytDto sisaltoviite, Map<Long, SisaltoViiteKevytDto> sisaltoViitteetIdMap, NavigationNodeDto result, PerusteKaikkiDto perusteKaikkiDto) {
+//        sisaltoviite.getLapset().forEach(viite -> {
+//            SisaltoViiteKevytDto lapsi = sisaltoViitteetIdMap.get(viite.getIdLong());
+//            NavigationNodeDto node = sisaltoviiteToNavigationNode(lapsi, sisaltoViitteetIdMap, perusteKaikkiDto);
+//
+//            NavigationNodeMetaUtil.lisaaTutkinnonOsanOsaAlueet(perusteKaikkiDto, lapsi, node);
+//            result.add(node);
+//        });
+//
+//        return result;
+//    }
 }

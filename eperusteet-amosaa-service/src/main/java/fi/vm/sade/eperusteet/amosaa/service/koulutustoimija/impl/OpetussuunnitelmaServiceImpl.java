@@ -470,43 +470,6 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     }
 
     private void alustaAmmatillinenOpetussuunnitelma(Opetussuunnitelma ops, SisaltoViite rootTkv) {
-        // Lisätään tutkinnonosille oma sisältöviite
-        {
-            SisaltoViite tosat = new SisaltoViite();
-            TekstiKappale tk = new TekstiKappale();
-
-
-            // Haetaan perusteen koulutustyyppi
-            CachedPeruste cperuste = ops.getPeruste();
-            String koulutustyppi;
-            try {
-                JsonNode node = objMapper.readTree(cperuste.getPeruste());
-                JsonNode koulutustyyppi = node.get("koulutustyyppi");
-                koulutustyppi = koulutustyyppi.asText();
-            } catch (IOException ex) {
-                throw new BusinessRuleViolationException("perusteen-parsinta-epaonnistui");
-            }
-
-            // Luodaan tutkinnon osat tekstikappale
-            Map<Kieli, String> tutkinnonOsatTekstikappale = new HashMap<>();
-            for (Kieli kieli : Kieli.values()) {
-                if (KoulutusTyyppi.of(koulutustyppi).isValmaTelma()) {
-                    tutkinnonOsatTekstikappale.put(kieli, messages.translate("koulutuksen-osat", kieli));
-                } else {
-                    tutkinnonOsatTekstikappale.put(kieli, messages.translate("tutkinnon-osat", kieli));
-                }
-            }
-            tk.setNimi(LokalisoituTeksti.of(tutkinnonOsatTekstikappale));
-
-            tk.setValmis(true);
-            tosat.setTekstiKappale(tkRepository.save(tk));
-            tosat.setLiikkumaton(false);
-            tosat.setVanhempi(rootTkv);
-            tosat.setPakollinen(true);
-            tosat.setTyyppi(SisaltoTyyppi.TUTKINNONOSAT);
-            tosat.setOwner(ops);
-            rootTkv.getLapset().add(tkvRepository.save(tosat));
-        }
 
         // Lisätään suorituspoluille oma sisältöviite
         if (ops.getTyyppi() == OpsTyyppi.OPS) {
@@ -526,6 +489,42 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
             suorituspolut.setVanhempi(rootTkv);
             rootTkv.getLapset().add(tkvRepository.save(suorituspolut));
         }
+
+        // Lisätään tutkinnonosille oma sisältöviite
+
+        SisaltoViite tosat = new SisaltoViite();
+        TekstiKappale tk = new TekstiKappale();
+
+        // Haetaan perusteen koulutustyyppi
+        CachedPeruste cperuste = ops.getPeruste();
+        String koulutustyppi;
+        try {
+            JsonNode node = objMapper.readTree(cperuste.getPeruste());
+            JsonNode koulutustyyppi = node.get("koulutustyyppi");
+            koulutustyppi = koulutustyyppi.asText();
+        } catch (IOException ex) {
+            throw new BusinessRuleViolationException("perusteen-parsinta-epaonnistui");
+        }
+
+        // Luodaan tutkinnon osat tekstikappale
+        Map<Kieli, String> tutkinnonOsatTekstikappale = new HashMap<>();
+        for (Kieli kieli : Kieli.values()) {
+            if (KoulutusTyyppi.of(koulutustyppi).isValmaTelma()) {
+                tutkinnonOsatTekstikappale.put(kieli, messages.translate("koulutuksen-osat", kieli));
+            } else {
+                tutkinnonOsatTekstikappale.put(kieli, messages.translate("tutkinnon-osat", kieli));
+            }
+        }
+        tk.setNimi(LokalisoituTeksti.of(tutkinnonOsatTekstikappale));
+
+        tk.setValmis(true);
+        tosat.setTekstiKappale(tkRepository.save(tk));
+        tosat.setLiikkumaton(false);
+        tosat.setVanhempi(rootTkv);
+        tosat.setPakollinen(true);
+        tosat.setTyyppi(SisaltoTyyppi.TUTKINNONOSAT);
+        tosat.setOwner(ops);
+        rootTkv.getLapset().add(tkvRepository.save(tosat));
     }
 
     private void alustaOpetussuunnitelmaPerusteenSisallolla(Opetussuunnitelma ops, SisaltoViite parentViite, PerusteenOsaViiteDto.Laaja sisalto) {
