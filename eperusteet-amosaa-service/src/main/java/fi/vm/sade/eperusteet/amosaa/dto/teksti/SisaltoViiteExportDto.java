@@ -33,7 +33,7 @@ public class SisaltoViiteExportDto extends SisaltoViiteExportBaseDto {
     private KotoOpintoExportDto kotoOpinto;
     private KotoLaajaAlainenOsaaminenExportDto kotoLaajaAlainenOsaaminen;
     private Long perusteenOsaId;
-    private List<OmaOsaAlueDto> osaAlueet = new ArrayList<>();
+    private List<OmaOsaAlueExportDto> osaAlueet = new ArrayList<>();
 
     public LokalisoituTekstiDto getNimi() {
         if (koulutuksenosa != null) {

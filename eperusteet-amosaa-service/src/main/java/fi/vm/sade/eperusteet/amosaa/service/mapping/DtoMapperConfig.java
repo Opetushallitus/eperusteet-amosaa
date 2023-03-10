@@ -24,8 +24,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
-import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
-import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaOsaAlue;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OpintokokonaisuusTavoite;
 import fi.vm.sade.eperusteet.amosaa.dto.KooditettuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
@@ -42,10 +41,10 @@ import fi.vm.sade.eperusteet.amosaa.dto.ops.SuorituspolkuOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.OmaOsaAlueExportDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.OpintokokonaisuusTavoiteDto;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SuorituspolkuRakenneDto;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.TekstiKappaleDto;
+import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
 import fi.vm.sade.eperusteet.amosaa.service.util.KoodistoClient;
 import ma.glasnost.orika.CustomMapper;
@@ -85,6 +84,10 @@ public class DtoMapperConfig {
     @Lazy
     @Autowired
     KoodistoClient koodistoClient;
+
+    @Lazy
+    @Autowired
+    EperusteetService eperusteetService;
 
     @Bean
     public DtoMapper dtoMapper(
@@ -232,6 +235,20 @@ public class DtoMapperConfig {
                                 Map<String, String> lokalisoitu = Arrays.stream(koodistokoodi.getMetadata()).collect(Collectors.toMap(KoodistoMetadataDto::getKieli, KoodistoMetadataDto::getNimi));
                                 target.setKooditettu(new LokalisoituTekstiDto(lokalisoitu));
                             }
+                        }
+                    }
+                })
+                .register();
+
+        factory.classMap(OmaOsaAlue.class, OmaOsaAlueExportDto.class)
+                .byDefault()
+                .favorExtension(true)
+                .customize(new CustomMapper<OmaOsaAlue, OmaOsaAlueExportDto>() {
+                    @Override
+                    public void mapAtoB(OmaOsaAlue source, OmaOsaAlueExportDto target, MappingContext context) {
+                        super.mapAtoB(source, target, context);
+                        if (source.getGeneerinenarviointi() != null) {
+                            target.setGeneerinenArviointiasteikko(eperusteetService.getGeneerinen(source.getGeneerinenarviointi()));
                         }
                     }
                 })

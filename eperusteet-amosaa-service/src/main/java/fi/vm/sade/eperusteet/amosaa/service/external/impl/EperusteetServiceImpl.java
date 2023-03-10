@@ -19,6 +19,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Throwables;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
@@ -27,6 +28,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.SuorituspolkuRiviDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.*;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.geneerinenarviointiasteikko.GeneerinenArviointiasteikkoKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.peruste.CachedPerusteRepository;
@@ -56,6 +58,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -291,6 +294,19 @@ public class EperusteetServiceImpl implements EperusteetService {
         String url = eperusteetServiceUrl + "/api/geneerinenarviointi/julkaistu";
         JsonNode result = client.exchange(url, HttpMethod.GET, httpEntity, JsonNode.class).getBody();
         return result;
+    }
+
+    @Override
+    @Cacheable("geneerinenarviointi")
+    public GeneerinenArviointiasteikkoKaikkiDto getGeneerinen(Long id) {
+        String url = eperusteetServiceUrl + "/api/geneerinenarviointi/"+id+"/kaikki";
+        JsonNode node = client.exchange(url, HttpMethod.GET, httpEntity, JsonNode.class).getBody();
+        try {
+            return mapper.treeToValue(node, GeneerinenArviointiasteikkoKaikkiDto.class);
+        } catch (JsonProcessingException e) {
+            logger.error("arvoinnin parsinta epäonnistui", Throwables.getStackTraceAsString(e));
+            throw new BusinessRuleViolationException("arvoinnin-parsinta-epaonnistui");
+        }
     }
 
     @Override

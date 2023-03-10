@@ -42,7 +42,7 @@ public class EperusteetServiceIT extends AbstractIntegrationTest {
         OpetussuunnitelmaBaseDto ops = createOpetussuunnitelma();
         SisaltoViiteDto.Matala root = sisaltoViiteService.getSisaltoRoot(getKoulutustoimijaId(), ops.getId());
 
-        sisaltoViiteService.addSisaltoViite(getKoulutustoimijaId(), ops.getId(), root.getLapset().get(1).getIdLong(),
+        sisaltoViiteService.addSisaltoViite(getKoulutustoimijaId(), ops.getId(), root.getLapset().get(0).getIdLong(),
                 createSisalto(sisaltoViiteDto -> {
                     sisaltoViiteDto.setTyyppi(SisaltoTyyppi.SUORITUSPOLKU);
                     sisaltoViiteDto.setSuorituspolku(new SuorituspolkuDto());

@@ -712,7 +712,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                         .collect(Collectors.toList());
             }
 
-            SisaltoViite tosat = rootTkv.getLapset().get(0);
+            SisaltoViite tosat = rootTkv.getLapset().get(1);
             for (TutkinnonosaKaikkiDto tosa : tutkinnonOsat) {
                 SisaltoViite uusi = OpetussuunnitelmaSisaltoCreateUtil.perusteenTutkinnonosaToSisaltoviite(tosat, tosa);
                 tkvRepository.save(uusi);

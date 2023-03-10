@@ -16,9 +16,9 @@
 package fi.vm.sade.eperusteet.amosaa.service.external;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.*;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.geneerinenarviointiasteikko.GeneerinenArviointiasteikkoKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -73,6 +73,8 @@ public interface EperusteetService {
     JsonNode getTiedotteet(Long jalkeen);
 
     JsonNode getGeneeriset();
+
+    GeneerinenArviointiasteikkoKaikkiDto getGeneerinen(Long id);
 
     JsonNode getTiedotteetHaku(TiedoteQueryDto queryDto);
 
