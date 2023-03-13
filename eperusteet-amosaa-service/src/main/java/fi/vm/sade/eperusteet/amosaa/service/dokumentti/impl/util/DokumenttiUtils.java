@@ -32,6 +32,10 @@ public class DokumenttiUtils {
         addLokalisoituteksti(docBase, lTeksti, tagi, null);
     }
 
+    public static void addLokalisoituteksti(DokumenttiBase docBase, LokalisoituTekstiDto lTeksti, String tagi, Element el) {
+        addLokalisoituteksti(docBase, LokalisoituTeksti.of(lTeksti.getTeksti()), tagi, el);
+    }
+
     public static void addLokalisoituteksti(DokumenttiBase docBase, LokalisoituTeksti lTeksti, String tagi, Element el) {
         if (lTeksti != null && lTeksti.getTeksti() != null && lTeksti.getTeksti().get(docBase.getKieli()) != null) {
             String teksti = lTeksti.getTeksti().get(docBase.getKieli());

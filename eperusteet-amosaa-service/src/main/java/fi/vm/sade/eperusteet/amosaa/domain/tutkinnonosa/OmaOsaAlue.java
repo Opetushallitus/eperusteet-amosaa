@@ -99,4 +99,17 @@ public class OmaOsaAlue extends AbstractAuditedEntity implements Serializable, R
         this.setGeneerinenarviointi(other.geneerinenarviointi);
 
     }
+
+    public int sort() {
+        switch (tyyppi) {
+            case PAKOLLINEN:
+                return 0;
+            case VALINNAINEN:
+                return 1;
+            case PAIKALLINEN:
+                return 2;
+            default:
+                return 3;
+        }
+    }
 }

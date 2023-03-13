@@ -2,7 +2,7 @@ package fi.vm.sade.eperusteet.amosaa.dto.peruste.geneerinenarviointiasteikko;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.OsaamistasoDto;
-import fi.vm.sade.eperusteet.utils.dto.utils.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
