@@ -18,6 +18,7 @@ package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 import java.util.Optional;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -30,6 +31,7 @@ import lombok.Setter;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class TekstiosaDto {
     private Long id;
     private LokalisoituTekstiDto otsikko;
@@ -38,5 +40,12 @@ public class TekstiosaDto {
     public TekstiosaDto(LokalisoituTekstiDto otsikko, LokalisoituTekstiDto teksti) {
         this.otsikko = otsikko;
         this.teksti = teksti;
+    }
+
+    public static TekstiosaDto of(String teksti) {
+        TekstiosaDto tekstiosaDto = new TekstiosaDto();
+        tekstiosaDto.setTeksti(LokalisoituTekstiDto.of(teksti));
+
+        return tekstiosaDto;
     }
 }

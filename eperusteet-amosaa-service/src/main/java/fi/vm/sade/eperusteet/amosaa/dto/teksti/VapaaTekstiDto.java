@@ -24,6 +24,7 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class VapaaTekstiDto {
     private Long id;
     private LokalisoituTekstiDto nimi;

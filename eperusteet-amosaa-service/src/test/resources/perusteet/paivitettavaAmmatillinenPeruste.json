@@ -1,0 +1,652 @@
+{
+  "id" : 8492,
+  "globalVersion" : {
+    "aikaleima" : 1678259831937
+  },
+  "nimi" : null,
+  "koulutustyyppi" : "koulutustyyppi_1",
+  "toteutus" : "ammatillinen",
+  "koulutukset" : [ ],
+  "kielet" : [ "fi" ],
+  "kuvaus" : null,
+  "maarayskirje" : null,
+  "muutosmaaraykset" : [ ],
+  "diaarinumero" : null,
+  "voimassaoloAlkaa" : null,
+  "siirtymaPaattyy" : null,
+  "voimassaoloLoppuu" : null,
+  "paatospvm" : null,
+  "viimeisinJulkaisuAika" : null,
+  "luotu" : 1678259756524,
+  "muokattu" : 1678259756524,
+  "tila" : "luonnos",
+  "tyyppi" : "normaali",
+  "koulutusvienti" : false,
+  "korvattavatDiaarinumerot" : [ ],
+  "osaamisalat" : [ ],
+  "tyotehtavatJoissaVoiToimia" : null,
+  "suorittaneenOsaaminen" : null,
+  "perusteenAikataulut" : [ {
+    "id" : 8830,
+    "peruste" : {
+      "id" : 8492,
+      "nimi" : null,
+      "tila" : "luonnos",
+      "tyyppi" : "normaali",
+      "koulutustyyppi" : "koulutustyyppi_1",
+      "esikatseltavissa" : false,
+      "voimassaoloAlkaa" : null,
+      "voimassaoloLoppuu" : null,
+      "suoritustavat" : [ {
+        "suoritustapakoodi" : "reformi",
+        "laajuusYksikko" : "OSAAMISPISTE"
+      } ]
+    },
+    "tavoite" : {
+      "_id" : "8840",
+      "_tunniste" : "bc71a4ee-6e32-492d-ab0f-4f430cda3d42",
+      "fi" : "Peruste luotu"
+    },
+    "tapahtuma" : "luominen",
+    "tapahtumapaiva" : 1678259754199,
+    "julkinen" : false
+  } ],
+  "suoritustavat" : [ {
+    "suoritustapakoodi" : "reformi",
+    "laajuusYksikko" : "OSAAMISPISTE",
+    "rakenne" : {
+      "kuvaus" : null,
+      "vieras" : null,
+      "tunniste" : "aede1eaf-8371-4c0a-8860-68246517fe8f",
+      "pakollinen" : false,
+      "nimi" : null,
+      "rooli" : null,
+      "muodostumisSaanto" : null,
+      "osaamisala" : null,
+      "tutkintonimike" : null,
+      "osat" : [ ],
+      "versioId" : null
+    },
+    "sisalto" : {
+      "id" : 8515,
+      "lapset" : [ {
+        "id" : 8516,
+        "perusteenOsa" : {
+          "id" : 7967,
+          "luotu" : 1678259756878,
+          "muokattu" : 1678259756878,
+          "muokkaaja" : "test",
+          "nimi" : {
+            "_id" : "8779",
+            "_tunniste" : "97b2af78-72d4-49a1-ad4b-ad17c4199a70",
+            "fi" : "Tutkinnon muodostuminen",
+            "sv" : "Uppbyggnaden av examen"
+          },
+          "tila" : "luonnos",
+          "tunniste" : "rakenne",
+          "teksti" : null,
+          "koodit" : [ ],
+          "liite" : false,
+          "osanTyyppi" : "tekstikappale"
+        },
+        "lapset" : [ ],
+        "_perusteenOsa" : "7967"
+      } ]
+    },
+    "tutkinnonOsaViitteet" : [ {
+      "id" : 7947,
+      "laajuus" : 5.00,
+      "_tutkinnonOsa" : "7968"
+    }, {
+      "id" : 7948,
+      "laajuus" : 5.00,
+      "_tutkinnonOsa" : "7969"
+    } ]
+  } ],
+  "tutkinnonOsat" : [ {
+    "id" : 7968,
+    "luotu" : 1678259777176,
+    "muokattu" : 1678259777176,
+    "muokkaaja" : "test",
+    "nimi" : {
+      "fi" : "3D-koordinaattimittaus"
+    },
+    "tila" : "luonnos",
+    "osanTyyppi" : "tutkinnonosa",
+    "kuvaus" : null,
+    "opintoluokitus" : null,
+    "koodi" : {
+      "id" : 8860,
+      "nimi" : {
+        "fi" : "3D-koordinaattimittaus"
+      },
+      "arvo" : "201029",
+      "uri" : "tutkinnonosat_201029",
+      "koodisto" : "tutkinnonosat",
+      "versio" : 1
+    },
+    "koodiUri" : "tutkinnonosat_201029",
+    "koodiArvo" : "201029",
+    "osaAlueet" : [ ],
+    "tyyppi" : "normaali",
+    "valmaTelmaSisalto" : null,
+    "geneerinenArviointiasteikko" : {
+      "id" : 1640,
+      "nimi" : {
+        "_id" : "1671",
+        "_tunniste" : "bb67e52a-45b8-4e16-b023-e2f2122ed949",
+        "fi" : "asdf"
+      },
+      "kohde" : {
+        "_id" : "1670",
+        "_tunniste" : "b45dc58d-b5c1-41dc-b596-e00d7ce98315",
+        "fi" : "asdf"
+      },
+      "arviointiAsteikko" : {
+        "id" : 2,
+        "osaamistasot" : [ {
+          "id" : 2,
+          "otsikko" : {
+            "_id" : "48",
+            "fi" : "Tyydyttävä T1",
+            "sv" : "[Tyydyttävä T1]"
+          },
+          "koodi" : {
+            "id" : 6261,
+            "nimi" : {
+              "fi" : "3"
+            },
+            "arvo" : "3",
+            "uri" : "arviointiasteikkoammatillinen15_3",
+            "koodisto" : "arviointiasteikkoammatillinen15",
+            "versio" : 1
+          }
+        }, {
+          "id" : 3,
+          "otsikko" : {
+            "_id" : "49",
+            "fi" : "Hyvä H2",
+            "sv" : "[Hyvä H2]"
+          },
+          "koodi" : {
+            "id" : 6262,
+            "nimi" : {
+              "en" : "Hylätty",
+              "fi" : "Hylätty",
+              "sv" : "Underkänd"
+            },
+            "arvo" : "Hylätty",
+            "uri" : "arviointiasteikkoammatillinen15_hylatty",
+            "koodisto" : "arviointiasteikkoammatillinen15",
+            "versio" : 1
+          }
+        }, {
+          "id" : 4,
+          "otsikko" : {
+            "_id" : "50",
+            "fi" : "Kiitettävä K3",
+            "sv" : "[Kiitettävä K3]"
+          },
+          "koodi" : {
+            "id" : 6263,
+            "nimi" : {
+              "fi" : "1"
+            },
+            "arvo" : "1",
+            "uri" : "arviointiasteikkoammatillinen15_1",
+            "koodisto" : "arviointiasteikkoammatillinen15",
+            "versio" : 1
+          }
+        } ]
+      },
+      "julkaistu" : true,
+      "valittavissa" : false,
+      "koulutustyypit" : [ ],
+      "osaamistasonKriteerit" : [ {
+        "osaamistaso" : {
+          "id" : 2,
+          "otsikko" : {
+            "_id" : "48",
+            "fi" : "Tyydyttävä T1",
+            "sv" : "[Tyydyttävä T1]"
+          },
+          "koodi" : {
+            "id" : 6261,
+            "nimi" : {
+              "fi" : "3"
+            },
+            "arvo" : "3",
+            "uri" : "arviointiasteikkoammatillinen15_3",
+            "koodisto" : "arviointiasteikkoammatillinen15",
+            "versio" : 1
+          }
+        },
+        "kriteerit" : [ ],
+        "_osaamistaso" : null
+      }, {
+        "osaamistaso" : {
+          "id" : 3,
+          "otsikko" : {
+            "_id" : "49",
+            "fi" : "Hyvä H2",
+            "sv" : "[Hyvä H2]"
+          },
+          "koodi" : {
+            "id" : 6262,
+            "nimi" : {
+              "en" : "Hylätty",
+              "fi" : "Hylätty",
+              "sv" : "Underkänd"
+            },
+            "arvo" : "Hylätty",
+            "uri" : "arviointiasteikkoammatillinen15_hylatty",
+            "koodisto" : "arviointiasteikkoammatillinen15",
+            "versio" : 1
+          }
+        },
+        "kriteerit" : [ ],
+        "_osaamistaso" : null
+      }, {
+        "osaamistaso" : {
+          "id" : 4,
+          "otsikko" : {
+            "_id" : "50",
+            "fi" : "Kiitettävä K3",
+            "sv" : "[Kiitettävä K3]"
+          },
+          "koodi" : {
+            "id" : 6263,
+            "nimi" : {
+              "fi" : "1"
+            },
+            "arvo" : "1",
+            "uri" : "arviointiasteikkoammatillinen15_1",
+            "koodisto" : "arviointiasteikkoammatillinen15",
+            "versio" : 1
+          }
+        },
+        "kriteerit" : [ ],
+        "_osaamistaso" : null
+      } ],
+      "_arviointiAsteikko" : null
+    },
+    "vapaatTekstit" : [ ],
+    "ammattitaitovaatimukset2019" : {
+      "id" : 7986,
+      "kohde" : {
+        "_id" : "8842",
+        "_tunniste" : "f2b71044-dcae-4c35-8ae5-4109b2b23b7a",
+        "fi" : "Opiskelija"
+      },
+      "vaatimukset" : [ ],
+      "kohdealueet" : [ ]
+    },
+    "ammattitaitovaatimukset" : {
+      "fi" : "<dl><dt><i>Opiskelija</i></dt></dl>"
+    }
+  }, {
+    "id" : 7969,
+    "luotu" : 1678259831923,
+    "muokattu" : 1678259831923,
+    "muokkaaja" : "test",
+    "nimi" : {
+      "fi" : "3D-mallinnus ja visualisointi",
+      "sv" : "3D-modellering och visualisering"
+    },
+    "tila" : "luonnos",
+    "osanTyyppi" : "tutkinnonosa",
+    "kuvaus" : null,
+    "opintoluokitus" : null,
+    "koodi" : {
+      "id" : 8861,
+      "nimi" : {
+        "fi" : "3D-mallinnus ja visualisointi",
+        "sv" : "3D-modellering och visualisering"
+      },
+      "arvo" : "102874",
+      "uri" : "tutkinnonosat_102874",
+      "koodisto" : "tutkinnonosat",
+      "versio" : 2
+    },
+    "koodiUri" : "tutkinnonosat_102874",
+    "koodiArvo" : "102874",
+    "osaAlueet" : [ {
+      "id" : 8192,
+      "nimi" : {
+        "_id" : "8845",
+        "_tunniste" : "8b2b1787-a7be-43a4-93fd-734531a911f3",
+        "fi" : "etiika"
+      },
+      "kuvaus" : null,
+      "tyyppi" : "osaalue2020",
+      "koodi" : {
+        "id" : 8862,
+        "nimi" : {
+          "fi" : "Etiikka",
+          "sv" : "Etik "
+        },
+        "arvo" : "ETK",
+        "uri" : "ammatillisenoppiaineet_etk",
+        "koodisto" : "ammatillisenoppiaineet",
+        "versio" : 1
+      },
+      "koodiUri" : "ammatillisenoppiaineet_etk",
+      "koodiArvo" : "ETK",
+      "arviointi" : {
+        "id" : 1640,
+        "kohde" : {
+          "_id" : "1670",
+          "_tunniste" : "b45dc58d-b5c1-41dc-b596-e00d7ce98315",
+          "fi" : "asdf"
+        },
+        "_arviointiAsteikko" : "2",
+        "osaamistasonKriteerit" : [ {
+          "osaamistaso" : {
+            "id" : 2,
+            "otsikko" : {
+              "_id" : "48",
+              "fi" : "Tyydyttävä T1",
+              "sv" : "[Tyydyttävä T1]"
+            },
+            "koodi" : {
+              "id" : 6261,
+              "nimi" : {
+                "fi" : "3"
+              },
+              "arvo" : "3",
+              "uri" : "arviointiasteikkoammatillinen15_3",
+              "koodisto" : "arviointiasteikkoammatillinen15",
+              "versio" : 1
+            }
+          },
+          "kriteerit" : [ ]
+        }, {
+          "osaamistaso" : {
+            "id" : 3,
+            "otsikko" : {
+              "_id" : "49",
+              "fi" : "Hyvä H2",
+              "sv" : "[Hyvä H2]"
+            },
+            "koodi" : {
+              "id" : 6262,
+              "nimi" : {
+                "en" : "Hylätty",
+                "fi" : "Hylätty",
+                "sv" : "Underkänd"
+              },
+              "arvo" : "Hylätty",
+              "uri" : "arviointiasteikkoammatillinen15_hylatty",
+              "koodisto" : "arviointiasteikkoammatillinen15",
+              "versio" : 1
+            }
+          },
+          "kriteerit" : [ ]
+        }, {
+          "osaamistaso" : {
+            "id" : 4,
+            "otsikko" : {
+              "_id" : "50",
+              "fi" : "Kiitettävä K3",
+              "sv" : "[Kiitettävä K3]"
+            },
+            "koodi" : {
+              "id" : 6263,
+              "nimi" : {
+                "fi" : "1"
+              },
+              "arvo" : "1",
+              "uri" : "arviointiasteikkoammatillinen15_1",
+              "koodisto" : "arviointiasteikkoammatillinen15",
+              "versio" : 1
+            }
+          },
+          "kriteerit" : [ ]
+        } ]
+      },
+      "pakollisetOsaamistavoitteet" : {
+        "id" : 8256,
+        "nimi" : null,
+        "pakollinen" : false,
+        "laajuus" : 0.00,
+        "koodi" : null,
+        "koodiUri" : null,
+        "koodiArvo" : null,
+        "tavoitteet" : {
+          "id" : 8965,
+          "kohde" : {
+            "_id" : "8966",
+            "_tunniste" : "92866607-f0ae-4173-882f-df735d22f63a",
+            "fi" : "fdas"
+          },
+          "vaatimukset" : [ ],
+          "kohdealueet" : [ {
+            "kuvaus" : {
+              "_id" : "8967",
+              "_tunniste" : "f3aa5022-edd0-4a79-ab3f-eb47bf14b505",
+              "fi" : "fda"
+            },
+            "vaatimukset" : [ {
+              "koodi" : null,
+              "vaatimus" : {
+                "_id" : "8968",
+                "_tunniste" : "7d817be8-a876-4f7e-b2f5-7e806f4edb65",
+                "fi" : "fda"
+              }
+            } ]
+          } ]
+        }
+      },
+      "valinnaisetOsaamistavoitteet" : {
+        "id" : 8254,
+        "nimi" : null,
+        "pakollinen" : false,
+        "laajuus" : 3.00,
+        "koodi" : null,
+        "koodiUri" : null,
+        "koodiArvo" : null,
+        "tavoitteet" : {
+          "id" : 8969,
+          "kohde" : {
+            "_id" : "9000",
+            "_tunniste" : "a5e9f8b1-4436-4ff7-a11b-6ee01fa6c736",
+            "fi" : "fda"
+          },
+          "vaatimukset" : [ ],
+          "kohdealueet" : [ {
+            "kuvaus" : {
+              "_id" : "9001",
+              "_tunniste" : "4d5dbda2-53e9-4e44-a907-66baa530675f",
+              "fi" : "fda"
+            },
+            "vaatimukset" : [ {
+              "koodi" : null,
+              "vaatimus" : {
+                "_id" : "9002",
+                "_tunniste" : "81596fec-5e52-4eb1-93db-7d080d4bb49c",
+                "fi" : "fda"
+              }
+            } ]
+          } ]
+        }
+      }
+    }, {
+      "id" : 8193,
+      "nimi" : {
+        "_id" : "8846",
+        "_tunniste" : "5bf42af6-1347-4ef6-b15c-9fbd94e8f438",
+        "fi" : "fysiikka"
+      },
+      "kuvaus" : null,
+      "tyyppi" : "osaalue2020",
+      "koodi" : {
+        "id" : 8863,
+        "nimi" : {
+          "fi" : "Fysiikka ja kemia",
+          "sv" : "Fysik och kemi"
+        },
+        "arvo" : "FK",
+        "uri" : "ammatillisenoppiaineet_fk",
+        "koodisto" : "ammatillisenoppiaineet",
+        "versio" : 1
+      },
+      "koodiUri" : "ammatillisenoppiaineet_fk",
+      "koodiArvo" : "FK",
+      "arviointi" : {
+        "id" : 1640,
+        "kohde" : {
+          "_id" : "1670",
+          "_tunniste" : "b45dc58d-b5c1-41dc-b596-e00d7ce98315",
+          "fi" : "asdf"
+        },
+        "_arviointiAsteikko" : "2",
+        "osaamistasonKriteerit" : [ {
+          "osaamistaso" : {
+            "id" : 2,
+            "otsikko" : {
+              "_id" : "48",
+              "fi" : "Tyydyttävä T1",
+              "sv" : "[Tyydyttävä T1]"
+            },
+            "koodi" : {
+              "id" : 6261,
+              "nimi" : {
+                "fi" : "3"
+              },
+              "arvo" : "3",
+              "uri" : "arviointiasteikkoammatillinen15_3",
+              "koodisto" : "arviointiasteikkoammatillinen15",
+              "versio" : 1
+            }
+          },
+          "kriteerit" : [ ]
+        }, {
+          "osaamistaso" : {
+            "id" : 3,
+            "otsikko" : {
+              "_id" : "49",
+              "fi" : "Hyvä H2",
+              "sv" : "[Hyvä H2]"
+            },
+            "koodi" : {
+              "id" : 6262,
+              "nimi" : {
+                "en" : "Hylätty",
+                "fi" : "Hylätty",
+                "sv" : "Underkänd"
+              },
+              "arvo" : "Hylätty",
+              "uri" : "arviointiasteikkoammatillinen15_hylatty",
+              "koodisto" : "arviointiasteikkoammatillinen15",
+              "versio" : 1
+            }
+          },
+          "kriteerit" : [ ]
+        }, {
+          "osaamistaso" : {
+            "id" : 4,
+            "otsikko" : {
+              "_id" : "50",
+              "fi" : "Kiitettävä K3",
+              "sv" : "[Kiitettävä K3]"
+            },
+            "koodi" : {
+              "id" : 6263,
+              "nimi" : {
+                "fi" : "1"
+              },
+              "arvo" : "1",
+              "uri" : "arviointiasteikkoammatillinen15_1",
+              "koodisto" : "arviointiasteikkoammatillinen15",
+              "versio" : 1
+            }
+          },
+          "kriteerit" : [ ]
+        } ]
+      },
+      "pakollisetOsaamistavoitteet" : {
+        "id" : 8255,
+        "nimi" : null,
+        "pakollinen" : false,
+        "laajuus" : 6.00,
+        "koodi" : null,
+        "koodiUri" : null,
+        "koodiArvo" : null,
+        "tavoitteet" : {
+          "id" : 8847,
+          "kohde" : {
+            "_id" : "8848",
+            "_tunniste" : "a4034ce8-1d59-4e75-aa98-3df82315bbcc",
+            "fi" : "asdf"
+          },
+          "vaatimukset" : [ ],
+          "kohdealueet" : [ {
+            "kuvaus" : {
+              "_id" : "8849",
+              "_tunniste" : "7fa811ef-0a25-479e-b382-e6eaf15b0193",
+              "fi" : "asdf"
+            },
+            "vaatimukset" : [ {
+              "koodi" : null,
+              "vaatimus" : {
+                "_id" : "8960",
+                "_tunniste" : "beae4527-3bd9-4b3e-be40-8d53798408a0",
+                "fi" : "asdf"
+              }
+            } ]
+          } ]
+        }
+      },
+      "valinnaisetOsaamistavoitteet" : {
+        "id" : 8253,
+        "nimi" : null,
+        "pakollinen" : false,
+        "laajuus" : 5.00,
+        "koodi" : null,
+        "koodiUri" : null,
+        "koodiArvo" : null,
+        "tavoitteet" : {
+          "id" : 8961,
+          "kohde" : {
+            "_id" : "8962",
+            "_tunniste" : "3b08c2f1-a693-4ad5-b215-1a3aeb0f91bc",
+            "fi" : "asdf"
+          },
+          "vaatimukset" : [ ],
+          "kohdealueet" : [ {
+            "kuvaus" : {
+              "_id" : "8963",
+              "_tunniste" : "2aaa7193-8104-40a5-827c-6d8b5e3cab47",
+              "fi" : "asdf"
+            },
+            "vaatimukset" : [ {
+              "koodi" : null,
+              "vaatimus" : {
+                "_id" : "8964",
+                "_tunniste" : "3ed2011b-8598-4fa1-9b61-e913a7f4c3aa",
+                "fi" : "asdf"
+              }
+            } ]
+          } ]
+        }
+      }
+    } ],
+    "tyyppi" : "reformi_tutke2",
+    "valmaTelmaSisalto" : null,
+    "geneerinenArviointiasteikko" : null,
+    "vapaatTekstit" : [ ],
+    "ammattitaitovaatimukset2019" : {
+      "id" : 7987,
+      "kohde" : {
+        "_id" : "8844",
+        "_tunniste" : "db057d7a-979e-4078-a89a-0a985592d67a",
+        "fi" : "Opiskelija"
+      },
+      "vaatimukset" : [ ],
+      "kohdealueet" : [ ]
+    },
+    "ammattitaitovaatimukset" : {
+      "fi" : "<dl><dt><i>Opiskelija</i></dt></dl>"
+    }
+  } ]
+}

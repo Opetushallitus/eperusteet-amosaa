@@ -19,15 +19,20 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Throwables;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
+import fi.vm.sade.eperusteet.amosaa.domain.peruste.Koulutuskoodi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.SuorituspolkuRiviDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.*;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.geneerinenarviointiasteikko.GeneerinenArviointiasteikkoKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
+import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.peruste.CachedPerusteRepository;
+import fi.vm.sade.eperusteet.amosaa.repository.peruste.KoulutuskoodiRepository;
 import fi.vm.sade.eperusteet.amosaa.resource.config.AbstractRakenneOsaDeserializer;
 import fi.vm.sade.eperusteet.amosaa.resource.config.MappingModule;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
@@ -53,6 +58,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -102,6 +108,12 @@ public class EperusteetServiceImpl implements EperusteetService {
     @Autowired
     private HttpEntity httpEntity;
 
+    @Autowired
+    private OpetussuunnitelmaRepository opetussuunnitelmaRepository;
+
+    @Autowired
+    private KoulutuskoodiRepository koulutuskoodiRepository;
+
     @PostConstruct
     protected void init() {
         client = new RestTemplate(singletonList(jsonMapper.messageConverter().orElseThrow(IllegalStateException::new)));
@@ -116,7 +128,7 @@ public class EperusteetServiceImpl implements EperusteetService {
     }
 
     @Override
-    public CachedPerusteBaseDto getCachedPeruste(PerusteDto peruste) {
+    public CachedPerusteBaseDto getCachedPeruste(PerusteBaseDto peruste) {
         Date viimeisinJulkaisu = eperusteetClient.getViimeisinJulkaisuPeruste(peruste.getId());
         CachedPeruste cperuste = cachedPerusteRepository.findFirstByPerusteIdAndLuotu(peruste.getId(), viimeisinJulkaisu);
         if (cperuste == null) {
@@ -130,7 +142,7 @@ public class EperusteetServiceImpl implements EperusteetService {
             cperuste.setLuotu(viimeisinJulkaisu);
             cperuste.setPeruste(eperusteetClient.getPerusteData(peruste.getId()));
             cperuste.setKoulutustyyppi(peruste.getKoulutustyyppi());
-            cperuste.setKoulutukset(peruste.getKoulutukset());
+            cperuste.setKoulutuskoodit(peruste.getKoulutukset().stream().map(koulutusDto ->  koulutuskoodiRepository.save(Koulutuskoodi.of(koulutusDto))).collect(Collectors.toSet()));
             cperuste = cachedPerusteRepository.save(cperuste);
         }
         return dtoMapper.map(cperuste, CachedPerusteBaseDto.class);
@@ -285,6 +297,19 @@ public class EperusteetServiceImpl implements EperusteetService {
     }
 
     @Override
+    @Cacheable("geneerinenarviointi")
+    public GeneerinenArviointiasteikkoKaikkiDto getGeneerinen(Long id) {
+        String url = eperusteetServiceUrl + "/api/geneerinenarviointi/"+id+"/kaikki";
+        JsonNode node = client.exchange(url, HttpMethod.GET, httpEntity, JsonNode.class).getBody();
+        try {
+            return mapper.treeToValue(node, GeneerinenArviointiasteikkoKaikkiDto.class);
+        } catch (JsonProcessingException e) {
+            logger.error("arvoinnin parsinta epäonnistui", Throwables.getStackTraceAsString(e));
+            throw new BusinessRuleViolationException("arvoinnin-parsinta-epaonnistui");
+        }
+    }
+
+    @Override
     public Set<UUID> getRakenneTunnisteet(Long id, String suoritustapa) {
         JsonNode st = getSuoritustapa(id, suoritustapa);
 
@@ -430,8 +455,39 @@ public class EperusteetServiceImpl implements EperusteetService {
         return null;
     }
 
+    @Override
+    public PerusteKaikkiDto getPerusteKaikki(Long perusteCacheId) {
+        try {
+            CachedPeruste cperuste = getMostRecentCachedPerusteByPerusteId(perusteCacheId);
+            JsonNode node = mapper.readTree(cperuste.getPeruste());
+            return mapper.treeToValue(node, PerusteKaikkiDto.class);
+        } catch (IOException ex) {
+            throw new BusinessRuleViolationException("perusteen-parsinta-epaonnistui");
+        }
+    }
+
     private CachedPeruste getMostRecentCachedPerusteByPerusteId(Long perusteCacheId) {
         CachedPeruste cperuste = cachedPerusteRepository.findOne(perusteCacheId);
         return cachedPerusteRepository.findFirstByPerusteIdOrderByLuotuDesc(cperuste.getPerusteId());
+    }
+
+    @Override
+    public PerusteDto getKoulutuskoodillaKorvaavaPeruste(Long ktId, Long opsId) {
+        Opetussuunnitelma opetussuunnitelma = opetussuunnitelmaRepository.findOne(opsId);
+        PerusteDto opetussuunnitelmanPeruste = getPerusteSisalto(opetussuunnitelma.getPeruste(), PerusteDto.class);
+        PerusteDto uusiPeruste = eperusteetClient.findPerusteetByKoulutuskoodit(opetussuunnitelmanPeruste.getKoulutukset().stream()
+                        .map(KoulutusDto::getKoulutuskoodiUri)
+                        .collect(Collectors.toList()))
+                .stream()
+                .sorted(Comparator.comparing(PerusteDto::getVoimassaoloAlkaa, Comparator.reverseOrder()))
+                .findFirst().orElse(null);
+
+        if (uusiPeruste == null
+                || uusiPeruste.getId().equals(opetussuunnitelma.getPeruste().getPerusteId())
+                || uusiPeruste.getVoimassaoloAlkaa().compareTo(opetussuunnitelmanPeruste.getVoimassaoloAlkaa()) <= 0) {
+            return null;
+        }
+
+        return uusiPeruste;
     }
 }

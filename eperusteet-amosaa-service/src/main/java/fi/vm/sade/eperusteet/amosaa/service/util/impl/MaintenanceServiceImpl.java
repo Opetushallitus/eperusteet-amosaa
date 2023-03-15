@@ -7,11 +7,15 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Julkaisu;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.JulkaisuData;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
+import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
+import fi.vm.sade.eperusteet.amosaa.domain.peruste.Koulutuskoodi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.JulkaisuRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
+import fi.vm.sade.eperusteet.amosaa.repository.peruste.CachedPerusteRepository;
+import fi.vm.sade.eperusteet.amosaa.repository.peruste.KoulutuskoodiRepository;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaMuokkaustietoService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
@@ -69,6 +73,12 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 
     @Autowired
     private CacheManager cacheManager;
+
+    @Autowired
+    private CachedPerusteRepository cachedPerusteRepository;
+
+    @Autowired
+    private KoulutuskoodiRepository koulutuskoodiRepository;
 
     @Deprecated
     @Override
@@ -143,4 +153,5 @@ public class MaintenanceServiceImpl implements MaintenanceService {
     public void clearCache(String cache) {
         Objects.requireNonNull(cacheManager.getCache(cache)).clear();
     }
+
 }

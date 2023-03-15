@@ -23,4 +23,5 @@ public class MaintenanceServiceMock implements MaintenanceService {
     @Override
     public void clearCache(String cache) {
     }
+
 }

@@ -18,6 +18,7 @@ package fi.vm.sade.eperusteet.amosaa.service.ops;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
+import fi.vm.sade.eperusteet.amosaa.dto.OletusToteutusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.RevisionDto;
 import fi.vm.sade.eperusteet.amosaa.dto.RevisionKayttajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.SisaltoviiteQueryDto;
@@ -100,7 +101,7 @@ public interface SisaltoViiteService extends LockService<SisaltoViiteCtx> {
     int getCountByKoodi(Long ktId, String koodi);
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
-    void copySisaltoViiteet(@P("ktId") Long ktId, @P("opsId") Long opsId, List<Long> viitteet);
+    List<SisaltoViiteDto> copySisaltoViiteet(@P("ktId") Long ktId, @P("opsId") Long opsId, List<Long> viitteet);
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'ESITYS')")
     <T> List<T> getTutkinnonOsaViitteet(@P("ktId") Long ktId, @P("opsId") Long opsId, Class<T> aClass);
@@ -131,5 +132,11 @@ public interface SisaltoViiteService extends LockService<SisaltoViiteCtx> {
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
     void linkSisaltoViiteet(Long ktId, Long opsId, List<Long> viitteet);
+
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
+    SisaltoViiteDto kopioiLinkattuSisaltoViiteet(Long ktId, Long opsId, Long viiteId);
+
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
+    List<OletusToteutusDto> tutkinnonosienOletusToteutukset(Long ktId, Long opsId);
 }
 

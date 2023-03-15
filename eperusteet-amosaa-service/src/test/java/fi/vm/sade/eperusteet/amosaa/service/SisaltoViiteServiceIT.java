@@ -252,7 +252,7 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
         useProfileKP2();
         OpetussuunnitelmaBaseDto ops = createOpetussuunnitelma();
         SisaltoViiteDto.Matala root = sisaltoViiteService.getSisaltoRoot(getKoulutustoimijaId(), ops.getId());
-        SisaltoViiteDto.Matala added = sisaltoViiteService.addSisaltoViite(getKoulutustoimijaId(), ops.getId(), root.getLapset().get(1).getIdLong(), createSisalto(sisaltoViiteDto -> {
+        SisaltoViiteDto.Matala added = sisaltoViiteService.addSisaltoViite(getKoulutustoimijaId(), ops.getId(), root.getLapset().get(0).getIdLong(), createSisalto(sisaltoViiteDto -> {
             sisaltoViiteDto.setTyyppi(SisaltoTyyppi.SUORITUSPOLKU);
         }));
         List<SuorituspolkuRakenneDto> rakenne = sisaltoViiteService.getSuorituspolkurakenne(getKoulutustoimijaId(), ops.getId());
@@ -294,7 +294,7 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
         useProfileKP2();
         OpetussuunnitelmaBaseDto ops = createOpetussuunnitelma();
         SisaltoViiteDto.Matala root = sisaltoViiteService.getSisaltoRoot(getKoulutustoimijaId(), ops.getId());
-        SisaltoViiteDto.Matala added = sisaltoViiteService.addSisaltoViite(getKoulutustoimijaId(), ops.getId(), root.getLapset().get(1).getIdLong(), createSisalto(sisaltoViiteDto -> {
+        SisaltoViiteDto.Matala added = sisaltoViiteService.addSisaltoViite(getKoulutustoimijaId(), ops.getId(), root.getLapset().get(0).getIdLong(), createSisalto(sisaltoViiteDto -> {
             sisaltoViiteDto.setTyyppi(SisaltoTyyppi.SUORITUSPOLKU);
             sisaltoViiteDto.setSuorituspolku(new SuorituspolkuDto());
             sisaltoViiteDto.getSuorituspolku().getRivit()
@@ -370,13 +370,6 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
         }
     }
 
-    private SisaltoViiteKevytDto getFirstOfType(Long ktId, Long opsId, SisaltoTyyppi tyyppi) {
-        List<SisaltoViiteKevytDto> sisaltoViitteet = service.getSisaltoViitteet(ktId, opsId, SisaltoViiteKevytDto.class);
-        return sisaltoViitteet.stream()
-                .filter(sv -> sv.getTyyppi().equals(tyyppi))
-                .findAny().get();
-    }
-
     @Test
     @Rollback
     public void testUpdateOpetussuunnitelmaPiilotetutSisaltoviitteet_ei_piilotuksia() {
@@ -449,7 +442,7 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
         List<SisaltoViiteDto.Matala> added = Arrays.asList(
                 sisaltoViiteService.addSisaltoViite(getKoulutustoimijaId(), ops.getId(), root.getId(), createSisalto(sisaltoViiteDto -> {
                     sisaltoViiteDto.setTyyppi(SisaltoTyyppi.TEKSTIKAPPALE);
-                })), sisaltoViiteService.addSisaltoViite(getKoulutustoimijaId(), ops.getId(), root.getLapset().get(0).getIdLong(), createSisalto(sisaltoViiteDto -> {
+                })), sisaltoViiteService.addSisaltoViite(getKoulutustoimijaId(), ops.getId(), root.getLapset().get(1).getIdLong(), createSisalto(sisaltoViiteDto -> {
                     sisaltoViiteDto.setTyyppi(SisaltoTyyppi.TUTKINNONOSA);
                     sisaltoViiteDto.setTosa(TutkinnonosaDto.builder()
                             .omatutkinnonosa(OmaTutkinnonosaDto.builder()
@@ -463,7 +456,7 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
                                     .build())
                             .build()
                     );
-                })), sisaltoViiteService.addSisaltoViite(getKoulutustoimijaId(), ops.getId(), root.getLapset().get(1).getIdLong(), createSisalto(sisaltoViiteDto -> {
+                })), sisaltoViiteService.addSisaltoViite(getKoulutustoimijaId(), ops.getId(), root.getLapset().get(0).getIdLong(), createSisalto(sisaltoViiteDto -> {
                     sisaltoViiteDto.setTyyppi(SisaltoTyyppi.SUORITUSPOLKU);
                 })));
 
@@ -471,10 +464,10 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
 
         SisaltoViite ops2Root = sisaltoviiteRepository.findOneRoot(ops2);
         assertThat(ops2Root.getLapset()).hasSize(2);
-        assertThat(ops2Root.getLapset().get(0).getTyyppi()).isEqualTo(SisaltoTyyppi.TUTKINNONOSAT);
-        assertThat(ops2Root.getLapset().get(0).getLapset()).hasSize(10);
-        assertThat(ops2Root.getLapset().get(1).getTyyppi()).isEqualTo(SisaltoTyyppi.SUORITUSPOLUT);
-        assertThat(ops2Root.getLapset().get(1).getLapset()).hasSize(0);
+        assertThat(ops2Root.getLapset().get(1).getTyyppi()).isEqualTo(SisaltoTyyppi.TUTKINNONOSAT);
+        assertThat(ops2Root.getLapset().get(1).getLapset()).hasSize(10);
+        assertThat(ops2Root.getLapset().get(0).getTyyppi()).isEqualTo(SisaltoTyyppi.SUORITUSPOLUT);
+        assertThat(ops2Root.getLapset().get(0).getLapset()).hasSize(0);
         assertThat(liiteService.getAll(getKoulutustoimijaId(), ops.getId())).hasSize(1);
         assertThat(liiteService.getAll(getKoulutustoimijaId(), ops2.getId())).hasSize(0);
 
@@ -482,14 +475,14 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
 
         ops2Root = sisaltoviiteRepository.findOneRoot(ops2);
         assertThat(ops2Root.getLapset()).hasSize(3);
-        assertThat(ops2Root.getLapset().get(0).getTyyppi()).isEqualTo(SisaltoTyyppi.TUTKINNONOSAT);
-        assertThat(ops2Root.getLapset().get(0).getLapset().get(10)
+        assertThat(ops2Root.getLapset().get(1).getTyyppi()).isEqualTo(SisaltoTyyppi.TUTKINNONOSAT);
+        assertThat(ops2Root.getLapset().get(1).getLapset().get(10)
                 .getTosa().getOmatutkinnonosa().getAmmattitaitovaatimuksetLista()
                 .get(0).getVaatimuksenKohteet().get(0).getVaatimukset().get(0)
                 .getSelite().getTeksti().get(Kieli.FI)).isEqualTo("vaatimusteksti");
-        assertThat(ops2Root.getLapset().get(0).getLapset()).hasSize(11);
-        assertThat(ops2Root.getLapset().get(1).getLapset().get(0).getTyyppi()).isEqualTo(SisaltoTyyppi.SUORITUSPOLKU);
-        assertThat(ops2Root.getLapset().get(1).getLapset()).hasSize(1);
+        assertThat(ops2Root.getLapset().get(1).getLapset()).hasSize(11);
+        assertThat(ops2Root.getLapset().get(0).getLapset().get(0).getTyyppi()).isEqualTo(SisaltoTyyppi.SUORITUSPOLKU);
+        assertThat(ops2Root.getLapset().get(0).getLapset()).hasSize(1);
         assertThat(ops2Root.getLapset().get(2).getTyyppi()).isEqualTo(SisaltoTyyppi.TEKSTIKAPPALE);
         assertThat(liiteService.getAll(getKoulutustoimijaId(), ops.getId())).hasSize(1);
         assertThat(liiteService.getAll(getKoulutustoimijaId(), ops2.getId())).hasSize(1);
@@ -518,8 +511,10 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
             paikallinen.setNimi(LokalisoituTekstiDto.of("nimi-" + id));
             paikallinen.setTyyppi(OmaOsaAlueTyyppi.PAIKALLINEN);
             paikallinen.setPerusteenOsaAlueKoodi("1234-" + id);
-            paikallinen.setArvioinnista(LokalisoituTekstiDto.of("arvioinnista-" + id));
-            paikallinen.setTavatjaymparisto(LokalisoituTekstiDto.of("tavatjaymparisto-" + id));
+            paikallinen.setToteutukset(Arrays.asList(OmaOsaAlueToteutusDto.builder()
+                            .arvioinnista(TekstiosaDto.of("arvioinnista-" + id))
+                            .tavatjaymparisto(TekstiosaDto.of("tavatjaymparisto-" + id))
+                    .build()));
             {
                 PaikallisetAmmattitaitovaatimukset2019Dto ot = new PaikallisetAmmattitaitovaatimukset2019Dto();
                 ot.setKohde(LokalisoituTekstiDto.of("otsikko1-" + id));
@@ -551,6 +546,11 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
             assertThat(updated.getOsaAlueet()).hasSize(2);
             assertThat(updated.getOsaAlueet().get(0).getNimi().get(Kieli.FI)).isEqualTo("nimi-a");
             assertThat(updated.getOsaAlueet().get(1).getNimi().get(Kieli.FI)).isEqualTo("nimi-b");
+
+            assertThat(updated.getOsaAlueet().get(0).getToteutukset()).hasSize(1);
+            assertThat(updated.getOsaAlueet().get(0).getToteutukset().get(0).getArvioinnista().getTeksti().get(Kieli.FI)).isEqualTo("arvioinnista-a");
+            assertThat(updated.getOsaAlueet().get(0).getToteutukset().get(0).getTavatjaymparisto().getTeksti().get(Kieli.FI)).isEqualTo("tavatjaymparisto-a");;
+
         }
 
         { // Editing osa alueet

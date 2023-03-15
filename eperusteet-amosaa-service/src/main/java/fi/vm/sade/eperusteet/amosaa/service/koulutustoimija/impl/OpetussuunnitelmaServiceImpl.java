@@ -36,6 +36,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
+import fi.vm.sade.eperusteet.amosaa.domain.peruste.Koulutuskoodi;
 import fi.vm.sade.eperusteet.amosaa.domain.revision.Revision;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
@@ -74,6 +75,7 @@ import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.JulkaisuRepositor
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.peruste.CachedPerusteRepository;
+import fi.vm.sade.eperusteet.amosaa.repository.peruste.KoulutuskoodiRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.TekstiKappaleRepository;
 import fi.vm.sade.eperusteet.amosaa.resource.config.AbstractRakenneOsaDeserializer;
@@ -99,6 +101,8 @@ import fi.vm.sade.eperusteet.amosaa.service.ops.OpetussuunnitelmaPohjaCreateServ
 import fi.vm.sade.eperusteet.amosaa.service.ops.OpetussuunnitelmaValidationService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.ValidointiService;
+import fi.vm.sade.eperusteet.amosaa.service.ops.impl.OpetussuunnitelmaSisaltoCreateUtil;
+import fi.vm.sade.eperusteet.amosaa.service.peruste.OpetussuunnitelmaPerustePaivitysService;
 import fi.vm.sade.eperusteet.amosaa.service.security.KoulutustyyppiRolePrefix;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionManager;
 import fi.vm.sade.eperusteet.amosaa.service.util.CollectionUtil;
@@ -108,6 +112,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -191,6 +196,9 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     private OrganisaatioService organisaatioService;
 
     @Autowired
+    private KoulutuskoodiRepository koulutuskoodiRepository;
+
+    @Autowired
     public void setKoulutustoimijaService(KoulutustoimijaService kts) {
         this.koulutustoimijaService = kts;
     }
@@ -263,22 +271,6 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         }
     }
 
-    public void mapKoulutukset() {
-        List<CachedPeruste> cperusteet = cachedPerusteRepository.findAll();
-        for (CachedPeruste cperuste : cperusteet) {
-            if (cperuste.getKoulutukset() == null) {
-                try {
-                    JsonNode peruste = eperusteetService.getPerusteSisalto(cperuste, JsonNode.class);
-                    Set<KoulutusDto> koulutukset = objMapper.readValue(peruste.get("koulutukset").toString(),
-                            objMapper.getTypeFactory().constructCollectionType(Set.class, KoulutusDto.class));
-                    cperuste.setKoulutukset(koulutukset);
-                } catch (Exception ex) {
-                    LOG.error(ex.getLocalizedMessage());
-                }
-            }
-        }
-    }
-
     @Override
     public List<OpetussuunnitelmaDto> getJulkisetOpetussuunnitelmat(Long ktId) {
         Koulutustoimija koulutustoimija = koulutustoimijaRepository.findOne(ktId);
@@ -294,9 +286,16 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
             Class<T> clazz
     ) {
         Koulutustoimija koulutustoimija = koulutustoimijaRepository.findOne(ktId);
-        if (koulutustoimija != null && query != null) {
-            query.setKoulutustoimija(koulutustoimija.getId());
+
+        List<KoulutusTyyppi> koulutustyyppi = query.getKoulutustyyppi();
+        if (koulutustyyppi == null && query.getTyyppi() != null && query.getTyyppi().equals(OpsTyyppi.YHTEINEN)) {
+            koulutustyyppi = Arrays.asList(KoulutusTyyppi.PERUSTUTKINTO);
         }
+
+        if (query != null && (koulutustyyppi == null || koulutustyyppi.stream().noneMatch(kt -> SecurityUtil.isUserOphAdmin(KoulutustyyppiRolePrefix.of(kt))))) {
+            query.setKoulutustoimijat(Arrays.asList(koulutustoimija.getId()));
+        }
+
         return repository.findBy(page, query)
                 .map(ops -> mapper.map(ops, clazz));
     }
@@ -471,43 +470,6 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     }
 
     private void alustaAmmatillinenOpetussuunnitelma(Opetussuunnitelma ops, SisaltoViite rootTkv) {
-        // Lisätään tutkinnonosille oma sisältöviite
-        {
-            SisaltoViite tosat = new SisaltoViite();
-            TekstiKappale tk = new TekstiKappale();
-
-
-            // Haetaan perusteen koulutustyyppi
-            CachedPeruste cperuste = ops.getPeruste();
-            String koulutustyppi;
-            try {
-                JsonNode node = objMapper.readTree(cperuste.getPeruste());
-                JsonNode koulutustyyppi = node.get("koulutustyyppi");
-                koulutustyppi = koulutustyyppi.asText();
-            } catch (IOException ex) {
-                throw new BusinessRuleViolationException("perusteen-parsinta-epaonnistui");
-            }
-
-            // Luodaan tutkinnon osat tekstikappale
-            Map<Kieli, String> tutkinnonOsatTekstikappale = new HashMap<>();
-            for (Kieli kieli : Kieli.values()) {
-                if (KoulutusTyyppi.of(koulutustyppi).isValmaTelma()) {
-                    tutkinnonOsatTekstikappale.put(kieli, messages.translate("koulutuksen-osat", kieli));
-                } else {
-                    tutkinnonOsatTekstikappale.put(kieli, messages.translate("tutkinnon-osat", kieli));
-                }
-            }
-            tk.setNimi(LokalisoituTeksti.of(tutkinnonOsatTekstikappale));
-
-            tk.setValmis(true);
-            tosat.setTekstiKappale(tkRepository.save(tk));
-            tosat.setLiikkumaton(false);
-            tosat.setVanhempi(rootTkv);
-            tosat.setPakollinen(true);
-            tosat.setTyyppi(SisaltoTyyppi.TUTKINNONOSAT);
-            tosat.setOwner(ops);
-            rootTkv.getLapset().add(tkvRepository.save(tosat));
-        }
 
         // Lisätään suorituspoluille oma sisältöviite
         if (ops.getTyyppi() == OpsTyyppi.OPS) {
@@ -527,6 +489,42 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
             suorituspolut.setVanhempi(rootTkv);
             rootTkv.getLapset().add(tkvRepository.save(suorituspolut));
         }
+
+        // Lisätään tutkinnonosille oma sisältöviite
+
+        SisaltoViite tosat = new SisaltoViite();
+        TekstiKappale tk = new TekstiKappale();
+
+        // Haetaan perusteen koulutustyyppi
+        CachedPeruste cperuste = ops.getPeruste();
+        String koulutustyppi;
+        try {
+            JsonNode node = objMapper.readTree(cperuste.getPeruste());
+            JsonNode koulutustyyppi = node.get("koulutustyyppi");
+            koulutustyppi = koulutustyyppi.asText();
+        } catch (IOException ex) {
+            throw new BusinessRuleViolationException("perusteen-parsinta-epaonnistui");
+        }
+
+        // Luodaan tutkinnon osat tekstikappale
+        Map<Kieli, String> tutkinnonOsatTekstikappale = new HashMap<>();
+        for (Kieli kieli : Kieli.values()) {
+            if (KoulutusTyyppi.of(koulutustyppi).isValmaTelma()) {
+                tutkinnonOsatTekstikappale.put(kieli, messages.translate("koulutuksen-osat", kieli));
+            } else {
+                tutkinnonOsatTekstikappale.put(kieli, messages.translate("tutkinnon-osat", kieli));
+            }
+        }
+        tk.setNimi(LokalisoituTeksti.of(tutkinnonOsatTekstikappale));
+
+        tk.setValmis(true);
+        tosat.setTekstiKappale(tkRepository.save(tk));
+        tosat.setLiikkumaton(false);
+        tosat.setVanhempi(rootTkv);
+        tosat.setPakollinen(true);
+        tosat.setTyyppi(SisaltoTyyppi.TUTKINNONOSAT);
+        tosat.setOwner(ops);
+        rootTkv.getLapset().add(tkvRepository.save(tosat));
     }
 
     private void alustaOpetussuunnitelmaPerusteenSisallolla(Opetussuunnitelma ops, SisaltoViite parentViite, PerusteenOsaViiteDto.Laaja sisalto) {
@@ -664,7 +662,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                     ? eperusteetClient.getYleinenPohjaSisalto()
                     : eperusteetClient.getPerusteData(peruste.getId()));
             cperuste.setKoulutustyyppi(peruste.getKoulutustyyppi());
-            cperuste.setKoulutukset(peruste.getKoulutukset());
+            cperuste.setKoulutuskoodit(peruste.getKoulutukset().stream().map(koulutusDto ->  koulutuskoodiRepository.save(Koulutuskoodi.of(koulutusDto))).collect(Collectors.toSet()));
             cperuste = cachedPerusteRepository.save(cperuste);
         }
 
@@ -709,43 +707,14 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                                     : -1;
                         })
                         .map(tosa -> idToTosaMap.get(tosa.getTutkinnonOsa()))
+                        .filter(Objects::nonNull)
                         .filter(tutkinnonosa -> CollectionUtils.isEmpty(tutkinnonOsaKoodiIncludes) || tutkinnonOsaKoodiIncludes.contains(tutkinnonosa.getKoodiUri()))
                         .collect(Collectors.toList());
             }
 
-            SisaltoViite tosat = rootTkv.getLapset().get(0);
+            SisaltoViite tosat = rootTkv.getLapset().get(1);
             for (TutkinnonosaKaikkiDto tosa : tutkinnonOsat) {
-                SisaltoViite uusi = SisaltoViite.createTutkinnonOsa(tosat);
-                uusi.setPakollinen(false);
-                uusi.getTekstiKappale().setNimi(LokalisoituTeksti.of(tosa.getNimi()));
-                Tutkinnonosa uusiTosa = uusi.getTosa();
-                uusiTosa.setTyyppi(TutkinnonosaTyyppi.PERUSTEESTA);
-                uusiTosa.setPerusteentutkinnonosa(tosa.getId());
-                uusiTosa.setKoodi(tosa.getKoodiUri());
-
-                for (OsaAlueKokonaanDto perusteenOsaAlue : tosa.getOsaAlueet()) {
-                    Osaamistavoite2020Dto pakolliset = perusteenOsaAlue.getPakollisetOsaamistavoitteet();
-                    Osaamistavoite2020Dto valinnaiset = perusteenOsaAlue.getValinnaisetOsaamistavoitteet();
-
-                    if (pakolliset != null) {
-                        OmaOsaAlue oa = new OmaOsaAlue();
-                        oa.setTyyppi(OmaOsaAlueTyyppi.PAKOLLINEN);
-                        oa.setPiilotettu(false);
-                        oa.setPerusteenOsaAlueKoodi(perusteenOsaAlue.getKoodiUri());
-                        oa.setPerusteenOsaAlueId(perusteenOsaAlue.getId());
-                        uusi.getOsaAlueet().add(oa);
-                    }
-
-                    if (valinnaiset != null) {
-                        OmaOsaAlue oa = new OmaOsaAlue();
-                        oa.setTyyppi(OmaOsaAlueTyyppi.VALINNAINEN);
-                        oa.setPiilotettu(false);
-                        oa.setPerusteenOsaAlueKoodi(perusteenOsaAlue.getKoodiUri());
-                        oa.setPerusteenOsaAlueId(perusteenOsaAlue.getId());
-                        uusi.getOsaAlueet().add(oa);
-                    }
-                }
-
+                SisaltoViite uusi = OpetussuunnitelmaSisaltoCreateUtil.perusteenTutkinnonosaToSisaltoviite(tosat, tosa);
                 tkvRepository.save(uusi);
             }
         }
@@ -807,24 +776,10 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     @Override
     public void paivitaPeruste(Long ktId, Long opsId) {
         Opetussuunnitelma ops = repository.getOne(opsId);
-        PerusteDto perusteDto = eperusteetClient.getPeruste(ops.getPeruste().getPerusteId(), PerusteDto.class);
+        PerusteKaikkiDto perusteDto = eperusteetClient.getPeruste(ops.getPeruste().getPerusteId(), PerusteKaikkiDto.class);
         CachedPerusteBaseDto cp = eperusteetService.getCachedPeruste(perusteDto);
         CachedPeruste newCachedPeruste = cachedPerusteRepository.findOne(cp.getId());
-        Set<UUID> tunnisteet = eperusteetService.getRakenneTunnisteet(newCachedPeruste.getId(), ops.getSuoritustapa());
-        if (tunnisteet.isEmpty()) {
-            tunnisteet = eperusteetService.getRakenneTunnisteet(newCachedPeruste.getId(), Suoritustapakoodi.REFORMI.toString());
-        }
-
-        Set<UUID> kaytetytTunnisteet = tkvService.getSuorituspolkurakenne(ktId, opsId).stream()
-                .map(AbstractRakenneOsaDto::getTunniste)
-                .collect(Collectors.toSet());
-
-        if (!tunnisteet.containsAll(kaytetytTunnisteet)) {
-            log.error("Opetussuunnitelman perusteen synkronointi epäonnistui \nops: {} \nperuste: {} \nold: {} \nnew: {} \ntunnisteet: {} \nnykyisetTunnisteet: {} \ntunniste-ero: {}",
-                    ops.getId(), perusteDto.getId(), ops.getPeruste().getLuotu(),newCachedPeruste.getLuotu(), tunnisteet, kaytetytTunnisteet,
-                    Sets.difference(tunnisteet, kaytetytTunnisteet));
-            throw new BusinessRuleViolationException("ei-voi-synkronoida");
-        }
+        dispatcher.get(ops.getOpsKoulutustyyppi(), OpetussuunnitelmaPerustePaivitysService.class).paivitaOpetussuunnitelma(opsId, perusteDto);
 
         List<SisaltoViite> tutkinnonOsaViitteet = sisaltoviiteRepository.findTutkinnonosat(ops);
         Set<Long> tutkinnonOsienPerusteIdt = tutkinnonOsaViitteet.stream()
@@ -907,6 +862,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
             if (opsDto.getTyyppi() != OpsTyyppi.YHTEINEN) {
                 rootTkv = new SisaltoViite();
                 rootTkv.setOwner(ops);
+                ops.getSisaltoviitteet().add(rootTkv);
                 rootTkv = tkvRepository.save(rootTkv);
             }
 

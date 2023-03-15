@@ -24,6 +24,8 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma_;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste_;
+import fi.vm.sade.eperusteet.amosaa.domain.peruste.Koulutuskoodi;
+import fi.vm.sade.eperusteet.amosaa.domain.peruste.Koulutuskoodi_;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti_;
@@ -35,6 +37,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale_;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Teksti_;
 import fi.vm.sade.eperusteet.amosaa.dto.OpsHakuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaQueryDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.KoulutusDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaCustomRepository;
 import java.util.ArrayList;
 import java.util.Date;
@@ -54,10 +57,14 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.SetJoin;
 import javax.persistence.criteria.Subquery;
+
+import fi.vm.sade.eperusteet.amosaa.service.security.KoulutustyyppiRolePrefix;
+import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 /**
@@ -259,11 +266,10 @@ public class OpetussuunnitelmaRepositoryImpl implements OpetussuunnitelmaCustomR
             CriteriaBuilder cb,
             OpsHakuDto queryDto
     ) {
-        if (ObjectUtils.isEmpty(queryDto.getKoulutustoimija())) {
-            throw new IllegalArgumentException("Koulutustoimija puuttuu");
+        Predicate oikeaKoulutustoimija = cb.and();
+        if (!ObjectUtils.isEmpty(queryDto.getKoulutustoimijat())) {
+            oikeaKoulutustoimija = cb.and(koulutustoimija.get(Koulutustoimija_.id).in(queryDto.getKoulutustoimijat()));
         }
-
-        Predicate oikeaKoulutustoimija = cb.equal(koulutustoimija.get(Koulutustoimija_.id), queryDto.getKoulutustoimija());
 
         Predicate pred;
         if (!ObjectUtils.isEmpty(queryDto.getPeruste())) {
@@ -296,7 +302,11 @@ public class OpetussuunnitelmaRepositoryImpl implements OpetussuunnitelmaCustomR
 
             Predicate diaarissa = cb.like(cb.lower(root.get(Opetussuunnitelma_.perusteDiaarinumero)), cb.literal(nimi));
 
-            pred = cb.and(pred, cb.or(nimessa, diaarissa));
+            Join<Opetussuunnitelma, CachedPeruste> peruste = root.join(Opetussuunnitelma_.peruste, JoinType.LEFT);
+            SetJoin<CachedPeruste, Koulutuskoodi> koulutuskoodit =  peruste.join(CachedPeruste_.koulutuskoodit);
+            Predicate koulutuskoodiArvossa = cb.like(cb.lower(koulutuskoodit.get(Koulutuskoodi_.koulutuskoodiArvo)), cb.literal(nimi));
+
+            pred = cb.and(pred, cb.or(nimessa, diaarissa, koulutuskoodiArvossa));
         }
 
         // Rajataan tilojen mukaan

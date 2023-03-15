@@ -28,7 +28,9 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author nkala
@@ -62,8 +64,18 @@ public class CachedPeruste implements Serializable, ReferenceableEntity {
 
     //TODO add koulutustyyppitoteutus
 
+    @Deprecated
     @Basic
     @Column(columnDefinition = "text")
     @Convert(converter = KoulutuksetConverter.class)
     private Set<KoulutusDto> koulutukset;
+
+    @OneToMany(mappedBy = "cachedPeruste", cascade = {CascadeType.MERGE}, orphanRemoval = true)
+    private Set<Koulutuskoodi> koulutuskoodit = new HashSet<>();
+
+    public void setKoulutuskoodit(Set<Koulutuskoodi> koulutuskoodit) {
+        this.koulutuskoodit.clear();
+        this.koulutuskoodit.addAll(koulutuskoodit);
+        this.koulutuskoodit.forEach(koulutuskoodi -> koulutuskoodi.setCachedPeruste(this));
+    }
 }

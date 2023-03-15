@@ -98,7 +98,12 @@ public interface OpetussuunnitelmaRepository extends JpaWithVersioningRepository
 
     List<Opetussuunnitelma> findAllByKoulutustoimijaAndTila(Koulutustoimija koulutustoimija, Tila tila);
 
-    List<Opetussuunnitelma> findAllByKoulutustoimijaAndTyyppi(Koulutustoimija koulutustoimija, OpsTyyppi tyyppi);
+    @Query(value = "SELECT DISTINCT o " +
+            "FROM Opetussuunnitelma o JOIN o.koulutustoimija kt LEFT JOIN o.peruste p " +
+            "WHERE kt in (:koulutustoimijat) " +
+            "AND o.tyyppi = :tyyppi " +
+            "AND tila != 'POISTETTU'")
+    List<Opetussuunnitelma> findAllByKoulutustoimijaAndTyyppi(Koulutustoimija koulutustoimijat, OpsTyyppi tyyppi);
 
     List<Opetussuunnitelma> findAllByTyyppi(OpsTyyppi tyyppi);
 

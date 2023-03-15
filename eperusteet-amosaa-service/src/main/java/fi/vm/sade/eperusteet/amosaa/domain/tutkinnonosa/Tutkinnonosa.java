@@ -17,6 +17,7 @@
 package fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa;
 
 import fi.vm.sade.eperusteet.amosaa.domain.AbstractAuditedEntity;
+import fi.vm.sade.eperusteet.amosaa.domain.OsaamistasonKriteeri;
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.VapaaTeksti;
@@ -25,6 +26,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -135,6 +137,30 @@ public class Tutkinnonosa extends AbstractAuditedEntity implements Serializable,
             return result;
         } else {
             return null;
+        }
+    }
+
+    public void asetaPaikallisetMaaritykset(Tutkinnonosa other) {
+        this.setOsaamisenOsoittaminen(other.getOsaamisenOsoittaminen());
+        this.setOmatutkinnonosa(OmaTutkinnonosa.copy(other.getOmatutkinnonosa()));
+        this.setVierastutkinnonosa(VierasTutkinnonosa.copy(other.getVierastutkinnonosa()));
+
+        List<TutkinnonosaToteutus> toteutukset = other.getToteutukset();
+        if (!ObjectUtils.isEmpty(toteutukset)) {
+            this.getToteutukset().clear();
+            for (TutkinnonosaToteutus toteutus : toteutukset) {
+                TutkinnonosaToteutus copy = toteutus.copy();
+                copy.setTutkinnonosa(this);
+                this.getToteutukset().add(copy);
+            }
+        }
+
+        List<VapaaTeksti> vapaat = other.getVapaat();
+        if (!ObjectUtils.isEmpty(vapaat)) {
+            this.getVapaat().clear();
+            for (VapaaTeksti vapaa : vapaat) {
+                this.getVapaat().add(vapaa.copy());
+            }
         }
     }
 }

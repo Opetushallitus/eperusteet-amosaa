@@ -16,12 +16,13 @@
 package fi.vm.sade.eperusteet.amosaa.service.external;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.*;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.geneerinenarviointiasteikko.GeneerinenArviointiasteikkoKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,7 +36,7 @@ import java.util.UUID;
 @PreAuthorize("permitAll()") // OK, koska mäppääntyy julkisiin rajapintoihin
 public interface EperusteetService {
     @PreAuthorize("isAuthenticated()")
-    CachedPerusteBaseDto getCachedPeruste(PerusteDto peruste);
+    CachedPerusteBaseDto getCachedPeruste(PerusteBaseDto peruste);
 
     JsonNode getTutkinnonOsat(Long id);
 
@@ -73,11 +74,18 @@ public interface EperusteetService {
 
     JsonNode getGeneeriset();
 
+    GeneerinenArviointiasteikkoKaikkiDto getGeneerinen(Long id);
+
     JsonNode getTiedotteetHaku(TiedoteQueryDto queryDto);
 
     byte[] getLiite(Long perusteId, UUID id);
 
     PerusteenOsaDto getPerusteenOsa(Long perusteId, Long perusteenOsaId);
+
+    PerusteKaikkiDto getPerusteKaikki(Long perusteCacheId);
+
+    @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
+    PerusteDto getKoulutuskoodillaKorvaavaPeruste(@P("ktId") Long ktId, Long opsId);
 
 //    <T> T getPeruste(String diaariNumero, Class<T> type);
 //

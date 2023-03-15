@@ -51,4 +51,5 @@ public class MaintenanceController {
                 koulutustyypit != null ? koulutustyypit.stream().map(KoulutusTyyppi::of).collect(Collectors.toSet()) : null,
                 OpsTyyppi.of(opstyyppi));
     }
+
 }

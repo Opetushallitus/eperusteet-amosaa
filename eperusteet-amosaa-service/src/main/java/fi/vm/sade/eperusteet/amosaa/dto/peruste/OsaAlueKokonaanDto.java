@@ -15,9 +15,15 @@
  */
 package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
@@ -28,6 +34,7 @@ import lombok.*;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class OsaAlueKokonaanDto extends OsaAlueDto {
 
     private Arviointi2020Dto arviointi;
@@ -39,4 +46,18 @@ public class OsaAlueKokonaanDto extends OsaAlueDto {
     private Osaamistavoite2020Dto valinnaisetOsaamistavoitteet;
 
     private List<OsaamistavoiteLaajaDto> osaamistavoitteet;
+
+    public LokalisoituTekstiDto getNimi() {
+        if (getKoodi() != null && getKielikoodi() != null) {
+            Map<Kieli, String> tekstit = new HashMap<>();
+            Arrays.stream(Kieli.values()).forEach(kieli -> {
+                if (getKoodi().getNimi().get(kieli.toString()) != null && getKielikoodi().getNimi().get(kieli.toString()) != null) {
+                    tekstit.put(kieli, getKoodi().getNimi().get(kieli.toString()) + ", " + getKielikoodi().getNimi().get(kieli.toString()));
+                }
+            });
+            return LokalisoituTekstiDto.of(tekstit);
+        } else {
+            return super.getNimi();
+        }
+    }
 }

@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.amosaa.dto.peruste;
 
-import fi.vm.sade.eperusteet.utils.dto.utils.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import lombok.*;
 
 @Data

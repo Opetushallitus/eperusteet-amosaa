@@ -101,13 +101,15 @@ public interface SisaltoviiteRepository extends JpaWithVersioningRepository<Sisa
             "AND nimi.kieli = :kieli " +
             "AND (:opsTyyppi IS NULL OR sv.owner.tyyppi = :opsTyyppi) " +
             "AND (:nimi IS NULL OR LOWER(nimi.teksti) LIKE LOWER(CONCAT('%', :nimi,'%'))) " +
-            "AND (:opsId IS NULL or sv.owner.id = :opsId) ")
+            "AND (:opsId IS NULL or sv.owner.id = :opsId) " +
+            "AND (:notInOpetussuunnitelmaId IS NULL or sv.owner.id <> :notInOpetussuunnitelmaId) ")
     Page<SisaltoViite> findAllWithPagination(@Param("ktId") Long ktId,
                                              @Param("tyyppi") SisaltoTyyppi tyyppi,
                                              @Param("kieli") Kieli kieli,
                                              @Param("nimi") String nimi,
                                              @Param("opsId") Long opsId,
                                              @Param("opsTyyppi") OpsTyyppi opsTyyppi,
+                                             @Param("notInOpetussuunnitelmaId") Long notInOpetussuunnitelmaId,
                                              Pageable pageable);
 
     @Query(value = "SELECT sv " +
@@ -117,4 +119,11 @@ public interface SisaltoviiteRepository extends JpaWithVersioningRepository<Sisa
             "AND sv.tyyppi = 'LAAJAALAINENOSAAMINEN' " +
             "AND lao.nimiKoodi = :koodiUri")
     SisaltoViite findTuvaLaajaAlainenOsaaminenByKoodiUri(@Param("owner") Opetussuunnitelma owner, @Param("koodiUri") String koodiUri);
+
+    @Query(value = "SELECT DISTINCT sv " +
+            "FROM SisaltoViite sv " +
+            "JOIN sv.tosa tosa " +
+            "JOIN tosa.toteutukset tot " +
+            "WHERE sv.owner.id = :opetussuunnitelmaId AND tot.oletustoteutus = true")
+    List<SisaltoViite> findTutkinnonosienOletusotetutukset(@Param("opetussuunnitelmaId") Long opetussuunnitelmaId);
 }

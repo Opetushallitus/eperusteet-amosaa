@@ -36,4 +36,5 @@ public class TutkinnonosaToteutusDto {
     private TekstiosaDto arvioinnista;
     private Set<String> koodit;
     private List<VapaaTekstiDto> vapaat;
+    private boolean oletustoteutus;
 }

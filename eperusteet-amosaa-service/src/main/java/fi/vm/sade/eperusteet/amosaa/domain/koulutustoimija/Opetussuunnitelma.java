@@ -31,6 +31,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 
 import fi.vm.sade.eperusteet.amosaa.dto.NavigationType;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
@@ -211,7 +212,7 @@ public class Opetussuunnitelma extends AbstractAuditedEntity implements Serializ
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
     @Getter
-    private List<SisaltoViite> sisaltoviitteet;
+    private List<SisaltoViite> sisaltoviitteet = new ArrayList<>();
 
     public void changeKoulutustoimija(Koulutustoimija kt) {
         this.koulutustoimija = kt;

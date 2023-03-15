@@ -15,10 +15,12 @@
  */
 package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteBaseDto;
@@ -48,6 +50,8 @@ public class SisaltoViiteKevytDto {
     private TuvaLaajaAlainenOsaaminenDto tuvaLaajaAlainenOsaaminen;
     private SisaltoTyyppi linkattuTyyppi;
     private OpintokokonaisuusDto opintokokonaisuus;
+    private Long perusteenOsaId;
+    private List<OmaOsaAlueKevytDto> osaAlueet = new ArrayList<>();
 
     public LokalisoituTekstiDto getNimi() {
         if (koulutuksenosa != null) {
@@ -67,5 +71,17 @@ public class SisaltoViiteKevytDto {
         }
 
         return null;
+    }
+
+    @JsonIgnore
+    public Integer getNavikaatioJarjestys() {
+        switch (tyyppi) {
+            case SUORITUSPOLUT:
+                return 1;
+            case TUTKINNONOSAT:
+                return 2;
+            default:
+                return 3;
+        }
     }
 }

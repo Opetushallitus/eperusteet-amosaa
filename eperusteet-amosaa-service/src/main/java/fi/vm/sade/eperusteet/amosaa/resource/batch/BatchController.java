@@ -48,10 +48,13 @@ public class BatchController {
             @RequestParam(value = "opstyyppi", required = false, defaultValue = "ops") final String opsTyyppi) throws Exception {
 
         Map<String, String> parametrit = new HashMap<String, String>();
-        parametrit.put("julkaiseKaikki", julkaiseKaikki);
-        parametrit.put("opsTyyppi", opsTyyppi);
-        if (CollectionUtils.isNotEmpty(koulutustyypit)) {
-            parametrit.put("koulutustyypit", String.join(",", koulutustyypit));
+
+        if ("julkaisuJob".equals(job)) {
+            parametrit.put("julkaiseKaikki", julkaiseKaikki);
+            parametrit.put("opsTyyppi", opsTyyppi);
+            if (CollectionUtils.isNotEmpty(koulutustyypit)) {
+                parametrit.put("koulutustyypit", String.join(",", koulutustyypit));
+            }
         }
 
         maintenanceService.kaynnistaJob(job, parametrit);

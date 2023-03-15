@@ -16,4 +16,5 @@ public interface MaintenanceService {
 
     @PreAuthorize("isAuthenticated()")
     void clearCache(String cache);
+
 }

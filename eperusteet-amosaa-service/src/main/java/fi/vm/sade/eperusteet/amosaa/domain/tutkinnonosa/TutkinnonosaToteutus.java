@@ -83,6 +83,10 @@ public class TutkinnonosaToteutus extends AbstractAuditedEntity implements Seria
     @OrderColumn(name = "jnro")
     private List<VapaaTeksti> vapaat = new ArrayList<>();
 
+    @Getter
+    @Setter
+    private boolean oletustoteutus;
+
     @Override
     public TutkinnonosaToteutus copy(boolean deep) {
         TutkinnonosaToteutus result = new TutkinnonosaToteutus();
@@ -90,8 +94,13 @@ public class TutkinnonosaToteutus extends AbstractAuditedEntity implements Seria
         result.setKoodit(new HashSet<>(this.getKoodit()));
         // tutkinnonosa asetetaan parentissa
         result.setOtsikko(this.getOtsikko());
-        result.setTavatjaymparisto(this.getTavatjaymparisto().copy());
-        result.setArvioinnista(this.getArvioinnista().copy());
+        if (this.getTavatjaymparisto() != null) {
+            result.setTavatjaymparisto(this.getTavatjaymparisto().copy());
+        }
+
+        if (this.getArvioinnista() != null) {
+            result.setArvioinnista(this.getArvioinnista().copy());
+        }
 
         List<VapaaTeksti> vapaat = this.getVapaat();
         if (!ObjectUtils.isEmpty(vapaat)) {
