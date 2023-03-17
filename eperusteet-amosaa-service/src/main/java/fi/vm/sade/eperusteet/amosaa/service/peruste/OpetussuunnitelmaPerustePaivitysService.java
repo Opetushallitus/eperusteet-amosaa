@@ -11,5 +11,6 @@ public interface OpetussuunnitelmaPerustePaivitysService extends Opetussuunnitel
         return OpetussuunnitelmaPerustePaivitysService.class;
     }
 
-    void paivitaOpetussuunnitelma(Long opetussuunnitelmaId, PerusteKaikkiDto perusteKaikkiDto);
+    default void paivitaOpetussuunnitelma(Long opetussuunnitelmaId, PerusteKaikkiDto perusteKaikkiDto) {
+    };
 }

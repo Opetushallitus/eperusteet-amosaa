@@ -98,6 +98,7 @@ import fi.vm.sade.eperusteet.amosaa.service.ops.NavigationBuilderPublic;
 import fi.vm.sade.eperusteet.amosaa.service.ops.OpetussuunnitelmaCreateService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.OpetussuunnitelmaDispatcher;
 import fi.vm.sade.eperusteet.amosaa.service.ops.OpetussuunnitelmaPohjaCreateService;
+import fi.vm.sade.eperusteet.amosaa.service.ops.OpetussuunnitelmaSisaltoCreateService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.OpetussuunnitelmaValidationService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.ValidointiService;
@@ -229,6 +230,9 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
     @Autowired
     private PermissionManager permissionManager;
+
+    @Autowired
+    private OpetussuunnitelmaSisaltoCreateService opetussuunnitelmaSisaltoCreateService;
 
     @PostConstruct
     protected void init() {
@@ -527,86 +531,6 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         rootTkv.getLapset().add(tkvRepository.save(tosat));
     }
 
-    private void alustaOpetussuunnitelmaPerusteenSisallolla(Opetussuunnitelma ops, SisaltoViite parentViite, PerusteenOsaViiteDto.Laaja sisalto) {
-
-        SisaltoViite sisaltoviite = null;
-
-        if (sisalto.getPerusteenOsa() instanceof TekstiKappaleDto) {
-            sisaltoviite = SisaltoViite.createTekstikappale(parentViite);
-            sisaltoviite.setPerusteteksti(LokalisoituTeksti.of(((TekstiKappaleDto) sisalto.getPerusteenOsa()).getTeksti()));
-            sisaltoviite.setNaytaPerusteenTeksti(true);
-        }
-
-        if (sisalto.getPerusteenOsa() instanceof OpintokokonaisuusDto) {
-            sisaltoviite = SisaltoViite.createOpintokokonaisuus(parentViite);
-            OpintokokonaisuusDto opintokokonaisuusDto = (OpintokokonaisuusDto) sisalto.getPerusteenOsa();
-            sisaltoviite.getOpintokokonaisuus().setTyyppi(OpintokokonaisuusTyyppi.PERUSTEESTA);
-            sisaltoviite.getOpintokokonaisuus().setKuvaus(LokalisoituTeksti.of(opintokokonaisuusDto.getKuvaus()));
-            sisaltoviite.getOpintokokonaisuus().setMinimilaajuus(opintokokonaisuusDto.getMinimilaajuus());
-            sisaltoviite.getOpintokokonaisuus().setOpetuksenTavoiteOtsikko(LokalisoituTeksti.of(opintokokonaisuusDto.getOpetuksenTavoiteOtsikko()));
-            sisaltoviite.getOpintokokonaisuus().setNimiKoodi(opintokokonaisuusDto.getNimiKoodi().getUri());
-            sisaltoviite.getOpintokokonaisuus().setArvioinnit(opintokokonaisuusDto.getArvioinnit().stream()
-                    .map(arviointi -> new OpintokokonaisuusArviointi(true, LokalisoituTeksti.of(arviointi))).collect(Collectors.toList()));
-            sisaltoviite.getOpintokokonaisuus().setTavoitteet(opintokokonaisuusDto.getOpetuksenTavoitteet().stream()
-                    .map(tavoite -> new OpintokokonaisuusTavoite(true, tavoite.getUri())).collect(Collectors.toList()));
-        }
-
-        if (sisalto.getPerusteenOsa() instanceof KoulutuksenOsaDto) {
-            sisaltoviite = SisaltoViite.createKoulutuksenosa(parentViite);
-            Koulutuksenosa koulutuksenosa = sisaltoviite.getKoulutuksenosa();
-            KoulutuksenOsaDto koulutuksenOsaDto = (KoulutuksenOsaDto) sisalto.getPerusteenOsa();
-            mapper.map(koulutuksenOsaDto, koulutuksenosa);
-            sisaltoviite.getKoulutuksenosa().setId(null);
-        }
-
-        if (sisalto.getPerusteenOsa() instanceof TuvaLaajaAlainenOsaaminenDto) {
-            sisaltoviite = SisaltoViite.createTuvaLaajaAlainenOsaaminen(parentViite);
-            TuvaLaajaAlainenOsaaminen tuvaLaajaAlainenOsaaminen = sisaltoviite.getTuvaLaajaAlainenOsaaminen();
-            TuvaLaajaAlainenOsaaminenDto tuvaLaajaAlainenOsaaminenDto = (TuvaLaajaAlainenOsaaminenDto) sisalto.getPerusteenOsa();
-            mapper.map(tuvaLaajaAlainenOsaaminenDto, tuvaLaajaAlainenOsaaminen);
-
-            sisaltoviite.setPerusteteksti(LokalisoituTeksti.of(tuvaLaajaAlainenOsaaminenDto.getTeksti()));
-            sisaltoviite.setNaytaPerusteenTeksti(true);
-
-            sisaltoviite.getTuvaLaajaAlainenOsaaminen().setId(null);
-            sisaltoviite.getTuvaLaajaAlainenOsaaminen().setTeksti(null);
-        }
-
-        if (sisalto.getPerusteenOsa() instanceof KotoKielitaitotasoDto) {
-            sisaltoviite = SisaltoViite.createKotoKielitaitotaso(parentViite);
-            KotoKielitaitotasoDto kotoKielitaitotasoDto = (KotoKielitaitotasoDto) sisalto.getPerusteenOsa();
-            sisaltoviite.getKotoKielitaitotaso().setTaitotasot(kotoKielitaitotasoDto.getTaitotasot().stream()
-                    .map(perusteenTaitotaso -> KotoTaitotaso.of(perusteenTaitotaso.getNimi().getUri()))
-                    .collect(Collectors.toList()));
-        }
-
-        if (sisalto.getPerusteenOsa() instanceof KotoOpintoDto) {
-            sisaltoviite = SisaltoViite.createKotoOpinto(parentViite);
-            KotoOpintoDto kotoOpintoDto = (KotoOpintoDto) sisalto.getPerusteenOsa();
-            sisaltoviite.getKotoOpinto().setTaitotasot(kotoOpintoDto.getTaitotasot().stream()
-                    .map(perusteenTaitotaso -> KotoTaitotaso.of(perusteenTaitotaso.getNimi().getUri()))
-                    .collect(Collectors.toList()));
-        }
-
-        if (sisalto.getPerusteenOsa() instanceof KotoLaajaAlainenOsaaminenDto) {
-            sisaltoviite = SisaltoViite.createKotoLaajaAlainenOsaaminen(parentViite);
-        }
-
-        if (sisaltoviite == null) {
-            throw new BusinessRuleViolationException("vaara-sisaltoviite-tyyppi");
-        } else {
-
-            sisaltoviite.setPerusteenOsaId(sisalto.getPerusteenOsa().getId());
-            sisaltoviite.getTekstiKappale().setNimi(LokalisoituTeksti.of(sisalto.getPerusteenOsa().getNimi()));
-            tkvRepository.save(sisaltoviite);
-
-            for (PerusteenOsaViiteDto.Laaja lapsi : sisalto.getLapset()) {
-                alustaOpetussuunnitelmaPerusteenSisallolla(ops, sisaltoviite, lapsi);
-            }
-        }
-
-    }
-
     private Opetussuunnitelma findOps(Long ktId, Long opsId) {
         Opetussuunnitelma ops = repository.findOne(opsId);
         Koulutustoimija kt = koulutustoimijaRepository.findOne(ktId);
@@ -724,7 +648,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                 || KoulutustyyppiToteutus.KOTOUTUMISKOULUTUS.equals(peruste.getToteutus())) {
             PerusteKaikkiDto perusteSisalto = eperusteetService.getPerusteSisalto(cperuste, PerusteKaikkiDto.class);
             for (PerusteenOsaViiteDto.Laaja lapsi : perusteSisalto.getSisalto().getLapset()) {
-                alustaOpetussuunnitelmaPerusteenSisallolla(ops, rootTkv, lapsi);
+                opetussuunnitelmaSisaltoCreateService.alustaOpetussuunnitelmaPerusteenSisallolla(ops, rootTkv, lapsi);
             }
         }
 

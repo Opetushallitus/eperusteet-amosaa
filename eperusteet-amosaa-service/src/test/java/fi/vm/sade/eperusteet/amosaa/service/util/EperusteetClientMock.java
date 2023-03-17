@@ -74,6 +74,8 @@ public class EperusteetClientMock implements EperusteetClient {
         perusteet.add(openFakeData("/perusteet/amosaaPerusteKoulutuskoodiUusi.json"));
         perusteet.add(openFakeData("/perusteet/amosaaPerusteKoulutuskoodiUusi2.json"));
         perusteet.add(openFakeData("/perusteet/paivitettavaAmmatillinenPeruste.json"));
+        perusteet.add(openFakeData("/perusteet/vstPerustePaivitettava.json"));
+        perusteet.add(openFakeData("/perusteet/vstPerustePaivitetty.json"));
     }
 
     public static final String DIAARINUMERO = "mock-diaarinumero";

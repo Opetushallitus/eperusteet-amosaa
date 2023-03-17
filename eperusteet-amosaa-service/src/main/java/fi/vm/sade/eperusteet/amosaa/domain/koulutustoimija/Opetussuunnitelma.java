@@ -222,6 +222,10 @@ public class Opetussuunnitelma extends AbstractAuditedEntity implements Serializ
         // Noop
     }
 
+    public SisaltoViite getRootViite() {
+        return getSisaltoviitteet().stream().filter(sv -> sv.getVanhempi() == null).findFirst().get();
+    }
+
     public void attachLiite(Liite liite) {
         liitteet.add(liite);
     }
