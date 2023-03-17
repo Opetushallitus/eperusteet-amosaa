@@ -1,0 +1,194 @@
+{
+  "id" : 9711,
+  "globalVersion" : {
+    "aikaleima" : 1679301479392
+  },
+  "nimi" : {
+    "_id" : "10531",
+    "_tunniste" : "59214bb7-b368-48c7-b03e-68471c7e111d",
+    "fi" : "paivitettavaPerusteIt"
+  },
+  "koulutustyyppi" : "koulutustyyppi_10",
+  "toteutus" : "vapaasivistystyo",
+  "koulutukset" : [ ],
+  "kielet" : [ "fi" ],
+  "kuvaus" : null,
+  "maarayskirje" : null,
+  "muutosmaaraykset" : [ ],
+  "diaarinumero" : "321/765/3566",
+  "voimassaoloAlkaa" : 1679263200000,
+  "siirtymaPaattyy" : null,
+  "voimassaoloLoppuu" : null,
+  "paatospvm" : 1679263200000,
+  "viimeisinJulkaisuAika" : null,
+  "luotu" : 1679301233171,
+  "muokattu" : 1679301504289,
+  "tila" : "valmis",
+  "tyyppi" : "normaali",
+  "koulutusvienti" : false,
+  "korvattavatDiaarinumerot" : [ ],
+  "osaamisalat" : [ ],
+  "tyotehtavatJoissaVoiToimia" : null,
+  "suorittaneenOsaaminen" : null,
+  "perusteenAikataulut" : [ {
+    "id" : 9751,
+    "peruste" : {
+      "id" : 9711,
+      "nimi" : {
+        "_id" : "10531",
+        "_tunniste" : "59214bb7-b368-48c7-b03e-68471c7e111d",
+        "fi" : "paivitettavaPerusteIt"
+      },
+      "tila" : "valmis",
+      "tyyppi" : "normaali",
+      "koulutustyyppi" : "koulutustyyppi_10",
+      "esikatseltavissa" : false,
+      "voimassaoloAlkaa" : 1679263200000,
+      "voimassaoloLoppuu" : null
+    },
+    "tavoite" : {
+      "_id" : "10460",
+      "_tunniste" : "49faf788-85d2-4012-8222-19cdc4c22871",
+      "fi" : "Peruste luotu"
+    },
+    "tapahtuma" : "luominen",
+    "tapahtumapaiva" : 1679301230678,
+    "julkinen" : false
+  } ],
+  "vapaasivistystyo" : {
+    "id" : 9721,
+    "sisalto" : {
+      "id" : 10206,
+      "lapset" : [ {
+        "id" : 10207,
+        "perusteenOsa" : {
+          "id" : 10225,
+          "luotu" : 1679301392495,
+          "muokattu" : 1679301392495,
+          "muokkaaja" : "test",
+          "nimi" : {
+            "_id" : "10461",
+            "_tunniste" : "06eb1386-29a0-4b71-b69c-69296e3b95d5",
+            "fi" : "tk1"
+          },
+          "tila" : "luonnos",
+          "teksti" : null,
+          "koodit" : [ ],
+          "liite" : false,
+          "osanTyyppi" : "tekstikappale"
+        },
+        "lapset" : [ {
+          "id" : 10209,
+          "perusteenOsa" : {
+            "id" : 10227,
+            "luotu" : 1679301428418,
+            "muokattu" : 1679301428418,
+            "muokkaaja" : "test",
+            "nimi" : {
+              "_id" : "10469",
+              "_tunniste" : "1adb08b3-e1c7-4244-8a0e-fddedf54c2c3",
+              "fi" : "tk1.1"
+            },
+            "tila" : "luonnos",
+            "teksti" : null,
+            "koodit" : [ ],
+            "liite" : false,
+            "osanTyyppi" : "tekstikappale"
+          },
+          "lapset" : [ {
+            "id" : 10520,
+            "perusteenOsa" : {
+              "id" : 10228,
+              "luotu" : 1679301441646,
+              "muokattu" : 1679301441646,
+              "muokkaaja" : "test",
+              "nimi" : {
+                "_id" : "10530",
+                "_tunniste" : "f04b3362-4709-4e06-952a-690d3397bafb",
+                "fi" : "tk.1.1.1"
+              },
+              "tila" : "luonnos",
+              "teksti" : null,
+              "koodit" : [ ],
+              "liite" : false,
+              "osanTyyppi" : "tekstikappale"
+            },
+            "lapset" : [ ],
+            "_perusteenOsa" : "10228"
+          } ],
+          "_perusteenOsa" : "10227"
+        } ],
+        "_perusteenOsa" : "10225"
+      }, {
+        "id" : 10208,
+        "perusteenOsa" : {
+          "id" : 10226,
+          "luotu" : 1679301396049,
+          "muokattu" : 1679301411577,
+          "muokkaaja" : "test",
+          "nimi" : {
+            "_id" : "10462",
+            "_tunniste" : "90bf41a3-6162-454c-87f2-007591e16509",
+            "fi" : "Opiskelu- ja urasuunnittelutaidot",
+            "sv" : "Studiefärdigheter och karriärplaneringsfärdigheter"
+          },
+          "tila" : "luonnos",
+          "nimiKoodi" : {
+            "id" : 9855,
+            "nimi" : {
+              "fi" : "Opiskelu- ja urasuunnittelutaidot",
+              "sv" : "Studiefärdigheter och karriärplaneringsfärdigheter"
+            },
+            "arvo" : "1007",
+            "uri" : "opintokokonaisuusnimet_1007",
+            "koodisto" : "opintokokonaisuusnimet",
+            "versio" : 1
+          },
+          "minimilaajuus" : 5,
+          "kuvaus" : {
+            "_id" : "10465",
+            "_tunniste" : "463f7f62-6b0a-4eda-921b-234bcb245dc3",
+            "fi" : "<p>123</p>"
+          },
+          "opetuksenTavoiteOtsikko" : {
+            "_id" : "10466",
+            "_tunniste" : "94d28a09-22dc-4a22-b16a-0e5b37c76529",
+            "fi" : "a234"
+          },
+          "opetuksenTavoitteet" : [ {
+            "id" : 9856,
+            "nimi" : {
+              "fi" : "345"
+            },
+            "arvo" : "16237",
+            "uri" : "opintokokonaisuustavoitteet_16237",
+            "koodisto" : "opintokokonaisuustavoitteet",
+            "versio" : 1
+          }, {
+            "id" : 9857,
+            "nimi" : {
+              "fi" : "456"
+            },
+            "arvo" : "16238",
+            "uri" : "opintokokonaisuustavoitteet_16238",
+            "koodisto" : "opintokokonaisuustavoitteet",
+            "versio" : 1
+          } ],
+          "arvioinnit" : [ {
+            "_id" : "10463",
+            "_tunniste" : "564a3d8e-0743-430e-adb1-b9935090487c",
+            "fi" : "567"
+          }, {
+            "_id" : "10464",
+            "_tunniste" : "f9fff0f2-4115-415c-ae3f-04cf01d390c4",
+            "fi" : "678"
+          } ],
+          "osanTyyppi" : "opintokokonaisuus"
+        },
+        "lapset" : [ ],
+        "_perusteenOsa" : "10226"
+      } ]
+    },
+    "laajuus" : null
+  }
+}
