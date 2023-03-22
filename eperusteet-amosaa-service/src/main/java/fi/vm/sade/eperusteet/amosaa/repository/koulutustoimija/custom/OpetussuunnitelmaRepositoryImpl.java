@@ -131,7 +131,7 @@ public class OpetussuunnitelmaRepositoryImpl implements OpetussuunnitelmaCustomR
         Predicate pred = cb.and(
                 cb.or(isJulkaistu, cb.and(cb.notEqual(root.get(Opetussuunnitelma_.tila), Tila.POISTETTU), cb.isNotEmpty(root.get(Opetussuunnitelma_.julkaisut)))),
                 onOikeallaKielella, eiOlePohja, eiOleOpsPohja);
-        
+
         if (!ObjectUtils.isEmpty(queryDto.getOppilaitosTyyppiKoodiUri())) {
             pred = cb.and(pred, cb.equal(root.get(Opetussuunnitelma_.oppilaitosTyyppiKoodiUri), queryDto.getOppilaitosTyyppiKoodiUri()));
         }
@@ -152,7 +152,7 @@ public class OpetussuunnitelmaRepositoryImpl implements OpetussuunnitelmaCustomR
             Predicate diaarissa = cb.like(cb.lower(root.get(Opetussuunnitelma_.perusteDiaarinumero)), cb.literal(nimi));
             SetJoin<LokalisoituTeksti, Teksti> ktNimi = koulutustoimija.join(Koulutustoimija_.nimi).join(LokalisoituTeksti_.teksti);
             Predicate ktNimessa = cb.like(cb.lower(ktNimi.get(Teksti_.teksti)), cb.literal(nimi));
-            
+
             Join<Opetussuunnitelma, SisaltoViite> sisaltoviitteet = root.join(Opetussuunnitelma_.sisaltoviitteet, JoinType.LEFT);
             SetJoin<LokalisoituTeksti, Teksti> tutkinnonosaNimi = sisaltoviitteet.join(SisaltoViite_.tekstiKappale).join(TekstiKappale_.nimi).join(LokalisoituTeksti_.teksti);
             Predicate toNimessa = cb.like(cb.lower(tutkinnonosaNimi.get(Teksti_.teksti)), cb.literal(nimi));
@@ -303,7 +303,7 @@ public class OpetussuunnitelmaRepositoryImpl implements OpetussuunnitelmaCustomR
             Predicate diaarissa = cb.like(cb.lower(root.get(Opetussuunnitelma_.perusteDiaarinumero)), cb.literal(nimi));
 
             Join<Opetussuunnitelma, CachedPeruste> peruste = root.join(Opetussuunnitelma_.peruste, JoinType.LEFT);
-            SetJoin<CachedPeruste, Koulutuskoodi> koulutuskoodit =  peruste.join(CachedPeruste_.koulutuskoodit);
+            SetJoin<CachedPeruste, Koulutuskoodi> koulutuskoodit =  peruste.join(CachedPeruste_.koulutuskoodit, JoinType.LEFT);
             Predicate koulutuskoodiArvossa = cb.like(cb.lower(koulutuskoodit.get(Koulutuskoodi_.koulutuskoodiArvo)), cb.literal(nimi));
 
             pred = cb.and(pred, cb.or(nimessa, diaarissa, koulutuskoodiArvossa));
