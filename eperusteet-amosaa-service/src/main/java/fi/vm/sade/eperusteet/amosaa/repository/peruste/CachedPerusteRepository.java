@@ -42,9 +42,8 @@ public interface CachedPerusteRepository extends JpaRepository<CachedPeruste, Lo
 
     @Query("SELECT p.id " +
             "FROM CachedPeruste p " +
-            "LEFT JOIN p.koulutuskoodit kk " +
             "WHERE p.koulutukset IS NOT NULL " +
-            "AND kk IS EMPTY")
+            "AND p.koulutuskoodit IS EMPTY")
     List<Long> findByKoulutuksetNotNull();
 
 }
