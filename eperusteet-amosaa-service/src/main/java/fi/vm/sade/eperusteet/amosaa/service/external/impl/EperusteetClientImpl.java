@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.PalauteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttooikeusKayttajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koodisto.KoodistoKoodiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.AbstractRakenneOsaDto;
@@ -29,6 +30,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
@@ -183,8 +185,11 @@ public class EperusteetClientImpl implements EperusteetClient {
 
     @Override
     public PerusteDto getYleinenPohja() {
-        PerusteDto peruste = commonGet("/api/perusteet/amosaapohja", PerusteDto.class);
-        return peruste;
+        try {
+            return commonGet("/api/perusteet/amosaapohja", PerusteDto.class);
+        } catch (Exception e) {
+            throw new BusinessRuleViolationException("amosaa-pohjien-haku-epaonnistui");
+        }
     }
 
     @Override
