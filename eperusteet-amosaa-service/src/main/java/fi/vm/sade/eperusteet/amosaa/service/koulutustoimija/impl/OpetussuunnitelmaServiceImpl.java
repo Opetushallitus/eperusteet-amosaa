@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Sets;
+import fi.vm.sade.eperusteet.amosaa.domain.HistoriaTapahtuma;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutustyyppiToteutus;
 import fi.vm.sade.eperusteet.amosaa.domain.MuokkausTapahtuma;
@@ -727,6 +728,8 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
 
         ops.setPeruste(newCachedPeruste);
+
+        muokkausTietoService.addOpsMuokkausTieto(ops.getId(), ops, MuokkausTapahtuma.PAIVITYS, "peruste-rakenne-paivitys");
     }
 
     @Override

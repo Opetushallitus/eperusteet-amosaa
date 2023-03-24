@@ -3,6 +3,7 @@ package fi.vm.sade.eperusteet.amosaa.service.peruste;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.SisaltoviiteLaajaDto;
@@ -55,6 +56,7 @@ public class OpetussuunnitelmaPerustePaivitysServiceIT extends AbstractIntegrati
 
         assertThat(opetussuunnitelma.getSisaltoviitteet()).hasSize(1);
         assertThat(opetussuunnitelma.getSisaltoviitteet().get(0).getLapset()).hasSize(2);
+        assertThat(opetussuunnitelma.getSisaltoviitteet().get(0).getLapset().get(0).getTekstiKappale().getNimi().getTeksti().get(Kieli.FI)).isEqualTo("tk1");
         assertThat(opetussuunnitelma.getSisaltoviitteet().get(0).getLapset().get(0).getLapset()).hasSize(1);
         assertThat(opetussuunnitelma.getSisaltoviitteet().get(0).getLapset().get(0).getLapset().get(0).getLapset()).hasSize(1);
         assertThat(opetussuunnitelma.getSisaltoviitteet().get(0).getLapset().get(0).getLapset().get(0).getLapset().get(0).getLapset()).hasSize(0);
@@ -70,9 +72,12 @@ public class OpetussuunnitelmaPerustePaivitysServiceIT extends AbstractIntegrati
         opetussuunnitelmaService.paivitaPeruste(getKoulutustoimijaId(), opetussuunnitelma.getId());
 
         opetussuunnitelma = opetussuunnitelmaRepository.findOne(vstOps.getId());
-        testSisaltoMaara(opetussuunnitelma, SisaltoTyyppi.TEKSTIKAPPALE, 1, true);
+        testSisaltoMaara(opetussuunnitelma, SisaltoTyyppi.TEKSTIKAPPALE, 2, true);
         testSisaltoMaara(opetussuunnitelma, SisaltoTyyppi.TEKSTIKAPPALE, 2, false);
         testSisaltoMaara(opetussuunnitelma, SisaltoTyyppi.OPINTOKOKONAISUUS, 3, true);
+
+        assertThat(opetussuunnitelma.getSisaltoviitteet().get(0).getLapset().get(0).getTekstiKappale().getNimi().getTeksti().get(Kieli.FI)).isEqualTo("tk1");
+        assertThat(opetussuunnitelma.getSisaltoviitteet().get(0).getLapset().get(1).getTekstiKappale().getNimi().getTeksti().get(Kieli.FI)).isEqualTo("tk2");
 
         assertThat(opetussuunnitelma.getSisaltoviitteet().get(0).getLapset().get(0).getPerusteenOsaId()).isNotNull();
         assertThat(opetussuunnitelma.getSisaltoviitteet().get(0).getLapset().get(0).getLapset()).hasSize(2);

@@ -267,7 +267,7 @@ public class JulkaisuServiceImpl implements JulkaisuService {
     private List<JulkaisuBaseDto> taytaKayttajaTiedot(List<JulkaisuBaseDto> julkaisut) {
         Map<String, KayttajanTietoDto> kayttajatiedot = kayttajanTietoService
                 .haeKayttajatiedot(julkaisut.stream().map(JulkaisuBaseDto::getLuoja).filter(Objects::nonNull).collect(Collectors.toList()))
-                .stream().collect(Collectors.toMap(kayttajanTieto -> kayttajanTieto.getOidHenkilo(), kayttajanTieto -> kayttajanTieto));
+                .stream().collect(Collectors.toMap(KayttajanTietoDto::getOidHenkilo, kayttajanTieto -> kayttajanTieto));
         julkaisut.forEach(julkaisu -> julkaisu.setKayttajanTieto(kayttajatiedot.get(julkaisu.getLuoja())));
         return julkaisut;
     }
@@ -296,8 +296,6 @@ public class JulkaisuServiceImpl implements JulkaisuService {
             String julkaistu = generoiOpetussuunnitelmaKaikkiDtotoString(objectMapper.treeToValue(data, OpetussuunnitelmaKaikkiDto.class));
             String nykyinen = generoiOpetussuunnitelmaKaikkiDtotoString(opetussuunnitelmaService.getOpetussuunnitelmaKaikki(ktId, opsId));
 
-            JSONCompareResult result = JSONCompare.compareJSON(julkaistu, nykyinen, JSONCompareMode.LENIENT);
-
             return JSONCompare.compareJSON(julkaistu, nykyinen, JSONCompareMode.LENIENT).failed();
         } catch (IOException | JSONException e) {
             log.error(Throwables.getStackTraceAsString(e));
@@ -324,6 +322,7 @@ public class JulkaisuServiceImpl implements JulkaisuService {
         opetussuunnitelmaKaikki.setViimeisinJulkaisuAika(null);
         opetussuunnitelmaKaikki.setTila(null);
         opetussuunnitelmaKaikki.setTila2016(null);
+        opetussuunnitelmaKaikki.setMuokattu(null);
         return objectMapper.writeValueAsString(opetussuunnitelmaKaikki);
     }
 

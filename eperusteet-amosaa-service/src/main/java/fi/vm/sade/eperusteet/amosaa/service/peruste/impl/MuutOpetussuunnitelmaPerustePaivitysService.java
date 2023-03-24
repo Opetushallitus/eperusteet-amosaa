@@ -37,7 +37,7 @@ public class MuutOpetussuunnitelmaPerustePaivitysService implements Opetussuunni
     public void paivitaOpetussuunnitelma(Long opetussuunnitelmaId, PerusteKaikkiDto perusteKaikkiDto) {
         Opetussuunnitelma opetussuunnitelma = opetussuunnitelmaRepository.findOne(opetussuunnitelmaId);
         for (PerusteenOsaViiteDto.Laaja lapsi : perusteKaikkiDto.getSisalto().getLapset()) {
-            opetussuunnitelmaSisaltoCreateService.paivitaOpetussuunnitelmaPerusteenSisallolla(opetussuunnitelma, opetussuunnitelma.getRootViite(), lapsi);
+            opetussuunnitelmaSisaltoCreateService.paivitaOpetussuunnitelmaPerusteenSisallolla(opetussuunnitelma, opetussuunnitelma.getRootViite(), lapsi, perusteKaikkiDto.getSisalto());
         }
 
         opetussuunnitelmaSisaltoCreateService.poistaPerusteenSisaltoOpetussuunnitelmalta(opetussuunnitelma, opetussuunnitelma.getRootViite(), perusteKaikkiDto);

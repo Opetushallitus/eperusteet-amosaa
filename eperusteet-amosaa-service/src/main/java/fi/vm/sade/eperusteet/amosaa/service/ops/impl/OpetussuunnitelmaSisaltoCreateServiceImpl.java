@@ -79,7 +79,7 @@ public class OpetussuunnitelmaSisaltoCreateServiceImpl implements Opetussuunnite
     }
 
     @Override
-    public void paivitaOpetussuunnitelmaPerusteenSisallolla(Opetussuunnitelma opetussuunnitelma, SisaltoViite parentViite, PerusteenOsaViiteDto.Laaja sisalto) {
+    public void paivitaOpetussuunnitelmaPerusteenSisallolla(Opetussuunnitelma opetussuunnitelma, SisaltoViite parentViite, PerusteenOsaViiteDto.Laaja sisalto, PerusteenOsaViiteDto.Laaja parent) {
         Map<Long, SisaltoViite> svPerusteelta = CollectionUtil.treeToStream(opetussuunnitelma.getSisaltoviitteet(), SisaltoViite::getLapset)
                 .filter(sv -> sv.getPerusteenOsaId() != null)
                 .collect(Collectors.toMap(SisaltoViite::getPerusteenOsaId, sv -> sv));
@@ -88,10 +88,13 @@ public class OpetussuunnitelmaSisaltoCreateServiceImpl implements Opetussuunnite
 
         if (sisaltoviite == null) {
             sisaltoviite = alustaSisaltoviite(parentViite, sisalto);
+
+            parentViite.getLapset().remove(sisaltoviite);
+            parentViite.getLapset().add(parent.getLapset().indexOf(sisalto), sisaltoviite);
         }
 
         for (PerusteenOsaViiteDto.Laaja lapsi : sisalto.getLapset()) {
-            paivitaOpetussuunnitelmaPerusteenSisallolla(opetussuunnitelma, sisaltoviite, lapsi);
+            paivitaOpetussuunnitelmaPerusteenSisallolla(opetussuunnitelma, sisaltoviite, lapsi, sisalto);
         }
     }
 
