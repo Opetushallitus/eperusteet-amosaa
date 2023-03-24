@@ -80,6 +80,26 @@
         "lapset" : [ ],
         "_perusteenOsa" : "10225"
       }, {
+        "id" : 464646,
+        "perusteenOsa" : {
+          "id" : 646464,
+          "luotu" : 1679301392495,
+          "muokattu" : 1679301392495,
+          "muokkaaja" : "test",
+          "nimi" : {
+            "_id" : "10461",
+            "_tunniste" : "06eb1386-29a0-4b71-b69c-69296e3b95d5",
+            "fi" : "tk2"
+          },
+          "tila" : "luonnos",
+          "teksti" : null,
+          "koodit" : [ ],
+          "liite" : false,
+          "osanTyyppi" : "tekstikappale"
+        },
+        "lapset" : [ ],
+        "_perusteenOsa" : "646464"
+      },{
         "id" : 10208,
         "perusteenOsa" : {
           "id" : 10226,

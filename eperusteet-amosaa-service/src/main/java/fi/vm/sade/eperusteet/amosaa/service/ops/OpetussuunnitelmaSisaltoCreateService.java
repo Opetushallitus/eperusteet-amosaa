@@ -11,7 +11,7 @@ public interface OpetussuunnitelmaSisaltoCreateService {
     @PreAuthorize("hasPermission(#opetussuunnitelma.id, 'opetussuunnitelma', 'LUONTI')")
     void poistaPerusteenSisaltoOpetussuunnitelmalta(Opetussuunnitelma opetussuunnitelma, SisaltoViite parentViite, PerusteKaikkiDto perusteKaikkiDto);
     @PreAuthorize("hasPermission(#opetussuunnitelma.id, 'opetussuunnitelma', 'LUONTI')")
-    void paivitaOpetussuunnitelmaPerusteenSisallolla(Opetussuunnitelma opetussuunnitelma, SisaltoViite parentViite, PerusteenOsaViiteDto.Laaja sisalto);
+    void paivitaOpetussuunnitelmaPerusteenSisallolla(Opetussuunnitelma opetussuunnitelma, SisaltoViite parentViite, PerusteenOsaViiteDto.Laaja sisalto, PerusteenOsaViiteDto.Laaja parent);
     @PreAuthorize("hasPermission(#opetussuunnitelma.id, 'opetussuunnitelma', 'LUONTI')")
     void alustaOpetussuunnitelmaPerusteenSisallolla(Opetussuunnitelma opetussuunnitelma, SisaltoViite parentViite, PerusteenOsaViiteDto.Laaja sisalto);
 }
