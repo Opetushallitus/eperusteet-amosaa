@@ -202,9 +202,6 @@ public class SisaltoViite extends AbstractAuditedEntity implements Referenceable
 
     @OneToMany(mappedBy = "vanhempi", fetch = FetchType.LAZY)
     @OrderColumn
-    @Getter
-    @Setter
-    @BatchSize(size = 100)
     private List<SisaltoViite> lapset = new ArrayList<>();
 
     public SisaltoViite() {
@@ -542,6 +539,11 @@ public class SisaltoViite extends AbstractAuditedEntity implements Referenceable
             return this.linkkiSisaltoViite.lapset;
         }
         return lapset;
+    }
+
+    public void setLapset(List<SisaltoViite> lapset) {
+        this.lapset.clear();
+        this.lapset.addAll(lapset);
     }
 
     @Override

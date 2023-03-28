@@ -660,15 +660,19 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         Koulutustoimija kt = koulutustoimijaRepository.findOne(ktId);
         List<Opetussuunnitelma> opsit = repository.findAllByKoulutustoimijaAndTyyppi(kt, OpsTyyppi.OPS);
         return opsit.stream()
-                .map(ops -> getOpetussuunnitelmaVanhentunutPeruste(ops))
-                .filter(v -> v != null)
+                .filter(ops -> ops.getPeruste() != null && ops.getPeruste().getKoulutustyyppi().isAmmatillinen())
+                .map(this::getOpetussuunnitelmaVanhentunutPeruste)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 
     private VanhentunutPohjaperusteDto getOpetussuunnitelmaVanhentunutPeruste(Opetussuunnitelma ops) {
         VanhentunutPohjaperusteDto vanhentunutPohjaperusteDto = null;
 
-        if (ops.getPeruste() != null) {
+        boolean perusteenOsia = CollectionUtil.treeToStream(ops.getSisaltoviitteet(), SisaltoViite::getLapset)
+                .anyMatch(sv -> sv.getPerusteenOsaId() != null);
+
+        if (ops.getPeruste() != null && (ops.getPeruste().getKoulutustyyppi().isAmmatillinen() || perusteenOsia)) {
             try {
                 Date viimeisinJulkaisu = eperusteetClient.getViimeisinJulkaisuPeruste(ops.getPeruste().getPerusteId());
                 CachedPeruste cperuste = ops.getPeruste();
