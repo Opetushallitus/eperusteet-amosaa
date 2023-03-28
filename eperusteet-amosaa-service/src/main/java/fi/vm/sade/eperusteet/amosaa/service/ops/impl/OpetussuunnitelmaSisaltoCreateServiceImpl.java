@@ -1,5 +1,6 @@
 package fi.vm.sade.eperusteet.amosaa.service.ops.impl;
 
+import fi.vm.sade.eperusteet.amosaa.domain.MuokkausTapahtuma;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
@@ -29,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -65,15 +67,13 @@ public class OpetussuunnitelmaSisaltoCreateServiceImpl implements Opetussuunnite
             for(SisaltoViite poistettavaLapsi : poistettavatViitteet) {
                 poistettavaLapsi.getLapset().forEach(lisattavaLapsi ->  {
                     lisattavaLapsi.setVanhempi(parentViite);
-                    sisaltoviiteRepository.save(parentViite);
                 });
                 parentViite.getLapset().addAll(poistettavaLapsi.getLapset());
-
-                poistettavaLapsi.getLapset().clear();
                 parentViite.getLapset().remove(poistettavaLapsi);
+                poistettavaLapsi.getLapset().clear();
                 sisaltoviiteRepository.delete(poistettavaLapsi);
             }
-
+            parentViite.setLapset(new ArrayList<>(parentViite.getLapset()));
             sisaltoviiteRepository.save(parentViite);
         }
     }
