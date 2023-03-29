@@ -6018,6 +6018,21 @@
         }
       }
     },
+    "ArviointiAsteikkoDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "osaamistasot" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/OsaamistasoDto"
+          }
+        }
+      }
+    },
     "ArviointiDto" : {
       "type" : "object",
       "properties" : {
@@ -6245,6 +6260,54 @@
         "toteutussuunnitelmaPohjatValmiit" : {
           "type" : "integer",
           "format" : "int64"
+        }
+      }
+    },
+    "GeneerinenArviointiasteikkoKaikkiDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "nimi" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "kohde" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "arviointiAsteikko" : {
+          "$ref" : "#/definitions/ArviointiAsteikkoDto"
+        },
+        "osaamistasonKriteerit" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/GeneerisenArvioinninOsaamistasonKriteeriKaikkiDto"
+          }
+        }
+      }
+    },
+    "GeneerisenArvioinninOsaamistasonKriteeriKaikkiDto" : {
+      "type" : "object",
+      "properties" : {
+        "osaamistaso" : {
+          "$ref" : "#/definitions/OsaamistasoDto"
+        },
+        "kriteerit" : {
+          "type" : "array",
+          "items" : {
+            "type" : "object",
+            "additionalProperties" : {
+              "type" : "string"
+            }
+          }
         }
       }
     },
@@ -7141,6 +7204,25 @@
         }
       }
     },
+    "LokalisoituTekstiDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "tunniste" : {
+          "type" : "string",
+          "format" : "uuid"
+        },
+        "tekstit" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
     "LukkoDto" : {
       "type" : "object",
       "properties" : {
@@ -7326,9 +7408,6 @@
           "items" : {
             "$ref" : "#/definitions/NavigationNodeDto"
           }
-        },
-        "icon" : {
-          "type" : "string"
         }
       }
     },
@@ -7446,6 +7525,55 @@
         "laajuus" : {
           "type" : "integer",
           "format" : "int32"
+        }
+      }
+    },
+    "OmaOsaAlueExportDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "tyyppi" : {
+          "type" : "string",
+          "enum" : [ "PAKOLLINEN", "VALINNAINEN", "PAIKALLINEN" ]
+        },
+        "nimi" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "perusteenOsaAlueKoodi" : {
+          "type" : "string"
+        },
+        "perusteenOsaAlueId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "piilotettu" : {
+          "type" : "boolean"
+        },
+        "toteutukset" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/OmaOsaAlueToteutusDto"
+          }
+        },
+        "osaamistavoitteet" : {
+          "$ref" : "#/definitions/PaikallisetAmmattitaitovaatimukset2019Dto"
+        },
+        "geneerinenarviointi" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "laajuus" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "geneerinenArviointiasteikko" : {
+          "$ref" : "#/definitions/GeneerinenArviointiasteikkoKaikkiDto"
         }
       }
     },
@@ -8687,13 +8815,13 @@
     "Page" : {
       "type" : "object",
       "properties" : {
-        "totalPages" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "totalElements" : {
           "type" : "integer",
           "format" : "int64"
+        },
+        "totalPages" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "size" : {
           "type" : "integer",
@@ -8727,13 +8855,13 @@
     "PageKoulutustoimijaJulkinenDto" : {
       "type" : "object",
       "properties" : {
-        "totalPages" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "totalElements" : {
           "type" : "integer",
           "format" : "int64"
+        },
+        "totalPages" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "size" : {
           "type" : "integer",
@@ -8767,13 +8895,13 @@
     "PageOpetussuunnitelmaBaseDto" : {
       "type" : "object",
       "properties" : {
-        "totalPages" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "totalElements" : {
           "type" : "integer",
           "format" : "int64"
+        },
+        "totalPages" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "size" : {
           "type" : "integer",
@@ -8807,13 +8935,13 @@
     "PageOpetussuunnitelmaDto" : {
       "type" : "object",
       "properties" : {
-        "totalPages" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "totalElements" : {
           "type" : "integer",
           "format" : "int64"
+        },
+        "totalPages" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "size" : {
           "type" : "integer",
@@ -8847,13 +8975,13 @@
     "PageSisaltoviiteLaajaDto" : {
       "type" : "object",
       "properties" : {
-        "totalPages" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "totalElements" : {
           "type" : "integer",
           "format" : "int64"
+        },
+        "totalPages" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "size" : {
           "type" : "integer",
@@ -9499,6 +9627,18 @@
         "peruste" : {
           "$ref" : "#/definitions/CachedPerusteKevytDto"
         },
+        "linkattuOps" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "linkattuSisaltoViiteId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "linkattuPerusteId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
         "naytaPohjanTeksti" : {
           "type" : "boolean"
         },
@@ -9551,6 +9691,12 @@
           "type" : "integer",
           "format" : "int64"
         },
+        "osaAlueet" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/OmaOsaAlueExportDto"
+          }
+        },
         "nimi" : {
           "type" : "object",
           "additionalProperties" : {
@@ -9572,6 +9718,18 @@
         },
         "peruste" : {
           "$ref" : "#/definitions/CachedPerusteKevytDto"
+        },
+        "linkattuOps" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "linkattuSisaltoViiteId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "linkattuPerusteId" : {
+          "type" : "integer",
+          "format" : "int64"
         },
         "opintokokonaisuus" : {
           "$ref" : "#/definitions/OpintokokonaisuusDto"
@@ -10369,6 +10527,18 @@
         },
         "peruste" : {
           "$ref" : "#/definitions/CachedPerusteKevytDto"
+        },
+        "linkattuOps" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "linkattuSisaltoViiteId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "linkattuPerusteId" : {
+          "type" : "integer",
+          "format" : "int64"
         },
         "tosa" : {
           "$ref" : "#/definitions/TutkinnonosaDto"
