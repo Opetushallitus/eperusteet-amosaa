@@ -591,6 +591,15 @@ public class SisaltoViite extends AbstractAuditedEntity implements Referenceable
         return null;
     }
 
+    public Long getLinkattuPerusteId() {
+        if (this.linkkiSisaltoViite != null) {
+            if (this.linkkiSisaltoViite.getOwner().getPeruste() != null ) {
+                return this.linkkiSisaltoViite.getOwner().getPeruste().getPerusteId();
+            }
+        }
+        return null;
+    }
+
     public Long getLinkattuSisaltoViiteId() {
         if (this.linkkiSisaltoViite != null) {
             return this.linkkiSisaltoViite.getId();
