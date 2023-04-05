@@ -33,7 +33,7 @@
         <pdfbox.version>2.0.24</pdfbox.version>
         <springfox.version>2.7.0</springfox.version>
         <metrics.version>4.2.18</metrics.version>
-        <aspectj.version>1.8.9</aspectj.version>
+        <aspectj.version>1.9.19</aspectj.version>
         <schema.file>${project.basedir}/target/schema.ddl</schema.file>
         <hibernate.export.type>CREATE</hibernate.export.type>
         <auditlog.api.version>5.0.0-SNAPSHOT</auditlog.api.version>
