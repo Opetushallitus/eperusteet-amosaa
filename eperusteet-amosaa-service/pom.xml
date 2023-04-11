@@ -26,7 +26,7 @@
         <eperusteet-amosaa.devdb.jdbcurl>jdbc:postgresql://localhost:5432/${eperusteet-amosaa.devdb.user}</eperusteet-amosaa.devdb.jdbcurl>
         <eperusteet-amosaa.ittestdb.jdbcurl>jdbc:postgresql://localhost:5432/${eperusteet-amosaa.ittestdb.user}</eperusteet-amosaa.ittestdb.jdbcurl>
         <buildhelper.skipAttach>true</buildhelper.skipAttach>
-        <jsoup.version>1.10.1</jsoup.version>
+        <jsoup.version>1.15.4</jsoup.version>
         <ehcache.version>2.6.11</ehcache.version>
         <slf4j.version>1.7.36</slf4j.version>
         <fop.version>2.8</fop.version>
