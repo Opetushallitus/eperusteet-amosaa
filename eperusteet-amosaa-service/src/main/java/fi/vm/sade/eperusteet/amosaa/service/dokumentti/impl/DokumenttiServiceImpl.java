@@ -1,19 +1,3 @@
-/*
- * Copyright (c) 2013 The Finnish Board of Education - Opetushallitus
- *
- * This program is free software: Licensed under the EUPL, Version 1.1 or - as
- * soon as they will be approved by the European Commission - subsequent versions
- * of the EUPL (the "Licence");
- *
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at: http://ec.europa.eu/idabc/eupl
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * European Union Public Licence for more details.
- */
-
 package fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl;
 
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.Dokumentti;
@@ -32,13 +16,8 @@ import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 
-import java.awt.Color;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
-import javax.imageio.ImageIO;
 import javax.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
@@ -50,12 +29,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-
-/**
- * @author iSaul
- */
 @Service
 @Transactional
 @Profile("default")
@@ -180,58 +154,6 @@ public class DokumenttiServiceImpl implements DokumenttiService {
         Dokumentti dokumentti = getLatestDokumentti(id, kieli);
         if (dokumentti != null) {
             return dokumentti.getData();
-        }
-
-        return null;
-    }
-
-    @Override
-    public DokumenttiDto addImage(Long ktId, Long opsId, DokumenttiDto dto, String tyyppi, String kieli, MultipartFile file) throws IOException {
-
-        if (!file.isEmpty()) {
-
-            BufferedImage bufferedImage = ImageIO.read(file.getInputStream());
-
-            int width = bufferedImage.getWidth();
-            int height = bufferedImage.getHeight();
-
-            // Muutetaan kaikkien kuvien väriavaruus RGB:ksi jotta PDF/A validointi menee läpi
-            // Asetetaan lisäksi läpinäkyvien kuvien taustaksi valkoinen väri
-            BufferedImage tempImage = new BufferedImage(bufferedImage.getWidth(), bufferedImage.getHeight(),
-                    BufferedImage.TYPE_3BYTE_BGR);
-            tempImage.getGraphics().setColor(new Color(255, 255, 255, 0));
-            tempImage.getGraphics().fillRect(0, 0, width, height);
-            tempImage.getGraphics().drawImage(bufferedImage, 0, 0, null);
-
-            bufferedImage = tempImage;
-
-            // Muutetaan kuva PNG:ksi
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(bufferedImage, "jpg", baos);
-            baos.flush();
-            byte[] image = baos.toByteArray();
-            baos.close();
-
-            // Todo: Tarkista onko tiedosto sallittu kuva
-
-            // Haetaan domain dokumentti
-            Dokumentti dokumentti = getLatestDokumentti(dto.getOpsId(), Kieli.of(kieli));
-
-            switch (tyyppi) {
-                case "kansikuva":
-                    dokumentti.setKansikuva(image);
-                    break;
-                case "ylatunniste":
-                    dokumentti.setYlatunniste(image);
-                    break;
-                case "alatunniste":
-                    dokumentti.setAlatunniste(image);
-                    break;
-                default:
-                    return null;
-            }
-
-            return mapper.map(dokumenttiRepository.save(dokumentti), DokumenttiDto.class);
         }
 
         return null;

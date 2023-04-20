@@ -1,19 +1,3 @@
-/*
- * Copyright (c) 2013 The Finnish Board of Education - Opetushallitus
- *
- * This program is free software: Licensed under the EUPL, Version 1.1 or - as
- * soon as they will be approved by the European Commission - subsequent versions
- * of the EUPL (the "Licence");
- *
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at: http://ec.europa.eu/idabc/eupl
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * European Union Public Licence for more details.
- */
-
 package fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl;
 
 import fi.vm.sade.eperusteet.amosaa.domain.Osaamistaso;
@@ -46,8 +30,6 @@ import fi.vm.sade.eperusteet.amosaa.dto.koodisto.KoodistoKoodiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koodisto.KoodistoMetadataDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.TermiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.Ammattitaitovaatimukset2019Dto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.Ammattitaitovaatimus2019Dto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.AmmattitaitovaatimustenKohdealue2019Dto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.ArvioinninKohdeDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.ArviointiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.ArviointiasteikkoDto;
@@ -73,7 +55,6 @@ import fi.vm.sade.eperusteet.amosaa.dto.peruste.geneerinenarviointiasteikko.Gene
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.AmmattitaitovaatimusKohdealueetDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.KoulutuksenOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.OmaOsaAlueDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.OmaOsaAlueExportDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.OpintokokonaisuusTavoiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
@@ -82,13 +63,13 @@ import fi.vm.sade.eperusteet.amosaa.dto.teksti.TekstiosaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.TuvaLaajaAlainenOsaaminenDto;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiBuilderService;
+import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiKuvaService;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.LocalizedMessagesService;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.PdfService;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.CharapterNumberGenerator;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiBase;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiRivi;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiTaulukko;
-import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils;
 import fi.vm.sade.eperusteet.amosaa.service.external.ArviointiasteikkoService;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
@@ -146,7 +127,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliRooli.VIRTUAALINEN;
 import static fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils.*;
@@ -155,9 +135,6 @@ import static fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.Dokument
 import static fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils.addTeksti;
 import static fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils.getTextString;
 
-/**
- * @author iSaul
- */
 @Service
 public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
 
@@ -195,6 +172,9 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
 
     @Autowired
     private ArviointiasteikkoService arviointiasteikkoService;
+
+    @Autowired
+    private DokumenttiKuvaService dokumenttiKuvaService;
 
     @Override
     public byte[] generatePdf(Opetussuunnitelma ops, Dokumentti dokumentti, Kieli kieli)
@@ -248,9 +228,9 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
 
         // Kuvat
         buildImages(docBase);
-        buildKansilehti(docBase);
-        buildYlatunniste(docBase);
-        buildAlatunniste(docBase);
+        buildKansilehti(docBase, ops.getId(), kieli);
+        buildYlatunniste(docBase, ops.getId(), kieli);
+        buildAlatunniste(docBase, ops.getId(), kieli);
 
         DokumenttiMetaDto meta = DokumenttiMetaDto.builder()
                 .title(getTextString(docBase, ops.getNimi()))
@@ -1745,15 +1725,16 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
         }
     }
 
-    private void buildKansilehti(DokumenttiBase docBase) {
-        Element head = docBase.getHeadElement();
-        Element kansikuva = docBase.getDocument().createElement("kansikuva");
-        Element kuva = docBase.getDocument().createElement("img");
+    private void buildKansilehti(DokumenttiBase docBase, Long opsId, Kieli kieli) {
+        byte[] image = dokumenttiKuvaService.getImage(opsId, "kansikuva", kieli);
 
-        byte[] image = docBase.getDokumentti().getKansikuva();
         if (image == null) {
             return;
         }
+
+        Element head = docBase.getHeadElement();
+        Element kansikuva = docBase.getDocument().createElement("kansikuva");
+        Element kuva = docBase.getDocument().createElement("img");
 
         String base64 = Base64.getEncoder().encodeToString(image);
         kuva.setAttribute("src", "data:image/jpg;base64," + base64);
@@ -1762,15 +1743,16 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
         head.appendChild(kansikuva);
     }
 
-    private void buildYlatunniste(DokumenttiBase docBase) {
-        Element head = docBase.getHeadElement();
-        Element ylatunniste = docBase.getDocument().createElement("ylatunniste");
-        Element kuva = docBase.getDocument().createElement("img");
+    private void buildYlatunniste(DokumenttiBase docBase, Long opsId, Kieli kieli) {
+        byte[] image = dokumenttiKuvaService.getImage(opsId, "ylatunniste", kieli);
 
-        byte[] image = docBase.getDokumentti().getYlatunniste();
         if (image == null) {
             return;
         }
+
+        Element head = docBase.getHeadElement();
+        Element ylatunniste = docBase.getDocument().createElement("ylatunniste");
+        Element kuva = docBase.getDocument().createElement("img");
 
         String base64 = Base64.getEncoder().encodeToString(image);
         kuva.setAttribute("src", "data:image/jpg;base64," + base64);
@@ -1779,15 +1761,16 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
         head.appendChild(ylatunniste);
     }
 
-    private void buildAlatunniste(DokumenttiBase docBase) {
-        Element head = docBase.getHeadElement();
-        Element alatunniste = docBase.getDocument().createElement("alatunniste");
-        Element kuva = docBase.getDocument().createElement("img");
+    private void buildAlatunniste(DokumenttiBase docBase, Long opsId, Kieli kieli) {
+        byte[] image = dokumenttiKuvaService.getImage(opsId, "alatunniste", kieli);
 
-        byte[] image = docBase.getDokumentti().getAlatunniste();
         if (image == null) {
             return;
         }
+
+        Element head = docBase.getHeadElement();
+        Element alatunniste = docBase.getDocument().createElement("alatunniste");
+        Element kuva = docBase.getDocument().createElement("img");
 
         String base64 = Base64.getEncoder().encodeToString(image);
         kuva.setAttribute("src", "data:image/jpg;base64," + base64);

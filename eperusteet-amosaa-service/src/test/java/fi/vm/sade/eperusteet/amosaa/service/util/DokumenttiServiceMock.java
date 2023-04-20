@@ -4,10 +4,8 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiService;
 import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
-import java.io.IOException;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Profile("test")
@@ -37,11 +35,6 @@ public class DokumenttiServiceMock implements DokumenttiService {
     @Override
     public void generateWithDto(Long ktId, Long opsId, DokumenttiDto dto) throws DokumenttiException {
 
-    }
-
-    @Override
-    public DokumenttiDto addImage(Long ktId, Long opsId, DokumenttiDto dto, String tyyppi, String kieli, MultipartFile image) throws IOException {
-        return null;
     }
 
     @Override
