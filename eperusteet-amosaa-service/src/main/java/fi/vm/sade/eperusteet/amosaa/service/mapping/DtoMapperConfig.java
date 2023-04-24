@@ -1,25 +1,10 @@
-/*
- * Copyright (c) 2013 The Finnish Board of Education - Opetushallitus
- *
- * This program is free software: Licensed under the EUPL, Version 1.1 or - as
- * soon as they will be approved by the European Commission - subsequent versions
- * of the EUPL (the "Licence");
- *
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at: http://ec.europa.eu/idabc/eupl
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * European Union Public Licence for more details.
- */
 package fi.vm.sade.eperusteet.amosaa.service.mapping;
 
 import com.google.common.base.Throwables;
 import fi.vm.sade.eperusteet.amosaa.domain.Kooditettu;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
-import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.Dokumentti;
-import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.Dokumentti_;
+import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiKuva;
+import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiKuva_;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
@@ -27,7 +12,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaOsaAlue;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OpintokokonaisuusTavoite;
 import fi.vm.sade.eperusteet.amosaa.dto.KooditettuDto;
-import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiKuvaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koodisto.KoodistoKoodiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koodisto.KoodistoMetadataDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
@@ -67,9 +52,6 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-/**
- * @author jhyoty
- */
 @Configuration
 public class DtoMapperConfig {
 
@@ -118,19 +100,19 @@ public class DtoMapperConfig {
         OptionalSupport.register(factory);
         factory.registerMapper(new ReferenceableCollectionMergeMapper());
 
-        factory.classMap(Dokumentti.class, DokumenttiDto.class)
-                .exclude(Dokumentti_.kansikuva.getName())
-                .exclude(Dokumentti_.ylatunniste.getName())
-                .exclude(Dokumentti_.alatunniste.getName())
+        factory.classMap(DokumenttiKuva.class, DokumenttiKuvaDto.class)
+                .exclude(DokumenttiKuva_.kansikuva.getName())
+                .exclude(DokumenttiKuva_.ylatunniste.getName())
+                .exclude(DokumenttiKuva_.alatunniste.getName())
                 .byDefault()
                 .favorExtension(true)
-                .customize(new CustomMapper<Dokumentti, DokumenttiDto>() {
+                .customize(new CustomMapper<DokumenttiKuva, DokumenttiKuvaDto>() {
                     @Override
-                    public void mapAtoB(Dokumentti dokumentti, DokumenttiDto dokumenttiDto, MappingContext context) {
-                        super.mapAtoB(dokumentti, dokumenttiDto, context);
-                        dokumenttiDto.setKansikuva(dokumentti.getKansikuva() != null);
-                        dokumenttiDto.setYlatunniste(dokumentti.getYlatunniste() != null);
-                        dokumenttiDto.setAlatunniste(dokumentti.getAlatunniste() != null);
+                    public void mapAtoB(DokumenttiKuva dokumenttiKuva, DokumenttiKuvaDto dokumenttiKuvaDto, MappingContext context) {
+                        super.mapAtoB(dokumenttiKuva, dokumenttiKuvaDto, context);
+                        dokumenttiKuvaDto.setKansikuva(dokumenttiKuva.getKansikuva() != null);
+                        dokumenttiKuvaDto.setYlatunniste(dokumenttiKuva.getYlatunniste() != null);
+                        dokumenttiKuvaDto.setAlatunniste(dokumenttiKuva.getAlatunniste() != null);
                     }
                 })
                 .register();
