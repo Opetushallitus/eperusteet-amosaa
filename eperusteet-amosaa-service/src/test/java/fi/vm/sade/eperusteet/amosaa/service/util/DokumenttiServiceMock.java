@@ -3,7 +3,6 @@ package fi.vm.sade.eperusteet.amosaa.service.util;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiService;
-import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -28,12 +27,22 @@ public class DokumenttiServiceMock implements DokumenttiService {
     }
 
     @Override
+    public DokumenttiDto getLatestValmisDokumentti(Long ktId, Long opsId, Kieli kieli) {
+        return null;
+    }
+
+    @Override
+    public Long getJulkaistuDokumenttiId(Long ktId, Long opsId, Kieli kieli, Integer revision) {
+        return null;
+    }
+
+    @Override
     public void setStarted(Long ktId, Long opsId, DokumenttiDto dto) {
 
     }
 
     @Override
-    public void generateWithDto(Long ktId, Long opsId, DokumenttiDto dto) throws DokumenttiException {
+    public void generateWithDto(Long ktId, Long opsId, DokumenttiDto dto) {
 
     }
 

@@ -3,10 +3,12 @@ package fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl;
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.Dokumentti;
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiEdistyminen;
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiTila;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Julkaisu;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.amosaa.repository.dokumentti.DokumenttiRepository;
+import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.JulkaisuRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiBuilderService;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiService;
@@ -20,11 +22,13 @@ import java.util.Date;
 import java.util.List;
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -51,6 +55,9 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     @Autowired
     private DokumenttiStateService dokumenttiStateService;
 
+    @Autowired
+    private JulkaisuRepository julkaisuRepository;
+
     @Lazy
     @Autowired
     private DokumenttiService self;
@@ -69,7 +76,6 @@ public class DokumenttiServiceImpl implements DokumenttiService {
                     dokumentti = dokumenttiRepository.save(dokumentti);
                 }
             }
-
             return mapper.map(dokumentti, DokumenttiDto.class);
         } else {
             return self.createDtoFor(ktId, opsId, kieli);
@@ -96,20 +102,63 @@ public class DokumenttiServiceImpl implements DokumenttiService {
         }
     }
 
-
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public DokumenttiDto createDtoFor(Long ktId, Long id, Kieli kieli) {
         Dokumentti dokumentti = new Dokumentti();
         dokumentti.setTila(DokumenttiTila.EI_OLE);
         dokumentti.setKieli(kieli);
+        dokumentti.setAloitusaika(new Date());
+        dokumentti.setLuoja(SecurityUtil.getAuthenticatedPrincipal().getName());
 
-        if (opsRepository.findOne(id) != null) {
+        Opetussuunnitelma ops = opsRepository.findOne(id);
+        if (ops != null) {
             dokumentti.setOpsId(id);
             Dokumentti saved = dokumenttiRepository.save(dokumentti);
             return mapper.map(saved, DokumenttiDto.class);
         }
+        return null;
+    }
 
+    @Override
+    @Transactional(readOnly = true)
+    public DokumenttiDto getLatestValmisDokumentti(Long ktId, Long opsId, Kieli kieli) {
+        Sort sort = new Sort(Sort.Direction.DESC, "valmistumisaika");
+        List<Dokumentti> dokumentit = dokumenttiRepository.findByOpsIdAndKieliAndTila(opsId, kieli, DokumenttiTila.VALMIS, sort);
+
+        if (!dokumentit.isEmpty()) {
+            return mapper.map(dokumentit.get(0), DokumenttiDto.class);
+        } else {
+            DokumenttiDto dto = new DokumenttiDto();
+            dto.setOpsId(opsId);
+            dto.setKieli(kieli);
+            dto.setTila(DokumenttiTila.EI_OLE);
+            return dto;
+        }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Long getJulkaistuDokumenttiId(Long ktId, Long opsId, Kieli kieli, Integer revision) {
+        Opetussuunnitelma ops = opsRepository.findOne(opsId);
+
+        if (ops == null) {
+            return null;
+        }
+
+        Julkaisu julkaisu;
+        if (revision != null) {
+            julkaisu = julkaisuRepository.findByOpetussuunnitelmaAndRevision(ops, revision);
+        } else {
+            julkaisu = julkaisuRepository.findFirstByOpetussuunnitelmaOrderByRevisionDesc(ops);
+        }
+
+        if (julkaisu != null && CollectionUtils.isNotEmpty(julkaisu.getDokumentit())) {
+            Dokumentti dokumentti = dokumenttiRepository.findByIdInAndKieli(julkaisu.getDokumentit(), kieli);
+            if (dokumentti != null) {
+                return dokumentti.getId();
+            }
+        }
         return null;
     }
 

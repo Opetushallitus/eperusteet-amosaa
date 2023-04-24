@@ -18,6 +18,12 @@ public interface DokumenttiService {
     DokumenttiDto createDtoFor(@P("ktId") Long ktId, @P("opsId") Long opsId, Kieli kieli);
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
+    DokumenttiDto getLatestValmisDokumentti(@P("ktId") Long ktId, @P("opsId") Long opsId, Kieli kieli);
+
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
+    Long getJulkaistuDokumenttiId(@P("ktId") Long ktId, @P("opsId") Long opsId, Kieli kieli, Integer revision);
+
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
     void setStarted(@P("ktId") Long ktId, @P("opsId") Long opsId, DokumenttiDto dto);
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
