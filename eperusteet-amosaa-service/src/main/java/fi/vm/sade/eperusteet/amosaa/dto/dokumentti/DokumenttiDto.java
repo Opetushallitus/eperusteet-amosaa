@@ -24,4 +24,5 @@ public class DokumenttiDto {
     private DokumenttiEdistyminen edistyminen = DokumenttiEdistyminen.TUNTEMATON;
     private String virhekoodi = "";
     private boolean perusteenSisalto;
+    private Boolean julkaisuDokumentti = false;
 }

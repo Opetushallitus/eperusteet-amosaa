@@ -55,13 +55,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.toSet;
 
 @Slf4j
 @Service
@@ -201,31 +200,29 @@ public class JulkaisuServiceImpl implements JulkaisuService {
             ObjectNode dataJson = (ObjectNode) jsonMapper.toJson(opetussuunnitelmaKaikki);
             List<Julkaisu> vanhatJulkaisut = julkaisuRepository.findAllByOpetussuunnitelma(opetussuunnitelma);
 
+            Set<Long> dokumenttiIds = new HashSet<>();
+
             for (Kieli kieli : opetussuunnitelma.getJulkaisukielet()) {
                 DokumenttiDto dokumenttiDto = dokumenttiService.createDtoFor(ktId, opsId, kieli);
                 try {
                     dokumenttiService.setStarted(ktId, opsId, dokumenttiDto);
                     dokumenttiService.generateWithDto(ktId, opsId, dokumenttiDto);
+                    dokumenttiIds.add(dokumenttiDto.getId());
                 } catch (DokumenttiException e) {
                     log.error(Throwables.getStackTraceAsString(e));
                 }
             }
 
-            Set<Long> dokumentit = opetussuunnitelma.getJulkaisukielet().stream()
-                    .map(kieli -> dokumenttiService.getDto(ktId, opsId, kieli))
-                    .map(DokumenttiDto::getId)
-                    .collect(toSet());
-
             JulkaisuData julkaisuData = julkaisuDataRepository.save(new JulkaisuData(dataJson));
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
             julkaisu.setRevision(vanhatJulkaisut.stream().mapToInt(Julkaisu::getRevision).max().orElse(0) + 1);
             julkaisu.setTiedote(mapper.map(julkaisuBaseDto.getTiedote(), LokalisoituTeksti.class));
-            julkaisu.setDokumentit(dokumentit);
+            julkaisu.setDokumentit(dokumenttiIds);
             julkaisu.setLuoja(username);
             julkaisu.setLuotu(opetussuunnitelma.getMuokattu());
             julkaisu.setOpetussuunnitelma(opetussuunnitelma);
             julkaisu.setData(julkaisuData);
-            julkaisu = julkaisuRepository.saveAndFlush(julkaisu);
+            julkaisuRepository.saveAndFlush(julkaisu);
             muokkausTietoService.addOpsMuokkausTieto(opsId, opetussuunnitelma, MuokkausTapahtuma.JULKAISU);
         } catch (Exception e) {
             log.error(Throwables.getStackTraceAsString(e));
