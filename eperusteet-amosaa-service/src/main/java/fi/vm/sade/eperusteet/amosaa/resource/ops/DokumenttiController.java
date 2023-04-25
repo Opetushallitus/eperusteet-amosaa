@@ -10,8 +10,6 @@ import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija.KoulutustoimijaIdGetterAbstractController;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiKuvaService;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiService;
-import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils;
-import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
@@ -36,8 +34,6 @@ import springfox.documentation.annotations.ApiIgnore;
 @Api(value = "dokumentit")
 @InternalApi
 public class DokumenttiController extends KoulutustoimijaIdGetterAbstractController {
-
-
     @Autowired
     private DtoMapper mapper;
     @Autowired
@@ -56,24 +52,29 @@ public class DokumenttiController extends KoulutustoimijaIdGetterAbstractControl
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<DokumenttiDto> createDokumentti(
-            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
-            @PathVariable Long opsId,
-            @RequestParam(defaultValue = "fi") String kieli
-    ) throws DokumenttiException {
-        DokumenttiDto dto = dokumenttiService.getDto(ktId, opsId, Kieli.of(kieli));
-        if (dto == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<DokumenttiDto> createDokumentti(@ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+                                                          @PathVariable Long opsId,
+                                                          @RequestParam(defaultValue = "fi") String kieli) throws DokumenttiException {
 
-        // Aloitetaan luonti jos luonti ei ole jo päällä tai maksimi luontiaika ylitetty
-        if (DokumenttiUtils.isTimePass(dto) || dto.getTila() != DokumenttiTila.LUODAAN) {
+        DokumenttiDto dto = dokumenttiService.createDtoFor(ktId, opsId, Kieli.of(kieli));
+
+        if (dto != null && dto.getTila() != DokumenttiTila.EPAONNISTUI) {
             dokumenttiService.setStarted(ktId, opsId, dto);
             dokumenttiService.generateWithDto(ktId, opsId, dto);
-            return new ResponseEntity<>(dto, HttpStatus.ACCEPTED);
-        } else {
-            throw new BusinessRuleViolationException("Luonti on jo käynissä");
+            return new ResponseEntity<>(dto, HttpStatus.CREATED);
         }
+        return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
+    @RequestMapping(value = "/latest", method = RequestMethod.GET)
+    public ResponseEntity<DokumenttiDto> getLatestDokumentti(@ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+                                                             @PathVariable("opsId") final Long opsId,
+                                                             @RequestParam(defaultValue = "fi") final String kieli) {
+        DokumenttiDto dto = dokumenttiService.getLatestValmisDokumentti(ktId, opsId, Kieli.of(kieli));
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     @ApiImplicitParams({
@@ -134,12 +135,7 @@ public class DokumenttiController extends KoulutustoimijaIdGetterAbstractControl
             @PathVariable Long opsId,
             @RequestParam(defaultValue = "fi") String kieli) {
 
-        // Tehdään DokumenttiDto jos ei löydy jo valmiina
         DokumenttiDto dokumenttiDto = dokumenttiService.getDto(ktId, opsId, Kieli.of(kieli));
-        if (dokumenttiDto == null) {
-            dokumenttiDto = dokumenttiService.createDtoFor(ktId, opsId, Kieli.of(kieli));
-        }
-
         if (dokumenttiDto == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {

@@ -42,7 +42,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.json.JSONException;
 import org.skyscreamer.jsonassert.JSONCompare;
 import org.skyscreamer.jsonassert.JSONCompareMode;
-import org.skyscreamer.jsonassert.JSONCompareResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
@@ -203,8 +202,8 @@ public class JulkaisuServiceImpl implements JulkaisuService {
             List<Julkaisu> vanhatJulkaisut = julkaisuRepository.findAllByOpetussuunnitelma(opetussuunnitelma);
 
             for (Kieli kieli : opetussuunnitelma.getJulkaisukielet()) {
+                DokumenttiDto dokumenttiDto = dokumenttiService.createDtoFor(ktId, opsId, kieli);
                 try {
-                    DokumenttiDto dokumenttiDto = dokumenttiService.getDto(ktId, opsId, kieli);
                     dokumenttiService.setStarted(ktId, opsId, dokumenttiDto);
                     dokumenttiService.generateWithDto(ktId, opsId, dokumenttiDto);
                 } catch (DokumenttiException e) {
