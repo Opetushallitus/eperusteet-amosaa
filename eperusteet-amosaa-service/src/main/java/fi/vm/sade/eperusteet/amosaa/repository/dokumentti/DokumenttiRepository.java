@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DokumenttiRepository extends JpaRepository<Dokumentti, Long> {
-    @Query("SELECT doc from Dokumentti doc WHERE doc.opsId = ?1 AND doc.kieli = ?2 ORDER BY doc.valmistumisaika")
+    @Query("SELECT doc from Dokumentti doc WHERE doc.opsId = ?1 AND doc.kieli = ?2 ORDER BY doc.valmistumisaika DESC")
     List<Dokumentti> findByOpsIdAndKieli(Long opsId, Kieli kieli);
 
     List<Dokumentti> findByOpsIdAndKieliAndTila(Long opsId, Kieli kieli, DokumenttiTila tila, Sort sort);

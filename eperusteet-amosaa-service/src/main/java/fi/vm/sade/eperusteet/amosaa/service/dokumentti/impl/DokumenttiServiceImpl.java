@@ -127,7 +127,12 @@ public class DokumenttiServiceImpl implements DokumenttiService {
         List<Dokumentti> dokumentit = dokumenttiRepository.findByOpsIdAndKieliAndTila(opsId, kieli, DokumenttiTila.VALMIS, sort);
 
         if (!dokumentit.isEmpty()) {
-            return mapper.map(dokumentit.get(0), DokumenttiDto.class);
+            DokumenttiDto dokumentti = mapper.map(dokumentit.get(0), DokumenttiDto.class);
+            DokumenttiDto julkaisuDokumentti = getJulkaistuDokumentti(ktId, opsId, kieli, null);
+            if (dokumentti.getId().equals(julkaisuDokumentti.getId())) {
+                dokumentti.setJulkaisuDokumentti(true);
+            }
+            return dokumentti;
         } else {
             DokumenttiDto dto = new DokumenttiDto();
             dto.setOpsId(opsId);
@@ -139,7 +144,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 
     @Override
     @Transactional(readOnly = true)
-    public Long getJulkaistuDokumenttiId(Long ktId, Long opsId, Kieli kieli, Integer revision) {
+    public DokumenttiDto getJulkaistuDokumentti(Long ktId, Long opsId, Kieli kieli, Integer revision) {
         Opetussuunnitelma ops = opsRepository.findOne(opsId);
 
         if (ops == null) {
@@ -156,7 +161,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
         if (julkaisu != null && CollectionUtils.isNotEmpty(julkaisu.getDokumentit())) {
             Dokumentti dokumentti = dokumenttiRepository.findByIdInAndKieli(julkaisu.getDokumentit(), kieli);
             if (dokumentti != null) {
-                return dokumentti.getId();
+                return mapper.map(dokumentti, DokumenttiDto.class);
             }
         }
         return null;
@@ -204,7 +209,16 @@ public class DokumenttiServiceImpl implements DokumenttiService {
         if (dokumentti != null) {
             return dokumentti.getData();
         }
+        return null;
+    }
 
+    @Override
+    @Transactional(readOnly = true)
+    public byte[] getByDokumenttiId(Long ktId, Long id, Long dokumenttiId) {
+        Dokumentti dokumentti  = dokumenttiRepository.findOne(dokumenttiId);
+        if (dokumentti != null) {
+            return dokumentti.getData();
+        }
         return null;
     }
 }

@@ -17,11 +17,11 @@ public interface DokumenttiService {
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
     DokumenttiDto createDtoFor(@P("ktId") Long ktId, @P("opsId") Long opsId, Kieli kieli);
 
-    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'ESITYS')")
     DokumenttiDto getLatestValmisDokumentti(@P("ktId") Long ktId, @P("opsId") Long opsId, Kieli kieli);
 
-    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
-    Long getJulkaistuDokumenttiId(@P("ktId") Long ktId, @P("opsId") Long opsId, Kieli kieli, Integer revision);
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'ESITYS')")
+    DokumenttiDto getJulkaistuDokumentti(@P("ktId") Long ktId, @P("opsId") Long opsId, Kieli kieli, Integer revision);
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
     void setStarted(@P("ktId") Long ktId, @P("opsId") Long opsId, DokumenttiDto dto);
@@ -31,4 +31,7 @@ public interface DokumenttiService {
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'ESITYS')")
     byte[] get(@P("ktId") Long ktId, @P("opsId") Long opsId, Kieli kieli);
+
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'ESITYS')")
+    byte[] getByDokumenttiId(Long ktId, Long id, Long dokumenttiId);
 }

@@ -32,7 +32,7 @@ public class DokumenttiServiceMock implements DokumenttiService {
     }
 
     @Override
-    public Long getJulkaistuDokumenttiId(Long ktId, Long opsId, Kieli kieli, Integer revision) {
+    public DokumenttiDto getJulkaistuDokumentti(Long ktId, Long opsId, Kieli kieli, Integer revision) {
         return null;
     }
 
@@ -48,6 +48,11 @@ public class DokumenttiServiceMock implements DokumenttiService {
 
     @Override
     public byte[] get(Long ktId, Long opsId, Kieli kieli) {
+        return new byte[0];
+    }
+
+    @Override
+    public byte[] getByDokumenttiId(Long ktId, Long id, Long dokumenttiId) {
         return new byte[0];
     }
 }
