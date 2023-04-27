@@ -1023,7 +1023,8 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         Opetussuunnitelma ops = findOps(ktId, opsId);
         Tila nykyinen = ops.getTila();
         if (nykyinen.mahdollisetSiirtymat().contains(tila)
-                && (!(tila.equals(Tila.POISTETTU) && CollectionUtils.isNotEmpty(ops.getJulkaisut())) || permissionManager.hasOphAdminPermission())) {
+                && (ops.getOpsKoulutustyyppi() == null || ops.getOpsKoulutustyyppi().isAmmatillinen()
+                || (!(tila.equals(Tila.POISTETTU) && CollectionUtils.isNotEmpty(ops.getJulkaisut())) || permissionManager.hasOphAdminPermission()))) {
 
             // Muutetaan tila
             ops.setTila(tila);
