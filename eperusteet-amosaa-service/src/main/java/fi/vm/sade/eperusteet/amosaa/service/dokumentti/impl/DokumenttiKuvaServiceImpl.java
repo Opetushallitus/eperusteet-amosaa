@@ -8,7 +8,6 @@ import fi.vm.sade.eperusteet.amosaa.repository.dokumentti.DokumenttiKuvaReposito
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiKuvaService;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
-import fi.vm.sade.eperusteet.amosaa.service.exception.NotExistsException;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -115,7 +114,7 @@ public class DokumenttiKuvaServiceImpl implements DokumenttiKuvaService {
         DokumenttiKuva dokumenttiKuva = dokumenttiKuvaRepository.findFirstByOpsIdAndKieli(opsId, kieli);
 
         if (dokumenttiKuva == null) {
-            throw new NotExistsException("Dokumenttikuvaa ei löytynyt");
+            return null;
         }
 
         byte[] image;
