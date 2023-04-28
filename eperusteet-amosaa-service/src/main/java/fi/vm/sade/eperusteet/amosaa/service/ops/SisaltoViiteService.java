@@ -131,12 +131,12 @@ public interface SisaltoViiteService extends LockService<SisaltoViiteCtx> {
     List<SisaltoViiteDto> getOpetussuunnitelmanPohjanSisaltoviitteet(Long ktId, Long opsId, SisaltoTyyppi tyyppi);
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
-    void linkSisaltoViiteet(Long ktId, Long opsId, List<Long> viitteet);
+    void linkSisaltoViiteet(@P("ktId") Long ktId, @P("opsId") Long opsId, List<Long> viitteet);
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
-    SisaltoViiteDto kopioiLinkattuSisaltoViiteet(Long ktId, Long opsId, Long viiteId);
+    SisaltoViiteDto kopioiLinkattuSisaltoViiteet(@P("ktId") Long ktId, @P("opsId") Long opsId, Long viiteId);
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
-    List<OletusToteutusDto> tutkinnonosienOletusToteutukset(Long ktId, Long opsId);
+    List<OletusToteutusDto> tutkinnonosienOletusToteutukset(@P("ktId") Long ktId, @P("opsId") Long opsId);
 }
 
