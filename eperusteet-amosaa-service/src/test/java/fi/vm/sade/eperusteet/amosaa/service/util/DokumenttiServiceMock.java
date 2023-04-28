@@ -27,7 +27,7 @@ public class DokumenttiServiceMock implements DokumenttiService {
     }
 
     @Override
-    public DokumenttiDto getLatestValmisDokumentti(Long ktId, Long opsId, Kieli kieli) {
+    public DokumenttiDto getLatestDokumentti(Long ktId, Long opsId, Kieli kieli) {
         return null;
     }
 
