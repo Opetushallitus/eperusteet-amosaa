@@ -86,7 +86,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     }
 
     private Dokumentti getLatestDokumentti(Long opsId, Kieli kieli) {
-        List<Dokumentti> dokumentit = dokumenttiRepository.findByOpsIdAndKieli(opsId, kieli);
+        List<Dokumentti> dokumentit = dokumenttiRepository.findByOpsIdAndKieliAndValmistumisaikaIsNotNull(opsId, kieli);
         if (dokumentit.isEmpty()) {
             return null;
         } else {
@@ -127,7 +127,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     @Transactional(readOnly = true)
     public DokumenttiDto getLatestDokumentti(Long ktId, Long opsId, Kieli kieli) {
         // haetaan sortattuna valmistumisajan mukaan
-        List<Dokumentti> dokumentit = dokumenttiRepository.findByOpsIdAndKieli(opsId, kieli);
+        List<Dokumentti> dokumentit = dokumenttiRepository.findByOpsIdAndKieliAndValmistumisaikaIsNotNull(opsId, kieli);
 
         if (!dokumentit.isEmpty()) {
             DokumenttiDto dokumentti = mapper.map(dokumentit.get(0), DokumenttiDto.class);
