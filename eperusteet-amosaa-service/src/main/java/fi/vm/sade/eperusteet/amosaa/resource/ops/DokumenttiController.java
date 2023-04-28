@@ -73,7 +73,7 @@ public class DokumenttiController extends KoulutustoimijaIdGetterAbstractControl
     public ResponseEntity<DokumenttiDto> getLatestDokumentti(@ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
                                                              @PathVariable("opsId") final Long opsId,
                                                              @RequestParam(defaultValue = "fi") final String kieli) {
-        DokumenttiDto dto = dokumenttiService.getLatestValmisDokumentti(ktId, opsId, Kieli.of(kieli));
+        DokumenttiDto dto = dokumenttiService.getLatestDokumentti(ktId, opsId, Kieli.of(kieli));
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 

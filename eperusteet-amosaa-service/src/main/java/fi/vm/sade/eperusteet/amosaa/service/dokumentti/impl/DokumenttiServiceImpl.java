@@ -28,7 +28,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Profile;
-import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -78,7 +77,11 @@ public class DokumenttiServiceImpl implements DokumenttiService {
             }
             return mapper.map(dokumentti, DokumenttiDto.class);
         } else {
-            return self.createDtoFor(ktId, opsId, kieli);
+            DokumenttiDto dto = new DokumenttiDto();
+            dto.setOpsId(opsId);
+            dto.setKieli(kieli);
+            dto.setTila(DokumenttiTila.EI_OLE);
+            return dto;
         }
     }
 
@@ -122,14 +125,14 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 
     @Override
     @Transactional(readOnly = true)
-    public DokumenttiDto getLatestValmisDokumentti(Long ktId, Long opsId, Kieli kieli) {
-        Sort sort = new Sort(Sort.Direction.DESC, "valmistumisaika");
-        List<Dokumentti> dokumentit = dokumenttiRepository.findByOpsIdAndKieliAndTila(opsId, kieli, DokumenttiTila.VALMIS, sort);
+    public DokumenttiDto getLatestDokumentti(Long ktId, Long opsId, Kieli kieli) {
+        // haetaan sortattuna valmistumisajan mukaan
+        List<Dokumentti> dokumentit = dokumenttiRepository.findByOpsIdAndKieli(opsId, kieli);
 
         if (!dokumentit.isEmpty()) {
             DokumenttiDto dokumentti = mapper.map(dokumentit.get(0), DokumenttiDto.class);
             DokumenttiDto julkaisuDokumentti = getJulkaistuDokumentti(ktId, opsId, kieli, null);
-            if (dokumentti.getId().equals(julkaisuDokumentti.getId())) {
+            if (julkaisuDokumentti != null && dokumentti.getId().equals(julkaisuDokumentti.getId())) {
                 dokumentti.setJulkaisuDokumentti(true);
             }
             return dokumentti;
@@ -194,9 +197,9 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 
             dokumenttiRepository.save(dokumentti);
         } catch (Exception ex) {
-            dokumentti.setTila(DokumenttiTila.EPAONNISTUI);
-            dokumentti.setVirhekoodi(ex.getLocalizedMessage());
-            dokumenttiRepository.save(dokumentti);
+            dto.setTila(DokumenttiTila.EPAONNISTUI);
+            dto.setVirhekoodi(ex.getLocalizedMessage());
+            dokumenttiStateService.save(dto);
 
             throw new DokumenttiException(ex.getMessage(), ex);
         }
