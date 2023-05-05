@@ -668,7 +668,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
     private VanhentunutPohjaperusteDto getOpetussuunnitelmaVanhentunutPeruste(Opetussuunnitelma ops) {
         VanhentunutPohjaperusteDto vanhentunutPohjaperusteDto = null;
-        
+
         if (ops.getPeruste() != null) {
             try {
                 Date viimeisinJulkaisu = eperusteetClient.getViimeisinJulkaisuPeruste(ops.getPeruste().getPerusteId());

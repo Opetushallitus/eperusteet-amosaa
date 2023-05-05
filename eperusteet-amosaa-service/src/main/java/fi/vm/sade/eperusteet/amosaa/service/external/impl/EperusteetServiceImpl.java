@@ -474,6 +474,10 @@ public class EperusteetServiceImpl implements EperusteetService {
     @Override
     public PerusteDto getKoulutuskoodillaKorvaavaPeruste(Long ktId, Long opsId) {
         Opetussuunnitelma opetussuunnitelma = opetussuunnitelmaRepository.findOne(opsId);
+        if (opetussuunnitelma.getPeruste() == null) {
+            return null;
+        }
+
         PerusteDto opetussuunnitelmanPeruste = getPerusteSisalto(opetussuunnitelma.getPeruste(), PerusteDto.class);
         PerusteDto uusiPeruste = eperusteetClient.findPerusteetByKoulutuskoodit(opetussuunnitelmanPeruste.getKoulutukset().stream()
                         .map(KoulutusDto::getKoulutuskoodiUri)
