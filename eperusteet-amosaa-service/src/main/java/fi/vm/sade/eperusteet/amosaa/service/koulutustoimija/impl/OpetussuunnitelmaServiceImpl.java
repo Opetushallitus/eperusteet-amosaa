@@ -668,11 +668,8 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
     private VanhentunutPohjaperusteDto getOpetussuunnitelmaVanhentunutPeruste(Opetussuunnitelma ops) {
         VanhentunutPohjaperusteDto vanhentunutPohjaperusteDto = null;
-
-        boolean perusteenOsia = CollectionUtil.treeToStream(ops.getSisaltoviitteet(), SisaltoViite::getLapset)
-                .anyMatch(sv -> sv.getPerusteenOsaId() != null);
-
-        if (ops.getPeruste() != null && (ops.getPeruste().getKoulutustyyppi().isAmmatillinen() || perusteenOsia)) {
+        
+        if (ops.getPeruste() != null) {
             try {
                 Date viimeisinJulkaisu = eperusteetClient.getViimeisinJulkaisuPeruste(ops.getPeruste().getPerusteId());
                 CachedPeruste cperuste = ops.getPeruste();
