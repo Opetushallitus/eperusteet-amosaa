@@ -336,8 +336,8 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
                 result.setKtYhteinenOsuusKeskeneraiset(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.POHJA, false, koulutustoimijat));
                 result.setKtYhteinenOsuusJulkaistut(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.POHJA, true, koulutustoimijat));
             } else {
-                result.setKtYhteinenOsuusKeskeneraiset(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.YHTEINEN, false, koulutustoimijat, koulutustyypit));
-                result.setKtYhteinenOsuusJulkaistut(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.YHTEINEN, true, koulutustoimijat, koulutustyypit));
+                result.setKtYhteinenOsuusKeskeneraiset(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.YHTEINEN, false, koulutustoimijat));
+                result.setKtYhteinenOsuusJulkaistut(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.YHTEINEN, true, koulutustoimijat));
             }
 
         }

@@ -322,10 +322,10 @@ public class OpetussuunnitelmaRepositoryImpl implements OpetussuunnitelmaCustomR
             } else if (queryDto.isVoimassaolo()) {
                 pred = cb.and(pred, cb.lessThanOrEqualTo(root.get(Opetussuunnitelma_.voimaantulo), new Date()));
                 pred = cb.and(pred, cb.or(
-                        root.get(Opetussuunnitelma_.paatospaivamaara).isNull(),
-                        cb.greaterThan(root.get(Opetussuunnitelma_.paatospaivamaara), new Date())));
+                        root.get(Opetussuunnitelma_.voimassaoloLoppuu).isNull(),
+                        cb.greaterThan(root.get(Opetussuunnitelma_.voimassaoloLoppuu), new Date())));
             } else if (queryDto.isPoistunut()) {
-                pred = cb.and(pred, cb.lessThanOrEqualTo(root.get(Opetussuunnitelma_.paatospaivamaara), new Date()));
+                pred = cb.and(pred, cb.lessThanOrEqualTo(root.get(Opetussuunnitelma_.voimassaoloLoppuu), new Date()));
             }
         }
 
