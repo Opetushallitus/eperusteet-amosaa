@@ -164,7 +164,9 @@ public class DokumenttiServiceImpl implements DokumenttiService {
         if (julkaisu != null && CollectionUtils.isNotEmpty(julkaisu.getDokumentit())) {
             Dokumentti dokumentti = dokumenttiRepository.findByIdInAndKieli(julkaisu.getDokumentit(), kieli);
             if (dokumentti != null) {
-                return mapper.map(dokumentti, DokumenttiDto.class);
+                DokumenttiDto dokumenttiDto = mapper.map(dokumentti, DokumenttiDto.class);
+                dokumenttiDto.setJulkaisuDokumentti(true);
+                return dokumenttiDto;
             }
         }
         return null;
