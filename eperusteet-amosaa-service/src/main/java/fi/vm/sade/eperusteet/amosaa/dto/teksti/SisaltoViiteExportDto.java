@@ -6,9 +6,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteenOsaDto;
 import lombok.*;
+import org.apache.commons.collections.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Käytetään sisällön viemiseen rakenteisena
@@ -71,5 +74,13 @@ public class SisaltoViiteExportDto extends SisaltoViiteExportBaseDto {
         if (perusteenOsaDto instanceof fi.vm.sade.eperusteet.amosaa.dto.peruste.TekstiKappaleDto) {
             perusteteksti = ((fi.vm.sade.eperusteet.amosaa.dto.peruste.TekstiKappaleDto) perusteenOsaDto).getTeksti();
         }
+    }
+
+    public List<OmaOsaAlueExportDto> getOsaAlueet() {
+        if (CollectionUtils.isNotEmpty(this.osaAlueet)) {
+            return this.osaAlueet.stream().filter(osaAlue -> !osaAlue.isPiilotettu()).collect(Collectors.toList());
+        }
+
+        return Collections.emptyList();
     }
 }
