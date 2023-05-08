@@ -20,6 +20,7 @@ public class OmaOsaAlueKevytDto implements KooditettuDto {
     private LokalisoituTekstiDto nimi;
     private Long perusteenOsaAlueId;
     private String perusteenOsaAlueKoodi;
+    private boolean piilotettu;
 
     @Override
     public void setKooditettu(LokalisoituTekstiDto kooditettu) {

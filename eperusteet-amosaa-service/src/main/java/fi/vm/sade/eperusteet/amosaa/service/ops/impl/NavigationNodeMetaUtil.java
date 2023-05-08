@@ -15,6 +15,7 @@ import lombok.experimental.UtilityClass;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Map;
+import java.util.function.Predicate;
 
 @UtilityClass
 public class NavigationNodeMetaUtil {
@@ -27,12 +28,12 @@ public class NavigationNodeMetaUtil {
         }
     }
 
-    public static void lisaaTutkinnonOsanOsaAlueet(PerusteKaikkiDto perusteKaikkiDto, SisaltoViiteKevytDto lapsi, NavigationNodeDto node) {
+    public static void lisaaTutkinnonOsanOsaAlueet(PerusteKaikkiDto perusteKaikkiDto, SisaltoViiteKevytDto lapsi, NavigationNodeDto node, Predicate<OmaOsaAlueKevytDto> filter) {
         if(!CollectionUtils.isEmpty(lapsi.getOsaAlueet())) {
             if (lapsi.getOsaAlueet().stream().anyMatch(osaalue -> osaalue.getTyyppi().equals(OmaOsaAlueTyyppi.PAKOLLINEN))) {
                 node.add(NavigationNodeDto.of(NavigationType.pakolliset_osaalueet).meta("navigation-subtype", true));
                 node.addAll(lapsi.getOsaAlueet().stream()
-                        .filter(osaalue -> osaalue.getTyyppi().equals(OmaOsaAlueTyyppi.PAKOLLINEN))
+                        .filter(osaalue -> osaalue.getTyyppi().equals(OmaOsaAlueTyyppi.PAKOLLINEN) && filter.test(osaalue))
                         .map(osaalue -> NavigationNodeDto
                                 .of(NavigationType.osaalue, osaAlueNimi(osaalue, perusteKaikkiDto), osaalue.getId())
                                 .meta("koodi", osaalue.getKoodiArvo())
@@ -42,7 +43,7 @@ public class NavigationNodeMetaUtil {
             if (lapsi.getOsaAlueet().stream().anyMatch(osaalue -> osaalue.getTyyppi().equals(OmaOsaAlueTyyppi.VALINNAINEN))) {
                 node.add(NavigationNodeDto.of(NavigationType.valinnaiset_osaalueet).meta("navigation-subtype", true));
                 node.addAll(lapsi.getOsaAlueet().stream()
-                        .filter(osaalue -> osaalue.getTyyppi().equals(OmaOsaAlueTyyppi.VALINNAINEN))
+                        .filter(osaalue -> osaalue.getTyyppi().equals(OmaOsaAlueTyyppi.VALINNAINEN) && filter.test(osaalue))
                         .map(osaalue -> NavigationNodeDto
                                 .of(NavigationType.osaalue, osaAlueNimi(osaalue, perusteKaikkiDto), osaalue.getId())
                                 .meta("koodi", osaalue.getKoodiArvo())
@@ -52,7 +53,7 @@ public class NavigationNodeMetaUtil {
             if (lapsi.getOsaAlueet().stream().anyMatch(osaalue -> osaalue.getTyyppi().equals(OmaOsaAlueTyyppi.PAIKALLINEN))) {
                 node.add(NavigationNodeDto.of(NavigationType.paikalliset_osaalueet).meta("navigation-subtype", true));
                 node.addAll(lapsi.getOsaAlueet().stream()
-                        .filter(osaalue -> osaalue.getTyyppi().equals(OmaOsaAlueTyyppi.PAIKALLINEN))
+                        .filter(osaalue -> osaalue.getTyyppi().equals(OmaOsaAlueTyyppi.PAIKALLINEN) && filter.test(osaalue))
                         .map(osaalue -> NavigationNodeDto
                                 .of(NavigationType.osaalue, osaalue.getNimi(), osaalue.getId())
                                 .meta("sisaltoviiteId", lapsi.getId())));
