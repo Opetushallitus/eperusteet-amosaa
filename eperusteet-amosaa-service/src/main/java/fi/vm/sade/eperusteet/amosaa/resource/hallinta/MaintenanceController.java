@@ -52,4 +52,10 @@ public class MaintenanceController {
                 OpsTyyppi.of(opstyyppi));
     }
 
+    @RequestMapping(value = "/poistajulkaisut/{opsId}", method = GET)
+    public ResponseEntity poistaJulkaisut(@PathVariable final Long opsId) {
+        maintenanceService.poistaJulkaisut(opsId);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
 }

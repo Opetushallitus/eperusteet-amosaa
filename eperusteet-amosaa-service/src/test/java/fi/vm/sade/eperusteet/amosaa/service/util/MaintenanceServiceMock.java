@@ -24,4 +24,9 @@ public class MaintenanceServiceMock implements MaintenanceService {
     public void clearCache(String cache) {
     }
 
+    @Override
+    public void poistaJulkaisut(Long opsId) {
+
+    }
+
 }

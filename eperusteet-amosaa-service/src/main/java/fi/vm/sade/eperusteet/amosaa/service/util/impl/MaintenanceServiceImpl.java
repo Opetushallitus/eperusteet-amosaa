@@ -3,6 +3,7 @@ package fi.vm.sade.eperusteet.amosaa.service.util.impl;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.MuokkausTapahtuma;
+import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Julkaisu;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.JulkaisuData;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
@@ -152,6 +153,17 @@ public class MaintenanceServiceImpl implements MaintenanceService {
     @Override
     public void clearCache(String cache) {
         Objects.requireNonNull(cacheManager.getCache(cache)).clear();
+    }
+
+    @Override
+    public void poistaJulkaisut(Long opsId) {
+        Opetussuunnitelma ops = opetussuunnitelmaRepository.findOne(opsId);
+
+        List<Julkaisu> julkaisut = julkaisuRepository.findAllByOpetussuunnitelma(ops);
+        julkaisut.forEach(julkaisu -> julkaisuRepository.delete(julkaisu));
+
+        ops.setTila(Tila.LUONNOS);
+        opetussuunnitelmaRepository.save(ops);
     }
 
 }
