@@ -4916,6 +4916,24 @@
         }
       }
     },
+    "/maintenance/poistajulkaisut/{opsId}" : {
+      "get" : {
+        "tags" : [ "Maintenance" ],
+        "operationId" : "poistaJulkaisut",
+        "parameters" : [ {
+          "name" : "opsId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
     "/ohjeet" : {
       "get" : {
         "tags" : [ "Ohjeet" ],
@@ -7749,6 +7767,9 @@
         },
         "perusteenOsaAlueKoodi" : {
           "type" : "string"
+        },
+        "piilotettu" : {
+          "type" : "boolean"
         }
       }
     },
@@ -8972,6 +8993,10 @@
           "type" : "integer",
           "format" : "int64"
         },
+        "number" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "size" : {
           "type" : "integer",
           "format" : "int32"
@@ -8982,22 +9007,18 @@
             "type" : "object"
           }
         },
-        "number" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
         "first" : {
           "type" : "boolean"
         },
-        "last" : {
-          "type" : "boolean"
-        },
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
+        },
+        "last" : {
+          "type" : "boolean"
         }
       }
     },
@@ -9012,6 +9033,10 @@
           "type" : "integer",
           "format" : "int64"
         },
+        "number" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "size" : {
           "type" : "integer",
           "format" : "int32"
@@ -9022,22 +9047,18 @@
             "$ref" : "#/definitions/KoulutustoimijaJulkinenDto"
           }
         },
-        "number" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
         "first" : {
           "type" : "boolean"
         },
-        "last" : {
-          "type" : "boolean"
-        },
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
+        },
+        "last" : {
+          "type" : "boolean"
         }
       }
     },
@@ -9052,6 +9073,10 @@
           "type" : "integer",
           "format" : "int64"
         },
+        "number" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "size" : {
           "type" : "integer",
           "format" : "int32"
@@ -9062,22 +9087,18 @@
             "$ref" : "#/definitions/OpetussuunnitelmaBaseDto"
           }
         },
-        "number" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
         "first" : {
           "type" : "boolean"
         },
-        "last" : {
-          "type" : "boolean"
-        },
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
+        },
+        "last" : {
+          "type" : "boolean"
         }
       }
     },
@@ -9092,6 +9113,10 @@
           "type" : "integer",
           "format" : "int64"
         },
+        "number" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "size" : {
           "type" : "integer",
           "format" : "int32"
@@ -9102,22 +9127,18 @@
             "$ref" : "#/definitions/OpetussuunnitelmaDto"
           }
         },
-        "number" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
         "first" : {
           "type" : "boolean"
         },
-        "last" : {
-          "type" : "boolean"
-        },
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
+        },
+        "last" : {
+          "type" : "boolean"
         }
       }
     },
@@ -9132,6 +9153,10 @@
           "type" : "integer",
           "format" : "int64"
         },
+        "number" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "size" : {
           "type" : "integer",
           "format" : "int32"
@@ -9142,22 +9167,18 @@
             "$ref" : "#/definitions/SisaltoviiteLaajaDto"
           }
         },
-        "number" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
         "first" : {
           "type" : "boolean"
         },
-        "last" : {
-          "type" : "boolean"
-        },
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
+        },
+        "last" : {
+          "type" : "boolean"
         }
       }
     },
