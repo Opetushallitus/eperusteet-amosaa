@@ -246,6 +246,8 @@ public class JulkinenController {
         }
 
         headers.setContentLength(pdfdata.length);
+        // estetään googlea indeksoimasta pdf:iä
+        headers.set("X-Robots-Tag", "noindex");
 
         return new ResponseEntity<>(pdfdata, headers, HttpStatus.OK);
     }
