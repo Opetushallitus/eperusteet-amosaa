@@ -400,7 +400,7 @@
         <dependency>
             <groupId>com.codepoetics</groupId>
             <artifactId>protonpack</artifactId>
-            <version>1.8</version>
+            <version>1.16</version>
         </dependency>
         <dependency>
             <groupId>io.springfox</groupId>
