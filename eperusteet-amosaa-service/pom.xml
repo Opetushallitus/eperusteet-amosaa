@@ -43,7 +43,7 @@
         <swagger-maven-plugin-version>3.1.7</swagger-maven-plugin-version>
         <eperusteet.backendutils.version>2.5</eperusteet.backendutils.version>
         <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
-        <lombok.version>1.18.4</lombok.version>
+        <lombok.version>1.18.26</lombok.version>
         <java.release.version>11</java.release.version>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
