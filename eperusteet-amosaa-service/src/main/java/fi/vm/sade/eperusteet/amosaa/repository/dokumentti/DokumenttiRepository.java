@@ -18,4 +18,6 @@ public interface DokumenttiRepository extends JpaRepository<Dokumentti, Long> {
     Dokumentti findFirstByOpsIdAndKieliOrderByAloitusaikaDesc(Long opsId, Kieli kieli);
 
     Dokumentti findByIdInAndKieli(Set<Long> id, Kieli kieli);
+
+    Dokumentti findById(Long id);
 }
