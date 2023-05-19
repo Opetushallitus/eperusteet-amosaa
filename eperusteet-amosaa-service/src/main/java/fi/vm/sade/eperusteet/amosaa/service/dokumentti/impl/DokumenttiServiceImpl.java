@@ -13,6 +13,7 @@ import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.Opetussuunnitelma
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiBuilderService;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiService;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiStateService;
+import fi.vm.sade.eperusteet.amosaa.service.dokumentti.ExternalPdfService;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils;
 import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
@@ -28,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Profile;
+import org.springframework.http.HttpEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -60,6 +62,9 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     @Lazy
     @Autowired
     private DokumenttiService self;
+
+    @Autowired
+    private ExternalPdfService externalPdfService;
 
     @Override
     @Transactional
@@ -179,21 +184,14 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     }
 
     @Override
-    @Transactional(noRollbackFor = DokumenttiException.class)
+    @Transactional(noRollbackFor = DokumenttiException.class, propagation = Propagation.REQUIRES_NEW)
     @Async(value = "docTaskExecutor")
     public void generateWithDto(Long ktId, @NotNull Long opsId, DokumenttiDto dto) throws DokumenttiException {
         dto.setTila(DokumenttiTila.LUODAAN);
-        Dokumentti dokumentti = dokumenttiStateService.save(dto);
+        dokumenttiStateService.save(dto);
 
         try {
-            Opetussuunnitelma ops = opsRepository.findOne(dokumentti.getOpsId());
-            dokumentti.setTila(DokumenttiTila.VALMIS);
-            dokumentti.setValmistumisaika(new Date());
-            dokumentti.setVirhekoodi("");
-            dokumentti.setEdistyminen(DokumenttiEdistyminen.TUNTEMATON);
-            dokumentti.setData(builderService.generatePdf(ops, dokumentti, dokumentti.getKieli()));
-
-            dokumenttiRepository.save(dokumentti);
+            externalPdfService.generatePdf(dto, ktId);
         } catch (Exception ex) {
             dto.setTila(DokumenttiTila.EPAONNISTUI);
             dto.setVirhekoodi(ex.getLocalizedMessage());
@@ -222,5 +220,22 @@ public class DokumenttiServiceImpl implements DokumenttiService {
             return dokumentti.getData();
         }
         return null;
+    }
+
+    @Override
+    public void updateDokumenttiPdfData(byte[] data, Long dokumenttiId) {
+        Dokumentti dokumentti = dokumenttiRepository.findById(dokumenttiId);
+        dokumentti.setData(data);
+        dokumentti.setTila(DokumenttiTila.VALMIS);
+        dokumentti.setValmistumisaika(new Date());
+        dokumentti.setVirhekoodi(null);
+        dokumenttiRepository.save(dokumentti);
+    }
+
+    @Override
+    public void updateDokumenttiTila(DokumenttiTila tila, Long dokumenttiId) {
+        Dokumentti dokumentti = dokumenttiRepository.findById(dokumenttiId);
+        dokumentti.setTila(tila);
+        dokumenttiRepository.save(dokumentti);
     }
 }
