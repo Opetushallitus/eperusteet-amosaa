@@ -36,9 +36,7 @@ public interface DokumenttiService {
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'ESITYS')")
     byte[] getDataByDokumenttiId(@P("ktId") Long ktId, @P("opsId") Long opsId, Long dokumenttiId);
 
-    @PreAuthorize("isAuthenticated()")
     void updateDokumenttiPdfData(byte[] pdfData, Long dokumenttiId);
 
-    @PreAuthorize("isAuthenticated()")
     void updateDokumenttiTila(DokumenttiTila tila, Long dokumenttiId);
 }
