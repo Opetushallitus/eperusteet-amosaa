@@ -7,7 +7,6 @@ import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,7 +26,7 @@ public class DokumenttiPdfContoller {
     @Autowired
     DokumenttiService dokumenttiService;
 
-    @PostMapping(path = "/pdf/data/{dokumenttiId}", consumes = MediaType.APPLICATION_PDF_VALUE)
+    @PostMapping(path = "/pdf/data/{dokumenttiId}")
     @ResponseBody
     public ResponseEntity<String> savePdfData(@PathVariable("dokumenttiId") Long dokumenttiId,
                                               @RequestBody PdfData pdfData) {
@@ -35,11 +34,11 @@ public class DokumenttiPdfContoller {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping(path = "/pdf/tila/{dokumenttiId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/pdf/tila/{dokumenttiId}")
     @ResponseBody
     public ResponseEntity<String> updateDokumenttiTila(@PathVariable("dokumenttiId") Long dokumenttiId,
-                                                       @RequestBody DokumenttiTila tila) {
-        dokumenttiService.updateDokumenttiTila(tila, dokumenttiId);
+                                                       @RequestBody PdfData pdfData) {
+        dokumenttiService.updateDokumenttiTila(DokumenttiTila.of(pdfData.getTila()), dokumenttiId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

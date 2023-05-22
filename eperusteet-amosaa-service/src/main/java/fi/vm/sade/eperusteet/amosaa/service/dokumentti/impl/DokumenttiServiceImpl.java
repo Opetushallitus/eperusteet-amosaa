@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.List;
 import javax.validation.constraints.NotNull;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 @Profile("default")
+@Slf4j
 public class DokumenttiServiceImpl implements DokumenttiService {
     private static final Logger LOG = LoggerFactory.getLogger(DokumenttiServiceImpl.class);
 
@@ -193,6 +195,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
         try {
             externalPdfService.generatePdf(dto, ktId);
         } catch (Exception ex) {
+            log.error(ex.getMessage());
             dto.setTila(DokumenttiTila.EPAONNISTUI);
             dto.setVirhekoodi(ex.getLocalizedMessage());
             dokumenttiStateService.save(dto);
