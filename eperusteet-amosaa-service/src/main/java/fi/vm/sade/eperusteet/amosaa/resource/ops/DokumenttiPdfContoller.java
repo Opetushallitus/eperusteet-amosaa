@@ -1,6 +1,7 @@
 package fi.vm.sade.eperusteet.amosaa.resource.ops;
 
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiTila;
+import fi.vm.sade.eperusteet.amosaa.dto.pdf.PdfData;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiService;
 import io.swagger.annotations.Api;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Base64;
+
 @RestController
 @RequestMapping("/dokumentit")
 @InternalApi
@@ -27,8 +30,8 @@ public class DokumenttiPdfContoller {
     @PostMapping(path = "/pdf/data/{dokumenttiId}", consumes = MediaType.APPLICATION_PDF_VALUE)
     @ResponseBody
     public ResponseEntity<String> savePdfData(@PathVariable("dokumenttiId") Long dokumenttiId,
-                                              @RequestBody byte[] pdfData) {
-        dokumenttiService.updateDokumenttiPdfData(pdfData, dokumenttiId);
+                                              @RequestBody PdfData pdfData) {
+        dokumenttiService.updateDokumenttiPdfData(Base64.getDecoder().decode(pdfData.getData()), dokumenttiId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
