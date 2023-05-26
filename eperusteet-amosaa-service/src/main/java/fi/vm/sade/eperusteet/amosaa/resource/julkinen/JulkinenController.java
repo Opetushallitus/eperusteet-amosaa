@@ -241,8 +241,7 @@ public class JulkinenController {
         if (nimi != null) {
             headers.set("Content-disposition", "inline; filename=\"" + nimi + ".pdf\"");
         } else {
-            DokumenttiDto dokumenttiDto = service.getDto(ktId, opsId, Kieli.of(kieli));
-            headers.set("Content-disposition", "inline; filename=\"" + dokumenttiDto.getId() + ".pdf\"");
+            headers.set("Content-disposition", "inline; filename=\"" + dokumenttiId + ".pdf\"");
         }
 
         headers.setContentLength(pdfdata.length);
