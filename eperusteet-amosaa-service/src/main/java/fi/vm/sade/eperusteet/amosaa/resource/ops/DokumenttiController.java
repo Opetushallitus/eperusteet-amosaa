@@ -81,13 +81,17 @@ public class DokumenttiController extends KoulutustoimijaIdGetterAbstractControl
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(method = RequestMethod.GET, produces = "application/pdf")
-    public ResponseEntity<Object> getPdfDokumentti(
+    public ResponseEntity<Object> getLatestValmisDokumentti(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable Long opsId,
             @RequestParam(defaultValue = "fi") String kieli
     ) {
-        byte[] pdfdata = dokumenttiService.get(ktId, opsId, Kieli.of(kieli));
+        DokumenttiDto dokumenttiDto = dokumenttiService.get(ktId, opsId, Kieli.of(kieli));
+        if (dokumenttiDto == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
 
+        byte[] pdfdata = dokumenttiService.getDataByDokumenttiId(ktId, opsId, dokumenttiDto.getId());
         if (pdfdata == null || pdfdata.length == 0) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -99,7 +103,6 @@ public class DokumenttiController extends KoulutustoimijaIdGetterAbstractControl
         if (nimi != null) {
             headers.set("Content-disposition", "inline; filename=\"" + nimi + ".pdf\"");
         } else {
-            DokumenttiDto dokumenttiDto = dokumenttiService.getDto(ktId, opsId, Kieli.of(kieli));
             headers.set("Content-disposition", "inline; filename=\"" + dokumenttiDto.getId() + ".pdf\"");
         }
 
@@ -137,7 +140,7 @@ public class DokumenttiController extends KoulutustoimijaIdGetterAbstractControl
             @PathVariable Long opsId,
             @RequestParam(defaultValue = "fi") String kieli) {
 
-        DokumenttiDto dokumenttiDto = dokumenttiService.getDto(ktId, opsId, Kieli.of(kieli));
+        DokumenttiDto dokumenttiDto = dokumenttiService.getValmisDto(ktId, opsId, Kieli.of(kieli));
         if (dokumenttiDto == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {

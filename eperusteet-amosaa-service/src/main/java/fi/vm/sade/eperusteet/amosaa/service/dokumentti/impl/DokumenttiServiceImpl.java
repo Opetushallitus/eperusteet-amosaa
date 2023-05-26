@@ -63,7 +63,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 
     @Override
     @Transactional
-    public DokumenttiDto getDto(Long ktId, Long opsId, Kieli kieli) {
+    public DokumenttiDto getValmisDto(Long ktId, Long opsId, Kieli kieli) {
         Dokumentti dokumentti = getLatestValmisDokumentti(opsId, kieli);
 
         if (dokumentti != null) {
@@ -205,17 +205,18 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 
     @Override
     @Transactional(readOnly = true)
-    public byte[] get(Long ktId, Long id, Kieli kieli) {
-        Dokumentti dokumentti = getLatestValmisDokumentti(id, kieli);
+    public DokumenttiDto get(Long ktId, Long id, Kieli kieli) {
+        Dokumentti dokumentti =  getLatestValmisDokumentti(id, kieli);
         if (dokumentti != null) {
-            return dokumentti.getData();
+            return mapper.map(dokumentti, DokumenttiDto.class);
         }
+
         return null;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public byte[] getByDokumenttiId(Long ktId, Long id, Long dokumenttiId) {
+    public byte[] getDataByDokumenttiId(Long ktId, Long id, Long dokumenttiId) {
         Dokumentti dokumentti  = dokumenttiRepository.findOne(dokumenttiId);
         if (dokumentti != null) {
             return dokumentti.getData();
