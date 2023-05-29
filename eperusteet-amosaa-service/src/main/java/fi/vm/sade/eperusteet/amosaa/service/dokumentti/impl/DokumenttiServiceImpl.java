@@ -63,18 +63,10 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 
     @Override
     @Transactional
-    public DokumenttiDto getDto(Long ktId, Long opsId, Kieli kieli) {
-        Dokumentti dokumentti = getLatestDokumentti(opsId, kieli);
+    public DokumenttiDto getValmisDto(Long ktId, Long opsId, Kieli kieli) {
+        Dokumentti dokumentti = getLatestValmisDokumentti(opsId, kieli);
 
         if (dokumentti != null) {
-
-            // Jos aloitusajasta on kulunut liian kauan, on luonti epäonnistunut
-            if (dokumentti.getTila() != DokumenttiTila.VALMIS && dokumentti.getTila() != DokumenttiTila.EI_OLE) {
-                if (DokumenttiUtils.isTimePass(dokumentti)) {
-                    dokumentti.setTila(DokumenttiTila.EPAONNISTUI);
-                    dokumentti = dokumenttiRepository.save(dokumentti);
-                }
-            }
             return mapper.map(dokumentti, DokumenttiDto.class);
         } else {
             DokumenttiDto dto = new DokumenttiDto();
@@ -85,7 +77,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
         }
     }
 
-    private Dokumentti getLatestDokumentti(Long opsId, Kieli kieli) {
+    private Dokumentti getLatestValmisDokumentti(Long opsId, Kieli kieli) {
         List<Dokumentti> dokumentit = dokumenttiRepository.findByOpsIdAndKieliAndValmistumisaikaIsNotNull(opsId, kieli);
         if (dokumentit.isEmpty()) {
             return null;
@@ -96,7 +88,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 
     @Override
     public DokumenttiDto update(Long ktId, Long opsId, Kieli kieli, DokumenttiDto dto) {
-        Dokumentti dokumentti = getLatestDokumentti(opsId, kieli);
+        Dokumentti dokumentti = getLatestValmisDokumentti(opsId, kieli);
         if (dokumentti == null) {
             return null;
         } else {
@@ -126,16 +118,20 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     @Override
     @Transactional(readOnly = true)
     public DokumenttiDto getLatestDokumentti(Long ktId, Long opsId, Kieli kieli) {
-        // haetaan sortattuna valmistumisajan mukaan
-        List<Dokumentti> dokumentit = dokumenttiRepository.findByOpsIdAndKieliAndValmistumisaikaIsNotNull(opsId, kieli);
+        Dokumentti dokumentti = dokumenttiRepository.findFirstByOpsIdAndKieliOrderByAloitusaikaDesc(opsId, kieli);
 
-        if (!dokumentit.isEmpty()) {
-            DokumenttiDto dokumentti = mapper.map(dokumentit.get(0), DokumenttiDto.class);
-            DokumenttiDto julkaisuDokumentti = getJulkaistuDokumentti(ktId, opsId, kieli, null);
-            if (julkaisuDokumentti != null && dokumentti.getId().equals(julkaisuDokumentti.getId())) {
-                dokumentti.setJulkaisuDokumentti(true);
+        if (dokumentti != null) {
+            // Jos aloitusajasta on kulunut liian kauan, on luonti epäonnistunut
+            if (dokumentti.getTila() != DokumenttiTila.VALMIS && dokumentti.getTila() != DokumenttiTila.EI_OLE && DokumenttiUtils.isTimePass(dokumentti)) {
+                dokumentti.setTila(DokumenttiTila.EPAONNISTUI);
+                dokumenttiRepository.save(dokumentti);
             }
-            return dokumentti;
+            DokumenttiDto dokumenttiDto = mapper.map(dokumentti, DokumenttiDto.class);
+            DokumenttiDto julkaisuDokumentti = getJulkaistuDokumentti(ktId, opsId, kieli, null);
+            if (julkaisuDokumentti != null && dokumenttiDto.getId().equals(julkaisuDokumentti.getId())) {
+                dokumenttiDto.setJulkaisuDokumentti(true);
+            }
+            return dokumenttiDto;
         } else {
             DokumenttiDto dto = new DokumenttiDto();
             dto.setOpsId(opsId);
@@ -209,17 +205,18 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 
     @Override
     @Transactional(readOnly = true)
-    public byte[] get(Long ktId, Long id, Kieli kieli) {
-        Dokumentti dokumentti = getLatestDokumentti(id, kieli);
+    public DokumenttiDto get(Long ktId, Long id, Kieli kieli) {
+        Dokumentti dokumentti =  getLatestValmisDokumentti(id, kieli);
         if (dokumentti != null) {
-            return dokumentti.getData();
+            return mapper.map(dokumentti, DokumenttiDto.class);
         }
+
         return null;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public byte[] getByDokumenttiId(Long ktId, Long id, Long dokumenttiId) {
+    public byte[] getDataByDokumenttiId(Long ktId, Long id, Long dokumenttiId) {
         Dokumentti dokumentti  = dokumenttiRepository.findOne(dokumenttiId);
         if (dokumentti != null) {
             return dokumentti.getData();

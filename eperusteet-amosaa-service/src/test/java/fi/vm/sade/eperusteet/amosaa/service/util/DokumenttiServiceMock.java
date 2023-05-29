@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 @Profile("test")
 public class DokumenttiServiceMock implements DokumenttiService {
     @Override
-    public DokumenttiDto getDto(Long ktId, Long opsId, Kieli kieli) {
+    public DokumenttiDto getValmisDto(Long ktId, Long opsId, Kieli kieli) {
         DokumenttiDto dto = new DokumenttiDto();
         dto.setId(new Double(Math.random() * 1000).longValue());
         return dto;
@@ -47,12 +47,12 @@ public class DokumenttiServiceMock implements DokumenttiService {
     }
 
     @Override
-    public byte[] get(Long ktId, Long opsId, Kieli kieli) {
-        return new byte[0];
+    public DokumenttiDto get(Long ktId, Long opsId, Kieli kieli) {
+        return new DokumenttiDto();
     }
 
     @Override
-    public byte[] getByDokumenttiId(Long ktId, Long id, Long dokumenttiId) {
+    public byte[] getDataByDokumenttiId(Long ktId, Long id, Long dokumenttiId) {
         return new byte[0];
     }
 }

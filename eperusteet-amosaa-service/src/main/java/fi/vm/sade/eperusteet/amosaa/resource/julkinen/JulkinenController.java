@@ -60,7 +60,7 @@ public class JulkinenController {
     private TiedoteService tiedoteService;
 
     @Autowired
-    DokumenttiService service;
+    DokumenttiService dokumenttiService;
 
     @RequestMapping(value = "/tutkinnonosat/{koodi}", method = RequestMethod.GET)
     @ApiIgnore
@@ -222,13 +222,8 @@ public class JulkinenController {
     public ResponseEntity<Object> getDokumentti(@ApiIgnore @ModelAttribute("ktId") final Long ktId,
                                                 @PathVariable final Long opsId,
                                                 @RequestParam(defaultValue = "fi") final String kieli,
-                                                @RequestParam(required = false) final Long dokumenttiId) {
-        byte[] pdfdata;
-        if (dokumenttiId != null) {
-            pdfdata = service.getByDokumenttiId(ktId, opsId, dokumenttiId);
-        } else {
-            pdfdata = service.get(ktId, opsId, Kieli.of(kieli));
-        }
+                                                @RequestParam final Long dokumenttiId) {
+        byte[] pdfdata = dokumenttiService.getDataByDokumenttiId(ktId, opsId, dokumenttiId);
 
         if (pdfdata == null || pdfdata.length == 0) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -241,8 +236,7 @@ public class JulkinenController {
         if (nimi != null) {
             headers.set("Content-disposition", "inline; filename=\"" + nimi + ".pdf\"");
         } else {
-            DokumenttiDto dokumenttiDto = service.getDto(ktId, opsId, Kieli.of(kieli));
-            headers.set("Content-disposition", "inline; filename=\"" + dokumenttiDto.getId() + ".pdf\"");
+            headers.set("Content-disposition", "inline; filename=\"" + dokumenttiId + ".pdf\"");
         }
 
         headers.setContentLength(pdfdata.length);
@@ -261,13 +255,9 @@ public class JulkinenController {
             @PathVariable Long opsId,
             @RequestParam(defaultValue = "fi") String kieli
     ) {
-        // Tehdään DokumenttiDto jos ei löydy jo valmiina
         DokumenttiDto dokumenttiDto = null;
         try {
-            dokumenttiDto = service.getDto(ktId, opsId, Kieli.of(kieli));
-            if (dokumenttiDto == null) {
-                dokumenttiDto = service.createDtoFor(ktId, opsId, Kieli.of(kieli));
-            }
+            dokumenttiDto = dokumenttiService.getValmisDto(ktId, opsId, Kieli.of(kieli));
         } catch (AccessDeniedException e) {
             dokumenttiDto = new DokumenttiDto();
         }
@@ -288,7 +278,7 @@ public class JulkinenController {
                                                          @RequestParam(defaultValue = "fi") String kieli,
                                                          @RequestParam(required = false) Integer revision) {
 
-        return ResponseEntity.ok(service.getJulkaistuDokumentti(ktId, opsId, Kieli.of(kieli), revision));
+        return ResponseEntity.ok(dokumenttiService.getJulkaistuDokumentti(ktId, opsId, Kieli.of(kieli), revision));
     }
 
     @ApiImplicitParams({

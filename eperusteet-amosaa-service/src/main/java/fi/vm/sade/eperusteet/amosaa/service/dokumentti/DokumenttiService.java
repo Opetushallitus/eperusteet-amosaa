@@ -9,7 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 public interface DokumenttiService {
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'ESITYS')")
-    DokumenttiDto getDto(@P("ktId") Long ktId, @P("opsId") Long opsId, Kieli kieli);
+    DokumenttiDto getValmisDto(@P("ktId") Long ktId, @P("opsId") Long opsId, Kieli kieli);
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
     DokumenttiDto update(@P("ktId") Long ktId, @P("opsId") Long opsId, Kieli kieli, DokumenttiDto dto);
@@ -30,8 +30,8 @@ public interface DokumenttiService {
     void generateWithDto(@P("ktId") Long ktId, @P("opsId") Long opsId, DokumenttiDto dto) throws DokumenttiException;
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'ESITYS')")
-    byte[] get(@P("ktId") Long ktId, @P("opsId") Long opsId, Kieli kieli);
+    DokumenttiDto get(@P("ktId") Long ktId, @P("opsId") Long opsId, Kieli kieli);
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'ESITYS')")
-    byte[] getByDokumenttiId(@P("ktId") Long ktId, @P("opsId") Long opsId, Long dokumenttiId);
+    byte[] getDataByDokumenttiId(@P("ktId") Long ktId, @P("opsId") Long opsId, Long dokumenttiId);
 }
