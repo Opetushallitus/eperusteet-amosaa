@@ -53,7 +53,6 @@ import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteenOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteenOsaViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.Suoritustapakoodi;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonosaExportDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonosaKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;

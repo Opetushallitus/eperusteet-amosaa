@@ -1,7 +1,6 @@
-package fi.vm.sade.eperusteet.amosaa.dto.peruste;
+package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.*;
 import lombok.*;
 
 @Deprecated
@@ -9,7 +8,7 @@ import lombok.*;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class TutkinnonosaExportDto extends SisaltoViiteExportBaseDto {
+public class TutkinnonosaViiteExportDto extends SisaltoViiteExportBaseDto {
     private TutkinnonosaDto tosa;
 
     @JsonUnwrapped
