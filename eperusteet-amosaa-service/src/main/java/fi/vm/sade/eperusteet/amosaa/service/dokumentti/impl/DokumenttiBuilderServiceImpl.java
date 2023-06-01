@@ -1381,60 +1381,41 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
 
         if (koulutuksenOsaDto.getPaikallinenTarkennus() != null) {
             addTeksti(docBase, getTextString(docBase, koulutuksenOsaDto.getPaikallinenTarkennus().getTavoitteetKuvaus()), "div");
-        }
 
-        if (!koulutuksenOsaDto.getPaikallinenTarkennus().getLaajaalaisetosaamiset().isEmpty()) {
-            addTeksti(docBase, messages.translate("docgen.laaja-alainen-osaaminen.title", docBase.getKieli()), "h5");
+            if (!koulutuksenOsaDto.getPaikallinenTarkennus().getLaajaalaisetosaamiset().isEmpty()) {
+                addTeksti(docBase, messages.translate("docgen.laaja-alainen-osaaminen.title", docBase.getKieli()), "h5");
+                koulutuksenOsaDto.getPaikallinenTarkennus().getLaajaalaisetosaamiset().forEach(lao -> {
+                    addTeksti(docBase, getTextString(docBase, lao.getNimi()), "h6");
+                    addTeksti(docBase, getTextString(docBase, lao.getLaajaAlaisenOsaamisenKuvaus()), "div");
+                });
+            }
 
-            // Tämä kenttä sisältää ohjetekstiä laatijalle EP-3230
-            //            addTeksti(docBase, getTextString(docBase, koulutuksenOsaDto.getLaajaAlaisenOsaamisenKuvaus()), "div");
-
-            koulutuksenOsaDto.getPaikallinenTarkennus().getLaajaalaisetosaamiset().forEach(lao -> {
-                addTeksti(docBase, getTextString(docBase, lao.getNimi()), "h6");
-
-                // Ei perusteen kuvausta moneen kertaan EP-3230
-                //                SisaltoViite laoKoodilla = tkvRepository.findTuvaLaajaAlainenOsaaminenByKoodiUri(docBase.getOpetussuunnitelma(), lao.getKoodiUri());
-                //                if (laoKoodilla != null) {
-                //                    addTeksti(docBase, getTextString(docBase, laoKoodilla.getPerusteteksti()), "div");
-                //                }
-
-                addTeksti(docBase, getTextString(docBase, lao.getLaajaAlaisenOsaamisenKuvaus()), "div");
-            });
-        }
-
-
-        addTeksti(docBase, messages.translate("docgen.keskeinen-sisalto.title", docBase.getKieli()), "h5");
-        addTeksti(docBase, getTextString(docBase, koulutuksenOsaDto.getKeskeinenSisalto()), "div");
-        if (koulutuksenOsaDto.getPaikallinenTarkennus() != null) {
+            addTeksti(docBase, messages.translate("docgen.keskeinen-sisalto.title", docBase.getKieli()), "h5");
+            addTeksti(docBase, getTextString(docBase, koulutuksenOsaDto.getKeskeinenSisalto()), "div");
             addTeksti(docBase, getTextString(docBase, koulutuksenOsaDto.getPaikallinenTarkennus().getKeskeinenSisalto()), "div");
-        }
-
-        addTeksti(docBase, messages.translate("docgen.arviointi.title", docBase.getKieli()), "h5");
-        addTeksti(docBase, getTextString(docBase, koulutuksenOsaDto.getArvioinninKuvaus()), "div");
-        if (koulutuksenOsaDto.getPaikallinenTarkennus() != null) {
+            addTeksti(docBase, messages.translate("docgen.arviointi.title", docBase.getKieli()), "h5");
+            addTeksti(docBase, getTextString(docBase, koulutuksenOsaDto.getArvioinninKuvaus()), "div");
             addTeksti(docBase, getTextString(docBase, koulutuksenOsaDto.getPaikallinenTarkennus().getArvioinninKuvaus()), "div");
+
+            if (!CollectionUtils.isEmpty(koulutuksenOsaDto.getPaikallinenTarkennus().getKoulutuksenJarjestajat())) {
+                addTeksti(docBase, messages.translate("docgen.koulutuksen-jarjestajat.title", docBase.getKieli()), "h5");
+
+                koulutuksenOsaDto.getPaikallinenTarkennus().getKoulutuksenJarjestajat().forEach(koulutuksenJarjestajaDto -> {
+                    addTeksti(docBase, getTextString(docBase, koulutuksenJarjestajaDto.getNimi()), "h5");
+                    addTeksti(docBase, messages.translate("docgen.toteutusuunnitelman-tai-koulutuksen-jarjestajan-verkkosivut.title", docBase.getKieli()), "h6");
+
+                    Element linkkiDiv = docBase.getDocument().createElement("div");
+                    Element koulutuksenjarjestajanUrl = docBase.getDocument().createElement("a");
+                    koulutuksenjarjestajanUrl.setTextContent(getTextString(docBase, koulutuksenJarjestajaDto.getUrl()));
+                    koulutuksenjarjestajanUrl.setAttribute("href", getTextString(docBase, koulutuksenJarjestajaDto.getUrl()));
+                    linkkiDiv.appendChild(koulutuksenjarjestajanUrl);
+                    docBase.getBodyElement().appendChild(linkkiDiv);
+
+                    addTeksti(docBase, messages.translate("docgen.kaytannon-toteutus.title", docBase.getKieli()), "h6");
+                    addTeksti(docBase, getTextString(docBase, koulutuksenJarjestajaDto.getKuvaus()), "div");
+                });
+            }
         }
-
-        if (koulutuksenOsaDto.getPaikallinenTarkennus() != null && !CollectionUtils.isEmpty(koulutuksenOsaDto.getPaikallinenTarkennus().getKoulutuksenJarjestajat())) {
-            addTeksti(docBase, messages.translate("docgen.koulutuksen-jarjestajat.title", docBase.getKieli()), "h5");
-
-            koulutuksenOsaDto.getPaikallinenTarkennus().getKoulutuksenJarjestajat().forEach(koulutuksenJarjestajaDto -> {
-                addTeksti(docBase, getTextString(docBase, koulutuksenJarjestajaDto.getNimi()), "h5");
-
-                addTeksti(docBase, messages.translate("docgen.toteutusuunnitelman-tai-koulutuksen-jarjestajan-verkkosivut.title", docBase.getKieli()), "h6");
-
-                Element linkkiDiv = docBase.getDocument().createElement("div");
-                Element koulutuksenjarjestajanUrl = docBase.getDocument().createElement("a");
-                koulutuksenjarjestajanUrl.setTextContent(getTextString(docBase, koulutuksenJarjestajaDto.getUrl()));
-                koulutuksenjarjestajanUrl.setAttribute("href", getTextString(docBase, koulutuksenJarjestajaDto.getUrl()));
-                linkkiDiv.appendChild(koulutuksenjarjestajanUrl);
-                docBase.getBodyElement().appendChild(linkkiDiv);
-
-                addTeksti(docBase, messages.translate("docgen.kaytannon-toteutus.title", docBase.getKieli()), "h6");
-                addTeksti(docBase, getTextString(docBase, koulutuksenJarjestajaDto.getKuvaus()), "div");
-            });
-        }
-
     }
 
     private void addKotoLaajaAlainenOsaaminen(DokumenttiBase docBase, SisaltoViite lapsi) {
