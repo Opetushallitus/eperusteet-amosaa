@@ -36,7 +36,6 @@ import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationExcep
 import fi.vm.sade.eperusteet.amosaa.service.util.Copyable;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.BatchSize;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
@@ -232,25 +231,25 @@ public class SisaltoViite extends AbstractAuditedEntity implements Referenceable
 
     @Override
     public SisaltoViite copy(boolean deep) {
-        return copy(this, deep, true);
+        return copy(this, deep, TekstiHierarkiaKopiointiToiminto.KOPIOI);
     }
 
-    public SisaltoViite copy(boolean deep, boolean copyText) {
-        return copy(this, deep, copyText);
+    public SisaltoViite copy(boolean deep, TekstiHierarkiaKopiointiToiminto kopiointiType) {
+        return copy(this, deep, kopiointiType);
     }
 
     public static SisaltoViite copy(SisaltoViite kopioitava) {
-        return copy(kopioitava, true, true);
+        return copy(kopioitava, true, TekstiHierarkiaKopiointiToiminto.KOPIOI);
     }
 
     public static SisaltoViite copy(SisaltoViite kopioitava, boolean copyChildren) {
-        return copy(kopioitava, copyChildren, true);
+        return copy(kopioitava, copyChildren, TekstiHierarkiaKopiointiToiminto.KOPIOI);
     }
 
-    public static SisaltoViite copy(SisaltoViite original, boolean copyChildren, boolean copyText) {
+    public static SisaltoViite copy(SisaltoViite original, boolean copyChildren, TekstiHierarkiaKopiointiToiminto kopiointiType) {
         if (original != null) {
             if (SisaltoTyyppi.LINKKI.equals(original.getTyyppi())) {
-                SisaltoViite result = SisaltoViite.copy(original.getLinkkiSisaltoViite(), copyChildren, copyText);
+                SisaltoViite result = SisaltoViite.copy(original.getLinkkiSisaltoViite(), copyChildren, kopiointiType);
                 return result;
             }
 
@@ -272,22 +271,24 @@ public class SisaltoViite extends AbstractAuditedEntity implements Referenceable
             result.setPeruste(original.getPeruste());
             result.setPerusteenOsaId(original.getPerusteenOsaId());
             result.setTekstiKappale(TekstiKappale.copy(original.getTekstiKappale()));
-
             result.setNaytaPohjanTeksti(original.isNaytaPohjanTeksti());
             result.updatePohjanTekstikappale(original.getPohjanTekstikappale());
 
-            if (!copyText
+            if ((kopiointiType.equals(TekstiHierarkiaKopiointiToiminto.POHJAVIITE) || kopiointiType.equals(TekstiHierarkiaKopiointiToiminto.KOPIOI_JA_SAILYTA_POHJA_VIITE))
                     && original.getTekstiKappale() != null
                     && original.getTyyppi().equals(SisaltoTyyppi.TEKSTIKAPPALE)) {
-                result.getTekstiKappale().setTeksti(null);
-                result.updatePohjanTekstikappale(original.getTekstiKappale());
                 result.setNaytaPohjanTeksti(true);
+
+                if (kopiointiType.equals(TekstiHierarkiaKopiointiToiminto.POHJAVIITE)) {
+                    result.getTekstiKappale().setTeksti(null);
+                    result.updatePohjanTekstikappale(original.getTekstiKappale());
+                }
             }
 
             if (copyChildren) {
                 result.setLapset(new ArrayList<>());
                 for (SisaltoViite lapsi : original.getLapset()) {
-                    result.getLapset().add(copy(lapsi, copyChildren, copyText));
+                    result.getLapset().add(copy(lapsi, copyChildren, kopiointiType));
                 }
             }
             return result;
@@ -617,6 +618,10 @@ public class SisaltoViite extends AbstractAuditedEntity implements Referenceable
     public void asetOsaAlueet(List<OmaOsaAlue> paivitetyt) {
         this.osaAlueet.clear();
         this.osaAlueet.addAll(paivitetyt);
+    }
+
+    public enum TekstiHierarkiaKopiointiToiminto {
+        KOPIOI, POHJAVIITE, KOPIOI_JA_SAILYTA_POHJA_VIITE
     }
 
 }

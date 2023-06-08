@@ -23,7 +23,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Sets;
-import fi.vm.sade.eperusteet.amosaa.domain.HistoriaTapahtuma;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutustyyppiToteutus;
 import fi.vm.sade.eperusteet.amosaa.domain.MuokkausTapahtuma;
@@ -43,7 +42,6 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
-import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.*;
 import fi.vm.sade.eperusteet.amosaa.dto.NavigationNodeDto;
 import fi.vm.sade.eperusteet.amosaa.dto.NavigationType;
 import fi.vm.sade.eperusteet.amosaa.dto.OpsHakuDto;
@@ -114,14 +112,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -134,8 +130,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.*;
-import org.springframework.security.authentication.InsufficientAuthenticationException;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -740,7 +734,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         Opetussuunnitelma ops;
 
         if (opsDto.getOpsId() != null) {
-            OpetussuunnitelmaBaseDto dispatchedOps = dispatcher.get(opsDto.getKoulutustyyppi(), OpetussuunnitelmaCreateService.class).create(kt, opsDto);
+            OpetussuunnitelmaBaseDto dispatchedOps = dispatcher.get(opsDto.getKoulutustyyppi(), opsDto.getTyyppi(), OpetussuunnitelmaCreateService.class).create(kt, opsDto);
             if (dispatchedOps != null) {
                 return dispatchedOps;
             }
@@ -771,7 +765,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                     sisaltoRoot,
                     ops,
                     Collections.singletonMap(SisaltoTyyppi.TUTKINNONOSA, opsDto.getTutkinnonOsaKoodiIncludes()),
-                    !pohja.getTyyppi().equals(OpsTyyppi.OPSPOHJA));
+                    pohja.getTyyppi().equals(OpsTyyppi.OPSPOHJA) ? SisaltoViite.TekstiHierarkiaKopiointiToiminto.POHJAVIITE : SisaltoViite.TekstiHierarkiaKopiointiToiminto.KOPIOI);
             tkvRepository.save(root);
         }
         else {
@@ -810,19 +804,6 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                         PerusteDto yleinen = eperusteetClient.getYleinenPohja();
                         setOpsCommon(ops, yleinen, rootTkv);
                         opsDto.setSuoritustapa("yleinen");
-                        break;
-                    case YHTEINEN:
-                        Opetussuunnitelma pohja = repository.findOne(opsDto.getPohja().getIdLong());
-                        if (pohja == null) {
-                            throw new BusinessRuleViolationException("pohjaa-ei-loytynyt");
-                        } else if (pohja.getTila() != Tila.JULKAISTU) {
-                            throw new BusinessRuleViolationException("vain-julkaistua-pohjaa-voi-kayttaa");
-                        }
-
-                        opsDto.setSuoritustapa("yhteinen");
-                        SisaltoViite pohjatkv = tkvRepository.findOneRoot(pohja);
-                        tkvRepository.save(tkvService.kopioiHierarkia(pohjatkv, ops, null, true));
-                        ops.setPohja(pohja);
                         break;
                     case POHJA:
                         throw new BusinessRuleViolationException("ainoastaan-oph-voi-tehda-pohjia");
