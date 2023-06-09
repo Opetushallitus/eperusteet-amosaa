@@ -94,7 +94,7 @@ public class KoulutustoimijaYhteinenOsuusCreateService implements Opetussuunnite
         }
 
         // käytössä koulutustoimijan tekemä opetussuunnitelma, jonka pohjana toinen koulutustoimijan tekemä opetussuunnitelma
-        return SisaltoViite.TekstiHierarkiaKopiointiToiminto.KOPIOI_JA_SAILYTA_POHJA_VIITE;
+        return SisaltoViite.TekstiHierarkiaKopiointiToiminto.KOPIOI_JA_SAILYTA_POHJAVIITE;
     }
 
     private List<Opetussuunnitelma> getPohjat(Opetussuunnitelma opetussuunnitelma) {

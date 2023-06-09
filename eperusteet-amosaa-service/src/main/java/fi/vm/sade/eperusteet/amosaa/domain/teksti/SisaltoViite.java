@@ -274,7 +274,7 @@ public class SisaltoViite extends AbstractAuditedEntity implements Referenceable
             result.setNaytaPohjanTeksti(original.isNaytaPohjanTeksti());
             result.updatePohjanTekstikappale(original.getPohjanTekstikappale());
 
-            if ((kopiointiType.equals(TekstiHierarkiaKopiointiToiminto.POHJAVIITE) || kopiointiType.equals(TekstiHierarkiaKopiointiToiminto.KOPIOI_JA_SAILYTA_POHJA_VIITE))
+            if ((kopiointiType.equals(TekstiHierarkiaKopiointiToiminto.POHJAVIITE) || kopiointiType.equals(TekstiHierarkiaKopiointiToiminto.KOPIOI_JA_SAILYTA_POHJAVIITE))
                     && original.getTekstiKappale() != null
                     && original.getTyyppi().equals(SisaltoTyyppi.TEKSTIKAPPALE)) {
                 result.setNaytaPohjanTeksti(true);
@@ -621,7 +621,7 @@ public class SisaltoViite extends AbstractAuditedEntity implements Referenceable
     }
 
     public enum TekstiHierarkiaKopiointiToiminto {
-        KOPIOI, POHJAVIITE, KOPIOI_JA_SAILYTA_POHJA_VIITE
+        KOPIOI, POHJAVIITE, KOPIOI_JA_SAILYTA_POHJAVIITE
     }
 
 }
