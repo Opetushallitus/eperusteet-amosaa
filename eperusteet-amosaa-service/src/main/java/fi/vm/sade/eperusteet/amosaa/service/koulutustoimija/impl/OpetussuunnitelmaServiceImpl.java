@@ -187,6 +187,15 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     private KoulutuskoodiRepository koulutuskoodiRepository;
 
     @Autowired
+    public void setKoulutustoimijaService(KoulutustoimijaService kts) {
+        this.koulutustoimijaService = kts;
+    }
+
+    public KoulutustoimijaService getKoulutustoimijaService() {
+        return this.koulutustoimijaService;
+    }
+
+    @Autowired
     private LocalizedMessagesService messages;
 
     private ObjectMapper objMapper;
