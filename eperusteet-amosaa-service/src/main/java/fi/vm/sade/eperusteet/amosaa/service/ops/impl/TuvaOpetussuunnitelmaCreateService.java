@@ -96,7 +96,7 @@ public class TuvaOpetussuunnitelmaCreateService implements OpetussuunnitelmaCrea
 
         ops = repository.save(ops);
 
-        SisaltoViite root = kopioiHierarkia(sisaltoRoot, ops, !pohja.getTyyppi().equals(OpsTyyppi.OPSPOHJA));
+        SisaltoViite root = kopioiHierarkia(sisaltoRoot, ops, pohja.getTyyppi().equals(OpsTyyppi.OPSPOHJA) ? SisaltoViite.TekstiHierarkiaKopiointiToiminto.POHJAVIITE : SisaltoViite.TekstiHierarkiaKopiointiToiminto.KOPIOI);
 
         if (pohja.getTyyppi().equals(OpsTyyppi.OPSPOHJA)) {
             List<SisaltoViite> koulutuksenosatViitteet = koulutuksenosat(root);
@@ -142,14 +142,14 @@ public class TuvaOpetussuunnitelmaCreateService implements OpetussuunnitelmaCrea
         return koulutuksenosat;
     }
 
-    private SisaltoViite kopioiHierarkia(SisaltoViite original, Opetussuunnitelma owner, boolean copyTekstikappalee) {
-        SisaltoViite result = original.copy(false, copyTekstikappalee);
+    private SisaltoViite kopioiHierarkia(SisaltoViite original, Opetussuunnitelma owner, SisaltoViite.TekstiHierarkiaKopiointiToiminto tekstiHierarkiaKopiointiToiminto) {
+        SisaltoViite result = original.copy(false, tekstiHierarkiaKopiointiToiminto);
         result.setOwner(owner);
         List<SisaltoViite> lapset = original.getLapset();
 
         if (lapset != null) {
             for (SisaltoViite lapsi : lapset) {
-                SisaltoViite uusiLapsi = kopioiHierarkia(lapsi, owner, copyTekstikappalee);
+                SisaltoViite uusiLapsi = kopioiHierarkia(lapsi, owner, tekstiHierarkiaKopiointiToiminto);
                 if (uusiLapsi != null) {
                     uusiLapsi.setVanhempi(result);
                     result.getLapset().add(uusiLapsi);

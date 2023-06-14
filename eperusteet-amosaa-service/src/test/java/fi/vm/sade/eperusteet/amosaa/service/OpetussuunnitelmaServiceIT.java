@@ -512,7 +512,7 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
 
         useProfileKP2();
         OpetussuunnitelmaBaseDto yhteinen = createOpetussuunnitelma(ops -> {
-            ops.setPohja(Reference.of(pohja.getId()));
+            ops.setOpsId(pohja.getId());
             ops.setTyyppi(OpsTyyppi.YHTEINEN);
         });
 

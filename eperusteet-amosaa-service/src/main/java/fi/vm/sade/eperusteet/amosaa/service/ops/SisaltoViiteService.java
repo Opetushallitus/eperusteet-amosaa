@@ -77,7 +77,7 @@ public interface SisaltoViiteService extends LockService<SisaltoViiteCtx> {
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
     void reorderSubTree(@P("ktId") Long ktId, @P("opsId") Long opsId, Long rootViiteId, SisaltoViiteRakenneDto uusi);
 
-    SisaltoViite kopioiHierarkia(SisaltoViite original, Opetussuunnitelma owner, Map<SisaltoTyyppi, Set<String>> sisaltotyyppiIncludes, boolean copyTekstikappaleet);
+    SisaltoViite kopioiHierarkia(SisaltoViite original, Opetussuunnitelma owner, Map<SisaltoTyyppi, Set<String>> sisaltotyyppiIncludes, SisaltoViite.TekstiHierarkiaKopiointiToiminto kopiointiType);
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
     RevisionDto getLatestRevision(@P("ktId") Long ktId, @P("opsId") Long opsId, Long viiteId);
