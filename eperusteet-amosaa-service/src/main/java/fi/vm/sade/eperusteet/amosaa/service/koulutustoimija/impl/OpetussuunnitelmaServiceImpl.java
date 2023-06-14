@@ -1,19 +1,3 @@
-/*
- * Copyright (c) 2013 The Finnish Board of Education - Opetushallitus
- *
- * This program is free software: Licensed under the EUPL, Version 1.1 or - as
- * soon as they will be approved by the European Commission - subsequent versions
- * of the EUPL (the "Licence");
- *
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at: http://ec.europa.eu/idabc/eupl
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * European Union Public Licence for more details.
- */
-
 package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -62,7 +46,15 @@ import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaTilasto
 import fi.vm.sade.eperusteet.amosaa.dto.ops.VanhentunutPohjaperusteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHistoriaLiitosDto;
 import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioStatus;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.*;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.AbstractRakenneOsaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteBaseDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKaikkiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteenOsaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteenOsaViiteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.Suoritustapakoodi;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonosaExportDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonosaKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteExportDto;
@@ -108,6 +100,22 @@ import fi.vm.sade.eperusteet.amosaa.service.security.PermissionManager;
 import fi.vm.sade.eperusteet.amosaa.service.util.CollectionUtil;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
+import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -121,28 +129,12 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax.annotation.PostConstruct;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
-import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.domain.*;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-/**
- * @author nkala
- */
 @Service
 @Slf4j
 @Transactional
 public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     static private final Logger LOG = LoggerFactory.getLogger(OpetussuunnitelmaServiceImpl.class);
-
-    private ObjectMapper jsonMapper = InitJacksonConverter.createMapper();
 
     @Autowired
     private DtoMapper mapper;
@@ -215,9 +207,6 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     private OpetussuunnitelmaMuokkaustietoService muokkausTietoService;
 
     @Autowired
-    private OpetussuunnitelmaService self;
-
-    @Autowired
     private JulkaisuRepository julkaisuRepository;
 
     @Autowired
@@ -287,12 +276,12 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         Koulutustoimija koulutustoimija = koulutustoimijaRepository.findOne(ktId);
 
         List<KoulutusTyyppi> koulutustyyppi = query.getKoulutustyyppi();
-        if (koulutustyyppi == null && query.getTyyppi() != null && query.getTyyppi().equals(OpsTyyppi.YHTEINEN)) {
-            koulutustyyppi = Arrays.asList(KoulutusTyyppi.PERUSTUTKINTO);
+        if (koulutustyyppi == null && query.getTyyppi() != null && query.getTyyppi().contains(OpsTyyppi.YHTEINEN)) {
+            koulutustyyppi = List.of(KoulutusTyyppi.PERUSTUTKINTO);
         }
 
-        if (query != null && (koulutustyyppi == null || koulutustyyppi.stream().noneMatch(kt -> SecurityUtil.isUserOphAdmin(KoulutustyyppiRolePrefix.of(kt))))) {
-            query.setKoulutustoimijat(Arrays.asList(koulutustoimija.getId()));
+        if (koulutustyyppi == null || koulutustyyppi.stream().noneMatch(kt -> SecurityUtil.isUserOphAdmin(KoulutustyyppiRolePrefix.of(kt)))) {
+            query.setKoulutustoimijat(Collections.singletonList(koulutustoimija.getId()));
         }
 
         return repository.findBy(page, query)
