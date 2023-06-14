@@ -99,7 +99,7 @@ public class AmmatillinenOpetussuunnitelmaCreateService implements Opetussuunnit
             return null;
         }
 
-        SisaltoViite result = original.copy(false, true);
+        SisaltoViite result = original.copy(false, SisaltoViite.TekstiHierarkiaKopiointiToiminto.KOPIOI);
         result.setOwner(owner);
         List<SisaltoViite> lapset = original.getLapset();
 
@@ -127,7 +127,7 @@ public class AmmatillinenOpetussuunnitelmaCreateService implements Opetussuunnit
                 .findFirst().get();
 
         pohjastaKopioitavatPaikallisetTutkinnonOsat.forEach(kopioitavaPaikallinenTosa -> {
-            SisaltoViite result = kopioitavaPaikallinenTosa.copy(false, true);
+            SisaltoViite result = kopioitavaPaikallinenTosa.copy(false, SisaltoViite.TekstiHierarkiaKopiointiToiminto.KOPIOI);
             result.setVanhempi(tutkinnonosatViite);
             tutkinnonosatViite.getLapset().add(result);
             result.setOwner(opetussuunnitelma);

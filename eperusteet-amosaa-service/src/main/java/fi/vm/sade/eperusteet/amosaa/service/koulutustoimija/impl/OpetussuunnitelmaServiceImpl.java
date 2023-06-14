@@ -723,7 +723,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         Opetussuunnitelma ops;
 
         if (opsDto.getOpsId() != null) {
-            OpetussuunnitelmaBaseDto dispatchedOps = dispatcher.get(opsDto.getKoulutustyyppi(), OpetussuunnitelmaCreateService.class).create(kt, opsDto);
+            OpetussuunnitelmaBaseDto dispatchedOps = dispatcher.get(opsDto.getKoulutustyyppi(), opsDto.getTyyppi(), OpetussuunnitelmaCreateService.class).create(kt, opsDto);
             if (dispatchedOps != null) {
                 return dispatchedOps;
             }
@@ -754,7 +754,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                     sisaltoRoot,
                     ops,
                     Collections.singletonMap(SisaltoTyyppi.TUTKINNONOSA, opsDto.getTutkinnonOsaKoodiIncludes()),
-                    !pohja.getTyyppi().equals(OpsTyyppi.OPSPOHJA));
+                    pohja.getTyyppi().equals(OpsTyyppi.OPSPOHJA) ? SisaltoViite.TekstiHierarkiaKopiointiToiminto.POHJAVIITE : SisaltoViite.TekstiHierarkiaKopiointiToiminto.KOPIOI);
             tkvRepository.save(root);
         }
         else {
@@ -793,19 +793,6 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                         PerusteDto yleinen = eperusteetClient.getYleinenPohja();
                         setOpsCommon(ops, yleinen, rootTkv);
                         opsDto.setSuoritustapa("yleinen");
-                        break;
-                    case YHTEINEN:
-                        Opetussuunnitelma pohja = repository.findOne(opsDto.getPohja().getIdLong());
-                        if (pohja == null) {
-                            throw new BusinessRuleViolationException("pohjaa-ei-loytynyt");
-                        } else if (pohja.getTila() != Tila.JULKAISTU) {
-                            throw new BusinessRuleViolationException("vain-julkaistua-pohjaa-voi-kayttaa");
-                        }
-
-                        opsDto.setSuoritustapa("yhteinen");
-                        SisaltoViite pohjatkv = tkvRepository.findOneRoot(pohja);
-                        tkvRepository.save(tkvService.kopioiHierarkia(pohjatkv, ops, null, true));
-                        ops.setPohja(pohja);
                         break;
                     case POHJA:
                         throw new BusinessRuleViolationException("ainoastaan-oph-voi-tehda-pohjia");

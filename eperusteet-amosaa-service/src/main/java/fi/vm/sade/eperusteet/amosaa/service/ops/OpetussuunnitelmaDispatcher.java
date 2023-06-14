@@ -2,6 +2,7 @@ package fi.vm.sade.eperusteet.amosaa.service.ops;
 
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import java.util.HashMap;
@@ -25,21 +26,32 @@ public class OpetussuunnitelmaDispatcher {
     private List<OpetussuunnitelmaToteutus> kaikkiToteutukset;
 
     private HashMap<Class, OpetussuunnitelmaToteutus> defaults = new HashMap<>();
+    private Map<Class, HashMap<OpsTyyppi, OpetussuunnitelmaToteutus>> opsTyyppiMap = new HashMap<>();
     private Map<Class, HashMap<KoulutusTyyppi, OpetussuunnitelmaToteutus>> toteutuksetMap = new HashMap<>();
 
     @PostConstruct
     public void postConstruct() {
         for (OpetussuunnitelmaToteutus toteutus : kaikkiToteutukset) {
             Set<KoulutusTyyppi> toteutukset = toteutus.getTyypit();
+            Set<OpsTyyppi> opsTyypit = toteutus.getOpsTyypit();
             Class impl = toteutus.getImpl();
-            if (toteutukset.isEmpty()) {
+            if (opsTyypit.isEmpty() && toteutukset.isEmpty()) {
                 defaults.put(impl, toteutus);
-            } else {
+            } else if (!toteutukset.isEmpty()){
                 if (!toteutuksetMap.containsKey(impl)) {
                     toteutuksetMap.put(impl, new HashMap<>());
                 }
                 HashMap<KoulutusTyyppi, OpetussuunnitelmaToteutus> map = toteutuksetMap.get(impl);
                 toteutukset.forEach(t -> {
+                    map.put(t, toteutus);
+                });
+            }
+            else {
+                if (!opsTyyppiMap.containsKey(impl)) {
+                    opsTyyppiMap.put(impl, new HashMap<>());
+                }
+                HashMap<OpsTyyppi, OpetussuunnitelmaToteutus> map = opsTyyppiMap.get(impl);
+                opsTyypit.forEach(t -> {
                     map.put(t, toteutus);
                 });
             }
@@ -70,6 +82,21 @@ public class OpetussuunnitelmaDispatcher {
 
     @PreAuthorize("permitAll()")
     public <T extends OpetussuunnitelmaToteutus> T get(KoulutusTyyppi toteutus, Class<T> clazz) {
+        return get(toteutus, null, clazz);
+    }
+
+    @PreAuthorize("permitAll()")
+    public <T extends OpetussuunnitelmaToteutus> T get(KoulutusTyyppi toteutus, OpsTyyppi opsTyyppi, Class<T> clazz) {
+        if (opsTyyppi != null) {
+            HashMap<OpsTyyppi, OpetussuunnitelmaToteutus> toteutukset = this.opsTyyppiMap.getOrDefault(clazz, null);
+            if (toteutukset != null && toteutukset.containsKey(opsTyyppi)) {
+                OpetussuunnitelmaToteutus impl = toteutukset.getOrDefault(opsTyyppi, null);
+                if (impl != null) {
+                    return (T) impl;
+                }
+            }
+        }
+
         if (toteutus != null) {
             HashMap<KoulutusTyyppi, OpetussuunnitelmaToteutus> toteutukset = this.toteutuksetMap.getOrDefault(clazz, null);
             if (toteutukset != null && toteutukset.containsKey(toteutus)) {
