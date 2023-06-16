@@ -842,7 +842,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     public OpetussuunnitelmaKaikkiDto getOpetussuunnitelmaKaikki(Long ktId, Long opsId) {
         Opetussuunnitelma ops = repository.findOne(opsId);
         SisaltoViiteExportDto sisalto = tkvService.getSisaltoRoot(ktId, opsId, SisaltoViiteExportDto.class);
-        List<TutkinnonosaExportDto> tutkinnonOsat = tkvService.getTutkinnonOsaViitteet(ktId, opsId, TutkinnonosaExportDto.class);
+        List<SisaltoViiteExportDto> tutkinnonOsat = tkvService.getTutkinnonOsaViitteet(ktId, opsId, SisaltoViiteExportDto.class);
         OpetussuunnitelmaKaikkiDto result = mapper.map(ops, OpetussuunnitelmaKaikkiDto.class);
 
         CollectionUtil.treeToStream(sisalto.getLapset(), SisaltoViiteExportDto::getLapset)
