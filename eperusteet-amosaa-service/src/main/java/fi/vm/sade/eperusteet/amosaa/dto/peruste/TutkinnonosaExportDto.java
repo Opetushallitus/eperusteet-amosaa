@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.*;
 import lombok.*;
 
+@Deprecated
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
