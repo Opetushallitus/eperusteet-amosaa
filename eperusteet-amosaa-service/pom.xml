@@ -21,7 +21,7 @@
         <spring.batch.version>4.3.6</spring.batch.version>
         <logback.version>1.2.3</logback.version>
         <postgresql.version>42.5.1</postgresql.version>
-        <jackson.version>2.11.4</jackson.version>
+        <jackson.version>2.15.0</jackson.version>
         <jackson.databind.version>2.14.1</jackson.databind.version>
         <eperusteet-amosaa.devdb.jdbcurl>jdbc:postgresql://localhost:5432/${eperusteet-amosaa.devdb.user}</eperusteet-amosaa.devdb.jdbcurl>
         <eperusteet-amosaa.ittestdb.jdbcurl>jdbc:postgresql://localhost:5432/${eperusteet-amosaa.ittestdb.user}</eperusteet-amosaa.ittestdb.jdbcurl>
