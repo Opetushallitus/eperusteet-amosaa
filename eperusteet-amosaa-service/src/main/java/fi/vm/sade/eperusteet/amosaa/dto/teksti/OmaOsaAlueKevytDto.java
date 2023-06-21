@@ -1,4 +1,3 @@
-
 package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -7,9 +6,6 @@ import fi.vm.sade.eperusteet.amosaa.dto.KooditettuDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -21,6 +17,7 @@ public class OmaOsaAlueKevytDto implements KooditettuDto {
     private Long perusteenOsaAlueId;
     private String perusteenOsaAlueKoodi;
     private boolean piilotettu;
+    private String koodi;
 
     @Override
     public void setKooditettu(LokalisoituTekstiDto kooditettu) {

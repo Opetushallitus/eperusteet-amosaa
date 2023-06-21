@@ -1,4 +1,3 @@
-
 package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -23,6 +22,7 @@ public class OmaOsaAlueDto implements KooditettuDto {
     private PaikallisetAmmattitaitovaatimukset2019Dto osaamistavoitteet = new PaikallisetAmmattitaitovaatimukset2019Dto();
     private Long geneerinenarviointi;
     private Integer laajuus;
+    private String koodi;
 
     @Override
     public void setKooditettu(LokalisoituTekstiDto kooditettu) {
