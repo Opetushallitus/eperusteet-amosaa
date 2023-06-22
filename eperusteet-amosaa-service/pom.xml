@@ -900,14 +900,15 @@
                                         <scheme>http</scheme>
                                         <scheme>https</scheme>
                                     </schemes>
-                                    <basePath>/api</basePath>
+                                    <basePath>https://eperusteet.opintopolku.fi/eperusteet-amosaa-service/api</basePath>
                                     <locations>
                                         <location>${eperusteet.amosaa.resources}.julkinen.ExternalController</location>
                                     </locations>
                                     <modelSubstitute>/substitutes.map</modelSubstitute>
                                     <info>
                                         <title>ePerusteet amosaa api</title>
-                                        <version>v1</version>
+                                        <version>1</version>
+                                        <description></description>
                                     </info>
                                     <swaggerFileName>amosaa-ext.spec</swaggerFileName>
                                     <swaggerDirectory>target/openapi</swaggerDirectory>
