@@ -314,6 +314,12 @@
            timeToLiveSeconds="3600"
            overflowToDisk="false" />
 
+    <cache name="perusteKaikki"
+           maxElementsInMemory="50"
+           eternal="false"
+           timeToLiveSeconds="3600"
+           overflowToDisk="false" />
+
     <cache name="koodistohaku"
          maxElementsInMemory="100"
          eternal="false"

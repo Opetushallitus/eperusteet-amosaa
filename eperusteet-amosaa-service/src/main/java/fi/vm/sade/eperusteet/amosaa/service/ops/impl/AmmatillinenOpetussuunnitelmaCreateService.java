@@ -27,6 +27,7 @@ import fi.vm.sade.eperusteet.amosaa.service.ops.OpetussuunnitelmaCreateService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.util.CollectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,6 +60,9 @@ public class AmmatillinenOpetussuunnitelmaCreateService implements Opetussuunnit
 
     @Autowired
     private OpetussuunnitelmaService opetussuunnitelmaService;
+
+    @Autowired
+    private CacheManager cacheManager;
 
     @Override
     public Set<KoulutusTyyppi> getTyypit() {
@@ -136,6 +140,7 @@ public class AmmatillinenOpetussuunnitelmaCreateService implements Opetussuunnit
     }
 
     private void asetaPerusteenTutkinnonosatiedotPohjasta(Opetussuunnitelma pohja, Opetussuunnitelma opetussuunnitelma) {
+        cacheManager.getCache("perusteKaikki").evictIfPresent(opetussuunnitelma.getPeruste().getId());
         PerusteKaikkiDto perusteKaikkiDto = eperusteetService.getPerusteKaikki(opetussuunnitelma.getPeruste().getId());
         List<String> perusteenTosaKoodit = perusteKaikkiDto.getTutkinnonOsat().stream()
                 .map(TutkinnonosaKaikkiDto::getKoodiUri)
