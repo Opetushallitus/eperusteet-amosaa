@@ -10,7 +10,6 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.helper.W3CDom;
 import org.jsoup.parser.Parser;
-import org.jsoup.select.Elements;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -61,7 +60,7 @@ public class DokumenttiUtils {
     public static void addTeksti(DokumenttiBase docBase, String teksti, String tagi, Element element) {
         if (teksti != null) {
 
-            teksti = unescapeHtml5(teksti);
+            teksti = cleanHtml(teksti);
             teksti = "<" + tagi + ">" + teksti + "</" + tagi + ">";
 
             Document tempDoc = new W3CDom().fromJsoup(Jsoup.parseBodyFragment(teksti));
@@ -75,7 +74,7 @@ public class DokumenttiUtils {
         if (text != null) {
             Element header = docBase.getDocument().createElement("h" + docBase.getGenerator().getDepth());
             header.setAttribute("number", docBase.getGenerator().generateNumber());
-            header.appendChild(docBase.getDocument().createTextNode(unescapeHtml5(text)));
+            header.appendChild(docBase.getDocument().createTextNode(cleanHtml(text)));
             docBase.getBodyElement().appendChild(header);
         }
     }
@@ -90,13 +89,8 @@ public class DokumenttiUtils {
                 || lokalisoituTeksti.getTeksti().get(docBase.getKieli()) == null) {
             return "";
         } else {
-            return unescapeHtml5(lokalisoituTeksti.getTeksti().get(docBase.getKieli()));
+            return cleanHtml(lokalisoituTeksti.getTeksti().get(docBase.getKieli()));
         }
-    }
-
-    public static String cleanHtml(String unclean) {
-        unclean = removeInternalLink(unclean);
-        return unescapeHtml5(unclean);
     }
 
     private static String removeInternalLink(String text) {
@@ -106,7 +100,11 @@ public class DokumenttiUtils {
     }
 
 
-    public static String unescapeHtml5(String string) {
+    public static String cleanHtml(String string) {
+        if (string == null) {
+            return "";
+        }
+        string = removeInternalLink(string);
         return StringEscapeUtils.unescapeHtml4(Jsoup.clean(stripNonValidXMLCharacters(string), ValidHtml.WhitelistType.NORMAL_PDF.getWhitelist()));
     }
 
