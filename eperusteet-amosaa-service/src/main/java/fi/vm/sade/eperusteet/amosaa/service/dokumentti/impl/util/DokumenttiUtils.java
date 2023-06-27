@@ -96,7 +96,7 @@ public class DokumenttiUtils {
 
     public static String cleanHtml(String unclean) {
         unclean = removeInternalLink(unclean);
-        return StringEscapeUtils.unescapeHtml4(Jsoup.clean(stripNonValidXMLCharacters(unclean), ValidHtml.WhitelistType.NORMAL_PDF.getWhitelist()));
+        return unescapeHtml5(unclean);
     }
 
     private static String removeInternalLink(String text) {
