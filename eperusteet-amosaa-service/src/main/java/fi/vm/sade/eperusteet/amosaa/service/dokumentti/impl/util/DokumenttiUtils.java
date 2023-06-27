@@ -9,6 +9,8 @@ import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import org.apache.commons.lang3.time.DateUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.helper.W3CDom;
+import org.jsoup.parser.Parser;
+import org.jsoup.select.Elements;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -39,7 +41,7 @@ public class DokumenttiUtils {
     public static void addLokalisoituteksti(DokumenttiBase docBase, LokalisoituTeksti lTeksti, String tagi, Element el) {
         if (lTeksti != null && lTeksti.getTeksti() != null && lTeksti.getTeksti().get(docBase.getKieli()) != null) {
             String teksti = lTeksti.getTeksti().get(docBase.getKieli());
-            teksti = "<" + tagi + ">" + unescapeHtml5(teksti) + "</" + tagi + ">";
+            teksti = "<" + tagi + ">" + cleanHtml(teksti) + "</" + tagi + ">";
 
             Document tempDoc = new W3CDom().fromJsoup(Jsoup.parseBodyFragment(teksti));
             Node node = tempDoc.getDocumentElement().getChildNodes().item(1).getFirstChild();
@@ -91,6 +93,18 @@ public class DokumenttiUtils {
             return unescapeHtml5(lokalisoituTeksti.getTeksti().get(docBase.getKieli()));
         }
     }
+
+    public static String cleanHtml(String unclean) {
+        unclean = removeInternalLink(unclean);
+        return StringEscapeUtils.unescapeHtml4(Jsoup.clean(stripNonValidXMLCharacters(unclean), ValidHtml.WhitelistType.NORMAL_PDF.getWhitelist()));
+    }
+
+    private static String removeInternalLink(String text) {
+        org.jsoup.nodes.Document stringRoutenodeCleaned = Jsoup.parse(text, "", Parser.xmlParser());
+        stringRoutenodeCleaned.select("a[routenode]").forEach(org.jsoup.nodes.Node::unwrap);
+        return stringRoutenodeCleaned.toString();
+    }
+
 
     public static String unescapeHtml5(String string) {
         return StringEscapeUtils.unescapeHtml4(Jsoup.clean(stripNonValidXMLCharacters(string), ValidHtml.WhitelistType.NORMAL_PDF.getWhitelist()));
