@@ -61,12 +61,17 @@ public class OpetussuunnitelmaPerustePaivitysServiceIT extends AbstractIntegrati
         assertThat(opetussuunnitelma.getSisaltoviitteet().get(0).getLapset().get(0).getLapset().get(0).getLapset()).hasSize(1);
         assertThat(opetussuunnitelma.getSisaltoviitteet().get(0).getLapset().get(0).getLapset().get(0).getLapset().get(0).getLapset()).hasSize(0);
         assertThat(opetussuunnitelma.getSisaltoviitteet().get(0).getLapset().get(1).getLapset()).hasSize(0);
+        assertThat(opetussuunnitelma.getSisaltoviitteet().get(0).getLapset().get(0).getTekstiKappale().getNimi().getTeksti().get(Kieli.FI)).isEqualTo("tk1");
+        assertThat(opetussuunnitelma.getSisaltoviitteet().get(0).getLapset().get(1).getTekstiKappale().getNimi().getTeksti().get(Kieli.FI)).isEqualTo("Opiskelu- ja urasuunnittelutaidot");
 
         testSisaltoMaara(opetussuunnitelma, SisaltoTyyppi.TEKSTIKAPPALE, 3, true);
         testSisaltoMaara(opetussuunnitelma, SisaltoTyyppi.OPINTOKOKONAISUUS, 1, true);
 
         createOpintokokonaisuus(vstOps.getId(), opetussuunnitelma.getSisaltoviitteet().get(0).getLapset().get(0).getLapset().get(0).getLapset().get(0).getId(), "oma1");
         createOpintokokonaisuus(vstOps.getId(), opetussuunnitelma.getSisaltoviitteet().get(0).getLapset().get(0).getLapset().get(0).getId(), "oma2");
+
+        assertThat(opetussuunnitelma.getSisaltoviitteet().get(0).getLapset().get(0).getTekstiKappale().getNimi().getTeksti().get(Kieli.FI)).isEqualTo("tk1");
+        assertThat(opetussuunnitelma.getSisaltoviitteet().get(0).getLapset().get(1).getTekstiKappale().getNimi().getTeksti().get(Kieli.FI)).isEqualTo("Opiskelu- ja urasuunnittelutaidot");
 
         paivitaOpsCachedPeruste(opetussuunnitelma);
         opetussuunnitelmaService.paivitaPeruste(getKoulutustoimijaId(), opetussuunnitelma.getId());
@@ -78,6 +83,7 @@ public class OpetussuunnitelmaPerustePaivitysServiceIT extends AbstractIntegrati
 
         assertThat(opetussuunnitelma.getSisaltoviitteet().get(0).getLapset().get(0).getTekstiKappale().getNimi().getTeksti().get(Kieli.FI)).isEqualTo("tk1");
         assertThat(opetussuunnitelma.getSisaltoviitteet().get(0).getLapset().get(1).getTekstiKappale().getNimi().getTeksti().get(Kieli.FI)).isEqualTo("tk2");
+        assertThat(opetussuunnitelma.getSisaltoviitteet().get(0).getLapset().get(2).getTekstiKappale().getNimi().getTeksti().get(Kieli.FI)).isEqualTo("Opiskelu- ja urasuunnittelutaidot");
 
         assertThat(opetussuunnitelma.getSisaltoviitteet().get(0).getLapset().get(0).getPerusteenOsaId()).isNotNull();
         assertThat(opetussuunnitelma.getSisaltoviitteet().get(0).getLapset().get(0).getLapset()).hasSize(2);
