@@ -6,6 +6,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiTila;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Julkaisu;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
+import fi.vm.sade.eperusteet.amosaa.dto.YllapitoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.amosaa.repository.dokumentti.DokumenttiRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.JulkaisuRepository;
@@ -226,5 +227,13 @@ public class DokumenttiServiceImpl implements DokumenttiService {
             return dokumentti.getData();
         }
         return null;
+    }
+
+    public String getYllapitoValueByKey(String key) {
+        return eperusteetService.getYllapitoAsetukset().stream()
+                .filter(yp -> key.equals(yp.getKey()))
+                .findFirst()
+                .map(YllapitoDto::getValue)
+                .orElse(null);
     }
 }
