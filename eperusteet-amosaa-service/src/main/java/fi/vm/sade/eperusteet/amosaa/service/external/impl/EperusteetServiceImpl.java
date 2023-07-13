@@ -1,18 +1,3 @@
-/*
- * Copyright (c) 2013 The Finnish Board of Education - Opetushallitus
- *
- * This program is free software: Licensed under the EUPL, Version 1.1 or - as
- * soon as they will be approved by the European Commission - subsequent versions
- * of the EUPL (the "Licence");
- *
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at: http://ec.europa.eu/idabc/eupl
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * European Union Public Licence for more details.
- */
 package fi.vm.sade.eperusteet.amosaa.service.external.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -25,6 +10,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.Koulutuskoodi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
+import fi.vm.sade.eperusteet.amosaa.dto.YllapitoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.SuorituspolkuRiviDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.*;
@@ -69,9 +55,6 @@ import org.springframework.web.client.RestTemplate;
 
 import static java.util.Collections.singletonList;
 
-/**
- * @author nkala
- */
 @Service
 @Transactional(readOnly = true)
 public class EperusteetServiceImpl implements EperusteetService {
@@ -96,7 +79,7 @@ public class EperusteetServiceImpl implements EperusteetService {
 
     @Autowired
     private SisaltoViiteService sisaltoViiteService;
-    
+
     @Autowired
     private OpetussuunnitelmaService opetussuunnitelmaService;
 
@@ -294,6 +277,26 @@ public class EperusteetServiceImpl implements EperusteetService {
         String url = eperusteetServiceUrl + "/api/geneerinenarviointi/julkaistu";
         JsonNode result = client.exchange(url, HttpMethod.GET, httpEntity, JsonNode.class).getBody();
         return result;
+    }
+
+    @Override
+    @Cacheable("yllapito")
+    public List<YllapitoDto> getYllapitoAsetukset() {
+        try {
+            YllapitoDto[] yllapito = client.getForObject(eperusteetServiceUrl + "/api/maintenance/yllapito/", YllapitoDto[].class);
+            return yllapito != null ? Arrays.asList(yllapito) : null;
+        } catch (Exception e) {
+            throw new BusinessRuleViolationException("yllapitoasetuksia-ei-saatu-haettu-eperusteista");
+        }
+    }
+
+    @Override
+    public String getYllapitoValueByKey(String key) {
+        return getYllapitoAsetukset().stream()
+                .filter(yp -> key.equals(yp.getKey()))
+                .findFirst()
+                .map(YllapitoDto::getValue)
+                .orElse(null);
     }
 
     @Override
