@@ -6,6 +6,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiTila;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Julkaisu;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
+import fi.vm.sade.eperusteet.amosaa.dto.YllapitoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.amosaa.repository.dokumentti.DokumenttiRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.JulkaisuRepository;
@@ -31,7 +32,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Profile;
-import org.springframework.http.HttpEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -194,10 +194,22 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     @Async(value = "docTaskExecutor")
     public void generateWithDto(Long ktId, @NotNull Long opsId, DokumenttiDto dto) throws DokumenttiException {
         dto.setTila(DokumenttiTila.LUODAAN);
-        dokumenttiStateService.save(dto);
+        Dokumentti dokumentti = dokumenttiStateService.save(dto);
 
         try {
-            externalPdfService.generatePdf(dto, ktId);
+            boolean isPdfServiceUsed = Boolean.parseBoolean(getYllapitoValueByKey("use-pdf-service-amosaa"));
+            if (isPdfServiceUsed) {
+                externalPdfService.generatePdf(dto, ktId);
+            } else {
+                Opetussuunnitelma ops = opsRepository.findOne(dokumentti.getOpsId());
+                dokumentti.setTila(DokumenttiTila.VALMIS);
+                dokumentti.setValmistumisaika(new Date());
+                dokumentti.setVirhekoodi("");
+                dokumentti.setEdistyminen(DokumenttiEdistyminen.TUNTEMATON);
+                dokumentti.setData(builderService.generatePdf(ops, dokumentti, dokumentti.getKieli()));
+
+                dokumenttiRepository.save(dokumentti);
+            }
         } catch (Exception ex) {
             log.error(ex.getMessage());
             dto.setTila(DokumenttiTila.EPAONNISTUI);
@@ -244,5 +256,13 @@ public class DokumenttiServiceImpl implements DokumenttiService {
         Dokumentti dokumentti = dokumenttiRepository.findById(dokumenttiId);
         dokumentti.setTila(tila);
         dokumenttiRepository.save(dokumentti);
+    }
+
+    public String getYllapitoValueByKey(String key) {
+        return eperusteetService.getYllapitoAsetukset().stream()
+                .filter(yp -> key.equals(yp.getKey()))
+                .findFirst()
+                .map(YllapitoDto::getValue)
+                .orElse(null);
     }
 }

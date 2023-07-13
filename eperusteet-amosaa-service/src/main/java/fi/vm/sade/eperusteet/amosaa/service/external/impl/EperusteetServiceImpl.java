@@ -291,15 +291,6 @@ public class EperusteetServiceImpl implements EperusteetService {
     }
 
     @Override
-    public String getYllapitoValueByKey(String key) {
-        return getYllapitoAsetukset().stream()
-                .filter(yp -> key.equals(yp.getKey()))
-                .findFirst()
-                .map(YllapitoDto::getValue)
-                .orElse(null);
-    }
-
-    @Override
     @Cacheable("geneerinenarviointi")
     public GeneerinenArviointiasteikkoKaikkiDto getGeneerinen(Long id) {
         String url = eperusteetServiceUrl + "/api/geneerinenarviointi/"+id+"/kaikki";

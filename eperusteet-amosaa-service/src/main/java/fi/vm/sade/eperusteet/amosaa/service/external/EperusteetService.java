@@ -59,8 +59,6 @@ public interface EperusteetService {
 
     List<YllapitoDto> getYllapitoAsetukset();
 
-    String getYllapitoValueByKey(String key);
-
     GeneerinenArviointiasteikkoKaikkiDto getGeneerinen(Long id);
 
     JsonNode getTiedotteetHaku(TiedoteQueryDto queryDto);
