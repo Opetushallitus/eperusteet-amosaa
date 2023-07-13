@@ -1,6 +1,5 @@
 package fi.vm.sade.eperusteet.amosaa.service.ops.impl;
 
-import fi.vm.sade.eperusteet.amosaa.domain.MuokkausTapahtuma;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
@@ -79,22 +78,24 @@ public class OpetussuunnitelmaSisaltoCreateServiceImpl implements Opetussuunnite
     }
 
     @Override
-    public void paivitaOpetussuunnitelmaPerusteenSisallolla(Opetussuunnitelma opetussuunnitelma, SisaltoViite parentViite, PerusteenOsaViiteDto.Laaja sisalto, PerusteenOsaViiteDto.Laaja parent) {
+    public void paivitaOpetussuunnitelmaPerusteenSisallolla(Opetussuunnitelma opetussuunnitelma, SisaltoViite parentViite, PerusteenOsaViiteDto.Laaja perusteenOsaViite, PerusteenOsaViiteDto.Laaja perusteenOsaViiteParent) {
         Map<Long, SisaltoViite> svPerusteelta = CollectionUtil.treeToStream(opetussuunnitelma.getSisaltoviitteet(), SisaltoViite::getLapset)
                 .filter(sv -> sv.getPerusteenOsaId() != null)
                 .collect(Collectors.toMap(SisaltoViite::getPerusteenOsaId, sv -> sv));
 
-        SisaltoViite sisaltoviite = svPerusteelta.get(sisalto.getPerusteenOsa().getId());
+        SisaltoViite sisaltoviite = svPerusteelta.get(perusteenOsaViite.getPerusteenOsa().getId());
 
         if (sisaltoviite == null) {
-            sisaltoviite = alustaSisaltoviite(parentViite, sisalto);
+            sisaltoviite = alustaSisaltoviite(parentViite, perusteenOsaViite);
 
-            parentViite.getLapset().remove(sisaltoviite);
-            parentViite.getLapset().add(parent.getLapset().indexOf(sisalto), sisaltoviite);
+            if (parentViite.getLapset().size() >= perusteenOsaViiteParent.getLapset().indexOf(perusteenOsaViite) + 1) {
+                parentViite.getLapset().remove(sisaltoviite);
+                parentViite.getLapset().add(perusteenOsaViiteParent.getLapset().indexOf(perusteenOsaViite), sisaltoviite);
+            }
         }
 
-        for (PerusteenOsaViiteDto.Laaja lapsi : sisalto.getLapset()) {
-            paivitaOpetussuunnitelmaPerusteenSisallolla(opetussuunnitelma, sisaltoviite, lapsi, sisalto);
+        for (PerusteenOsaViiteDto.Laaja lapsi : perusteenOsaViite.getLapset()) {
+            paivitaOpetussuunnitelmaPerusteenSisallolla(opetussuunnitelma, sisaltoviite, lapsi, perusteenOsaViite);
         }
     }
 

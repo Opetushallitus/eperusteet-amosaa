@@ -3,6 +3,7 @@ package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.*;
 
+@Deprecated
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor

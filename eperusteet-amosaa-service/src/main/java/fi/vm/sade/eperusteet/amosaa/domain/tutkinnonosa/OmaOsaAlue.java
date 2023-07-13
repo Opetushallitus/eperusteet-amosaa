@@ -4,11 +4,9 @@ import fi.vm.sade.eperusteet.amosaa.domain.AbstractAuditedEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.Kooditettu;
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
-import fi.vm.sade.eperusteet.amosaa.domain.teksti.VapaaTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.BatchSize;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 import org.springframework.util.CollectionUtils;
@@ -16,7 +14,6 @@ import org.springframework.util.ObjectUtils;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -59,6 +56,8 @@ public class OmaOsaAlue extends AbstractAuditedEntity implements Serializable, R
     @OrderColumn(name = "jnro")
     private List<OmaOsaAlueToteutus> toteutukset = new ArrayList<>();
 
+    private String koodi;
+
     @Override
     public String getUri() {
         return perusteenOsaAlueKoodi;
@@ -70,6 +69,8 @@ public class OmaOsaAlue extends AbstractAuditedEntity implements Serializable, R
         result.setPiilotettu(isPiilotettu());
         result.setTyyppi(getTyyppi());
         result.setLaajuus(getLaajuus());
+        result.setKoodi(getKoodi());
+
         if (osaamistavoitteet != null) {
             result.setOsaamistavoitteet(new Ammattitaitovaatimukset2019(osaamistavoitteet));
         }

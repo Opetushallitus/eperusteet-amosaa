@@ -14,10 +14,12 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
+import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.JulkaisuBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaKaikkiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteRakenneDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.JulkaistuOpetussuunnitelmaTilaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.JulkaisuDataRepository;
@@ -40,6 +42,7 @@ import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.json.JSONException;
+import org.jsoup.Jsoup;
 import org.skyscreamer.jsonassert.JSONCompare;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -152,7 +155,11 @@ public class JulkaisuServiceImpl implements JulkaisuService {
         List<Julkaisu> vanhatJulkaisut = julkaisuRepository.findAllByOpetussuunnitelma(opetussuunnitelma);
 
         if (vanhatJulkaisut.size() > 0 && !onkoMuutoksia(ktId, opsId)) {
-            throw new BusinessRuleViolationException("ei-muuttunut-viime-julkaisun-jalkeen");
+            throw new BusinessRuleViolationException("julkaisu-epaonnistui-opetussuunnitelma-ei-muuttunut-viime-julkaisun-jalkeen");
+        }
+
+        if (!isValidTiedote(julkaisuBaseDto.getTiedote())) {
+            throw new BusinessRuleViolationException("tiedote-sisaltaa-kiellettyja-merkkeja");
         }
 
         JulkaistuOpetussuunnitelmaTila julkaistuOpetussuunnitelmaTila = getOrCreateTila(opsId);
@@ -329,4 +336,13 @@ public class JulkaisuServiceImpl implements JulkaisuService {
                 .forEach(lapsi -> kooditaSisaltoviite(lapsi));
     }
 
+    private boolean isValidTiedote(LokalisoituTekstiDto tiedote) {
+        Set<Kieli> kielet = new HashSet<>(Arrays.asList(Kieli.FI, Kieli.SV, Kieli.EN));
+        for (Kieli kieli : kielet) {
+            if (tiedote.get(kieli) != null && !Jsoup.isValid(tiedote.get(kieli), ValidHtml.WhitelistType.SIMPLIFIED.getWhitelist())) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

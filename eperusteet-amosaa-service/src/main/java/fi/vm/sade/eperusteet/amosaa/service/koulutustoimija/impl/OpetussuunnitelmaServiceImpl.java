@@ -1,19 +1,3 @@
-/*
- * Copyright (c) 2013 The Finnish Board of Education - Opetushallitus
- *
- * This program is free software: Licensed under the EUPL, Version 1.1 or - as
- * soon as they will be approved by the European Commission - subsequent versions
- * of the EUPL (the "Licence");
- *
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at: http://ec.europa.eu/idabc/eupl
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * European Union Public Licence for more details.
- */
-
 package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -23,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Sets;
+import fi.vm.sade.eperusteet.amosaa.domain.HistoriaTapahtuma;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutustyyppiToteutus;
 import fi.vm.sade.eperusteet.amosaa.domain.MuokkausTapahtuma;
@@ -62,7 +47,15 @@ import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaTilasto
 import fi.vm.sade.eperusteet.amosaa.dto.ops.VanhentunutPohjaperusteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHistoriaLiitosDto;
 import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioStatus;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.*;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.AbstractRakenneOsaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteBaseDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKaikkiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteenOsaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteenOsaViiteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.Suoritustapakoodi;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonosaExportDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonosaKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteExportDto;
@@ -109,6 +102,22 @@ import fi.vm.sade.eperusteet.amosaa.service.security.PermissionManager;
 import fi.vm.sade.eperusteet.amosaa.service.util.CollectionUtil;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
+import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -122,28 +131,12 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax.annotation.PostConstruct;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
-import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.domain.*;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-/**
- * @author nkala
- */
 @Service
 @Slf4j
 @Transactional
 public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     static private final Logger LOG = LoggerFactory.getLogger(OpetussuunnitelmaServiceImpl.class);
-
-    private ObjectMapper jsonMapper = InitJacksonConverter.createMapper();
 
     @Autowired
     private DtoMapper mapper;
@@ -216,9 +209,6 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     private OpetussuunnitelmaMuokkaustietoService muokkausTietoService;
 
     @Autowired
-    private OpetussuunnitelmaService self;
-
-    @Autowired
     private JulkaisuRepository julkaisuRepository;
 
     @Autowired
@@ -288,12 +278,12 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         Koulutustoimija koulutustoimija = koulutustoimijaRepository.findOne(ktId);
 
         List<KoulutusTyyppi> koulutustyyppi = query.getKoulutustyyppi();
-        if (koulutustyyppi == null && query.getTyyppi() != null && query.getTyyppi().equals(OpsTyyppi.YHTEINEN)) {
-            koulutustyyppi = Arrays.asList(KoulutusTyyppi.PERUSTUTKINTO);
+        if (koulutustyyppi == null && query.getTyyppi() != null && query.getTyyppi().contains(OpsTyyppi.YHTEINEN)) {
+            koulutustyyppi = List.of(KoulutusTyyppi.PERUSTUTKINTO);
         }
 
-        if (query != null && (koulutustyyppi == null || koulutustyyppi.stream().noneMatch(kt -> SecurityUtil.isUserOphAdmin(KoulutustyyppiRolePrefix.of(kt))))) {
-            query.setKoulutustoimijat(Arrays.asList(koulutustoimija.getId()));
+        if (koulutustyyppi == null || koulutustyyppi.stream().noneMatch(kt -> SecurityUtil.isUserOphAdmin(KoulutustyyppiRolePrefix.of(kt)))) {
+            query.setKoulutustoimijat(Collections.singletonList(koulutustoimija.getId()));
         }
 
         return repository.findBy(page, query)
@@ -735,7 +725,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         Opetussuunnitelma ops;
 
         if (opsDto.getOpsId() != null) {
-            OpetussuunnitelmaBaseDto dispatchedOps = dispatcher.get(opsDto.getKoulutustyyppi(), OpetussuunnitelmaCreateService.class).create(kt, opsDto);
+            OpetussuunnitelmaBaseDto dispatchedOps = dispatcher.get(opsDto.getKoulutustyyppi(), opsDto.getTyyppi(), OpetussuunnitelmaCreateService.class).create(kt, opsDto);
             if (dispatchedOps != null) {
                 return dispatchedOps;
             }
@@ -766,7 +756,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                     sisaltoRoot,
                     ops,
                     Collections.singletonMap(SisaltoTyyppi.TUTKINNONOSA, opsDto.getTutkinnonOsaKoodiIncludes()),
-                    !pohja.getTyyppi().equals(OpsTyyppi.OPSPOHJA));
+                    pohja.getTyyppi().equals(OpsTyyppi.OPSPOHJA) ? SisaltoViite.TekstiHierarkiaKopiointiToiminto.POHJAVIITE : SisaltoViite.TekstiHierarkiaKopiointiToiminto.KOPIOI);
             tkvRepository.save(root);
         }
         else {
@@ -805,19 +795,6 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                         PerusteDto yleinen = eperusteetClient.getYleinenPohja();
                         setOpsCommon(ops, yleinen, rootTkv);
                         opsDto.setSuoritustapa("yleinen");
-                        break;
-                    case YHTEINEN:
-                        Opetussuunnitelma pohja = repository.findOne(opsDto.getPohja().getIdLong());
-                        if (pohja == null) {
-                            throw new BusinessRuleViolationException("pohjaa-ei-loytynyt");
-                        } else if (pohja.getTila() != Tila.JULKAISTU) {
-                            throw new BusinessRuleViolationException("vain-julkaistua-pohjaa-voi-kayttaa");
-                        }
-
-                        opsDto.setSuoritustapa("yhteinen");
-                        SisaltoViite pohjatkv = tkvRepository.findOneRoot(pohja);
-                        tkvRepository.save(tkvService.kopioiHierarkia(pohjatkv, ops, null, true));
-                        ops.setPohja(pohja);
                         break;
                     case POHJA:
                         throw new BusinessRuleViolationException("ainoastaan-oph-voi-tehda-pohjia");
@@ -867,7 +844,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     public OpetussuunnitelmaKaikkiDto getOpetussuunnitelmaKaikki(Long ktId, Long opsId) {
         Opetussuunnitelma ops = repository.findOne(opsId);
         SisaltoViiteExportDto sisalto = tkvService.getSisaltoRoot(ktId, opsId, SisaltoViiteExportDto.class);
-        List<TutkinnonosaViiteExportDto> tutkinnonOsat = tkvService.getTutkinnonOsaViitteet(ktId, opsId, TutkinnonosaViiteExportDto.class);
+        List<SisaltoViiteExportDto> tutkinnonOsat = tkvService.getTutkinnonOsaViitteet(ktId, opsId, SisaltoViiteExportDto.class);
         OpetussuunnitelmaKaikkiDto result = mapper.map(ops, OpetussuunnitelmaKaikkiDto.class);
 
         CollectionUtil.treeToStream(sisalto.getLapset(), SisaltoViiteExportDto::getLapset)

@@ -456,6 +456,7 @@ public class EperusteetServiceImpl implements EperusteetService {
     }
 
     @Override
+    @Cacheable("perusteKaikki")
     public PerusteKaikkiDto getPerusteKaikki(Long perusteCacheId) {
         try {
             CachedPeruste cperuste = getMostRecentCachedPerusteByPerusteId(perusteCacheId);
