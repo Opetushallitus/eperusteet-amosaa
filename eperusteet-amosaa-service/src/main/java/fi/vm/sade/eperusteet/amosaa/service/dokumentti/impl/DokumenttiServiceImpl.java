@@ -16,6 +16,7 @@ import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiStateService;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.ExternalPdfService;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils;
 import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
+import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 
@@ -60,6 +61,9 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 
     @Autowired
     private JulkaisuRepository julkaisuRepository;
+
+    @Autowired
+    private EperusteetService eperusteetService;
 
     @Lazy
     @Autowired
