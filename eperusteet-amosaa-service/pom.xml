@@ -451,7 +451,7 @@
         <dependency>
             <groupId>org.jasig.cas.client</groupId>
             <artifactId>cas-client-support-distributed-ehcache</artifactId>
-            <version>3.4.1</version>
+            <version>3.6.4</version>
             <exclusions>
                 <exclusion>
                     <groupId>net.sf.ehcache</groupId>
@@ -908,7 +908,7 @@
                                     <info>
                                         <title>ePerusteet amosaa api</title>
                                         <version>1</version>
-                                        <description></description>
+                                        <description/>
                                     </info>
                                     <swaggerFileName>amosaa-ext.spec</swaggerFileName>
                                     <swaggerDirectory>target/openapi</swaggerDirectory>
