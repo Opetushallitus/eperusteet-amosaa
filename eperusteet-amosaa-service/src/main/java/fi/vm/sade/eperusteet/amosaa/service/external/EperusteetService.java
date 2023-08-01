@@ -2,11 +2,17 @@ package fi.vm.sade.eperusteet.amosaa.service.external;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
-import fi.vm.sade.eperusteet.amosaa.dto.YllapitoDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.*;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteBaseDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteBaseDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKaikkiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteenOsaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliTunnisteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.SuoritustapaLaajaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.TiedoteQueryDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonOsaSuoritustapaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.geneerinenarviointiasteikko.GeneerinenArviointiasteikkoKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
-
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
@@ -57,7 +63,7 @@ public interface EperusteetService {
 
     JsonNode getGeneeriset();
 
-    List<YllapitoDto> getYllapitoAsetukset();
+    String getYllapitoAsetus(String key);
 
     GeneerinenArviointiasteikkoKaikkiDto getGeneerinen(Long id);
 

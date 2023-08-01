@@ -10,10 +10,21 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.Koulutuskoodi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
-import fi.vm.sade.eperusteet.amosaa.dto.YllapitoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.SuorituspolkuRiviDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.*;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.AbstractRakenneOsaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteBaseDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.KoulutusDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteBaseDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKaikkiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteenOsaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteenOsaViiteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliTunnisteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.SuoritustapaLaajaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.TiedoteQueryDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonOsaSuoritustapaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.geneerinenarviointiasteikko.GeneerinenArviointiasteikkoKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
@@ -22,22 +33,13 @@ import fi.vm.sade.eperusteet.amosaa.repository.peruste.KoulutuskoodiRepository;
 import fi.vm.sade.eperusteet.amosaa.resource.config.AbstractRakenneOsaDeserializer;
 import fi.vm.sade.eperusteet.amosaa.resource.config.MappingModule;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
+import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetClient;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
-import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetClient;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.peruste.PerusteCacheService;
-
 import fi.vm.sade.eperusteet.amosaa.service.util.CollectionUtil;
-import java.io.IOException;
-import java.util.*;
-import java.util.function.Function;
-import java.util.logging.Level;
-import java.util.stream.Collectors;
-
-import javax.annotation.PostConstruct;
-
 import fi.vm.sade.eperusteet.amosaa.service.util.JsonMapper;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
@@ -52,6 +54,23 @@ import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
+
+import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
+import java.util.UUID;
+import java.util.function.Function;
+import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
 
@@ -280,11 +299,9 @@ public class EperusteetServiceImpl implements EperusteetService {
     }
 
     @Override
-    @Cacheable("yllapito")
-    public List<YllapitoDto> getYllapitoAsetukset() {
+    public String getYllapitoAsetus(String key) {
         try {
-            YllapitoDto[] yllapito = client.getForObject(eperusteetServiceUrl + "/api/maintenance/yllapito/", YllapitoDto[].class);
-            return yllapito != null ? Arrays.asList(yllapito) : null;
+            return client.getForObject(eperusteetServiceUrl + "/api/maintenance/yllapito/" + key, String.class);
         } catch (Exception e) {
             throw new BusinessRuleViolationException("yllapitoasetuksia-ei-saatu-haettu-eperusteista");
         }

@@ -368,10 +368,4 @@
            timeToLiveSeconds="7200"
            overflowToDisk="false"/>
 
-    <cache name="yllapito"
-           maxElementsInMemory="100"
-           eternal="false"
-           timeToLiveSeconds="3600"
-           overflowToDisk="false"/>
-
 </ehcache>

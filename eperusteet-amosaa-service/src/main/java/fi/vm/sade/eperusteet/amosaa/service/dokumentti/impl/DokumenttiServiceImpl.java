@@ -6,7 +6,6 @@ import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiTila;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Julkaisu;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
-import fi.vm.sade.eperusteet.amosaa.dto.YllapitoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.amosaa.repository.dokumentti.DokumenttiRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.JulkaisuRepository;
@@ -19,11 +18,6 @@ import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
-
-import java.util.Date;
-import java.util.List;
-import javax.validation.constraints.NotNull;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +28,10 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.validation.constraints.NotNull;
+import java.util.Date;
+import java.util.List;
 
 @Service
 @Transactional
@@ -229,11 +227,4 @@ public class DokumenttiServiceImpl implements DokumenttiService {
         return null;
     }
 
-    public String getYllapitoValueByKey(String key) {
-        return eperusteetService.getYllapitoAsetukset().stream()
-                .filter(yp -> key.equals(yp.getKey()))
-                .findFirst()
-                .map(YllapitoDto::getValue)
-                .orElse(null);
-    }
 }
