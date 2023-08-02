@@ -1,11 +1,13 @@
 package fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl;
 
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.Dokumentti;
+import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiEdistyminen;
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiTila;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Julkaisu;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.util.YllapitoAvaimet;
 import fi.vm.sade.eperusteet.amosaa.repository.dokumentti.DokumenttiRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.JulkaisuRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
@@ -191,10 +193,22 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     @Async(value = "docTaskExecutor")
     public void generateWithDto(Long ktId, @NotNull Long opsId, DokumenttiDto dto) throws DokumenttiException {
         dto.setTila(DokumenttiTila.LUODAAN);
-        dokumenttiStateService.save(dto);
+        Dokumentti dokumentti = dokumenttiStateService.save(dto);
 
         try {
-            externalPdfService.generatePdf(dto, ktId);
+            boolean isPdfServiceUsed = Boolean.parseBoolean(eperusteetService.getYllapitoAsetus(YllapitoAvaimet.USE_PDF_SERVICE_AMOSAA));
+            if (isPdfServiceUsed) {
+                externalPdfService.generatePdf(dto, ktId);
+            } else {
+                Opetussuunnitelma ops = opsRepository.findOne(dokumentti.getOpsId());
+                dokumentti.setTila(DokumenttiTila.VALMIS);
+                dokumentti.setValmistumisaika(new Date());
+                dokumentti.setVirhekoodi("");
+                dokumentti.setEdistyminen(DokumenttiEdistyminen.TUNTEMATON);
+                dokumentti.setData(builderService.generatePdf(ops, dokumentti, dokumentti.getKieli()));
+
+                dokumenttiRepository.save(dokumentti);
+            }
         } catch (Exception ex) {
             log.error(ex.getMessage());
             dto.setTila(DokumenttiTila.EPAONNISTUI);
