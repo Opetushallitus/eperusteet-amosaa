@@ -1,5 +1,6 @@
 package fi.vm.sade.eperusteet.amosaa.service.dokumentti;
 
+import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiTila;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
@@ -34,4 +35,8 @@ public interface DokumenttiService {
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'ESITYS')")
     byte[] getDataByDokumenttiId(@P("ktId") Long ktId, @P("opsId") Long opsId, Long dokumenttiId);
+
+    void updateDokumenttiPdfData(byte[] pdfData, Long dokumenttiId);
+
+    void updateDokumenttiTila(DokumenttiTila tila, Long dokumenttiId);
 }
