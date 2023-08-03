@@ -384,7 +384,15 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
             }
 
             if (lapsi.getTyyppi().equals(SisaltoTyyppi.KOULUTUKSENOSA)) {
-                otsikkoBuilder.append(", " + lapsi.getKoulutuksenosa().getLaajuusMinimi() + " - " + lapsi.getKoulutuksenosa().getLaajuusMaksimi() + " " + messages.translate("docgen.laajuus.viikkoa", docBase.getKieli()));
+                Integer minimilaajuus = lapsi.getKoulutuksenosa().getLaajuusMinimi();
+                Integer maksimiLAajuus = lapsi.getKoulutuksenosa().getLaajuusMaksimi();
+                if (lapsi.getPerusteenOsaId() != null) {
+                    fi.vm.sade.eperusteet.amosaa.dto.peruste.KoulutuksenOsaDto perusteenOsaDto = (fi.vm.sade.eperusteet.amosaa.dto.peruste.KoulutuksenOsaDto) eperusteetService.getPerusteenOsa(docBase.getOpetussuunnitelma().getPeruste().getId(), lapsi.getPerusteenOsaId());
+                    minimilaajuus = perusteenOsaDto.getLaajuusMinimi();
+                    maksimiLAajuus = perusteenOsaDto.getLaajuusMaksimi();
+                }
+
+                otsikkoBuilder.append(", " + minimilaajuus + " - " + maksimiLAajuus + " " + messages.translate("docgen.laajuus.viikkoa", docBase.getKieli()));
             }
 
             addHeader(docBase, otsikkoBuilder.toString());
@@ -1362,13 +1370,18 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
     }
 
     private void addKoulutuksenosa(DokumenttiBase docBase, SisaltoViite lapsi) {
+        fi.vm.sade.eperusteet.amosaa.dto.peruste.KoulutuksenOsaDto perusteenOsaDto = null;
+        if (lapsi.getPerusteenOsaId() != null) {
+            perusteenOsaDto = (fi.vm.sade.eperusteet.amosaa.dto.peruste.KoulutuksenOsaDto) eperusteetService.getPerusteenOsa(docBase.getOpetussuunnitelma().getPeruste().getId(), lapsi.getPerusteenOsaId());
+        }
         KoulutuksenOsaDto koulutuksenOsaDto = mapper.map(lapsi.getKoulutuksenosa(), KoulutuksenOsaDto.class);
-        addTeksti(docBase, getTextString(docBase, koulutuksenOsaDto.getKuvaus()), "div");
+
+        addTeksti(docBase, getTextString(docBase, perusteenOsaDto != null ? perusteenOsaDto.getKuvaus() : koulutuksenOsaDto.getKuvaus()), "div");
 
         addTeksti(docBase, messages.translate("docgen.tavoitteet.title", docBase.getKieli()), "h5");
         Element tavoitteetEl = docBase.getDocument().createElement("ul");
         Stream.concat(
-                Stream.of(koulutuksenOsaDto.getTavoitteet()),
+                perusteenOsaDto != null ? Stream.of(perusteenOsaDto.getTavoitteet()) : Stream.of(koulutuksenOsaDto.getTavoitteet()),
                 Stream.of(koulutuksenOsaDto.getPaikallinenTarkennus() != null ? koulutuksenOsaDto.getPaikallinenTarkennus().getTavoitteet() : Collections.<LokalisoituTekstiDto>emptyList()))
                 .flatMap(Collection::stream)
                 .forEach(tavoite -> {
@@ -1391,10 +1404,10 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
             }
 
             addTeksti(docBase, messages.translate("docgen.keskeinen-sisalto.title", docBase.getKieli()), "h5");
-            addTeksti(docBase, getTextString(docBase, koulutuksenOsaDto.getKeskeinenSisalto()), "div");
+            addTeksti(docBase, getTextString(docBase, perusteenOsaDto != null ? perusteenOsaDto.getKeskeinenSisalto() : koulutuksenOsaDto.getKeskeinenSisalto()), "div");
             addTeksti(docBase, getTextString(docBase, koulutuksenOsaDto.getPaikallinenTarkennus().getKeskeinenSisalto()), "div");
             addTeksti(docBase, messages.translate("docgen.arviointi.title", docBase.getKieli()), "h5");
-            addTeksti(docBase, getTextString(docBase, koulutuksenOsaDto.getArvioinninKuvaus()), "div");
+            addTeksti(docBase, getTextString(docBase, perusteenOsaDto != null ? perusteenOsaDto.getArvioinninKuvaus() : koulutuksenOsaDto.getArvioinninKuvaus()), "div");
             addTeksti(docBase, getTextString(docBase, koulutuksenOsaDto.getPaikallinenTarkennus().getArvioinninKuvaus()), "div");
 
             if (!CollectionUtils.isEmpty(koulutuksenOsaDto.getPaikallinenTarkennus().getKoulutuksenJarjestajat())) {

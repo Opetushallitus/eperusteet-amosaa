@@ -51,8 +51,10 @@ public class Koulutuksenosa extends AbstractAuditedEntity implements Serializabl
 
     private String nimiKoodi;
 
+    @Deprecated
     private Integer laajuusMinimi;
 
+    @Deprecated
     private Integer laajuusMaksimi;
 
     @Enumerated(EnumType.STRING)
@@ -61,10 +63,12 @@ public class Koulutuksenosa extends AbstractAuditedEntity implements Serializabl
     @Enumerated(EnumType.STRING)
     private KoulutusOsanTyyppi koulutusOsanTyyppi;
 
+    @Deprecated
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     private LokalisoituTeksti kuvaus;
 
+    @Deprecated
     @ValidHtml(whitelist = ValidHtml.WhitelistType.MINIMAL)
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @OrderColumn
@@ -75,14 +79,17 @@ public class Koulutuksenosa extends AbstractAuditedEntity implements Serializabl
     @BatchSize(size = 25)
     private List<LokalisoituTeksti> tavoitteet = new ArrayList<>();
 
+    @Deprecated
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     private LokalisoituTeksti keskeinenSisalto;
 
+    @Deprecated
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     private LokalisoituTeksti laajaAlaisenOsaamisenKuvaus;
 
+    @Deprecated
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     private LokalisoituTeksti arvioinninKuvaus;
