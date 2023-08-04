@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.KoulutusOsanKoulutustyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.KoulutusOsanTyyppi;
 import java.util.List;
+import java.util.Optional;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,5 +28,5 @@ public class KoulutuksenOsaDto extends KoulutuksenOsaKevytDto {
     private LokalisoituTekstiDto laajaAlaisenOsaamisenKuvaus;
     private LokalisoituTekstiDto arvioinninKuvaus;
     private KoulutuksenosanPaikallinenTarkennusDto paikallinenTarkennus;
-    
+
 }

@@ -3,8 +3,10 @@ package fi.vm.sade.eperusteet.amosaa.service.tuva;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.SisaltoviiteLaajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.KoulutusOsanKoulutustyyppi;
@@ -12,10 +14,19 @@ import fi.vm.sade.eperusteet.amosaa.dto.peruste.KoulutusOsanTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.KoulutuksenOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
+import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
+import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
+import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
+import fi.vm.sade.eperusteet.amosaa.service.ops.OpetussuunnitelmaDispatcher;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
+import fi.vm.sade.eperusteet.amosaa.service.peruste.OpetussuunnitelmaPerustePaivitysService;
+import fi.vm.sade.eperusteet.amosaa.service.peruste.impl.TuvaOpetussuunnitelmaPerustePaivitysService;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator;
+import fi.vm.sade.eperusteet.amosaa.service.util.CollectionUtil;
 import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,6 +54,18 @@ public class TuvaOpsitIT extends AbstractIntegrationTest {
     @Autowired
     private OpetussuunnitelmaService opetussuunnitelmaService;
 
+    @Autowired
+    private OpetussuunnitelmaRepository opetussuunnitelmaRepository;
+
+    @Autowired
+    private EperusteetService eperusteetService;
+
+    @Autowired
+    private OpetussuunnitelmaDispatcher dispatcher;
+
+    @Autowired
+    private SisaltoviiteRepository sisaltoviiteRepository;
+
     @Test
     @Rollback
     public void test_createTuvaPohja() {
@@ -57,6 +80,50 @@ public class TuvaOpsitIT extends AbstractIntegrationTest {
         assertThat(sisaltoviitteet).hasSize(9);
 
         checkSisaltoviiteSisallot(sisaltoviitteet);
+    }
+
+    @Test
+    @Rollback
+    public void test_createTuvaPohja_peruste_paivitys() {
+        useProfileOPH();
+        OpetussuunnitelmaBaseDto pohjaOps = createOpetussuunnitelma(ops -> {
+            ops.setPerusteId(76091l);
+            ops.setTyyppi(OpsTyyppi.OPSPOHJA);
+            ops.setKoulutustyyppi(KoulutusTyyppi.TUTKINTOONVALMENTAVA);
+        });
+
+        useProfileTuva();
+        OpetussuunnitelmaBaseDto tuvaOps = createOpetussuunnitelma(ops -> {
+            ops.setPerusteId(null);
+            ops.setTyyppi(OpsTyyppi.OPS);
+            ops.setOpsId(pohjaOps.getId());
+            ops.setKoulutustyyppi(KoulutusTyyppi.TUTKINTOONVALMENTAVA);
+        });
+
+        Opetussuunnitelma opetussuunnitelma = opetussuunnitelmaRepository.findOne(tuvaOps.getId());
+
+        SisaltoViite root = sisaltoviiteRepository.findOneRoot(opetussuunnitelmaRepository.findOne(tuvaOps.getId()));
+        List<SisaltoViite> sisaltoviitteet = sisaltoviiteRepository.findAllByOwnerId(tuvaOps.getId());
+
+        root.getLapset().addAll(CollectionUtil.treeToStream(sisaltoviitteet, SisaltoViite::getLapset)
+                .filter(viite -> viite.getTyyppi().equals(SisaltoTyyppi.KOULUTUKSENOSA))
+                .peek(koulutuksenosa -> {
+                    koulutuksenosa.setVanhempi(root);
+                    sisaltoviiteRepository.save(koulutuksenosa);
+                }).collect(Collectors.toList()));
+
+        SisaltoViite koulutuksenosat = CollectionUtil.treeToStream(sisaltoviitteet, SisaltoViite::getLapset)
+                .filter(viite -> viite.getTyyppi().equals(SisaltoTyyppi.KOULUTUKSENOSAT))
+                        .findFirst().get();
+        koulutuksenosat.setLapset(new ArrayList<>());
+        sisaltoviiteRepository.save(koulutuksenosat);
+        opetussuunnitelma.getSisaltoviitteet().clear();
+        opetussuunnitelma.getSisaltoviitteet().addAll(sisaltoviitteet);
+        opetussuunnitelmaRepository.save(opetussuunnitelma);
+
+        assertThat(koulutuksenosat.getLapset()).hasSize(0);
+        dispatcher.get(opetussuunnitelma.getOpsKoulutustyyppi(), OpetussuunnitelmaPerustePaivitysService.class).paivitaOpetussuunnitelma(tuvaOps.getId(), eperusteetService.getPerusteKaikki(opetussuunnitelma.getPeruste().getId()));
+        assertThat(koulutuksenosat.getLapset()).hasSize(6);
     }
 
 
