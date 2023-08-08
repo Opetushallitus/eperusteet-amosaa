@@ -8,6 +8,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaOsaAlue;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaTutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OpintokokonaisuusTavoite;
 import fi.vm.sade.eperusteet.amosaa.dto.KooditettuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiKuvaDto;
@@ -25,6 +26,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.OmaOsaAlueExportDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.OmaTutkinnonosaExportDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.OpintokokonaisuusTavoiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SuorituspolkuRakenneDto;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
@@ -201,6 +203,20 @@ public class DtoMapperConfig {
                 .customize(new CustomMapper<OmaOsaAlue, OmaOsaAlueExportDto>() {
                     @Override
                     public void mapAtoB(OmaOsaAlue source, OmaOsaAlueExportDto target, MappingContext context) {
+                        super.mapAtoB(source, target, context);
+                        if (source.getGeneerinenarviointi() != null) {
+                            target.setGeneerinenArviointiasteikko(eperusteetService.getGeneerinen(source.getGeneerinenarviointi()));
+                        }
+                    }
+                })
+                .register();
+
+        factory.classMap(OmaTutkinnonosa.class, OmaTutkinnonosaExportDto.class)
+                .byDefault()
+                .favorExtension(true)
+                .customize(new CustomMapper<OmaTutkinnonosa, OmaTutkinnonosaExportDto>() {
+                    @Override
+                    public void mapAtoB(OmaTutkinnonosa source, OmaTutkinnonosaExportDto target, MappingContext context) {
                         super.mapAtoB(source, target, context);
                         if (source.getGeneerinenarviointi() != null) {
                             target.setGeneerinenArviointiasteikko(eperusteetService.getGeneerinen(source.getGeneerinenarviointi()));
