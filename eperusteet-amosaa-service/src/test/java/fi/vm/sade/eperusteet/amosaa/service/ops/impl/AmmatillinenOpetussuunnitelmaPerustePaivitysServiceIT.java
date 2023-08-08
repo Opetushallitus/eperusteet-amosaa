@@ -2,12 +2,16 @@ package fi.vm.sade.eperusteet.amosaa.service.ops.impl;
 
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaOsaAlueTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.OsaAlueKokonaanDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.Osaamistavoite2020Dto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonosaKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.OmaOsaAlueDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.OmaOsaAlueKevytDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteKevytDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
@@ -68,15 +72,32 @@ public class AmmatillinenOpetussuunnitelmaPerustePaivitysServiceIT extends Abstr
             opsLuonti.setPerusteId(8492L);
             opsLuonti.setSuoritustapa("reformi");
         });
+
+        lisaaPaikallinenOsaAlue(opsDto);
+
         Opetussuunnitelma ops = opetussuunnitelmaRepository.findOne(opsDto.getId());
-        tarkistaLukumaarat(ops, 2, 4);
+        tarkistaLukumaarat(ops, 2, 5);
 
         PerusteKaikkiDto perusteDto = eperusteetClient.getPeruste(ops.getPeruste().getPerusteId(), PerusteKaikkiDto.class);
         TutkinnonosaKaikkiDto osaalueellinen = perusteDto.getTutkinnonOsat().stream().filter(tosa -> !tosa.getOsaAlueet().isEmpty()).findFirst().get();
         osaalueellinen.getOsaAlueet().add(buildOsaAlue());
 
         dispatcher.get(ops.getOpsKoulutustyyppi(), OpetussuunnitelmaPerustePaivitysService.class).paivitaOpetussuunnitelma(opsDto.getId(), perusteDto);
-        tarkistaLukumaarat(ops, 2, 5);
+        tarkistaLukumaarat(ops, 2, 6);
+    }
+
+    private void lisaaPaikallinenOsaAlue(OpetussuunnitelmaBaseDto opsDto) {
+        List<SisaltoViiteKevytDto> tutkinnonosat = getType(getKoulutustoimijaId(), opsDto.getId(), SisaltoTyyppi.TUTKINNONOSA);
+        SisaltoViiteKevytDto sisaltoviite = tutkinnonosat.stream().filter(tosa -> tosa.getOsaAlueet().size() > 0)
+                .findFirst()
+                .orElse(new SisaltoViiteKevytDto());
+        SisaltoViiteDto.Matala sisaltoviitedto = sisaltoViiteService.getSisaltoViite(getKoulutustoimijaId(), opsDto.getId(), sisaltoviite.getId());
+        sisaltoviitedto.getOsaAlueet().add(OmaOsaAlueDto
+                .builder()
+                .tyyppi(OmaOsaAlueTyyppi.PAIKALLINEN)
+                .nimi(LokalisoituTekstiDto.of("paikallinen"))
+                .build());
+        sisaltoViiteService.updateSisaltoViite(getKoulutustoimijaId(), opsDto.getId(), sisaltoviite.getId(), sisaltoviitedto);
     }
 
     @Test

@@ -11,6 +11,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class OmaOsaAlueDto implements KooditettuDto {
     private Long id;
     private OmaOsaAlueTyyppi tyyppi;
