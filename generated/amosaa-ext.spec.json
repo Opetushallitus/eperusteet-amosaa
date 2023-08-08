@@ -279,6 +279,9 @@
         },
         "_arviointiasteikko" : {
           "$ref" : "#/definitions/Reference"
+        },
+        "arviointiasteikko" : {
+          "$ref" : "#/definitions/ArviointiasteikkoDto"
         }
       }
     },
@@ -331,6 +334,21 @@
           "type" : "array",
           "items" : {
             "$ref" : "#/definitions/ArvioinninKohdealueDto"
+          }
+        }
+      }
+    },
+    "ArviointiasteikkoDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "osaamistasot" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/OsaamistasoDto"
           }
         }
       }
@@ -1234,7 +1252,7 @@
         }
       }
     },
-    "OmaTutkinnonosaDto" : {
+    "OmaTutkinnonosaExportDto" : {
       "type" : "object",
       "properties" : {
         "id" : {
@@ -1274,6 +1292,9 @@
           "additionalProperties" : {
             "type" : "string"
           }
+        },
+        "geneerinenArviointiasteikko" : {
+          "$ref" : "#/definitions/GeneerinenArviointiasteikkoKaikkiDto"
         }
       }
     },
@@ -1694,10 +1715,7 @@
           "format" : "int64"
         },
         "otsikko" : {
-          "type" : "object",
-          "additionalProperties" : {
-            "type" : "string"
-          }
+          "$ref" : "#/definitions/LokalisoituTekstiDto"
         },
         "koodi" : {
           "$ref" : "#/definitions/KoodiDto"
@@ -1724,13 +1742,13 @@
     "Page" : {
       "type" : "object",
       "properties" : {
-        "totalPages" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "totalElements" : {
           "type" : "integer",
           "format" : "int64"
+        },
+        "totalPages" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "size" : {
           "type" : "integer",
@@ -1749,28 +1767,28 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "first" : {
           "type" : "boolean"
         },
         "last" : {
           "type" : "boolean"
-        },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
         }
       }
     },
     "PageOpetussuunnitelmaDto" : {
       "type" : "object",
       "properties" : {
-        "totalPages" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "totalElements" : {
           "type" : "integer",
           "format" : "int64"
+        },
+        "totalPages" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "size" : {
           "type" : "integer",
@@ -1789,15 +1807,15 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "first" : {
           "type" : "boolean"
         },
         "last" : {
           "type" : "boolean"
-        },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
         }
       }
     },
@@ -1910,7 +1928,7 @@
           "$ref" : "#/definitions/TekstiKappaleDto"
         },
         "tosa" : {
-          "$ref" : "#/definitions/TutkinnonosaDto"
+          "$ref" : "#/definitions/TutkinnonosaExportDto"
         },
         "suorituspolku" : {
           "$ref" : "#/definitions/SuorituspolkuExportDto"
@@ -2023,6 +2041,13 @@
         },
         "piilotaPerusteenTeksti" : {
           "type" : "boolean"
+        },
+        "rivit" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/SuorituspolkuRiviDto"
+          }
         }
       }
     },
@@ -2075,7 +2100,7 @@
           "format" : "int32"
         },
         "paikallinenKuvaus" : {
-          "$ref" : "#/definitions/SuorituspolkuRiviJulkinenDto"
+          "$ref" : "#/definitions/SuorituspolkuRiviDto"
         },
         "sisaltoviiteId" : {
           "type" : "integer",
@@ -2083,7 +2108,7 @@
         }
       }
     },
-    "SuorituspolkuRiviJulkinenDto" : {
+    "SuorituspolkuRiviDto" : {
       "type" : "object",
       "properties" : {
         "id" : {
@@ -2102,6 +2127,17 @@
           "items" : {
             "type" : "string"
           }
+        },
+        "rakennemoduuli" : {
+          "type" : "string",
+          "format" : "uuid"
+        },
+        "jrno" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "piilotettu" : {
+          "type" : "boolean"
         }
       }
     },
@@ -2204,7 +2240,7 @@
         }
       }
     },
-    "TutkinnonosaDto" : {
+    "TutkinnonosaExportDto" : {
       "type" : "object",
       "properties" : {
         "id" : {
@@ -2223,7 +2259,7 @@
           "format" : "date-time"
         },
         "omatutkinnonosa" : {
-          "$ref" : "#/definitions/OmaTutkinnonosaDto"
+          "$ref" : "#/definitions/OmaTutkinnonosaExportDto"
         },
         "vierastutkinnonosa" : {
           "$ref" : "#/definitions/VierasTutkinnonosaDto"
