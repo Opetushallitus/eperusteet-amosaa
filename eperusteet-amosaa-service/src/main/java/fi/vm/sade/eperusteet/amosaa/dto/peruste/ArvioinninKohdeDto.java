@@ -26,9 +26,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.Set;
 
-/**
- * @author jhyoty
- */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -38,8 +35,5 @@ public class ArvioinninKohdeDto {
     private LokalisoituTekstiDto selite;
     @JsonProperty("_arviointiasteikko")
     private Reference arviointiasteikko;
-
-    @JsonProperty("arviointiasteikko")
-    private ArviointiasteikkoDto arviointiasteikkoDto;
     private Set<OsaamistasonKriteeriDto> osaamistasonKriteerit;
 }
