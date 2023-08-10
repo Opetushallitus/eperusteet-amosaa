@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class OmaTutkinnonosaExportDto extends OmaTutkinnonosaDto {
+public class OmaTutkinnonosaExportDto extends OmaTutkinnonosaBaseDto {
+    private ArviointiExportDto arviointi;
     private GeneerinenArviointiasteikkoKaikkiDto geneerinenArviointiasteikko;
 }

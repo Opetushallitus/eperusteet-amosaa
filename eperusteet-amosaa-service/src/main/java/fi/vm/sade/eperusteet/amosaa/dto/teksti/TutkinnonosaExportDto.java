@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @NoArgsConstructor
 @AllArgsConstructor
-public class TutkinnonosaExportDto extends TutkinnonosaDto{
+public class TutkinnonosaExportDto extends TutkinnonosaBaseDto{
     private OmaTutkinnonosaExportDto omatutkinnonosa;
 }
