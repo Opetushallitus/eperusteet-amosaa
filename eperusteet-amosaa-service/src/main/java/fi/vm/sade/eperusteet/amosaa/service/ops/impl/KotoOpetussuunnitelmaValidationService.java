@@ -7,6 +7,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
+import fi.vm.sade.eperusteet.amosaa.dto.NavigationNodeDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.ops.OpetussuunnitelmaValidationService;
@@ -48,7 +49,7 @@ public class KotoOpetussuunnitelmaValidationService implements Opetussuunnitelma
         }
 
         if (viite.getTekstiKappale() != null && viite.getPerusteenOsaId() == null) {
-            LokalisoituTeksti.validoi(validointi, ops, viite.getTekstiKappale().getTeksti(), viite.getTekstiKappale().getNimi());
+            LokalisoituTeksti.validoi(validointi, ops, viite.getTekstiKappale().getTeksti(), NavigationNodeDto.of(viite));
         }
 
         for (SisaltoViite lapsi : viite.getLapset()) {

@@ -79,20 +79,6 @@ public class Tekstiosa implements Serializable, Copyable<Tekstiosa> {
         return new Tekstiosa(other);
     }
 
-    public static void validoi(Validointi validointi, Tekstiosa osa, Opetussuunnitelma kielet, LokalisoituTeksti parent) {
-        validoiOtsikko(validointi, osa, kielet, parent);
-        validoiTeksti(validointi, osa, kielet, parent);
-    }
-
-
-    public static void validoiOtsikko(Validointi validointi, Tekstiosa osa, Opetussuunnitelma ops, LokalisoituTeksti parent) {
-        LokalisoituTeksti.validoi(validointi, ops, osa.getOtsikko(), parent);
-    }
-
-    public static void validoiTeksti(Validointi validointi, Tekstiosa osa, Opetussuunnitelma ops, LokalisoituTeksti parent) {
-        LokalisoituTeksti.validoi(validointi, ops, osa.getTeksti(), parent);
-    }
-
     @Override
     public Tekstiosa copy(boolean deep) {
         return copyOf(this);

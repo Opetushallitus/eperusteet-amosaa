@@ -1,16 +1,19 @@
 package fi.vm.sade.eperusteet.amosaa.dto;
 
-import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import lombok.*;
 
 @Data
 @NoArgsConstructor
@@ -27,6 +30,13 @@ public class NavigationNodeDto {
         result.setType(type);
         result.setLabel(label);
         result.setId(id);
+        return result;
+    }
+
+    static public NavigationNodeDto of(NavigationType type, LokalisoituTekstiDto label) {
+        NavigationNodeDto result = new NavigationNodeDto();
+        result.setType(type);
+        result.setLabel(label);
         return result;
     }
 
@@ -71,6 +81,13 @@ public class NavigationNodeDto {
             this.children.addAll(node.children);
         }
         return this;
+    }
+
+    public static NavigationNodeDto of(SisaltoViite sisaltoviite) {
+        return NavigationNodeDto.of(
+                NavigationType.of(sisaltoviite.getTyyppi().toString()),
+                sisaltoviite.getNimi() != null ? LokalisoituTekstiDto.of(sisaltoviite.getNimi().getTeksti()) : null,
+                sisaltoviite.getId());
     }
 
 }
