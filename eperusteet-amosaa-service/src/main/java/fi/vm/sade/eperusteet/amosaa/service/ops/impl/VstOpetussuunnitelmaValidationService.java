@@ -6,8 +6,11 @@ import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
+import fi.vm.sade.eperusteet.amosaa.dto.NavigationNodeDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteKevytDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
+import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.ops.OpetussuunnitelmaValidationService;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +59,7 @@ public class VstOpetussuunnitelmaValidationService implements OpetussuunnitelmaV
             // Validointi jos osa on pakollinen tai kyseessä itse määritetty sisältö millä ei ole alisisältöä
             if ((viite.getPerusteteksti() == null && viite.getPohjanTekstikappale() == null)) {
                 if (viite.getLapset().isEmpty() && viite.getTekstiKappale() != null) {
-                    LokalisoituTeksti.validoi(validointi, ops, viite.getTekstiKappale().getTeksti(), viite.getTekstiKappale().getNimi());
+                    LokalisoituTeksti.validoi(validointi, ops, viite.getTekstiKappale().getTeksti(), NavigationNodeDto.of(viite));
                 }
             }
         }
@@ -65,13 +68,13 @@ public class VstOpetussuunnitelmaValidationService implements OpetussuunnitelmaV
             if (validointi.getVirheet().stream().map(Validointi.Virhe::getSyy).noneMatch(syy -> syy.equals(SISALLOSSA_NIMETTOMIA_OPINTOKOKONAISUUKSIA))
                 && (viite.getTekstiKappale().getNimi() == null
                     || viite.getTekstiKappale().getNimi().getTeksti().isEmpty())) {
-                validointi.virhe(SISALLOSSA_NIMETTOMIA_OPINTOKOKONAISUUKSIA);
+                validointi.virhe(SISALLOSSA_NIMETTOMIA_OPINTOKOKONAISUUKSIA, NavigationNodeDto.of(viite));
             }
             if (hasEmptyLaajuus(viite)) {
-                validointi.varoitus("sisallossa-opintokokonaisuuksia-ilman-laajuutta");
+                validointi.varoitus("sisallossa-opintokokonaisuuksia-ilman-laajuutta", NavigationNodeDto.of(viite));
             }
             if (!hasEmptyLaajuus(viite) && viite.getOpintokokonaisuus().getLaajuusYksikko() == null) {
-                validointi.virhe("sisallossa-opintokokonaisuuksia-ilman-laajuusyksikkoa");
+                validointi.virhe("sisallossa-opintokokonaisuuksia-ilman-laajuusyksikkoa", NavigationNodeDto.of(viite));
             }
         }
 
@@ -85,4 +88,5 @@ public class VstOpetussuunnitelmaValidationService implements OpetussuunnitelmaV
     private boolean hasEmptyLaajuus(SisaltoViite viite) {
         return viite.getOpintokokonaisuus().getLaajuus() == null || viite.getOpintokokonaisuus().getLaajuus().compareTo(BigDecimal.ZERO) == 0;
     }
+
 }

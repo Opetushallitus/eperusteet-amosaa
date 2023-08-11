@@ -7,6 +7,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
+import fi.vm.sade.eperusteet.amosaa.dto.NavigationNodeDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
@@ -54,12 +55,12 @@ public class TuvaOpetussuunnitelmaValidationService implements Opetussuunnitelma
         // Validointi jos osa on pakollinen tai kyseessä itse määritetty sisältö millä ei ole alisisältöä
         if ((viite.getPerusteteksti() == null && viite.getPohjanTekstikappale() == null)) {
             if (viite.getLapset().isEmpty()) {
-                LokalisoituTeksti.validoi(validointi, ops, viite.getTekstiKappale().getTeksti(), viite.getTekstiKappale().getNimi());
+                LokalisoituTeksti.validoi(validointi, ops, viite.getTekstiKappale().getTeksti(), NavigationNodeDto.of(viite));
             }
         }
 
         if (viite.isPakollinen()) {
-            validointi.varoitus("tekstikappaleella-ei-lainkaan-sisaltoa", nimi);
+            validointi.varoitus("tekstikappaleella-ei-lainkaan-sisaltoa", NavigationNodeDto.of(viite), nimi.getTeksti());
         }
 
         for (SisaltoViite lapsi : viite.getLapset()) {

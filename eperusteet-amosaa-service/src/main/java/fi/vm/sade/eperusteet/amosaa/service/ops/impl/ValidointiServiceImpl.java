@@ -33,6 +33,8 @@ import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaTutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Suorituspolku;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Tutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
+import fi.vm.sade.eperusteet.amosaa.dto.NavigationNodeDto;
+import fi.vm.sade.eperusteet.amosaa.dto.NavigationType;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.*;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
@@ -136,14 +138,14 @@ public class ValidointiServiceImpl implements ValidointiService {
 
         if (tosa.getToteutukset().isEmpty()) {
             if (KoulutusTyyppi.of(koulutustyppi).isValmaTelma()) {
-                validointi.varoitus("koulutuksen-osalla-ei-toteutuksia", nimi);
+                validointi.varoitus("koulutuksen-osalla-ei-toteutuksia", NavigationNodeDto.of(viite));
             } else {
-                validointi.varoitus("tutkinnon-osalla-ei-toteutuksia", nimi);
+                validointi.varoitus("tutkinnon-osalla-ei-toteutuksia", NavigationNodeDto.of(viite));
             }
         } else {
             tosa.getToteutukset().forEach(toteutus -> {
                 if (toteutus.getOtsikko() == null) {
-                    validointi.virhe("toteutuksen-otsikko-ei-maaritelty", nimi);
+                    validointi.virhe("toteutuksen-otsikko-ei-maaritelty", NavigationNodeDto.of(viite));
                 }
             });
         }
@@ -152,19 +154,19 @@ public class ValidointiServiceImpl implements ValidointiService {
             OmaTutkinnonosa oma = tosa.getOmatutkinnonosa();
             if (oma == null) {
                 if (KoulutusTyyppi.of(koulutustyppi).isValmaTelma()) {
-                    validointi.virhe("oma-koulutuksen-osa-ei-sisaltoa", nimi);
+                    validointi.virhe("oma-koulutuksen-osa-ei-sisaltoa", NavigationNodeDto.of(viite));
                 } else {
-                    validointi.virhe("oma-tutkinnon-osa-ei-sisaltoa", nimi);
+                    validointi.virhe("oma-tutkinnon-osa-ei-sisaltoa", NavigationNodeDto.of(viite));
                 }
             } else {
                 try {
                     Integer arvo = Integer.valueOf(oma.getKoodi());
                     if (arvo < 1000 || arvo > 999999999) {
-                        validointi.virhe("oma-tutkinnon-osa-virheellinen-koodi", nimi);
+                        validointi.virhe("oma-tutkinnon-osa-virheellinen-koodi", NavigationNodeDto.of(viite));
                     }
                 }
                 catch (NumberFormatException ex) {
-                    validointi.virhe("oma-tutkinnon-osa-virheellinen-koodi", nimi);
+                    validointi.virhe("oma-tutkinnon-osa-virheellinen-koodi", NavigationNodeDto.of(viite));
                 }
 
                 long paikalliset = sisaltoviiteRepository.findAllPaikallisetTutkinnonOsatByKoodi(ops.getKoulutustoimija(), oma.getKoodi()).stream()
@@ -172,9 +174,9 @@ public class ValidointiServiceImpl implements ValidointiService {
                         .count();
                 if (paikalliset > 1) {
                     if (KoulutusTyyppi.of(koulutustyppi).isValmaTelma()) {
-                        validointi.virhe("oma-koulutuksen-osa-koodi-jo-kaytossa", nimi);
+                        validointi.virhe("oma-koulutuksen-osa-koodi-jo-kaytossa", NavigationNodeDto.of(viite));
                     } else {
-                        validointi.virhe("oma-tutkinnon-osa-koodi-jo-kaytossa", nimi);
+                        validointi.virhe("oma-tutkinnon-osa-koodi-jo-kaytossa", NavigationNodeDto.of(viite));
                     }
                 }
 
@@ -270,7 +272,7 @@ public class ValidointiServiceImpl implements ValidointiService {
     }
 
     // Yksittäisen ryhmän tarkastus
-    private void validoiSpRyhma(ValidointiHelper ctx, RakenneModuuliDto moduuli) {
+    private void validoiSpRyhma(ValidointiHelper ctx, RakenneModuuliDto moduuli, SisaltoViite viite) {
 
         Pair<Integer, BigDecimal> sisallonKokoJaLaajuus = sisallonLaajuusJaKoko(ctx, moduuli);
 
@@ -278,7 +280,7 @@ public class ValidointiServiceImpl implements ValidointiService {
             try {
                 Integer minimi = moduuli.getMuodostumisSaanto().getKoko().getMinimi();
                 if (sisallonKokoJaLaajuus.getFirst() < minimi) {
-                    ctx.validointi.virhe("virheellinen-rakenteen-osa", ctx.getViiteNimi(), moduuli.getNimi());
+                    ctx.validointi.virhe("virheellinen-rakenteen-osa", NavigationNodeDto.of(viite), moduuli.getNimi().getTeksti());
                 }
             } catch (NullPointerException ex) {
             }
@@ -286,7 +288,7 @@ public class ValidointiServiceImpl implements ValidointiService {
             try {
                 BigDecimal minimi = new BigDecimal(moduuli.getMuodostumisSaanto().getLaajuus().getMinimi());
                 if (sisallonKokoJaLaajuus.getSecond().compareTo(minimi) < 0) {
-                    ctx.validointi.virhe("virheellinen-rakenteen-osa", ctx.getViiteNimi(), moduuli.getNimi());
+                    ctx.validointi.virhe("virheellinen-rakenteen-osa", NavigationNodeDto.of(viite), moduuli.getNimi().getTeksti());
                 }
             } catch (NullPointerException ex) {
             }
@@ -294,20 +296,20 @@ public class ValidointiServiceImpl implements ValidointiService {
     }
 
     // Suorituspolun validointi perusteen rakennepuuta vasten
-    private void validoiSpRakenne(ValidointiHelper ctx, RakenneModuuliDto moduuli) {
+    private void validoiSpRakenne(ValidointiHelper ctx, RakenneModuuliDto moduuli, SisaltoViite viite) {
         SuorituspolkuRivi rivi = ctx.rivit.get(moduuli.getTunniste());
         // Jos ryhmä on piilotettu, sitä ei huomioida
         if (rivi != null && (rivi.getPiilotettu() != null && rivi.getPiilotettu())) {
             return;
         }
 
-        validoiSpRyhma(ctx, moduuli);
+        validoiSpRyhma(ctx, moduuli, viite);
 
         moduuli.getOsat().stream()
                 .filter(osa -> osa instanceof RakenneModuuliDto)
                 .map(osa -> (RakenneModuuliDto) osa)
                 .filter(osa -> osa.getRooli() == RakenneModuuliRooli.NORMAALI || osa.getRooli() == RakenneModuuliRooli.OSAAMISALA)
-                .forEach(osa -> validoiSpRakenne(ctx, osa));
+                .forEach(osa -> validoiSpRakenne(ctx, osa, viite));
     }
 
     // Suorituspolun validointi
@@ -317,11 +319,11 @@ public class ValidointiServiceImpl implements ValidointiService {
 
         if (sp != null && sp.getRivit() != null) {
             for (SuorituspolkuRivi rivi : sp.getRivit()) {
-                LokalisoituTeksti.validoi(validointi, ops, rivi.getKuvaus());
+                LokalisoituTeksti.validoi(validointi, ops, rivi.getKuvaus(), NavigationNodeDto.of(viite));
                 for (String koodi : rivi.getKoodit()) {
                     if (sisaltoViiteService.getCountByKoodi(ops.getKoulutustoimija().getId(), koodi) == 0) {
                         String[] koodiSplit = koodi.split("_");
-                        validointi.varoitus("suorituspolku-koodi-ei-toteutusta", nimi, LokalisoituTeksti.of(Kieli.FI, koodiSplit.length > 0 ? koodiSplit[koodiSplit.length - 1] : koodi));
+                        validointi.varoitus("suorituspolku-koodi-ei-toteutusta", NavigationNodeDto.of(viite), nimi.getTeksti());
                     }
                 }
             }
@@ -333,7 +335,7 @@ public class ValidointiServiceImpl implements ValidointiService {
             Map<Long, TutkinnonOsaViiteSuppeaDto> tov = suoritustapa.getTutkinnonOsat().stream()
                     .collect(Collectors.toMap(TutkinnonOsaViiteSuppeaDto::getId, Function.identity()));
             ValidointiHelper ctx = new ValidointiHelper(validointi, ops, suoritustapa, viite, rivit, tov);
-            validoiSpRakenne(ctx, suoritustapa.getRakenne());
+            validoiSpRakenne(ctx, suoritustapa.getRakenne(), viite);
         }
     }
 
@@ -362,9 +364,9 @@ public class ValidointiServiceImpl implements ValidointiService {
             }
             if (lapsi.isPakollinen()) {
                 if (lapsi.getTekstiKappale() != null) {
-                    LokalisoituTeksti.validoi(validointi, ops, lapsi.getTekstiKappale().getNimi(), nimi);
+                    LokalisoituTeksti.validoi(validointi, ops, lapsi.getTekstiKappale().getNimi(), NavigationNodeDto.of(lapsi));
                 } else {
-                    validointi.virhe("tekstikappaleella-ei-lainkaan-sisaltoa", nimi);
+                    validointi.virhe("tekstikappaleella-ei-lainkaan-sisaltoa", NavigationNodeDto.of(viite));
                 }
             }
             validoi(validointi, lapsi, ops);
@@ -372,24 +374,23 @@ public class ValidointiServiceImpl implements ValidointiService {
     }
 
     static public void validoiTiedot(Validointi validointi, Opetussuunnitelma ops) {
-        LokalisoituTeksti.validoi(validointi, ops, ops.getNimi());
-        LokalisoituTeksti.validoi(validointi, ops, ops.getKuvaus());
+        LokalisoituTeksti.validoi(validointi, ops, ops.getNimi(), NavigationNodeDto.of(NavigationType.tiedot, LokalisoituTekstiDto.of(ops.getNimi().getTeksti())));
 
         if (ops.getJulkaisukielet().isEmpty()) {
-            validointi.virhe("julkaisukielet-ei-maaritelty", ops.getNimi());
+            validointi.virhe("julkaisukielet-ei-maaritelty", NavigationNodeDto.of(NavigationType.tiedot), ops.getNimi().getTeksti());
         }
 
         if (ops.getTyyppi() == OpsTyyppi.OPS || ops.getTyyppi() == OpsTyyppi.YLEINEN) {
             if (ObjectUtils.isEmpty(ops.getHyvaksyja())) {
-                validointi.virhe("hyvaksyjaa-ei-maaritelty", ops.getNimi());
+                validointi.virhe("hyvaksyjaa-ei-maaritelty", NavigationNodeDto.of(NavigationType.tiedot), ops.getNimi().getTeksti());
             }
 
             if (ObjectUtils.isEmpty(ops.getPaatosnumero())) {
-                validointi.virhe("paatosnumeroa-ei-maaritelty", ops.getNimi());
+                validointi.virhe("paatosnumeroa-ei-maaritelty", NavigationNodeDto.of(NavigationType.tiedot), ops.getNimi().getTeksti());
             }
 
             if (ObjectUtils.isEmpty(ops.getPaatospaivamaara())) {
-                validointi.virhe("paatospaivamaaraa-ei-maaritelty", ops.getNimi());
+                validointi.virhe("paatospaivamaaraa-ei-maaritelty", NavigationNodeDto.of(NavigationType.tiedot), ops.getNimi().getTeksti());
             }
         }
     }

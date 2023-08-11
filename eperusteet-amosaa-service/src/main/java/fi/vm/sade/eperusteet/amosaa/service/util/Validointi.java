@@ -17,6 +17,7 @@ package fi.vm.sade.eperusteet.amosaa.service.util;
 
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
+import fi.vm.sade.eperusteet.amosaa.dto.NavigationNodeDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.service.exception.ValidointiException;
 
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
@@ -31,88 +33,36 @@ import lombok.Getter;
  */
 @Getter
 public class Validointi {
-    @Getter
-    static public class Virhe {
-        private String syy;
-        private Map<Kieli, String> nimi;
-
-        Virhe(String syy) {
-            this.syy = syy;
-            this.nimi = null;
-        }
-
-        Virhe(String syy, LokalisoituTeksti t) {
-            this.syy = syy;
-            this.nimi = t.getTeksti();
-        }
-
-        Virhe(String syy, LokalisoituTekstiDto t) {
-            this.syy = syy;
-            this.nimi = t.getTeksti();
-        }
-    }
 
     private List<Virhe> virheet = new ArrayList<>();
     private List<Virhe> varoitukset = new ArrayList<>();
     private List<Virhe> huomiot = new ArrayList<>();
 
-    public Validointi virhe(String syy) {
-        virheet.add(new Virhe(syy));
+    @Getter
+    @AllArgsConstructor
+    static public class Virhe {
+        private String syy;
+        private Map<Kieli, String> nimi;
+        private NavigationNodeDto navigationNode;
+    }
+
+    public Validointi virhe(String syy, NavigationNodeDto navigationNode) {
+        virheet.add(new Virhe(syy, null, navigationNode));
         return this;
     }
 
-    public Validointi virhe(String syy, LokalisoituTekstiDto... args) {
-        for (LokalisoituTekstiDto arg : args) {
-            if (arg != null) {
-                virheet.add(new Virhe(syy, arg));
-            }
-            else {
-                virheet.add(new Virhe(syy));
-            }
-        }
+    public Validointi virhe(String syy, NavigationNodeDto navigationNode, Map<Kieli, String> nimi) {
+        virheet.add(new Virhe(syy, nimi, navigationNode));
         return this;
     }
 
-    public Validointi virhe(String syy, LokalisoituTeksti... args) {
-        for (LokalisoituTeksti arg : args) {
-            if (arg != null) {
-                virheet.add(new Virhe(syy, arg));
-            }
-            else {
-                virheet.add(new Virhe(syy));
-            }
-        }
+    public Validointi varoitus(String syy, NavigationNodeDto navigationNode) {
+        varoitukset.add(new Virhe(syy, null, navigationNode));
         return this;
     }
 
-    public Validointi varoitus(String syy) {
-        varoitukset.add(new Virhe(syy));
-        return this;
-    }
-
-    public Validointi varoitus(String syy, LokalisoituTeksti... args) {
-        for (LokalisoituTeksti arg : args) {
-            if (arg != null) {
-                varoitukset.add(new Virhe(syy, arg));
-            }
-            else {
-                virheet.add(new Virhe(syy));
-            }
-        }
-        return this;
-    }
-
-    public Validointi huomio(String syy) {
-        huomiot.add(new Virhe(syy));
-        return this;
-    }
-
-    public Validointi huomio(String syy, LokalisoituTeksti... args) {
-        for (LokalisoituTeksti arg : args) {
-            if (arg != null) {
-                huomiot.add(new Virhe(syy, arg));
-            }
-        }
+    public Validointi varoitus(String syy, NavigationNodeDto navigationNode, Map<Kieli, String> nimi) {
+        varoitukset.add(new Virhe(syy, nimi, navigationNode));
         return this;
     }
 

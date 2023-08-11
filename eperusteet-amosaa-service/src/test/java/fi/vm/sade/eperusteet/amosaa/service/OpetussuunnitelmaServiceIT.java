@@ -10,6 +10,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
+import fi.vm.sade.eperusteet.amosaa.dto.NavigationType;
 import fi.vm.sade.eperusteet.amosaa.dto.OpsHakuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.OpsHakuInternalDto;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
@@ -670,14 +671,14 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
         SisaltoViiteDto.Matala sisalto = createSisalto();
         sisalto = sisaltoViiteService.addSisaltoViite(ops.getKoulutustoimija().getId(), ops.getId(), root.getId(), sisalto);
         Validointi validointi = opetussuunnitelmaService.validoi(ops.getKoulutustoimija().getId(), ops.getId());
-        assertThat(validointi.getVirheet())
+        assertThat(validointi.getVirheet().stream().filter(virhe -> !virhe.getNavigationNode().getType().equals(NavigationType.tiedot)))
                 .extracting(Validointi.Virhe::getSyy)
                 .contains("kielisisaltoa-ei-loytynyt-opsin-kielilla");
 
         sisalto.getTekstiKappale().setTeksti(LokalisoituTekstiDto.of(Kieli.FI, "teksti"));
         sisaltoViiteService.updateSisaltoViite(ops.getKoulutustoimija().getId(), ops.getId(), sisalto.getId(), sisalto);
         validointi = opetussuunnitelmaService.validoi(ops.getKoulutustoimija().getId(), ops.getId());
-        assertThat(validointi.getVirheet())
+        assertThat(validointi.getVirheet().stream().filter(virhe -> !virhe.getNavigationNode().getType().equals(NavigationType.tiedot)))
                 .extracting(Validointi.Virhe::getSyy)
                 .doesNotContain("kielisisaltoa-ei-loytynyt-opsin-kielilla");
     }
