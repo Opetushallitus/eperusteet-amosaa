@@ -4,6 +4,8 @@ import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 import org.springframework.security.core.parameters.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import java.util.List;
+
 public interface OpetussuunnitelmaValidationService extends OpetussuunnitelmaToteutus {
 
     @Override
@@ -12,7 +14,7 @@ public interface OpetussuunnitelmaValidationService extends OpetussuunnitelmaTot
     }
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
-    default Validointi validoi(@P("ktId") Long ktId, @P("opsId") Long opsId) {
+    default List<Validointi> validoi(@P("ktId") Long ktId, @P("opsId") Long opsId) {
         return null;
     }
 }
