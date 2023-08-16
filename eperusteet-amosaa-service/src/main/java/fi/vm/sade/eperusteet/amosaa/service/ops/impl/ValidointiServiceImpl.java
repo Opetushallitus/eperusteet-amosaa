@@ -20,13 +20,11 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
-import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.SuorituspolkuRivi;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
-import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaTutkinnonosa;
@@ -47,10 +45,12 @@ import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.ValidointiService;
 import fi.vm.sade.eperusteet.amosaa.service.peruste.PerusteCacheService;
 import fi.vm.sade.eperusteet.amosaa.service.util.Pair;
+import fi.vm.sade.eperusteet.amosaa.service.util.ValidationCategory;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -99,12 +99,14 @@ public class ValidointiServiceImpl implements ValidointiService {
     }
 
     @Override
-    public Validointi validoi(Opetussuunnitelma ops) {
-        Validointi validointi = new Validointi();
-        validoiTiedot(validointi, ops);
+    public List<Validointi> validoi(Opetussuunnitelma ops) {
+        Validointi opsValidointi = new Validointi(ValidationCategory.OPETUSSUUNNITELMA);
+        validoiTiedot(opsValidointi, ops);
         SisaltoViite root = sisaltoviiteRepository.findOneRoot(ops);
-        validoi(validointi, root, ops);
-        return validointi;
+
+        Validointi sisaltoValidointi = new Validointi(ValidationCategory.SISALTO);
+        validoi(sisaltoValidointi, root, ops);
+        return Arrays.asList(opsValidointi, sisaltoValidointi);
     }
 
     @Override
@@ -115,7 +117,7 @@ public class ValidointiServiceImpl implements ValidointiService {
             throw new BusinessRuleViolationException("virhe");
         }
 
-        Validointi validointi = new Validointi();
+        Validointi validointi = new Validointi(ValidationCategory.SISALTO);
         validoiTutkinnonOsa(validointi, viite, ops);
         return validointi.getVirheet().stream().map(Validointi.Virhe::getKuvaus).collect(Collectors.toList());
     }
@@ -138,9 +140,9 @@ public class ValidointiServiceImpl implements ValidointiService {
 
         if (tosa.getToteutukset().isEmpty()) {
             if (KoulutusTyyppi.of(koulutustyppi).isValmaTelma()) {
-                validointi.varoitus("koulutuksen-osalla-ei-toteutuksia", NavigationNodeDto.of(viite));
+                validointi.huomautukset("koulutuksen-osalla-ei-toteutuksia", NavigationNodeDto.of(viite));
             } else {
-                validointi.varoitus("tutkinnon-osalla-ei-toteutuksia", NavigationNodeDto.of(viite));
+                validointi.huomautukset("tutkinnon-osalla-ei-toteutuksia", NavigationNodeDto.of(viite));
             }
         } else {
             tosa.getToteutukset().forEach(toteutus -> {
@@ -323,7 +325,7 @@ public class ValidointiServiceImpl implements ValidointiService {
                 for (String koodi : rivi.getKoodit()) {
                     if (sisaltoViiteService.getCountByKoodi(ops.getKoulutustoimija().getId(), koodi) == 0) {
                         String[] koodiSplit = koodi.split("_");
-                        validointi.varoitus("suorituspolku-koodi-ei-toteutusta", NavigationNodeDto.of(viite), nimi.getTeksti());
+                        validointi.huomautukset("suorituspolku-koodi-ei-toteutusta", NavigationNodeDto.of(viite), nimi.getTeksti());
                     }
                 }
             }
