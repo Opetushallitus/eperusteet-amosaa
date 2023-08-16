@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Getter
@@ -24,6 +25,7 @@ public class Validointi {
     }
 
     @Getter
+    @EqualsAndHashCode
     @AllArgsConstructor
     static public class Virhe {
         private String kuvaus;
@@ -31,13 +33,19 @@ public class Validointi {
         private NavigationNodeDto navigationNode;
     }
 
+    private void addVirhe(Virhe virhe) {
+        if (!virheet.contains(virhe)) {
+            virheet.add(virhe);
+        }
+    }
+
     public Validointi virhe(String kuvaus, NavigationNodeDto navigationNode) {
-        virheet.add(new Virhe(kuvaus, null, navigationNode));
+        addVirhe(new Virhe(kuvaus, null, navigationNode));
         return this;
     }
 
     public Validointi virhe(String kuvaus, NavigationNodeDto navigationNode, Map<Kieli, String> nimi) {
-        virheet.add(new Virhe(kuvaus, nimi, navigationNode));
+        addVirhe(new Virhe(kuvaus, nimi, navigationNode));
         return this;
     }
 
