@@ -8780,19 +8780,19 @@
           "type" : "string",
           "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO", "MAAHANMUUTTAJIENKOTOUTUMISKOULUTUS", "VAPAASIVISTYSTYOLUKUTAITO", "TUTKINTOONVALMENTAVA" ]
         },
-        "perusteId" : {
-          "type" : "integer",
-          "format" : "int64"
-        },
-        "julkaisuVuosi" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "perusteNimi" : {
           "type" : "object",
           "additionalProperties" : {
             "type" : "string"
           }
+        },
+        "julkaisuVuosi" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "perusteId" : {
+          "type" : "integer",
+          "format" : "int64"
         }
       }
     },
@@ -9150,11 +9150,15 @@
     "Page" : {
       "type" : "object",
       "properties" : {
+        "totalPages" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "totalElements" : {
           "type" : "integer",
           "format" : "int64"
         },
-        "totalPages" : {
+        "number" : {
           "type" : "integer",
           "format" : "int32"
         },
@@ -9180,21 +9184,21 @@
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
-        },
-        "number" : {
-          "type" : "integer",
-          "format" : "int32"
         }
       }
     },
     "PageKoulutustoimijaJulkinenDto" : {
       "type" : "object",
       "properties" : {
+        "totalPages" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "totalElements" : {
           "type" : "integer",
           "format" : "int64"
         },
-        "totalPages" : {
+        "number" : {
           "type" : "integer",
           "format" : "int32"
         },
@@ -9220,21 +9224,21 @@
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
-        },
-        "number" : {
-          "type" : "integer",
-          "format" : "int32"
         }
       }
     },
     "PageOpetussuunnitelmaBaseDto" : {
       "type" : "object",
       "properties" : {
+        "totalPages" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "totalElements" : {
           "type" : "integer",
           "format" : "int64"
         },
-        "totalPages" : {
+        "number" : {
           "type" : "integer",
           "format" : "int32"
         },
@@ -9260,21 +9264,21 @@
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
-        },
-        "number" : {
-          "type" : "integer",
-          "format" : "int32"
         }
       }
     },
     "PageOpetussuunnitelmaDto" : {
       "type" : "object",
       "properties" : {
+        "totalPages" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "totalElements" : {
           "type" : "integer",
           "format" : "int64"
         },
-        "totalPages" : {
+        "number" : {
           "type" : "integer",
           "format" : "int32"
         },
@@ -9300,21 +9304,21 @@
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
-        },
-        "number" : {
-          "type" : "integer",
-          "format" : "int32"
         }
       }
     },
     "PageSisaltoviiteLaajaDto" : {
       "type" : "object",
       "properties" : {
+        "totalPages" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "totalElements" : {
           "type" : "integer",
           "format" : "int64"
         },
-        "totalPages" : {
+        "number" : {
           "type" : "integer",
           "format" : "int32"
         },
@@ -9338,10 +9342,6 @@
           "type" : "boolean"
         },
         "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-        "number" : {
           "type" : "integer",
           "format" : "int32"
         }
@@ -11176,7 +11176,7 @@
     "Virhe" : {
       "type" : "object",
       "properties" : {
-        "syy" : {
+        "kuvaus" : {
           "type" : "string"
         },
         "nimi" : {

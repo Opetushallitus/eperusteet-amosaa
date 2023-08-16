@@ -117,7 +117,7 @@ public class ValidointiServiceImpl implements ValidointiService {
 
         Validointi validointi = new Validointi();
         validoiTutkinnonOsa(validointi, viite, ops);
-        return validointi.getVirheet().stream().map(Validointi.Virhe::getSyy).collect(Collectors.toList());
+        return validointi.getVirheet().stream().map(Validointi.Virhe::getKuvaus).collect(Collectors.toList());
     }
 
     private void validoiTutkinnonOsa(Validointi validointi, SisaltoViite viite, Opetussuunnitelma ops) {

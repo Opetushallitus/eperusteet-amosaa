@@ -41,28 +41,28 @@ public class Validointi {
     @Getter
     @AllArgsConstructor
     static public class Virhe {
-        private String syy;
+        private String kuvaus;
         private Map<Kieli, String> nimi;
         private NavigationNodeDto navigationNode;
     }
 
-    public Validointi virhe(String syy, NavigationNodeDto navigationNode) {
-        virheet.add(new Virhe(syy, null, navigationNode));
+    public Validointi virhe(String kuvaus, NavigationNodeDto navigationNode) {
+        virheet.add(new Virhe(kuvaus, null, navigationNode));
         return this;
     }
 
-    public Validointi virhe(String syy, NavigationNodeDto navigationNode, Map<Kieli, String> nimi) {
-        virheet.add(new Virhe(syy, nimi, navigationNode));
+    public Validointi virhe(String kuvaus, NavigationNodeDto navigationNode, Map<Kieli, String> nimi) {
+        virheet.add(new Virhe(kuvaus, nimi, navigationNode));
         return this;
     }
 
-    public Validointi varoitus(String syy, NavigationNodeDto navigationNode) {
-        varoitukset.add(new Virhe(syy, null, navigationNode));
+    public Validointi varoitus(String kuvaus, NavigationNodeDto navigationNode) {
+        varoitukset.add(new Virhe(kuvaus, null, navigationNode));
         return this;
     }
 
-    public Validointi varoitus(String syy, NavigationNodeDto navigationNode, Map<Kieli, String> nimi) {
-        varoitukset.add(new Virhe(syy, nimi, navigationNode));
+    public Validointi varoitus(String kuvaus, NavigationNodeDto navigationNode, Map<Kieli, String> nimi) {
+        varoitukset.add(new Virhe(kuvaus, nimi, navigationNode));
         return this;
     }
 

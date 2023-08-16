@@ -65,7 +65,7 @@ public class VstOpetussuunnitelmaValidationService implements OpetussuunnitelmaV
         }
 
         if (viite.getTyyppi().equals(SisaltoTyyppi.OPINTOKOKONAISUUS)) {
-            if (validointi.getVirheet().stream().map(Validointi.Virhe::getSyy).noneMatch(syy -> syy.equals(SISALLOSSA_NIMETTOMIA_OPINTOKOKONAISUUKSIA))
+            if (validointi.getVirheet().stream().map(Validointi.Virhe::getKuvaus).noneMatch(kuvaus -> kuvaus.equals(SISALLOSSA_NIMETTOMIA_OPINTOKOKONAISUUKSIA))
                 && (viite.getTekstiKappale().getNimi() == null
                     || viite.getTekstiKappale().getNimi().getTeksti().isEmpty())) {
                 validointi.virhe(SISALLOSSA_NIMETTOMIA_OPINTOKOKONAISUUKSIA, NavigationNodeDto.of(viite));
