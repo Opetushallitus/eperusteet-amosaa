@@ -215,9 +215,9 @@ public class LokalisoituTeksti implements Serializable {
         validoi("kielisisaltoa-ei-loytynyt-opsin-kielilla", validointi, ops, teksti, navigationNodeDto);
     }
 
-    static public void validoi(String syy, Validointi validointi, Opetussuunnitelma ops, LokalisoituTeksti teksti, NavigationNodeDto navigationNodeDto) {
+    static public void validoi(String kuvaus, Validointi validointi, Opetussuunnitelma ops, LokalisoituTeksti teksti, NavigationNodeDto navigationNodeDto) {
         if (teksti == null || !teksti.hasKielet(ops.getJulkaisukielet())) {
-            validointi.virhe(syy, navigationNodeDto);
+            validointi.virhe(kuvaus, navigationNodeDto);
         }
     }
 }

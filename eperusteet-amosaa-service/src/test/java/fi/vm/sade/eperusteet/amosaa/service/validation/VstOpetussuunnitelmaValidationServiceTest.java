@@ -51,28 +51,28 @@ public class VstOpetussuunnitelmaValidationServiceTest extends AbstractIntegrati
 
         Validointi validointi = vstOpetussuunnitelmaValidationService.validoi(getKoulutustoimijaId(), vstOps.getId());
         assertThat(validointi.getVirheet().stream()
-                .filter(virhe -> virhe.getSyy().equals(VstOpetussuunnitelmaValidationService.SISALLOSSA_NIMETTOMIA_OPINTOKOKONAISUUKSIA)).collect(Collectors.toList())).hasSize(1);
+                .filter(virhe -> virhe.getKuvaus().equals(VstOpetussuunnitelmaValidationService.SISALLOSSA_NIMETTOMIA_OPINTOKOKONAISUUKSIA)).collect(Collectors.toList())).hasSize(1);
 
         opintokokonaisuus1.getTekstiKappale().setNimi(LokalisoituTekstiDto.of("nimi1"));
         sisaltoViiteService.updateSisaltoViite(getKoulutustoimijaId(), vstOps.getId(), opintokokonaisuus1.getId(), opintokokonaisuus1);
         validointi = vstOpetussuunnitelmaValidationService.validoi(getKoulutustoimijaId(), vstOps.getId());
         assertThat(validointi.getVirheet().stream()
-                .filter(virhe -> virhe.getSyy().equals(VstOpetussuunnitelmaValidationService.SISALLOSSA_NIMETTOMIA_OPINTOKOKONAISUUKSIA)).collect(Collectors.toList())).hasSize(1);
+                .filter(virhe -> virhe.getKuvaus().equals(VstOpetussuunnitelmaValidationService.SISALLOSSA_NIMETTOMIA_OPINTOKOKONAISUUKSIA)).collect(Collectors.toList())).hasSize(1);
 
         opintokokonaisuus2.getTekstiKappale().setNimi(LokalisoituTekstiDto.of("nimi2"));
         sisaltoViiteService.updateSisaltoViite(getKoulutustoimijaId(), vstOps.getId(), opintokokonaisuus2.getId(), opintokokonaisuus2);
         validointi = vstOpetussuunnitelmaValidationService.validoi(getKoulutustoimijaId(), vstOps.getId());
-        assertThat(validointi.getVirheet().stream().noneMatch(virhe -> virhe.getSyy().equals(VstOpetussuunnitelmaValidationService.SISALLOSSA_NIMETTOMIA_OPINTOKOKONAISUUKSIA))).isTrue();
+        assertThat(validointi.getVirheet().stream().noneMatch(virhe -> virhe.getKuvaus().equals(VstOpetussuunnitelmaValidationService.SISALLOSSA_NIMETTOMIA_OPINTOKOKONAISUUKSIA))).isTrue();
     }
 
     @Test
     public void testSisallostaPuuttuuOpintokokonaisuusLaajuusJaYksikko() {
         // validoidaan vstOps:n defaultina luotu opintokokonaisuus
         Validointi validointi = vstOpetussuunnitelmaValidationService.validoi(getKoulutustoimijaId(), vstOps.getId());
-        assertThat(validointi.getVirheet()).extracting(Validointi.Virhe::getSyy)
+        assertThat(validointi.getVirheet()).extracting(Validointi.Virhe::getKuvaus)
                 .doesNotContain("sisallossa-opintokokonaisuuksia-ilman-laajuutta")
                 .doesNotContain("sisallossa-opintokokonaisuuksia-ilman-laajuusyksikkoa");
-        assertThat(validointi.getVaroitukset()).extracting(Validointi.Virhe::getSyy)
+        assertThat(validointi.getVaroitukset()).extracting(Validointi.Virhe::getKuvaus)
                 .contains("sisallossa-opintokokonaisuuksia-ilman-laajuutta");
 
         SisaltoViiteDto viite = sisaltoViiteService.getSisaltoviitteet(getKoulutustoimijaId(), vstOps.getId(), SisaltoTyyppi.OPINTOKOKONAISUUS).get(0);
@@ -80,14 +80,14 @@ public class VstOpetussuunnitelmaValidationServiceTest extends AbstractIntegrati
         viite.getOpintokokonaisuus().setLaajuus(BigDecimal.valueOf(30.0));
         sisaltoViiteService.updateSisaltoViite(getKoulutustoimijaId(), vstOps.getId(), viite.getId(), viite);
         validointi = vstOpetussuunnitelmaValidationService.validoi(getKoulutustoimijaId(), vstOps.getId());
-        assertThat(validointi.getVirheet()).extracting(Validointi.Virhe::getSyy)
+        assertThat(validointi.getVirheet()).extracting(Validointi.Virhe::getKuvaus)
                 .doesNotContain("sisallossa-opintokokonaisuuksia-ilman-laajuutta")
                 .contains("sisallossa-opintokokonaisuuksia-ilman-laajuusyksikkoa");
 
         viite.getOpintokokonaisuus().setLaajuusYksikko(LaajuusYksikko.OPINTOPISTE);
         sisaltoViiteService.updateSisaltoViite(getKoulutustoimijaId(), vstOps.getId(), viite.getId(), viite);
         validointi = vstOpetussuunnitelmaValidationService.validoi(getKoulutustoimijaId(), vstOps.getId());
-        assertThat(validointi.getVirheet()).extracting(Validointi.Virhe::getSyy)
+        assertThat(validointi.getVirheet()).extracting(Validointi.Virhe::getKuvaus)
                 .doesNotContain("sisallossa-opintokokonaisuuksia-ilman-laajuutta")
                 .doesNotContain("sisallossa-opintokokonaisuuksia-ilman-laajuusyksikkoa");
     }

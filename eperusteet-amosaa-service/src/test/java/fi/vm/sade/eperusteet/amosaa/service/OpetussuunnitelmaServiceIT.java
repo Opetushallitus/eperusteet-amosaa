@@ -672,14 +672,14 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
         sisalto = sisaltoViiteService.addSisaltoViite(ops.getKoulutustoimija().getId(), ops.getId(), root.getId(), sisalto);
         Validointi validointi = opetussuunnitelmaService.validoi(ops.getKoulutustoimija().getId(), ops.getId());
         assertThat(validointi.getVirheet().stream().filter(virhe -> !virhe.getNavigationNode().getType().equals(NavigationType.tiedot)))
-                .extracting(Validointi.Virhe::getSyy)
+                .extracting(Validointi.Virhe::getKuvaus)
                 .contains("kielisisaltoa-ei-loytynyt-opsin-kielilla");
 
         sisalto.getTekstiKappale().setTeksti(LokalisoituTekstiDto.of(Kieli.FI, "teksti"));
         sisaltoViiteService.updateSisaltoViite(ops.getKoulutustoimija().getId(), ops.getId(), sisalto.getId(), sisalto);
         validointi = opetussuunnitelmaService.validoi(ops.getKoulutustoimija().getId(), ops.getId());
         assertThat(validointi.getVirheet().stream().filter(virhe -> !virhe.getNavigationNode().getType().equals(NavigationType.tiedot)))
-                .extracting(Validointi.Virhe::getSyy)
+                .extracting(Validointi.Virhe::getKuvaus)
                 .doesNotContain("kielisisaltoa-ei-loytynyt-opsin-kielilla");
     }
 
