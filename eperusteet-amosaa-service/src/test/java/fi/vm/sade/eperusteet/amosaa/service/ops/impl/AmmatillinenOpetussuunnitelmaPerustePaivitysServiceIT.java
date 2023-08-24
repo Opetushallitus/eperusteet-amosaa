@@ -10,7 +10,6 @@ import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonosaKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.OmaOsaAlueDto;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.OmaOsaAlueKevytDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteKevytDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
@@ -19,7 +18,7 @@ import fi.vm.sade.eperusteet.amosaa.repository.tutkinnonosa.TutkinnonosaReposito
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetClient;
 import fi.vm.sade.eperusteet.amosaa.service.ops.OpetussuunnitelmaDispatcher;
 import fi.vm.sade.eperusteet.amosaa.service.peruste.OpetussuunnitelmaPerustePaivitysService;
-import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
+import fi.vm.sade.eperusteet.amosaa.test.AbstractH2IntegrationTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
@@ -32,7 +31,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @Transactional
-public class AmmatillinenOpetussuunnitelmaPerustePaivitysServiceIT extends AbstractIntegrationTest {
+public class AmmatillinenOpetussuunnitelmaPerustePaivitysServiceIT extends AbstractH2IntegrationTest {
 
     @Autowired
     private OpetussuunnitelmaDispatcher dispatcher;

@@ -1,14 +1,10 @@
 package fi.vm.sade.eperusteet.amosaa.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.gson.JsonObject;
-
 import fi.vm.sade.eperusteet.amosaa.dto.PoistettuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHierarkiaDto;
-import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
+import fi.vm.sade.eperusteet.amosaa.test.AbstractH2IntegrationTest;
 import org.junit.Test;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,12 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.util.Collections;
 
-import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DirtiesContext
 @Transactional
-public class MappingIT extends AbstractIntegrationTest {
+public class MappingIT extends AbstractH2IntegrationTest {
 
     private ObjectMapper mapper = new ObjectMapper();
 

@@ -16,7 +16,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator;
-import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
+import fi.vm.sade.eperusteet.amosaa.test.AbstractH2IntegrationTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -34,7 +34,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DirtiesContext
 @Transactional
-public class KoulutustoimijaServiceIT extends AbstractIntegrationTest {
+public class KoulutustoimijaServiceIT extends AbstractH2IntegrationTest {
 
     @Autowired
     private DtoMapper mapper;
@@ -231,19 +231,19 @@ public class KoulutustoimijaServiceIT extends AbstractIntegrationTest {
         Opetussuunnitelma opetussuunnitelma = createOpetussuunnitelmaJulkaistu();
         updateOpetussuunnitelmaJulkaisukielet(opetussuunnitelma, Sets.newHashSet(Kieli.FI, Kieli.EN));
         updateKoulutustoimijaLokalisointiNimet(ImmutableMap.of(Kieli.FI, "testijarjestys5", Kieli.EN, "test1"));
-    	
+
     	useProfileKP1();
     	opetussuunnitelma = createOpetussuunnitelmaJulkaistu();
     	updateOpetussuunnitelmaJulkaisukielet(opetussuunnitelma, Sets.newHashSet(Kieli.FI, Kieli.EN));
     	updateKoulutustoimijaLokalisointiNimet(ImmutableMap.of(Kieli.FI, "testijarjestys1", Kieli.EN, "test2"));
-    	
+
     	useProfileKP3();
-    	createOpetussuunnitelmaJulkaistu();    	
+    	createOpetussuunnitelmaJulkaistu();
     	updateKoulutustoimijaLokalisointiNimet(ImmutableMap.of(Kieli.FI, "testijarjestys3"));
-    	
+
     	PageRequest p = new PageRequest(0, 10);
         KoulutustoimijaQueryDto pquery = new KoulutustoimijaQueryDto();
-        
+
         Page<KoulutustoimijaJulkinenDto> julkisetToimijat = koulutustoimijaService.findKoulutustoimijat(p, pquery);
         assertThat(julkisetToimijat).hasSize(3);
         assertThat(julkisetToimijat.getContent().stream()
@@ -257,7 +257,7 @@ public class KoulutustoimijaServiceIT extends AbstractIntegrationTest {
         assertThat(julkisetToimijat.getContent().stream()
                 .map(KoulutustoimijaBaseDto::getOrganisaatio))
                 .containsExactly(oidKp2, oidKp1);
-        
+
     }
 
     @Test

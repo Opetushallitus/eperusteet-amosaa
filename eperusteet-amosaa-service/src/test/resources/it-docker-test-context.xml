@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:cache="http://www.springframework.org/schema/cache"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+       http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd
+       http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd"
+       profile="docker">
+    <!-- Enables the caching through annotations -->
+    <cache:annotation-driven />
+
+    <context:property-placeholder
+            location="classpath:eperusteet-amosaa-service.properties, file:///${user.home:''}/oph-configuration/common.properties, file:///${user.home:''}/oph-configuration/eperusteet-service.properties, file:///${user.home:''}/oph-configuration/override.properties"
+            ignore-resource-not-found="true"
+            properties-ref="defaultProps"/>
+
+    <bean id="defaultProps" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="properties">
+            <util:properties local-override="true">
+                <prop key="cas_key">eperusteet-service</prop>
+                <prop key="spring_security_default_access">permitAll</prop>
+            </util:properties>
+        </property>
+    </bean>
+
+    <!--generic cache manager -->
+    <bean id="cacheManager" class="org.springframework.cache.concurrent.ConcurrentMapCacheManager"/>
+
+    <!-- import resource="file:///${user.home:''}/oph-configuration/security-context-backend.xml"/ -->
+    <context:component-scan base-package="fi.vm.sade.eperusteet.amosaa.service"/>
+    <context:component-scan base-package="fi.vm.sade.eperusteet.amosaa.service.util"/>
+    <context:component-scan base-package="fi.vm.sade.eperusteet.utils"/>
+
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="org.testcontainers.jdbc.ContainerDatabaseDriver"/>
+        <property name="url" value="jdbc:tc:postgresql:12.10:////test"/>
+        <property name="username" value="test"/>
+        <property name="password" value="test"/>
+    </bean>
+
+    <bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="outOfOrder" value="true"/>
+    </bean>
+
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" depends-on="flyway">
+        <property name="persistenceUnitName" value="eperusteet"/>
+        <property name="dataSource" ref="dataSource"/>
+        <property name="packagesToScan" value="fi.vm.sade.eperusteet.amosaa.domain"/>
+        <property name="persistenceProviderClass" value="org.hibernate.jpa.HibernatePersistenceProvider"/>
+        <property name="jpaPropertyMap">
+            <map>
+                <entry key="hibernate.hbm2ddl.auto" value="none"/>
+                <entry key="hibernate.show_sql" value="${hibernate.show_sql:false}"/>
+                <entry key="hibernate.dialect" value="fi.vm.sade.eperusteet.utils.repository.dialect.CustomPostgreSqlDialect"/>
+                <entry key="hibernate.enable_lazy_load_no_trans" value="true"/>
+                <entry key="javax.persistence.sharedCache.mode" value="ENABLE_SELECTIVE"/>
+                <entry key="hibernate.cache.use_second_level_cache" value="true"/>
+                <entry key="net.sf.ehcache.configurationResourceName" value="/eperusteet-hibernate-ehcache.xml"/>
+                <entry key="hibernate.cache.region.factory_class" value="org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory"/>
+                <entry key="org.hibernate.envers.audit_strategy" value="org.hibernate.envers.strategy.DefaultAuditStrategy"/>
+                <entry key="org.hibernate.envers.allow_identifier_reuse" value="true"/>
+            </map>
+        </property>
+        <property name="mappingResources">
+            <list>
+                <value>typedefs-pg.xml</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+
+    <jpa:repositories base-package="fi.vm.sade.eperusteet.amosaa.repository" factory-class="fi.vm.sade.eperusteet.amosaa.repository.version.JpaWithVersioningRepositoryFactoryBean"/>
+
+    <bean id="testPermissionEvaluator" class="fi.vm.sade.eperusteet.amosaa.service.util.TestPermissionEvaluator"/>
+    <bean id="permissionEvaluator" class="fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator"/>
+
+    <bean id="expressionHandler" class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler">
+        <property name="permissionEvaluator" ref="permissionEvaluator"/>
+    </bean>
+
+    <security:global-method-security secured-annotations="enabled" pre-post-annotations="enabled" >
+        <security:expression-handler ref="expressionHandler"/>
+        <security:protect-pointcut expression="execution(* fi.vm.sade.eperusteet.amosaa.service.*.*(..))" access="ROLE_DENY_ALL"/>
+    </security:global-method-security>
+
+    <security:authentication-manager alias="authenticationManager">
+        <security:authentication-provider>
+            <security:user-service>
+                <security:user name="oph" password="{noop}test"
+                               authorities="ROLE_USER, ROLE_APP_EPERUSTEET_AMOSAA, ROLE_APP_EPERUSTEET_VST, ROLE_APP_EPERUSTEET_TUVA, ROLE_APP_EPERUSTEET_AMOSAA_ADMIN_1.2.246.562.10.00000000001, ROLE_APP_EPERUSTEET_TUVA_ADMIN_1.2.246.562.10.00000000001, ROLE_APP_EPERUSTEET_VST_ADMIN_1.2.246.562.10.00000000001, ROLE_APP_EPERUSTEET_KOTO_ADMIN_1.2.246.562.10.00000000001"/>
+                <security:user name="kp1" password="{noop}test"
+                               authorities="ROLE_USER, ROLE_APP_EPERUSTEET_AMOSAA, ROLE_APP_EPERUSTEET_AMOSAA_ADMIN_1.2.246.562.10.54645809036"/>
+                <security:user name="kp2" password="{noop}test"
+                               authorities="ROLE_USER, ROLE_APP_EPERUSTEET_AMOSAA, ROLE_APP_EPERUSTEET_AMOSAA_ADMIN_1.2.246.562.10.2013120512391252668625"/>
+                <security:user name="kp2user2" password="{noop}test"
+                               authorities="ROLE_USER, ROLE_APP_EPERUSTEET_AMOSAA, ROLE_APP_EPERUSTEET_AMOSAA_ADMIN_1.2.246.562.10.2013120512391252668625"/>
+                <security:user name="kp3" password="{noop}test"
+                               authorities="ROLE_USER, ROLE_APP_EPERUSTEET_AMOSAA, ROLE_APP_EPERUSTEET_AMOSAA_ADMIN_1.2.246.562.10.2013120513110198396408"/>
+                <security:user name="tmpr" password="{noop}test"
+                               authorities="ROLE_USER, ROLE_APP_EPERUSTEET_AMOSAA, ROLE_APP_EPERUSTEET_AMOSAA_ADMIN_1.2.246.562.10.79499343246"/>
+                <security:user name="tuva" password="{noop}test"
+                               authorities="ROLE_USER, ROLE_APP_EPERUSTEET_TUVA, ROLE_APP_EPERUSTEET_TUVA_ADMIN_1.2.246.562.10.2013120512391252668625"/>
+                <security:user name="vst" password="{noop}test"
+                               authorities="ROLE_USER, ROLE_APP_EPERUSTEET_VST, ROLE_APP_EPERUSTEET_VST_ADMIN_1.2.246.562.10.2013120512391252668625"/>
+                <security:user name="koto" password="{noop}test"
+                               authorities="ROLE_USER, ROLE_APP_EPERUSTEET_KOTO, ROLE_APP_EPERUSTEET_KOTO_ADMIN_1.2.246.562.10.2013120512391252668625"/>
+                <security:user name="test3" password="{noop}test" authorities="ROLE_USER"/>
+                <security:user name="test4" password="{noop}test" authorities="ROLE_USER"/>
+                <security:user name="test5" password="{noop}test" authorities="ROLE_USER"/>
+                <security:user name="test6" password="{noop}test" authorities="ROLE_USER"/>
+                <security:user name="test7" password="{noop}test" authorities="ROLE_USER"/>
+                <security:user name="test8" password="{noop}test" authorities="ROLE_USER"/>
+            </security:user-service>
+        </security:authentication-provider>
+    </security:authentication-manager>
+
+</beans>

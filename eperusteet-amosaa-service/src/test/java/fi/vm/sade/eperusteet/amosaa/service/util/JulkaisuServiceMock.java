@@ -4,12 +4,13 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.JulkaistuOpetussuunni
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.JulkaisuTila;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.JulkaisuBaseDto;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.JulkaisuService;
-import java.util.List;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
-@Profile("test")
+@Profile({"test", "docker"})
 public class JulkaisuServiceMock implements JulkaisuService {
     @Override
     public List<JulkaisuBaseDto> getJulkaisut(long ktId, long opsId) {
@@ -32,7 +33,7 @@ public class JulkaisuServiceMock implements JulkaisuService {
 
     @Override
     public void kooditaSisaltoviitteet(long ktId, long opsId) {
-        
+
     }
 
     @Override

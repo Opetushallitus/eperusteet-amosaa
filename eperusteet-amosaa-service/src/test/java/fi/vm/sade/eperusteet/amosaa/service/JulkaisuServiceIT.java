@@ -1,12 +1,10 @@
 package fi.vm.sade.eperusteet.amosaa.service;
 
-import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.JulkaisuBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
-import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.JulkaisuDataRepository;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.JulkaisuService;
-import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
+import fi.vm.sade.eperusteet.amosaa.test.AbstractDockerIntegrationTest;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -18,13 +16,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DirtiesContext
 @Transactional
-public class JulkaisuServiceIt extends AbstractIntegrationTest {
+public class JulkaisuServiceIT extends AbstractDockerIntegrationTest {
 
     @Autowired
     private JulkaisuService julkaisuService;
-
-    @Autowired
-    private JulkaisuDataRepository julkaisuDataRepository;
 
     @BeforeClass
     public static void setup() {
@@ -34,7 +29,7 @@ public class JulkaisuServiceIt extends AbstractIntegrationTest {
     @Test
     @Ignore
     public void testJulkaisu1() {
-        useProfileKP1();
+        useProfileKP2();
         OpetussuunnitelmaBaseDto ops = createOpetussuunnitelma();
         assertThat(julkaisuService.getJulkaisut(getKoulutustoimijaId(), ops.getId())).isEmpty();
 
@@ -50,5 +45,4 @@ public class JulkaisuServiceIt extends AbstractIntegrationTest {
         // FIXME: haun kutsu kaatuu koska julkaisu_data taulua ei ole enaa olemassa???
         //assertThat(julkaisuService.getJulkaisut(getKoulutustoimijaId(), this.opsId)).hasSize(1);
     }
-
 }

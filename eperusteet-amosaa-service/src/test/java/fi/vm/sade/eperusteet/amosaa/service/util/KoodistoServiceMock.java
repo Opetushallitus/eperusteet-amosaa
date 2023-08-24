@@ -27,7 +27,7 @@ import java.util.List;
  * @author mikkom
  */
 @Service
-@Profile("test")
+@Profile({"test", "docker"})
 public class KoodistoServiceMock implements KoodistoService {
     @Override
     public List<KoodistoKoodiDto> getAll(String koodisto) {

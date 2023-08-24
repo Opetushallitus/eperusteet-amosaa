@@ -22,6 +22,7 @@ import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationExcep
 import fi.vm.sade.eperusteet.amosaa.service.ops.LiiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.ValidointiService;
+import fi.vm.sade.eperusteet.amosaa.test.AbstractH2IntegrationTest;
 import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -43,7 +44,7 @@ import static org.assertj.core.api.Assertions.*;
 
 @DirtiesContext
 @Transactional
-public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
+public class SisaltoViiteServiceIT extends AbstractH2IntegrationTest {
 
     @Autowired
     private SisaltoViiteService sisaltoViiteService;

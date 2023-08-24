@@ -11,7 +11,7 @@ import fi.vm.sade.eperusteet.amosaa.service.ops.OpetussuunnitelmaValidationServi
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.impl.VstOpetussuunnitelmaValidationService;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
-import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
+import fi.vm.sade.eperusteet.amosaa.test.AbstractH2IntegrationTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +23,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DirtiesContext
 @Transactional
-public class VstOpetussuunnitelmaValidationServiceTest extends AbstractIntegrationTest {
+public class VstOpetussuunnitelmaValidationServiceTest extends AbstractH2IntegrationTest {
 
     @Autowired
     private OpetussuunnitelmaValidationService vstOpetussuunnitelmaValidationService;

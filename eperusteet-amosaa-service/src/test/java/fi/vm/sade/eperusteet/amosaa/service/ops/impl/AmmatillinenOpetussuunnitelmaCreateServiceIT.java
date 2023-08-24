@@ -23,7 +23,7 @@ import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.tutkinnonosa.TutkinnonosaRepository;
 import fi.vm.sade.eperusteet.amosaa.service.ops.OpetussuunnitelmaCreateService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.OpetussuunnitelmaDispatcher;
-import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
+import fi.vm.sade.eperusteet.amosaa.test.AbstractH2IntegrationTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
@@ -38,7 +38,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @Transactional
-public class AmmatillinenOpetussuunnitelmaCreateServiceIT extends AbstractIntegrationTest {
+public class AmmatillinenOpetussuunnitelmaCreateServiceIT extends AbstractH2IntegrationTest {
 
     @Autowired
     private OpetussuunnitelmaDispatcher dispatcher;

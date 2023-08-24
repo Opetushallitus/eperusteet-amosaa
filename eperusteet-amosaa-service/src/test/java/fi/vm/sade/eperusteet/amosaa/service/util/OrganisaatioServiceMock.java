@@ -26,17 +26,18 @@ import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHierarkiaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHistoriaLiitosDto;
 import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioStatus;
 import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Service;
 
 /**
  * @author mikkom
  */
 @Service
-@Profile("test")
+@Profile({"test", "docker"})
 public class OrganisaatioServiceMock implements OrganisaatioService {
     @Override
     public JsonNode getOrganisaatio(String organisaatioOid) {
@@ -79,7 +80,7 @@ public class OrganisaatioServiceMock implements OrganisaatioService {
 
     @Override
     public List<OrganisaatioHistoriaLiitosDto> getOrganisaationHistoriaLiitokset(String organisaatioOid) {
-        
+
         return Arrays.asList(
                 OrganisaatioHistoriaLiitosDto.builder()
                         .organisaatio(OrganisaatioHierarkiaDto.builder()

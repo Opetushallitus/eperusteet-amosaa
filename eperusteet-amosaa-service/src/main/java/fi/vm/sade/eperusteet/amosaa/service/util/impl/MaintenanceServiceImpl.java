@@ -43,7 +43,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.CollectionUtils;
 
 @Service
-@Profile("!test")
+@Profile("default")
 public class MaintenanceServiceImpl implements MaintenanceService {
 
     private static final Logger logger = LoggerFactory.getLogger(MaintenanceServiceImpl.class);

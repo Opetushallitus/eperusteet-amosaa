@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 @Service
-@Profile("test")
+@Profile({"test", "docker"})
 public class DokumenttiServiceMock implements DokumenttiService {
     @Override
     public DokumenttiDto getValmisDto(Long ktId, Long opsId, Kieli kieli) {

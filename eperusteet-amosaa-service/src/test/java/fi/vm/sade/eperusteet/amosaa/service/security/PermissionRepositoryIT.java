@@ -15,7 +15,7 @@
  */
 package fi.vm.sade.eperusteet.amosaa.service.security;
 
-import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
+import fi.vm.sade.eperusteet.amosaa.test.AbstractH2IntegrationTest;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ import org.springframework.test.annotation.DirtiesContext;
  * @author jhyoty
  */
 @DirtiesContext
-public class PermissionRepositoryIT extends AbstractIntegrationTest {
+public class PermissionRepositoryIT extends AbstractH2IntegrationTest {
 
     @Autowired
     private PermissionRepository permissions;
