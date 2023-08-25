@@ -12,7 +12,8 @@
        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
        http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd
        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd"
-       profile="docker">
+       profile="docker"
+       default-lazy-init="true">
     <!-- Enables the caching through annotations -->
     <cache:annotation-driven />
 
@@ -33,9 +34,7 @@
     <!--generic cache manager -->
     <bean id="cacheManager" class="org.springframework.cache.concurrent.ConcurrentMapCacheManager"/>
 
-    <!-- import resource="file:///${user.home:''}/oph-configuration/security-context-backend.xml"/ -->
     <context:component-scan base-package="fi.vm.sade.eperusteet.amosaa.service"/>
-    <context:component-scan base-package="fi.vm.sade.eperusteet.amosaa.service.util"/>
     <context:component-scan base-package="fi.vm.sade.eperusteet.utils"/>
 
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">

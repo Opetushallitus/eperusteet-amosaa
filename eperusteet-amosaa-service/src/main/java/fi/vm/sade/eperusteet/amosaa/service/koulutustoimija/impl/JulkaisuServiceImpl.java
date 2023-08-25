@@ -63,12 +63,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @Transactional
-@Profile("default")
+@Profile("!test")
 public class JulkaisuServiceImpl implements JulkaisuService {
 
     @Value("${fi.vm.sade.eperusteet.salli_virheelliset:false}")
@@ -145,7 +146,7 @@ public class JulkaisuServiceImpl implements JulkaisuService {
     }
 
     @Override
-    public void teeJulkaisu(long ktId, long opsId, JulkaisuBaseDto julkaisuBaseDto) {
+    public CompletableFuture<Void> teeJulkaisu(long ktId, long opsId, JulkaisuBaseDto julkaisuBaseDto) {
         Opetussuunnitelma opetussuunnitelma = opetussuunnitelmaRepository.findOne(opsId);
 
         if (opetussuunnitelma == null) {
@@ -166,7 +167,7 @@ public class JulkaisuServiceImpl implements JulkaisuService {
         julkaistuOpetussuunnitelmaTila.setJulkaisutila(JulkaisuTila.KESKEN);
         saveJulkaistuOpetussuunnitelmaTila(julkaistuOpetussuunnitelmaTila);
 
-        self.teeJulkaisuAsync(ktId, opsId, julkaisuBaseDto);
+        return self.teeJulkaisuAsync(ktId, opsId, julkaisuBaseDto);
     }
 
     private JulkaistuOpetussuunnitelmaTila getOrCreateTila(Long opsId) {
@@ -182,7 +183,7 @@ public class JulkaisuServiceImpl implements JulkaisuService {
 
     @Override
     @Async("julkaisuTaskExecutor")
-    public void teeJulkaisuAsync(long ktId, long opsId, JulkaisuBaseDto julkaisuBaseDto) {
+    public CompletableFuture<Void> teeJulkaisuAsync(long ktId, long opsId, JulkaisuBaseDto julkaisuBaseDto) {
         log.debug("teeJulkaisu: {}", opsId);
 
         JulkaistuOpetussuunnitelmaTila julkaistuOpetussuunnitelmaTila = getOrCreateTila(opsId);
@@ -241,6 +242,7 @@ public class JulkaisuServiceImpl implements JulkaisuService {
         opetussuunnitelma.setTila(Tila.JULKAISTU);
         julkaistuOpetussuunnitelmaTila.setJulkaisutila(JulkaisuTila.JULKAISTU);
         saveJulkaistuOpetussuunnitelmaTila(julkaistuOpetussuunnitelmaTila);
+        return null;
     }
 
     @Override

@@ -4,6 +4,8 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.JulkaistuOpetussuunni
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.JulkaisuTila;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.JulkaisuBaseDto;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
 import org.springframework.security.core.parameters.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -12,10 +14,10 @@ public interface JulkaisuService {
     List<JulkaisuBaseDto> getJulkaisut(long ktId, long opsId);
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
-    void teeJulkaisu(@P("ktId") long ktId, @P("opsId") long opsId, JulkaisuBaseDto julkaisuBaseDto);
+    CompletableFuture<Void> teeJulkaisu(@P("ktId") long ktId, @P("opsId") long opsId, JulkaisuBaseDto julkaisuBaseDto);
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
-    void teeJulkaisuAsync(@P("ktId") long ktId, @P("opsId") long opsId, JulkaisuBaseDto julkaisuBaseDto);
+    CompletableFuture<Void> teeJulkaisuAsync(@P("ktId") long ktId, @P("opsId") long opsId, JulkaisuBaseDto julkaisuBaseDto);
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
     JulkaisuBaseDto aktivoiJulkaisu(@P("ktId") long ktId, @P("opsId") long opsId, int revision);

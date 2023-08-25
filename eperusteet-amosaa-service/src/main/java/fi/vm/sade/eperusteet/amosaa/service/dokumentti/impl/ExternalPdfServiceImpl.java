@@ -14,6 +14,7 @@ import fi.vm.sade.javautils.http.OphHttpRequest;
 import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -29,6 +30,7 @@ import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 
 @Service
+@Profile("default")
 public class ExternalPdfServiceImpl implements ExternalPdfService {
 
     @Value("${fi.vm.sade.eperusteet.amosaa.pdf-service:''}")
