@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 @Service
 @Profile("test")
@@ -19,13 +18,11 @@ public class JulkaisuServiceMock implements JulkaisuService {
     }
 
     @Override
-    public CompletableFuture<Void> teeJulkaisu(long ktId, long opsId, JulkaisuBaseDto julkaisuBaseDto) {
-        return null;
+    public void teeJulkaisu(long ktId, long opsId, JulkaisuBaseDto julkaisuBaseDto) {
     }
 
     @Override
-    public CompletableFuture<Void> teeJulkaisuAsync(long ktId, long opsId, JulkaisuBaseDto julkaisuBaseDto) {
-        return null;
+    public void teeJulkaisuAsync(long ktId, long opsId, JulkaisuBaseDto julkaisuBaseDto) {
     }
 
     @Override

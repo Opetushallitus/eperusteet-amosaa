@@ -146,7 +146,7 @@ public class JulkaisuServiceImpl implements JulkaisuService {
     }
 
     @Override
-    public CompletableFuture<Void> teeJulkaisu(long ktId, long opsId, JulkaisuBaseDto julkaisuBaseDto) {
+    public void teeJulkaisu(long ktId, long opsId, JulkaisuBaseDto julkaisuBaseDto) {
         Opetussuunnitelma opetussuunnitelma = opetussuunnitelmaRepository.findOne(opsId);
 
         if (opetussuunnitelma == null) {
@@ -167,7 +167,7 @@ public class JulkaisuServiceImpl implements JulkaisuService {
         julkaistuOpetussuunnitelmaTila.setJulkaisutila(JulkaisuTila.KESKEN);
         saveJulkaistuOpetussuunnitelmaTila(julkaistuOpetussuunnitelmaTila);
 
-        return self.teeJulkaisuAsync(ktId, opsId, julkaisuBaseDto);
+        self.teeJulkaisuAsync(ktId, opsId, julkaisuBaseDto);
     }
 
     private JulkaistuOpetussuunnitelmaTila getOrCreateTila(Long opsId) {
@@ -183,7 +183,7 @@ public class JulkaisuServiceImpl implements JulkaisuService {
 
     @Override
     @Async("julkaisuTaskExecutor")
-    public CompletableFuture<Void> teeJulkaisuAsync(long ktId, long opsId, JulkaisuBaseDto julkaisuBaseDto) {
+    public void teeJulkaisuAsync(long ktId, long opsId, JulkaisuBaseDto julkaisuBaseDto) {
         log.debug("teeJulkaisu: {}", opsId);
 
         JulkaistuOpetussuunnitelmaTila julkaistuOpetussuunnitelmaTila = getOrCreateTila(opsId);
@@ -242,7 +242,6 @@ public class JulkaisuServiceImpl implements JulkaisuService {
         opetussuunnitelma.setTila(Tila.JULKAISTU);
         julkaistuOpetussuunnitelmaTila.setJulkaisutila(JulkaisuTila.JULKAISTU);
         saveJulkaistuOpetussuunnitelmaTila(julkaistuOpetussuunnitelmaTila);
-        return null;
     }
 
     @Override
