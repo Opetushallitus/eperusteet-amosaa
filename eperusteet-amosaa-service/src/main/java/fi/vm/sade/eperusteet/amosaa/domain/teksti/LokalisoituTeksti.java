@@ -17,6 +17,7 @@ package fi.vm.sade.eperusteet.amosaa.domain.teksti;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
+import fi.vm.sade.eperusteet.amosaa.dto.NavigationNodeDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 import lombok.Getter;
@@ -210,19 +211,13 @@ public class LokalisoituTeksti implements Serializable {
         return true;
     }
 
-    static public void validoi(Validointi validointi, Opetussuunnitelma ops, LokalisoituTeksti teksti, LokalisoituTeksti... parents) {
-        validoi("kielisisaltoa-ei-loytynyt-opsin-kielilla", validointi, ops, teksti, parents);
+    static public void validoi(Validointi validointi, Opetussuunnitelma ops, LokalisoituTeksti teksti, NavigationNodeDto navigationNodeDto) {
+        validoi("kielisisaltoa-ei-loytynyt-opsin-kielilla", validointi, ops, teksti, navigationNodeDto);
     }
 
-    static public void validoi(String syy, Validointi validointi, Opetussuunnitelma ops, LokalisoituTeksti teksti, LokalisoituTeksti... parents) {
+    static public void validoi(String kuvaus, Validointi validointi, Opetussuunnitelma ops, LokalisoituTeksti teksti, NavigationNodeDto navigationNodeDto) {
         if (teksti == null || !teksti.hasKielet(ops.getJulkaisukielet())) {
-            validointi.virhe(syy, parents);
-        }
-    }
-
-    static public void validoi(String syy, Validointi validointi, Opetussuunnitelma ops, LokalisoituTeksti teksti) {
-        if (teksti == null || !teksti.hasKielet(ops.getJulkaisukielet())) {
-            validointi.virhe(syy);
+            validointi.virhe(kuvaus, navigationNodeDto);
         }
     }
 }

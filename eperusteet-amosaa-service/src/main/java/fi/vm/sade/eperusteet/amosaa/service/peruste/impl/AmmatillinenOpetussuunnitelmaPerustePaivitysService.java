@@ -6,6 +6,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaOsaAlue;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaOsaAlueTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.OsaAlueDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.OsaAlueKokonaanDto;
@@ -23,6 +24,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -89,9 +91,15 @@ public class AmmatillinenOpetussuunnitelmaPerustePaivitysService implements Opet
 
     private void paivitaTutkinnonOsaPerusteenTiedoilla(SisaltoViite sisaltoViite, TutkinnonosaKaikkiDto tutkinnonosaKaikkiDto) {
         List<Long> perusteenOsaAlueIdt = tutkinnonosaKaikkiDto.getOsaAlueet().stream().map(OsaAlueDto::getId).collect(Collectors.toList());
-        List<Long> opsinPerusteenOsaAlueIdt = sisaltoViite.getOsaAlueet().stream().map(OmaOsaAlue::getPerusteenOsaAlueId).collect(Collectors.toList());
+        List<Long> opsinPerusteenOsaAlueIdt = sisaltoViite.getOsaAlueet().stream()
+                .map(OmaOsaAlue::getPerusteenOsaAlueId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
 
-        sisaltoViite.getOsaAlueet().removeAll(sisaltoViite.getOsaAlueet().stream().filter(omaosaalue -> !perusteenOsaAlueIdt.contains(omaosaalue.getPerusteenOsaAlueId())).collect(Collectors.toList()));
+        sisaltoViite.getOsaAlueet().removeAll(sisaltoViite.getOsaAlueet().stream()
+                .filter(osaalue -> !osaalue.getTyyppi().equals(OmaOsaAlueTyyppi.PAIKALLINEN))
+                .filter(omaosaalue -> !perusteenOsaAlueIdt.contains(omaosaalue.getPerusteenOsaAlueId()))
+                .collect(Collectors.toList()));
         tutkinnonosaKaikkiDto.getOsaAlueet().stream()
                 .filter(osaalue -> !opsinPerusteenOsaAlueIdt.contains(osaalue.getId()))
                 .forEach(osaalue -> OpetussuunnitelmaSisaltoCreateUtil.addPerusteenOsaAlueToSisaltoViite(sisaltoViite, osaalue));

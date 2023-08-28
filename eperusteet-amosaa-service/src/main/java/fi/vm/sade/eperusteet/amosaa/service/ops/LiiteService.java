@@ -32,18 +32,18 @@ public interface LiiteService {
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'MUOKKAUS')")
     UUID add(Long ktId, @P("opsId") Long opsId, String tyyppi, String nimi, long length, InputStream is);
 
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'ESITYS')")
+    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'ESITYS') or isAuthenticated()")
     LiiteDto get(@P("opsId") Long opsId, UUID id);
 
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
+    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU') or isAuthenticated()")
     List<LiiteDto> getAll(@P("ktId") Long ktId, @P("opsId") Long opsId);
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'MUOKKAUS')")
     void delete(@P("opsId") Long ktId, @P("opsId") Long opsId, UUID id);
 
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'ESITYS')")
+    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'ESITYS') or isAuthenticated()")
     void export(@P("opsId") Long opsId, UUID id, OutputStream os);
 
-    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'ESITYS')")
+    @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'ESITYS')  or isAuthenticated()")
     InputStream exportLiitePerusteelta(Long opsId, UUID id);
 }

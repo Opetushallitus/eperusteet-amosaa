@@ -4592,7 +4592,10 @@
           "200" : {
             "description" : "successful operation",
             "schema" : {
-              "$ref" : "#/definitions/Validointi"
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Validointi"
+              }
             }
           }
         }
@@ -6146,6 +6149,33 @@
         }
       }
     },
+    "ArvioinninKohdeExportDto" : {
+      "type" : "object",
+      "properties" : {
+        "otsikko" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "selite" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "arviointiasteikko" : {
+          "$ref" : "#/definitions/ArviointiasteikkoDto"
+        },
+        "osaamistasonKriteerit" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/OsaamistasonKriteeriDto"
+          }
+        }
+      }
+    },
     "ArvioinninKohdealue" : {
       "type" : "object",
       "properties" : {
@@ -6177,6 +6207,23 @@
           "type" : "array",
           "items" : {
             "$ref" : "#/definitions/ArvioinninKohdeDto"
+          }
+        }
+      }
+    },
+    "ArvioinninKohdealueExportDto" : {
+      "type" : "object",
+      "properties" : {
+        "otsikko" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "arvioinninKohteet" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ArvioinninKohdeExportDto"
           }
         }
       }
@@ -6234,6 +6281,27 @@
           "type" : "array",
           "items" : {
             "$ref" : "#/definitions/ArvioinninKohdealueDto"
+          }
+        }
+      }
+    },
+    "ArviointiExportDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "lisatiedot" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "arvioinninKohdealueet" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ArvioinninKohdealueExportDto"
           }
         }
       }
@@ -7916,8 +7984,48 @@
         "laajuus" : {
           "type" : "number"
         },
+        "geneerinenarviointi" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "ammattitaitovaatimukset" : {
+          "$ref" : "#/definitions/PaikallisetAmmattitaitovaatimukset2019Dto"
+        },
+        "ammattitaidonOsoittamistavat" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "ammattitaitovaatimuksetLista" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/AmmattitaitovaatimuksenKohdealueDto"
+          }
+        },
+        "tavoitteet" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
         "arviointi" : {
           "$ref" : "#/definitions/ArviointiDto"
+        }
+      }
+    },
+    "OmaTutkinnonosaExportDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "koodi" : {
+          "type" : "string"
+        },
+        "laajuus" : {
+          "type" : "number"
         },
         "geneerinenarviointi" : {
           "type" : "integer",
@@ -7943,6 +8051,12 @@
           "additionalProperties" : {
             "type" : "string"
           }
+        },
+        "arviointi" : {
+          "$ref" : "#/definitions/ArviointiExportDto"
+        },
+        "geneerinenArviointiasteikko" : {
+          "$ref" : "#/definitions/GeneerinenArviointiasteikkoKaikkiDto"
         }
       }
     },
@@ -8669,19 +8783,19 @@
           "type" : "string",
           "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO", "MAAHANMUUTTAJIENKOTOUTUMISKOULUTUS", "VAPAASIVISTYSTYOLUKUTAITO", "TUTKINTOONVALMENTAVA" ]
         },
-        "perusteId" : {
-          "type" : "integer",
-          "format" : "int64"
-        },
-        "julkaisuVuosi" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "perusteNimi" : {
           "type" : "object",
           "additionalProperties" : {
             "type" : "string"
           }
+        },
+        "julkaisuVuosi" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "perusteId" : {
+          "type" : "integer",
+          "format" : "int64"
         }
       }
     },
@@ -9047,10 +9161,6 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "number" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "size" : {
           "type" : "integer",
           "format" : "int32"
@@ -9061,18 +9171,22 @@
             "type" : "object"
           }
         },
-        "first" : {
-          "type" : "boolean"
+        "number" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
-        "last" : {
+        "first" : {
           "type" : "boolean"
         },
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
+        },
+        "last" : {
+          "type" : "boolean"
         }
       }
     },
@@ -9087,10 +9201,6 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "number" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "size" : {
           "type" : "integer",
           "format" : "int32"
@@ -9101,18 +9211,22 @@
             "$ref" : "#/definitions/KoulutustoimijaJulkinenDto"
           }
         },
-        "first" : {
-          "type" : "boolean"
+        "number" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
-        "last" : {
+        "first" : {
           "type" : "boolean"
         },
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
+        },
+        "last" : {
+          "type" : "boolean"
         }
       }
     },
@@ -9127,10 +9241,6 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "number" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "size" : {
           "type" : "integer",
           "format" : "int32"
@@ -9141,18 +9251,22 @@
             "$ref" : "#/definitions/OpetussuunnitelmaBaseDto"
           }
         },
-        "first" : {
-          "type" : "boolean"
+        "number" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
-        "last" : {
+        "first" : {
           "type" : "boolean"
         },
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
+        },
+        "last" : {
+          "type" : "boolean"
         }
       }
     },
@@ -9167,10 +9281,6 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "number" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "size" : {
           "type" : "integer",
           "format" : "int32"
@@ -9181,18 +9291,22 @@
             "$ref" : "#/definitions/OpetussuunnitelmaDto"
           }
         },
-        "first" : {
-          "type" : "boolean"
+        "number" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
-        "last" : {
+        "first" : {
           "type" : "boolean"
         },
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
+        },
+        "last" : {
+          "type" : "boolean"
         }
       }
     },
@@ -9207,10 +9321,6 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "number" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "size" : {
           "type" : "integer",
           "format" : "int32"
@@ -9221,18 +9331,22 @@
             "$ref" : "#/definitions/SisaltoviiteLaajaDto"
           }
         },
-        "first" : {
-          "type" : "boolean"
+        "number" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
-        "last" : {
+        "first" : {
           "type" : "boolean"
         },
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
+        },
+        "last" : {
+          "type" : "boolean"
         }
       }
     },
@@ -9879,7 +9993,7 @@
           "$ref" : "#/definitions/TekstiKappaleDto"
         },
         "tosa" : {
-          "$ref" : "#/definitions/TutkinnonosaDto"
+          "$ref" : "#/definitions/TutkinnonosaExportDto"
         },
         "suorituspolku" : {
           "$ref" : "#/definitions/SuorituspolkuExportDto"
@@ -10216,6 +10330,13 @@
         },
         "piilotaPerusteenTeksti" : {
           "type" : "boolean"
+        },
+        "rivit" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/SuorituspolkuRiviDto"
+          }
         }
       }
     },
@@ -10268,7 +10389,7 @@
           "format" : "int32"
         },
         "paikallinenKuvaus" : {
-          "$ref" : "#/definitions/SuorituspolkuRiviJulkinenDto"
+          "$ref" : "#/definitions/SuorituspolkuRiviDto"
         },
         "sisaltoviiteId" : {
           "type" : "integer",
@@ -10306,28 +10427,6 @@
         },
         "piilotettu" : {
           "type" : "boolean"
-        }
-      }
-    },
-    "SuorituspolkuRiviJulkinenDto" : {
-      "type" : "object",
-      "properties" : {
-        "id" : {
-          "type" : "integer",
-          "format" : "int64"
-        },
-        "kuvaus" : {
-          "type" : "object",
-          "additionalProperties" : {
-            "type" : "string"
-          }
-        },
-        "koodit" : {
-          "type" : "array",
-          "uniqueItems" : true,
-          "items" : {
-            "type" : "string"
-          }
         }
       }
     },
@@ -10718,8 +10817,53 @@
           "type" : "string",
           "format" : "date-time"
         },
+        "vierastutkinnonosa" : {
+          "$ref" : "#/definitions/VierasTutkinnonosaDto"
+        },
+        "toteutukset" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/TutkinnonosaToteutusDto"
+          }
+        },
+        "osaamisenOsoittaminen" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "perusteentutkinnonosa" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "vapaat" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/VapaaTekstiDto"
+          }
+        },
         "omatutkinnonosa" : {
           "$ref" : "#/definitions/OmaTutkinnonosaDto"
+        }
+      }
+    },
+    "TutkinnonosaExportDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "tyyppi" : {
+          "type" : "string",
+          "enum" : [ "PERUSTEESTA", "OMA", "VIERAS", "YHTEINEN" ]
+        },
+        "koodi" : {
+          "type" : "string"
+        },
+        "muokattu" : {
+          "type" : "string",
+          "format" : "date-time"
         },
         "vierastutkinnonosa" : {
           "$ref" : "#/definitions/VierasTutkinnonosaDto"
@@ -10745,6 +10889,9 @@
           "items" : {
             "$ref" : "#/definitions/VapaaTekstiDto"
           }
+        },
+        "omatutkinnonosa" : {
+          "$ref" : "#/definitions/OmaTutkinnonosaExportDto"
         }
       }
     },
@@ -10882,13 +11029,17 @@
     "Validointi" : {
       "type" : "object",
       "properties" : {
+        "kategoria" : {
+          "type" : "string",
+          "enum" : [ "OPETUSSUUNNITELMA", "SISALTO" ]
+        },
         "virheet" : {
           "type" : "array",
           "items" : {
             "$ref" : "#/definitions/Virhe"
           }
         },
-        "varoitukset" : {
+        "huomautukset" : {
           "type" : "array",
           "items" : {
             "$ref" : "#/definitions/Virhe"
@@ -11032,7 +11183,7 @@
     "Virhe" : {
       "type" : "object",
       "properties" : {
-        "syy" : {
+        "kuvaus" : {
           "type" : "string"
         },
         "nimi" : {
@@ -11040,6 +11191,9 @@
           "additionalProperties" : {
             "type" : "string"
           }
+        },
+        "navigationNode" : {
+          "$ref" : "#/definitions/NavigationNodeDto"
         }
       }
     }

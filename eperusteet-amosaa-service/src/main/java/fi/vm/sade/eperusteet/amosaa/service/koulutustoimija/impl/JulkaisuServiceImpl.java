@@ -194,9 +194,9 @@ public class JulkaisuServiceImpl implements JulkaisuService {
                 throw new BusinessRuleViolationException("opetussuunnitelmaa-ei-loytynyt");
             }
 
-            Validointi validointi = opetussuunnitelmaService.validoi(ktId, opsId);
+            List<Validointi> validoinnit = opetussuunnitelmaService.validoi(ktId, opsId);
 
-            if (!salliVirheelliset && CollectionUtils.isNotEmpty(validointi.getVirheet())) {
+            if (!salliVirheelliset && validoinnit.stream().anyMatch(validointi -> CollectionUtils.isNotEmpty(validointi.getVirheet()))) {
                 throw new BusinessRuleViolationException("opetussuunnitelma-ei-validi");
             }
 

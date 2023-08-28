@@ -40,7 +40,7 @@ public class DokumenttiStateServiceImpl implements DokumenttiStateService {
     @Autowired
     private DtoMapper mapper;
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional
     public Dokumentti save(DokumenttiDto dto) {
         Dokumentti dokumentti = dokumenttiRepository.findOne(dto.getId());
         if (dokumentti != null) {

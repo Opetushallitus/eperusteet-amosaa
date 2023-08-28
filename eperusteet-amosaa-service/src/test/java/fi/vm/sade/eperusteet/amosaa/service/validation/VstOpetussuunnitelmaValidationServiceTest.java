@@ -19,6 +19,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.*;
@@ -49,30 +51,36 @@ public class VstOpetussuunnitelmaValidationServiceTest extends AbstractIntegrati
         SisaltoViiteDto.Matala opintokokonaisuus1 = createOpintokokonaisuus();
         SisaltoViiteDto.Matala opintokokonaisuus2 = createOpintokokonaisuus();
 
-        Validointi validointi = vstOpetussuunnitelmaValidationService.validoi(getKoulutustoimijaId(), vstOps.getId());
-        assertThat(validointi.getVirheet().stream()
-                .filter(virhe -> virhe.getSyy().equals(VstOpetussuunnitelmaValidationService.SISALLOSSA_NIMETTOMIA_OPINTOKOKONAISUUKSIA)).collect(Collectors.toList())).hasSize(1);
+        List<Validointi> validointi = vstOpetussuunnitelmaValidationService.validoi(getKoulutustoimijaId(), vstOps.getId());
+        List<Validointi.Virhe> virheet = validointi.stream().map(Validointi::getVirheet).flatMap(Collection::stream).collect(Collectors.toList());
+        assertThat(virheet.stream()
+                .filter(virhe -> virhe.getKuvaus().equals(VstOpetussuunnitelmaValidationService.SISALLOSSA_NIMETTOMIA_OPINTOKOKONAISUUKSIA)).collect(Collectors.toList())).hasSize(1);
 
         opintokokonaisuus1.getTekstiKappale().setNimi(LokalisoituTekstiDto.of("nimi1"));
         sisaltoViiteService.updateSisaltoViite(getKoulutustoimijaId(), vstOps.getId(), opintokokonaisuus1.getId(), opintokokonaisuus1);
         validointi = vstOpetussuunnitelmaValidationService.validoi(getKoulutustoimijaId(), vstOps.getId());
-        assertThat(validointi.getVirheet().stream()
-                .filter(virhe -> virhe.getSyy().equals(VstOpetussuunnitelmaValidationService.SISALLOSSA_NIMETTOMIA_OPINTOKOKONAISUUKSIA)).collect(Collectors.toList())).hasSize(1);
+        virheet = validointi.stream().map(Validointi::getVirheet).flatMap(Collection::stream).collect(Collectors.toList());
+        assertThat(virheet.stream()
+                .filter(virhe -> virhe.getKuvaus().equals(VstOpetussuunnitelmaValidationService.SISALLOSSA_NIMETTOMIA_OPINTOKOKONAISUUKSIA)).collect(Collectors.toList())).hasSize(1);
 
         opintokokonaisuus2.getTekstiKappale().setNimi(LokalisoituTekstiDto.of("nimi2"));
         sisaltoViiteService.updateSisaltoViite(getKoulutustoimijaId(), vstOps.getId(), opintokokonaisuus2.getId(), opintokokonaisuus2);
         validointi = vstOpetussuunnitelmaValidationService.validoi(getKoulutustoimijaId(), vstOps.getId());
-        assertThat(validointi.getVirheet().stream().noneMatch(virhe -> virhe.getSyy().equals(VstOpetussuunnitelmaValidationService.SISALLOSSA_NIMETTOMIA_OPINTOKOKONAISUUKSIA))).isTrue();
+        virheet = validointi.stream().map(Validointi::getVirheet).flatMap(Collection::stream).collect(Collectors.toList());
+        assertThat(virheet.stream().noneMatch(virhe -> virhe.getKuvaus().equals(VstOpetussuunnitelmaValidationService.SISALLOSSA_NIMETTOMIA_OPINTOKOKONAISUUKSIA))).isTrue();
     }
 
     @Test
     public void testSisallostaPuuttuuOpintokokonaisuusLaajuusJaYksikko() {
         // validoidaan vstOps:n defaultina luotu opintokokonaisuus
-        Validointi validointi = vstOpetussuunnitelmaValidationService.validoi(getKoulutustoimijaId(), vstOps.getId());
-        assertThat(validointi.getVirheet()).extracting(Validointi.Virhe::getSyy)
+        List<Validointi> validointi = vstOpetussuunnitelmaValidationService.validoi(getKoulutustoimijaId(), vstOps.getId());
+        List<Validointi.Virhe> virheet = validointi.stream().map(Validointi::getVirheet).flatMap(Collection::stream).collect(Collectors.toList());
+        assertThat(virheet).extracting(Validointi.Virhe::getKuvaus)
                 .doesNotContain("sisallossa-opintokokonaisuuksia-ilman-laajuutta")
                 .doesNotContain("sisallossa-opintokokonaisuuksia-ilman-laajuusyksikkoa");
-        assertThat(validointi.getVaroitukset()).extracting(Validointi.Virhe::getSyy)
+
+        List<Validointi.Virhe> varoitukset = validointi.stream().map(Validointi::getHuomautukset).flatMap(Collection::stream).collect(Collectors.toList());
+        assertThat(varoitukset).extracting(Validointi.Virhe::getKuvaus)
                 .contains("sisallossa-opintokokonaisuuksia-ilman-laajuutta");
 
         SisaltoViiteDto viite = sisaltoViiteService.getSisaltoviitteet(getKoulutustoimijaId(), vstOps.getId(), SisaltoTyyppi.OPINTOKOKONAISUUS).get(0);
@@ -80,14 +88,16 @@ public class VstOpetussuunnitelmaValidationServiceTest extends AbstractIntegrati
         viite.getOpintokokonaisuus().setLaajuus(BigDecimal.valueOf(30.0));
         sisaltoViiteService.updateSisaltoViite(getKoulutustoimijaId(), vstOps.getId(), viite.getId(), viite);
         validointi = vstOpetussuunnitelmaValidationService.validoi(getKoulutustoimijaId(), vstOps.getId());
-        assertThat(validointi.getVirheet()).extracting(Validointi.Virhe::getSyy)
+        virheet = validointi.stream().map(Validointi::getVirheet).flatMap(Collection::stream).collect(Collectors.toList());
+        assertThat(virheet).extracting(Validointi.Virhe::getKuvaus)
                 .doesNotContain("sisallossa-opintokokonaisuuksia-ilman-laajuutta")
                 .contains("sisallossa-opintokokonaisuuksia-ilman-laajuusyksikkoa");
 
         viite.getOpintokokonaisuus().setLaajuusYksikko(LaajuusYksikko.OPINTOPISTE);
         sisaltoViiteService.updateSisaltoViite(getKoulutustoimijaId(), vstOps.getId(), viite.getId(), viite);
         validointi = vstOpetussuunnitelmaValidationService.validoi(getKoulutustoimijaId(), vstOps.getId());
-        assertThat(validointi.getVirheet()).extracting(Validointi.Virhe::getSyy)
+        virheet = validointi.stream().map(Validointi::getVirheet).flatMap(Collection::stream).collect(Collectors.toList());
+        assertThat(virheet).extracting(Validointi.Virhe::getKuvaus)
                 .doesNotContain("sisallossa-opintokokonaisuuksia-ilman-laajuutta")
                 .doesNotContain("sisallossa-opintokokonaisuuksia-ilman-laajuusyksikkoa");
     }

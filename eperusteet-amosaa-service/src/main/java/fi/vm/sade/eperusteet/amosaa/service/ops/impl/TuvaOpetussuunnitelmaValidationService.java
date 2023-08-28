@@ -7,12 +7,15 @@ import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
+import fi.vm.sade.eperusteet.amosaa.dto.NavigationNodeDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
-import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.OpetussuunnitelmaValidationService;
-import fi.vm.sade.eperusteet.amosaa.service.ops.ValidointiService;
+import fi.vm.sade.eperusteet.amosaa.service.util.ValidationCategory;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
+
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.parameters.P;
@@ -33,15 +36,17 @@ public class TuvaOpetussuunnitelmaValidationService implements Opetussuunnitelma
     }
 
     @Override
-    public Validointi validoi(@P("ktId") Long ktId, @P("opsId") Long opsId) {
+    public List<Validointi> validoi(@P("ktId") Long ktId, @P("opsId") Long opsId) {
         Opetussuunnitelma ops = opetussuunnitelmaRepository.findOne(opsId);
 
-        Validointi validointi = new Validointi();
-        ValidointiServiceImpl.validoiTiedot(validointi, ops);
+        Validointi opsValidointi = new Validointi(ValidationCategory.OPETUSSUUNNITELMA);
+        ValidointiServiceImpl.validoiTiedot(opsValidointi, ops);
         SisaltoViite root = sisaltoviiteRepository.findOneRoot(ops);
-        validoi(validointi, root, ops);
 
-        return validointi;
+        Validointi sisaltoValidointi = new Validointi(ValidationCategory.SISALTO);
+        validoi(sisaltoValidointi, root, ops);
+
+        return Arrays.asList(opsValidointi, sisaltoValidointi);
     }
 
     private void validoi(Validointi validointi, SisaltoViite viite, Opetussuunnitelma ops) {
@@ -54,12 +59,12 @@ public class TuvaOpetussuunnitelmaValidationService implements Opetussuunnitelma
         // Validointi jos osa on pakollinen tai kyseessä itse määritetty sisältö millä ei ole alisisältöä
         if ((viite.getPerusteteksti() == null && viite.getPohjanTekstikappale() == null)) {
             if (viite.getLapset().isEmpty()) {
-                LokalisoituTeksti.validoi(validointi, ops, viite.getTekstiKappale().getTeksti(), viite.getTekstiKappale().getNimi());
+                LokalisoituTeksti.validoi(validointi, ops, viite.getTekstiKappale().getTeksti(), NavigationNodeDto.of(viite));
             }
         }
 
         if (viite.isPakollinen()) {
-            validointi.varoitus("tekstikappaleella-ei-lainkaan-sisaltoa", nimi);
+            validointi.huomautukset("tekstikappaleella-ei-lainkaan-sisaltoa", NavigationNodeDto.of(viite), nimi.getTeksti());
         }
 
         for (SisaltoViite lapsi : viite.getLapset()) {

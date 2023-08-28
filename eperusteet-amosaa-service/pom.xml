@@ -29,8 +29,8 @@
         <jsoup.version>1.10.1</jsoup.version>
         <ehcache.version>2.6.11</ehcache.version>
         <slf4j.version>1.7.36</slf4j.version>
-        <fop.version>2.8</fop.version>
         <pdfbox.version>2.0.29</pdfbox.version>
+        <fop.version>2.9</fop.version>
         <springfox.version>2.7.0</springfox.version>
         <metrics.version>4.2.18</metrics.version>
         <aspectj.version>1.9.19</aspectj.version>
@@ -43,7 +43,7 @@
         <swagger-maven-plugin-version>3.1.7</swagger-maven-plugin-version>
         <eperusteet.backendutils.version>2.5</eperusteet.backendutils.version>
         <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
-        <lombok.version>1.18.4</lombok.version>
+        <lombok.version>1.18.28</lombok.version>
         <java.release.version>11</java.release.version>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>

@@ -34,9 +34,4 @@ import lombok.*;
 @Builder
 public class TutkinnonosaDto extends TutkinnonosaBaseDto {
     private OmaTutkinnonosaDto omatutkinnonosa;
-    private VierasTutkinnonosaDto vierastutkinnonosa;
-    private List<TutkinnonosaToteutusDto> toteutukset;
-    private LokalisoituTekstiDto osaamisenOsoittaminen;
-    private Long perusteentutkinnonosa;
-    private List<VapaaTekstiDto> vapaat;
 }

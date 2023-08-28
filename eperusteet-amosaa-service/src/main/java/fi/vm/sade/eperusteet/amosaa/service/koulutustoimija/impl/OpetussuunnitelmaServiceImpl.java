@@ -53,7 +53,6 @@ import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteenOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteenOsaViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.Suoritustapakoodi;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonosaExportDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonosaKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
@@ -999,7 +998,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
             // Julkaisun rutiinit
             if (tila.equals(Tila.JULKAISTU)) {
 
-                validoi(ktId, opsId).tuomitse();
+                validoi(ktId, opsId).forEach(Validointi::tuomitse);
 
                 julkaisuService.teeJulkaisu(
                         ktId, opsId,
@@ -1016,10 +1015,10 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     }
 
     @Override
-    public Validointi validoi(Long ktId, Long opsId) {
+    public List<Validointi> validoi(Long ktId, Long opsId) {
         Opetussuunnitelma ops = findOps(ktId, opsId);
         if (ops.getKoulutustyyppi() != null || ops.getPeruste() != null) {
-            Validointi validointi = dispatcher.get(
+            List<Validointi> validointi = dispatcher.get(
                     ops.getKoulutustyyppi() != null ? ops.getKoulutustyyppi() : ops.getPeruste().getKoulutustyyppi(),
                     OpetussuunnitelmaValidationService.class).validoi(ktId, opsId);
             if (validointi != null) {

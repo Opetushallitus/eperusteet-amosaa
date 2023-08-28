@@ -10,6 +10,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
+import fi.vm.sade.eperusteet.amosaa.dto.NavigationType;
 import fi.vm.sade.eperusteet.amosaa.dto.OpsHakuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.OpsHakuInternalDto;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
@@ -42,6 +43,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -669,16 +671,16 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
         SisaltoViiteDto.Matala root = sisaltoViiteService.getSisaltoRoot(getKoulutustoimijaId(), ops.getId());
         SisaltoViiteDto.Matala sisalto = createSisalto();
         sisalto = sisaltoViiteService.addSisaltoViite(ops.getKoulutustoimija().getId(), ops.getId(), root.getId(), sisalto);
-        Validointi validointi = opetussuunnitelmaService.validoi(ops.getKoulutustoimija().getId(), ops.getId());
-        assertThat(validointi.getVirheet())
-                .extracting(Validointi.Virhe::getSyy)
+        List<Validointi.Virhe> virheet = virheet(opetussuunnitelmaService.validoi(ops.getKoulutustoimija().getId(), ops.getId()));
+        assertThat(virheet.stream().filter(virhe -> !virhe.getNavigationNode().getType().equals(NavigationType.tiedot)))
+                .extracting(Validointi.Virhe::getKuvaus)
                 .contains("kielisisaltoa-ei-loytynyt-opsin-kielilla");
 
         sisalto.getTekstiKappale().setTeksti(LokalisoituTekstiDto.of(Kieli.FI, "teksti"));
         sisaltoViiteService.updateSisaltoViite(ops.getKoulutustoimija().getId(), ops.getId(), sisalto.getId(), sisalto);
-        validointi = opetussuunnitelmaService.validoi(ops.getKoulutustoimija().getId(), ops.getId());
-        assertThat(validointi.getVirheet())
-                .extracting(Validointi.Virhe::getSyy)
+        virheet = virheet(opetussuunnitelmaService.validoi(ops.getKoulutustoimija().getId(), ops.getId()));
+        assertThat(virheet.stream().filter(virhe -> !virhe.getNavigationNode().getType().equals(NavigationType.tiedot)))
+                .extracting(Validointi.Virhe::getKuvaus)
                 .doesNotContain("kielisisaltoa-ei-loytynyt-opsin-kielilla");
     }
 
@@ -711,8 +713,12 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
         kt2.setYstavat(Sets.newHashSet(Reference.of(kt1.getId())));
         koulutustoimijaService.updateKoulutustoimija(kt2.getId(), kt2);
 
-        Validointi validointi = opetussuunnitelmaService.validoi(ops.getKoulutustoimija().getId(), ops.getId());
-        assertThat(validointi.getVirheet()).isNotEmpty();
+        List<Validointi.Virhe> virheet = virheet(opetussuunnitelmaService.validoi(ops.getKoulutustoimija().getId(), ops.getId()));
+        assertThat(virheet).isNotEmpty();
+    }
+
+    private List<Validointi.Virhe> virheet(List<Validointi> validoinnit) {
+        return validoinnit.stream().map(validointi -> validointi.getVirheet()).flatMap(Collection::stream).collect(Collectors.toList());
     }
 
     @Test

@@ -30,7 +30,7 @@ public class MuutOpetussuunnitelmaPerustePaivitysService implements Opetussuunni
 
     @Override
     public Set<KoulutusTyyppi> getTyypit() {
-        return Sets.newHashSet(KoulutusTyyppi.VAPAASIVISTYSTYO, KoulutusTyyppi.VAPAASIVISTYSTYOLUKUTAITO, KoulutusTyyppi.MAAHANMUUTTAJIENKOTOUTUMISKOULUTUS, KoulutusTyyppi.TUTKINTOONVALMENTAVA);
+        return Sets.newHashSet(KoulutusTyyppi.VAPAASIVISTYSTYO, KoulutusTyyppi.VAPAASIVISTYSTYOLUKUTAITO, KoulutusTyyppi.MAAHANMUUTTAJIENKOTOUTUMISKOULUTUS);
     }
 
     @Override

@@ -294,7 +294,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
     })
     @RequestMapping(value = "/{opsId}/validoi", method = RequestMethod.GET)
     @InternalApi
-    public Validointi validoiOpetussuunnitelma(
+    public List<Validointi> validoiOpetussuunnitelma(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId
     ) {

@@ -3,9 +3,10 @@ package fi.vm.sade.eperusteet.amosaa.service.ops.impl;
 import com.google.common.collect.Sets;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteKevytDto;
-import java.util.Set;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Set;
 
 @Component
 @Transactional

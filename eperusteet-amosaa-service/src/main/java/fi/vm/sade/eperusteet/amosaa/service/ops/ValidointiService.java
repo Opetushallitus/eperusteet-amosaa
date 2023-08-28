@@ -27,7 +27,7 @@ import java.util.List;
  * @author nkala
  */
 public interface ValidointiService {
-    Validointi validoi(Opetussuunnitelma ops);
+    List<Validointi> validoi(Opetussuunnitelma ops);
 
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
     List<String> tutkinnonOsanValidointivirheet(@P("opsId") Long opsId, Long viiteId);

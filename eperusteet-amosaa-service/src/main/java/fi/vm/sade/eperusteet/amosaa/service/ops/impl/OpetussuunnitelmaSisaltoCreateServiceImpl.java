@@ -6,6 +6,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.KotoTaitotaso;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Koulutuksenosa;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.KoulutuksenosanPaikallinenTarkennus;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OpintokokonaisuusArviointi;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OpintokokonaisuusTavoite;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OpintokokonaisuusTyyppi;
@@ -137,6 +138,8 @@ public class OpetussuunnitelmaSisaltoCreateServiceImpl implements Opetussuunnite
             Koulutuksenosa koulutuksenosa = sisaltoviite.getKoulutuksenosa();
             KoulutuksenOsaDto koulutuksenOsaDto = (KoulutuksenOsaDto) sisalto.getPerusteenOsa();
             mapper.map(koulutuksenOsaDto, koulutuksenosa);
+            KoulutuksenosanPaikallinenTarkennus koulutuksenosanPaikallinenTarkennus = new KoulutuksenosanPaikallinenTarkennus();
+            koulutuksenosa.setPaikallinenTarkennus(koulutuksenosanPaikallinenTarkennus);
             sisaltoviite.getKoulutuksenosa().setId(null);
         }
 
