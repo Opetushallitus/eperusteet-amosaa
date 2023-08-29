@@ -48,6 +48,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -184,7 +186,11 @@ public class SisaltoViite extends AbstractAuditedEntity implements Referenceable
     @Setter
     private KotoLaajaAlainenOsaaminen kotoLaajaAlainenOsaaminen;
 
+    @OrderColumn
     @OneToMany(orphanRemoval = true, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @JoinTable(name = "sisaltoviite_omaosaalue",
+            joinColumns = @JoinColumn(name = "sisaltoviite_id"),
+            inverseJoinColumns = @JoinColumn(name = "osaalueet_id"))
     @Getter
     @Setter
     private List<OmaOsaAlue> osaAlueet = new ArrayList<>();
