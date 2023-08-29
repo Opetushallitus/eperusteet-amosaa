@@ -531,6 +531,7 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
         { // Adding osa alueet
             uusi.getOsaAlueet().add(createOsaalue.apply("a"));
             uusi.getOsaAlueet().add(createOsaalue.apply("b"));
+            uusi.getOsaAlueet().add(createOsaalue.apply("c"));
 
             sisaltoViiteService.updateSisaltoViite(
                     ops.getKoulutustoimija().getId(),
@@ -543,9 +544,10 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
                     ops.getId(),
                     uusi.getId());
 
-            assertThat(updated.getOsaAlueet()).hasSize(2);
+            assertThat(updated.getOsaAlueet()).hasSize(3);
             assertThat(updated.getOsaAlueet().get(0).getNimi().get(Kieli.FI)).isEqualTo("nimi-a");
             assertThat(updated.getOsaAlueet().get(1).getNimi().get(Kieli.FI)).isEqualTo("nimi-b");
+            assertThat(updated.getOsaAlueet().get(2).getNimi().get(Kieli.FI)).isEqualTo("nimi-c");
 
             assertThat(updated.getOsaAlueet().get(0).getToteutukset()).hasSize(1);
             assertThat(updated.getOsaAlueet().get(0).getToteutukset().get(0).getArvioinnista().getTeksti().get(Kieli.FI)).isEqualTo("arvioinnista-a");
@@ -561,9 +563,10 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
 
             Collections.swap(updated.getOsaAlueet(), 0, 1);
 
-            assertThat(updated.getOsaAlueet()).hasSize(2);
+            assertThat(updated.getOsaAlueet()).hasSize(3);
             assertThat(updated.getOsaAlueet().get(0).getNimi().get(Kieli.FI)).isEqualTo("nimi-b");
             assertThat(updated.getOsaAlueet().get(1).getNimi().get(Kieli.FI)).isEqualTo("nimi-a");
+            assertThat(updated.getOsaAlueet().get(2).getNimi().get(Kieli.FI)).isEqualTo("nimi-c");
         }
     }
 
