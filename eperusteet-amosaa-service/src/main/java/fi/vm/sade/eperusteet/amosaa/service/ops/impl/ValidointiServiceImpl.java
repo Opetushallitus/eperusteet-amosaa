@@ -325,7 +325,7 @@ public class ValidointiServiceImpl implements ValidointiService {
                 for (String koodi : rivi.getKoodit()) {
                     if (sisaltoViiteService.getCountByKoodi(ops.getKoulutustoimija().getId(), koodi) == 0) {
                         String[] koodiSplit = koodi.split("_");
-                        validointi.huomautukset("suorituspolku-koodi-ei-toteutusta", NavigationNodeDto.of(viite), nimi.getTeksti());
+                        validointi.huomautukset("suorituspolku-koodi-ei-toteutusta", NavigationNodeDto.of(viite), Optional.ofNullable(nimi).map(LokalisoituTeksti::getTeksti).orElse(null));
                     }
                 }
             }
