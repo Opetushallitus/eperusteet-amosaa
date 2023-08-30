@@ -59,6 +59,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author mikkom
@@ -279,6 +280,7 @@ public class SisaltoViite extends AbstractAuditedEntity implements Referenceable
             result.setTekstiKappale(TekstiKappale.copy(original.getTekstiKappale()));
             result.setNaytaPohjanTeksti(original.isNaytaPohjanTeksti());
             result.updatePohjanTekstikappale(original.getPohjanTekstikappale());
+            result.setOsaAlueet(original.getOsaAlueet().stream().map(OmaOsaAlue::copy).collect(Collectors.toList()));
 
             if ((kopiointiType.equals(TekstiHierarkiaKopiointiToiminto.POHJAVIITE) || kopiointiType.equals(TekstiHierarkiaKopiointiToiminto.KOPIOI_JA_SAILYTA_POHJAVIITE))
                     && original.getTekstiKappale() != null
