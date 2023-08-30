@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteKevytDto;
 import lombok.*;
 
@@ -18,7 +19,7 @@ import lombok.*;
 public class SisaltoViiteExportBaseDto {
     private Long id;
     private SisaltoTyyppi tyyppi;
-    private CachedPerusteKevytDto peruste;
+    private CachedPerusteBaseDto peruste;
 
     private Long linkattuOps;
     private Long linkattuSisaltoViiteId;

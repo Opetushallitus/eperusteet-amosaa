@@ -70,6 +70,8 @@ public class OmaOsaAlue extends AbstractAuditedEntity implements Serializable, R
         result.setTyyppi(getTyyppi());
         result.setLaajuus(getLaajuus());
         result.setKoodi(getKoodi());
+        result.setPerusteenOsaAlueId(getPerusteenOsaAlueId());
+        result.setPerusteenOsaAlueKoodi(getPerusteenOsaAlueKoodi());
 
         if (osaamistavoitteet != null) {
             result.setOsaamistavoitteet(new Ammattitaitovaatimukset2019(osaamistavoitteet));
