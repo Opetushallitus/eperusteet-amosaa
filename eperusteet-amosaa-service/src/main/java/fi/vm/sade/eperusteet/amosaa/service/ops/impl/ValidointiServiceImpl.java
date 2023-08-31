@@ -321,7 +321,9 @@ public class ValidointiServiceImpl implements ValidointiService {
 
         if (sp != null && sp.getRivit() != null) {
             for (SuorituspolkuRivi rivi : sp.getRivit()) {
-                LokalisoituTeksti.validoi(validointi, ops, rivi.getKuvaus(), NavigationNodeDto.of(viite));
+                if (rivi.getPiilotettu() == null || !rivi.getPiilotettu()) {
+                    LokalisoituTeksti.validoi(validointi, ops, rivi.getKuvaus(), NavigationNodeDto.of(viite));
+                }
                 for (String koodi : rivi.getKoodit()) {
                     if (sisaltoViiteService.getCountByKoodi(ops.getKoulutustoimija().getId(), koodi) == 0) {
                         String[] koodiSplit = koodi.split("_");
