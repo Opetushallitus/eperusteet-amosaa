@@ -16,6 +16,8 @@
 package fi.vm.sade.eperusteet.amosaa.domain;
 
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Immutable;
@@ -23,38 +25,18 @@ import org.hibernate.annotations.Immutable;
 import javax.persistence.*;
 import java.io.Serializable;
 
-/**
- * @author teele1
- */
+@Setter
+@Getter
 @Entity
 @Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
-@Immutable
 @Table(name = "osaamistaso")
 public class Osaamistaso implements Serializable, ReferenceableEntity {
 
-    // Ei voi luoda lisää muuten kuin migraatiolla
     @Id
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private LokalisoituTeksti otsikko;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public LokalisoituTeksti getOtsikko() {
-        return otsikko;
-    }
-
-    public void setOtsikko(LokalisoituTeksti otsikko) {
-        this.otsikko = otsikko;
-    }
 
     @Override
     public String toString() {
