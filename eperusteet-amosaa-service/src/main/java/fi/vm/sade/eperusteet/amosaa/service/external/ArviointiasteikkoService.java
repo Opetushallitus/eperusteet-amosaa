@@ -30,4 +30,7 @@ public interface ArviointiasteikkoService {
 
     @PreAuthorize("permitAll()")
     ArviointiasteikkoDto get(Long id);
+
+    @PreAuthorize("hasPermission(null, 'oph', 'HALLINTA')")
+    void update();
 }

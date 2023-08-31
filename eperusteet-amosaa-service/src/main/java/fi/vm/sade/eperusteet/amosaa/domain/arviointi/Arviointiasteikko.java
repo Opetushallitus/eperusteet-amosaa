@@ -18,6 +18,8 @@ package fi.vm.sade.eperusteet.amosaa.domain.arviointi;
 
 import fi.vm.sade.eperusteet.amosaa.domain.Osaamistaso;
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Immutable;
@@ -26,13 +28,10 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * @author teele1
- */
+@Setter
+@Getter
 @Entity
 @Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
-@Immutable
 @Table(name = "arviointiasteikko")
 public class Arviointiasteikko implements Serializable, ReferenceableEntity {
 
@@ -41,22 +40,6 @@ public class Arviointiasteikko implements Serializable, ReferenceableEntity {
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @OrderColumn
-    @Immutable
     private List<Osaamistaso> osaamistasot;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public List<Osaamistaso> getOsaamistasot() {
-        return osaamistasot;
-    }
-
-    public void setOsaamistasot(List<Osaamistaso> osaamistasot) {
-        this.osaamistasot = osaamistasot;
-    }
 }
