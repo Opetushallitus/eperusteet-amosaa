@@ -105,6 +105,7 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -216,6 +217,9 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
     @Autowired
     private OpetussuunnitelmaSisaltoCreateService opetussuunnitelmaSisaltoCreateService;
+
+    @Autowired
+    private CacheManager cacheManager;
 
     @PostConstruct
     protected void init() {
@@ -687,6 +691,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         PerusteKaikkiDto perusteDto = eperusteetClient.getPeruste(ops.getPeruste().getPerusteId(), PerusteKaikkiDto.class);
         CachedPerusteBaseDto cp = eperusteetService.getCachedPeruste(perusteDto);
         CachedPeruste newCachedPeruste = cachedPerusteRepository.findOne(cp.getId());
+        cacheManager.getCache("perusteKaikki").evictIfPresent(newCachedPeruste.getId());
         dispatcher.get(ops.getOpsKoulutustyyppi(), OpetussuunnitelmaPerustePaivitysService.class).paivitaOpetussuunnitelma(opsId, perusteDto);
 
         List<SisaltoViite> tutkinnonOsaViitteet = sisaltoviiteRepository.findTutkinnonosat(ops);

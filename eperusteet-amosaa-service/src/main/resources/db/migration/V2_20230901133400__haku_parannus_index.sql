@@ -1,0 +1,9 @@
+CREATE INDEX sisaltoviite_vanhempi_id_index ON sisaltoviite(vanhempi_id);
+CREATE INDEX sisaltoviite_pohjanTekstikappale_id_index ON sisaltoviite(pohjanTekstikappale_id);
+CREATE INDEX sisaltoviite_linkkiSisaltoViite_id_index ON sisaltoviite(linkkiSisaltoViite_id);
+CREATE INDEX tekstikappale_nimi_id_index ON tekstikappale(nimi_id);
+CREATE INDEX tekstikappale_teksti_id_index ON tekstikappale(teksti_id);
+CREATE INDEX lokalisoituteksti_teksti_lokalisoituteksti_id_index ON lokalisoituteksti_teksti(lokalisoituteksti_id);
+CREATE INDEX lokalisoituteksti_id_index ON lokalisoituteksti(id);
+
+analyze;

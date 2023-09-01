@@ -317,7 +317,7 @@
     <cache name="perusteKaikki"
            maxElementsInMemory="50"
            eternal="false"
-           timeToLiveSeconds="3600"
+           timeToLiveSeconds="43200"
            overflowToDisk="false" />
 
     <cache name="koodistohaku"
