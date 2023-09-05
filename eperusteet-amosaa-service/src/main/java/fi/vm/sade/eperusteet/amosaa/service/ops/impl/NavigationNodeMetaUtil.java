@@ -37,7 +37,8 @@ public class NavigationNodeMetaUtil {
                         .map(osaalue -> NavigationNodeDto
                                 .of(NavigationType.osaalue, osaAlueNimi(osaalue, perusteKaikkiDto), osaalue.getId())
                                 .meta("koodi", osaalue.getKoodiArvo())
-                                .meta("sisaltoviiteId", lapsi.getId())));
+                                .meta("sisaltoviiteId", lapsi.getId())
+                                .meta("nimi-kieli-filter", true)));
             }
 
             if (lapsi.getOsaAlueet().stream().anyMatch(osaalue -> osaalue.getTyyppi().equals(OmaOsaAlueTyyppi.VALINNAINEN))) {
@@ -47,7 +48,8 @@ public class NavigationNodeMetaUtil {
                         .map(osaalue -> NavigationNodeDto
                                 .of(NavigationType.osaalue, osaAlueNimi(osaalue, perusteKaikkiDto), osaalue.getId())
                                 .meta("koodi", osaalue.getKoodiArvo())
-                                .meta("sisaltoviiteId", lapsi.getId())));
+                                .meta("sisaltoviiteId", lapsi.getId())
+                                .meta("nimi-kieli-filter", true)));
             }
 
             if (lapsi.getOsaAlueet().stream().anyMatch(osaalue -> osaalue.getTyyppi().equals(OmaOsaAlueTyyppi.PAIKALLINEN))) {
@@ -56,7 +58,8 @@ public class NavigationNodeMetaUtil {
                         .filter(osaalue -> osaalue.getTyyppi().equals(OmaOsaAlueTyyppi.PAIKALLINEN) && filter.test(osaalue))
                         .map(osaalue -> NavigationNodeDto
                                 .of(NavigationType.osaalue, osaalue.getNimi(), osaalue.getId())
-                                .meta("sisaltoviiteId", lapsi.getId())));
+                                .meta("sisaltoviiteId", lapsi.getId())
+                                .meta("nimi-kieli-filter", true)));
             }
         }
     }
