@@ -46,18 +46,4 @@ public class OsaAlueKokonaanDto extends OsaAlueDto {
     private Osaamistavoite2020Dto valinnaisetOsaamistavoitteet;
 
     private List<OsaamistavoiteLaajaDto> osaamistavoitteet;
-
-    public LokalisoituTekstiDto getNimi() {
-        if (getKoodi() != null && getKielikoodi() != null) {
-            Map<Kieli, String> tekstit = new HashMap<>();
-            Arrays.stream(Kieli.values()).forEach(kieli -> {
-                if (getKoodi().getNimi().get(kieli.toString()) != null && getKielikoodi().getNimi().get(kieli.toString()) != null) {
-                    tekstit.put(kieli, getKoodi().getNimi().get(kieli.toString()) + ", " + getKielikoodi().getNimi().get(kieli.toString()));
-                }
-            });
-            return LokalisoituTekstiDto.of(tekstit);
-        } else {
-            return super.getNimi();
-        }
-    }
 }
