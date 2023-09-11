@@ -9,7 +9,6 @@ import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaOsaAlue;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaOsaAlueTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.OsaAlueDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.OsaAlueKokonaanDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonosaKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;

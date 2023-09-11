@@ -48,7 +48,7 @@ public class TutkinnonosaKaikkiDto extends PerusteenOsaDto {
     private Long opintoluokitus;
     private String koodiUri;
     private String koodiArvo;
-    private List<OsaAlueKokonaanDto> osaAlueet;
+    private List<OsaAlueKaikkiDto> osaAlueet;
     private TutkinnonOsaTyyppi tyyppi;
     private ValmaTelmaSisaltoDto valmaTelmaSisalto;
 }
