@@ -44,7 +44,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.peruste.KotoLaajaAlaisenOsaamisenAlueDto
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.KotoOpintoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.KotoTaitotasoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.MuodostumisSaantoDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.OsaAlueKokonaanDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.OsaAlueKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.OsaamisenTavoiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliDto;
@@ -84,9 +84,6 @@ import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.TermistoService;
 import fi.vm.sade.eperusteet.amosaa.service.util.KoodistoClient;
 import fi.vm.sade.eperusteet.utils.dto.dokumentti.DokumenttiMetaDto;
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -120,6 +117,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Collection;
@@ -133,13 +132,14 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliRooli.VIRTUAALINEN;
-import static fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils.*;
 import static fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils.addHeader;
 import static fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils.addLokalisoituteksti;
 import static fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils.addTeksti;
 import static fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils.getTextString;
+import static fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util.DokumenttiUtils.selectLaajuusYksikkoMessage;
 
 @Service
 public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
@@ -865,7 +865,7 @@ public class DokumenttiBuilderServiceImpl implements DokumenttiBuilderService {
             });
 
             StringBuilder sisaltoOtsikko = new StringBuilder();
-            OsaAlueKokonaanDto perusteenOsaAlue = null;
+            OsaAlueKaikkiDto perusteenOsaAlue = null;
 
             if (omaOsaAlueDto.getPerusteenOsaAlueId() != null) {
                 perusteenOsaAlue = peruste.getTutkinnonOsat().stream()

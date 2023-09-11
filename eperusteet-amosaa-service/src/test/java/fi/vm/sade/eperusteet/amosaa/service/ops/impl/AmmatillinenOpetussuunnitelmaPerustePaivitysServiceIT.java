@@ -4,13 +4,12 @@ import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaOsaAlueTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.OsaAlueKokonaanDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.OsaAlueKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.Osaamistavoite2020Dto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonosaKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.OmaOsaAlueDto;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.OmaOsaAlueKevytDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteKevytDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
@@ -140,8 +139,8 @@ public class AmmatillinenOpetussuunnitelmaPerustePaivitysServiceIT extends Abstr
         assertThat(tutkinnonosat.stream().filter(tosa -> tosa.getOsaAlueet().size() > 0).findFirst().orElse(new SisaltoViiteKevytDto()).getOsaAlueet()).hasSize(osaALueLkm);
     }
 
-    private OsaAlueKokonaanDto buildOsaAlue() {
-        OsaAlueKokonaanDto oa = new OsaAlueKokonaanDto();
+    private OsaAlueKaikkiDto buildOsaAlue() {
+        OsaAlueKaikkiDto oa = new OsaAlueKaikkiDto();
         oa.setNimi(LokalisoituTekstiDto.of("test"));
         oa.setKoodiUri("osaalue_123");
         oa.setId(3131313L);

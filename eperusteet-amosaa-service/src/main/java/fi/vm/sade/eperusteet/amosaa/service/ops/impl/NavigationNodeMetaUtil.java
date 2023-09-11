@@ -5,7 +5,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaOsaAlueTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.NavigationNodeDto;
 import fi.vm.sade.eperusteet.amosaa.dto.NavigationType;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.OsaAlueKokonaanDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.OsaAlueKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonosaKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
@@ -14,7 +14,6 @@ import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteKevytDto;
 import lombok.experimental.UtilityClass;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Map;
 import java.util.function.Predicate;
 
 @UtilityClass
@@ -66,7 +65,7 @@ public class NavigationNodeMetaUtil {
 
     private LokalisoituTekstiDto osaAlueNimi(OmaOsaAlueKevytDto osaAlue, PerusteKaikkiDto perusteKaikkiDto) {
         for(TutkinnonosaKaikkiDto tutkinnonosa : perusteKaikkiDto.getTutkinnonOsat()) {
-            for(OsaAlueKokonaanDto pOsaAlue: tutkinnonosa.getOsaAlueet()) {
+            for(OsaAlueKaikkiDto pOsaAlue: tutkinnonosa.getOsaAlueet()) {
                 if (pOsaAlue.getId().equals(osaAlue.getPerusteenOsaAlueId())) {
                     return new LokalisoituTekstiDto(pOsaAlue.getNimi().asMap());
                 }

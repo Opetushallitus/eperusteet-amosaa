@@ -6,7 +6,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaOsaAlue;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaOsaAlueTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Tutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.OsaAlueKokonaanDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.OsaAlueKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.Osaamistavoite2020Dto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonosaKaikkiDto;
 
@@ -21,14 +21,14 @@ public class OpetussuunnitelmaSisaltoCreateUtil {
         uusiTosa.setPerusteentutkinnonosa(tutkinnonosaKaikkiDto.getId());
         uusiTosa.setKoodi(tutkinnonosaKaikkiDto.getKoodiUri());
 
-        for (OsaAlueKokonaanDto perusteenOsaAlue : tutkinnonosaKaikkiDto.getOsaAlueet()) {
+        for (OsaAlueKaikkiDto perusteenOsaAlue : tutkinnonosaKaikkiDto.getOsaAlueet()) {
             addPerusteenOsaAlueToSisaltoViite(uusi, perusteenOsaAlue);
         }
 
         return uusi;
     }
 
-    public static void addPerusteenOsaAlueToSisaltoViite(SisaltoViite sisaltoviite, OsaAlueKokonaanDto perusteenOsaAlue) {
+    public static void addPerusteenOsaAlueToSisaltoViite(SisaltoViite sisaltoviite, OsaAlueKaikkiDto perusteenOsaAlue) {
         Osaamistavoite2020Dto pakolliset = perusteenOsaAlue.getPakollisetOsaamistavoitteet();
         Osaamistavoite2020Dto valinnaiset = perusteenOsaAlue.getValinnaisetOsaamistavoitteet();
 
