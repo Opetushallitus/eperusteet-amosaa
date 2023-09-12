@@ -30,7 +30,7 @@ public interface JulkaisuRepository extends JpaRepository<Julkaisu, Long> {
             "   AND (:nimi LIKE '' " +
             "       OR LOWER(nimi->>:kieli) LIKE LOWER(CONCAT('%',:nimi,'%'))" +
             "       OR LOWER(koulutustoimija->'nimi'->>:kieli) LIKE LOWER(CONCAT('%',:nimi,'%'))) " +
-            "   AND (:organisaatioRyhma = false OR cast(koulutustoimija->>'organisaatioRyhma' as boolean) = true) " +
+            "   AND cast(koulutustoimija->>'organisaatioRyhma' as boolean) = false " +
             "   AND (:oppilaitosTyyppiKoodiUri = '' OR :oppilaitosTyyppiKoodiUri = data.\"oppilaitosTyyppiKoodiUri\")" +
             "   AND tyyppi IN (:tyyppi) " +
             "   AND (:organisaatio = '' OR koulutustoimija->>'organisaatio' = :organisaatio)" +
@@ -60,7 +60,6 @@ public interface JulkaisuRepository extends JpaRepository<Julkaisu, Long> {
             @Param("nimi") String nimi,
             @Param("kieli") String kieli,
             @Param("oppilaitosTyyppiKoodiUri") String oppilaitosTyyppiKoodiUri,
-            @Param("organisaatioRyhma") boolean organisaatioRyhma,
             @Param("tyyppi") List<String> tyyppi,
             @Param("organisaatio") String organisaatio,
             @Param("perusteId") Long perusteId,

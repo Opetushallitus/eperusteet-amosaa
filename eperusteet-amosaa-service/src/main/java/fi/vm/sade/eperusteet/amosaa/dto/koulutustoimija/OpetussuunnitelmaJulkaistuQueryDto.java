@@ -41,7 +41,6 @@ public class OpetussuunnitelmaJulkaistuQueryDto extends QueryDto {
     private Long perusteId = 0l;
     private String organisaatio = "";
     private List<String> tyyppi;
-    private boolean organisaatioRyhma = false;
     private String oppilaitosTyyppiKoodiUri = "";
     private List<KoulutusTyyppi> koulutustyyppi = new ArrayList<>();
     private String nimi = "";

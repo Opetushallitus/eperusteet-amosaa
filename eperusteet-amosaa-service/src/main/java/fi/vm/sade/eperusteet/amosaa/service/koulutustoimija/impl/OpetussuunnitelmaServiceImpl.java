@@ -1055,7 +1055,6 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                 pquery.getNimi(),
                 pquery.getKieli(),
                 pquery.getOppilaitosTyyppiKoodiUri(),
-                pquery.isOrganisaatioRyhma(),
                 pquery.getTyyppi(),
                 pquery.getOrganisaatio(),
                 pquery.getPerusteId(),

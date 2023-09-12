@@ -96,11 +96,6 @@
           "required" : false,
           "type" : "string"
         }, {
-          "name" : "organisaatioRyhma",
-          "in" : "query",
-          "required" : false,
-          "type" : "boolean"
-        }, {
           "name" : "oppilaitosTyyppiKoodiUri",
           "in" : "query",
           "required" : false,
@@ -255,7 +250,7 @@
         }
       }
     },
-    "ArvioinninKohdeDto" : {
+    "ArvioinninKohdeExportDto" : {
       "type" : "object",
       "properties" : {
         "otsikko" : {
@@ -270,22 +265,19 @@
             "type" : "string"
           }
         },
+        "arviointiasteikko" : {
+          "$ref" : "#/definitions/ArviointiasteikkoDto"
+        },
         "osaamistasonKriteerit" : {
           "type" : "array",
           "uniqueItems" : true,
           "items" : {
             "$ref" : "#/definitions/OsaamistasonKriteeriDto"
           }
-        },
-        "_arviointiasteikko" : {
-          "$ref" : "#/definitions/Reference"
-        },
-        "arviointiasteikko" : {
-          "$ref" : "#/definitions/ArviointiasteikkoDto"
         }
       }
     },
-    "ArvioinninKohdealueDto" : {
+    "ArvioinninKohdealueExportDto" : {
       "type" : "object",
       "properties" : {
         "otsikko" : {
@@ -297,7 +289,7 @@
         "arvioinninKohteet" : {
           "type" : "array",
           "items" : {
-            "$ref" : "#/definitions/ArvioinninKohdeDto"
+            "$ref" : "#/definitions/ArvioinninKohdeExportDto"
           }
         }
       }
@@ -317,7 +309,7 @@
         }
       }
     },
-    "ArviointiDto" : {
+    "ArviointiExportDto" : {
       "type" : "object",
       "properties" : {
         "id" : {
@@ -333,7 +325,7 @@
         "arvioinninKohdealueet" : {
           "type" : "array",
           "items" : {
-            "$ref" : "#/definitions/ArvioinninKohdealueDto"
+            "$ref" : "#/definitions/ArvioinninKohdealueExportDto"
           }
         }
       }
@@ -383,28 +375,6 @@
           "items" : {
             "$ref" : "#/definitions/KoulutusDto"
           }
-        }
-      }
-    },
-    "CachedPerusteKevytDto" : {
-      "type" : "object",
-      "properties" : {
-        "diaarinumero" : {
-          "type" : "string"
-        },
-        "perusteId" : {
-          "type" : "integer",
-          "format" : "int64"
-        },
-        "nimi" : {
-          "type" : "object",
-          "additionalProperties" : {
-            "type" : "string"
-          }
-        },
-        "koulutustyyppi" : {
-          "type" : "string",
-          "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO", "MAAHANMUUTTAJIENKOTOUTUMISKOULUTUS", "VAPAASIVISTYSTYOLUKUTAITO", "TUTKINTOONVALMENTAVA" ]
         }
       }
     },
@@ -1265,9 +1235,6 @@
         "laajuus" : {
           "type" : "number"
         },
-        "arviointi" : {
-          "$ref" : "#/definitions/ArviointiDto"
-        },
         "geneerinenarviointi" : {
           "type" : "integer",
           "format" : "int64"
@@ -1292,6 +1259,9 @@
           "additionalProperties" : {
             "type" : "string"
           }
+        },
+        "arviointi" : {
+          "$ref" : "#/definitions/ArviointiExportDto"
         },
         "geneerinenArviointiasteikko" : {
           "$ref" : "#/definitions/GeneerinenArviointiasteikkoKaikkiDto"
@@ -1750,6 +1720,13 @@
           "type" : "integer",
           "format" : "int32"
         },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "last" : {
+          "type" : "boolean"
+        },
         "size" : {
           "type" : "integer",
           "format" : "int32"
@@ -1767,14 +1744,7 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "first" : {
-          "type" : "boolean"
-        },
-        "last" : {
           "type" : "boolean"
         }
       }
@@ -1789,6 +1759,13 @@
         "totalPages" : {
           "type" : "integer",
           "format" : "int32"
+        },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "last" : {
+          "type" : "boolean"
         },
         "size" : {
           "type" : "integer",
@@ -1807,14 +1784,7 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "first" : {
-          "type" : "boolean"
-        },
-        "last" : {
           "type" : "boolean"
         }
       }
@@ -1898,7 +1868,7 @@
           "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU", "OPINTOKOKONAISUUS", "KOULUTUKSENOSA", "KOULUTUKSENOSAT", "LAAJAALAINENOSAAMINEN", "KOTO_KIELITAITOTASO", "KOTO_OPINTO", "KOTO_LAAJAALAINENOSAAMINEN", "LINKKI" ]
         },
         "peruste" : {
-          "$ref" : "#/definitions/CachedPerusteKevytDto"
+          "$ref" : "#/definitions/CachedPerusteBaseDto"
         },
         "linkattuOps" : {
           "type" : "integer",
@@ -1990,7 +1960,7 @@
           "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU", "OPINTOKOKONAISUUS", "KOULUTUKSENOSA", "KOULUTUKSENOSAT", "LAAJAALAINENOSAAMINEN", "KOTO_KIELITAITOTASO", "KOTO_OPINTO", "KOTO_LAAJAALAINENOSAAMINEN", "LINKKI" ]
         },
         "peruste" : {
-          "$ref" : "#/definitions/CachedPerusteKevytDto"
+          "$ref" : "#/definitions/CachedPerusteBaseDto"
         },
         "linkattuOps" : {
           "type" : "integer",
@@ -2258,9 +2228,6 @@
           "type" : "string",
           "format" : "date-time"
         },
-        "omatutkinnonosa" : {
-          "$ref" : "#/definitions/OmaTutkinnonosaExportDto"
-        },
         "vierastutkinnonosa" : {
           "$ref" : "#/definitions/VierasTutkinnonosaDto"
         },
@@ -2285,6 +2252,9 @@
           "items" : {
             "$ref" : "#/definitions/VapaaTekstiDto"
           }
+        },
+        "omatutkinnonosa" : {
+          "$ref" : "#/definitions/OmaTutkinnonosaExportDto"
         }
       }
     },

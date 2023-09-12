@@ -38,7 +38,6 @@ public class ExternalController {
             @ApiImplicitParam(name = "sivukoko", dataType = "long", paramType = "query"),
             @ApiImplicitParam(name = "nimi", dataType = "string", paramType = "query"),
             @ApiImplicitParam(name = "kieli", dataType = "string", paramType = "query"),
-            @ApiImplicitParam(name = "organisaatioRyhma", dataType = "boolean", paramType = "query"),
             @ApiImplicitParam(name = "oppilaitosTyyppiKoodiUri", dataType = "string", paramType = "query"),
             @ApiImplicitParam(name = "koulutustyyppi", dataType = "string", paramType = "query", allowMultiple = true),
             @ApiImplicitParam(name = "tuleva", dataType = "boolean", paramType = "query"),
