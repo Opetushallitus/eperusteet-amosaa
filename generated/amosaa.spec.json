@@ -69,6 +69,17 @@
         }
       }
     },
+    "/arviointiasteikot/update" : {
+      "get" : {
+        "tags" : [ "Arviointiasteikot" ],
+        "operationId" : "updateArviointiasteikko",
+        "responses" : {
+          "200" : {
+            "description" : ""
+          }
+        }
+      }
+    },
     "/arviointiasteikot/{id}" : {
       "get" : {
         "tags" : [ "Arviointiasteikot" ],
@@ -175,11 +186,6 @@
           "in" : "query",
           "required" : false,
           "type" : "string"
-        }, {
-          "name" : "organisaatioRyhma",
-          "in" : "query",
-          "required" : false,
-          "type" : "boolean"
         }, {
           "name" : "oppilaitosTyyppiKoodiUri",
           "in" : "query",
@@ -932,11 +938,6 @@
           "in" : "query",
           "required" : false,
           "type" : "string"
-        }, {
-          "name" : "organisaatioRyhma",
-          "in" : "query",
-          "required" : false,
-          "type" : "boolean"
         }, {
           "name" : "oppilaitosTyyppiKoodiUri",
           "in" : "query",
@@ -6413,28 +6414,6 @@
         }
       }
     },
-    "CachedPerusteKevytDto" : {
-      "type" : "object",
-      "properties" : {
-        "diaarinumero" : {
-          "type" : "string"
-        },
-        "perusteId" : {
-          "type" : "integer",
-          "format" : "int64"
-        },
-        "nimi" : {
-          "type" : "object",
-          "additionalProperties" : {
-            "type" : "string"
-          }
-        },
-        "koulutustyyppi" : {
-          "type" : "string",
-          "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO", "MAAHANMUUTTAJIENKOTOUTUMISKOULUTUS", "VAPAASIVISTYSTYOLUKUTAITO", "TUTKINTOONVALMENTAVA" ]
-        }
-      }
-    },
     "DokumenttiDto" : {
       "type" : "object",
       "properties" : {
@@ -9181,12 +9160,12 @@
         "first" : {
           "type" : "boolean"
         },
+        "last" : {
+          "type" : "boolean"
+        },
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
-        },
-        "last" : {
-          "type" : "boolean"
         }
       }
     },
@@ -9221,12 +9200,12 @@
         "first" : {
           "type" : "boolean"
         },
+        "last" : {
+          "type" : "boolean"
+        },
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
-        },
-        "last" : {
-          "type" : "boolean"
         }
       }
     },
@@ -9261,12 +9240,12 @@
         "first" : {
           "type" : "boolean"
         },
+        "last" : {
+          "type" : "boolean"
+        },
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
-        },
-        "last" : {
-          "type" : "boolean"
         }
       }
     },
@@ -9301,12 +9280,12 @@
         "first" : {
           "type" : "boolean"
         },
+        "last" : {
+          "type" : "boolean"
+        },
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
-        },
-        "last" : {
-          "type" : "boolean"
         }
       }
     },
@@ -9341,12 +9320,12 @@
         "first" : {
           "type" : "boolean"
         },
+        "last" : {
+          "type" : "boolean"
+        },
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
-        },
-        "last" : {
-          "type" : "boolean"
         }
       }
     },
@@ -9963,7 +9942,7 @@
           "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU", "OPINTOKOKONAISUUS", "KOULUTUKSENOSA", "KOULUTUKSENOSAT", "LAAJAALAINENOSAAMINEN", "KOTO_KIELITAITOTASO", "KOTO_OPINTO", "KOTO_LAAJAALAINENOSAAMINEN", "LINKKI" ]
         },
         "peruste" : {
-          "$ref" : "#/definitions/CachedPerusteKevytDto"
+          "$ref" : "#/definitions/CachedPerusteBaseDto"
         },
         "linkattuOps" : {
           "type" : "integer",
@@ -10055,7 +10034,7 @@
           "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU", "OPINTOKOKONAISUUS", "KOULUTUKSENOSA", "KOULUTUKSENOSAT", "LAAJAALAINENOSAAMINEN", "KOTO_KIELITAITOTASO", "KOTO_OPINTO", "KOTO_LAAJAALAINENOSAAMINEN", "LINKKI" ]
         },
         "peruste" : {
-          "$ref" : "#/definitions/CachedPerusteKevytDto"
+          "$ref" : "#/definitions/CachedPerusteBaseDto"
         },
         "linkattuOps" : {
           "type" : "integer",
