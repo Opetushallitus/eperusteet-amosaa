@@ -38,12 +38,11 @@ public interface JulkaisuRepository extends JpaRepository<Julkaisu, Long> {
             "           OR (cast(peruste->>'perusteId' as bigint) = :perusteId))" +
             "   AND ((:perusteenDiaarinumero IS NULL) OR (:perusteenDiaarinumero = '') " +
             "           OR (peruste->>'diaarinumero' = :perusteenDiaarinumero))" +
-            "   AND ((:tulevat = true " +
-            "                       AND (data.\"voimaantulo\" IS NOT NULL AND CAST(data.\"voimaantulo\" as bigint) > :nykyhetki)) " +
-            "       OR (:poistuneet = true AND CAST(data.\"voimassaoloLoppuu\" as bigint) < :nykyhetki)" +
-            "       OR (:voimassa = true " +
-            "                       AND (data.\"voimaantulo\" IS NULL OR CAST(data.\"voimaantulo\" as bigint) < :nykyhetki) " +
-            "                           AND (data.\"voimassaoloLoppuu\" IS NULL OR CAST(data.\"voimassaoloLoppuu\" as bigint) > :nykyhetki))) " +
+            "   AND ((:tulevat = false AND :poistuneet = false AND :voimassa = false) " +
+            "           OR (" +
+            "              (:tulevat = true AND (data.\"voimaantulo\" IS NOT NULL AND CAST(data.\"voimaantulo\" as bigint) > :nykyhetki)) " +
+            "              OR (:poistuneet = true AND CAST(data.\"voimassaoloLoppuu\" as bigint) < :nykyhetki)" +
+            "              OR (:voimassa = true AND (data.\"voimaantulo\" IS NULL OR CAST(data.\"voimaantulo\" as bigint) < :nykyhetki) AND (data.\"voimassaoloLoppuu\" IS NULL OR CAST(data.\"voimassaoloLoppuu\" as bigint) > :nykyhetki)))) " +
             "   AND (COALESCE(:jotpatyypit, NULL) = '' " +
             "       OR ( " +
             "            (:jotpattomat = false AND jotpatyyppi IN (:jotpatyypit)) " +
