@@ -246,7 +246,7 @@ public class JulkaisuServiceImpl implements JulkaisuService {
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void saveJulkaistuOpetussuunnitelmaTila(JulkaistuOpetussuunnitelmaTila julkaistuOpetussuunnitelmaTila) {
-        julkaistuOpetussuunnitelmaTilaRepository.save(julkaistuOpetussuunnitelmaTila);
+        julkaistuOpetussuunnitelmaTilaRepository.saveAndFlush(julkaistuOpetussuunnitelmaTila);
     }
 
     @Override
