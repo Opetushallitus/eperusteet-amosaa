@@ -214,6 +214,12 @@ public class Opetussuunnitelma extends AbstractAuditedEntity implements Serializ
     @Getter
     private List<SisaltoViite> sisaltoviitteet = new ArrayList<>();
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @Getter
+    @Setter
+    @Column(name="peruste_paivitetty_pvm")
+    private Date perustePaivitettyPvm;
+
     public void changeKoulutustoimija(Koulutustoimija kt) {
         this.koulutustoimija = kt;
     }

@@ -1,0 +1,2 @@
+ALTER TABLE opetussuunnitelma ADD COLUMN peruste_paivitetty_pvm timestamp;
+ALTER TABLE opetussuunnitelma_aud ADD COLUMN peruste_paivitetty_pvm timestamp;

@@ -714,7 +714,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                     });
         });
 
-
+        ops.setPerustePaivitettyPvm(new Date());
         ops.setPeruste(newCachedPeruste);
 
         muokkausTietoService.addOpsMuokkausTieto(ops.getId(), ops, MuokkausTapahtuma.PAIVITYS, "peruste-rakenne-paivitys");

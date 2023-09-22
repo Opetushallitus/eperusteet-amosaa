@@ -2,6 +2,7 @@ package fi.vm.sade.eperusteet.amosaa.service.peruste.impl;
 
 import com.google.common.collect.Sets;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
+import fi.vm.sade.eperusteet.amosaa.domain.Poistettu;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
@@ -11,11 +12,15 @@ import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TutkinnonosaTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.OsaAlueDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonosaKaikkiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
+import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.PoistettuRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
+import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.ops.impl.OpetussuunnitelmaSisaltoCreateUtil;
 import fi.vm.sade.eperusteet.amosaa.service.peruste.OpetussuunnitelmaPerustePaivitysService;
 import fi.vm.sade.eperusteet.amosaa.service.util.CollectionUtil;
+import fi.vm.sade.eperusteet.amosaa.service.util.PoistettuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +42,9 @@ public class AmmatillinenOpetussuunnitelmaPerustePaivitysService implements Opet
     @Autowired
     private SisaltoviiteRepository sisaltoviiteRepository;
 
+    @Autowired
+    private PoistettuRepository poistettuRepository;
+
     @Override
     public Set<KoulutusTyyppi> getTyypit() {
         return Sets.newHashSet(KoulutusTyyppi.ammatilliset());
@@ -57,7 +65,10 @@ public class AmmatillinenOpetussuunnitelmaPerustePaivitysService implements Opet
                 .filter(sisaltoviite -> sisaltoviite.getTyyppi().equals(SisaltoTyyppi.TUTKINNONOSAT))
                 .findFirst().get();
 
-        perusteKaikkiDto.getTutkinnonOsat().forEach(tutkinnonosaKaikkiDto -> {
+        List<String> toteutussuunnitelmanPoistetutTutkinnonosat = toteutussuunnitelmanPoistettujenTutkinnonosienKoodit(opetussuunnitelma);
+        perusteKaikkiDto.getTutkinnonOsat().stream()
+                .filter(tutkinnonosaKaikkiDto -> !toteutussuunnitelmanPoistetutTutkinnonosat.contains(tutkinnonosaKaikkiDto.getKoodiUri()))
+                .forEach(tutkinnonosaKaikkiDto -> {
             if (!opetussuunnitelmanTutkinnonosaViitteet.containsKey(tutkinnonosaKaikkiDto.getKoodiUri())) {
                 SisaltoViite uusi = OpetussuunnitelmaSisaltoCreateUtil.perusteenTutkinnonosaToSisaltoviite(tutkinnonosatViite, tutkinnonosaKaikkiDto);
                 sisaltoviiteRepository.save(uusi);
@@ -102,5 +113,13 @@ public class AmmatillinenOpetussuunnitelmaPerustePaivitysService implements Opet
         tutkinnonosaKaikkiDto.getOsaAlueet().stream()
                 .filter(osaalue -> !opsinPerusteenOsaAlueIdt.contains(osaalue.getId()))
                 .forEach(osaalue -> OpetussuunnitelmaSisaltoCreateUtil.addPerusteenOsaAlueToSisaltoViite(sisaltoViite, osaalue));
+    }
+
+    private List<String> toteutussuunnitelmanPoistettujenTutkinnonosienKoodit(Opetussuunnitelma opetussuunnitelma) {
+        List<Poistettu> poistettu = poistettuRepository.findAllByOpetussuunnitelmaAndTyyppi(opetussuunnitelma, SisaltoTyyppi.TUTKINNONOSA);
+        return poistettu.stream().map(poistettuTutkinnonosa -> {
+            SisaltoViite viite = sisaltoviiteRepository.findRevision(poistettuTutkinnonosa.getPoistettu(), poistettuTutkinnonosa.getRev());
+            return viite.getTosa().getKoodi();
+        }).collect(Collectors.toList());
     }
 }
