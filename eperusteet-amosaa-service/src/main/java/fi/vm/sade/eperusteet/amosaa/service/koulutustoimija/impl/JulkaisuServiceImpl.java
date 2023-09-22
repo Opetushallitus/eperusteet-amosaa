@@ -240,13 +240,13 @@ public class JulkaisuServiceImpl implements JulkaisuService {
 
         opetussuunnitelma.setTila(Tila.JULKAISTU);
         julkaistuOpetussuunnitelmaTila.setJulkaisutila(JulkaisuTila.JULKAISTU);
-        saveJulkaistuOpetussuunnitelmaTila(julkaistuOpetussuunnitelmaTila);
+        self.saveJulkaistuOpetussuunnitelmaTila(julkaistuOpetussuunnitelmaTila);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void saveJulkaistuOpetussuunnitelmaTila(JulkaistuOpetussuunnitelmaTila julkaistuOpetussuunnitelmaTila) {
-        julkaistuOpetussuunnitelmaTilaRepository.saveAndFlush(julkaistuOpetussuunnitelmaTila);
+        julkaistuOpetussuunnitelmaTilaRepository.save(julkaistuOpetussuunnitelmaTila);
     }
 
     @Override
