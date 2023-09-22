@@ -2,6 +2,7 @@ package fi.vm.sade.eperusteet.amosaa.service.ops.impl;
 
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaOsaAlueTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.OsaAlueKaikkiDto;
@@ -18,10 +19,12 @@ import fi.vm.sade.eperusteet.amosaa.repository.tutkinnonosa.TutkinnonosaReposito
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetClient;
 import fi.vm.sade.eperusteet.amosaa.service.ops.OpetussuunnitelmaDispatcher;
 import fi.vm.sade.eperusteet.amosaa.service.peruste.OpetussuunnitelmaPerustePaivitysService;
+import fi.vm.sade.eperusteet.amosaa.service.util.PoistettuService;
 import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.transaction.TestTransaction;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -47,6 +50,9 @@ public class AmmatillinenOpetussuunnitelmaPerustePaivitysServiceIT extends Abstr
 
     @Autowired
     private EperusteetClient eperusteetClient;
+
+    @Autowired
+    private PoistettuService poistettuService;
 
     @Test
     public void testOpetussuunnitelmaOsaALuePoistettu() {
@@ -128,6 +134,43 @@ public class AmmatillinenOpetussuunnitelmaPerustePaivitysServiceIT extends Abstr
         TutkinnonosaKaikkiDto osaalueellinen = perusteDto.getTutkinnonOsat().stream().filter(tosa -> !tosa.getOsaAlueet().isEmpty()).findFirst().get();
         perusteDto.getTutkinnonOsat().remove(osaalueellinen);
 
+        dispatcher.get(ops.getOpsKoulutustyyppi(), OpetussuunnitelmaPerustePaivitysService.class).paivitaOpetussuunnitelma(opsDto.getId(), perusteDto);
+        tarkistaLukumaarat(ops, 1, 0);
+    }
+
+    @Test
+    public void testOpetussuunnitelmaTutkinnonosaPoistettu_toteutussuunnitelmalta() {
+
+        TestTransaction.end();
+        Opetussuunnitelma ops;
+        OpetussuunnitelmaBaseDto opsDto;
+
+        {
+            TestTransaction.start();
+            TestTransaction.flagForCommit();
+
+            useProfileKP1();
+            opsDto = createOpetussuunnitelma(opsLuonti -> {
+                opsLuonti.setPerusteId(8492L);
+                opsLuonti.setSuoritustapa("reformi");
+            });
+            ops = opetussuunnitelmaRepository.findOne(opsDto.getId());
+            TestTransaction.end();
+
+            tarkistaLukumaarat(ops, 2, 4);
+        }
+
+        {
+            TestTransaction.start();
+            TestTransaction.flagForCommit();
+            List<SisaltoViiteKevytDto> tutkinnonosat = getType(getKoulutustoimijaId(), ops.getId(), SisaltoTyyppi.TUTKINNONOSA);
+            sisaltoViiteService.removeSisaltoViite(getKoulutustoimijaId(),  ops.getId(), tutkinnonosat.stream().filter(tosa -> !tosa.getOsaAlueet().isEmpty()).findFirst().get().getId());
+            TestTransaction.end();
+
+            tarkistaLukumaarat(ops, 1, 0);
+        }
+
+        PerusteKaikkiDto perusteDto = eperusteetClient.getPeruste(ops.getPeruste().getPerusteId(), PerusteKaikkiDto.class);
         dispatcher.get(ops.getOpsKoulutustyyppi(), OpetussuunnitelmaPerustePaivitysService.class).paivitaOpetussuunnitelma(opsDto.getId(), perusteDto);
         tarkistaLukumaarat(ops, 1, 0);
     }

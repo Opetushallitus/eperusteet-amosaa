@@ -53,4 +53,5 @@ public class OpetussuunnitelmaDto extends OpetussuunnitelmaBaseDto {
     private KoodistoKoodiDto oppilaitosTyyppiKoodi;
     private KoulutusTyyppi koulutustyyppi;
     private Date viimeisinJulkaisuAika;
+    private Date perustePaivitettyPvm;
 }
