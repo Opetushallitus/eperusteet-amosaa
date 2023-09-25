@@ -1,8 +1,9 @@
 {
   "swagger" : "2.0",
   "info" : {
+    "description" : "Ammatillisien ja tutkintoon valmentavien toteutussuunnitelmien sekä vapaiden sivistystöiden ja kotoutumiskoulutuksien opetussuunnitelmien rajapintakuvaukset",
     "version" : "1",
-    "title" : "ePerusteet amosaa api"
+    "title" : "TOTSU-työkalu API"
   },
   "basePath" : "https://eperusteet.opintopolku.fi/eperusteet-amosaa-service/api",
   "tags" : [ {
@@ -1392,6 +1393,10 @@
         "viimeisinJulkaisuAika" : {
           "type" : "string",
           "format" : "date-time"
+        },
+        "perustePaivitettyPvm" : {
+          "type" : "string",
+          "format" : "date-time"
         }
       }
     },
@@ -1517,6 +1522,10 @@
           "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO", "MAAHANMUUTTAJIENKOTOUTUMISKOULUTUS", "VAPAASIVISTYSTYOLUKUTAITO", "TUTKINTOONVALMENTAVA" ]
         },
         "viimeisinJulkaisuAika" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "perustePaivitettyPvm" : {
           "type" : "string",
           "format" : "date-time"
         },
@@ -1720,13 +1729,6 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-        "last" : {
-          "type" : "boolean"
-        },
         "size" : {
           "type" : "integer",
           "format" : "int32"
@@ -1746,6 +1748,13 @@
         },
         "first" : {
           "type" : "boolean"
+        },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "last" : {
+          "type" : "boolean"
         }
       }
     },
@@ -1759,13 +1768,6 @@
         "totalPages" : {
           "type" : "integer",
           "format" : "int32"
-        },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-        "last" : {
-          "type" : "boolean"
         },
         "size" : {
           "type" : "integer",
@@ -1785,6 +1787,13 @@
           "$ref" : "#/definitions/Sort"
         },
         "first" : {
+          "type" : "boolean"
+        },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "last" : {
           "type" : "boolean"
         }
       }
