@@ -906,9 +906,9 @@
                                     </locations>
                                     <modelSubstitute>/substitutes.map</modelSubstitute>
                                     <info>
-                                        <title>ePerusteet amosaa api</title>
+                                        <title>TOTSU-työkalu API</title>
                                         <version>1</version>
-                                        <description/>
+                                        <description>Ammatillisien ja tutkintoon valmentavien toteutussuunnitelmien sekä vapaiden sivistystöiden ja kotoutumiskoulutuksien opetussuunnitelmien rajapintakuvaukset</description>
                                     </info>
                                     <swaggerFileName>amosaa-ext.spec</swaggerFileName>
                                     <swaggerDirectory>target/openapi</swaggerDirectory>
