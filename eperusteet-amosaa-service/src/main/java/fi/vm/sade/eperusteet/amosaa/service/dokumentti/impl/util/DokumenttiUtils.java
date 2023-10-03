@@ -1,6 +1,7 @@
 package fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl.util;
 
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.Dokumentti;
+import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiTila;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
@@ -21,7 +22,7 @@ import java.util.Date;
  * @author isaul
  */
 public class DokumenttiUtils {
-    private static final int MAX_TIME_IN_MINUTES = 5;
+    public static final int MAX_TIME_IN_MINUTES = 60;
 
     public static void addLokalisoituteksti(DokumenttiBase docBase, LokalisoituTekstiDto lTekstiDto, String tagi) {
         if (lTekstiDto != null) {
@@ -128,7 +129,7 @@ public class DokumenttiUtils {
     }
 
     public static boolean isTimePass(Dokumentti dokumentti) {
-        return isTimePass(dokumentti.getAloitusaika());
+        return dokumentti.getTila().equals(DokumenttiTila.LUODAAN) && isTimePass(dokumentti.getAloitusaika());
     }
 
     public static boolean isTimePass(DokumenttiDto dokumenttiDto) {
