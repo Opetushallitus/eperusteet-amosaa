@@ -132,7 +132,8 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 
         if (dokumentti != null) {
             // Jos aloitusajasta on kulunut liian kauan, on luonti epäonnistunut
-            if (dokumentti.getTila() != DokumenttiTila.VALMIS && dokumentti.getTila() != DokumenttiTila.EI_OLE && DokumenttiUtils.isTimePass(dokumentti)) {
+            if (DokumenttiUtils.isTimePass(dokumentti)) {
+                log.error("dokumentin valmistus kesti yli {} minuuttia, opetussuunnitelma {}", DokumenttiUtils.MAX_TIME_IN_MINUTES, dokumentti.getOpsId());
                 dokumentti.setTila(DokumenttiTila.EPAONNISTUI);
                 dokumenttiRepository.save(dokumentti);
             }
