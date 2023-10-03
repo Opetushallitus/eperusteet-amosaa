@@ -727,35 +727,35 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         Opetussuunnitelma ops;
 
         if (opsDto.getOpsId() != null) {
+            Opetussuunnitelma pohja = repository.findOne(opsDto.getOpsId());
             OpetussuunnitelmaBaseDto dispatchedOps = dispatcher.get(opsDto.getKoulutustyyppi(), opsDto.getTyyppi(), OpetussuunnitelmaCreateService.class).create(kt, opsDto);
             if (dispatchedOps != null) {
+                opetussuunnitelmaLisaysMuokkausTapahtuma(dispatchedOps.getId(), pohja);
                 return dispatchedOps;
             }
 
-            Opetussuunnitelma pohja = repository.findOne(opsDto.getOpsId());
             boolean ophOpsPohja = pohja != null && pohja.getTyyppi().equals(OpsTyyppi.OPSPOHJA) && pohja.getKoulutustoimija().getOrganisaatio().equals(KoulutustoimijaService.OPH);
-
             if (pohja == null || (!ophOpsPohja && !Objects.equals(pohja.getKoulutustoimija().getId(), ktId))) {
                 throw new BusinessRuleViolationException("ei-oikeutta-opetussuunnitelmaan");
             }
 
-            SisaltoViite sisaltoRoot = tkvRepository.findOneRoot(pohja);
             ops = pohja.copy();
             if (opsDto.getNimi() != null) {
                 ops.setNimi(mapper.map(opsDto.getNimi(), LokalisoituTeksti.class));
             }
 
-            switch (pohja.getTyyppi()) {
-                case OPSPOHJA:
-                    ops.setTyyppi(OpsTyyppi.OPS);
-                    ops.changeKoulutustoimija(kt);
-                    ops.setPohja(pohja);
-                    break;
+            if (pohja.getTyyppi().equals(OpsTyyppi.OPSPOHJA)) {
+                ops.setTyyppi(OpsTyyppi.OPS);
+                ops.changeKoulutustoimija(kt);
+                ops.setPohja(pohja);
             }
 
             ops = repository.save(ops);
+            opetussuunnitelmaLisaysMuokkausTapahtuma(ops.getId(), pohja);
+
+            SisaltoViite pohjaRoot = tkvRepository.findOneRoot(pohja);
             SisaltoViite root = tkvService.kopioiHierarkia(
-                    sisaltoRoot,
+                    pohjaRoot,
                     ops,
                     Collections.singletonMap(SisaltoTyyppi.TUTKINNONOSA, opsDto.getTutkinnonOsaKoodiIncludes()),
                     pohja.getTyyppi().equals(OpsTyyppi.OPSPOHJA) ? SisaltoViite.TekstiHierarkiaKopiointiToiminto.POHJAVIITE : SisaltoViite.TekstiHierarkiaKopiointiToiminto.KOPIOI);
@@ -809,6 +809,12 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         }
 
         return mapper.map(ops, OpetussuunnitelmaBaseDto.class);
+    }
+
+    private void opetussuunnitelmaLisaysMuokkausTapahtuma(Long opsId, Opetussuunnitelma pohja) {
+        if (pohja.getTyyppi().equals(OpsTyyppi.OPS)) {
+            muokkausTietoService.addOpsMuokkausTieto(opsId, pohja, MuokkausTapahtuma.LUONTI, "opetussuunnitelma-luotu-toisesta-opetussuunnitelmasta");
+        }
     }
 
     @Override
