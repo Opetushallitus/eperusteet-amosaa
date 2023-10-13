@@ -152,12 +152,6 @@ public class JulkaisuServiceImpl implements JulkaisuService {
             throw new BusinessRuleViolationException("opetussuunnitelmaa-ei-loytynyt");
         }
 
-        List<Julkaisu> vanhatJulkaisut = julkaisuRepository.findAllByOpetussuunnitelma(opetussuunnitelma);
-
-        if (vanhatJulkaisut.size() > 0 && !onkoMuutoksia(ktId, opsId)) {
-            throw new BusinessRuleViolationException("julkaisu-epaonnistui-opetussuunnitelma-ei-muuttunut-viime-julkaisun-jalkeen");
-        }
-
         if (!isValidTiedote(julkaisuBaseDto.getTiedote())) {
             throw new BusinessRuleViolationException("tiedote-sisaltaa-kiellettyja-merkkeja");
         }
