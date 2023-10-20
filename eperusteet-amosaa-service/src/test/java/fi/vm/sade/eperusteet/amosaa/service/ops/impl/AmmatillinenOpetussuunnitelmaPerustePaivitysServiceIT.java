@@ -2,7 +2,6 @@ package fi.vm.sade.eperusteet.amosaa.service.ops.impl;
 
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
-import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaOsaAlueTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.OsaAlueKaikkiDto;
@@ -14,12 +13,9 @@ import fi.vm.sade.eperusteet.amosaa.dto.teksti.OmaOsaAlueDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteKevytDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
-import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
-import fi.vm.sade.eperusteet.amosaa.repository.tutkinnonosa.TutkinnonosaRepository;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetClient;
 import fi.vm.sade.eperusteet.amosaa.service.ops.OpetussuunnitelmaDispatcher;
 import fi.vm.sade.eperusteet.amosaa.service.peruste.OpetussuunnitelmaPerustePaivitysService;
-import fi.vm.sade.eperusteet.amosaa.service.util.PoistettuService;
 import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,16 +39,7 @@ public class AmmatillinenOpetussuunnitelmaPerustePaivitysServiceIT extends Abstr
     private OpetussuunnitelmaRepository opetussuunnitelmaRepository;
 
     @Autowired
-    private TutkinnonosaRepository tutkinnonosaRepository;
-
-    @Autowired
-    private SisaltoviiteRepository sisaltoviiteRepository;
-
-    @Autowired
     private EperusteetClient eperusteetClient;
-
-    @Autowired
-    private PoistettuService poistettuService;
 
     @Test
     public void testOpetussuunnitelmaOsaALuePoistettu() {
@@ -164,7 +151,7 @@ public class AmmatillinenOpetussuunnitelmaPerustePaivitysServiceIT extends Abstr
             TestTransaction.start();
             TestTransaction.flagForCommit();
             List<SisaltoViiteKevytDto> tutkinnonosat = getType(getKoulutustoimijaId(), ops.getId(), SisaltoTyyppi.TUTKINNONOSA);
-            sisaltoViiteService.removeSisaltoViite(getKoulutustoimijaId(),  ops.getId(), tutkinnonosat.stream().filter(tosa -> !tosa.getOsaAlueet().isEmpty()).findFirst().get().getId());
+            sisaltoViiteService.removeSisaltoViite(getKoulutustoimijaId(),  ops.getId(), tutkinnonosat.stream().filter(tosa -> !tosa.getOsaAlueet().isEmpty()).findFirst().get().getId(), false);
             TestTransaction.end();
 
             tarkistaLukumaarat(ops, 1, 0);

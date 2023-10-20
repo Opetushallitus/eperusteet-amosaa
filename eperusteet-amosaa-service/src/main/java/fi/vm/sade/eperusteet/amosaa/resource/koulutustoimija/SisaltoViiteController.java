@@ -226,7 +226,7 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
             @PathVariable final Long opsId,
             @PathVariable final Long svId
     ) {
-        service.removeSisaltoViite(ktId, opsId, svId);
+        service.removeSisaltoViite(ktId, opsId, svId, false);
     }
 
     @ApiImplicitParams({

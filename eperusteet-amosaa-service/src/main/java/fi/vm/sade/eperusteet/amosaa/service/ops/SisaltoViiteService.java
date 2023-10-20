@@ -1,18 +1,3 @@
-/*
- * Copyright (c) 2013 The Finnish Board of Education - Opetushallitus
- *
- * This program is free software: Licensed under the EUPL, Version 1.1 or - as
- * soon as they will be approved by the European Commission - subsequent versions
- * of the EUPL (the "Licence");
- *
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at: http://ec.europa.eu/idabc/eupl
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * European Union Public Licence for more details.
- */
 package fi.vm.sade.eperusteet.amosaa.service.ops;
 
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
@@ -35,9 +20,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.core.parameters.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 
-/**
- * @author mikkom
- */
 public interface SisaltoViiteService extends LockService<SisaltoViiteCtx> {
     default SisaltoViiteDto.Matala getSisaltoRoot(Long ktId, Long opsId) {
         return getSisaltoRoot(ktId, opsId, SisaltoViiteDto.Matala.class);
@@ -69,7 +51,7 @@ public interface SisaltoViiteService extends LockService<SisaltoViiteCtx> {
     void updateSisaltoViite(@P("ktId") Long ktId, @P("opsId") Long opsId, Long viiteId, SisaltoViiteDto uusi);
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS') or hasPermission(null, 'OPH','HALLINTA')")
-    void removeSisaltoViite(@P("ktId") Long ktId, @P("opsId") Long opsId, Long viiteId);
+    void removeSisaltoViite(@P("ktId") Long ktId, @P("opsId") Long opsId, Long viiteId, boolean isChild);
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
     SisaltoViiteDto.Puu kloonaaTekstiKappale(@P("ktId") Long ktId, @P("opsId") Long opsId, Long viiteId);
