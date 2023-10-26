@@ -1,21 +1,7 @@
-/*
- * Copyright (c) 2013 The Finnish Board of Education - Opetushallitus
- *
- * This program is free software: Licensed under the EUPL, Version 1.1 or - as
- * soon as they will be approved by the European Commission - subsequent versions
- * of the EUPL (the "Licence");
- *
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at: http://ec.europa.eu/idabc/eupl
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * European Union Public Licence for more details.
- */
 package fi.vm.sade.eperusteet.amosaa.service.ops.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Sets;
 import fi.vm.sade.eperusteet.amosaa.domain.HistoriaTapahtumaAuditointitiedoilla;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.MuokkausTapahtuma;
@@ -104,9 +90,6 @@ import org.springframework.util.ObjectUtils;
 
 import static fi.vm.sade.eperusteet.amosaa.service.util.Nulls.assertExists;
 
-/**
- * @author mikkom
- */
 @Service
 @Slf4j
 @Transactional(readOnly = true)
@@ -171,8 +154,6 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
 
     @Autowired
     private LockManager lockMgr;
-
-    private ObjectMapper objMapper;
 
     @Override
     public <T> T getSisaltoViite(Long ktId, Long opsId, Long viiteId, Class<T> t) {
@@ -603,7 +584,11 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
         }
 
         if (viite.getLapset() != null && !viite.getLapset().isEmpty()) {
-            throw new BusinessRuleViolationException("Sisällöllä on lapsia, ei voida poistaa");
+            if (!SisaltoTyyppi.TEKSTIKAPPALE.equals(viite.getTyyppi())) {
+                throw new BusinessRuleViolationException("Sisällöllä on lapsia, ei voida poistaa");
+            }
+
+            Sets.newHashSet(viite.getLapset()).forEach(lapsi -> removeSisaltoViite(ktId, opsId, lapsi.getId()));
         }
 
         if (viite.isPakollinen() && ops.getTyyppi() != OpsTyyppi.POHJA) {
@@ -1245,5 +1230,4 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
                 }).collect(Collectors.toList())
         ).flatMap(Collection::stream).collect(Collectors.toList());
     }
-
 }
