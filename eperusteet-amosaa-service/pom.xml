@@ -857,6 +857,7 @@
                                         <location>${eperusteet.amosaa.resources}.peruste.PerusteController</location>
                                         <location>${eperusteet.amosaa.resources}.util.ArviointiasteikkoController</location>
                                         <location>${eperusteet.amosaa.resources}.util.KayttajaController</location>
+                                        <location>${eperusteet.amosaa.resources}.util.LogoutController</location>
                                         <location>${eperusteet.amosaa.resources}.util.KoodistoController</location>
                                         <location>${eperusteet.amosaa.resources}.hallinta.MaintenanceController</location>
                                         <location>${eperusteet.amosaa.resources}.ops.TutkinnonOsaController</location>
