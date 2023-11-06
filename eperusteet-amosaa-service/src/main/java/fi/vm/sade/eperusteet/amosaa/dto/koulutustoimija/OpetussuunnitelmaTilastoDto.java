@@ -23,6 +23,7 @@ import org.apache.commons.collections.CollectionUtils;
 public class OpetussuunnitelmaTilastoDto {
     public static SimpleDateFormat getYearFormat = new SimpleDateFormat("yyyy");
 
+    private Long id;
     private LokalisoituTekstiDto nimi;
     private Tila tila;
     private Date paatospaivamaara;
