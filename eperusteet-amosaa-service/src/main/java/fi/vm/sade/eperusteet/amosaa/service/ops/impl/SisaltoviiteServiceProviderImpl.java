@@ -8,6 +8,7 @@ import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteToteutusService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoviiteServiceProvider;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,25 +29,27 @@ public class SisaltoviiteServiceProviderImpl implements SisaltoviiteServiceProvi
     }
 
     @Override
-    public SisaltoViiteToteutusService getSisaltoViiteToteutusService(SisaltoViite viite) {
-        SisaltoViiteToteutusService result = sisaltoViiteToteutusServices.getOrDefault(viite.getTyyppi(), null);
-        if (result == null) {
-            throw new BusinessRuleViolationException("no implementation found");
-        }
-        return result;
+    public Optional<SisaltoViiteToteutusService> getSisaltoViiteToteutusService(SisaltoViite viite) {
+        return Optional.ofNullable(sisaltoViiteToteutusServices.getOrDefault(viite.getTyyppi(), null));
     }
 
     @Override
     public SisaltoViite updateSisaltoViite(SisaltoViite viite, SisaltoViiteDto uusi) {
-        return getSisaltoViiteToteutusService(viite).updateSisaltoViite(viite, uusi);
+        return getSisaltoViiteToteutusService(viite)
+                .map(sisaltoViiteToteutusService -> sisaltoViiteToteutusService.updateSisaltoViite(viite, uusi))
+                .orElse(null);
+
     }
 
     @Override
     public void koodita(SisaltoViite viite) {
-        try {
-            getSisaltoViiteToteutusService(viite).koodita(viite);
-        } catch (BusinessRuleViolationException e) {
-            // skip
-        }
+        getSisaltoViiteToteutusService(viite)
+                .ifPresent(sisaltoViiteToteutusService -> sisaltoViiteToteutusService.koodita(viite));
+    }
+
+    @Override
+    public boolean validoiKoodi(SisaltoViite viite) {
+        return getSisaltoViiteToteutusService(viite)
+                .map(sisaltoViiteToteutusService -> sisaltoViiteToteutusService.validoiKoodi(viite)).orElse(true);
     }
 }

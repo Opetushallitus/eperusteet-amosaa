@@ -12,4 +12,8 @@ public interface SisaltoViiteToteutusService {
 
     default void koodita(SisaltoViite viite) {
     }
+
+    default boolean validoiKoodi(SisaltoViite viite) {
+        return true;
+    }
 }

@@ -5,6 +5,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.LaajuusYksikko;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.OpintokokonaisuusDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.OpintokokonaisuusTavoiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.TekstiKappaleDto;
 import fi.vm.sade.eperusteet.amosaa.service.ops.OpetussuunnitelmaValidationService;
@@ -19,7 +20,9 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -100,6 +103,35 @@ public class VstOpetussuunnitelmaValidationServiceTest extends AbstractIntegrati
         assertThat(virheet).extracting(Validointi.Virhe::getKuvaus)
                 .doesNotContain("sisallossa-opintokokonaisuuksia-ilman-laajuutta")
                 .doesNotContain("sisallossa-opintokokonaisuuksia-ilman-laajuusyksikkoa");
+    }
+
+    @Test
+    public void testLiianPitkaTavoite() {
+        SisaltoViiteDto.Matala opintokokonaisuus1 = createOpintokokonaisuus();
+        opintokokonaisuus1.getOpintokokonaisuus().getTavoitteet().add(
+                OpintokokonaisuusTavoiteDto.builder()
+                        .perusteesta(false)
+                        .tavoite(LokalisoituTekstiDto.of("1" + new String(new char[999]).replace('\0', ' ') + " 2"))
+                        .build());
+        opintokokonaisuus1.getTekstiKappale().setNimi(LokalisoituTekstiDto.of("nimi1"));
+        opintokokonaisuus1.getOpintokokonaisuus().setOpetuksenTavoiteOtsikko(LokalisoituTekstiDto.of("testi"));
+
+        sisaltoViiteService.updateSisaltoViite(getKoulutustoimijaId(), vstOps.getId(), opintokokonaisuus1.getId(), opintokokonaisuus1);
+        List<Validointi> validointi = vstOpetussuunnitelmaValidationService.validoi(getKoulutustoimijaId(), vstOps.getId());
+        List<Validointi.Virhe> virheet = validointi.stream().map(Validointi::getVirheet).flatMap(Collection::stream).collect(Collectors.toList());
+        assertThat(virheet.stream()
+                .filter(virhe -> virhe.getKuvaus().equals(VstOpetussuunnitelmaValidationService.SISALLOSSA_OPINTOKOKONAISUUDEN_TAVOITTEISSA_VIRHEITA)).collect(Collectors.toList())).hasSize(1);
+
+        opintokokonaisuus1.getOpintokokonaisuus().setTavoitteet(Collections.singletonList(
+                OpintokokonaisuusTavoiteDto.builder()
+                        .perusteesta(false)
+                        .tavoite(LokalisoituTekstiDto.of("testi"))
+                        .build()));
+        sisaltoViiteService.updateSisaltoViite(getKoulutustoimijaId(), vstOps.getId(), opintokokonaisuus1.getId(), opintokokonaisuus1);
+        validointi = vstOpetussuunnitelmaValidationService.validoi(getKoulutustoimijaId(), vstOps.getId());
+        virheet = validointi.stream().map(Validointi::getVirheet).flatMap(Collection::stream).collect(Collectors.toList());
+        assertThat(virheet.stream()
+                .filter(virhe -> virhe.getKuvaus().equals(VstOpetussuunnitelmaValidationService.SISALLOSSA_OPINTOKOKONAISUUDEN_TAVOITTEISSA_VIRHEITA)).collect(Collectors.toList())).hasSize(0);
     }
 
     private SisaltoViiteDto.Matala createOpintokokonaisuus() {

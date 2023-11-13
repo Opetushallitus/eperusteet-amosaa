@@ -326,8 +326,8 @@ public class JulkaisuServiceImpl implements JulkaisuService {
     private void kooditaSisaltoviite(SisaltoViite sisaltoViite) {
         sisaltoviiteServiceProvider.koodita(sisaltoViite);
         sisaltoViite.getLapset().stream()
-                .filter(lapsi -> lapsi != null)
-                .forEach(lapsi -> kooditaSisaltoviite(lapsi));
+                .filter(Objects::nonNull)
+                .forEach(this::kooditaSisaltoviite);
     }
 
     private boolean isValidTiedote(LokalisoituTekstiDto tiedote) {
