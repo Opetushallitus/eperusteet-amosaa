@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Stack;
 import java.util.stream.Collectors;
+
+import fi.vm.sade.eperusteet.amosaa.service.util.impl.KoodistoClientImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +71,14 @@ public class OpintokokonaisuusSisaltoviiteServiceImpl implements SisaltoViiteTot
         viite.setOpintokokonaisuus(uusiOpintokokonaisuus);
 
         sisaltoviiteRepository.save(viite);
+    }
+
+    @Override
+    public boolean validoiKoodi(SisaltoViite viite) {
+        SisaltoViiteDto sisaltoViiteDto = mapper.map(viite, SisaltoViiteDto.class);
+        return sisaltoViiteDto.getOpintokokonaisuus().getTavoitteet()
+                .stream().filter(tavoite -> StringUtils.isEmpty(tavoite.getTavoiteKoodi()))
+                .allMatch(tavoite -> KoodistoClientImpl.validoiKooditettava(tavoite.getTavoite()));
     }
 
     private void kooditaOpintokokonaisuus(SisaltoViiteDto sisaltoViiteDto) {

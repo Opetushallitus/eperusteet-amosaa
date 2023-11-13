@@ -223,10 +223,16 @@ public class KoodistoClientImpl implements KoodistoClient {
         return addKoodiNimella(koodistonimi, koodinimi, seuraavaKoodi);
     }
 
+    public static boolean validoiKooditettava(LokalisoituTekstiDto koodinimi) {
+        return koodinimi != null
+                && koodinimi.getTekstit() != null
+                && koodinimi.getTekstit().values().stream().noneMatch(teksti -> teksti != null && (teksti.length() == 0 || teksti.length() > KOODISTO_TEKSTI_MAX_LENGTH));
+    }
+
     @Override
     public KoodistoKoodiDto addKoodiNimella(String koodistonimi, LokalisoituTekstiDto koodinimi, long seuraavaKoodi) {
 
-        if (koodinimi.getTekstit().values().stream().anyMatch(teksti -> teksti != null && teksti.length() > KOODISTO_TEKSTI_MAX_LENGTH)) {
+        if (!KoodistoClientImpl.validoiKooditettava(koodinimi)) {
             throw new BusinessRuleViolationException("koodi-arvo-liian-pitka");
         }
 

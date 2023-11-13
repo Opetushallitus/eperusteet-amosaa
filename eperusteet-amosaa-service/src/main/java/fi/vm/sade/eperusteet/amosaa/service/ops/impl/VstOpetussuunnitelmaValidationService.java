@@ -10,6 +10,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.NavigationNodeDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.ops.OpetussuunnitelmaValidationService;
+import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoviiteServiceProvider;
 import fi.vm.sade.eperusteet.amosaa.service.util.ValidationCategory;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,13 @@ public class VstOpetussuunnitelmaValidationService implements OpetussuunnitelmaV
     @Autowired
     private OpetussuunnitelmaRepository opetussuunnitelmaRepository;
 
+    @Autowired
+    private SisaltoviiteServiceProvider sisaltoviiteServiceProvider;
+
     public static final String SISALLOSSA_NIMETTOMIA_OPINTOKOKONAISUUKSIA = "sisallossa-opintokokonaisuuksia-ilman-nimea";
+    public static final String SISALLOSSA_OPINTOKOKONAISUUKSIA_ILMAN_LAAJUUTTA = "sisallossa-opintokokonaisuuksia-ilman-laajuutta";
+    public static final String SISALLOSSA_OPINTOKOKONAISUUKSIA_ILMAN_LAAJUUSYKSIKKOA = "sisallossa-opintokokonaisuuksia-ilman-laajuusyksikkoa";
+    public static final String SISALLOSSA_OPINTOKOKONAISUUDEN_TAVOITTEISSA_VIRHEITA = "opintokokonaisuuden-tavoitteissa-virheita";
 
     @Override
     public Set<KoulutusTyyppi> getTyypit() {
@@ -74,10 +81,14 @@ public class VstOpetussuunnitelmaValidationService implements OpetussuunnitelmaV
                 validointi.virhe(SISALLOSSA_NIMETTOMIA_OPINTOKOKONAISUUKSIA, NavigationNodeDto.of(viite));
             }
             if (hasEmptyLaajuus(viite)) {
-                validointi.huomautukset("sisallossa-opintokokonaisuuksia-ilman-laajuutta", NavigationNodeDto.of(viite));
+                validointi.huomautukset(SISALLOSSA_OPINTOKOKONAISUUKSIA_ILMAN_LAAJUUTTA, NavigationNodeDto.of(viite));
             }
             if (!hasEmptyLaajuus(viite) && viite.getOpintokokonaisuus().getLaajuusYksikko() == null) {
-                validointi.virhe("sisallossa-opintokokonaisuuksia-ilman-laajuusyksikkoa", NavigationNodeDto.of(viite));
+                validointi.virhe(SISALLOSSA_OPINTOKOKONAISUUKSIA_ILMAN_LAAJUUSYKSIKKOA, NavigationNodeDto.of(viite));
+            }
+
+            if (!sisaltoviiteServiceProvider.validoiKoodi(viite)) {
+                validointi.virhe(SISALLOSSA_OPINTOKOKONAISUUDEN_TAVOITTEISSA_VIRHEITA, NavigationNodeDto.of(viite));
             }
         }
 
