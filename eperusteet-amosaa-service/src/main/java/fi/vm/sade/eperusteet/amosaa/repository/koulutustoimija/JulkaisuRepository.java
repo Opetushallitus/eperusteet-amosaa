@@ -79,4 +79,6 @@ public interface JulkaisuRepository extends JpaRepository<Julkaisu, Long> {
                     "   WHERE EXISTS (SELECT 1 FROM JSONB_ARRAY_ELEMENTS(opintokokonaisuudet) elem WHERE elem->'opintokokonaisuus'->>'koodiArvo' LIKE :koodiarvo) " +
                     ") t")
     String findByOpintokokonaisuusKoodiArvo(@Param("koodiarvo") String koodiArvo);
+
+    long countByOpetussuunnitelmaId(Long id);
 }

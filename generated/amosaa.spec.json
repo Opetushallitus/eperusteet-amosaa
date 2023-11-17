@@ -2806,10 +2806,10 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/julkaisu/onkoMuutoksia" : {
+    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/julkaisu/muutoksia" : {
       "get" : {
         "tags" : [ "Julkaisut" ],
-        "operationId" : "onkoMuutoksia",
+        "operationId" : "julkaisemattomiaMuutoksia",
         "parameters" : [ {
           "in" : "body",
           "name" : "body",
@@ -8756,6 +8756,10 @@
     "OpetussuunnitelmaTilastoDto" : {
       "type" : "object",
       "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
         "nimi" : {
           "type" : "object",
           "additionalProperties" : {
@@ -8796,6 +8800,10 @@
           "type" : "string",
           "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO", "MAAHANMUUTTAJIENKOTOUTUMISKOULUTUS", "VAPAASIVISTYSTYOLUKUTAITO", "TUTKINTOONVALMENTAVA" ]
         },
+        "perusteId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
         "julkaisuVuosi" : {
           "type" : "integer",
           "format" : "int32"
@@ -8805,10 +8813,6 @@
           "additionalProperties" : {
             "type" : "string"
           }
-        },
-        "perusteId" : {
-          "type" : "integer",
-          "format" : "int64"
         }
       }
     },
@@ -9194,12 +9198,12 @@
         "first" : {
           "type" : "boolean"
         },
+        "last" : {
+          "type" : "boolean"
+        },
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
-        },
-        "last" : {
-          "type" : "boolean"
         }
       }
     },
@@ -9234,12 +9238,12 @@
         "first" : {
           "type" : "boolean"
         },
+        "last" : {
+          "type" : "boolean"
+        },
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
-        },
-        "last" : {
-          "type" : "boolean"
         }
       }
     },
@@ -9274,12 +9278,12 @@
         "first" : {
           "type" : "boolean"
         },
+        "last" : {
+          "type" : "boolean"
+        },
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
-        },
-        "last" : {
-          "type" : "boolean"
         }
       }
     },
@@ -9314,12 +9318,12 @@
         "first" : {
           "type" : "boolean"
         },
+        "last" : {
+          "type" : "boolean"
+        },
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
-        },
-        "last" : {
-          "type" : "boolean"
         }
       }
     },
@@ -9354,12 +9358,12 @@
         "first" : {
           "type" : "boolean"
         },
+        "last" : {
+          "type" : "boolean"
+        },
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
-        },
-        "last" : {
-          "type" : "boolean"
         }
       }
     },

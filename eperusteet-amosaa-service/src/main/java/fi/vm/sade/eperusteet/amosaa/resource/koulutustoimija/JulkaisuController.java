@@ -62,11 +62,11 @@ public class JulkaisuController extends KoulutustoimijaIdGetterAbstractControlle
     @ApiImplicitParams({
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
-    @RequestMapping(method = GET, value = "/julkaisu/onkoMuutoksia")
-    public boolean onkoMuutoksia(
+    @RequestMapping(method = GET, value = "/julkaisu/muutoksia")
+    public boolean julkaisemattomiaMuutoksia(
             @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable("opsId") final long opsId) {
-        return julkaisutService.onkoMuutoksia(ktId, opsId);
+        return julkaisutService.julkaisemattomiaMuutoksia(ktId, opsId);
     }
 
     @ApiImplicitParams({

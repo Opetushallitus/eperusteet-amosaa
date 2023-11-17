@@ -24,7 +24,7 @@ public interface JulkaisuService {
     void kooditaSisaltoviitteet(@P("ktId") long ktId, @P("opsId") long opsId);
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
-    boolean onkoMuutoksia(long ktId, long opsId);
+    boolean julkaisemattomiaMuutoksia(long ktId, long opsId);
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
     JulkaisuTila viimeisinJulkaisuTila(long ktId, long opsId);
