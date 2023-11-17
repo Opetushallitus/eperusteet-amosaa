@@ -19,6 +19,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.JulkaisuBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaKaikkiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaMuokkaustietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteRakenneDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.JulkaistuOpetussuunnitelmaTilaRepository;
@@ -280,24 +281,11 @@ public class JulkaisuServiceImpl implements JulkaisuService {
     }
 
     @Override
-    public boolean onkoMuutoksia(long ktId, long opsId) {
-        try {
-            Opetussuunnitelma opetussuunnitelma = opetussuunnitelmaRepository.findOne(opsId);
-            Julkaisu viimeisinJulkaisu = julkaisuRepository.findFirstByOpetussuunnitelmaOrderByRevisionDesc(opetussuunnitelma);
-
-            if (viimeisinJulkaisu == null) {
-                return false;
-            }
-
-            ObjectNode data = viimeisinJulkaisu.getData().getData();
-            String julkaistu = generoiOpetussuunnitelmaKaikkiDtotoString(objectMapper.treeToValue(data, OpetussuunnitelmaKaikkiDto.class));
-            String nykyinen = generoiOpetussuunnitelmaKaikkiDtotoString(opetussuunnitelmaService.getOpetussuunnitelmaKaikki(ktId, opsId));
-
-            return JSONCompare.compareJSON(julkaistu, nykyinen, JSONCompareMode.LENIENT).failed();
-        } catch (IOException | JSONException e) {
-            log.error(Throwables.getStackTraceAsString(e));
-            throw new BusinessRuleViolationException("onko-muutoksia-julkaisuun-verrattuna-tarkistus-epaonnistui");
-        }
+    public boolean julkaisemattomiaMuutoksia(long ktId, long opsId) {
+        List<OpetussuunnitelmaMuokkaustietoDto> muokkaustiedot = muokkausTietoService.getOpetussuunnitelmanMuokkaustiedot(ktId, opsId, new Date(), 1);
+        return julkaisuRepository.countByOpetussuunnitelmaId(opsId) > 0
+                && !muokkaustiedot.isEmpty()
+                && muokkaustiedot.stream().noneMatch(muokkaustieto -> muokkaustieto.getTapahtuma().equals(MuokkausTapahtuma.JULKAISU));
     }
 
     @Override

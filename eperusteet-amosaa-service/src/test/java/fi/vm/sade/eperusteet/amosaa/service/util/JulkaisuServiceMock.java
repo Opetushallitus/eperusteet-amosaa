@@ -36,7 +36,7 @@ public class JulkaisuServiceMock implements JulkaisuService {
     }
 
     @Override
-    public boolean onkoMuutoksia(long ktId, long opsId) {
+    public boolean julkaisemattomiaMuutoksia(long ktId, long opsId) {
         return false;
     }
 
