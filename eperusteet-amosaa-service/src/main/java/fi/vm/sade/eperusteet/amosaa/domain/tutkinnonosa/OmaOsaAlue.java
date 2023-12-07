@@ -4,6 +4,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.AbstractAuditedEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.Kooditettu;
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.VapaaTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 import lombok.Getter;
 import lombok.Setter;
@@ -55,6 +56,19 @@ public class OmaOsaAlue extends AbstractAuditedEntity implements Serializable, R
     @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @OrderColumn(name = "jnro")
     private List<OmaOsaAlueToteutus> toteutukset = new ArrayList<>();
+
+    @Getter
+    @Setter
+    @ValidHtml(whitelist = ValidHtml.WhitelistType.SIMPLIFIED)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    private LokalisoituTeksti paikallinenTarkennus;
+
+    @Getter
+    @Setter
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OrderColumn(name = "jnro")
+    private List<VapaaTeksti> vapaat = new ArrayList<>();
 
     private String koodi;
 
