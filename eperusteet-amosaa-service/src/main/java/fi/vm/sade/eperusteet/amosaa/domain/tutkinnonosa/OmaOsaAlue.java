@@ -86,6 +86,7 @@ public class OmaOsaAlue extends AbstractAuditedEntity implements Serializable, R
         result.setKoodi(getKoodi());
         result.setPerusteenOsaAlueId(getPerusteenOsaAlueId());
         result.setPerusteenOsaAlueKoodi(getPerusteenOsaAlueKoodi());
+        result.setPaikallinenTarkennus(getPaikallinenTarkennus());
 
         if (osaamistavoitteet != null) {
             result.setOsaamistavoitteet(new Ammattitaitovaatimukset2019(osaamistavoitteet));
@@ -94,6 +95,9 @@ public class OmaOsaAlue extends AbstractAuditedEntity implements Serializable, R
 
         if (!CollectionUtils.isEmpty(getToteutukset())) {
             result.toteutukset.addAll(getToteutukset().stream().map(OmaOsaAlueToteutus::copy).collect(Collectors.toList()));
+        }
+        if (!CollectionUtils.isEmpty(getVapaat())) {
+            result.vapaat.addAll(getVapaat().stream().map(VapaaTeksti::copy).collect(Collectors.toList()));
         }
         return result;
     }
