@@ -3,6 +3,7 @@ package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaOsaAlueTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.KooditettuDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.KevytTekstiKappaleDto;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -24,6 +25,8 @@ public class OmaOsaAlueDto implements KooditettuDto {
     private Long geneerinenarviointi;
     private Integer laajuus;
     private String koodi;
+    private LokalisoituTekstiDto paikallinenTarkennus;
+    private List<KevytTekstiKappaleDto> vapaat = new ArrayList<>();
 
     @Override
     public void setKooditettu(LokalisoituTekstiDto kooditettu) {

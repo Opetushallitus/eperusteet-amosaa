@@ -4,6 +4,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.AbstractAuditedEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.Kooditettu;
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.VapaaTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 import lombok.Getter;
 import lombok.Setter;
@@ -56,6 +57,19 @@ public class OmaOsaAlue extends AbstractAuditedEntity implements Serializable, R
     @OrderColumn(name = "jnro")
     private List<OmaOsaAlueToteutus> toteutukset = new ArrayList<>();
 
+    @Getter
+    @Setter
+    @ValidHtml(whitelist = ValidHtml.WhitelistType.SIMPLIFIED)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    private LokalisoituTeksti paikallinenTarkennus;
+
+    @Getter
+    @Setter
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OrderColumn(name = "jnro")
+    private List<VapaaTeksti> vapaat = new ArrayList<>();
+
     private String koodi;
 
     @Override
@@ -72,6 +86,7 @@ public class OmaOsaAlue extends AbstractAuditedEntity implements Serializable, R
         result.setKoodi(getKoodi());
         result.setPerusteenOsaAlueId(getPerusteenOsaAlueId());
         result.setPerusteenOsaAlueKoodi(getPerusteenOsaAlueKoodi());
+        result.setPaikallinenTarkennus(getPaikallinenTarkennus());
 
         if (osaamistavoitteet != null) {
             result.setOsaamistavoitteet(new Ammattitaitovaatimukset2019(osaamistavoitteet));
@@ -80,6 +95,9 @@ public class OmaOsaAlue extends AbstractAuditedEntity implements Serializable, R
 
         if (!CollectionUtils.isEmpty(getToteutukset())) {
             result.toteutukset.addAll(getToteutukset().stream().map(OmaOsaAlueToteutus::copy).collect(Collectors.toList()));
+        }
+        if (!CollectionUtils.isEmpty(getVapaat())) {
+            result.vapaat.addAll(getVapaat().stream().map(VapaaTeksti::copy).collect(Collectors.toList()));
         }
         return result;
     }
