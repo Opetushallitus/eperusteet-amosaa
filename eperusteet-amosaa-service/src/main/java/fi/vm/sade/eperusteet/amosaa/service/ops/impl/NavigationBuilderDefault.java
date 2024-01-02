@@ -1,6 +1,7 @@
 package fi.vm.sade.eperusteet.amosaa.service.ops.impl;
 
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
+import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.dto.NavigationNodeDto;
 import fi.vm.sade.eperusteet.amosaa.dto.NavigationType;
@@ -20,6 +21,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -70,7 +72,10 @@ public class NavigationBuilderDefault implements NavigationBuilder {
 
     private NavigationNodeDto sisaltoviiteToNavigationNode(SisaltoViiteKevytDto sisaltoviite, Map<Long, SisaltoViiteKevytDto> sisaltoViitteetIdMap, PerusteKaikkiDto perusteKaikkiDto) {
         NavigationNodeDto result = NavigationNodeDto.of(
-                        NavigationType.of(sisaltoviite.getTyyppi().toString()),
+                        NavigationType.of(Optional
+                                .ofNullable(sisaltoviite.getTyyppi())
+                                .orElse(SisaltoTyyppi.TEKSTIKAPPALE)
+                            .toString()),
                         sisaltoviite.getNimi(),
                         sisaltoviite.getId())
                     .meta("koodi", getSisaltoviiteMetaKoodi(sisaltoviite));
