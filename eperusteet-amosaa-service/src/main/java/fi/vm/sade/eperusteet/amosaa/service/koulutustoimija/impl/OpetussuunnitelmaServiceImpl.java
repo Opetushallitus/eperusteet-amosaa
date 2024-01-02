@@ -646,7 +646,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         Koulutustoimija kt = koulutustoimijaRepository.findOne(ktId);
         List<Opetussuunnitelma> opsit = repository.findAllByKoulutustoimijaAndTyyppi(kt, OpsTyyppi.OPS);
         return opsit.stream()
-                .filter(ops -> ops.getPeruste() != null && ops.getPeruste().getKoulutustyyppi().isAmmatillinen())
+                .filter(ops -> ops.getPeruste() != null && ops.getPeruste().getKoulutustyyppi() != null && ops.getPeruste().getKoulutustyyppi().isAmmatillinen())
                 .map(this::getOpetussuunnitelmaVanhentunutPeruste)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
