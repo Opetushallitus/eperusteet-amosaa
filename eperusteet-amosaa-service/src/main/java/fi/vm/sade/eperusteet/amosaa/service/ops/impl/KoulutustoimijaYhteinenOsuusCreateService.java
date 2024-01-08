@@ -66,7 +66,7 @@ public class KoulutustoimijaYhteinenOsuusCreateService implements Opetussuunnite
                 pohjaRoot,
                 opetussuunnitelma,
                 null,
-                kopiointiToiminto(pohja));
+                kopiointiToiminto(pohja, opsDto.isKopioiPohjanTiedot()));
         sisaltoviiteRepository.save(root);
 
         return mapper.map(opetussuunnitelma, OpetussuunnitelmaBaseDto.class);
@@ -82,7 +82,11 @@ public class KoulutustoimijaYhteinenOsuusCreateService implements Opetussuunnite
         return pohjat.get(1); // pohjaksi asetetaan hierarkiassa korkemmallaan opetussuunnitelma, jonka pohjana on oph-pohja
     }
 
-    private SisaltoViite.TekstiHierarkiaKopiointiToiminto kopiointiToiminto(Opetussuunnitelma pohja) {
+    private SisaltoViite.TekstiHierarkiaKopiointiToiminto kopiointiToiminto(Opetussuunnitelma pohja, boolean kopioi) {
+        if (kopioi) {
+            return SisaltoViite.TekstiHierarkiaKopiointiToiminto.KOPIOI;
+        }
+
         List<Opetussuunnitelma> pohjat = getPohjat(pohja);
 
         if (pohjat.isEmpty()) { // käytössä OPH-pohja
