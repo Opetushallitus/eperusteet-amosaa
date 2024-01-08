@@ -12,4 +12,5 @@ import lombok.*;
 public class OpetussuunnitelmaLuontiDto extends OpetussuunnitelmaDto {
     private Long opsId;
     private Set<String> tutkinnonOsaKoodiIncludes;
+    private boolean kopioiPohjanTiedot;
 }
