@@ -65,6 +65,7 @@ public class NavigationBuilderDefault implements NavigationBuilder {
                 .filter(sisaltoViitte -> sisaltoViitte.getVanhempi() == null)
                 .filter(sisaltoviite -> sisaltoviite.getLapset() != null)
                 .flatMap(sisaltoviite -> sisaltoviite.getLapset().stream())
+                .filter(sisaltoviite -> sisaltoViitteetIdMap.get(sisaltoviite.getIdLong()) != null)
                 .sorted(Comparator.comparing(Reference::getIdLong, Comparator.comparing(l -> sisaltoViitteetIdMap.get(l).getNavikaatioJarjestys())))
                 .map(sisaltoViite -> sisaltoviiteToNavigationNode(sisaltoViitteetIdMap.get(sisaltoViite.getIdLong()), sisaltoViitteetIdMap, perusteKaikkiDto))
                 .collect(Collectors.toList());
@@ -72,10 +73,7 @@ public class NavigationBuilderDefault implements NavigationBuilder {
 
     private NavigationNodeDto sisaltoviiteToNavigationNode(SisaltoViiteKevytDto sisaltoviite, Map<Long, SisaltoViiteKevytDto> sisaltoViitteetIdMap, PerusteKaikkiDto perusteKaikkiDto) {
         NavigationNodeDto result = NavigationNodeDto.of(
-                        NavigationType.of(Optional
-                                .ofNullable(sisaltoviite.getTyyppi())
-                                .orElse(SisaltoTyyppi.TEKSTIKAPPALE)
-                            .toString()),
+                        NavigationType.of(sisaltoviite.getTyyppi().toString()),
                         sisaltoviite.getNimi(),
                         sisaltoviite.getId())
                     .meta("koodi", getSisaltoviiteMetaKoodi(sisaltoviite));
@@ -83,6 +81,7 @@ public class NavigationBuilderDefault implements NavigationBuilder {
         NavigationNodeMetaUtil.lisaaTutkinnonOsanOsaAlueet(perusteKaikkiDto, sisaltoviite, result, (osaalue) -> true);
 
         return result.addAll(sisaltoviite.getLapset() != null ? sisaltoviite.getLapset().stream()
+                    .filter(lapsi -> sisaltoViitteetIdMap.get(lapsi.getIdLong()) != null)
                     .map(lapsi -> sisaltoviiteToNavigationNode(sisaltoViitteetIdMap.get(lapsi.getIdLong()), sisaltoViitteetIdMap, perusteKaikkiDto))
                     .collect(Collectors.toList())
                     : Collections.emptyList());
