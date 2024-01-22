@@ -1,19 +1,3 @@
-/*
- * Copyright (c) 2013 The Finnish Board of Education - Opetushallitus
- *
- * This program is free software: Licensed under the EUPL, Version 1.1 or - as
- * soon as they will be approved by the European Commission - subsequent versions
- * of the EUPL (the "Licence");
- *
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at: http://ec.europa.eu/idabc/eupl
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * European Union Public Licence for more details.
- */
-
 package fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.custom;
 
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
@@ -32,12 +16,10 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti_;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite_;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Teksti;
-import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale_;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Teksti_;
 import fi.vm.sade.eperusteet.amosaa.dto.OpsHakuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaQueryDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.KoulutusDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaCustomRepository;
 import java.util.ArrayList;
 import java.util.Date;
@@ -56,20 +38,11 @@ import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.SetJoin;
-import javax.persistence.criteria.Subquery;
-
-import fi.vm.sade.eperusteet.amosaa.service.security.KoulutustyyppiRolePrefix;
-import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
-/**
- * @author nkala
- */
 public class OpetussuunnitelmaRepositoryImpl implements OpetussuunnitelmaCustomRepository {
 
     @PersistenceContext
@@ -299,6 +272,8 @@ public class OpetussuunnitelmaRepositoryImpl implements OpetussuunnitelmaCustomR
         if (!ObjectUtils.isEmpty(queryDto.getNimi())) {
             String nimi = RepositoryUtil.kuten(queryDto.getNimi());
             Predicate nimessa = cb.like(cb.lower(opsNimi.get(Teksti_.teksti)), cb.literal(nimi));
+            Predicate onOikeallaKielella = cb.equal(opsNimi.get(Teksti_.kieli), Kieli.of(queryDto.getKieli()));
+            Predicate nimiKielella = cb.and(nimessa, onOikeallaKielella);
 
             Predicate diaarissa = cb.like(cb.lower(root.get(Opetussuunnitelma_.perusteDiaarinumero)), cb.literal(nimi));
 
@@ -306,7 +281,9 @@ public class OpetussuunnitelmaRepositoryImpl implements OpetussuunnitelmaCustomR
             SetJoin<CachedPeruste, Koulutuskoodi> koulutuskoodit =  peruste.join(CachedPeruste_.koulutuskoodit, JoinType.LEFT);
             Predicate koulutuskoodiArvossa = cb.like(cb.lower(koulutuskoodit.get(Koulutuskoodi_.koulutuskoodiArvo)), cb.literal(nimi));
 
-            pred = cb.and(pred, cb.or(nimessa, diaarissa, koulutuskoodiArvossa));
+            pred = cb.and(pred, cb.or(nimiKielella, diaarissa, koulutuskoodiArvossa));
+        } else {
+            pred = cb.and(pred, cb.equal(opsNimi.get(Teksti_.kieli), Kieli.of(queryDto.getKieli())));
         }
 
         // Rajataan tilojen mukaan
