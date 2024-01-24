@@ -69,10 +69,10 @@ public interface KayttajanTietoService {
     Set<String> getUserOrganizations(PermissionEvaluator.RolePrefix rolePrefix);
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
-    List<KayttajaKtoDto> getKaikkiKayttajat(@P("ktId") Long ktId);
+    List<KayttajaKtoDto> getKaikkiKayttajat(@P("ktId") Long ktId, PermissionEvaluator.RolePrefix rolePrefix);
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
-    List<KayttajaKtoDto> getYstavaOrganisaatioKayttajat(@P("ktId") Long ktId);
+    List<KayttajaKtoDto> getYstavaOrganisaatioKayttajat(@P("ktId") Long ktId, PermissionEvaluator.RolePrefix rolePrefix);
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
     KayttajanTietoDto getKayttaja(@P("ktId") Long ktId, String oid);
@@ -81,7 +81,7 @@ public interface KayttajanTietoService {
     KayttajanTietoDto getKayttaja(@P("ktId") Long ktId, Long oid);
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
-    List<KayttajaKtoDto> getKayttajat(@P("ktId") Long ktId);
+    List<KayttajaKtoDto> getKayttajat(@P("ktId") Long ktId, PermissionEvaluator.RolePrefix rolePrefix);
 
     @PreAuthorize("hasPermission(#opsId, 'opetussuunnitelma', 'LUKU')")
     void removeSuosikki(@P("opsId") Long opsId);

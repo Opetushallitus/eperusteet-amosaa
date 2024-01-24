@@ -33,6 +33,7 @@ import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
+import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -113,9 +114,10 @@ public class KoulutustoimijaController extends KoulutustoimijaIdGetterAbstractCo
     })
     @RequestMapping(value = "/{ktId}/kayttajat", method = RequestMethod.GET)
     public ResponseEntity<List<KayttajaKtoDto>> getKoulutustoimijaKayttajat(
-            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @RequestParam(value = "app") final String app
     ) {
-        return new ResponseEntity<>(kayttajaTietoService.getKayttajat(ktId), HttpStatus.OK);
+        return new ResponseEntity<>(kayttajaTietoService.getKayttajat(ktId, PermissionEvaluator.RolePrefix.valueOf(app)), HttpStatus.OK);
     }
 
     @ApiImplicitParams({
@@ -123,9 +125,10 @@ public class KoulutustoimijaController extends KoulutustoimijaIdGetterAbstractCo
     })
     @RequestMapping(value = "/{ktId}/kaikkiKayttajat", method = RequestMethod.GET)
     public ResponseEntity<List<KayttajaKtoDto>> getKaikkiKayttajat(
-            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @RequestParam(value = "app") final String app
     ) {
-        return new ResponseEntity<>(kayttajaTietoService.getKaikkiKayttajat(ktId), HttpStatus.OK);
+        return new ResponseEntity<>(kayttajaTietoService.getKaikkiKayttajat(ktId, PermissionEvaluator.RolePrefix.valueOf(app)), HttpStatus.OK);
     }
 
     @ApiImplicitParams({
@@ -133,9 +136,10 @@ public class KoulutustoimijaController extends KoulutustoimijaIdGetterAbstractCo
     })
     @RequestMapping(value = "/{ktId}/ystavaOrganisaatioKayttajat", method = RequestMethod.GET)
     public ResponseEntity<List<KayttajaKtoDto>> getYstavaOrganisaatioKayttajat(
-            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @RequestParam(value = "app") final String app
     ) {
-        return new ResponseEntity<>(kayttajaTietoService.getYstavaOrganisaatioKayttajat(ktId), HttpStatus.OK);
+        return new ResponseEntity<>(kayttajaTietoService.getYstavaOrganisaatioKayttajat(ktId, PermissionEvaluator.RolePrefix.valueOf(app)), HttpStatus.OK);
     }
 
     @ApiImplicitParams({
