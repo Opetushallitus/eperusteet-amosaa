@@ -126,7 +126,7 @@ public abstract class AbstractIntegrationTest {
     }
 
     protected KayttajaoikeusDto updateUserOikeus(Long ktId, Long opsId, KayttajaoikeusTyyppi oikeus, String kayttajaOid) {
-        KayttajaDto user = kayttajanTietoService.getKaikkiKayttajat(getKoulutustoimijaId()).stream()
+        KayttajaDto user = kayttajanTietoService.getKaikkiKayttajat(getKoulutustoimijaId(), PermissionEvaluator.RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA).stream()
                 .filter(kayttaja -> kayttaja.getOid().equals(kayttajaOid))
                 .findFirst()
                 .get();

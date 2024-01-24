@@ -1654,6 +1654,11 @@
             "format" : "int64"
           }
         }, {
+          "name" : "app",
+          "in" : "query",
+          "required" : true,
+          "type" : "string"
+        }, {
           "name" : "ktId",
           "in" : "path",
           "required" : true,
@@ -1684,6 +1689,11 @@
             "type" : "integer",
             "format" : "int64"
           }
+        }, {
+          "name" : "app",
+          "in" : "query",
+          "required" : true,
+          "type" : "string"
         }, {
           "name" : "ktId",
           "in" : "path",
@@ -4872,6 +4882,11 @@
             "type" : "integer",
             "format" : "int64"
           }
+        }, {
+          "name" : "app",
+          "in" : "query",
+          "required" : true,
+          "type" : "string"
         }, {
           "name" : "ktId",
           "in" : "path",

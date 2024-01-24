@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttooikeusKayttajaDto;
+import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,7 @@ import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
 public class KayttooikeusServiceMock implements KayttooikeusService{
 
     @Override
-    public List<KayttooikeusKayttajaDto> getOrganisaatioVirkailijat(String organisaatioOid) {
+    public List<KayttooikeusKayttajaDto> getOrganisaatioVirkailijat(String organisaatioOid, PermissionEvaluator.RolePrefix rolePrefix) {
         return Optional.ofNullable(KayttooikeusServiceMock.kayttoikeuskayttajaMap().get(organisaatioOid))
                 .orElseGet(Collections::emptyList);
     }

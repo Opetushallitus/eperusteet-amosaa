@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaKtoDto;
 import java.util.List;
 
+import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
@@ -27,7 +28,7 @@ public class KayttajaTietoServiceIT extends AbstractIntegrationTest {
 
         useProfileKP1();
 
-        List<KayttajaKtoDto> kaikkiKayttajat = kayttajanTietoService.getKaikkiKayttajat(getKoulutustoimijaId());
+        List<KayttajaKtoDto> kaikkiKayttajat = kayttajanTietoService.getKaikkiKayttajat(getKoulutustoimijaId(), PermissionEvaluator.RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA);
 
         assertThat(kaikkiKayttajat).hasSize(5);
         assertThat(kaikkiKayttajat)
@@ -54,13 +55,13 @@ public class KayttajaTietoServiceIT extends AbstractIntegrationTest {
 
         useProfileKP1();
 
-        List<KayttajaKtoDto> kaikkiKayttajat = kayttajanTietoService.getKaikkiKayttajat(getKoulutustoimijaId());
+        List<KayttajaKtoDto> kaikkiKayttajat = kayttajanTietoService.getKaikkiKayttajat(getKoulutustoimijaId(), PermissionEvaluator.RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA);
         assertThat(kaikkiKayttajat.stream().filter(k -> k.getOid().equals(TMPR)).findFirst().get().getId()).isNull();
 
         useProfileTmpr();
         useProfileKP1();
 
-        kaikkiKayttajat = kayttajanTietoService.getKaikkiKayttajat(getKoulutustoimijaId());
+        kaikkiKayttajat = kayttajanTietoService.getKaikkiKayttajat(getKoulutustoimijaId(), PermissionEvaluator.RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA);
         assertThat(kaikkiKayttajat.stream().filter(k -> k.getOid().equals(TMPR)).findFirst().get().getId()).isNotNull();
 
     }

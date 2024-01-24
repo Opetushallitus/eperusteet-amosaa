@@ -8,6 +8,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttooikeusKayttajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttooikeusKyselyDto;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttooikeusService;
+import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator;
 import fi.vm.sade.eperusteet.utils.client.RestClientFactory;
 import fi.vm.sade.javautils.http.OphHttpClient;
 import fi.vm.sade.javautils.http.OphHttpEntity;
@@ -48,7 +49,7 @@ public class KayttooikeusServiceImpl implements KayttooikeusService{
     private ObjectMapper omapper = new ObjectMapper();
 
     @Override
-    public List<KayttooikeusKayttajaDto> getOrganisaatioVirkailijat(String organisaatioOid) {
+    public List<KayttooikeusKayttajaDto> getOrganisaatioVirkailijat(String organisaatioOid, PermissionEvaluator.RolePrefix rolePrefix) {
 
         OphHttpClient client = restClientFactory.get(kayttooikeusServiceUrl, true);
         
@@ -57,7 +58,7 @@ public class KayttooikeusServiceImpl implements KayttooikeusService{
                 .buildAndExpand(organisaatioOid);
 
         KayttooikeusKyselyDto kayttooikeusKyselyDto = KayttooikeusKyselyDto.builder()
-                .kayttooikeudet(ImmutableMap.of(KAYTTOOIKEUS_EPERUSTEET_AMOSAA, ROLES))
+                .kayttooikeudet(ImmutableMap.of(rolePrefix.name().replace("ROLE_APP_", ""), ROLES))
                 .organisaatioOids(Collections.singletonList(organisaatioOid))
                 .build();
 

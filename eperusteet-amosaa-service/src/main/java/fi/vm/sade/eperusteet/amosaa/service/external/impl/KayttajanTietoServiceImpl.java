@@ -254,34 +254,34 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
                 .collect(Collectors.toList());
     }
 
-    private List<KayttajaKtoDto> getKayttajat(Koulutustoimija kt) {
+    private List<KayttajaKtoDto> getKayttajat(Koulutustoimija kt, PermissionEvaluator.RolePrefix rolePrefix) {
         if (kt.isOph()) {
             return new ArrayList<>();
         }
         else {
             Koulutustoimija koulutustoimija = koulutustoimijaRepository.findOne(kt.getId());
-            return getOrganisaatioVirkailijatAsKayttajat(Collections.singletonList(koulutustoimija.getOrganisaatio()));
+            return getOrganisaatioVirkailijatAsKayttajat(Collections.singletonList(koulutustoimija.getOrganisaatio()), rolePrefix);
         }
     }
 
     @Override
-    public List<KayttajaKtoDto> getKayttajat(Long kOid) {
+    public List<KayttajaKtoDto> getKayttajat(Long kOid, PermissionEvaluator.RolePrefix rolePrefix) {
         Koulutustoimija kt = koulutustoimijaRepository.findOne(kOid);
-        return getKayttajat(kt);
+        return getKayttajat(kt, rolePrefix);
     }
 
     @Override
-    public List<KayttajaKtoDto> getKaikkiKayttajat(Long kOid) {
+    public List<KayttajaKtoDto> getKaikkiKayttajat(Long kOid, PermissionEvaluator.RolePrefix rolePrefix) {
         Map<String, KayttajaKtoDto> result = new HashMap<>();
         Koulutustoimija self = koulutustoimijaRepository.findOne(kOid);
         List<KoulutustoimijaYstavaDto> ystavaorganisaatiot = koulutustoimijaService.getOmatYstavat(self.getId());
 
         if (!self.isOph()) {
-            result.putAll(getOrganisaatioVirkailijatAsKayttajat(Collections.singletonList(self.getOrganisaatio())).stream()
+            result.putAll(getOrganisaatioVirkailijatAsKayttajat(Collections.singletonList(self.getOrganisaatio()), rolePrefix).stream()
                     .collect(Collectors.toMap(KayttajaDto::getOid, kayttaja -> kayttaja, (kayttaja1, kayttaja2) -> kayttaja1)));
             try {
                 result.putAll(getOrganisaatioVirkailijatAsKayttajat(ystavaorganisaatiot.stream()
-                        .map(KoulutustoimijaYstavaDto::getOrganisaatio).collect(Collectors.toList())).stream()
+                        .map(KoulutustoimijaYstavaDto::getOrganisaatio).collect(Collectors.toList()), rolePrefix).stream()
                         .collect(Collectors.toMap(KayttajaDto::getOid, kayttaja -> kayttaja, (kayttaja1, kayttaja2) -> kayttaja1)));
             } catch (RuntimeException ignored) {
             }
@@ -291,20 +291,20 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
     }
 
     @Override
-    public List<KayttajaKtoDto> getYstavaOrganisaatioKayttajat(Long kOid) {
+    public List<KayttajaKtoDto> getYstavaOrganisaatioKayttajat(Long kOid, PermissionEvaluator.RolePrefix rolePrefix) {
         Koulutustoimija self = koulutustoimijaRepository.findOne(kOid);
         List<KoulutustoimijaYstavaDto> ystavaorganisaatiot = koulutustoimijaService.getOmatYstavat(self.getId());
-        return getOrganisaatioVirkailijatAsKayttajat(ystavaorganisaatiot.stream().map(KoulutustoimijaYstavaDto::getOrganisaatio).collect(Collectors.toList()));
+        return getOrganisaatioVirkailijatAsKayttajat(ystavaorganisaatiot.stream().map(KoulutustoimijaYstavaDto::getOrganisaatio).collect(Collectors.toList()), rolePrefix);
     }
 
-    private List<KayttajaKtoDto> getOrganisaatioVirkailijatAsKayttajat(List<String> organisaatioOids) {
+    private List<KayttajaKtoDto> getOrganisaatioVirkailijatAsKayttajat(List<String> organisaatioOids, PermissionEvaluator.RolePrefix rolePrefix) {
 
         if (organisaatioOids.isEmpty()) {
             return Collections.emptyList();
         }
 
         Map<String, KayttajaKtoDto> kayttajaMap = organisaatioOids.stream()
-                .flatMap(organisaatioOid -> kayttooikeusService.getOrganisaatioVirkailijat(organisaatioOid).stream()
+                .flatMap(organisaatioOid -> kayttooikeusService.getOrganisaatioVirkailijat(organisaatioOid, rolePrefix).stream()
                         .map(kayttooikeusKayttajaDto -> mapper.map(kayttooikeusKayttajaDto, KayttajaKtoDto.class).withOrganisaatioOid(organisaatioOid)
                     ))
                 .collect(Collectors.toMap(KayttajaDto::getOid, kayttaja -> kayttaja, (kayttaja1, kayttaja2) -> kayttaja1));

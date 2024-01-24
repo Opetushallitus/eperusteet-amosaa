@@ -292,7 +292,7 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
     @Test
     @Rollback
     public void testKoulutustoimijaKayttajaoikeudet() {
-        List<KayttajaKtoDto> kaikki = kayttajanTietoService.getKaikkiKayttajat(getKoulutustoimijaId());
+        List<KayttajaKtoDto> kaikki = kayttajanTietoService.getKaikkiKayttajat(getKoulutustoimijaId(), PermissionEvaluator.RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA);
         assertThat(kaikki)
                 .extracting(KayttajaDto::getOid)
                 .containsExactlyInAnyOrder("kp2", "1.22.3.4.5.kp2", "1.2.3.4.5.kp1", "tmpr");
@@ -303,7 +303,7 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
     public void testKoulutustoimijaKayttajaoikeudetKaikkiTestiorganisaatiot() {
         regAllProfiles();
         useProfileKP2();
-        List<KayttajaKtoDto> kaikki = kayttajanTietoService.getKaikkiKayttajat(getKoulutustoimijaId());
+        List<KayttajaKtoDto> kaikki = kayttajanTietoService.getKaikkiKayttajat(getKoulutustoimijaId(), PermissionEvaluator.RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA);
         assertThat(kaikki)
                 .extracting(KayttajaDto::getOid)
                 .containsExactlyInAnyOrder("kp1", "kp2", "1.22.3.4.5.kp2", "1.2.3.4.5.kp1", "tmpr");
@@ -316,7 +316,7 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
         regAllProfiles();
         makeFriendsWithTmpr();
         useProfileKP2();
-        List<KayttajaKtoDto> kaikki = kayttajanTietoService.getKaikkiKayttajat(getKoulutustoimijaId());
+        List<KayttajaKtoDto> kaikki = kayttajanTietoService.getKaikkiKayttajat(getKoulutustoimijaId(), PermissionEvaluator.RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA);
         assertThat(kaikki)
                 .extracting(KayttajaDto::getOid)
                 .containsExactlyInAnyOrder("kp1", "kp2", "tmpr", "1.22.3.4.5.kp2", "1.2.3.4.5.kp1", "1.22.3.4.5.TMPR");
@@ -328,7 +328,7 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
         regAllProfiles();
         makeFriendsWithTmpr();
         useProfileKP2();
-        List<KayttajaKtoDto> ystavat = kayttajanTietoService.getYstavaOrganisaatioKayttajat(getKoulutustoimijaId());
+        List<KayttajaKtoDto> ystavat = kayttajanTietoService.getYstavaOrganisaatioKayttajat(getKoulutustoimijaId(), PermissionEvaluator.RolePrefix.ROLE_APP_EPERUSTEET_AMOSAA);
         assertThat(ystavat)
                 .extracting(KayttajaDto::getOid)
                 .containsExactlyInAnyOrder("kp1", "1.2.3.4.5.kp1", "1.22.3.4.5.TMPR");
