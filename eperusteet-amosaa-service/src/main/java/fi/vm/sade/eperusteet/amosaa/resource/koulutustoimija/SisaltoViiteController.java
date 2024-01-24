@@ -1,21 +1,5 @@
 package fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija;
 
-/*
- * Copyright (c) 2013 The Finnish Board of Education - Opetushallitus
- *
- * This program is free software: Licensed under the EUPL, Version 1.1 or - as
- * soon as they will be approved by the European Commission - subsequent versions
- * of the EUPL (the "Licence");
- *
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at: http://ec.europa.eu/idabc/eupl
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * European Union Public Licence for more details.
- */
-
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.RevisionDto;
 import fi.vm.sade.eperusteet.amosaa.dto.RevisionKayttajaDto;
@@ -46,10 +30,6 @@ import springfox.documentation.annotations.ApiIgnore;
 import java.util.ArrayList;
 import java.util.List;
 
-
-/**
- * @author nkala
- */
 @RestController
 @RequestMapping("/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}")
 @Api(value = "Sisaltoviitteet")
@@ -227,6 +207,19 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
             @PathVariable final Long svId
     ) {
         service.removeSisaltoViite(ktId, opsId, svId);
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    })
+    @RequestMapping(value = "/removeViitteet", method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.OK)
+    public void removeSisaltoViitteet(
+            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @PathVariable final Long opsId,
+            @RequestBody List<Long> viitteet
+    ) {
+        service.removeSisaltoViitteet(ktId, opsId, viitteet);
     }
 
     @ApiImplicitParams({

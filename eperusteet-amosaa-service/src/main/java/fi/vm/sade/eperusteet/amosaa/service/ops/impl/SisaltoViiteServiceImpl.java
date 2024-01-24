@@ -1,6 +1,5 @@
 package fi.vm.sade.eperusteet.amosaa.service.ops.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Sets;
 import fi.vm.sade.eperusteet.amosaa.domain.HistoriaTapahtumaAuditointitiedoilla;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
@@ -571,6 +570,12 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
                 query.getNotInOpetussuunnitelmaId(),
                 pageable)
                 .map(sisaltoviite -> mapper.map(sisaltoviite, tyyppi));
+    }
+
+    @Override
+    @Transactional
+    public void removeSisaltoViitteet(Long ktId, Long opsId, List<Long> viiteIds) {
+        viiteIds.forEach(viiteId -> removeSisaltoViite(ktId, opsId, viiteId));
     }
 
     @Override
