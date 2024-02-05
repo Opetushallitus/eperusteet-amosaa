@@ -45,7 +45,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.PUT;
  * @author isaul
  */
 @RestController
-@RequestMapping("/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tekstit/{tkvId}/kommentit")
+@RequestMapping("/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tekstit/{tkvId}/kommentit")
 @InternalApi
 public class KommenttiController extends KoulutustoimijaIdGetterAbstractController {
 

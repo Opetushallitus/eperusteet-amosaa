@@ -52,7 +52,7 @@ import springfox.documentation.annotations.ApiIgnore;
  * @author nkala
  */
 @RestController
-@RequestMapping("/perusteet")
+@RequestMapping("/api/perusteet")
 @Api(value = "perusteet")
 @InternalApi
 public class PerusteController extends KoulutustoimijaIdGetterAbstractController {

@@ -41,7 +41,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
  * @author nkala
  */
 @RestController
-@RequestMapping("/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tekstit/{svId}/lukko")
+@RequestMapping("/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tekstit/{svId}/lukko")
 @Api(value = "SisaltoviiteLukko")
 @InternalApi
 public class SisaltoViiteLockController {

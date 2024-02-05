@@ -126,7 +126,7 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
     @Test
     @Rollback
     public void opetussuunnitelmanSiirto() {
-        PageRequest pageRequest = new PageRequest(0, 25);
+        PageRequest pageRequest = PageRequest.of(0, 25);
 
         useProfileKP3();
         assertThat(opetussuunnitelmaService
@@ -157,7 +157,7 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
     @Test
     @Rollback
     public void opetussuunnitelmanSiirtoVirheellisesti() {
-        PageRequest pageRequest = new PageRequest(0, 25);
+        PageRequest pageRequest = PageRequest.of(0, 25);
 
         useProfileTmpr();
         Long toimija = koulutustoimijaService.getKoulutustoimija("1.2.246.562.10.79499343246");
@@ -186,7 +186,7 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
     public void testLuonnoksetEiJulkisia() {
         useProfileKP2();
         OpetussuunnitelmaQueryDto pquery = new OpetussuunnitelmaQueryDto();
-        PageRequest p = new PageRequest(pquery.getSivu(), Math.min(pquery.getSivukoko(), 100));
+        PageRequest p = PageRequest.of(pquery.getSivu(), Math.min(pquery.getSivukoko(), 100));
         OpetussuunnitelmaBaseDto ops = createOpetussuunnitelma();
         assertThat(opetussuunnitelmaService.findOpetussuunnitelmat(p, pquery).getTotalElements()).isEqualTo(0);
 
@@ -203,7 +203,7 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
         createOpsWithCachedPeruste("333/333", 3l);
 
         OpetussuunnitelmaQueryDto pquery = new OpetussuunnitelmaQueryDto();
-        PageRequest p = new PageRequest(pquery.getSivu(), Math.min(pquery.getSivukoko(), 100));
+        PageRequest p = PageRequest.of(pquery.getSivu(), Math.min(pquery.getSivukoko(), 100));
 
         assertThat(opetussuunnitelmaService.findOpetussuunnitelmat(p, new OpetussuunnitelmaQueryDto()).getTotalElements()).isEqualTo(5);
 
@@ -625,7 +625,7 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
         createOpsWithCachedPeruste("222/222", 2l);
 
         OpetussuunnitelmaQueryDto pquery = new OpetussuunnitelmaQueryDto();
-        PageRequest p = new PageRequest(pquery.getSivu(), Math.min(pquery.getSivukoko(), 100));
+        PageRequest p = PageRequest.of(pquery.getSivu(), Math.min(pquery.getSivukoko(), 100));
 
         assertThat(opetussuunnitelmaService.findOpetussuunnitelmat(p, pquery).getTotalElements()).isEqualTo(2);
 
@@ -646,7 +646,7 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
         });
 
         OpetussuunnitelmaQueryDto pquery = new OpetussuunnitelmaQueryDto();
-        PageRequest p = new PageRequest(pquery.getSivu(), Math.min(pquery.getSivukoko(), 100));
+        PageRequest p = PageRequest.of(pquery.getSivu(), Math.min(pquery.getSivukoko(), 100));
 
         assertThat(opetussuunnitelmaService.findOpetussuunnitelmat(p, pquery).getTotalElements()).isEqualTo(2);
 

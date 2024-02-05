@@ -74,7 +74,7 @@ public class LiitetiedostoController extends KoulutustoimijaIdGetterAbstractCont
     @ApiImplicitParams({
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
-    @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/kuvat", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/kuvat", method = RequestMethod.POST)
     public ResponseEntity<String> upload(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable Long opsId,
@@ -142,7 +142,7 @@ public class LiitetiedostoController extends KoulutustoimijaIdGetterAbstractCont
     @ApiImplicitParams({
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
-    @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/kuvat/{fileName}", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/kuvat/{fileName}", method = RequestMethod.GET)
     @CacheControl(age = CacheControl.ONE_YEAR)
     public void getKoulutustoimjaImage(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
@@ -154,7 +154,7 @@ public class LiitetiedostoController extends KoulutustoimijaIdGetterAbstractCont
         getImage(opsId, fileName, etag, response);
     }
 
-    @RequestMapping(value = "/opetussuunnitelmat/{opsId}/kuvat/{fileName}", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/opetussuunnitelmat/{opsId}/kuvat/{fileName}", method = RequestMethod.GET)
     @CacheControl(age = CacheControl.ONE_YEAR)
     public void getImage(
             @PathVariable Long opsId,
@@ -182,7 +182,7 @@ public class LiitetiedostoController extends KoulutustoimijaIdGetterAbstractCont
     @ApiImplicitParams({
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
-    @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/kuvat/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/kuvat/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteImage(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
@@ -195,7 +195,7 @@ public class LiitetiedostoController extends KoulutustoimijaIdGetterAbstractCont
     @ApiImplicitParams({
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
-    @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/kuvat", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/kuvat", method = RequestMethod.GET)
     public List<LiiteDto> getAllImages(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable Long opsId

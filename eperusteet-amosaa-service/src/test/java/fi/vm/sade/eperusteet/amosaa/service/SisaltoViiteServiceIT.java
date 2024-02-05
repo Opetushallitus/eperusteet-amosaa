@@ -134,8 +134,8 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
         sisaltoViiteService.updateSisaltoViite(getKoulutustoimijaId(), ops.getId(), added.getId(), added);
 
         assertThat(added)
-                .extracting("tosa.toteutukset")
-                .containsExactly(toteutukset);
+                .extracting(SisaltoViiteDto::getTosa).extracting(TutkinnonosaDto::getToteutukset)
+                .isEqualTo(toteutukset);
 
         assertThat(added.getTosa().getToteutukset().get(0).getVapaat())
                 .extracting(vapaa -> vapaa.getNimi().get(Kieli.FI), vapaa -> vapaa.getTeksti().get(Kieli.FI))

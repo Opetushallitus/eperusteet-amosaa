@@ -26,7 +26,7 @@ import springfox.documentation.annotations.ApiIgnore;
  * @author nkala
  */
 @RestController
-@RequestMapping("/koodit")
+@RequestMapping("/api/koodit")
 @Api(value = "koodit")
 @InternalApi
 public class KoodistoControllerDto {

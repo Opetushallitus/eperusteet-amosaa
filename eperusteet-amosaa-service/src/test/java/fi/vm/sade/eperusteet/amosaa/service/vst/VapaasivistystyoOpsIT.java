@@ -128,9 +128,9 @@ public class VapaasivistystyoOpsIT extends AbstractIntegrationTest {
                         "opintokokonaisuustavoitteet_1048",
                         null);
         assertThat(sisaltoviiteDto.getOpintokokonaisuus().getTavoitteet().get(3))
-                .extracting("tavoite")
-                .extracting("tekstit")
-                .containsExactlyInAnyOrder(LokalisoituTekstiDto.of("tavoite1").getTeksti());
+                .extracting(OpintokokonaisuusTavoiteDto::getTavoite)
+                .extracting(LokalisoituTekstiDto::getTekstit)
+                .isEqualTo(LokalisoituTekstiDto.of("tavoite1").getTekstit());
 
         SisaltoViite sisaltoViite = sisaltoviiteRepository.getOne(sisaltoviiteDto.getId());
         sisaltoviiteServiceProvider.koodita(sisaltoViite);

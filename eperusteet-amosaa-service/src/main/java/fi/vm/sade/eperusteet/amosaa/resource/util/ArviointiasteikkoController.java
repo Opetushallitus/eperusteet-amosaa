@@ -34,7 +34,7 @@ import java.util.List;
  * @author isaul
  */
 @RestController
-@RequestMapping("/arviointiasteikot")
+@RequestMapping("/api/arviointiasteikot")
 @Api(value = "Arviointiasteikot")
 @ApiIgnore
 public class ArviointiasteikkoController {

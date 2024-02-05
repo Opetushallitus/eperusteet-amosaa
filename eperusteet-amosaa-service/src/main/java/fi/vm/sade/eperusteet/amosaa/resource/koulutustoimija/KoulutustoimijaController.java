@@ -50,7 +50,7 @@ import springfox.documentation.annotations.ApiIgnore;
  * @author nkala
  */
 @RestController
-@RequestMapping("/koulutustoimijat")
+@RequestMapping("/api/koulutustoimijat")
 @Api(value = "koulutustoimijat")
 @InternalApi
 public class KoulutustoimijaController extends KoulutustoimijaIdGetterAbstractController {

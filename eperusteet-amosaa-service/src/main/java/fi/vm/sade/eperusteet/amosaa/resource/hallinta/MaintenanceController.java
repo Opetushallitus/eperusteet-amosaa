@@ -27,7 +27,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @InternalApi
 @RestController
-@RequestMapping(value = "/maintenance")
+@RequestMapping(value = "/api/maintenance")
 @Profile("!test")
 @Api("Maintenance")
 @Slf4j

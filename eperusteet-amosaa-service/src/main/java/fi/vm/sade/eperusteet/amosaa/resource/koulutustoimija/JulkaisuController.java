@@ -19,7 +19,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
-@RequestMapping("/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}")
+@RequestMapping("/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}")
 @Api(value = "Julkaisut")
 @Description("Opetussuunnitelmien julkaisut")
 public class JulkaisuController extends KoulutustoimijaIdGetterAbstractController {

@@ -43,7 +43,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.PUT;
  * @author apvilkko
  */
 @RestController
-@RequestMapping("/koulutustoimijat/{ktId}")
+@RequestMapping("/api/koulutustoimijat/{ktId}")
 @InternalApi
 public class TermistoController extends KoulutustoimijaIdGetterAbstractController {
 
