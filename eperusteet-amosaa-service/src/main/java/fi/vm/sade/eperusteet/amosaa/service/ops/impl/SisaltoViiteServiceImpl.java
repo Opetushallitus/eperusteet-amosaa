@@ -560,7 +560,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
 
     @Override
     public <T> Page<T> getSisaltoviitteetWithQuery(Long ktId, SisaltoviiteQueryDto query, Class<T> tyyppi) {
-        Pageable pageable = new PageRequest(query.getSivu(), query.getSivukoko(), new Sort(Sort.Direction.fromString(query.isSortDesc() ? "DESC" : "ASC"), "nimi.teksti"));
+        Pageable pageable = PageRequest.of(query.getSivu(), query.getSivukoko(), Sort.by(Sort.Direction.fromString(query.isSortDesc() ? "DESC" : "ASC"), "nimi.teksti"));
         return repository.findAllWithPagination(
                 ktId,
                 query.getTyyppi(),

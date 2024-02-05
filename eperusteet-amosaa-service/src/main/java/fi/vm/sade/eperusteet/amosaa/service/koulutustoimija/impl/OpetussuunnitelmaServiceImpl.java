@@ -301,7 +301,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
     @Override
     public Page<OpetussuunnitelmaTilastoDto> getOpetussuunnitelmaTilastot(Integer sivu, Integer sivukoko) {
-        Page<Opetussuunnitelma> opetussuunnitelmat = repository.findAll(new PageRequest(sivu, sivukoko, Sort.Direction.ASC, "id"));
+        Page<Opetussuunnitelma> opetussuunnitelmat = repository.findAll(PageRequest.of(sivu, sivukoko, Sort.Direction.ASC, "id"));
         return new PageImpl(opetussuunnitelmat.getContent().stream()
                 .map(t -> mapper.map(t, OpetussuunnitelmaTilastoDto.class))
                 .collect(Collectors.toList()), null, opetussuunnitelmat.getTotalElements());
@@ -323,7 +323,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
     @Override
     public Page<OpetussuunnitelmaDto> getOpetussuunnitelmat(Long ktId, OpsHakuInternalDto query) {
-        PageRequest pageRequest = new PageRequest(query.getSivu(), query.getSivukoko(), new Sort(Sort.Direction.fromString("ASC"), "nimi.teksti"));
+        PageRequest pageRequest = PageRequest.of(query.getSivu(), query.getSivukoko(), Sort.by(Sort.Direction.fromString("ASC"), "nimi.teksti"));
 
         if (query.getKoulutustyyppi().stream().noneMatch(kt -> SecurityUtil.isUserOphAdmin(KoulutustyyppiRolePrefix.of(KoulutusTyyppi.of(kt))))) {
             query.setKoulutustoimijat(Arrays.asList(ktId));
@@ -1050,7 +1050,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
     @Override
     public Page<OpetussuunnitelmaDto> findOpetussuunnitelmatJulkaisut(OpetussuunnitelmaJulkaistuQueryDto pquery) {
-        Pageable pageable = new PageRequest(pquery.getSivu(), pquery.getSivukoko());
+        Pageable pageable = PageRequest.of(pquery.getSivu(), pquery.getSivukoko());
         List<String> koulutustyypit = pquery.getKoulutustyyppi().stream().map(KoulutusTyyppi::toString).collect(Collectors.toList());
         koulutustyypit.addAll(pquery.getKoulutustyyppi().stream().map(KoulutusTyyppi::name).collect(Collectors.toList()));
 

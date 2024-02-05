@@ -74,18 +74,18 @@ public class EperusteetServiceIT extends AbstractIntegrationTest {
         assertThat(suoritustavat).hasSize(1);
 
         RakenneModuuliTunnisteDto rakenneModuuliTunnisteDto1 = (RakenneModuuliTunnisteDto) suoritustavat.get(0).getOsat().get(0);
-        assertThat(rakenneModuuliTunnisteDto1).extracting("tunniste").containsExactlyInAnyOrder(UUID.fromString("d35fb695-f181-4e49-b4b9-c64a85819d0a"));
+        assertThat(rakenneModuuliTunnisteDto1).extracting("tunniste").isEqualTo(UUID.fromString("d35fb695-f181-4e49-b4b9-c64a85819d0a"));
         assertThat(rakenneModuuliTunnisteDto1.getKoodit()).isEqualTo(Sets.newHashSet("koodi1"));
         assertThat(rakenneModuuliTunnisteDto1.getKuvaus().getTeksti().get(Kieli.FI)).isEqualTo("testi1");
         
-        assertThat(rakenneModuuliTunnisteDto1.getOsat().get(0)) .extracting("tunniste").containsExactlyInAnyOrder(UUID.fromString("2f91a972-c52f-4db4-83be-3e16d668cb46"));
+        assertThat(rakenneModuuliTunnisteDto1.getOsat().get(0)) .extracting("tunniste").isEqualTo(UUID.fromString("2f91a972-c52f-4db4-83be-3e16d668cb46"));
         
         RakenneModuuliTunnisteDto rakenneModuuliTunnisteDto1_1 = (RakenneModuuliTunnisteDto)((RakenneModuuliTunnisteDto)suoritustavat.get(0).getOsat().get(0)).getOsat().get(0);
         assertThat(rakenneModuuliTunnisteDto1_1.getKoodit()).isEqualTo(Sets.newHashSet("koodi2"));
         assertThat(rakenneModuuliTunnisteDto1_1.getKuvaus().getTeksti().get(Kieli.FI)).isEqualTo("testi2");
         
         RakenneModuuliTunnisteDto rakenneModuuliTunnisteDto2 = (RakenneModuuliTunnisteDto) suoritustavat.get(0).getOsat().get(1);
-        assertThat(rakenneModuuliTunnisteDto2).extracting("tunniste").containsExactlyInAnyOrder(UUID.fromString("428e7f22-0a69-43c5-baa5-520296f71169"));
+        assertThat(rakenneModuuliTunnisteDto2).extracting("tunniste").isEqualTo(UUID.fromString("428e7f22-0a69-43c5-baa5-520296f71169"));
         assertThat(rakenneModuuliTunnisteDto2.getKoodit()).isEqualTo(Sets.newHashSet("koodi3"));
         assertThat(rakenneModuuliTunnisteDto2.getKuvaus().getTeksti().get(Kieli.FI)).isEqualTo("testi3");
 

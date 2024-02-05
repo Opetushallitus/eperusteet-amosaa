@@ -42,7 +42,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.PUT;
  * @author nkala
  */
 @RestController
-@RequestMapping("/ohjeet")
+@RequestMapping("/api/ohjeet")
 @InternalApi
 @Api("Ohjeet")
 public class OhjeController {

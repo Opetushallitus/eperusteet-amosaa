@@ -20,6 +20,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.liite.Liite;
 import java.util.List;
 import java.util.UUID;
 
+import fi.vm.sade.eperusteet.amosaa.repository.CustomJpaRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -28,7 +29,7 @@ import org.springframework.stereotype.Repository;
  * @author jhyoty
  */
 @Repository
-public interface LiiteRepository extends JpaRepository<Liite, UUID>, LiiteRepositoryCustom {
+public interface LiiteRepository extends CustomJpaRepository<Liite, UUID>, LiiteRepositoryCustom {
 //    @Query("SELECT l FROM Koulutustoimija kt JOIN kt.liitteet l WHERE kt.id = ?1")
 //    List<Liite> findByKoulutustoimijaId(Long koulutustoimijaId);
 

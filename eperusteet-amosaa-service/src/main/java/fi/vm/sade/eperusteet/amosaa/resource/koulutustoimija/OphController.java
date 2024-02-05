@@ -39,7 +39,7 @@ import springfox.documentation.annotations.ApiIgnore;
  * @author nkala
  */
 @RestController
-@RequestMapping("/opetussuunnitelmat")
+@RequestMapping("/api/opetussuunnitelmat")
 @Api(value = "opetussuunnitelmat")
 @InternalApi
 public class OphController {

@@ -28,7 +28,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.PUT;
  * Created by richard.vancamp on 29/03/16.
  */
 @RestController
-@RequestMapping("/koulutustoimijat/{ktId}")
+@RequestMapping("/api/koulutustoimijat/{ktId}")
 @Api(value = "Tiedotteet", description = "Tiedotteiden hallinta")
 @InternalApi
 public class TiedoteController extends KoulutustoimijaIdGetterAbstractController {

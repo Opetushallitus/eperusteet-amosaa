@@ -1,4 +1,4 @@
-package fi.vm.sade.eperusteet.amosaa.service.config;
+package fi.vm.sade.eperusteet.amosaa.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.session.jdbc.config.annotation.web.http.EnableJdbcHttpSession;

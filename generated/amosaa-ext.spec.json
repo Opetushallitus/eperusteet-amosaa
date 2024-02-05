@@ -11,7 +11,7 @@
   } ],
   "schemes" : [ "http", "https" ],
   "paths" : {
-    "/external/opetussuunnitelma/{koulutustoimijaId}/{opsId}" : {
+    "/api/external/opetussuunnitelma/{koulutustoimijaId}/{opsId}" : {
       "get" : {
         "tags" : [ "external" ],
         "summary" : "Opetussuunnitelman tietojen haku koulutustoimijan ja opetussuunnitelman id:llä",
@@ -93,7 +93,7 @@
         }
       }
     },
-    "/external/opetussuunnitelmat" : {
+    "/api/external/opetussuunnitelmat" : {
       "get" : {
         "tags" : [ "external" ],
         "operationId" : "getPublicOpetussuunnitelmat",
@@ -194,7 +194,7 @@
         }
       }
     },
-    "/external/opintokokonaisuus/{koodiArvo}" : {
+    "/api/external/opintokokonaisuus/{koodiArvo}" : {
       "get" : {
         "tags" : [ "external" ],
         "summary" : "Opintokokonaisuuden haku opintokokonaisuuden koodin arvolla",
@@ -1925,6 +1925,12 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
+        "pageable" : {
+          "$ref" : "#/definitions/Pageable"
+        },
+        "last" : {
+          "type" : "boolean"
+        },
         "first" : {
           "type" : "boolean"
         },
@@ -1932,7 +1938,7 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "last" : {
+        "empty" : {
           "type" : "boolean"
         }
       }
@@ -1965,6 +1971,12 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
+        "pageable" : {
+          "$ref" : "#/definitions/Pageable"
+        },
+        "last" : {
+          "type" : "boolean"
+        },
         "first" : {
           "type" : "boolean"
         },
@@ -1972,7 +1984,33 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "last" : {
+        "empty" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "Pageable" : {
+      "type" : "object",
+      "properties" : {
+        "offset" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "sort" : {
+          "$ref" : "#/definitions/Sort"
+        },
+        "unpaged" : {
+          "type" : "boolean"
+        },
+        "pageNumber" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "pageSize" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "paged" : {
           "type" : "boolean"
         }
       }
@@ -2184,7 +2222,18 @@
       }
     },
     "Sort" : {
-      "type" : "object"
+      "type" : "object",
+      "properties" : {
+        "empty" : {
+          "type" : "boolean"
+        },
+        "sorted" : {
+          "type" : "boolean"
+        },
+        "unsorted" : {
+          "type" : "boolean"
+        }
+      }
     },
     "SuorituspolkuExportDto" : {
       "type" : "object",

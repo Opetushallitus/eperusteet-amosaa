@@ -54,7 +54,7 @@
   } ],
   "schemes" : [ "http", "https" ],
   "paths" : {
-    "/arviointiasteikot" : {
+    "/api/arviointiasteikot" : {
       "get" : {
         "tags" : [ "Arviointiasteikot" ],
         "operationId" : "getAllArviointiasteikot",
@@ -71,7 +71,7 @@
         }
       }
     },
-    "/arviointiasteikot/update" : {
+    "/api/arviointiasteikot/update" : {
       "get" : {
         "tags" : [ "Arviointiasteikot" ],
         "operationId" : "updateArviointiasteikko",
@@ -82,7 +82,7 @@
         }
       }
     },
-    "/arviointiasteikot/{id}" : {
+    "/api/arviointiasteikot/{id}" : {
       "get" : {
         "tags" : [ "Arviointiasteikot" ],
         "operationId" : "getArviointiasteikko",
@@ -103,7 +103,7 @@
         }
       }
     },
-    "/external/opetussuunnitelma/{koulutustoimijaId}/{opsId}" : {
+    "/api/external/opetussuunnitelma/{koulutustoimijaId}/{opsId}" : {
       "get" : {
         "tags" : [ "external" ],
         "summary" : "Opetussuunnitelman tietojen haku koulutustoimijan ja opetussuunnitelman id:llä",
@@ -185,7 +185,7 @@
         }
       }
     },
-    "/external/opetussuunnitelmat" : {
+    "/api/external/opetussuunnitelmat" : {
       "get" : {
         "tags" : [ "external" ],
         "operationId" : "getPublicOpetussuunnitelmat",
@@ -286,7 +286,7 @@
         }
       }
     },
-    "/external/opintokokonaisuus/{koodiArvo}" : {
+    "/api/external/opintokokonaisuus/{koodiArvo}" : {
       "get" : {
         "tags" : [ "external" ],
         "summary" : "Opintokokonaisuuden haku opintokokonaisuuden koodin arvolla",
@@ -309,6 +309,7 @@
         }
       }
     },
+<<<<<<< HEAD
     "/julkinen/kaikkijulkaistut" : {
       "get" : {
         "tags" : [ "julkinen" ],
@@ -327,6 +328,9 @@
       }
     },
     "/julkinen/koodi/{koodi}" : {
+=======
+    "/api/julkinen/koodi/{koodi}" : {
+>>>>>>> be956d5b (EP-3491)
       "get" : {
         "tags" : [ "julkinen" ],
         "operationId" : "getSisaltoViiteByKoodi",
@@ -349,7 +353,7 @@
         }
       }
     },
-    "/julkinen/koulutustoimijat" : {
+    "/api/julkinen/koulutustoimijat" : {
       "get" : {
         "tags" : [ "julkinen" ],
         "operationId" : "findKoulutustoimijat",
@@ -396,7 +400,7 @@
         }
       }
     },
-    "/julkinen/koulutustoimijat/koulutystyypilla" : {
+    "/api/julkinen/koulutustoimijat/koulutystyypilla" : {
       "get" : {
         "tags" : [ "julkinen" ],
         "operationId" : "findKoulutusatyypinKoulutustoimijat",
@@ -423,7 +427,7 @@
         }
       }
     },
-    "/julkinen/koulutustoimijat/org/{ktOid}" : {
+    "/api/julkinen/koulutustoimijat/org/{ktOid}" : {
       "get" : {
         "tags" : [ "julkinen" ],
         "operationId" : "getKoulutustoimijaByOid",
@@ -443,7 +447,7 @@
         }
       }
     },
-    "/julkinen/koulutustoimijat/{ktId}" : {
+    "/api/julkinen/koulutustoimijat/{ktId}" : {
       "get" : {
         "tags" : [ "julkinen" ],
         "operationId" : "getKoulutustoimijaByKtId",
@@ -464,7 +468,7 @@
         }
       }
     },
-    "/julkinen/koulutustoimijat/{ktId}/koodi/{koodi}" : {
+    "/api/julkinen/koulutustoimijat/{ktId}/koodi/{koodi}" : {
       "get" : {
         "tags" : [ "julkinen" ],
         "operationId" : "getByKoodi",
@@ -500,7 +504,7 @@
         }
       }
     },
-    "/julkinen/koulutustoimijat/{ktId}/opetussuunnitelmat" : {
+    "/api/julkinen/koulutustoimijat/{ktId}/opetussuunnitelmat" : {
       "get" : {
         "tags" : [ "julkinen" ],
         "operationId" : "getAllOpetussuunnitelmat",
@@ -531,7 +535,7 @@
         }
       }
     },
-    "/julkinen/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}" : {
+    "/api/julkinen/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}" : {
       "get" : {
         "tags" : [ "julkinen" ],
         "operationId" : "getOpetussuunnitelmaJulkinen",
@@ -565,7 +569,7 @@
         }
       }
     },
-    "/julkinen/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/dokumentti" : {
+    "/api/julkinen/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/dokumentti" : {
       "get" : {
         "tags" : [ "julkinen" ],
         "operationId" : "getDokumentti",
@@ -610,7 +614,7 @@
         }
       }
     },
-    "/julkinen/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/dokumentti/julkaistu" : {
+    "/api/julkinen/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/dokumentti/julkaistu" : {
       "get" : {
         "tags" : [ "julkinen" ],
         "operationId" : "getJulkaistuDokumentti",
@@ -655,7 +659,7 @@
         }
       }
     },
-    "/julkinen/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/dokumentti/tila" : {
+    "/api/julkinen/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/dokumentti/tila" : {
       "get" : {
         "tags" : [ "julkinen" ],
         "operationId" : "queryDokumentti",
@@ -694,7 +698,7 @@
         }
       }
     },
-    "/julkinen/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/julkaisu" : {
+    "/api/julkinen/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/julkaisu" : {
       "get" : {
         "tags" : [ "julkinen" ],
         "operationId" : "getOpetussuunnitelmaJulkaistuSisalto",
@@ -733,7 +737,7 @@
         }
       }
     },
-    "/julkinen/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/kaikki" : {
+    "/api/julkinen/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/kaikki" : {
       "get" : {
         "tags" : [ "julkinen" ],
         "operationId" : "getOpetussuunnitelmaKaikki",
@@ -767,7 +771,7 @@
         }
       }
     },
-    "/julkinen/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/otsikot" : {
+    "/api/julkinen/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/otsikot" : {
       "get" : {
         "tags" : [ "julkinen" ],
         "operationId" : "getOpetussuunnitelmaOtsikot",
@@ -804,7 +808,7 @@
         }
       }
     },
-    "/julkinen/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tekstit/{svId}" : {
+    "/api/julkinen/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tekstit/{svId}" : {
       "get" : {
         "tags" : [ "julkinen" ],
         "operationId" : "getOpetussuunnitelmaTekstit",
@@ -844,7 +848,7 @@
         }
       }
     },
-    "/julkinen/koulutustoimijat/{ktId}/tiedotteet" : {
+    "/api/julkinen/koulutustoimijat/{ktId}/tiedotteet" : {
       "get" : {
         "tags" : [ "julkinen" ],
         "operationId" : "getJulkisetTiedotteet",
@@ -875,7 +879,7 @@
         }
       }
     },
-    "/julkinen/opetussuunnitelmat" : {
+    "/api/julkinen/opetussuunnitelmat" : {
       "get" : {
         "tags" : [ "julkinen" ],
         "operationId" : "findOpetussuunnitelmat",
@@ -957,7 +961,7 @@
         }
       }
     },
-    "/julkinen/opetussuunnitelmat/julkaisut" : {
+    "/api/julkinen/opetussuunnitelmat/julkaisut" : {
       "get" : {
         "tags" : [ "julkinen" ],
         "operationId" : "findOpetussuunnitelmatJulkaisut",
@@ -1057,7 +1061,7 @@
         }
       }
     },
-    "/julkinen/opetussuunnitelmat/{opsId}/koulutustoimija" : {
+    "/api/julkinen/opetussuunnitelmat/{opsId}/koulutustoimija" : {
       "get" : {
         "tags" : [ "julkinen" ],
         "operationId" : "getOpetussuunnitelmanToimija",
@@ -1078,7 +1082,7 @@
         }
       }
     },
-    "/julkinen/perusteenopetussuunnitelmat" : {
+    "/api/julkinen/perusteenopetussuunnitelmat" : {
       "get" : {
         "tags" : [ "julkinen" ],
         "operationId" : "getPerusteenOpetussuunnitelmat",
@@ -1101,7 +1105,7 @@
         }
       }
     },
-    "/julkinen/tutkinnonosat/{koodi}" : {
+    "/api/julkinen/tutkinnonosat/{koodi}" : {
       "get" : {
         "tags" : [ "julkinen" ],
         "operationId" : "getTutkinnonOsa",
@@ -1121,7 +1125,7 @@
         }
       }
     },
-    "/kayttaja" : {
+    "/api/kayttaja" : {
       "get" : {
         "tags" : [ "kayttaja" ],
         "operationId" : "get",
@@ -1135,7 +1139,7 @@
         }
       }
     },
-    "/kayttaja/etusivu" : {
+    "/api/kayttaja/etusivu" : {
       "get" : {
         "tags" : [ "kayttaja" ],
         "operationId" : "getKayttajanEtusivu",
@@ -1155,7 +1159,7 @@
         }
       }
     },
-    "/kayttaja/koulutustoimijaoikeudet" : {
+    "/api/kayttaja/koulutustoimijaoikeudet" : {
       "get" : {
         "tags" : [ "kayttajaoikeudet" ],
         "operationId" : "getKoulutustoimijaOikeudet",
@@ -1182,7 +1186,7 @@
         }
       }
     },
-    "/kayttaja/koulutustoimijat" : {
+    "/api/kayttaja/koulutustoimijat" : {
       "get" : {
         "tags" : [ "kayttaja" ],
         "operationId" : "getKoulutustoimijat",
@@ -1220,7 +1224,7 @@
         }
       }
     },
-    "/kayttaja/oikeudet" : {
+    "/api/kayttaja/oikeudet" : {
       "get" : {
         "tags" : [ "kayttajaoikeudet" ],
         "operationId" : "getTyoryhmat",
@@ -1237,7 +1241,7 @@
         }
       }
     },
-    "/kayttaja/organisaatiooikeudet" : {
+    "/api/kayttaja/organisaatiooikeudet" : {
       "get" : {
         "tags" : [ "kayttajaoikeudet" ],
         "operationId" : "getOikeudet",
@@ -1265,7 +1269,7 @@
         }
       }
     },
-    "/kayttaja/organisaatiot" : {
+    "/api/kayttaja/organisaatiot" : {
       "get" : {
         "tags" : [ "kayttaja" ],
         "operationId" : "getOrganisaatiot",
@@ -1289,7 +1293,7 @@
         }
       }
     },
-    "/kayttaja/suosikki/{opsId}" : {
+    "/api/kayttaja/suosikki/{opsId}" : {
       "post" : {
         "tags" : [ "kayttaja" ],
         "operationId" : "addSuosikki",
@@ -1323,7 +1327,7 @@
         }
       }
     },
-    "/kayttaja/tiedot" : {
+    "/api/kayttaja/tiedot" : {
       "get" : {
         "tags" : [ "kayttaja" ],
         "operationId" : "getKayttaja",
@@ -1337,7 +1341,7 @@
         }
       }
     },
-    "/kayttaja/{oid}" : {
+    "/api/kayttaja/{oid}" : {
       "post" : {
         "tags" : [ "kayttaja" ],
         "operationId" : "getOrSaveKayttaja",
@@ -1357,7 +1361,7 @@
         }
       }
     },
-    "/koodisto/relaatio/sisaltyy-alakoodit/{koodi}" : {
+    "/api/koodisto/relaatio/sisaltyy-alakoodit/{koodi}" : {
       "get" : {
         "tags" : [ "Koodistot" ],
         "operationId" : "getKoodiAlarelaatio",
@@ -1380,7 +1384,7 @@
         }
       }
     },
-    "/koodisto/relaatio/sisaltyy-ylakoodit/{koodi}" : {
+    "/api/koodisto/relaatio/sisaltyy-ylakoodit/{koodi}" : {
       "get" : {
         "tags" : [ "Koodistot" ],
         "operationId" : "getKoodiYlarelaatio",
@@ -1403,7 +1407,7 @@
         }
       }
     },
-    "/koodisto/uri/{koodiUri}" : {
+    "/api/koodisto/uri/{koodiUri}" : {
       "get" : {
         "tags" : [ "Koodistot" ],
         "operationId" : "getKoodistoKoodiByUri",
@@ -1423,7 +1427,7 @@
         }
       }
     },
-    "/koodisto/{koodisto}" : {
+    "/api/koodisto/{koodisto}" : {
       "get" : {
         "tags" : [ "Koodistot" ],
         "operationId" : "getKoodistoKaikki",
@@ -1451,7 +1455,7 @@
         }
       }
     },
-    "/koodisto/{koodisto}/haku/{query}" : {
+    "/api/koodisto/{koodisto}/haku/{query}" : {
       "get" : {
         "tags" : [ "Koodistot" ],
         "operationId" : "queryKoodist",
@@ -1479,7 +1483,7 @@
         }
       }
     },
-    "/koodisto/{koodisto}/{koodi}" : {
+    "/api/koodisto/{koodisto}/{koodi}" : {
       "get" : {
         "tags" : [ "Koodistot" ],
         "operationId" : "getKoodistoYksi",
@@ -1504,7 +1508,7 @@
         }
       }
     },
-    "/koulutustoimijat/koulutuksenjarjestajat" : {
+    "/api/koulutustoimijat/koulutuksenjarjestajat" : {
       "get" : {
         "tags" : [ "koulutustoimijat" ],
         "operationId" : "getKoulutuksenJarjestajat",
@@ -1521,7 +1525,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}" : {
+    "/api/koulutustoimijat/{ktId}" : {
       "get" : {
         "tags" : [ "koulutustoimijat" ],
         "operationId" : "getKoulutustoimija",
@@ -1582,7 +1586,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/etusivu" : {
+    "/api/koulutustoimijat/{ktId}/etusivu" : {
       "get" : {
         "tags" : [ "koulutustoimijat" ],
         "operationId" : "getEtusivu",
@@ -1619,7 +1623,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/hierarkia" : {
+    "/api/koulutustoimijat/{ktId}/hierarkia" : {
       "get" : {
         "tags" : [ "koulutustoimijat" ],
         "operationId" : "getHierarkia",
@@ -1647,7 +1651,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/historialiitokset" : {
+    "/api/koulutustoimijat/{ktId}/historialiitokset" : {
       "get" : {
         "tags" : [ "koulutustoimijat" ],
         "operationId" : "getOrganisaatioHistoriaLiitokset",
@@ -1678,7 +1682,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/hylkaa/{vierasKtId}" : {
+    "/api/koulutustoimijat/{ktId}/hylkaa/{vierasKtId}" : {
       "delete" : {
         "tags" : [ "koulutustoimijat" ],
         "operationId" : "hylkaaYhteistyopyynto",
@@ -1709,7 +1713,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/kaikkiKayttajat" : {
+    "/api/koulutustoimijat/{ktId}/kaikkiKayttajat" : {
       "get" : {
         "tags" : [ "koulutustoimijat" ],
         "operationId" : "getKaikkiKayttajat",
@@ -1745,7 +1749,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/kayttajat" : {
+    "/api/koulutustoimijat/{ktId}/kayttajat" : {
       "get" : {
         "tags" : [ "koulutustoimijat" ],
         "operationId" : "getKoulutustoimijaKayttajat",
@@ -1781,7 +1785,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/kayttajat/{kayttajaOid}" : {
+    "/api/koulutustoimijat/{ktId}/kayttajat/{kayttajaOid}" : {
       "get" : {
         "tags" : [ "koulutustoimijat" ],
         "operationId" : "getKoulutustoimijaKayttaja",
@@ -1814,7 +1818,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/koodi/{koodi}" : {
+    "/api/koulutustoimijat/{ktId}/koodi/{koodi}" : {
       "get" : {
         "tags" : [ "koulutustoimijat" ],
         "operationId" : "getKoulutustoimijaByKoodi",
@@ -1850,7 +1854,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelma/{opsId}/aikataulu" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelma/{opsId}/aikataulu" : {
       "get" : {
         "tags" : [ "Aikataulut" ],
         "operationId" : "getOpetussuunnitelmanAikataulut",
@@ -1918,7 +1922,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelma/{opsId}/muokkaustieto" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelma/{opsId}/muokkaustieto" : {
       "get" : {
         "tags" : [ "Muokkaustieto" ],
         "operationId" : "getPerusteenMuokkausTiedotWithLuomisaika",
@@ -1960,7 +1964,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat" : {
       "get" : {
         "tags" : [ "opetussuunnitelmat" ],
         "operationId" : "getAllOpetussuunnitelmatBaseSivutettu",
@@ -2021,7 +2025,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/info" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/info" : {
       "get" : {
         "tags" : [ "opetussuunnitelmat" ],
         "operationId" : "getAllOpetussuunnitelmatSivutettu",
@@ -2049,7 +2053,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/kaikki" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/kaikki" : {
       "get" : {
         "tags" : [ "opetussuunnitelmat" ],
         "operationId" : "getKaikkiOpetussuunnitelmat",
@@ -2077,7 +2081,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/koulutustoimija" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/koulutustoimija" : {
       "get" : {
         "tags" : [ "opetussuunnitelmat" ],
         "operationId" : "getKoulutustoimijaOpetussuunnitelmat",
@@ -2123,7 +2127,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/organisaatio/{organisaatioid}" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/organisaatio/{organisaatioid}" : {
       "get" : {
         "tags" : [ "opetussuunnitelmat" ],
         "operationId" : "getOpetussuunnitelmatOrganisaatioista",
@@ -2159,7 +2163,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/pohjat" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/pohjat" : {
       "get" : {
         "tags" : [ "opetussuunnitelmat" ],
         "operationId" : "getOpsPohjat",
@@ -2213,7 +2217,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/tilastot" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/tilastot" : {
       "get" : {
         "tags" : [ "opetussuunnitelmat" ],
         "operationId" : "getOpetussuunnitelmaTilastot",
@@ -2245,7 +2249,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/vanhentuneet" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/vanhentuneet" : {
       "get" : {
         "tags" : [ "opetussuunnitelmat" ],
         "operationId" : "getPaivitettavatOpetussuunnitelmat",
@@ -2276,7 +2280,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/vanhentuneet/{opsId}" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/vanhentuneet/{opsId}" : {
       "get" : {
         "tags" : [ "opetussuunnitelmat" ],
         "operationId" : "getPaivitettavaOpetussuunnitelma",
@@ -2310,7 +2314,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/ystavien" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/ystavien" : {
       "get" : {
         "tags" : [ "opetussuunnitelmat" ],
         "operationId" : "getAllOtherOrgsOpetussuunnitelmat",
@@ -2350,7 +2354,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}" : {
       "get" : {
         "tags" : [ "opetussuunnitelmat" ],
         "operationId" : "getOpetussuunnitelma",
@@ -2423,7 +2427,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/aktivoi/{revision}" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/aktivoi/{revision}" : {
       "post" : {
         "tags" : [ "Julkaisut" ],
         "operationId" : "aktivoiJulkaisu",
@@ -2463,7 +2467,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/dokumentti" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/dokumentti" : {
       "get" : {
         "tags" : [ "dokumentit" ],
         "operationId" : "getLatestValmisDokumentti",
@@ -2540,7 +2544,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/dokumentti/dokumenttikuva" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/dokumentti/dokumenttikuva" : {
       "get" : {
         "tags" : [ "dokumentit" ],
         "operationId" : "getDokumenttiKuva",
@@ -2579,7 +2583,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/dokumentti/kuva" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/dokumentti/kuva" : {
       "get" : {
         "tags" : [ "dokumentit" ],
         "operationId" : "getDokumenttiImage",
@@ -2716,7 +2720,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/dokumentti/latest" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/dokumentti/latest" : {
       "get" : {
         "tags" : [ "dokumentit" ],
         "operationId" : "getLatestDokumentti",
@@ -2755,7 +2759,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/dokumentti/tila" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/dokumentti/tila" : {
       "get" : {
         "tags" : [ "dokumentit" ],
         "operationId" : "queryDokumenttiTila",
@@ -2794,7 +2798,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/dokumentti/{id}" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/dokumentti/{id}" : {
       "put" : {
         "tags" : [ "dokumentit" ],
         "operationId" : "updateDokumentti",
@@ -2846,7 +2850,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/julkaisu" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/julkaisu" : {
       "post" : {
         "tags" : [ "Julkaisut" ],
         "operationId" : "teeJulkaisu",
@@ -2884,7 +2888,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/julkaisu/muutoksia" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/julkaisu/muutoksia" : {
       "get" : {
         "tags" : [ "Julkaisut" ],
         "operationId" : "julkaisemattomiaMuutoksia",
@@ -2918,7 +2922,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/julkaisut" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/julkaisut" : {
       "get" : {
         "tags" : [ "Julkaisut" ],
         "operationId" : "getJulkaisut",
@@ -2955,7 +2959,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/kevyt" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/kevyt" : {
       "get" : {
         "tags" : [ "opetussuunnitelmat" ],
         "operationId" : "getOpetussuunnitelmaKevyt",
@@ -2989,7 +2993,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/kopioiLinkattu" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/kopioiLinkattu" : {
       "post" : {
         "tags" : [ "Sisaltoviitteet" ],
         "operationId" : "kopioiLinkattuSisalto",
@@ -3031,7 +3035,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/kuvat" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/kuvat" : {
       "get" : {
         "tags" : [ "liitetiedostot" ],
         "operationId" : "getAllImages",
@@ -3122,7 +3126,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/kuvat/{fileName}" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/kuvat/{fileName}" : {
       "get" : {
         "tags" : [ "liitetiedostot" ],
         "operationId" : "getKoulutustoimjaImage",
@@ -3163,7 +3167,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/kuvat/{id}" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/kuvat/{id}" : {
       "delete" : {
         "tags" : [ "liitetiedostot" ],
         "operationId" : "deleteImage",
@@ -3200,7 +3204,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/linkkaa" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/linkkaa" : {
       "post" : {
         "tags" : [ "Sisaltoviitteet" ],
         "operationId" : "linkkaaUusiSisalto",
@@ -3242,7 +3246,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/lisaa" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/lisaa" : {
       "post" : {
         "tags" : [ "Sisaltoviitteet" ],
         "operationId" : "copyMultipleSisaltoviite",
@@ -3284,7 +3288,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/navigaatio" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/navigaatio" : {
       "get" : {
         "tags" : [ "opetussuunnitelmat" ],
         "operationId" : "getOpetussuunnitelmaNavigation",
@@ -3318,7 +3322,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/navigaatio/julkinen" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/navigaatio/julkinen" : {
       "get" : {
         "tags" : [ "opetussuunnitelmat" ],
         "operationId" : "getOpetussuunnitelmaNavigationJulkinen",
@@ -3352,7 +3356,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/navigaatio/public" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/navigaatio/public" : {
       "get" : {
         "tags" : [ "opetussuunnitelmat" ],
         "operationId" : "getOpetussuunnitelmaNavigationPublic",
@@ -3391,7 +3395,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/oikeudet" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/oikeudet" : {
       "get" : {
         "tags" : [ "opetussuunnitelmat" ],
         "operationId" : "getOpetussuunnitelmaOikeudet",
@@ -3428,7 +3432,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/oikeudet/{kayttajaId}" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/oikeudet/{kayttajaId}" : {
       "post" : {
         "tags" : [ "opetussuunnitelmat" ],
         "operationId" : "updateOpetussuunnitelmaOikeus",
@@ -3475,7 +3479,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/osaalue/oletustoteutukset" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/osaalue/oletustoteutukset" : {
       "get" : {
         "tags" : [ "OsaAlue" ],
         "operationId" : "haeOletusOsaAlueToteutukset",
@@ -3512,7 +3516,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/otsikot" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/otsikot" : {
       "get" : {
         "tags" : [ "Sisaltoviitteet" ],
         "operationId" : "getOtsikot",
@@ -3549,7 +3553,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/paivita" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/paivita" : {
       "post" : {
         "tags" : [ "opetussuunnitelmat" ],
         "operationId" : "paivitaOpetussuunnitelmanPeruste",
@@ -3580,7 +3584,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/peruste" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/peruste" : {
       "get" : {
         "tags" : [ "opetussuunnitelmat" ],
         "operationId" : "getOpetussuunnitelmaPeruste",
@@ -3614,7 +3618,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/pohja/kevyt" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/pohja/kevyt" : {
       "get" : {
         "tags" : [ "opetussuunnitelmat" ],
         "operationId" : "getOpetussuunnitelmaPohjaKevyt",
@@ -3648,7 +3652,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/pohjansisaltoviitteet/{tyyppi}" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/pohjansisaltoviitteet/{tyyppi}" : {
       "get" : {
         "tags" : [ "Sisaltoviitteet" ],
         "operationId" : "getOpetussuunnitelmanPohjanSisaltoviitteet",
@@ -3690,7 +3694,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/poistetut" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/poistetut" : {
       "get" : {
         "tags" : [ "opetussuunnitelmat" ],
         "operationId" : "getPoistetutSisaltoviitteet",
@@ -3727,7 +3731,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/poistetut/{poistettuId}/palauta" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/poistetut/{poistettuId}/palauta" : {
       "post" : {
         "tags" : [ "opetussuunnitelmat" ],
         "operationId" : "palautaOpetussuunnitelmaSisaltoviite",
@@ -3767,7 +3771,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/polut" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/polut" : {
       "get" : {
         "tags" : [ "Sisaltoviitteet" ],
         "operationId" : "getSuorituspolutRakenteella",
@@ -3804,7 +3808,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/removeViitteet" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/removeViitteet" : {
       "delete" : {
         "tags" : [ "Sisaltoviitteet" ],
         "operationId" : "removeSisaltoViitteet",
@@ -3846,7 +3850,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/siirra" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/siirra" : {
       "post" : {
         "tags" : [ "opetussuunnitelmat" ],
         "operationId" : "updateOpetussuunnitelmaKoulutustoimija",
@@ -3887,7 +3891,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/siirraPassivoidusta" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/siirraPassivoidusta" : {
       "post" : {
         "tags" : [ "opetussuunnitelmat" ],
         "operationId" : "updateOpetussuunnitelmaKoulutustoimijaPassivoidusta",
@@ -3921,7 +3925,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/sisaltoviitteet" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/sisaltoviitteet" : {
       "get" : {
         "tags" : [ "Sisaltoviitteet" ],
         "operationId" : "getSisaltoviitteet",
@@ -3955,7 +3959,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/sisaltoviitteet/{tyyppi}" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/sisaltoviitteet/{tyyppi}" : {
       "get" : {
         "tags" : [ "Sisaltoviitteet" ],
         "operationId" : "getSisaltoviitteeTyypilla",
@@ -3997,7 +4001,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/suorituspolku" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/suorituspolku" : {
       "get" : {
         "tags" : [ "opetussuunnitelmat" ],
         "operationId" : "getPerusteRakenneNakyvat",
@@ -4034,7 +4038,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/suorituspolut" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/suorituspolut" : {
       "get" : {
         "tags" : [ "Sisaltoviitteet" ],
         "operationId" : "getSuorituspolut",
@@ -4071,7 +4075,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tekstit/{svId}" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tekstit/{svId}" : {
       "get" : {
         "tags" : [ "Sisaltoviitteet" ],
         "operationId" : "getSisaltoviiteTekstit",
@@ -4233,7 +4237,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tekstit/{svId}/lukko" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tekstit/{svId}/lukko" : {
       "get" : {
         "tags" : [ "SisaltoviiteLukko" ],
         "operationId" : "checkLock",
@@ -4330,7 +4334,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tekstit/{svId}/lukko/check" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tekstit/{svId}/lukko/check" : {
       "get" : {
         "tags" : [ "SisaltoviiteLukko" ],
         "operationId" : "getLock",
@@ -4363,7 +4367,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tekstit/{svId}/rakenne" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tekstit/{svId}/rakenne" : {
       "put" : {
         "tags" : [ "Sisaltoviitteet" ],
         "operationId" : "updateSisaltoViiteRakenne",
@@ -4407,7 +4411,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tekstit/{svId}/versiot" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tekstit/{svId}/versiot" : {
       "get" : {
         "tags" : [ "Sisaltoviitteet" ],
         "operationId" : "getSisaltoviiteRevisions",
@@ -4450,7 +4454,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tekstit/{svId}/versiot/{revId}" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tekstit/{svId}/versiot/{revId}" : {
       "get" : {
         "tags" : [ "Sisaltoviitteet" ],
         "operationId" : "getSisaltoviiteRevision",
@@ -4496,7 +4500,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tila/{tila}" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tila/{tila}" : {
       "post" : {
         "tags" : [ "opetussuunnitelmat" ],
         "operationId" : "updateOpetussuunnitelmaTila",
@@ -4536,7 +4540,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tutkinnonosat" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tutkinnonosat" : {
       "get" : {
         "tags" : [ "Sisaltoviitteet" ],
         "operationId" : "getTutkinnonosat",
@@ -4573,7 +4577,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tutkinnonosat/kevyt" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tutkinnonosat/kevyt" : {
       "get" : {
         "tags" : [ "Sisaltoviitteet" ],
         "operationId" : "getTutkinnonosatKevyt",
@@ -4610,7 +4614,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tutkinnonosat/oletustoteutukset" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tutkinnonosat/oletustoteutukset" : {
       "get" : {
         "tags" : [ "Tutkinnonosa" ],
         "operationId" : "haeOletusTutkinnonosaToteutukset",
@@ -4647,7 +4651,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tutkinnonosat/viite/{id}" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tutkinnonosat/viite/{id}" : {
       "get" : {
         "tags" : [ "Tutkinnonosa" ],
         "operationId" : "haeTutkinnonosa",
@@ -4687,7 +4691,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/validoi" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/validoi" : {
       "get" : {
         "tags" : [ "opetussuunnitelmat" ],
         "operationId" : "validoiOpetussuunnitelma",
@@ -4724,7 +4728,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/version/{revId}" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/version/{revId}" : {
       "post" : {
         "tags" : [ "opetussuunnitelmat" ],
         "operationId" : "revertOpetussuunnitelmaToRevision",
@@ -4764,7 +4768,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/versiot" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/versiot" : {
       "get" : {
         "tags" : [ "opetussuunnitelmat" ],
         "operationId" : "getOpetussuunnitelmaRevisions",
@@ -4801,7 +4805,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/versiot/{revId}" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/versiot/{revId}" : {
       "get" : {
         "tags" : [ "opetussuunnitelmat" ],
         "operationId" : "getOpetussuunnitelmaRevision",
@@ -4841,7 +4845,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/viimeisinjulkaisutila" : {
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/viimeisinjulkaisutila" : {
       "get" : {
         "tags" : [ "Julkaisut" ],
         "operationId" : "viimeisinJulkaisuTila",
@@ -4876,7 +4880,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/tutkinnonosat" : {
+    "/api/koulutustoimijat/{ktId}/tutkinnonosat" : {
       "get" : {
         "tags" : [ "koulutustoimijat" ],
         "operationId" : "getPaikallisetTutkinnonosat",
@@ -4907,7 +4911,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/yhteistyo" : {
+    "/api/koulutustoimijat/{ktId}/yhteistyo" : {
       "get" : {
         "tags" : [ "koulutustoimijat" ],
         "operationId" : "getYhteistyoKoulutustoimijat",
@@ -4938,7 +4942,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/ystavaOrganisaatioKayttajat" : {
+    "/api/koulutustoimijat/{ktId}/ystavaOrganisaatioKayttajat" : {
       "get" : {
         "tags" : [ "koulutustoimijat" ],
         "operationId" : "getYstavaOrganisaatioKayttajat",
@@ -4974,7 +4978,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/ystavapyynnot" : {
+    "/api/koulutustoimijat/{ktId}/ystavapyynnot" : {
       "get" : {
         "tags" : [ "koulutustoimijat" ],
         "operationId" : "getPyynnot",
@@ -5005,7 +5009,7 @@
         }
       }
     },
-    "/koulutustoimijat/{ktId}/ystavat" : {
+    "/api/koulutustoimijat/{ktId}/ystavat" : {
       "get" : {
         "tags" : [ "koulutustoimijat" ],
         "operationId" : "getOmatYstavat",
@@ -5036,7 +5040,7 @@
         }
       }
     },
-    "/logout" : {
+    "/api/logout" : {
       "get" : {
         "tags" : [ "Logout" ],
         "operationId" : "logoutGet",
@@ -5056,7 +5060,7 @@
         }
       }
     },
-    "/maintenance/cacheclear/{cache}" : {
+    "/api/maintenance/cacheclear/{cache}" : {
       "get" : {
         "tags" : [ "Maintenance" ],
         "operationId" : "clearCache",
@@ -5073,7 +5077,7 @@
         }
       }
     },
-    "/maintenance/julkaisut" : {
+    "/api/maintenance/julkaisut" : {
       "get" : {
         "tags" : [ "Maintenance" ],
         "operationId" : "teeJulkaisut",
@@ -5104,7 +5108,7 @@
         }
       }
     },
-    "/maintenance/poistajulkaisut/{opsId}" : {
+    "/api/maintenance/poistajulkaisut/{opsId}" : {
       "get" : {
         "tags" : [ "Maintenance" ],
         "operationId" : "poistaJulkaisut",
@@ -5122,7 +5126,7 @@
         }
       }
     },
-    "/ohjeet" : {
+    "/api/ohjeet" : {
       "get" : {
         "tags" : [ "Ohjeet" ],
         "operationId" : "getOhjeet",
@@ -5168,7 +5172,7 @@
         }
       }
     },
-    "/ohjeet/{id}" : {
+    "/api/ohjeet/{id}" : {
       "put" : {
         "tags" : [ "Ohjeet" ],
         "operationId" : "editOhje",
@@ -5212,7 +5216,7 @@
         }
       }
     },
-    "/opetussuunnitelmat/opspohjat" : {
+    "/api/opetussuunnitelmat/opspohjat" : {
       "get" : {
         "tags" : [ "opetussuunnitelmat" ],
         "operationId" : "getOphOpsPohjat",
@@ -5239,7 +5243,7 @@
         }
       }
     },
-    "/opetussuunnitelmat/pohjat" : {
+    "/api/opetussuunnitelmat/pohjat" : {
       "get" : {
         "tags" : [ "opetussuunnitelmat" ],
         "operationId" : "getPohjat",
@@ -5256,7 +5260,7 @@
         }
       }
     },
-    "/opetussuunnitelmat/{opsId}/kuvat/{fileName}" : {
+    "/api/opetussuunnitelmat/{opsId}/kuvat/{fileName}" : {
       "get" : {
         "tags" : [ "liitetiedostot" ],
         "operationId" : "getImage",
@@ -5284,7 +5288,7 @@
         }
       }
     },
-    "/palaute" : {
+    "/api/palaute" : {
       "post" : {
         "tags" : [ "Palautteet" ],
         "operationId" : "sendPalaute",
@@ -5309,7 +5313,7 @@
         }
       }
     },
-    "/perusteet" : {
+    "/api/perusteet" : {
       "get" : {
         "tags" : [ "perusteet" ],
         "operationId" : "getPerusteet",
@@ -5326,7 +5330,7 @@
         }
       }
     },
-    "/perusteet/haku" : {
+    "/api/perusteet/haku" : {
       "get" : {
         "tags" : [ "perusteet" ],
         "operationId" : "haePerusteista",
@@ -5346,7 +5350,7 @@
         }
       }
     },
-    "/perusteet/koulutustoimija/{ktId}/opetussuunnitelma/{opetussuunnitelmaId}/koulutuskoodillakorvaava" : {
+    "/api/perusteet/koulutustoimija/{ktId}/opetussuunnitelma/{opetussuunnitelmaId}/koulutuskoodillakorvaava" : {
       "get" : {
         "tags" : [ "perusteet" ],
         "operationId" : "getKoulutuskoodillaKorvaavaPeruste",
@@ -5380,7 +5384,7 @@
         }
       }
     },
-    "/perusteet/opetussuunnitelmat" : {
+    "/api/perusteet/opetussuunnitelmat" : {
       "get" : {
         "tags" : [ "perusteet" ],
         "operationId" : "getOpetussuunnitelmat",
@@ -5403,7 +5407,7 @@
         }
       }
     },
-    "/perusteet/{id}" : {
+    "/api/perusteet/{id}" : {
       "get" : {
         "tags" : [ "perusteet" ],
         "operationId" : "getPeruste",
@@ -5424,7 +5428,7 @@
         }
       }
     },
-    "/perusteet/{id}/kaikki" : {
+    "/api/perusteet/{id}/kaikki" : {
       "get" : {
         "tags" : [ "perusteet" ],
         "operationId" : "getPerusteAll",
@@ -5445,7 +5449,7 @@
         }
       }
     },
-    "/perusteet/{id}/suorituspolkuosat" : {
+    "/api/perusteet/{id}/suorituspolkuosat" : {
       "get" : {
         "tags" : [ "perusteet" ],
         "operationId" : "getPerusteTutkinnonOsatKevyt",
@@ -5469,7 +5473,7 @@
         }
       }
     },
-    "/perusteet/{id}/suoritustavat" : {
+    "/api/perusteet/{id}/suoritustavat" : {
       "get" : {
         "tags" : [ "perusteet" ],
         "operationId" : "getPerusteRakenteet",
@@ -5490,7 +5494,7 @@
         }
       }
     },
-    "/perusteet/{id}/suoritustavat/{st}" : {
+    "/api/perusteet/{id}/suoritustavat/{st}" : {
       "get" : {
         "tags" : [ "perusteet" ],
         "operationId" : "getPerusteRakenne",
@@ -5516,7 +5520,7 @@
         }
       }
     },
-    "/perusteet/{id}/suoritustavat/{st}/tutkinnonosat" : {
+    "/api/perusteet/{id}/suoritustavat/{st}/tutkinnonosat" : {
       "get" : {
         "tags" : [ "perusteet" ],
         "operationId" : "getTutkinnonOsaViitteet",
@@ -5542,7 +5546,7 @@
         }
       }
     },
-    "/perusteet/{id}/suoritustavat/{st}/tutkinnonosat/{tosaId}" : {
+    "/api/perusteet/{id}/suoritustavat/{st}/tutkinnonosat/{tosaId}" : {
       "get" : {
         "tags" : [ "perusteet" ],
         "operationId" : "getTutkinnonOsaViite",
@@ -5574,7 +5578,7 @@
         }
       }
     },
-    "/perusteet/{id}/tutkinnonosat" : {
+    "/api/perusteet/{id}/tutkinnonosat" : {
       "get" : {
         "tags" : [ "perusteet" ],
         "operationId" : "getPerusteTutkinnonOsat",
@@ -5595,7 +5599,7 @@
         }
       }
     },
-    "/perusteet/{id}/tutkinnonosat/{tosaId}" : {
+    "/api/perusteet/{id}/tutkinnonosat/{tosaId}" : {
       "get" : {
         "tags" : [ "perusteet" ],
         "operationId" : "getPerusteTutkinnonOsa",
@@ -5622,7 +5626,7 @@
         }
       }
     },
-    "/perusteet/{perusteId}/perusteenosa/{perusteenosaId}" : {
+    "/api/perusteet/{perusteId}/perusteenosa/{perusteenosaId}" : {
       "get" : {
         "tags" : [ "perusteet" ],
         "operationId" : "getPerusteenOsa",
@@ -5649,7 +5653,7 @@
         }
       }
     },
-    "/perusteet/{perusteId}/perusteesta" : {
+    "/api/perusteet/{perusteId}/perusteesta" : {
       "get" : {
         "tags" : [ "perusteet" ],
         "operationId" : "getPerusteByPerusteId",
@@ -5670,7 +5674,7 @@
         }
       }
     },
-    "/ulkopuoliset/geneerisetArvioinnit" : {
+    "/api/ulkopuoliset/geneerisetArvioinnit" : {
       "get" : {
         "tags" : [ "Ulkopuoliset" ],
         "operationId" : "getGeneerisetArvioinnit",
@@ -5684,7 +5688,7 @@
         }
       }
     },
-    "/ulkopuoliset/julkaistutperusteet" : {
+    "/api/ulkopuoliset/julkaistutperusteet" : {
       "get" : {
         "tags" : [ "Ulkopuoliset" ],
         "operationId" : "getJulkaistutPerusteet",
@@ -5701,7 +5705,7 @@
         }
       }
     },
-    "/ulkopuoliset/julkaistutperusteet/kevyt" : {
+    "/api/ulkopuoliset/julkaistutperusteet/kevyt" : {
       "get" : {
         "tags" : [ "Ulkopuoliset" ],
         "operationId" : "getJulkaistutPerusteetKevyt",
@@ -5728,7 +5732,7 @@
         }
       }
     },
-    "/ulkopuoliset/kayttajatiedot/{oid}" : {
+    "/api/ulkopuoliset/kayttajatiedot/{oid}" : {
       "get" : {
         "tags" : [ "Ulkopuoliset" ],
         "operationId" : "getKayttajatiedot",
@@ -5749,7 +5753,7 @@
         }
       }
     },
-    "/ulkopuoliset/koodisto/relaatio/sisaltyy-alakoodit/{koodi}" : {
+    "/api/ulkopuoliset/koodisto/relaatio/sisaltyy-alakoodit/{koodi}" : {
       "get" : {
         "tags" : [ "Ulkopuoliset" ],
         "operationId" : "alarelaatio",
@@ -5772,7 +5776,7 @@
         }
       }
     },
-    "/ulkopuoliset/koodisto/relaatio/sisaltyy-ylakoodit/{koodi}" : {
+    "/api/ulkopuoliset/koodisto/relaatio/sisaltyy-ylakoodit/{koodi}" : {
       "get" : {
         "tags" : [ "Ulkopuoliset" ],
         "operationId" : "ylarelaatio",
@@ -5795,7 +5799,7 @@
         }
       }
     },
-    "/ulkopuoliset/koodisto/{koodisto}" : {
+    "/api/ulkopuoliset/koodisto/{koodisto}" : {
       "get" : {
         "tags" : [ "Ulkopuoliset" ],
         "operationId" : "kaikki",
@@ -5823,7 +5827,7 @@
         }
       }
     },
-    "/ulkopuoliset/koodisto/{koodisto}/{koodi}" : {
+    "/api/ulkopuoliset/koodisto/{koodisto}/{koodi}" : {
       "get" : {
         "tags" : [ "Ulkopuoliset" ],
         "operationId" : "yksi",
@@ -5848,7 +5852,7 @@
         }
       }
     },
-    "/ulkopuoliset/tiedotteet" : {
+    "/api/ulkopuoliset/tiedotteet" : {
       "get" : {
         "tags" : [ "Ulkopuoliset" ],
         "operationId" : "getTiedotteet",
@@ -5869,7 +5873,7 @@
         }
       }
     },
-    "/ulkopuoliset/tiedotteet/haku" : {
+    "/api/ulkopuoliset/tiedotteet/haku" : {
       "get" : {
         "tags" : [ "Ulkopuoliset" ],
         "summary" : "tiedotteiden haku",
@@ -9012,6 +9016,7 @@
           "type" : "string",
           "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO", "MAAHANMUUTTAJIENKOTOUTUMISKOULUTUS", "VAPAASIVISTYSTYOLUKUTAITO", "TUTKINTOONVALMENTAVA" ]
         },
+<<<<<<< HEAD
         "perusteId" : {
           "type" : "integer",
           "format" : "int64"
@@ -9024,15 +9029,27 @@
           "type" : "string",
           "format" : "date-time"
         },
+=======
+>>>>>>> be956d5b (EP-3491)
         "perusteNimi" : {
           "type" : "object",
           "additionalProperties" : {
             "type" : "string"
           }
         },
+<<<<<<< HEAD
         "julkaistu" : {
           "type" : "string",
           "format" : "date-time"
+=======
+        "julkaisuVuosi" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "perusteId" : {
+          "type" : "integer",
+          "format" : "int64"
+>>>>>>> be956d5b (EP-3491)
         }
       }
     },
@@ -9496,8 +9513,24 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "first" : {
           "type" : "boolean"
+<<<<<<< HEAD
+=======
+        },
+        "last" : {
+          "type" : "boolean"
+        },
+        "pageable" : {
+          "$ref" : "#/definitions/Pageable"
+        },
+        "empty" : {
+          "type" : "boolean"
+>>>>>>> be956d5b (EP-3491)
         }
       }
     },
@@ -9536,8 +9569,24 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "first" : {
           "type" : "boolean"
+<<<<<<< HEAD
+=======
+        },
+        "last" : {
+          "type" : "boolean"
+        },
+        "pageable" : {
+          "$ref" : "#/definitions/Pageable"
+        },
+        "empty" : {
+          "type" : "boolean"
+>>>>>>> be956d5b (EP-3491)
         }
       }
     },
@@ -9576,8 +9625,24 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "first" : {
           "type" : "boolean"
+<<<<<<< HEAD
+=======
+        },
+        "last" : {
+          "type" : "boolean"
+        },
+        "pageable" : {
+          "$ref" : "#/definitions/Pageable"
+        },
+        "empty" : {
+          "type" : "boolean"
+>>>>>>> be956d5b (EP-3491)
         }
       }
     },
@@ -9616,8 +9681,24 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "first" : {
           "type" : "boolean"
+<<<<<<< HEAD
+=======
+        },
+        "last" : {
+          "type" : "boolean"
+        },
+        "pageable" : {
+          "$ref" : "#/definitions/Pageable"
+        },
+        "empty" : {
+          "type" : "boolean"
+>>>>>>> be956d5b (EP-3491)
         }
       }
     },
@@ -9656,8 +9737,50 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "first" : {
           "type" : "boolean"
+<<<<<<< HEAD
+=======
+        },
+        "last" : {
+          "type" : "boolean"
+        },
+        "pageable" : {
+          "$ref" : "#/definitions/Pageable"
+        },
+        "empty" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "Pageable" : {
+      "type" : "object",
+      "properties" : {
+        "offset" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "sort" : {
+          "$ref" : "#/definitions/Sort"
+        },
+        "unpaged" : {
+          "type" : "boolean"
+        },
+        "paged" : {
+          "type" : "boolean"
+        },
+        "pageNumber" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "pageSize" : {
+          "type" : "integer",
+          "format" : "int32"
+>>>>>>> be956d5b (EP-3491)
         }
       }
     },
@@ -10600,7 +10723,18 @@
       }
     },
     "Sort" : {
-      "type" : "object"
+      "type" : "object",
+      "properties" : {
+        "empty" : {
+          "type" : "boolean"
+        },
+        "unsorted" : {
+          "type" : "boolean"
+        },
+        "sorted" : {
+          "type" : "boolean"
+        }
+      }
     },
     "SuorituspolkuDto" : {
       "type" : "object",

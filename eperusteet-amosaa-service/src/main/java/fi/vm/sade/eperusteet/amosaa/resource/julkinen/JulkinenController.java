@@ -43,7 +43,7 @@ import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
-@RequestMapping("/julkinen")
+@RequestMapping("/api/julkinen")
 @Api(value = "julkinen")
 public class JulkinenController {
 
@@ -113,7 +113,7 @@ public class JulkinenController {
             @ApiIgnore final OpetussuunnitelmaQueryDto pquery
     ) {
         // Oletuksena älä palauta pohjia
-        PageRequest p = new PageRequest(pquery.getSivu(), Math.min(pquery.getSivukoko(), 100));
+        PageRequest p = PageRequest.of(pquery.getSivu(), Math.min(pquery.getSivukoko(), 100));
         return opsService.findOpetussuunnitelmat(p, pquery);
     }
 
@@ -166,7 +166,7 @@ public class JulkinenController {
             @ApiIgnore final KoulutustoimijaQueryDto pquery
     ) {
         // Oletuksena älä palauta pohjia
-        PageRequest p = new PageRequest(pquery.getSivu(), Math.min(pquery.getSivukoko(), 1000));
+        PageRequest p = PageRequest.of(pquery.getSivu(), Math.min(pquery.getSivukoko(), 1000));
         return ktService.findKoulutustoimijat(p, pquery);
     }
 
