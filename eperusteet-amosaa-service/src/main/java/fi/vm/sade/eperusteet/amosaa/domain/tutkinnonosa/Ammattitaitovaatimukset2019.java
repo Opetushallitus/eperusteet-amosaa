@@ -1,7 +1,6 @@
 package fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa;
 
 import fi.vm.sade.eperusteet.amosaa.domain.AbstractAuditedReferenceableEntity;
-import fi.vm.sade.eperusteet.amosaa.domain.koodisto.KoodistoKoodi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 import lombok.Getter;
@@ -17,7 +16,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import static fi.vm.sade.eperusteet.amosaa.service.util.Util.refXnor;
-import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
 
 @Entity
 @Table(name = "ammattitaitovaatimukset2019")

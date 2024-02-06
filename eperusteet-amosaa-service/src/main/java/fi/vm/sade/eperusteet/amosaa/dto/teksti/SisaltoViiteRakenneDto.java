@@ -6,9 +6,6 @@ import lombok.*;
 
 import java.util.List;
 
-/**
- * @author nkala
- */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

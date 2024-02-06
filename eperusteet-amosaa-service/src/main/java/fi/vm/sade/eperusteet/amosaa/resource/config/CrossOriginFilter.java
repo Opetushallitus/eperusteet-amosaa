@@ -8,9 +8,6 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/**
- * @author isaul
- */
 @Component
 public class CrossOriginFilter implements Filter {
     private static final Logger log = LoggerFactory.getLogger(CrossOriginFilter.class);

@@ -1,7 +1,6 @@
 package fi.vm.sade.eperusteet.amosaa.resource.batch;
 
 import fi.vm.sade.eperusteet.amosaa.domain.batch.BatchStepExecution;
-import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
 import fi.vm.sade.eperusteet.amosaa.repository.batch.BatchStepExecutionRepository;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.service.util.MaintenanceService;

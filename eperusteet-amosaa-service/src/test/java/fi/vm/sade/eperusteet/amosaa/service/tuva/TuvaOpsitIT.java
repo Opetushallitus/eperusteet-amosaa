@@ -21,8 +21,6 @@ import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaSer
 import fi.vm.sade.eperusteet.amosaa.service.ops.OpetussuunnitelmaDispatcher;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.peruste.OpetussuunnitelmaPerustePaivitysService;
-import fi.vm.sade.eperusteet.amosaa.service.peruste.impl.TuvaOpetussuunnitelmaPerustePaivitysService;
-import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator;
 import fi.vm.sade.eperusteet.amosaa.service.util.CollectionUtil;
 import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
 

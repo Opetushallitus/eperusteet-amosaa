@@ -2,7 +2,6 @@ package fi.vm.sade.eperusteet.amosaa.service.util;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.AllArgsConstructor;
-import lombok.experimental.UtilityClass;
 
 @AllArgsConstructor
 public enum ValidationCategory {

@@ -1,18 +1,3 @@
-/*
- * Copyright (c) 2013 The Finnish Board of Education - Opetushallitus
- *
- * This program is free software: Licensed under the EUPL, Version 1.1 or - as
- * soon as they will be approved by the European Commission - subsequent versions
- * of the EUPL (the "Licence");
- *
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at: http://ec.europa.eu/idabc/eupl
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * European Union Public Licence for more details.
- */
 package fi.vm.sade.eperusteet.amosaa.service.external.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -48,9 +33,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 
-/**
- * @author mikkom
- */
 @Service
 @Profile("default")
 public class OrganisaatioServiceImpl implements OrganisaatioService {
@@ -112,15 +94,15 @@ public class OrganisaatioServiceImpl implements OrganisaatioService {
                     })
                     .orElse(null);
         }
-        
+
         public JsonNode getOrganisaationHistoriaLiitokset(String organisaatioOid) {
             OphHttpClient client = restClientFactory.get(serviceUrl, false);
-   
+
             UriComponents uri = UriComponentsBuilder.fromHttpUrl(serviceUrl)
                     .path(ORGANISAATIOT)
                     .path("v4/{organisaatioOid}/historia")
                     .buildAndExpand(organisaatioOid);
-            
+
             OphHttpRequest request = OphHttpRequest.Builder
                     .get(uri.toString())
                     .build();
@@ -215,7 +197,7 @@ public class OrganisaatioServiceImpl implements OrganisaatioService {
                 return null;
             }
             JsonNode organisaatiot = puu.get("liitokset");
-                        
+
             ObjectReader reader = mapper.readerFor(new TypeReference<List<OrganisaatioHistoriaLiitosDto>>() {});
             return reader.readValue(organisaatiot);
         } catch (IOException ex) {

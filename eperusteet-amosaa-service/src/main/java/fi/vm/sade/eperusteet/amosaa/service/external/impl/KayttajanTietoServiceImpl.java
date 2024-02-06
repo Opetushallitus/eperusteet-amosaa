@@ -1,18 +1,3 @@
-/*
- * Copyright (c) 2013 The Finnish Board of Education - Opetushallitus
- *
- * This program is free software: Licensed under the EUPL, Version 1.1 or - as
- * soon as they will be approved by the European Commission - subsequent versions
- * of the EUPL (the "Licence");
- *
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at: http://ec.europa.eu/idabc/eupl
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * European Union Public Licence for more details.
- */
 package fi.vm.sade.eperusteet.amosaa.service.external.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -71,9 +56,6 @@ import static javax.servlet.http.HttpServletResponse.SC_FORBIDDEN;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 
-/**
- * @author nkala
- */
 @Service
 @Transactional
 public class KayttajanTietoServiceImpl implements KayttajanTietoService {
@@ -97,7 +79,7 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
 
     @Autowired
     private DtoMapper mapper;
-    
+
     @Autowired
     private KayttooikeusService kayttooikeusService;
 
@@ -215,7 +197,7 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
         }
         return kayttaja;
     }
-    
+
     @Override
     public KayttajaDto saveKayttaja(String oid) {
         Kayttaja kayttaja = kayttajaRepository.findOneByOid(oid);
@@ -320,7 +302,7 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
 
         return new ArrayList<>(kayttajaMap.values());
     }
-    
+
     @Override
     public Set<String> getUserOrganizations(PermissionEvaluator.RolePrefix rolePrefix) {
         return SecurityUtil.getOrganizations(EnumSet.allOf(RolePermission.class), rolePrefix);

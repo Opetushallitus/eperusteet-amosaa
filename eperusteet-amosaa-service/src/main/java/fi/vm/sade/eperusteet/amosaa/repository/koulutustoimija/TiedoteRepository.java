@@ -7,9 +7,6 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-/**
- * Created by richard.vancamp on 29/03/16.
- */
 public interface TiedoteRepository extends JpaRepository<Tiedote, Long> {
     List<Tiedote> findAllByKoulutustoimija(Koulutustoimija koulutustoimija);
 

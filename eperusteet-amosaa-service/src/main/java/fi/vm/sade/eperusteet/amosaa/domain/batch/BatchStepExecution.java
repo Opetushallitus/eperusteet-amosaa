@@ -2,7 +2,6 @@ package fi.vm.sade.eperusteet.amosaa.domain.batch;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
-import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.persistence.Column;
