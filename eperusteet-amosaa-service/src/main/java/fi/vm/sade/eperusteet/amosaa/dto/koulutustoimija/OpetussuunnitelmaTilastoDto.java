@@ -28,6 +28,7 @@ public class OpetussuunnitelmaTilastoDto {
     private Tila tila;
     private Date paatospaivamaara;
     private Date voimaantulo;
+    private Date luotu;
     private KoulutustoimijaBaseDto koulutustoimija;
     private Set<Kieli> julkaisukielet;
     private Set<JulkaisuKevytDto> julkaisut;
@@ -70,6 +71,18 @@ public class OpetussuunnitelmaTilastoDto {
 
         if (tila.equals(Tila.JULKAISTU) && voimaantulo != null) {
             return Integer.parseInt(getYearFormat.format(voimaantulo));
+        }
+
+        return null;
+    }
+
+    public Date getEnsijulkaisu() {
+        if (CollectionUtils.isNotEmpty(julkaisut)) {
+            return julkaisut.stream()
+                    .sorted(Comparator.comparing(JulkaisuKevytDto::getLuotu))
+                    .map(JulkaisuKevytDto::getLuotu)
+                    .findFirst()
+                    .orElse(null);
         }
 
         return null;
