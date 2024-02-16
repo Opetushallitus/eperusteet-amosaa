@@ -45,6 +45,8 @@ import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
+
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -203,5 +205,7 @@ public interface OpetussuunnitelmaService extends RevisionService {
     @PreAuthorize("permitAll()")
     Object getJulkaistuSisaltoObjectNode(Long opetussuunnitelmaId, List<String> queryList);
 
+    @PreAuthorize("isAuthenticated()")
+    List<OpetussuunnitelmaDto> getKaikkiJulkaistutOpetussuunnitelmat();
 }
 

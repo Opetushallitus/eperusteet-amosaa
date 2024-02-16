@@ -1075,16 +1075,24 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                 pquery.getJotpatyyppi().contains("NULL"),
                 DateTime.now().getMillis(),
                 pageable)
-                .map(obj -> {
-                    try {
-                        return objMapper.readValue(obj, OpetussuunnitelmaDto.class);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        throw new RuntimeException(e);
-                    }
-                });
+                .map(this::convertToOpetussuunnitelmaDto);
 
         return result;
+    }
+
+    @Override
+    public List<OpetussuunnitelmaDto> getKaikkiJulkaistutOpetussuunnitelmat() {
+        return julkaisuRepository.findAllJulkaistutOpetussuunnitelmatByVoimassaolo(DateTime.now().getMillis(), false, true, false).stream()
+                .map(this::convertToOpetussuunnitelmaDto).collect(Collectors.toList());
+    }
+
+    private OpetussuunnitelmaDto convertToOpetussuunnitelmaDto(String obj) {
+        try {
+            return objMapper.readValue(obj, OpetussuunnitelmaDto.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
