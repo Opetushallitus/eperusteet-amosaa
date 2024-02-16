@@ -5,8 +5,6 @@ import fi.vm.sade.eperusteet.amosaa.dto.peruste.ArviointiasteikkoDto;
 import fi.vm.sade.eperusteet.amosaa.repository.ops.ArviointiasteikkoRepository;
 import fi.vm.sade.eperusteet.amosaa.service.external.ArviointiasteikkoService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -18,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
-
 
 @Service
 @Transactional

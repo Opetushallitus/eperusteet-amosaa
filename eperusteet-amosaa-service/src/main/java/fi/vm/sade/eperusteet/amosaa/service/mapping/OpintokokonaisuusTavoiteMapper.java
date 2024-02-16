@@ -5,7 +5,6 @@ import fi.vm.sade.eperusteet.amosaa.dto.koodisto.KoodistoKoodiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koodisto.KoodistoMetadataDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.OpintokokonaisuusTavoiteDto;
-import fi.vm.sade.eperusteet.amosaa.service.dokumentti.LokalisointiService;
 import fi.vm.sade.eperusteet.amosaa.service.util.KoodistoClient;
 import java.util.Arrays;
 import java.util.Map;

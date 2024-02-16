@@ -10,7 +10,6 @@ import fi.vm.sade.eperusteet.amosaa.dto.KooditettuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.LaajuusYksikko;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data

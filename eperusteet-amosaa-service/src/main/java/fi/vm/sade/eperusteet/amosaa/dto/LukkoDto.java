@@ -18,10 +18,8 @@ package fi.vm.sade.eperusteet.amosaa.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import fi.vm.sade.eperusteet.amosaa.domain.Lukko;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;

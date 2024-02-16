@@ -1,17 +1,6 @@
 package fi.vm.sade.eperusteet.amosaa.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.List;
-import java.util.UUID;
-
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.google.common.collect.Sets;
-
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
@@ -20,10 +9,18 @@ import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliTunnisteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SuorituspolkuDto;
-import fi.vm.sade.eperusteet.amosaa.repository.peruste.CachedPerusteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.UUID;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DirtiesContext
 @Transactional
@@ -77,13 +74,13 @@ public class EperusteetServiceIT extends AbstractIntegrationTest {
         assertThat(rakenneModuuliTunnisteDto1).extracting("tunniste").containsExactlyInAnyOrder(UUID.fromString("d35fb695-f181-4e49-b4b9-c64a85819d0a"));
         assertThat(rakenneModuuliTunnisteDto1.getKoodit()).isEqualTo(Sets.newHashSet("koodi1"));
         assertThat(rakenneModuuliTunnisteDto1.getKuvaus().getTeksti().get(Kieli.FI)).isEqualTo("testi1");
-        
+
         assertThat(rakenneModuuliTunnisteDto1.getOsat().get(0)) .extracting("tunniste").containsExactlyInAnyOrder(UUID.fromString("2f91a972-c52f-4db4-83be-3e16d668cb46"));
-        
+
         RakenneModuuliTunnisteDto rakenneModuuliTunnisteDto1_1 = (RakenneModuuliTunnisteDto)((RakenneModuuliTunnisteDto)suoritustavat.get(0).getOsat().get(0)).getOsat().get(0);
         assertThat(rakenneModuuliTunnisteDto1_1.getKoodit()).isEqualTo(Sets.newHashSet("koodi2"));
         assertThat(rakenneModuuliTunnisteDto1_1.getKuvaus().getTeksti().get(Kieli.FI)).isEqualTo("testi2");
-        
+
         RakenneModuuliTunnisteDto rakenneModuuliTunnisteDto2 = (RakenneModuuliTunnisteDto) suoritustavat.get(0).getOsat().get(1);
         assertThat(rakenneModuuliTunnisteDto2).extracting("tunniste").containsExactlyInAnyOrder(UUID.fromString("428e7f22-0a69-43c5-baa5-520296f71169"));
         assertThat(rakenneModuuliTunnisteDto2.getKoodit()).isEqualTo(Sets.newHashSet("koodi3"));

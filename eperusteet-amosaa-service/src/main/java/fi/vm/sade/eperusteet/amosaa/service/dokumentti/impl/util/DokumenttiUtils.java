@@ -18,9 +18,6 @@ import org.apache.commons.text.StringEscapeUtils;
 
 import java.util.Date;
 
-/**
- * @author isaul
- */
 public class DokumenttiUtils {
     public static final int MAX_TIME_IN_MINUTES = 60;
 

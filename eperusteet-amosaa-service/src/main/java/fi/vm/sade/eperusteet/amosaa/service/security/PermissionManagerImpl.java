@@ -1,18 +1,3 @@
-/*
- * Copyright (c) 2013 The Finnish Board of Education - Opetushallitus
- *
- * This program is free software: Licensed under the EUPL, Version 1.1 or - as
- * soon as they will be approved by the European Commission - subsequent versions
- * of the EUPL (the "Licence");
- *
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at: http://ec.europa.eu/idabc/eupl
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * European Union Public Licence for more details.
- */
 package fi.vm.sade.eperusteet.amosaa.service.security;
 
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
@@ -21,10 +6,6 @@ import fi.vm.sade.eperusteet.amosaa.domain.kayttaja.KayttajaoikeusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
-import fi.vm.sade.eperusteet.amosaa.repository.kayttaja.KayttajaoikeusRepository;
-import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.JulkaisuRepository;
-import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
-import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.Organization;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.RolePermission;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator.RolePrefix;
@@ -36,22 +17,12 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
-import org.springframework.core.env.Environment;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
-/**
- * @author mikkom
- */
 @Profile("!developmentPermissionOverride")
 @Service
 public class PermissionManagerImpl extends AbstractPermissionManager {
