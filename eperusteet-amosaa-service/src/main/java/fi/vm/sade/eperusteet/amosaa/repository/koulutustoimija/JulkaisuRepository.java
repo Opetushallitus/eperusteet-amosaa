@@ -81,4 +81,12 @@ public interface JulkaisuRepository extends JpaRepository<Julkaisu, Long> {
     String findByOpintokokonaisuusKoodiArvo(@Param("koodiarvo") String koodiArvo);
 
     long countByOpetussuunnitelmaId(Long id);
+
+    @Query(nativeQuery = true,
+            value = "SELECT CAST(jsonb_path_query(jd.data, CAST(:query AS jsonpath)) AS text) " +
+                    "FROM julkaisu ju " +
+                    "INNER JOIN julkaisu_data jd ON ju.data_id = jd.id " +
+                    "WHERE ju.opetussuunnitelma_id = :opetussuunnitelma_id " +
+                    "AND luotu = (SELECT MAX(luotu) FROM julkaisu WHERE opetussuunnitelma_id = ju.opetussuunnitelma_id)")
+    String findJulkaisutByJsonPath(@Param("opetussuunnitelma_id") Long opetussuunnitelmaId, @Param("query") String query);
 }
