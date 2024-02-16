@@ -50,6 +50,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.peruste.AbstractRakenneOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKaikkiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteTila;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteenOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteenOsaViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.Suoritustapakoodi;
@@ -101,6 +102,7 @@ import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -112,6 +114,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -887,27 +890,27 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
             return getOpetussuunnitelmaKaikki(ktId, opsId);
         }
 
-        return getOpetussuunnitelmaJulkaistuSisalto(ktId, opsId);
+        return getOpetussuunnitelmaJulkaistuSisalto(opsId);
     }
 
     @Override
-    public OpetussuunnitelmaKaikkiDto getOpetussuunnitelmaJulkaistuSisalto(Long ktId, Long opsId) {
+    public OpetussuunnitelmaKaikkiDto getOpetussuunnitelmaJulkaistuSisalto(Long opsId) {
         Opetussuunnitelma ops = repository.findOne(opsId);
         Julkaisu julkaisu = julkaisuRepository.findFirstByOpetussuunnitelmaOrderByRevisionDesc(ops);
 
-        if (julkaisu != null) {
-            ObjectNode data = julkaisu.getData().getData();
-            try {
-                ObjectMapper objectMapper = InitJacksonConverter.createMapper();
-                OpetussuunnitelmaKaikkiDto kaikkiDto = objectMapper.treeToValue(data, OpetussuunnitelmaKaikkiDto.class);
-                kaikkiDto.setTila(Tila.JULKAISTU);
-                return kaikkiDto;
-            } catch (JsonProcessingException e) {
-                log.error(Throwables.getStackTraceAsString(e));
-                throw new BusinessRuleViolationException("opetussuunnitelman-haku-epaonnistui");
-            }
-        } else {
-            return getOpetussuunnitelmaKaikki(ktId, opsId);
+        if (julkaisu == null) {
+            return null;
+        }
+
+        ObjectNode data = julkaisu.getData().getData();
+        try {
+            ObjectMapper objectMapper = InitJacksonConverter.createMapper();
+            OpetussuunnitelmaKaikkiDto kaikkiDto = objectMapper.treeToValue(data, OpetussuunnitelmaKaikkiDto.class);
+            kaikkiDto.setTila(Tila.JULKAISTU);
+            return kaikkiDto;
+        } catch (JsonProcessingException e) {
+            log.error(Throwables.getStackTraceAsString(e));
+            throw new BusinessRuleViolationException("opetussuunnitelman-haku-epaonnistui");
         }
     }
 
@@ -1171,5 +1174,29 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
         ops.changeKoulutustoimija(kt);
         return mapper.map(ops, OpetussuunnitelmaDto.class);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Object getJulkaistuSisaltoObjectNode(Long opetussuunnitelmaId, List<String> queryList) {
+        Opetussuunnitelma opetussuunnitelma = repository.findOne(opetussuunnitelmaId);
+
+        if (opetussuunnitelma == null || opetussuunnitelma.getTila().equals(Tila.POISTETTU)) {
+            throw new NotExistsException("");
+        }
+
+        String query = queryList.stream().reduce("$", (subquery, element) -> {
+            if (NumberUtils.isCreatable(element)) {
+                return subquery + String.format("?(@.id==%s)", element);
+            }
+            return subquery + "." + element;
+        });
+
+        try {
+            return objMapper.readValue(julkaisuRepository.findJulkaisutByJsonPath(opetussuunnitelmaId, query), Object.class);
+        } catch (JsonProcessingException e) {
+            log.error(Throwables.getStackTraceAsString(e));
+            return null;
+        }
     }
 }
