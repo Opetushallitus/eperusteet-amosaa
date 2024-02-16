@@ -89,4 +89,22 @@ public interface JulkaisuRepository extends JpaRepository<Julkaisu, Long> {
                     "WHERE ju.opetussuunnitelma_id = :opetussuunnitelma_id " +
                     "AND luotu = (SELECT MAX(luotu) FROM julkaisu WHERE opetussuunnitelma_id = ju.opetussuunnitelma_id)")
     String findJulkaisutByJsonPath(@Param("opetussuunnitelma_id") Long opetussuunnitelmaId, @Param("query") String query);
+
+    @Query(nativeQuery = true, value =
+            "SELECT CAST(row_to_json(t) as text) FROM ( " +
+                    "   SELECT * " +
+                    "   FROM julkaistu_opetussuunnitelma_Data_view data " +
+                    "   WHERE 1 = 1 " +
+                    "   AND ((:tulevat = false AND :poistuneet = false AND :voimassa = false) " +
+                    "           OR (" +
+                    "              (:tulevat = true AND (data.\"voimaantulo\" IS NOT NULL AND CAST(data.\"voimaantulo\" as bigint) > :nykyhetki)) " +
+                    "              OR (:poistuneet = true AND CAST(data.\"voimassaoloLoppuu\" as bigint) < :nykyhetki)" +
+                    "              OR (:voimassa = true AND (data.\"voimaantulo\" IS NULL OR CAST(data.\"voimaantulo\" as bigint) < :nykyhetki) AND (data.\"voimassaoloLoppuu\" IS NULL OR CAST(data.\"voimassaoloLoppuu\" as bigint) > :nykyhetki)))) " +
+
+                    ") t")
+    List<String> findAllJulkaistutOpetussuunnitelmatByVoimassaolo(
+            @Param("nykyhetki") Long nykyhetki,
+            @Param("tulevat") boolean tulevat,
+            @Param("voimassa") boolean voimassa,
+            @Param("poistuneet") boolean poistuneet);
 }
