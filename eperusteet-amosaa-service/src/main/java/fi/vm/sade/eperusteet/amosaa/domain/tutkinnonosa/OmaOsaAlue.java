@@ -59,7 +59,7 @@ public class OmaOsaAlue extends AbstractAuditedEntity implements Serializable, R
 
     @Getter
     @Setter
-    @ValidHtml(whitelist = ValidHtml.WhitelistType.SIMPLIFIED)
+    @ValidHtml(whitelist = ValidHtml.WhitelistType.NORMAL)
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     private LokalisoituTeksti paikallinenTarkennus;
