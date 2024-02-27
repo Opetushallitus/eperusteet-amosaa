@@ -33,6 +33,10 @@ jobs:
             echo "EPERUSTEET_AMOSAA_UI_GIT_BRANCH=" >> $GITHUB_ENV
             echo branch not found
           fi
+          if [ "$(curl -s -o /dev/null -I -w '%{http_code}' https://raw.githubusercontent.com/Opetushallitus/eperusteet/${{ github.ref_name }}/generated/eperusteet.spec.json)" == "200" ] 
+          then
+            echo "EPERUSTEET_SPECFILE=https://raw.githubusercontent.com/Opetushallitus/eperusteet/${{ github.ref_name }}/generated/eperusteet.spec.json" >> $GITHUB_ENV
+          fi
 
       - name: Build with Maven
         run: |
