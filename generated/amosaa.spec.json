@@ -106,25 +106,74 @@
     "/api/external/opetussuunnitelma/{koulutustoimijaId}/{opsId}" : {
       "get" : {
         "tags" : [ "external" ],
-        "operationId" : "getPublicOpetussuunnitelma",
+        "summary" : "Opetussuunnitelman tietojen haku koulutustoimijan ja opetussuunnitelman id:llä",
+        "description" : "",
+        "operationId" : "getPublicOpetussuunnitelmaKoulutustoimija",
         "produces" : [ "application/json;charset=UTF-8" ],
         "parameters" : [ {
           "name" : "koulutustoimijaId",
           "in" : "path",
           "required" : true,
           "type" : "integer",
+          "pattern" : "\\d+",
           "format" : "int64"
         }, {
           "name" : "opsId",
           "in" : "path",
           "required" : true,
           "type" : "integer",
+          "pattern" : "\\d+",
           "format" : "int64"
-        }, {
-          "name" : "ktId",
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/OpetussuunnitelmaKaikkiDto"
+            }
+          }
+        }
+      }
+    },
+    "/api/external/opetussuunnitelma/{opsId}" : {
+      "get" : {
+        "tags" : [ "external" ],
+        "summary" : "Opetussuunnitelman tietojen haku",
+        "description" : "",
+        "operationId" : "getPublicOpetussuunnitelma",
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "parameters" : [ {
+          "name" : "opsId",
           "in" : "path",
           "required" : true,
-          "type" : "string"
+          "type" : "integer",
+          "pattern" : "\\d+",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/OpetussuunnitelmaKaikkiDto"
+            }
+          }
+        }
+      }
+    },
+    "/api/external/opetussuunnitelma/{opsId}/**" : {
+      "get" : {
+        "tags" : [ "external" ],
+        "summary" : "Opetussuunnitelman tietojen haku tarkalla sisältörakenteella",
+        "description" : "Url parametreiksi voi antaa opetussuunnitelman id:n lisäksi erilaisia opetussuunnitelman rakenteen osia ja id-kenttien arvoja. Esim. /opetussuunnitelma/8505691/tutkinnonOsat/7283253/tosa antaa opetussuunnitelman (id: 8505691) tutkinnon osien tietueen (id: 7283253).",
+        "operationId" : "getOpetussuunnitelmaDynamicQuery",
+        "produces" : [ "application/json;charset=UTF-8" ],
+        "parameters" : [ {
+          "name" : "opsId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "pattern" : "\\d+",
+          "format" : "int64"
         } ],
         "responses" : {
           "200" : {
@@ -240,6 +289,8 @@
     "/api/external/opintokokonaisuus/{koodiArvo}" : {
       "get" : {
         "tags" : [ "external" ],
+        "summary" : "Opintokokonaisuuden haku opintokokonaisuuden koodin arvolla",
+        "description" : "",
         "operationId" : "getPublicOpintokokonaisuusKoodilla",
         "produces" : [ "application/json;charset=UTF-8" ],
         "parameters" : [ {
@@ -8882,6 +8933,10 @@
           "type" : "string",
           "format" : "date-time"
         },
+        "luotu" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
         "koulutustoimija" : {
           "$ref" : "#/definitions/KoulutustoimijaBaseDto"
         },
@@ -8903,6 +8958,10 @@
         "koulutustyyppi" : {
           "type" : "string",
           "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO", "MAAHANMUUTTAJIENKOTOUTUMISKOULUTUS", "VAPAASIVISTYSTYOLUKUTAITO", "TUTKINTOONVALMENTAVA" ]
+        },
+        "ensijulkaisu" : {
+          "type" : "string",
+          "format" : "date-time"
         },
         "perusteNimi" : {
           "type" : "object",
@@ -9300,14 +9359,14 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "first" : {
-          "type" : "boolean"
-        },
         "last" : {
           "type" : "boolean"
         },
         "pageable" : {
           "$ref" : "#/definitions/Pageable"
+        },
+        "first" : {
+          "type" : "boolean"
         },
         "empty" : {
           "type" : "boolean"
@@ -9346,14 +9405,14 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "first" : {
-          "type" : "boolean"
-        },
         "last" : {
           "type" : "boolean"
         },
         "pageable" : {
           "$ref" : "#/definitions/Pageable"
+        },
+        "first" : {
+          "type" : "boolean"
         },
         "empty" : {
           "type" : "boolean"
@@ -9392,14 +9451,14 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "first" : {
-          "type" : "boolean"
-        },
         "last" : {
           "type" : "boolean"
         },
         "pageable" : {
           "$ref" : "#/definitions/Pageable"
+        },
+        "first" : {
+          "type" : "boolean"
         },
         "empty" : {
           "type" : "boolean"
@@ -9438,14 +9497,14 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "first" : {
-          "type" : "boolean"
-        },
         "last" : {
           "type" : "boolean"
         },
         "pageable" : {
           "$ref" : "#/definitions/Pageable"
+        },
+        "first" : {
+          "type" : "boolean"
         },
         "empty" : {
           "type" : "boolean"
@@ -9484,14 +9543,14 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "first" : {
-          "type" : "boolean"
-        },
         "last" : {
           "type" : "boolean"
         },
         "pageable" : {
           "$ref" : "#/definitions/Pageable"
+        },
+        "first" : {
+          "type" : "boolean"
         },
         "empty" : {
           "type" : "boolean"
@@ -9508,10 +9567,10 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
-        "unpaged" : {
+        "paged" : {
           "type" : "boolean"
         },
-        "paged" : {
+        "unpaged" : {
           "type" : "boolean"
         },
         "pageNumber" : {
@@ -10462,10 +10521,10 @@
         "empty" : {
           "type" : "boolean"
         },
-        "unsorted" : {
+        "sorted" : {
           "type" : "boolean"
         },
-        "sorted" : {
+        "unsorted" : {
           "type" : "boolean"
         }
       }
