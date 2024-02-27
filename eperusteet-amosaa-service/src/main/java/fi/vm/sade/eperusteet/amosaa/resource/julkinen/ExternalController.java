@@ -73,7 +73,7 @@ public class ExternalController {
     
     @RequestMapping(value = "/opetussuunnitelma/{koulutustoimijaId:\\d+}/{opsId:\\d+}", method = RequestMethod.GET)
     @ApiOperation(value = "Opetussuunnitelman tietojen haku koulutustoimijan ja opetussuunnitelman id:llä")
-    public OpetussuunnitelmaKaikkiDto getPublicKtOpetussuunnitelma(
+    public OpetussuunnitelmaKaikkiDto getPublicOpetussuunnitelmaKoulutustoimija(
             @PathVariable final Long koulutustoimijaId,
             @PathVariable final Long opsId
     ) {

@@ -108,7 +108,11 @@
         "tags" : [ "external" ],
         "summary" : "Opetussuunnitelman tietojen haku koulutustoimijan ja opetussuunnitelman id:llä",
         "description" : "",
+<<<<<<< HEAD
         "operationId" : "getPublicKtOpetussuunnitelma",
+=======
+        "operationId" : "getPublicOpetussuunnitelmaKoulutustoimija",
+>>>>>>> 8a1f286e (cas client session)
         "produces" : [ "application/json;charset=UTF-8" ],
         "parameters" : [ {
           "name" : "koulutustoimijaId",
@@ -135,7 +139,11 @@
         }
       }
     },
+<<<<<<< HEAD
     "/external/opetussuunnitelma/{opsId}" : {
+=======
+    "/api/external/opetussuunnitelma/{opsId}" : {
+>>>>>>> 8a1f286e (cas client session)
       "get" : {
         "tags" : [ "external" ],
         "summary" : "Opetussuunnitelman tietojen haku",
@@ -160,7 +168,11 @@
         }
       }
     },
+<<<<<<< HEAD
     "/external/opetussuunnitelma/{opsId}/**" : {
+=======
+    "/api/external/opetussuunnitelma/{opsId}/**" : {
+>>>>>>> 8a1f286e (cas client session)
       "get" : {
         "tags" : [ "external" ],
         "summary" : "Opetussuunnitelman tietojen haku tarkalla sisältörakenteella",
@@ -9017,6 +9029,7 @@
           "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO", "MAAHANMUUTTAJIENKOTOUTUMISKOULUTUS", "VAPAASIVISTYSTYOLUKUTAITO", "TUTKINTOONVALMENTAVA" ]
         },
 <<<<<<< HEAD
+<<<<<<< HEAD
         "perusteId" : {
           "type" : "integer",
           "format" : "int64"
@@ -9025,12 +9038,17 @@
           "type" : "integer",
           "format" : "int32"
         },
+=======
+>>>>>>> 8a1f286e (cas client session)
         "ensijulkaisu" : {
           "type" : "string",
           "format" : "date-time"
         },
+<<<<<<< HEAD
 =======
 >>>>>>> be956d5b (EP-3491)
+=======
+>>>>>>> 8a1f286e (cas client session)
         "perusteNimi" : {
           "type" : "object",
           "additionalProperties" : {
@@ -9517,16 +9535,22 @@
           "type" : "integer",
           "format" : "int32"
         },
+<<<<<<< HEAD
         "first" : {
           "type" : "boolean"
 <<<<<<< HEAD
 =======
         },
+=======
+>>>>>>> 8a1f286e (cas client session)
         "last" : {
           "type" : "boolean"
         },
         "pageable" : {
           "$ref" : "#/definitions/Pageable"
+        },
+        "first" : {
+          "type" : "boolean"
         },
         "empty" : {
           "type" : "boolean"
@@ -9573,16 +9597,22 @@
           "type" : "integer",
           "format" : "int32"
         },
+<<<<<<< HEAD
         "first" : {
           "type" : "boolean"
 <<<<<<< HEAD
 =======
         },
+=======
+>>>>>>> 8a1f286e (cas client session)
         "last" : {
           "type" : "boolean"
         },
         "pageable" : {
           "$ref" : "#/definitions/Pageable"
+        },
+        "first" : {
+          "type" : "boolean"
         },
         "empty" : {
           "type" : "boolean"
@@ -9629,16 +9659,22 @@
           "type" : "integer",
           "format" : "int32"
         },
+<<<<<<< HEAD
         "first" : {
           "type" : "boolean"
 <<<<<<< HEAD
 =======
         },
+=======
+>>>>>>> 8a1f286e (cas client session)
         "last" : {
           "type" : "boolean"
         },
         "pageable" : {
           "$ref" : "#/definitions/Pageable"
+        },
+        "first" : {
+          "type" : "boolean"
         },
         "empty" : {
           "type" : "boolean"
@@ -9685,16 +9721,22 @@
           "type" : "integer",
           "format" : "int32"
         },
+<<<<<<< HEAD
         "first" : {
           "type" : "boolean"
 <<<<<<< HEAD
 =======
         },
+=======
+>>>>>>> 8a1f286e (cas client session)
         "last" : {
           "type" : "boolean"
         },
         "pageable" : {
           "$ref" : "#/definitions/Pageable"
+        },
+        "first" : {
+          "type" : "boolean"
         },
         "empty" : {
           "type" : "boolean"
@@ -9741,16 +9783,22 @@
           "type" : "integer",
           "format" : "int32"
         },
+<<<<<<< HEAD
         "first" : {
           "type" : "boolean"
 <<<<<<< HEAD
 =======
         },
+=======
+>>>>>>> 8a1f286e (cas client session)
         "last" : {
           "type" : "boolean"
         },
         "pageable" : {
           "$ref" : "#/definitions/Pageable"
+        },
+        "first" : {
+          "type" : "boolean"
         },
         "empty" : {
           "type" : "boolean"
@@ -9767,10 +9815,10 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
-        "unpaged" : {
+        "paged" : {
           "type" : "boolean"
         },
-        "paged" : {
+        "unpaged" : {
           "type" : "boolean"
         },
         "pageNumber" : {
@@ -10728,10 +10776,10 @@
         "empty" : {
           "type" : "boolean"
         },
-        "unsorted" : {
+        "sorted" : {
           "type" : "boolean"
         },
-        "sorted" : {
+        "unsorted" : {
           "type" : "boolean"
         }
       }

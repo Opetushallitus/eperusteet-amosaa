@@ -16,7 +16,11 @@
         "tags" : [ "external" ],
         "summary" : "Opetussuunnitelman tietojen haku koulutustoimijan ja opetussuunnitelman id:llä",
         "description" : "",
+<<<<<<< HEAD
         "operationId" : "getPublicKtOpetussuunnitelma",
+=======
+        "operationId" : "getPublicOpetussuunnitelmaKoulutustoimija",
+>>>>>>> 8a1f286e (cas client session)
         "produces" : [ "application/json;charset=UTF-8" ],
         "parameters" : [ {
           "name" : "koulutustoimijaId",
@@ -43,7 +47,7 @@
         }
       }
     },
-    "/external/opetussuunnitelma/{opsId}" : {
+    "/api/external/opetussuunnitelma/{opsId}" : {
       "get" : {
         "tags" : [ "external" ],
         "summary" : "Opetussuunnitelman tietojen haku",
@@ -68,7 +72,7 @@
         }
       }
     },
-    "/external/opetussuunnitelma/{opsId}/**" : {
+    "/api/external/opetussuunnitelma/{opsId}/**" : {
       "get" : {
         "tags" : [ "external" ],
         "summary" : "Opetussuunnitelman tietojen haku tarkalla sisältörakenteella",
@@ -1925,18 +1929,18 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
-        "pageable" : {
-          "$ref" : "#/definitions/Pageable"
-        },
-        "last" : {
-          "type" : "boolean"
-        },
         "first" : {
           "type" : "boolean"
         },
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
+        },
+        "pageable" : {
+          "$ref" : "#/definitions/Pageable"
+        },
+        "last" : {
+          "type" : "boolean"
         },
         "empty" : {
           "type" : "boolean"
@@ -1971,18 +1975,18 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
-        "pageable" : {
-          "$ref" : "#/definitions/Pageable"
-        },
-        "last" : {
-          "type" : "boolean"
-        },
         "first" : {
           "type" : "boolean"
         },
         "numberOfElements" : {
           "type" : "integer",
           "format" : "int32"
+        },
+        "pageable" : {
+          "$ref" : "#/definitions/Pageable"
+        },
+        "last" : {
+          "type" : "boolean"
         },
         "empty" : {
           "type" : "boolean"
@@ -1999,19 +2003,19 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
-        "unpaged" : {
-          "type" : "boolean"
-        },
         "pageNumber" : {
           "type" : "integer",
           "format" : "int32"
         },
-        "pageSize" : {
-          "type" : "integer",
-          "format" : "int32"
+        "unpaged" : {
+          "type" : "boolean"
         },
         "paged" : {
           "type" : "boolean"
+        },
+        "pageSize" : {
+          "type" : "integer",
+          "format" : "int32"
         }
       }
     },
@@ -2227,10 +2231,10 @@
         "empty" : {
           "type" : "boolean"
         },
-        "sorted" : {
+        "unsorted" : {
           "type" : "boolean"
         },
-        "unsorted" : {
+        "sorted" : {
           "type" : "boolean"
         }
       }
