@@ -25,6 +25,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
 import javax.annotation.PostConstruct;
 
@@ -120,6 +121,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         OpintopolkuCasAuthenticationFilter casAuthenticationFilter = new OpintopolkuCasAuthenticationFilter(serviceProperties());
         casAuthenticationFilter.setAuthenticationManager(authenticationManager());
         casAuthenticationFilter.setFilterProcessesUrl("/j_spring_cas_security_check");
+        casAuthenticationFilter.setAuthenticationSuccessHandler(new SavedRequestAwareAuthenticationSuccessHandler());
         return casAuthenticationFilter;
     }
 
