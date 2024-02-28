@@ -23,7 +23,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
-import fi.vm.sade.eperusteet.amosaa.repository.version.JpaWithVersioningRepository;
+import fi.vm.sade.eperusteet.amosaa.domain.liite.version.JpaWithVersioningRepository;
 import fi.vm.sade.eperusteet.amosaa.service.util.Pair;
 import java.util.Set;
 import org.springframework.data.domain.Page;

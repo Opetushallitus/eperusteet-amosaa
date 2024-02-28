@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Base64;
 
 @RestController
-@RequestMapping("/dokumentit")
+@RequestMapping("/api/dokumentit")
 @InternalApi
 @Api(value = "Dokumentit")
 public class DokumenttiPdfContoller {

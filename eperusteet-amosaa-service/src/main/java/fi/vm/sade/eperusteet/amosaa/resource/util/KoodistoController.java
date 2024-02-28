@@ -39,7 +39,7 @@ import springfox.documentation.annotations.ApiIgnore;
  * @author nkala
  */
 @RestController
-@RequestMapping("/koodisto")
+@RequestMapping("/api/koodisto")
 @InternalApi
 @ApiIgnore
 @Api(value = "Koodistot")

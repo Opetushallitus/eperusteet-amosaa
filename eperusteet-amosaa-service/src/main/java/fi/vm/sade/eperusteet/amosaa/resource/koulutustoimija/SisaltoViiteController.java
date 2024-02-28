@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}")
+@RequestMapping("/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}")
 @Api(value = "Sisaltoviitteet")
 @InternalApi
 public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractController {

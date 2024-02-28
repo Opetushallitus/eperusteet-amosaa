@@ -36,7 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author nkala
  */
 @RestController
-@RequestMapping("/tilastot")
+@RequestMapping("/api/tilastot")
 @Api(value = "tilastot")
 @InternalApi
 public class TilastotController {
