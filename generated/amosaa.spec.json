@@ -14,8 +14,6 @@
   }, {
     "name" : "Koodistot"
   }, {
-    "name" : "Logout"
-  }, {
     "name" : "Maintenance"
   }, {
     "name" : "Muokkaustieto"
@@ -5052,26 +5050,6 @@
         }
       }
     },
-    "/api/logout" : {
-      "get" : {
-        "tags" : [ "Logout" ],
-        "operationId" : "logoutGet",
-        "responses" : {
-          "default" : {
-            "description" : "successful operation"
-          }
-        }
-      },
-      "post" : {
-        "tags" : [ "Logout" ],
-        "operationId" : "logoutPOST",
-        "responses" : {
-          "default" : {
-            "description" : "successful operation"
-          }
-        }
-      }
-    },
     "/api/maintenance/cacheclear/{cache}" : {
       "get" : {
         "tags" : [ "Maintenance" ],
@@ -9536,6 +9514,7 @@
           "format" : "int32"
         },
 <<<<<<< HEAD
+<<<<<<< HEAD
         "first" : {
           "type" : "boolean"
 <<<<<<< HEAD
@@ -9543,14 +9522,16 @@
         },
 =======
 >>>>>>> 8a1f286e (cas client session)
+=======
+        "first" : {
+          "type" : "boolean"
+        },
+>>>>>>> ebac2e97 (logout)
         "last" : {
           "type" : "boolean"
         },
         "pageable" : {
           "$ref" : "#/definitions/Pageable"
-        },
-        "first" : {
-          "type" : "boolean"
         },
         "empty" : {
           "type" : "boolean"
@@ -9598,6 +9579,7 @@
           "format" : "int32"
         },
 <<<<<<< HEAD
+<<<<<<< HEAD
         "first" : {
           "type" : "boolean"
 <<<<<<< HEAD
@@ -9605,14 +9587,16 @@
         },
 =======
 >>>>>>> 8a1f286e (cas client session)
+=======
+        "first" : {
+          "type" : "boolean"
+        },
+>>>>>>> ebac2e97 (logout)
         "last" : {
           "type" : "boolean"
         },
         "pageable" : {
           "$ref" : "#/definitions/Pageable"
-        },
-        "first" : {
-          "type" : "boolean"
         },
         "empty" : {
           "type" : "boolean"
@@ -9660,6 +9644,7 @@
           "format" : "int32"
         },
 <<<<<<< HEAD
+<<<<<<< HEAD
         "first" : {
           "type" : "boolean"
 <<<<<<< HEAD
@@ -9667,14 +9652,16 @@
         },
 =======
 >>>>>>> 8a1f286e (cas client session)
+=======
+        "first" : {
+          "type" : "boolean"
+        },
+>>>>>>> ebac2e97 (logout)
         "last" : {
           "type" : "boolean"
         },
         "pageable" : {
           "$ref" : "#/definitions/Pageable"
-        },
-        "first" : {
-          "type" : "boolean"
         },
         "empty" : {
           "type" : "boolean"
@@ -9722,6 +9709,7 @@
           "format" : "int32"
         },
 <<<<<<< HEAD
+<<<<<<< HEAD
         "first" : {
           "type" : "boolean"
 <<<<<<< HEAD
@@ -9729,14 +9717,16 @@
         },
 =======
 >>>>>>> 8a1f286e (cas client session)
+=======
+        "first" : {
+          "type" : "boolean"
+        },
+>>>>>>> ebac2e97 (logout)
         "last" : {
           "type" : "boolean"
         },
         "pageable" : {
           "$ref" : "#/definitions/Pageable"
-        },
-        "first" : {
-          "type" : "boolean"
         },
         "empty" : {
           "type" : "boolean"
@@ -9784,6 +9774,7 @@
           "format" : "int32"
         },
 <<<<<<< HEAD
+<<<<<<< HEAD
         "first" : {
           "type" : "boolean"
 <<<<<<< HEAD
@@ -9791,14 +9782,16 @@
         },
 =======
 >>>>>>> 8a1f286e (cas client session)
+=======
+        "first" : {
+          "type" : "boolean"
+        },
+>>>>>>> ebac2e97 (logout)
         "last" : {
           "type" : "boolean"
         },
         "pageable" : {
           "$ref" : "#/definitions/Pageable"
-        },
-        "first" : {
-          "type" : "boolean"
         },
         "empty" : {
           "type" : "boolean"
@@ -9815,10 +9808,10 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
-        "paged" : {
+        "unpaged" : {
           "type" : "boolean"
         },
-        "unpaged" : {
+        "paged" : {
           "type" : "boolean"
         },
         "pageNumber" : {
