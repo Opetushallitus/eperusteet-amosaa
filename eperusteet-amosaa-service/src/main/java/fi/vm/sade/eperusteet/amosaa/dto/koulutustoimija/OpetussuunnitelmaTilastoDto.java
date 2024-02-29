@@ -76,15 +76,17 @@ public class OpetussuunnitelmaTilastoDto {
         return null;
     }
 
+    public Date getJulkaistu() {
+        if (CollectionUtils.isNotEmpty(julkaisut)) {
+            return julkaisut.stream().max(Comparator.comparing(JulkaisuKevytDto::getLuotu)).map(JulkaisuKevytDto::getLuotu).orElse(null);
+        }
+        return null;
+    }
+
     public Date getEnsijulkaisu() {
         if (CollectionUtils.isNotEmpty(julkaisut)) {
-            return julkaisut.stream()
-                    .sorted(Comparator.comparing(JulkaisuKevytDto::getLuotu))
-                    .map(JulkaisuKevytDto::getLuotu)
-                    .findFirst()
-                    .orElse(null);
+            return julkaisut.stream().min(Comparator.comparing(JulkaisuKevytDto::getLuotu)).map(JulkaisuKevytDto::getLuotu).orElse(null);
         }
-
         return null;
     }
 }
