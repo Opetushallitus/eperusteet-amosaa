@@ -142,7 +142,7 @@ public class JulkinenController {
     }
 
     @RequestMapping(value = "/kaikkijulkaistut", method = RequestMethod.GET)
-    public List<OpetussuunnitelmaDto> getKaikkiOpetussuunnitelmat() {
+    public List<OpetussuunnitelmaDto> getKaikkiJulkaistutOpetussuunnitelmat() {
         return opsService.getKaikkiJulkaistutOpetussuunnitelmat();
     }
 
