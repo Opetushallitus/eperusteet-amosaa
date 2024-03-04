@@ -220,6 +220,12 @@ public class Opetussuunnitelma extends AbstractAuditedEntity implements Serializ
     @Column(name="peruste_paivitetty_pvm")
     private Date perustePaivitettyPvm;
 
+    @NotAudited
+    @Getter
+    @Setter
+    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "opetussuunnitelma", orphanRemoval = true)
+    private List<OsaamisenArvioinninToteutussuunnitelma> osaamisenArvioinninToteutussuunnitelmat = new ArrayList<>();
+
     public void changeKoulutustoimija(Koulutustoimija kt) {
         this.koulutustoimija = kt;
     }
@@ -244,6 +250,15 @@ public class Opetussuunnitelma extends AbstractAuditedEntity implements Serializ
         this.opetussuunnitelmanAikataulut.clear();
         if (opetussuunnitelmanAikataulut != null) {
             this.opetussuunnitelmanAikataulut.addAll(opetussuunnitelmanAikataulut);
+        }
+    }
+
+    public void setOsaamisenArvioinninToteutussuunnitelmat(List<OsaamisenArvioinninToteutussuunnitelma> osaamisenArvioinninToteutussuunnitelmat) {
+        this.osaamisenArvioinninToteutussuunnitelmat.clear();
+        if (osaamisenArvioinninToteutussuunnitelmat != null) {
+            this.osaamisenArvioinninToteutussuunnitelmat.addAll(osaamisenArvioinninToteutussuunnitelmat.stream()
+                    .peek(oat -> oat.setOpetussuunnitelma(this))
+                    .collect(java.util.stream.Collectors.toList()));
         }
     }
 

@@ -756,6 +756,32 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
         assertThat(opss.getTotalElements()).isEqualTo(2L);
     }
 
+    @Test
+    public void opetussuunnitelmanOatSaveTest() {
+        OpetussuunnitelmaBaseDto oattiOpsi = createOpetussuunnitelma();
+        OpetussuunnitelmaBaseDto ops = createOpetussuunnitelma();
+
+        OpetussuunnitelmaDto opetussuunnitelmaDto = opetussuunnitelmaService.getOpetussuunnitelma(getKoulutustoimijaId(), ops.getId());
+        opetussuunnitelmaDto.setOsaamisenArvioinninToteutussuunnitelmat(
+                Collections.singletonList(OsaamisenArvioinninToteutussuunnitelmaDto.builder()
+                        .oatOpetussuunnitelma(mapper.map(oattiOpsi, OpetussuunnitelmaKevytDto.class))
+                        .opetussuunnitelma(mapper.map(ops, OpetussuunnitelmaKevytDto.class))
+                        .build()));
+        opetussuunnitelmaDto = opetussuunnitelmaService.update(getKoulutustoimijaId(), ops.getId(), opetussuunnitelmaDto);
+
+        assertThat(opetussuunnitelmaDto.getOsaamisenArvioinninToteutussuunnitelmat()).hasSize(1);
+        assertThat(opetussuunnitelmaDto.getOsaamisenArvioinninToteutussuunnitelmat().get(0).getOatOpetussuunnitelma().getId()).isEqualTo(oattiOpsi.getId());
+
+        opetussuunnitelmaDto.getOsaamisenArvioinninToteutussuunnitelmat().add(OsaamisenArvioinninToteutussuunnitelmaDto.builder()
+                .url(Map.of(Kieli.FI, "urli"))
+                .nimi(LokalisoituTekstiDto.of("urlin nimi"))
+                .build());
+        opetussuunnitelmaDto = opetussuunnitelmaService.update(getKoulutustoimijaId(), ops.getId(), opetussuunnitelmaDto);
+
+        assertThat(opetussuunnitelmaDto.getOsaamisenArvioinninToteutussuunnitelmat()).hasSize(2);
+        assertThat(opetussuunnitelmaDto.getOsaamisenArvioinninToteutussuunnitelmat().get(1).getUrl().get(Kieli.FI)).isEqualTo("urli");
+    }
+
     private OpsHakuInternalDto createDefaultOpsHakuInternalDto() {
         return OpsHakuInternalDto.builder()
                 .koulutustyyppi(Collections.singletonList(KoulutusTyyppi.ERIKOISAMMATTITUTKINTO.toString()))
