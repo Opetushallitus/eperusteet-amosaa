@@ -23,6 +23,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.koodisto.KoodistoKoodiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.liite.LiiteDto;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -54,4 +55,5 @@ public class OpetussuunnitelmaDto extends OpetussuunnitelmaBaseDto {
     private KoulutusTyyppi koulutustyyppi;
     private Date viimeisinJulkaisuAika;
     private Date perustePaivitettyPvm;
+    private List<OsaamisenArvioinninToteutussuunnitelmaDto> osaamisenArvioinninToteutussuunnitelmat;
 }

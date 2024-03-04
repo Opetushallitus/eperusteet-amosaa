@@ -50,7 +50,6 @@ import fi.vm.sade.eperusteet.amosaa.dto.peruste.AbstractRakenneOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKaikkiDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteTila;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteenOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteenOsaViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.Suoritustapakoodi;
@@ -114,7 +113,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -926,6 +924,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         body.setTila(ops.getTila());
         repository.setRevisioKommentti(body.getKommentti());
         Opetussuunnitelma updated = mapper.map(body, ops);
+        repository.save(updated);
         muokkausTietoService.addOpsMuokkausTieto(opsId, updated, MuokkausTapahtuma.PAIVITYS);
         return mapper.map(updated, OpetussuunnitelmaDto.class);
     }
