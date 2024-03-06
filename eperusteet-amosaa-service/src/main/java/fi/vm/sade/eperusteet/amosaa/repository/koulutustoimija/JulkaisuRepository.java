@@ -47,6 +47,7 @@ public interface JulkaisuRepository extends JpaRepository<Julkaisu, Long> {
             "       OR ( " +
             "            (:jotpattomat = false AND jotpatyyppi IN (:jotpatyypit)) " +
             "            OR (:jotpattomat = true AND (jotpatyyppi IS NULL OR jotpatyyppi IN (:jotpatyypit)))))" +
+            "   AND (:kieli LIKE '' OR LOWER(CAST(julkaisukielet as text)) LIKE LOWER(CONCAT('%', :kieli,'%'))) " +
             "   order by nimi->>:kieli asc, ?#{#pageable} " +
             ") t";
 

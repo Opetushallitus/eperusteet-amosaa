@@ -1058,7 +1058,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
             koulutustyypit = Arrays.asList("");
         }
 
-        Page<OpetussuunnitelmaDto> result = julkaisuRepository.findAllJulkisetJulkaisut(
+        return julkaisuRepository.findAllJulkisetJulkaisut(
                 koulutustyypit,
                 pquery.getNimi(),
                 pquery.getKieli(),
@@ -1075,8 +1075,6 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                 DateTime.now().getMillis(),
                 pageable)
                 .map(this::convertToOpetussuunnitelmaDto);
-
-        return result;
     }
 
     @Override
