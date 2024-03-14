@@ -1,29 +1,8 @@
-/*
- * Copyright (c) 2013 The Finnish Board of Education - Opetushallitus
- *
- * This program is free software: Licensed under the EUPL, Version 1.1 or - as
- * soon as they will be approved by the European Commission - subsequent versions
- * of the EUPL (the "Licence");
- *
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at: http://ec.europa.eu/idabc/eupl
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * European Union Public Licence for more details.
- */
 package fi.vm.sade.eperusteet.amosaa.domain;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-
-import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import java.util.EnumSet;
 
-
-/**
- * @author nkala
- */
 public enum SisaltoTyyppi {
     TEKSTIKAPPALE("tekstikappale"),
     TUTKINNONOSAT("tutkinnonosat"),
@@ -40,6 +19,7 @@ public enum SisaltoTyyppi {
     KOTO_KIELITAITOTASO("koto_kielitaitotaso"),
     KOTO_OPINTO("koto_opinto"),
     KOTO_LAAJAALAINENOSAAMINEN("koto_laajaalainenosaaminen"),
+    OSAAMISMERKKI("osaamismerkki"),
 
     // Linkki toiseen minkä läpi voi vain lukea
     LINKKI("linkki");
@@ -83,7 +63,7 @@ public enum SisaltoTyyppi {
     }
 
     public static boolean salliLuonti(SisaltoTyyppi tyyppi) {
-        return EnumSet.of(SUORITUSPOLKU, OSASUORITUSPOLKU, TUTKINNONOSA, TEKSTIKAPPALE, OPINTOKOKONAISUUS).contains(tyyppi);
+        return EnumSet.of(SUORITUSPOLKU, OSASUORITUSPOLKU, TUTKINNONOSA, TEKSTIKAPPALE, OPINTOKOKONAISUUS, OSAAMISMERKKI).contains(tyyppi);
     }
 
     public static boolean isSuorituspolku(SisaltoTyyppi tyyppi) {
@@ -95,7 +75,7 @@ public enum SisaltoTyyppi {
     }
 
     public boolean isVstTyyppi() {
-        return isOneOf(TEKSTIKAPPALE, OPINTOKOKONAISUUS);
+        return isOneOf(TEKSTIKAPPALE, OPINTOKOKONAISUUS, OSAAMISMERKKI);
     }
 
     public boolean isTuvaTyyppi() {

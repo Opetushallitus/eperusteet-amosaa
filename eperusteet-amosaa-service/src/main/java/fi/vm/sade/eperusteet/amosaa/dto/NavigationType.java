@@ -30,7 +30,8 @@ public enum NavigationType {
     pakolliset_osaalueet,
     valinnaiset_osaalueet,
     paikalliset_osaalueet,
-    osaalue;
+    osaalue,
+    osaamismerkki;
 
     public static NavigationType of(String type) {
         for (NavigationType t : values()) {
