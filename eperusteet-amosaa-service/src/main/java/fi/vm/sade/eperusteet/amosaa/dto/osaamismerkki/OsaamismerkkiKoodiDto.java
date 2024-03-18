@@ -20,4 +20,9 @@ public class OsaamismerkkiKoodiDto implements KooditettuDto {
     public void setKooditettu(LokalisoituTekstiDto kooditettu) {
         this.nimi = kooditettu;
     }
+
+    public OsaamismerkkiKoodiDto(LokalisoituTekstiDto nimi, String koodi) {
+        this.nimi = nimi;
+        this.koodi = koodi;
+    }
 }

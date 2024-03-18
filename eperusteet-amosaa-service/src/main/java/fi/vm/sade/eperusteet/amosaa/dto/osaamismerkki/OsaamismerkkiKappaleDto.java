@@ -16,4 +16,9 @@ public class OsaamismerkkiKappaleDto {
     private Long id;
     private LokalisoituTekstiDto kuvaus;
     private List<OsaamismerkkiKoodiDto> osaamismerkkiKoodit;
+
+    public OsaamismerkkiKappaleDto(LokalisoituTekstiDto kuvaus, List<OsaamismerkkiKoodiDto> osaamismerkkiKoodit) {
+        this.kuvaus = kuvaus;
+        this.osaamismerkkiKoodit = osaamismerkkiKoodit;
+    }
 }
