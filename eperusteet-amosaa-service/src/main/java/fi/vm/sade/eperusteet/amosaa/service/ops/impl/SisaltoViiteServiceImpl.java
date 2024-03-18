@@ -506,6 +506,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
             case KOTO_KIELITAITOTASO:
             case KOTO_LAAJAALAINENOSAAMINEN:
             case KOTO_OPINTO:
+            case OSAAMISMERKKI:
                 sisaltoviiteServiceProvider.updateSisaltoViite(viite, uusi);
             default:
                 break;
