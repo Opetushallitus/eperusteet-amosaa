@@ -270,6 +270,7 @@ public class SisaltoViite extends AbstractAuditedEntity implements Referenceable
             result.setNaytaPohjanTeksti(original.isNaytaPohjanTeksti());
             result.updatePohjanTekstikappale(original.getPohjanTekstikappale());
             result.setOsaAlueet(original.getOsaAlueet().stream().map(OmaOsaAlue::copy).collect(Collectors.toList()));
+            result.setOsaamismerkkiKappale(OsaamismerkkiKappale.copy(original.getOsaamismerkkiKappale()));
 
             if ((kopiointiType.equals(TekstiHierarkiaKopiointiToiminto.POHJAVIITE) || kopiointiType.equals(TekstiHierarkiaKopiointiToiminto.KOPIOI_JA_SAILYTA_POHJAVIITE))
                     && original.getTekstiKappale() != null
