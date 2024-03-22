@@ -15,7 +15,7 @@ public interface DokumenttiRepository extends JpaRepository<Dokumentti, Long> {
     @Query("SELECT doc from Dokumentti doc WHERE doc.opsId = ?1 AND doc.kieli = ?2 AND doc.valmistumisaika IS NOT NULL ORDER BY doc.valmistumisaika DESC")
     List<Dokumentti> findByOpsIdAndKieliAndValmistumisaikaIsNotNull(Long opsId, Kieli kieli);
 
-    Dokumentti findFirstByOpsIdAndKieliOrderByAloitusaikaDesc(Long opsId, Kieli kieli);
+    Dokumentti findFirstByOpsIdAndKieliAndAloitusaikaNotNullOrderByAloitusaikaDesc(Long opsId, Kieli kieli);
 
     Dokumentti findByIdInAndKieli(Set<Long> id, Kieli kieli);
 
