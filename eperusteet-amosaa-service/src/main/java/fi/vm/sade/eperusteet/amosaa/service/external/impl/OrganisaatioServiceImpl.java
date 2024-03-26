@@ -70,12 +70,15 @@ public class OrganisaatioServiceImpl implements OrganisaatioService {
         @Value("${cas.service.organisaatio-service:''}")
         private String serviceUrl;
 
+        @Value("${cas.service.organisaatio-service.internal:${cas.service.organisaatio-service:''}}")
+        private String serviceInternalUrl;
+
         private final ObjectMapper mapper = new ObjectMapper();
 
         @Cacheable("organisaatiot")
         public JsonNode getOrganisaatio(String organisaatioOid) {
             OphHttpClient client = restClientFactory.get(serviceUrl, false);
-            String url = serviceUrl + ORGANISAATIOT + organisaatioOid;
+            String url = serviceInternalUrl + ORGANISAATIOT + organisaatioOid;
 
             OphHttpRequest request = OphHttpRequest.Builder
                     .get(url)
@@ -95,7 +98,7 @@ public class OrganisaatioServiceImpl implements OrganisaatioService {
 
         public JsonNode getOrganisaatioPuu(String organisaatioOid) {
             OphHttpClient client = restClientFactory.get(serviceUrl, false);
-            String url = serviceUrl + ORGANISAATIOT + "v2/hierarkia/hae?aktiiviset=true&suunnitellut=true&lakkautetut=false&oid=" + organisaatioOid;
+            String url = serviceInternalUrl + ORGANISAATIOT + "v2/hierarkia/hae?aktiiviset=true&suunnitellut=true&lakkautetut=false&oid=" + organisaatioOid;
 
             OphHttpRequest request = OphHttpRequest.Builder
                     .get(url)
@@ -116,7 +119,7 @@ public class OrganisaatioServiceImpl implements OrganisaatioService {
         public JsonNode getOrganisaationHistoriaLiitokset(String organisaatioOid) {
             OphHttpClient client = restClientFactory.get(serviceUrl, false);
    
-            UriComponents uri = UriComponentsBuilder.fromHttpUrl(serviceUrl)
+            UriComponents uri = UriComponentsBuilder.fromHttpUrl(serviceInternalUrl)
                     .path(ORGANISAATIOT)
                     .path("v4/{organisaatioOid}/historia")
                     .buildAndExpand(organisaatioOid);
@@ -139,7 +142,7 @@ public class OrganisaatioServiceImpl implements OrganisaatioService {
 
         public JsonNode getKoulutustoimijat() {
             OphHttpClient client = restClientFactory.get(serviceUrl, false);
-            String url = serviceUrl + ORGANISAATIOT + "v4/hae?aktiiviset=true&suunnitellut=true&lakkautetut=false&organisaatiotyyppi=organisaatiotyyppi_01";
+            String url = serviceInternalUrl + ORGANISAATIOT + "v4/hae?aktiiviset=true&suunnitellut=true&lakkautetut=false&organisaatiotyyppi=organisaatiotyyppi_01";
 
             OphHttpRequest request = OphHttpRequest.Builder
                     .get(url)
