@@ -3,8 +3,9 @@ package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 import fi.vm.sade.eperusteet.amosaa.dto.KooditettuDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+
+import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -17,7 +18,7 @@ public class TuvaLaajaAlainenOsaaminenDto implements KooditettuDto {
     private Boolean liite;
 
     @Override
-    public void setKooditettu(LokalisoituTekstiDto kooditettu) {
+    public void setKooditettu(LokalisoituTekstiDto kooditettu, Date voimassaAlkuPvm, Date voimassaLoppuPvm) {
         this.nimi = kooditettu;
     }
 }

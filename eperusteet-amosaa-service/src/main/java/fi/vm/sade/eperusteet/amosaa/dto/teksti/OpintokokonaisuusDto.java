@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OpintokokonaisuusTyyppi;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import fi.vm.sade.eperusteet.amosaa.dto.KooditettuDto;
@@ -43,7 +44,7 @@ public class OpintokokonaisuusDto implements KooditettuDto {
     }
 
     @Override
-    public void setKooditettu(LokalisoituTekstiDto kooditettu) {
+    public void setKooditettu(LokalisoituTekstiDto kooditettu, Date voimassaAlkuPvm, Date voimassaLoppuPvm) {
         this.kooditettuNimi = kooditettu;
     }
 }

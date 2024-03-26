@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,7 +22,7 @@ public class OmaOsaAlueKevytDto implements KooditettuDto {
     private String koodi;
 
     @Override
-    public void setKooditettu(LokalisoituTekstiDto kooditettu) {
+    public void setKooditettu(LokalisoituTekstiDto kooditettu, Date voimassaAlkuPvm, Date voimassaLoppuPvm) {
         this.nimi = kooditettu;
     }
 

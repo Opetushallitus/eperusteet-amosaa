@@ -7,6 +7,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.peruste.KevytTekstiKappaleDto;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -29,7 +30,7 @@ public class OmaOsaAlueDto implements KooditettuDto {
     private List<KevytTekstiKappaleDto> vapaat = new ArrayList<>();
 
     @Override
-    public void setKooditettu(LokalisoituTekstiDto kooditettu) {
+    public void setKooditettu(LokalisoituTekstiDto kooditettu, Date voimassaAlkuPvm, Date voimassaLoppuPvm) {
         this.nimi = kooditettu;
     }
 
