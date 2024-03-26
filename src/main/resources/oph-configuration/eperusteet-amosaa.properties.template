@@ -43,6 +43,7 @@ cas.service.kayttooikeus-service=https\://${host.virkailija}/kayttooikeus-servic
 cas.service.eperusteet-service=https\://${host.virkailija}/eperusteet-service
 cas.service.eperusteet-amosaa-service=https\://${host.virkailija}/eperusteet-amosaa-service
 cas.service.organisaatio-service=https\://${host.virkailija}/organisaatio-service
+cas.service.organisaatio-service.internal=http://organisaatio.{{server_name}}.internal:8080/organisaatio-service
 cas.user-search-base=ou\=people
 cas.user-search-filter=(|(mail\={0})(uid\={0}))
 customAttribute.webservice.url.backend=https://${host.virkailija}/authentication-service/services/customAttributeService
