@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -15,10 +17,14 @@ public class OsaamismerkkiKoodiDto implements KooditettuDto {
     private Long id;
     private LokalisoituTekstiDto nimi;
     private String koodi;
+    private Date voimassaAlkuPvm;
+    private Date voimassaLoppuPvm;
 
     @Override
-    public void setKooditettu(LokalisoituTekstiDto kooditettu) {
+    public void setKooditettu(LokalisoituTekstiDto kooditettu, Date voimassaAlkuPvm, Date voimassaLoppuPvm) {
         this.nimi = kooditettu;
+        this.voimassaAlkuPvm = voimassaAlkuPvm;
+        this.voimassaLoppuPvm = voimassaLoppuPvm;
     }
 
     public OsaamismerkkiKoodiDto(LokalisoituTekstiDto nimi, String koodi) {

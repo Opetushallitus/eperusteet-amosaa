@@ -9012,7 +9012,15 @@
           "type" : "string",
           "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO", "MAAHANMUUTTAJIENKOTOUTUMISKOULUTUS", "VAPAASIVISTYSTYOLUKUTAITO", "TUTKINTOONVALMENTAVA" ]
         },
-        "julkaistu" : {
+        "perusteId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "julkaisuVuosi" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "ensijulkaisu" : {
           "type" : "string",
           "format" : "date-time"
         },
@@ -9022,17 +9030,9 @@
             "type" : "string"
           }
         },
-        "ensijulkaisu" : {
+        "julkaistu" : {
           "type" : "string",
           "format" : "date-time"
-        },
-        "julkaisuVuosi" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-        "perusteId" : {
-          "type" : "integer",
-          "format" : "int64"
         }
       }
     },
@@ -9328,6 +9328,14 @@
         },
         "koodi" : {
           "type" : "string"
+        },
+        "voimassaAlkuPvm" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "voimassaLoppuPvm" : {
+          "type" : "string",
+          "format" : "date-time"
         }
       }
     },
@@ -9464,6 +9472,13 @@
           "type" : "integer",
           "format" : "int64"
         },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "last" : {
+          "type" : "boolean"
+        },
         "size" : {
           "type" : "integer",
           "format" : "int32"
@@ -9483,13 +9498,6 @@
         },
         "first" : {
           "type" : "boolean"
-        },
-        "last" : {
-          "type" : "boolean"
-        },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
         }
       }
     },
@@ -9503,6 +9511,13 @@
         "totalElements" : {
           "type" : "integer",
           "format" : "int64"
+        },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "last" : {
+          "type" : "boolean"
         },
         "size" : {
           "type" : "integer",
@@ -9523,13 +9538,6 @@
         },
         "first" : {
           "type" : "boolean"
-        },
-        "last" : {
-          "type" : "boolean"
-        },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
         }
       }
     },
@@ -9543,6 +9551,13 @@
         "totalElements" : {
           "type" : "integer",
           "format" : "int64"
+        },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "last" : {
+          "type" : "boolean"
         },
         "size" : {
           "type" : "integer",
@@ -9563,13 +9578,6 @@
         },
         "first" : {
           "type" : "boolean"
-        },
-        "last" : {
-          "type" : "boolean"
-        },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
         }
       }
     },
@@ -9583,6 +9591,13 @@
         "totalElements" : {
           "type" : "integer",
           "format" : "int64"
+        },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "last" : {
+          "type" : "boolean"
         },
         "size" : {
           "type" : "integer",
@@ -9603,13 +9618,6 @@
         },
         "first" : {
           "type" : "boolean"
-        },
-        "last" : {
-          "type" : "boolean"
-        },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
         }
       }
     },
@@ -9623,6 +9631,13 @@
         "totalElements" : {
           "type" : "integer",
           "format" : "int64"
+        },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "last" : {
+          "type" : "boolean"
         },
         "size" : {
           "type" : "integer",
@@ -9643,13 +9658,6 @@
         },
         "first" : {
           "type" : "boolean"
-        },
-        "last" : {
-          "type" : "boolean"
-        },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
         }
       }
     },
