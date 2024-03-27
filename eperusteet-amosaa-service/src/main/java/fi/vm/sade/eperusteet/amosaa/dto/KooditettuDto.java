@@ -6,5 +6,7 @@ import java.util.Date;
 
 public interface KooditettuDto {
 
-    void setKooditettu(LokalisoituTekstiDto kooditettu, Date voimassaAlkuPvm, Date voimassaLoppuPvm);
+    default void setKooditettu(LokalisoituTekstiDto kooditettu) {}
+
+    default void setKooditettu(LokalisoituTekstiDto kooditettu, Date voimassaAlkuPvm, Date voimassaLoppuPvm) {}
 }

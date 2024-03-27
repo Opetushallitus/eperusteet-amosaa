@@ -30,7 +30,7 @@ public class OmaOsaAlueDto implements KooditettuDto {
     private List<KevytTekstiKappaleDto> vapaat = new ArrayList<>();
 
     @Override
-    public void setKooditettu(LokalisoituTekstiDto kooditettu, Date voimassaAlkuPvm, Date voimassaLoppuPvm) {
+    public void setKooditettu(LokalisoituTekstiDto kooditettu) {
         this.nimi = kooditettu;
     }
 

@@ -18,7 +18,7 @@ public class TuvaLaajaAlainenOsaaminenDto implements KooditettuDto {
     private Boolean liite;
 
     @Override
-    public void setKooditettu(LokalisoituTekstiDto kooditettu, Date voimassaAlkuPvm, Date voimassaLoppuPvm) {
+    public void setKooditettu(LokalisoituTekstiDto kooditettu) {
         this.nimi = kooditettu;
     }
 }

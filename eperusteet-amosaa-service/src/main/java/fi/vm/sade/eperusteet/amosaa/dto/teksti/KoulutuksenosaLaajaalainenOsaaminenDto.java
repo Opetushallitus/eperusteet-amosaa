@@ -18,7 +18,7 @@ public class KoulutuksenosaLaajaalainenOsaaminenDto implements KooditettuDto {
     private LokalisoituTekstiDto laajaAlaisenOsaamisenKuvaus;
 
     @Override
-    public void setKooditettu(LokalisoituTekstiDto kooditettu, Date voimassaAlkuPvm, Date voimassaLoppuPvm) {
+    public void setKooditettu(LokalisoituTekstiDto kooditettu) {
         this.nimi = kooditettu;
     }
 }

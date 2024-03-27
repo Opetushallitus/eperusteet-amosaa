@@ -44,7 +44,7 @@ public class OpintokokonaisuusDto implements KooditettuDto {
     }
 
     @Override
-    public void setKooditettu(LokalisoituTekstiDto kooditettu, Date voimassaAlkuPvm, Date voimassaLoppuPvm) {
+    public void setKooditettu(LokalisoituTekstiDto kooditettu) {
         this.kooditettuNimi = kooditettu;
     }
 }

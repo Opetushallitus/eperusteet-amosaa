@@ -18,7 +18,7 @@ public class KoulutuksenOsaKevytDto implements KooditettuDto {
     private String nimiKoodi;
 
     @Override
-    public void setKooditettu(LokalisoituTekstiDto kooditettu, Date voimassaAlkuPvm, Date voimassaLoppuPvm) {
+    public void setKooditettu(LokalisoituTekstiDto kooditettu) {
         this.kooditettuNimi = kooditettu;
     }
 

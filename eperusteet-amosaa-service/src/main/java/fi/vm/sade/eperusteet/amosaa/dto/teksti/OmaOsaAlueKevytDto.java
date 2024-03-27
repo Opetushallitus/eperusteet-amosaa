@@ -22,7 +22,7 @@ public class OmaOsaAlueKevytDto implements KooditettuDto {
     private String koodi;
 
     @Override
-    public void setKooditettu(LokalisoituTekstiDto kooditettu, Date voimassaAlkuPvm, Date voimassaLoppuPvm) {
+    public void setKooditettu(LokalisoituTekstiDto kooditettu) {
         this.nimi = kooditettu;
     }
 
