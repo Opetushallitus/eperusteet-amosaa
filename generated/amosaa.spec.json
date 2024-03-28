@@ -106,11 +106,7 @@
         "tags" : [ "external" ],
         "summary" : "Opetussuunnitelman tietojen haku koulutustoimijan ja opetussuunnitelman id:llä",
         "description" : "",
-<<<<<<< HEAD
-        "operationId" : "getPublicKtOpetussuunnitelma",
-=======
         "operationId" : "getPublicOpetussuunnitelmaKoulutustoimija",
->>>>>>> 8a1f286e (cas client session)
         "produces" : [ "application/json;charset=UTF-8" ],
         "parameters" : [ {
           "name" : "koulutustoimijaId",
@@ -137,11 +133,7 @@
         }
       }
     },
-<<<<<<< HEAD
-    "/external/opetussuunnitelma/{opsId}" : {
-=======
     "/api/external/opetussuunnitelma/{opsId}" : {
->>>>>>> 8a1f286e (cas client session)
       "get" : {
         "tags" : [ "external" ],
         "summary" : "Opetussuunnitelman tietojen haku",
@@ -166,11 +158,7 @@
         }
       }
     },
-<<<<<<< HEAD
-    "/external/opetussuunnitelma/{opsId}/**" : {
-=======
     "/api/external/opetussuunnitelma/{opsId}/**" : {
->>>>>>> 8a1f286e (cas client session)
       "get" : {
         "tags" : [ "external" ],
         "summary" : "Opetussuunnitelman tietojen haku tarkalla sisältörakenteella",
@@ -319,8 +307,7 @@
         }
       }
     },
-<<<<<<< HEAD
-    "/julkinen/kaikkijulkaistut" : {
+    "/api/julkinen/kaikkijulkaistut" : {
       "get" : {
         "tags" : [ "julkinen" ],
         "operationId" : "getKaikkiJulkaistutOpetussuunnitelmat",
@@ -337,10 +324,7 @@
         }
       }
     },
-    "/julkinen/koodi/{koodi}" : {
-=======
     "/api/julkinen/koodi/{koodi}" : {
->>>>>>> be956d5b (EP-3491)
       "get" : {
         "tags" : [ "julkinen" ],
         "operationId" : "getSisaltoViiteByKoodi",
@@ -583,6 +567,7 @@
       "get" : {
         "tags" : [ "julkinen" ],
         "operationId" : "getDokumentti",
+        "produces" : [ "application/pdf" ],
         "parameters" : [ {
           "in" : "body",
           "name" : "body",
@@ -9006,46 +8991,27 @@
           "type" : "string",
           "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO", "MAAHANMUUTTAJIENKOTOUTUMISKOULUTUS", "VAPAASIVISTYSTYOLUKUTAITO", "TUTKINTOONVALMENTAVA" ]
         },
-<<<<<<< HEAD
-<<<<<<< HEAD
-        "perusteId" : {
-          "type" : "integer",
-          "format" : "int64"
-        },
         "julkaisuVuosi" : {
           "type" : "integer",
           "format" : "int32"
         },
-=======
->>>>>>> 8a1f286e (cas client session)
         "ensijulkaisu" : {
           "type" : "string",
           "format" : "date-time"
         },
-<<<<<<< HEAD
-=======
->>>>>>> be956d5b (EP-3491)
-=======
->>>>>>> 8a1f286e (cas client session)
         "perusteNimi" : {
           "type" : "object",
           "additionalProperties" : {
             "type" : "string"
           }
         },
-<<<<<<< HEAD
         "julkaistu" : {
           "type" : "string",
           "format" : "date-time"
-=======
-        "julkaisuVuosi" : {
-          "type" : "integer",
-          "format" : "int32"
         },
         "perusteId" : {
           "type" : "integer",
           "format" : "int64"
->>>>>>> be956d5b (EP-3491)
         }
       }
     },
@@ -9485,13 +9451,6 @@
           "type" : "integer",
           "format" : "int64"
         },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-        "last" : {
-          "type" : "boolean"
-        },
         "size" : {
           "type" : "integer",
           "format" : "int32"
@@ -9509,33 +9468,21 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-<<<<<<< HEAD
-<<<<<<< HEAD
         "first" : {
-          "type" : "boolean"
-<<<<<<< HEAD
-=======
-        },
-=======
->>>>>>> 8a1f286e (cas client session)
-=======
-        "first" : {
-          "type" : "boolean"
-        },
->>>>>>> ebac2e97 (logout)
-        "last" : {
           "type" : "boolean"
         },
         "pageable" : {
           "$ref" : "#/definitions/Pageable"
         },
+        "last" : {
+          "type" : "boolean"
+        },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "empty" : {
           "type" : "boolean"
->>>>>>> be956d5b (EP-3491)
         }
       }
     },
@@ -9549,13 +9496,6 @@
         "totalElements" : {
           "type" : "integer",
           "format" : "int64"
-        },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-        "last" : {
-          "type" : "boolean"
         },
         "size" : {
           "type" : "integer",
@@ -9574,33 +9514,21 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-<<<<<<< HEAD
-<<<<<<< HEAD
         "first" : {
-          "type" : "boolean"
-<<<<<<< HEAD
-=======
-        },
-=======
->>>>>>> 8a1f286e (cas client session)
-=======
-        "first" : {
-          "type" : "boolean"
-        },
->>>>>>> ebac2e97 (logout)
-        "last" : {
           "type" : "boolean"
         },
         "pageable" : {
           "$ref" : "#/definitions/Pageable"
         },
+        "last" : {
+          "type" : "boolean"
+        },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "empty" : {
           "type" : "boolean"
->>>>>>> be956d5b (EP-3491)
         }
       }
     },
@@ -9614,13 +9542,6 @@
         "totalElements" : {
           "type" : "integer",
           "format" : "int64"
-        },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-        "last" : {
-          "type" : "boolean"
         },
         "size" : {
           "type" : "integer",
@@ -9639,33 +9560,21 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-<<<<<<< HEAD
-<<<<<<< HEAD
         "first" : {
-          "type" : "boolean"
-<<<<<<< HEAD
-=======
-        },
-=======
->>>>>>> 8a1f286e (cas client session)
-=======
-        "first" : {
-          "type" : "boolean"
-        },
->>>>>>> ebac2e97 (logout)
-        "last" : {
           "type" : "boolean"
         },
         "pageable" : {
           "$ref" : "#/definitions/Pageable"
         },
+        "last" : {
+          "type" : "boolean"
+        },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "empty" : {
           "type" : "boolean"
->>>>>>> be956d5b (EP-3491)
         }
       }
     },
@@ -9679,13 +9588,6 @@
         "totalElements" : {
           "type" : "integer",
           "format" : "int64"
-        },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-        "last" : {
-          "type" : "boolean"
         },
         "size" : {
           "type" : "integer",
@@ -9704,33 +9606,21 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-<<<<<<< HEAD
-<<<<<<< HEAD
         "first" : {
-          "type" : "boolean"
-<<<<<<< HEAD
-=======
-        },
-=======
->>>>>>> 8a1f286e (cas client session)
-=======
-        "first" : {
-          "type" : "boolean"
-        },
->>>>>>> ebac2e97 (logout)
-        "last" : {
           "type" : "boolean"
         },
         "pageable" : {
           "$ref" : "#/definitions/Pageable"
         },
+        "last" : {
+          "type" : "boolean"
+        },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "empty" : {
           "type" : "boolean"
->>>>>>> be956d5b (EP-3491)
         }
       }
     },
@@ -9744,13 +9634,6 @@
         "totalElements" : {
           "type" : "integer",
           "format" : "int64"
-        },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-        "last" : {
-          "type" : "boolean"
         },
         "size" : {
           "type" : "integer",
@@ -9769,29 +9652,18 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-<<<<<<< HEAD
-<<<<<<< HEAD
         "first" : {
-          "type" : "boolean"
-<<<<<<< HEAD
-=======
-        },
-=======
->>>>>>> 8a1f286e (cas client session)
-=======
-        "first" : {
-          "type" : "boolean"
-        },
->>>>>>> ebac2e97 (logout)
-        "last" : {
           "type" : "boolean"
         },
         "pageable" : {
           "$ref" : "#/definitions/Pageable"
+        },
+        "last" : {
+          "type" : "boolean"
+        },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "empty" : {
           "type" : "boolean"
@@ -9808,12 +9680,6 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
-        "unpaged" : {
-          "type" : "boolean"
-        },
-        "paged" : {
-          "type" : "boolean"
-        },
         "pageNumber" : {
           "type" : "integer",
           "format" : "int32"
@@ -9821,7 +9687,12 @@
         "pageSize" : {
           "type" : "integer",
           "format" : "int32"
->>>>>>> be956d5b (EP-3491)
+        },
+        "unpaged" : {
+          "type" : "boolean"
+        },
+        "paged" : {
+          "type" : "boolean"
         }
       }
     },
@@ -10769,10 +10640,10 @@
         "empty" : {
           "type" : "boolean"
         },
-        "sorted" : {
+        "unsorted" : {
           "type" : "boolean"
         },
-        "unsorted" : {
+        "sorted" : {
           "type" : "boolean"
         }
       }

@@ -16,11 +16,7 @@
         "tags" : [ "external" ],
         "summary" : "Opetussuunnitelman tietojen haku koulutustoimijan ja opetussuunnitelman id:llä",
         "description" : "",
-<<<<<<< HEAD
-        "operationId" : "getPublicKtOpetussuunnitelma",
-=======
         "operationId" : "getPublicOpetussuunnitelmaKoulutustoimija",
->>>>>>> 8a1f286e (cas client session)
         "produces" : [ "application/json;charset=UTF-8" ],
         "parameters" : [ {
           "name" : "koulutustoimijaId",
@@ -1866,6 +1862,14 @@
         },
         "koodi" : {
           "type" : "string"
+        },
+        "voimassaAlkuPvm" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "voimassaLoppuPvm" : {
+          "type" : "string",
+          "format" : "date-time"
         }
       }
     },
@@ -2003,19 +2007,19 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
+        "paged" : {
+          "type" : "boolean"
+        },
         "pageNumber" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "pageSize" : {
           "type" : "integer",
           "format" : "int32"
         },
         "unpaged" : {
           "type" : "boolean"
-        },
-        "paged" : {
-          "type" : "boolean"
-        },
-        "pageSize" : {
-          "type" : "integer",
-          "format" : "int32"
         }
       }
     },
