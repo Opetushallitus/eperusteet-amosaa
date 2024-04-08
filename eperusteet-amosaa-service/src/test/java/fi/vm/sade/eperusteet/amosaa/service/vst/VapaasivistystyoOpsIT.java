@@ -10,6 +10,8 @@ import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OpintokokonaisuusTavoite
 import fi.vm.sade.eperusteet.amosaa.dto.koodisto.KoodistoUriArvo;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.SisaltoviiteLaajaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.osaamismerkki.OsaamismerkkiKappaleDto;
+import fi.vm.sade.eperusteet.amosaa.dto.osaamismerkki.OsaamismerkkiKoodiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.OpintokokonaisuusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.OpintokokonaisuusTavoiteDto;
@@ -26,6 +28,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -220,5 +223,35 @@ public class VapaasivistystyoOpsIT extends AbstractIntegrationTest {
 
         assertThat(tekstikappaleet1.get(0).getTekstiKappale().getTeksti().get(Kieli.FI)).isEqualTo("opsinteksti");
 
+    }
+
+    @Test
+    public void test_vapaasivistystyo_osaamismerkkikappale() {
+        List<OsaamismerkkiKoodiDto> osaamismerkkiKoodit = new ArrayList<>();
+        osaamismerkkiKoodit.add(new OsaamismerkkiKoodiDto(LokalisoituTekstiDto.of("kuvaus"), "1234"));
+
+        OpetussuunnitelmaBaseDto vstOps = createOpetussuunnitelma(ops -> ops.setPerusteId(35820L));
+        SisaltoViiteDto.Matala root = sisaltoViiteService.getSisaltoRoot(getKoulutustoimijaId(), vstOps.getId());
+        sisaltoViiteService.addSisaltoViite(getKoulutustoimijaId(), vstOps.getId(), root.getId(), createSisalto(sisaltoViiteDto -> {
+            sisaltoViiteDto.setTyyppi(SisaltoTyyppi.OSAAMISMERKKI);
+            sisaltoViiteDto.setOsaamismerkkiKappale(
+                    new OsaamismerkkiKappaleDto(LokalisoituTekstiDto.of("kuvaus"), osaamismerkkiKoodit));
+        }));
+
+        List<SisaltoViiteDto> sisaltoviitteet = sisaltoViiteService.getSisaltoViitteet(vstOps.getKoulutustoimija().getId(), vstOps.getId(), SisaltoViiteDto.class);
+        List<SisaltoViiteDto> osaamismerkit = sisaltoviitteet.stream().filter(viite -> SisaltoTyyppi.OSAAMISMERKKI.equals(viite.getTyyppi())).collect(Collectors.toList());
+        SisaltoViiteDto osaamismerkkiSisalto = osaamismerkit.get(0);
+
+        assertThat(osaamismerkkiSisalto.getOsaamismerkkiKappale()).isNotNull();
+        assertThat(osaamismerkkiSisalto.getOsaamismerkkiKappale().getKuvaus().getTeksti().get(Kieli.FI)).isEqualTo("kuvaus");
+        assertThat(osaamismerkkiSisalto.getOsaamismerkkiKappale().getOsaamismerkkiKoodit()).hasSize(1);
+
+        osaamismerkkiSisalto.getOsaamismerkkiKappale().setKuvaus(LokalisoituTekstiDto.of("kuvaus_edit"));
+
+        sisaltoViiteService.updateSisaltoViite(vstOps.getKoulutustoimija().getId(), vstOps.getId(), osaamismerkkiSisalto.getId(), osaamismerkkiSisalto);
+        List<SisaltoViiteDto> updatedSisaltoviitteet = sisaltoViiteService.getSisaltoViitteet(vstOps.getKoulutustoimija().getId(), vstOps.getId(), SisaltoViiteDto.class);
+        List<SisaltoViiteDto> updatedOsaamismerkit = updatedSisaltoviitteet.stream().filter(viite -> SisaltoTyyppi.OSAAMISMERKKI.equals(viite.getTyyppi())).collect(Collectors.toList());
+
+        assertThat(updatedOsaamismerkit.get(0).getOsaamismerkkiKappale().getKuvaus().getTeksti().get(Kieli.FI)).isEqualTo("kuvaus_edit");
     }
 }

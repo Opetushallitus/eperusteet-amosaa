@@ -7,6 +7,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.peruste.KevytTekstiKappaleDto;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Data

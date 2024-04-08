@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fi.vm.sade.eperusteet.amosaa.domain.SisaltoTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.Reference;
+import fi.vm.sade.eperusteet.amosaa.dto.osaamismerkki.OsaamismerkkiKappaleDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteBaseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -50,6 +51,7 @@ public class SisaltoViiteDto {
     private Long linkattuSisaltoViiteId;
     private Long linkattuPeruste;
     private SisaltoTyyppi linkattuTyyppi;
+    private OsaamismerkkiKappaleDto osaamismerkkiKappale;
 
     @JsonProperty("_tekstiKappale")
     private Reference tekstiKappaleRef;
@@ -61,7 +63,6 @@ public class SisaltoViiteDto {
 
         public Matala() {
         }
-
     }
 
     @Data

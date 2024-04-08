@@ -81,6 +81,10 @@ public class Opintokokonaisuus extends AbstractAuditedEntity implements Serializ
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     private LokalisoituTeksti arvioinninKuvaus;
 
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    private OsaamismerkkiKappale osaamismerkkiKappale;
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderColumn
     private List<OpintokokonaisuusArviointi> arvioinnit = new ArrayList<>();
@@ -108,6 +112,10 @@ public class Opintokokonaisuus extends AbstractAuditedEntity implements Serializ
             }
             if (original.getArvioinninKuvaus() != null) {
                 result.setArvioinninKuvaus(LokalisoituTeksti.of(original.getArvioinninKuvaus().getTeksti()));
+            }
+
+            if (original.getOsaamismerkkiKappale() != null) {
+                result.setOsaamismerkkiKappale(OsaamismerkkiKappale.copy(original.getOsaamismerkkiKappale()));
             }
 
             if (!ObjectUtils.isEmpty(original.getTavoitteet())) {

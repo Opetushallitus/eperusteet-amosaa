@@ -12,6 +12,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.KotoOpinto;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Koulutuksenosa;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaOsaAlue;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Opintokokonaisuus;
+import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OsaamismerkkiKappale;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Suorituspolku;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Tutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TuvaLaajaAlainenOsaaminen;
@@ -192,6 +193,12 @@ public class SisaltoViite extends AbstractAuditedEntity implements Referenceable
     @OrderColumn
     private List<SisaltoViite> lapset = new ArrayList<>();
 
+    @Getter
+    @Setter
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    private OsaamismerkkiKappale osaamismerkkiKappale;
+
     public SisaltoViite() {
     }
 
@@ -263,6 +270,7 @@ public class SisaltoViite extends AbstractAuditedEntity implements Referenceable
             result.setNaytaPohjanTeksti(original.isNaytaPohjanTeksti());
             result.updatePohjanTekstikappale(original.getPohjanTekstikappale());
             result.setOsaAlueet(original.getOsaAlueet().stream().map(OmaOsaAlue::copy).collect(Collectors.toList()));
+            result.setOsaamismerkkiKappale(OsaamismerkkiKappale.copy(original.getOsaamismerkkiKappale()));
 
             if ((kopiointiType.equals(TekstiHierarkiaKopiointiToiminto.POHJAVIITE) || kopiointiType.equals(TekstiHierarkiaKopiointiToiminto.KOPIOI_JA_SAILYTA_POHJAVIITE))
                     && original.getTekstiKappale() != null

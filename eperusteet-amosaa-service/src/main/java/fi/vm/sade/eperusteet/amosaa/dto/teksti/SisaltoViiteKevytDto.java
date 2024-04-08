@@ -38,6 +38,10 @@ public class SisaltoViiteKevytDto {
     private List<OmaOsaAlueKevytDto> osaAlueet = new ArrayList<>();
 
     public LokalisoituTekstiDto getNimi() {
+        if (SisaltoTyyppi.OSAAMISMERKKI.equals(tyyppi)) {
+            return LokalisoituTekstiDto.of("Kansalliset perustaitojen osaamismerkit");
+        }
+
         if (koulutuksenosa != null) {
             return koulutuksenosa.getNimi();
         }

@@ -47,6 +47,7 @@ public interface JulkaisuRepository extends JpaRepository<Julkaisu, Long> {
             "       OR ( " +
             "            (:jotpattomat = false AND jotpatyyppi IN (:jotpatyypit)) " +
             "            OR (:jotpattomat = true AND (jotpatyyppi IS NULL OR jotpatyyppi IN (:jotpatyypit)))))" +
+            "   AND (:kieli LIKE '' OR LOWER(CAST(julkaisukielet as text)) LIKE LOWER(CONCAT('%', :kieli,'%'))) " +
             "   order by nimi->>:kieli asc, ?#{#pageable} " +
             ") t";
 
@@ -81,4 +82,30 @@ public interface JulkaisuRepository extends JpaRepository<Julkaisu, Long> {
     String findByOpintokokonaisuusKoodiArvo(@Param("koodiarvo") String koodiArvo);
 
     long countByOpetussuunnitelmaId(Long id);
+
+    @Query(nativeQuery = true,
+            value = "SELECT CAST(jsonb_path_query(jd.data, CAST(:query AS jsonpath)) AS text) " +
+                    "FROM julkaisu ju " +
+                    "INNER JOIN julkaisu_data jd ON ju.data_id = jd.id " +
+                    "WHERE ju.opetussuunnitelma_id = :opetussuunnitelma_id " +
+                    "AND luotu = (SELECT MAX(luotu) FROM julkaisu WHERE opetussuunnitelma_id = ju.opetussuunnitelma_id)")
+    String findJulkaisutByJsonPath(@Param("opetussuunnitelma_id") Long opetussuunnitelmaId, @Param("query") String query);
+
+    @Query(nativeQuery = true, value =
+            "SELECT CAST(row_to_json(t) as text) FROM ( " +
+                    "   SELECT * " +
+                    "   FROM julkaistu_opetussuunnitelma_Data_view data " +
+                    "   WHERE 1 = 1 " +
+                    "   AND ((:tulevat = false AND :poistuneet = false AND :voimassa = false) " +
+                    "           OR (" +
+                    "              (:tulevat = true AND (data.\"voimaantulo\" IS NOT NULL AND CAST(data.\"voimaantulo\" as bigint) > :nykyhetki)) " +
+                    "              OR (:poistuneet = true AND CAST(data.\"voimassaoloLoppuu\" as bigint) < :nykyhetki)" +
+                    "              OR (:voimassa = true AND (data.\"voimaantulo\" IS NULL OR CAST(data.\"voimaantulo\" as bigint) < :nykyhetki) AND (data.\"voimassaoloLoppuu\" IS NULL OR CAST(data.\"voimassaoloLoppuu\" as bigint) > :nykyhetki)))) " +
+
+                    ") t")
+    List<String> findAllJulkaistutOpetussuunnitelmatByVoimassaolo(
+            @Param("nykyhetki") Long nykyhetki,
+            @Param("tulevat") boolean tulevat,
+            @Param("voimassa") boolean voimassa,
+            @Param("poistuneet") boolean poistuneet);
 }

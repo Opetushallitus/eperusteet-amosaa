@@ -128,7 +128,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     @Override
     @Transactional(readOnly = true)
     public DokumenttiDto getLatestDokumentti(Long ktId, Long opsId, Kieli kieli) {
-        Dokumentti dokumentti = dokumenttiRepository.findFirstByOpsIdAndKieliOrderByAloitusaikaDesc(opsId, kieli);
+        Dokumentti dokumentti = dokumenttiRepository.findFirstByOpsIdAndKieliAndAloitusaikaNotNullOrderByAloitusaikaDesc(opsId, kieli);
 
         if (dokumentti != null) {
             // Jos aloitusajasta on kulunut liian kauan, on luonti epäonnistunut

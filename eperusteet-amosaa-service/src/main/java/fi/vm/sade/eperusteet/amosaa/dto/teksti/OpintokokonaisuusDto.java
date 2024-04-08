@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OpintokokonaisuusTyyppi;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import fi.vm.sade.eperusteet.amosaa.dto.KooditettuDto;
+import fi.vm.sade.eperusteet.amosaa.dto.osaamismerkki.OsaamismerkkiKappaleDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.LaajuusYksikko;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,6 +32,7 @@ public class OpintokokonaisuusDto implements KooditettuDto {
     private LokalisoituTekstiDto tavoitteidenKuvaus;
     private LokalisoituTekstiDto keskeisetSisallot;
     private LokalisoituTekstiDto arvioinninKuvaus;
+    private OsaamismerkkiKappaleDto osaamismerkkiKappale;
     private List<OpintokokonaisuusArviointiDto> arvioinnit = new ArrayList<>();
 
     public String getKoodiArvo() {

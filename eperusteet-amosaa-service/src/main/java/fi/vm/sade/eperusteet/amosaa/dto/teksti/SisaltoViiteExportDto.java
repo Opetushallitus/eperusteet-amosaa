@@ -2,6 +2,7 @@ package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import fi.vm.sade.eperusteet.amosaa.dto.osaamismerkki.OsaamismerkkiKappaleDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteenOsaDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -38,6 +39,7 @@ public class SisaltoViiteExportDto extends SisaltoViiteExportBaseDto {
     private KotoKielitaitotasoExportDto kotoKielitaitotaso;
     private KotoOpintoExportDto kotoOpinto;
     private KotoLaajaAlainenOsaaminenExportDto kotoLaajaAlainenOsaaminen;
+    private OsaamismerkkiKappaleDto osaamismerkkiKappale;
     private Long perusteenOsaId;
     private List<OmaOsaAlueExportDto> osaAlueet = new ArrayList<>();
 

@@ -141,6 +141,11 @@ public class JulkinenController {
         return opsService.findOpetussuunnitelmatJulkaisut(pquery);
     }
 
+    @RequestMapping(value = "/kaikkijulkaistut", method = RequestMethod.GET)
+    public List<OpetussuunnitelmaDto> getKaikkiJulkaistutOpetussuunnitelmat() {
+        return opsService.getKaikkiJulkaistutOpetussuunnitelmat();
+    }
+
     @RequestMapping(value = "/perusteenopetussuunnitelmat", method = RequestMethod.GET)
     @Description("")
     public List<OpetussuunnitelmaJulkinenDto> getPerusteenOpetussuunnitelmat(
