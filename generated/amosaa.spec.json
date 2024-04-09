@@ -4,7 +4,6 @@
     "version" : "v1",
     "title" : "ePerusteet amosaa api"
   },
-  "basePath" : "/api",
   "tags" : [ {
     "name" : "Aikataulut"
   }, {
@@ -8991,13 +8990,13 @@
           "type" : "string",
           "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO", "MAAHANMUUTTAJIENKOTOUTUMISKOULUTUS", "VAPAASIVISTYSTYOLUKUTAITO", "TUTKINTOONVALMENTAVA" ]
         },
+        "perusteId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
         "julkaisuVuosi" : {
           "type" : "integer",
           "format" : "int32"
-        },
-        "ensijulkaisu" : {
-          "type" : "string",
-          "format" : "date-time"
         },
         "perusteNimi" : {
           "type" : "object",
@@ -9009,9 +9008,9 @@
           "type" : "string",
           "format" : "date-time"
         },
-        "perusteId" : {
-          "type" : "integer",
-          "format" : "int64"
+        "ensijulkaisu" : {
+          "type" : "string",
+          "format" : "date-time"
         }
       }
     },
@@ -9443,13 +9442,13 @@
     "Page" : {
       "type" : "object",
       "properties" : {
-        "totalPages" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "totalElements" : {
           "type" : "integer",
           "format" : "int64"
+        },
+        "totalPages" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "size" : {
           "type" : "integer",
@@ -9471,15 +9470,15 @@
         "first" : {
           "type" : "boolean"
         },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "pageable" : {
           "$ref" : "#/definitions/Pageable"
         },
         "last" : {
           "type" : "boolean"
-        },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
         },
         "empty" : {
           "type" : "boolean"
@@ -9489,13 +9488,13 @@
     "PageKoulutustoimijaJulkinenDto" : {
       "type" : "object",
       "properties" : {
-        "totalPages" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "totalElements" : {
           "type" : "integer",
           "format" : "int64"
+        },
+        "totalPages" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "size" : {
           "type" : "integer",
@@ -9517,15 +9516,15 @@
         "first" : {
           "type" : "boolean"
         },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "pageable" : {
           "$ref" : "#/definitions/Pageable"
         },
         "last" : {
           "type" : "boolean"
-        },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
         },
         "empty" : {
           "type" : "boolean"
@@ -9535,13 +9534,13 @@
     "PageOpetussuunnitelmaBaseDto" : {
       "type" : "object",
       "properties" : {
-        "totalPages" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "totalElements" : {
           "type" : "integer",
           "format" : "int64"
+        },
+        "totalPages" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "size" : {
           "type" : "integer",
@@ -9563,15 +9562,15 @@
         "first" : {
           "type" : "boolean"
         },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "pageable" : {
           "$ref" : "#/definitions/Pageable"
         },
         "last" : {
           "type" : "boolean"
-        },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
         },
         "empty" : {
           "type" : "boolean"
@@ -9581,13 +9580,13 @@
     "PageOpetussuunnitelmaDto" : {
       "type" : "object",
       "properties" : {
-        "totalPages" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "totalElements" : {
           "type" : "integer",
           "format" : "int64"
+        },
+        "totalPages" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "size" : {
           "type" : "integer",
@@ -9609,15 +9608,15 @@
         "first" : {
           "type" : "boolean"
         },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "pageable" : {
           "$ref" : "#/definitions/Pageable"
         },
         "last" : {
           "type" : "boolean"
-        },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
         },
         "empty" : {
           "type" : "boolean"
@@ -9627,13 +9626,13 @@
     "PageSisaltoviiteLaajaDto" : {
       "type" : "object",
       "properties" : {
-        "totalPages" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "totalElements" : {
           "type" : "integer",
           "format" : "int64"
+        },
+        "totalPages" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "size" : {
           "type" : "integer",
@@ -9655,15 +9654,15 @@
         "first" : {
           "type" : "boolean"
         },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "pageable" : {
           "$ref" : "#/definitions/Pageable"
         },
         "last" : {
           "type" : "boolean"
-        },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
         },
         "empty" : {
           "type" : "boolean"
@@ -9684,15 +9683,15 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "pageSize" : {
-          "type" : "integer",
-          "format" : "int32"
+        "paged" : {
+          "type" : "boolean"
         },
         "unpaged" : {
           "type" : "boolean"
         },
-        "paged" : {
-          "type" : "boolean"
+        "pageSize" : {
+          "type" : "integer",
+          "format" : "int32"
         }
       }
     },
@@ -10640,10 +10639,10 @@
         "empty" : {
           "type" : "boolean"
         },
-        "unsorted" : {
+        "sorted" : {
           "type" : "boolean"
         },
-        "sorted" : {
+        "unsorted" : {
           "type" : "boolean"
         }
       }

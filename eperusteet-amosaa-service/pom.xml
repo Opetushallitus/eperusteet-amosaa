@@ -824,7 +824,6 @@
                                         <scheme>http</scheme>
                                         <scheme>https</scheme>
                                     </schemes>
-                                    <basePath>/api</basePath>
                                     <locations>
                                         <location>${eperusteet.amosaa.resources}.external.UlkopuolisetController</location>
                                         <location>${eperusteet.amosaa.resources}.julkinen.*</location>
