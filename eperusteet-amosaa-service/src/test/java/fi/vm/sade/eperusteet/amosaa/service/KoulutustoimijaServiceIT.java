@@ -137,7 +137,7 @@ public class KoulutustoimijaServiceIT extends AbstractIntegrationTest {
     @Test
     @Rollback
     public void testKoulutustoimijaHaku() {
-        PageRequest p = new PageRequest(0, 10);
+        PageRequest p = PageRequest.of(0, 10);
         KoulutustoimijaQueryDto pquery = new KoulutustoimijaQueryDto();
         Page<KoulutustoimijaJulkinenDto> julkisetToimijat = koulutustoimijaService.findKoulutustoimijat(p, pquery);
         assertThat(julkisetToimijat).isEmpty();
@@ -174,7 +174,7 @@ public class KoulutustoimijaServiceIT extends AbstractIntegrationTest {
             opetussuunnitelmaService.updateTila(getKoulutustoimijaId(), ops.getId(), Tila.JULKAISTU, false);
         }
 
-        PageRequest p = new PageRequest(0, 10);
+        PageRequest p = PageRequest.of(0, 10);
         KoulutustoimijaQueryDto pquery = new KoulutustoimijaQueryDto();
 
         Page<KoulutustoimijaJulkinenDto> julkisetToimijat = koulutustoimijaService.findKoulutustoimijat(p, pquery);
@@ -210,7 +210,7 @@ public class KoulutustoimijaServiceIT extends AbstractIntegrationTest {
             opetussuunnitelmaService.updateTila(getKoulutustoimijaId(), ops.getId(), Tila.JULKAISTU, false);
         }
 
-        PageRequest p = new PageRequest(0, 10);
+        PageRequest p = PageRequest.of(0, 10);
         KoulutustoimijaQueryDto pquery = new KoulutustoimijaQueryDto();
 
         koulutustoimijaService.findKoulutustoimijat(p, pquery);
@@ -241,7 +241,7 @@ public class KoulutustoimijaServiceIT extends AbstractIntegrationTest {
     	createOpetussuunnitelmaJulkaistu();    	
     	updateKoulutustoimijaLokalisointiNimet(ImmutableMap.of(Kieli.FI, "testijarjestys3"));
     	
-    	PageRequest p = new PageRequest(0, 10);
+    	PageRequest p = PageRequest.of(0, 10);
         KoulutustoimijaQueryDto pquery = new KoulutustoimijaQueryDto();
         
         Page<KoulutustoimijaJulkinenDto> julkisetToimijat = koulutustoimijaService.findKoulutustoimijat(p, pquery);

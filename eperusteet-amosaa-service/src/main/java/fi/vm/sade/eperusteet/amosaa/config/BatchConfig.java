@@ -1,4 +1,4 @@
-package fi.vm.sade.eperusteet.amosaa.service.config;
+package fi.vm.sade.eperusteet.amosaa.config;
 
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Julkaisu;
 import javax.sql.DataSource;

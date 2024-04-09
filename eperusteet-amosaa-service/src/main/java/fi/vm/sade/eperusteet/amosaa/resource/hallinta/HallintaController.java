@@ -9,7 +9,7 @@ import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaSer
 import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
-@RequestMapping("/hallinta")
+@RequestMapping("/api/hallinta")
 @ApiIgnore
 public class HallintaController {
 

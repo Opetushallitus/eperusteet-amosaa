@@ -234,7 +234,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
         uusiViite.setOwner(parentViite.getOwner());
         viiteDto.setTekstiKappale(tekstiKappaleService.add(opsId, uusiViite, viiteDto.getTekstiKappale()));
         uusiViite.setVanhempi(parentViite);
-        parentViite.getLapset().add(0, uusiViite);
+        parentViite.getLapset().add(uusiViite);
 
         switch (uusiViite.getTyyppi()) {
             case TOSARYHMA:
@@ -560,7 +560,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
 
     @Override
     public <T> Page<T> getSisaltoviitteetWithQuery(Long ktId, SisaltoviiteQueryDto query, Class<T> tyyppi) {
-        Pageable pageable = new PageRequest(query.getSivu(), query.getSivukoko(), new Sort(Sort.Direction.fromString(query.isSortDesc() ? "DESC" : "ASC"), "nimi.teksti"));
+        Pageable pageable = PageRequest.of(query.getSivu(), query.getSivukoko(), Sort.by(Sort.Direction.fromString(query.isSortDesc() ? "DESC" : "ASC"), "nimi.teksti"));
         return repository.findAllWithPagination(
                 ktId,
                 query.getTyyppi(),

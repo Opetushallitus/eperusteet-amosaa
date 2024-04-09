@@ -20,8 +20,7 @@ import java.util.List;
 
 import fi.vm.sade.eperusteet.amosaa.domain.Termi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
-import fi.vm.sade.eperusteet.amosaa.repository.version.JpaWithVersioningRepository;
-import org.springframework.data.jpa.repository.JpaRepository;
+import fi.vm.sade.eperusteet.amosaa.domain.liite.version.JpaWithVersioningRepository;
 import org.springframework.stereotype.Repository;
 
 /**

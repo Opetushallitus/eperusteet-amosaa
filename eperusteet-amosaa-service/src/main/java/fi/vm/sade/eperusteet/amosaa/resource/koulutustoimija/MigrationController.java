@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
-@RequestMapping("/migrate")
+@RequestMapping("/api/migrate")
 @InternalApi
 public class MigrationController {
 

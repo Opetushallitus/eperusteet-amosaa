@@ -67,7 +67,7 @@ public class OhjeServiceImpl implements OhjeService {
 
     @Override
     public void removeOhje(Long id) {
-        repository.delete(id);
+        repository.deleteById(id);
     }
 
 }

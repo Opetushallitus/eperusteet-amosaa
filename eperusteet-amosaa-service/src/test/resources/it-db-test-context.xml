@@ -95,7 +95,7 @@
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>
 
-    <jpa:repositories base-package="fi.vm.sade.eperusteet.amosaa.repository" factory-class="fi.vm.sade.eperusteet.amosaa.repository.version.JpaWithVersioningRepositoryFactoryBean" />
+    <jpa:repositories base-package="fi.vm.sade.eperusteet.amosaa.repository" factory-class="fi.vm.sade.eperusteet.amosaa.domain.liite.version.JpaWithVersioningRepositoryFactoryBean" />
 
     <bean id="testPermissionEvaluator" class="fi.vm.sade.eperusteet.amosaa.service.util.TestPermissionEvaluator"/>
 

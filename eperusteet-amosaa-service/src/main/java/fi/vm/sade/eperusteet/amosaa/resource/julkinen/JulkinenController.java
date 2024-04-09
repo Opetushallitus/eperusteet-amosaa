@@ -32,6 +32,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -43,7 +44,7 @@ import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
-@RequestMapping("/julkinen")
+@RequestMapping("/api/julkinen")
 @Api(value = "julkinen")
 public class JulkinenController {
 
@@ -113,7 +114,7 @@ public class JulkinenController {
             @ApiIgnore final OpetussuunnitelmaQueryDto pquery
     ) {
         // Oletuksena älä palauta pohjia
-        PageRequest p = new PageRequest(pquery.getSivu(), Math.min(pquery.getSivukoko(), 100));
+        PageRequest p = PageRequest.of(pquery.getSivu(), Math.min(pquery.getSivukoko(), 100));
         return opsService.findOpetussuunnitelmat(p, pquery);
     }
 
@@ -166,7 +167,7 @@ public class JulkinenController {
             @ApiIgnore final KoulutustoimijaQueryDto pquery
     ) {
         // Oletuksena älä palauta pohjia
-        PageRequest p = new PageRequest(pquery.getSivu(), Math.min(pquery.getSivukoko(), 1000));
+        PageRequest p = PageRequest.of(pquery.getSivu(), Math.min(pquery.getSivukoko(), 1000));
         return ktService.findKoulutustoimijat(p, pquery);
     }
 
@@ -222,7 +223,7 @@ public class JulkinenController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
-    @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/dokumentti", method = RequestMethod.GET)
+    @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/dokumentti", method = RequestMethod.GET, produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<Object> getDokumentti(@ApiIgnore @ModelAttribute("ktId") final Long ktId,
                                                 @PathVariable final Long opsId,
                                                 @RequestParam(defaultValue = "fi") final String kieli,

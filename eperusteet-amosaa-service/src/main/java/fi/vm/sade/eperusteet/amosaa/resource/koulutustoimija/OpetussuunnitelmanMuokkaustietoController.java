@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/koulutustoimijat/{ktId}/opetussuunnitelma/{opsId}/muokkaustieto")
+@RequestMapping("/api/koulutustoimijat/{ktId}/opetussuunnitelma/{opsId}/muokkaustieto")
 @InternalApi
 @Api("Muokkaustieto")
 public class OpetussuunnitelmanMuokkaustietoController {

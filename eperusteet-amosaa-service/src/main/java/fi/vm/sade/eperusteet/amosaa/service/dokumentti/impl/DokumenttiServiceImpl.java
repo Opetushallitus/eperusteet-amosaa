@@ -243,7 +243,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 
     @Override
     public void updateDokumenttiPdfData(byte[] data, Long dokumenttiId) {
-        Dokumentti dokumentti = dokumenttiRepository.findById(dokumenttiId);
+        Dokumentti dokumentti = dokumenttiRepository.findById(dokumenttiId).orElseThrow();
         dokumentti.setData(data);
         dokumentti.setTila(DokumenttiTila.VALMIS);
         dokumentti.setValmistumisaika(new Date());
@@ -253,7 +253,7 @@ public class DokumenttiServiceImpl implements DokumenttiService {
 
     @Override
     public void updateDokumenttiTila(DokumenttiTila tila, Long dokumenttiId) {
-        Dokumentti dokumentti = dokumenttiRepository.findById(dokumenttiId);
+        Dokumentti dokumentti = dokumenttiRepository.findById(dokumenttiId).orElseThrow();
         dokumentti.setTila(tila);
         dokumenttiRepository.save(dokumentti);
     }

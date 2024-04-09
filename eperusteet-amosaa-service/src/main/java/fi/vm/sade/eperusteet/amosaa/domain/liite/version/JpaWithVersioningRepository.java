@@ -13,7 +13,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * European Union Public Licence for more details.
  */
-package fi.vm.sade.eperusteet.amosaa.repository.version;
+package fi.vm.sade.eperusteet.amosaa.domain.liite.version;
 
 import fi.vm.sade.eperusteet.amosaa.domain.revision.Revision;
 
@@ -28,6 +28,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 @NoRepositoryBean
 public interface JpaWithVersioningRepository<T, ID extends Serializable> extends JpaRepository<T, ID> {
+
+    default T findOne(ID id) {
+        return findById(id).orElse(null);
+    }
+
+    default void delete(ID id) {
+        deleteById(id);
+    }
 
     List<Revision> getRevisions(final ID id);
 

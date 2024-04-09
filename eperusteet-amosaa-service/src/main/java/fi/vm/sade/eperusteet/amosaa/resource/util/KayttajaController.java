@@ -39,7 +39,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author jhyoty
  */
 @RestController
-@RequestMapping("/kayttaja")
+@RequestMapping("/api/kayttaja")
 @Api(value = "kayttaja")
 @ApiIgnore
 public class KayttajaController {

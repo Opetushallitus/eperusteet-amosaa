@@ -30,7 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
-@RequestMapping("/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/dokumentti")
+@RequestMapping("/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/dokumentti")
 @Api(value = "dokumentit")
 @InternalApi
 public class DokumenttiController extends KoulutustoimijaIdGetterAbstractController {

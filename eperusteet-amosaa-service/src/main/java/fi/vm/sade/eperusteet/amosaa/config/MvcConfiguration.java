@@ -13,13 +13,16 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * European Union Public Licence for more details.
  */
-package fi.vm.sade.eperusteet.amosaa.resource.config;
+package fi.vm.sade.eperusteet.amosaa.config;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.AbstractRakenneOsaDto;
+import fi.vm.sade.eperusteet.amosaa.resource.config.AbstractRakenneOsaDeserializer;
+import fi.vm.sade.eperusteet.amosaa.resource.config.MappingModule;
+import fi.vm.sade.eperusteet.amosaa.resource.config.ReferenceNamingStrategy;
 import fi.vm.sade.eperusteet.amosaa.resource.util.CacheHeaderInterceptor;
 import fi.vm.sade.eperusteet.amosaa.resource.util.LoggingInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,12 +42,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * @author jhyoty
- */
 @Configuration
-@EnableWebMvc
-public class MvcConfiguration extends WebMvcConfigurerAdapter {
+public class MvcConfiguration implements WebMvcConfigurer {
 
     @Autowired
     EntityManagerFactory emf;
@@ -55,10 +54,9 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter {
     }
 
     @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/index.html").addResourceLocations("/index.html");
-        registry.addResourceHandler("/internal.html").addResourceLocations("/internal.html");
-        super.addResourceHandlers(registry);
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addViewController("/ui/").setViewName("forward:/ui/index.html");
+        registry.addRedirectViewController("/ui", "/ui/");
     }
 
     @Override
@@ -74,7 +72,6 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new LoggingInterceptor());
         registry.addInterceptor(new CacheHeaderInterceptor());
-        super.addInterceptors(registry);
     }
 
     @Bean

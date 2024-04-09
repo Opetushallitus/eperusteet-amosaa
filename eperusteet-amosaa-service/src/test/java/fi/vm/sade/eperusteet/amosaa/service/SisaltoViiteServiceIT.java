@@ -134,8 +134,8 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
         sisaltoViiteService.updateSisaltoViite(getKoulutustoimijaId(), ops.getId(), added.getId(), added);
 
         assertThat(added)
-                .extracting("tosa.toteutukset")
-                .containsExactly(toteutukset);
+                .extracting(SisaltoViiteDto::getTosa).extracting(TutkinnonosaDto::getToteutukset)
+                .isEqualTo(toteutukset);
 
         assertThat(added.getTosa().getToteutukset().get(0).getVapaat())
                 .extracting(vapaa -> vapaa.getNimi().get(Kieli.FI), vapaa -> vapaa.getTeksti().get(Kieli.FI))
@@ -217,7 +217,7 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
         SisaltoViiteDto.Matala root = sisaltoViiteService.getSisaltoRoot(getKoulutustoimijaId(), ops.getId());
         SisaltoViiteDto.Matala added = sisaltoViiteService.addSisaltoViite(getKoulutustoimijaId(), ops.getId(), root.getId(), createSisalto());
         SisaltoViiteRakenneDto rakenne = sisaltoViiteService.getRakenne(getKoulutustoimijaId(), ops.getId());
-        assertThat(rakenne.getLapset().get(0)).hasFieldOrPropertyWithValue("id", added.getId());
+        assertThat(rakenne.getLapset().get(rakenne.getLapset().size() - 1)).hasFieldOrPropertyWithValue("id", added.getId());
 
         int lastIdx = rakenne.getLapset().size() - 1;
         SisaltoViiteRakenneDto a = rakenne.getLapset().get(0);
@@ -227,7 +227,7 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
         sisaltoViiteService.reorderSubTree(getKoulutustoimijaId(), ops.getId(), root.getId(), rakenne);
         rakenne = sisaltoViiteService.getRakenne(getKoulutustoimijaId(), ops.getId());
         assertThat(rakenne.getLapset().get(0)).hasFieldOrPropertyWithValue("id", b.getId());
-        assertThat(rakenne.getLapset().get(lastIdx)).hasFieldOrPropertyWithValue("id", added.getId());
+        assertThat(rakenne.getLapset().get(lastIdx)).hasFieldOrPropertyWithValue("id", a.getId());
     }
 
     @Test
