@@ -62,4 +62,10 @@ public class MaintenanceController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    @RequestMapping(value = "/paivita/koulutustoimija/oppilaitostyyppi", method = GET)
+    public ResponseEntity paivitaKoulutustoimijaOppilaitostyypit() {
+        maintenanceService.paivitaKoulutustoimijaOppilaitostyypi();
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
 }

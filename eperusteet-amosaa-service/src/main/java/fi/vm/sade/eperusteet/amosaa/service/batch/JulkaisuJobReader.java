@@ -7,6 +7,8 @@ import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.Opetussuunnitelma
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import fi.vm.sade.eperusteet.amosaa.service.util.MaintenanceJulkaisuTarkistus;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.batch.core.configuration.annotation.StepScope;
@@ -30,8 +32,8 @@ public class JulkaisuJobReader implements ItemReader<Long> {
 
     private List<Long> ids = null;
 
-    @Value("#{jobParameters['julkaiseKaikki']}")
-    private Boolean julkaiseKaikki;
+    @Value("#{jobParameters['julkaisutarkistus']}")
+    private String julkaisutarkistus;
 
     @Value("#{jobParameters['opsTyyppi']}")
     private String opsTyyppi;
@@ -58,13 +60,17 @@ public class JulkaisuJobReader implements ItemReader<Long> {
         List<Opetussuunnitelma> opetussuunnitelmat;
         if (koulutustyypit != null) {
             opetussuunnitelmat = opetussuunnitelmaRepository
-                    .findJulkaistutByTyyppi(OpsTyyppi.of(opsTyyppi), Arrays.stream(koulutustyypit.split(",")).map(KoulutusTyyppi::of).collect(Collectors.toSet()));
+                    .findByTyyppiAndKoulutustyyppi(OpsTyyppi.of(opsTyyppi), Arrays.stream(koulutustyypit.split(",")).map(KoulutusTyyppi::of).collect(Collectors.toSet()));
         } else {
-            opetussuunnitelmat = opetussuunnitelmaRepository.findJulkaistutByTyyppi(OpsTyyppi.of(opsTyyppi));
+            opetussuunnitelmat = opetussuunnitelmaRepository.findByTyyppi(OpsTyyppi.of(opsTyyppi));
         }
 
+        MaintenanceJulkaisuTarkistus maintenanceJulkaisuTarkistus = MaintenanceJulkaisuTarkistus.valueOf(julkaisutarkistus.toUpperCase());
+
         ids = opetussuunnitelmat.stream()
-                .filter(peruste -> julkaiseKaikki || CollectionUtils.isEmpty(peruste.getJulkaisut()))
+                .filter(peruste -> maintenanceJulkaisuTarkistus.equals(MaintenanceJulkaisuTarkistus.KAIKKI)
+                        || (CollectionUtils.isEmpty(peruste.getJulkaisut()) && maintenanceJulkaisuTarkistus.equals(MaintenanceJulkaisuTarkistus.JULKAISEMATTOMAT))
+                        || (!CollectionUtils.isEmpty(peruste.getJulkaisut()) && maintenanceJulkaisuTarkistus.equals(MaintenanceJulkaisuTarkistus.JULKAISTUT)))
                 .map(Opetussuunnitelma::getId)
                 .collect(Collectors.toList());
     }

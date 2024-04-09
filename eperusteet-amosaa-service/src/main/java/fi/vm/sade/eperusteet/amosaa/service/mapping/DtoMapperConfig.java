@@ -131,6 +131,14 @@ public class DtoMapperConfig {
                         } catch (RestClientException | AccessDeniedException ex) {
                             logger.error(Throwables.getStackTraceAsString(ex));
                         }
+
+                        if (source.getOppilaitosTyyppiKoodiUri() != null) {
+                            KoodistoKoodiDto koodistokoodi = koodistoClient.getByUri(source.getOppilaitosTyyppiKoodiUri());
+                            if (koodistokoodi != null) {
+                                Map<String, String> lokalisoitu = Arrays.stream(koodistokoodi.getMetadata()).collect(Collectors.toMap(KoodistoMetadataDto::getKieli, KoodistoMetadataDto::getNimi));
+                                target.setOppilaitostyyppi(new LokalisoituTekstiDto(lokalisoitu));
+                            }
+                        }
                     }
                 })
                 .register();
