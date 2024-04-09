@@ -20,4 +20,6 @@ public interface MaintenanceService {
     @PreAuthorize("hasPermission(null, 'oph', 'HALLINTA')")
     void poistaJulkaisut(Long opsId);
 
+    @PreAuthorize("hasPermission(null, 'oph', 'HALLINTA')")
+    void paivitaKoulutustoimijaOppilaitostyypi();
 }
