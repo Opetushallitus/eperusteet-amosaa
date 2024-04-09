@@ -7,7 +7,7 @@ import org.apache.commons.validator.routines.EmailValidator;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.safety.Whitelist;
+import org.jsoup.safety.Safelist;
 
 import java.util.Map;
 
@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 
 public abstract class ValidHtmlValidatorBase {
 
-    private Whitelist whitelist;
+    private Safelist whitelist;
     private final UrlValidator urlValidator = new UrlValidator(UrlValidator.ALLOW_LOCAL_URLS);
     private final EmailValidator emailValidator = EmailValidator.getInstance(true, true);
 

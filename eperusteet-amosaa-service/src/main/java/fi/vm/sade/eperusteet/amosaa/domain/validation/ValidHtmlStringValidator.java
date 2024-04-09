@@ -1,14 +1,14 @@
 package fi.vm.sade.eperusteet.amosaa.domain.validation;
 
 import org.jsoup.Jsoup;
-import org.jsoup.safety.Whitelist;
+import org.jsoup.safety.Safelist;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 public class ValidHtmlStringValidator implements ConstraintValidator<ValidHtml, String> {
 
-    private Whitelist whitelist;
+    private Safelist whitelist;
 
     @Override
     public void initialize(ValidHtml constraintAnnotation) {
