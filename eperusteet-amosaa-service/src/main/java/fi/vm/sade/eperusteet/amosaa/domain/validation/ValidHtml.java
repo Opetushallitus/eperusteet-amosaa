@@ -1,6 +1,6 @@
 package fi.vm.sade.eperusteet.amosaa.domain.validation;
 
-import org.jsoup.safety.Whitelist;
+import org.jsoup.safety.Safelist;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -27,24 +27,24 @@ public @interface ValidHtml {
     Class<? extends Payload>[] payload() default {};
 
     enum WhitelistType {
-        NONE(Whitelist.none()),
-        MINIMAL(Whitelist.none().addTags("p")),
-        SIMPLIFIED(Whitelist.none().addTags("p", "strong", "em", "i", "s", "ol", "li", "ul")),
+        NONE(Safelist.none()),
+        MINIMAL(Safelist.none().addTags("p")),
+        SIMPLIFIED(Safelist.none().addTags("p", "strong", "em", "i", "s", "ol", "li", "ul")),
         NORMAL(getNormalWhiteList()),
         NORMAL_PDF(getNormalWhiteList().removeAttributes("a", "routenode"));
 
-        private final Whitelist whitelist;
+        private final Safelist whitelist;
 
-        WhitelistType(Whitelist whitelist) {
+        WhitelistType(Safelist whitelist) {
             this.whitelist = whitelist;
         }
 
-        public Whitelist getWhitelist() {
+        public Safelist getWhitelist() {
             return whitelist;
         }
 
-        private static Whitelist getNormalWhiteList() {
-            return Whitelist.none()
+        private static Safelist getNormalWhiteList() {
+            return Safelist.none()
                     .addTags("p", "span", "strong", "em", "i", "s", "ol", "li", "ul", "blockquote", "table", "caption",
                             "tbody", "tr", "td", "hr", "pre", "th", "thead", "a", "abbr", "comment", "figcaption", "br",
                             "dt", "dl", "dd")
