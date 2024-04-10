@@ -22,7 +22,7 @@
         </encoder>
     </appender>
     <appender name="AUDIT" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${user.home}/logs/auditlog_eperusteet_ylops.log</file>
+        <file>${user.home}/logs/auditlog_eperusteet_amosaa.log</file>
         <append>true</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
             <fileNamePattern>${user.home}/logs/auditlog_eperusteet_amosaa.%i.log</fileNamePattern>
