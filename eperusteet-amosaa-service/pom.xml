@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.17</version>
+        <version>2.7.18</version>
         <relativePath/>
     </parent>
     <artifactId>eperusteet-amosaa-service</artifactId>
@@ -14,7 +14,7 @@
         <apache.httpclient.version>4.5.13</apache.httpclient.version>
         <hibernate.jpamodel.version>5.3.6.Final</hibernate.jpamodel.version>
         <spring.session.jdbc.version>2.4.3</spring.session.jdbc.version>
-        <jackson.version>2.15.2</jackson.version>
+        <jackson.version>2.15.4</jackson.version>
         <eperusteet-amosaa.devdb.jdbcurl>jdbc:postgresql://localhost:5432/${eperusteet-amosaa.devdb.user}</eperusteet-amosaa.devdb.jdbcurl>
         <eperusteet-amosaa.ittestdb.jdbcurl>jdbc:postgresql://localhost:5432/${eperusteet-amosaa.ittestdb.user}</eperusteet-amosaa.ittestdb.jdbcurl>
         <jsoup.version>1.10.1</jsoup.version>
@@ -23,7 +23,7 @@
         <metrics.version>4.2.18</metrics.version>
         <schema.file>${project.basedir}/target/schema.ddl</schema.file>
         <hibernate.export.type>CREATE</hibernate.export.type>
-        <flyway.version>5.2.4</flyway.version>
+        <flyway.version>9.22.3</flyway.version>
         <eperusteet.amosaa.resources>fi.vm.sade.eperusteet.amosaa.resource</eperusteet.amosaa.resources>
         <swagger-maven-plugin-version>3.1.7</swagger-maven-plugin-version>
         <java.release.version>11</java.release.version>
@@ -136,6 +136,11 @@
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-joda</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-toml</artifactId>
             <version>${jackson.version}</version>
         </dependency>
         <dependency>
@@ -598,25 +603,6 @@
                         <exclude>**/*IT.java</exclude>
                     </excludes>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.flywaydb</groupId>
-                <artifactId>flyway-maven-plugin</artifactId>
-                <version>${flyway.version}</version>
-                <configuration>
-                    <url>${eperusteet-amosaa.devdb.jdbcurl}</url>
-                    <user>${eperusteet-amosaa.devdb.user}</user>
-                    <password>${eperusteet-amosaa.devdb.password}</password>
-                    <outOfOrder>true</outOfOrder>
-                    <table>schema_version</table>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.postgresql</groupId>
-                        <artifactId>postgresql</artifactId>
-                        <version>${postgresql.version}</version>
-                    </dependency>
-                </dependencies>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

@@ -82,6 +82,7 @@ public class DefaultConfigs {
         return Flyway.configure()
                 .dataSource(dataSource)
                 .outOfOrder(true)
+                .table("schema_version")
                 .load();
     }
 
