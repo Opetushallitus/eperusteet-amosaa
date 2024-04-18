@@ -49,6 +49,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import static fi.vm.sade.eperusteet.amosaa.service.util.Nulls.assertExists;
 
@@ -101,6 +102,10 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
         Koulutustoimija uusiKoulutustoimija = new Koulutustoimija();
         uusiKoulutustoimija.setNimi(LokalisoituTeksti.of(organisaatio.get("nimi")));
         uusiKoulutustoimija.setOrganisaatio(kOid);
+
+        if (!ObjectUtils.isEmpty(organisaatio.get("oppilaitosTyyppiUri"))) {
+            uusiKoulutustoimija.setOppilaitosTyyppiKoodiUri(organisaatio.get("oppilaitosTyyppiUri").asText().replaceAll("#[0-9]+", ""));
+        }
 
         if (organisaatio.get("tyypit") != null && organisaatio.get("tyypit").isArray()) {
             for (final JsonNode objNode : organisaatio.get("tyypit")) {

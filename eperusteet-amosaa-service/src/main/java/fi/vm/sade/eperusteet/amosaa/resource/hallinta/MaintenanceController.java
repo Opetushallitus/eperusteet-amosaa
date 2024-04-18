@@ -22,7 +22,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @InternalApi
 @RestController
-@RequestMapping(value = "/maintenance")
+@RequestMapping(value = "/api/maintenance")
 @Profile("!test")
 @Api("Maintenance")
 @Slf4j
@@ -54,6 +54,12 @@ public class MaintenanceController {
     @RequestMapping(value = "/poistajulkaisut/{opsId}", method = GET)
     public ResponseEntity poistaJulkaisut(@PathVariable final Long opsId) {
         maintenanceService.poistaJulkaisut(opsId);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @RequestMapping(value = "/paivita/koulutustoimija/oppilaitostyyppi", method = GET)
+    public ResponseEntity paivitaKoulutustoimijaOppilaitostyypit() {
+        maintenanceService.paivitaKoulutustoimijaOppilaitostyypi();
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

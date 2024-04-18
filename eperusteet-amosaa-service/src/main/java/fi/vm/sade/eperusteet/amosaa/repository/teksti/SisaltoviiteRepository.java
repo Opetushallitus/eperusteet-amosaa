@@ -7,7 +7,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
-import fi.vm.sade.eperusteet.amosaa.repository.version.JpaWithVersioningRepository;
+import fi.vm.sade.eperusteet.amosaa.domain.liite.version.JpaWithVersioningRepository;
 
 import java.util.List;
 

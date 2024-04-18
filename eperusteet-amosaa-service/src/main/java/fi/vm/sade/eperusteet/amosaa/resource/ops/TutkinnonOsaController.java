@@ -23,7 +23,7 @@ import java.util.List;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @RestController
-@RequestMapping("/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tutkinnonosat")
+@RequestMapping("/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tutkinnonosat")
 @InternalApi
 @Api(value = "Tutkinnonosa")
 public class TutkinnonOsaController extends KoulutustoimijaIdGetterAbstractController {

@@ -7,7 +7,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
-import fi.vm.sade.eperusteet.amosaa.repository.version.JpaWithVersioningRepository;
+import fi.vm.sade.eperusteet.amosaa.domain.liite.version.JpaWithVersioningRepository;
 import fi.vm.sade.eperusteet.amosaa.service.util.Pair;
 import java.util.Set;
 import org.springframework.data.domain.Page;
@@ -172,6 +172,21 @@ public interface OpetussuunnitelmaRepository extends JpaWithVersioningRepository
             "AND tila != 'POISTETTU' " +
             "AND (o.julkaisut IS NOT EMPTY OR o.tila = 'JULKAISTU')")
     List<Opetussuunnitelma> findJulkaistutByTyyppi(@Param("tyyppi") OpsTyyppi tyyppi);
+
+    @Query(value = "SELECT o " +
+            "FROM Opetussuunnitelma o " +
+            "LEFT OUTER JOIN o.peruste p " +
+            "WHERE o.tyyppi = :tyyppi " +
+            "AND tila != 'POISTETTU' " +
+            "AND (p.koulutustyyppi IN (:koulutustyyppi) OR o.koulutustyyppi IN (:koulutustyyppi))")
+    List<Opetussuunnitelma> findByTyyppiAndKoulutustyyppi(@Param("tyyppi") OpsTyyppi tyyppi, @Param("koulutustyyppi") Set<KoulutusTyyppi> koulutusTyyppi);
+
+    @Query(value = "SELECT o " +
+            "FROM Opetussuunnitelma o " +
+            "LEFT OUTER JOIN o.peruste p " +
+            "WHERE o.tyyppi = :tyyppi " +
+            "AND tila != 'POISTETTU'")
+    List<Opetussuunnitelma> findByTyyppi(@Param("tyyppi") OpsTyyppi tyyppi);
 
     @Query(value = "SELECT DISTINCT o FROM Opetussuunnitelma o " +
             "LEFT JOIN o.peruste p " +

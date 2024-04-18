@@ -55,7 +55,7 @@ public class KoodistoClientImpl implements KoodistoClient {
     @Value("${koodisto.service.url:https://virkailija.opintopolku.fi/koodisto-service}")
     private String koodistoServiceUrl;
 
-    @Value("${koodisto.service.internal.url:${koodistoServiceUrl: ''}}")
+    @Value("${koodisto.service.internal.url:${koodisto.service.url:''}}")
     private String koodistoServiceInternalUrl;
 
     private static final String KOODISTO_API = "/rest/json/";

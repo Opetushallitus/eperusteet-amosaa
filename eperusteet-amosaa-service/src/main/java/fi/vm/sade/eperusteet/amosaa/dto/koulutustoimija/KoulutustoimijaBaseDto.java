@@ -7,8 +7,10 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class KoulutustoimijaBaseDto {
-    Long id;
-    String organisaatio;
-    LokalisoituTekstiDto nimi;
+    private Long id;
+    private String organisaatio;
+    private LokalisoituTekstiDto nimi;
     private boolean organisaatioRyhma;
+    private LokalisoituTekstiDto oppilaitostyyppi;
+    private String oppilaitosTyyppiKoodiUri;
 }

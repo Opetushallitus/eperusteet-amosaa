@@ -31,7 +31,7 @@ public interface JulkaisuRepository extends JpaRepository<Julkaisu, Long> {
             "       OR LOWER(nimi->>:kieli) LIKE LOWER(CONCAT('%',:nimi,'%'))" +
             "       OR LOWER(koulutustoimija->'nimi'->>:kieli) LIKE LOWER(CONCAT('%',:nimi,'%'))) " +
             "   AND cast(koulutustoimija->>'organisaatioRyhma' as boolean) = false " +
-            "   AND (:oppilaitosTyyppiKoodiUri = '' OR :oppilaitosTyyppiKoodiUri = data.\"oppilaitosTyyppiKoodiUri\")" +
+            "   AND (:oppilaitosTyyppiKoodiUri = '' OR koulutustoimija->>'oppilaitosTyyppiKoodiUri' = :oppilaitosTyyppiKoodiUri)" +
             "   AND tyyppi IN (:tyyppi) " +
             "   AND (:organisaatio = '' OR koulutustoimija->>'organisaatio' = :organisaatio)" +
             "   AND ((:perusteId = 0) OR (:perusteId IS NULL) " +
@@ -48,7 +48,7 @@ public interface JulkaisuRepository extends JpaRepository<Julkaisu, Long> {
             "            (:jotpattomat = false AND jotpatyyppi IN (:jotpatyypit)) " +
             "            OR (:jotpattomat = true AND (jotpatyyppi IS NULL OR jotpatyyppi IN (:jotpatyypit)))))" +
             "   AND (:kieli LIKE '' OR LOWER(CAST(julkaisukielet as text)) LIKE LOWER(CONCAT('%', :kieli,'%'))) " +
-            "   order by nimi->>:kieli asc, ?#{#pageable} " +
+            "   order by nimi->>:kieli asc " +
             ") t";
 
     @Query(nativeQuery = true,

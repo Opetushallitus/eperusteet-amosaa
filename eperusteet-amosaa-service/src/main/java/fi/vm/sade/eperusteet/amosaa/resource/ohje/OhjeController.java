@@ -22,7 +22,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 @RestController
-@RequestMapping("/ohjeet")
+@RequestMapping("/api/ohjeet")
 @InternalApi
 @Api("Ohjeet")
 public class OhjeController {

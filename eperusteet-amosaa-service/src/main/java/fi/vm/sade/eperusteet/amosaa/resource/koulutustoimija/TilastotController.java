@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/tilastot")
+@RequestMapping("/api/tilastot")
 @Api(value = "tilastot")
 @InternalApi
 public class TilastotController {

@@ -48,7 +48,7 @@ import springfox.documentation.annotations.ApiIgnore;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @RestController
-@RequestMapping("/koulutustoimijat/{ktId}/opetussuunnitelmat")
+@RequestMapping("/api/koulutustoimijat/{ktId}/opetussuunnitelmat")
 @Api(value = "opetussuunnitelmat")
 @InternalApi
 public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstractController {
@@ -76,7 +76,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @ApiIgnore OpsHakuDto query
     ) {
-        PageRequest pageRequest = new PageRequest(query.getSivu(), Math.min(query.getSivukoko(), 25));
+        PageRequest pageRequest = PageRequest.of(query.getSivu(), Math.min(query.getSivukoko(), 25));
         return service.getOpetussuunnitelmat(ktId, pageRequest, query);
     }
 
@@ -88,7 +88,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @ApiIgnore OpsHakuDto query
     ) {
-        PageRequest pageRequest = new PageRequest(query.getSivu(), Math.min(query.getSivukoko(), 25));
+        PageRequest pageRequest = PageRequest.of(query.getSivu(), Math.min(query.getSivukoko(), 25));
         return service.getOpetussuunnitelmat(ktId, pageRequest, query, OpetussuunnitelmaDto.class);
     }
 

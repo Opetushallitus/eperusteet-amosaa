@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/kayttaja")
+@RequestMapping("/api/kayttaja")
 @Api(value = "kayttajaoikeudet")
 @InternalApi
 public class KayttajaoikeusController {

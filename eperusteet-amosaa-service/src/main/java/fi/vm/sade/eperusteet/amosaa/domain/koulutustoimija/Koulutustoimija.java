@@ -79,6 +79,10 @@ public class Koulutustoimija extends AbstractAuditedEntity implements Serializab
     @Setter
     private boolean organisaatioRyhma = false;
 
+    @Getter
+    @Setter
+    private String oppilaitosTyyppiKoodiUri;
+
     public boolean isOph() {
         return SecurityUtil.OPH_OID.equals(this.organisaatio);
     }

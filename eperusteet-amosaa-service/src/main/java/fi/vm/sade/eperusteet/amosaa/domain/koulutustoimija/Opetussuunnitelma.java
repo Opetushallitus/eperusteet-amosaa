@@ -170,6 +170,7 @@ public class Opetussuunnitelma extends AbstractAuditedEntity implements Serializ
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "opetussuunnitelma", orphanRemoval = true)
     private Set<OpetussuunnitelmaAikataulu> opetussuunnitelmanAikataulut = new HashSet<>();
 
+    @Deprecated
     @Getter
     @Setter
     private String oppilaitosTyyppiKoodiUri;

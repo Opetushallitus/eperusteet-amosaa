@@ -72,7 +72,7 @@ public abstract class AbstractPermissionManager implements PermissionManager {
     }
 
     public List<Koulutustoimija> kayttajanKoulutustoimijat(PermissionEvaluator.RolePrefix rolePrefix) {
-        return koulutustoimijaRepository.findAll(kayttajanTietoService.koulutustoimijat(rolePrefix).stream().map(KoulutustoimijaBaseDto::getId).collect(Collectors.toList()));
+        return koulutustoimijaRepository.findAllById(kayttajanTietoService.koulutustoimijat(rolePrefix).stream().map(KoulutustoimijaBaseDto::getId).collect(Collectors.toList()));
     }
 
     @Transactional(readOnly = true)

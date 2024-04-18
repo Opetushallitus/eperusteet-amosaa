@@ -29,4 +29,9 @@ public class MaintenanceServiceMock implements MaintenanceService {
 
     }
 
+    @Override
+    public void paivitaKoulutustoimijaOppilaitostyypi() {
+
+    }
+
 }

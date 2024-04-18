@@ -62,6 +62,9 @@ public class TutkinnonosaToteutus extends AbstractAuditedEntity implements Seria
     @Setter
     @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @OrderColumn(name = "jnro")
+    @JoinTable(name = "tutkinnonosa_toteutus_vapaa_teksti",
+            joinColumns = @JoinColumn(name = "tutkinnonosa_toteutus_id"),
+            inverseJoinColumns = @JoinColumn(name = "vapaat_id"))
     private List<VapaaTeksti> vapaat = new ArrayList<>();
 
     @Getter

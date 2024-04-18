@@ -30,7 +30,7 @@ import springfox.documentation.annotations.ApiIgnore;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @RestController
-@RequestMapping("/ulkopuoliset")
+@RequestMapping("/api/ulkopuoliset")
 @InternalApi
 @Api("Ulkopuoliset")
 public class UlkopuolisetController {

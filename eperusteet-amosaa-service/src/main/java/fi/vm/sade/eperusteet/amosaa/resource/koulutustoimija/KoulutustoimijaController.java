@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
-@RequestMapping("/koulutustoimijat")
+@RequestMapping("/api/koulutustoimijat")
 @Api(value = "koulutustoimijat")
 @InternalApi
 public class KoulutustoimijaController extends KoulutustoimijaIdGetterAbstractController {

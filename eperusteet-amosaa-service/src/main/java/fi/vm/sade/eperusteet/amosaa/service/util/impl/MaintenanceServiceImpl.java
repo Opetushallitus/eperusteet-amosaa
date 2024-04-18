@@ -1,21 +1,25 @@
 package fi.vm.sade.eperusteet.amosaa.service.util.impl;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.MuokkausTapahtuma;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Julkaisu;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.JulkaisuData;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.JulkaisuRepository;
+import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.peruste.CachedPerusteRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.peruste.KoulutuskoodiRepository;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
+import fi.vm.sade.eperusteet.amosaa.service.external.OrganisaatioService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaMuokkaustietoService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.util.JsonMapper;
@@ -39,6 +43,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 
 @Service
 @Profile("!test")
@@ -78,6 +83,12 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 
     @Autowired
     private KoulutuskoodiRepository koulutuskoodiRepository;
+
+    @Autowired
+    private KoulutustoimijaRepository koulutustoimijaRepository;
+
+    @Autowired
+    private OrganisaatioService organisaatioService;
 
     @Deprecated
     @Override
@@ -162,6 +173,22 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 
         ops.setTila(Tila.LUONNOS);
         opetussuunnitelmaRepository.save(ops);
+    }
+
+    @Override
+    public void paivitaKoulutustoimijaOppilaitostyypi() {
+        koulutustoimijaRepository.findAll().forEach(kt -> {
+            JsonNode organisaatio = organisaatioService.getOrganisaatio(kt.getOrganisaatio());
+            if (organisaatio == null) {
+                return;
+            }
+
+            if (!ObjectUtils.isEmpty(organisaatio.get("oppilaitosTyyppiUri"))) {
+                kt.setOppilaitosTyyppiKoodiUri(organisaatio.get("oppilaitosTyyppiUri").asText().replaceAll("#[0-9]+", ""));
+            }
+
+            koulutustoimijaRepository.save(kt);
+        });
     }
 
 }

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/opetussuunnitelmat")
+@RequestMapping("/api/opetussuunnitelmat")
 @Api(value = "opetussuunnitelmat")
 @InternalApi
 public class OphController {

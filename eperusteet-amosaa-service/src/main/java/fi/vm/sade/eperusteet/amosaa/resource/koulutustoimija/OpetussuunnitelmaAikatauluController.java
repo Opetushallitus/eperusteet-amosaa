@@ -16,7 +16,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 @RestController
-@RequestMapping("/koulutustoimijat/{ktId}/opetussuunnitelma/{opsId}/aikataulu")
+@RequestMapping("/api/koulutustoimijat/{ktId}/opetussuunnitelma/{opsId}/aikataulu")
 @Api(value = "Aikataulut")
 @InternalApi
 public class OpetussuunnitelmaAikatauluController {

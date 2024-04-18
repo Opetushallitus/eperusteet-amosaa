@@ -1,4 +1,4 @@
-package fi.vm.sade.eperusteet.amosaa.service.config;
+package fi.vm.sade.eperusteet.amosaa.config;
 
 import fi.vm.sade.auditlog.ApplicationType;
 import fi.vm.sade.auditlog.Audit;

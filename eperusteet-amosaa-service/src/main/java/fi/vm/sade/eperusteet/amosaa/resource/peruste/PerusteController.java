@@ -28,7 +28,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
-@RequestMapping("/perusteet")
+@RequestMapping("/api/perusteet")
 @Api(value = "perusteet")
 @InternalApi
 public class PerusteController extends KoulutustoimijaIdGetterAbstractController {

@@ -53,7 +53,7 @@ public class OpetussuunnitelmaRepositoryImpl implements OpetussuunnitelmaCustomR
         TypedQuery<Long> countQuery = getCountQuery(queryDto);
         TypedQuery<Tuple> query = getQuery(queryDto);
         if (page != null) {
-            query.setFirstResult(page.getOffset());
+            query.setFirstResult(Long.valueOf(page.getOffset()).intValue());
             query.setMaxResults(page.getPageSize());
         }
         return new PageImpl<>(query.getResultList().stream()
@@ -174,7 +174,7 @@ public class OpetussuunnitelmaRepositoryImpl implements OpetussuunnitelmaCustomR
         TypedQuery<Long> countQuery = getCountQuery(queryDto);
         TypedQuery<Tuple> query = getQuery(queryDto);
         if (page != null) {
-            query.setFirstResult(page.getOffset());
+            query.setFirstResult(Long.valueOf(page.getOffset()).intValue());
             query.setMaxResults(page.getPageSize());
         }
 

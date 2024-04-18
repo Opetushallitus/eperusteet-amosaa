@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
-@RequestMapping("/koodisto")
+@RequestMapping("/api/koodisto")
 @InternalApi
 @ApiIgnore
 @Api(value = "Koodistot")

@@ -1,4 +1,19 @@
-package fi.vm.sade.eperusteet.amosaa.repository.version;
+/*
+ * Copyright (c) 2013 The Finnish Board of Education - Opetushallitus
+ *
+ * This program is free software: Licensed under the EUPL, Version 1.1 or - as
+ * soon as they will be approved by the European Commission - subsequent versions
+ * of the EUPL (the "Licence");
+ *
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at: http://ec.europa.eu/idabc/eupl
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * European Union Public Licence for more details.
+ */
+package fi.vm.sade.eperusteet.amosaa.domain.liite.version;
 
 import fi.vm.sade.eperusteet.amosaa.domain.revision.Revision;
 
@@ -13,6 +28,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 @NoRepositoryBean
 public interface JpaWithVersioningRepository<T, ID extends Serializable> extends JpaRepository<T, ID> {
+
+    default T findOne(ID id) {
+        return findById(id).orElse(null);
+    }
+
+    default void delete(ID id) {
+        deleteById(id);
+    }
 
     List<Revision> getRevisions(final ID id);
 

@@ -3,6 +3,7 @@ package fi.vm.sade.eperusteet.amosaa.resource.batch;
 import fi.vm.sade.eperusteet.amosaa.domain.batch.BatchStepExecution;
 import fi.vm.sade.eperusteet.amosaa.repository.batch.BatchStepExecutionRepository;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
+import fi.vm.sade.eperusteet.amosaa.service.util.MaintenanceJulkaisuTarkistus;
 import fi.vm.sade.eperusteet.amosaa.service.util.MaintenanceService;
 import io.swagger.annotations.Api;
 import java.util.HashMap;
@@ -22,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @RestController
-@RequestMapping("/batch")
+@RequestMapping("/api/batch")
 @InternalApi
 @Api("batch")
 public class BatchController {
@@ -42,14 +43,14 @@ public class BatchController {
     @RequestMapping(value = "/{job}", method = GET)
     public ResponseEntity<String> kaynnistaJob(
             @PathVariable final String job,
-            @RequestParam(value = "julkaisekaikki", required = false, defaultValue = "false") String julkaiseKaikki,
+            @RequestParam(value = "julkaisutarkistus", required = false, defaultValue = "JULKAISTUT") String julkaisutarkistus,
             @RequestParam(value = "koulutustyypit", required = false) final Set<String> koulutustyypit,
             @RequestParam(value = "opstyyppi", required = false, defaultValue = "ops") final String opsTyyppi) throws Exception {
 
         Map<String, String> parametrit = new HashMap<String, String>();
 
         if ("julkaisuJob".equals(job)) {
-            parametrit.put("julkaiseKaikki", julkaiseKaikki);
+            parametrit.put("julkaisutarkistus", julkaisutarkistus);
             parametrit.put("opsTyyppi", opsTyyppi);
             if (CollectionUtils.isNotEmpty(koulutustyypit)) {
                 parametrit.put("koulutustyypit", String.join(",", koulutustyypit));

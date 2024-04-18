@@ -23,11 +23,13 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Setter
 @Table(name = "liite")
+@NoArgsConstructor
 public class Liite implements Serializable {
 
     @Id
@@ -59,10 +61,6 @@ public class Liite implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "opetussuunnitelma_id"))
     @Getter
     private Set<Opetussuunnitelma> opetussuunnitelmat;
-
-    protected Liite() {
-        //JPA
-    }
 
     public Liite(String tyyppi, String nimi, Blob data) {
         this.id = UUID.randomUUID();

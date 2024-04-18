@@ -16,7 +16,7 @@ import springfox.documentation.annotations.ApiIgnore;
 import java.util.List;
 
 @RestController
-@RequestMapping("/arviointiasteikot")
+@RequestMapping("/api/arviointiasteikot")
 @Api(value = "Arviointiasteikot")
 @ApiIgnore
 public class ArviointiasteikkoController {

@@ -25,7 +25,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 @RestController
-@RequestMapping("/koulutustoimijat/{ktId}")
+@RequestMapping("/api/koulutustoimijat/{ktId}")
 @Api(value = "Tiedotteet", description = "Tiedotteiden hallinta")
 @InternalApi
 public class TiedoteController extends KoulutustoimijaIdGetterAbstractController {

@@ -11,12 +11,12 @@
   } ],
   "schemes" : [ "http", "https" ],
   "paths" : {
-    "/external/opetussuunnitelma/{koulutustoimijaId}/{opsId}" : {
+    "/api/external/opetussuunnitelma/{koulutustoimijaId}/{opsId}" : {
       "get" : {
         "tags" : [ "external" ],
         "summary" : "Opetussuunnitelman tietojen haku koulutustoimijan ja opetussuunnitelman id:llä",
         "description" : "",
-        "operationId" : "getPublicKtOpetussuunnitelma",
+        "operationId" : "getPublicOpetussuunnitelmaKoulutustoimija",
         "produces" : [ "application/json;charset=UTF-8" ],
         "parameters" : [ {
           "name" : "koulutustoimijaId",
@@ -43,7 +43,7 @@
         }
       }
     },
-    "/external/opetussuunnitelma/{opsId}" : {
+    "/api/external/opetussuunnitelma/{opsId}" : {
       "get" : {
         "tags" : [ "external" ],
         "summary" : "Opetussuunnitelman tietojen haku",
@@ -68,7 +68,7 @@
         }
       }
     },
-    "/external/opetussuunnitelma/{opsId}/**" : {
+    "/api/external/opetussuunnitelma/{opsId}/**" : {
       "get" : {
         "tags" : [ "external" ],
         "summary" : "Opetussuunnitelman tietojen haku tarkalla sisältörakenteella",
@@ -93,7 +93,7 @@
         }
       }
     },
-    "/external/opetussuunnitelmat" : {
+    "/api/external/opetussuunnitelmat" : {
       "get" : {
         "tags" : [ "external" ],
         "operationId" : "getPublicOpetussuunnitelmat",
@@ -194,7 +194,7 @@
         }
       }
     },
-    "/external/opintokokonaisuus/{koodiArvo}" : {
+    "/api/external/opintokokonaisuus/{koodiArvo}" : {
       "get" : {
         "tags" : [ "external" ],
         "summary" : "Opintokokonaisuuden haku opintokokonaisuuden koodin arvolla",
@@ -1862,6 +1862,14 @@
         },
         "koodi" : {
           "type" : "string"
+        },
+        "voimassaAlkuPvm" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "voimassaLoppuPvm" : {
+          "type" : "string",
+          "format" : "date-time"
         }
       }
     },
@@ -1932,7 +1940,13 @@
           "type" : "integer",
           "format" : "int32"
         },
+        "pageable" : {
+          "$ref" : "#/definitions/Pageable"
+        },
         "last" : {
+          "type" : "boolean"
+        },
+        "empty" : {
           "type" : "boolean"
         }
       }
@@ -1972,7 +1986,39 @@
           "type" : "integer",
           "format" : "int32"
         },
+        "pageable" : {
+          "$ref" : "#/definitions/Pageable"
+        },
         "last" : {
+          "type" : "boolean"
+        },
+        "empty" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "Pageable" : {
+      "type" : "object",
+      "properties" : {
+        "offset" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "sort" : {
+          "$ref" : "#/definitions/Sort"
+        },
+        "paged" : {
+          "type" : "boolean"
+        },
+        "pageNumber" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "pageSize" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "unpaged" : {
           "type" : "boolean"
         }
       }
@@ -2184,7 +2230,18 @@
       }
     },
     "Sort" : {
-      "type" : "object"
+      "type" : "object",
+      "properties" : {
+        "empty" : {
+          "type" : "boolean"
+        },
+        "unsorted" : {
+          "type" : "boolean"
+        },
+        "sorted" : {
+          "type" : "boolean"
+        }
+      }
     },
     "SuorituspolkuExportDto" : {
       "type" : "object",
