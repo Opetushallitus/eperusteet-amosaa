@@ -56,6 +56,12 @@ public class DokumenttiController extends KoulutustoimijaIdGetterAbstractControl
                                                           @PathVariable Long opsId,
                                                           @RequestParam(defaultValue = "fi") String kieli) throws DokumenttiException {
 
+        DokumenttiDto viimeisinJulkaistuDokumentti = dokumenttiService.getJulkaistuDokumentti(ktId, opsId, Kieli.of(kieli), null);
+        if (viimeisinJulkaistuDokumentti != null && viimeisinJulkaistuDokumentti.getTila().equals(DokumenttiTila.EPAONNISTUI)) {
+            dokumenttiService.setStarted(ktId, opsId, viimeisinJulkaistuDokumentti);
+            dokumenttiService.generateWithDto(ktId, opsId, viimeisinJulkaistuDokumentti);
+        }
+
         DokumenttiDto dto = dokumenttiService.createDtoFor(ktId, opsId, Kieli.of(kieli));
 
         if (dto != null && dto.getTila() != DokumenttiTila.EPAONNISTUI) {

@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface JulkaisuRepository extends JpaRepository<Julkaisu, Long> {
@@ -108,4 +109,6 @@ public interface JulkaisuRepository extends JpaRepository<Julkaisu, Long> {
             @Param("tulevat") boolean tulevat,
             @Param("voimassa") boolean voimassa,
             @Param("poistuneet") boolean poistuneet);
+
+    Julkaisu findOneByDokumentitIn(Set<Long> dokumentit);
 }
