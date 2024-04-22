@@ -2,8 +2,11 @@ package fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiTila;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Julkaisu;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaKaikkiDto;
+import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.JulkaisuRepository;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InitJacksonConverter;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.ExternalPdfService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
@@ -17,6 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import java.util.Collections;
 import java.util.Optional;
 
 import static javax.servlet.http.HttpServletResponse.SC_ACCEPTED;
@@ -40,11 +44,22 @@ public class ExternalPdfServiceImpl implements ExternalPdfService {
     @Autowired
     RestClientFactory restClientFactory;
 
+    @Autowired
+    private JulkaisuRepository julkaisuRepository;
+
     private final ObjectMapper mapper = InitJacksonConverter.createMapper();
 
     @Override
     public void generatePdf(DokumenttiDto dto, Long ktId) throws JsonProcessingException {
-        OpetussuunnitelmaKaikkiDto ops = opetussuunnitelmaService.getOpetussuunnitelmaKaikki(ktId, dto.getOpsId());
+
+        OpetussuunnitelmaKaikkiDto ops = null;
+        Julkaisu julkaisu = julkaisuRepository.findOneByDokumentitIn(Collections.singleton(dto.getId()));
+        if (dto.getTila().equals(DokumenttiTila.EPAONNISTUI) && julkaisu != null) {
+            ops = opetussuunnitelmaService.getOpetussuunnitelmaJulkaistuSisalto(dto.getOpsId());
+        } else {
+            ops = opetussuunnitelmaService.getOpetussuunnitelmaKaikki(ktId, dto.getOpsId());
+        }
+
         String json = mapper.writeValueAsString(ops);
         OphHttpClient client = restClientFactory.get(pdfServiceUrl, true);
         String url = pdfServiceUrl + "/api/pdf/generate/amosaa/" + dto.getId() + "/" + dto.getKieli().name() + "/" + ktId;
