@@ -1,6 +1,5 @@
 package fi.vm.sade.eperusteet.amosaa.repository.teksti;
 
-
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaOsaAlue;
 import fi.vm.sade.eperusteet.amosaa.domain.liite.version.JpaWithVersioningRepository;
 import org.springframework.data.jpa.repository.Query;

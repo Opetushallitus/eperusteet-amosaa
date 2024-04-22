@@ -1,18 +1,3 @@
-/*
- * Copyright (c) 2013 The Finnish Board of Education - Opetushallitus
- *
- * This program is free software: Licensed under the EUPL, Version 1.1 or - as
- * soon as they will be approved by the European Commission - subsequent versions
- * of the EUPL (the "Licence");
- *
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at: http://ec.europa.eu/idabc/eupl
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * European Union Public Licence for more details.
- */
 package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -54,7 +39,6 @@ import javax.persistence.PersistenceContext;
 import fi.vm.sade.eperusteet.amosaa.service.security.KoulutustyyppiRolePrefix;
 import fi.vm.sade.eperusteet.amosaa.service.util.MaintenanceService;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
-import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,9 +53,6 @@ import org.springframework.util.ObjectUtils;
 
 import static fi.vm.sade.eperusteet.amosaa.service.util.Nulls.assertExists;
 
-/**
- * @author nkala
- */
 @Service
 @Transactional
 public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {

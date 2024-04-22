@@ -1,6 +1,5 @@
 package fi.vm.sade.eperusteet.amosaa.dto.teksti;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import java.util.Date;

@@ -17,9 +17,6 @@ import javax.persistence.TemporalType;
 import lombok.Getter;
 import lombok.Setter;
 
-/**
- * Created by richard.vancamp on 29/03/16.
- */
 @Entity
 @Table(name = "tiedote")
 @Getter

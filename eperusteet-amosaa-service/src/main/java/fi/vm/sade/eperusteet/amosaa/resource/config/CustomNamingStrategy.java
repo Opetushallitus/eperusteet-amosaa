@@ -2,9 +2,6 @@ package fi.vm.sade.eperusteet.amosaa.resource.config;
 
 import org.hibernate.cfg.EJB3NamingStrategy;
 
-/**
- * @author isaul
- */
 public class CustomNamingStrategy extends EJB3NamingStrategy {
 
     @Override

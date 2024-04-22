@@ -2,8 +2,6 @@ package fi.vm.sade.eperusteet.amosaa.resource.ops;
 
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Tutkinnonosa;
 import fi.vm.sade.eperusteet.amosaa.dto.OletusToteutusDto;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
-import fi.vm.sade.eperusteet.amosaa.dto.teksti.TutkinnonosaDto;
 import fi.vm.sade.eperusteet.amosaa.repository.tutkinnonosa.TutkinnonosaRepository;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija.KoulutustoimijaIdGetterAbstractController;
@@ -23,10 +21,6 @@ import springfox.documentation.annotations.ApiIgnore;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
-
-/**
- * @author isaul
- */
 
 @RestController
 @RequestMapping("/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tutkinnonosat")

@@ -6,9 +6,6 @@ import org.jsoup.safety.Whitelist;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-/**
- * @author isaul
- */
 public class ValidHtmlStringValidator implements ConstraintValidator<ValidHtml, String> {
 
     private Whitelist whitelist;

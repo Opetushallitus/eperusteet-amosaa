@@ -1,20 +1,17 @@
 package fi.vm.sade.eperusteet.amosaa.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaKtoDto;
-import java.util.List;
-
+import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator;
+import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Transactional;
 
-import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaDto;
-import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
-import fi.vm.sade.eperusteet.amosaa.service.util.KayttooikeusServiceMock;
-import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DirtiesContext
 @Transactional
@@ -22,7 +19,7 @@ public class KayttajaTietoServiceIT extends AbstractIntegrationTest {
 
     @Autowired
     KayttajanTietoService kayttajanTietoService;
-    
+
     @Test
     public void testGetKaikkiKayttajat() {
 
@@ -47,7 +44,7 @@ public class KayttajaTietoServiceIT extends AbstractIntegrationTest {
 
         assertThat(kaikkiKayttajat.stream().filter(k -> k.getOid().equals(TMPR)).findFirst().get().getId()).isNull();
         assertThat(kaikkiKayttajat.stream().filter(k -> k.getOid().equals(TMPR)).findFirst().get().getSukunimi()).isNotNull();
-        
+
     }
 
     @Test

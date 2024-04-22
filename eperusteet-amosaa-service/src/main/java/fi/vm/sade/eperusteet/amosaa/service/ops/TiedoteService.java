@@ -7,9 +7,6 @@ import java.util.List;
 import org.springframework.security.core.parameters.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 
-/**
- * Created by richard.vancamp on 29/03/16.
- */
 public interface TiedoteService {
 
     @PreAuthorize("permitAll()")
