@@ -5,7 +5,7 @@
     "version" : "1",
     "title" : "TOTSU-työkalu API"
   },
-  "basePath" : "https://eperusteet.opintopolku.fi/eperusteet-amosaa-service/api",
+  "basePath" : "https://eperusteet.opintopolku.fi/eperusteet-amosaa-service",
   "tags" : [ {
     "name" : "external"
   } ],
@@ -1143,6 +1143,15 @@
         },
         "organisaatioRyhma" : {
           "type" : "boolean"
+        },
+        "oppilaitostyyppi" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "oppilaitosTyyppiKoodiUri" : {
+          "type" : "string"
         }
       }
     },
@@ -1463,12 +1472,6 @@
             "type" : "string"
           }
         },
-        "oppilaitosTyyppiKoodiUri" : {
-          "type" : "string"
-        },
-        "oppilaitosTyyppiKoodi" : {
-          "$ref" : "#/definitions/KoodistoKoodiDto"
-        },
         "koulutustyyppi" : {
           "type" : "string",
           "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO", "MAAHANMUUTTAJIENKOTOUTUMISKOULUTUS", "VAPAASIVISTYSTYOLUKUTAITO", "TUTKINTOONVALMENTAVA" ]
@@ -1486,6 +1489,12 @@
           "items" : {
             "$ref" : "#/definitions/OsaamisenArvioinninToteutussuunnitelmaDto"
           }
+        },
+        "oppilaitosTyyppiKoodiUri" : {
+          "type" : "string"
+        },
+        "oppilaitosTyyppiKoodi" : {
+          "$ref" : "#/definitions/KoodistoKoodiDto"
         }
       }
     },
@@ -1600,12 +1609,6 @@
             "type" : "string"
           }
         },
-        "oppilaitosTyyppiKoodiUri" : {
-          "type" : "string"
-        },
-        "oppilaitosTyyppiKoodi" : {
-          "$ref" : "#/definitions/KoodistoKoodiDto"
-        },
         "koulutustyyppi" : {
           "type" : "string",
           "enum" : [ "PERUSTUTKINTO", "AMMATTITUTKINTO", "ERIKOISAMMATTITUTKINTO", "TELMA", "VALMA", "VAPAASIVISTYSTYO", "MAAHANMUUTTAJIENKOTOUTUMISKOULUTUS", "VAPAASIVISTYSTYOLUKUTAITO", "TUTKINTOONVALMENTAVA" ]
@@ -1623,6 +1626,12 @@
           "items" : {
             "$ref" : "#/definitions/OsaamisenArvioinninToteutussuunnitelmaDto"
           }
+        },
+        "oppilaitosTyyppiKoodiUri" : {
+          "type" : "string"
+        },
+        "oppilaitosTyyppiKoodi" : {
+          "$ref" : "#/definitions/KoodistoKoodiDto"
         },
         "sisalto" : {
           "$ref" : "#/definitions/SisaltoViiteExportDto"
@@ -1936,15 +1945,15 @@
         "first" : {
           "type" : "boolean"
         },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
+        "last" : {
+          "type" : "boolean"
         },
         "pageable" : {
           "$ref" : "#/definitions/Pageable"
         },
-        "last" : {
-          "type" : "boolean"
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "empty" : {
           "type" : "boolean"
@@ -1982,15 +1991,15 @@
         "first" : {
           "type" : "boolean"
         },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
+        "last" : {
+          "type" : "boolean"
         },
         "pageable" : {
           "$ref" : "#/definitions/Pageable"
         },
-        "last" : {
-          "type" : "boolean"
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "empty" : {
           "type" : "boolean"
@@ -2007,19 +2016,19 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
-        "paged" : {
-          "type" : "boolean"
-        },
         "pageNumber" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-        "pageSize" : {
           "type" : "integer",
           "format" : "int32"
         },
         "unpaged" : {
           "type" : "boolean"
+        },
+        "paged" : {
+          "type" : "boolean"
+        },
+        "pageSize" : {
+          "type" : "integer",
+          "format" : "int32"
         }
       }
     },

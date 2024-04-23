@@ -291,11 +291,6 @@
         </dependency>
         <dependency>
             <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger1</artifactId>
-            <version>${springfox.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>
             <version>${springfox.version}</version>
         </dependency>
@@ -874,7 +869,7 @@
                                         <scheme>http</scheme>
                                         <scheme>https</scheme>
                                     </schemes>
-                                    <basePath>https://eperusteet.opintopolku.fi/eperusteet-amosaa-service/api</basePath>
+                                    <basePath>https://eperusteet.opintopolku.fi/eperusteet-amosaa-service</basePath>
                                     <locations>
                                         <location>${eperusteet.amosaa.resources}.julkinen.ExternalController</location>
                                     </locations>
