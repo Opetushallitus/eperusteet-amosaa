@@ -39,6 +39,8 @@ public class ExternalController {
     @Autowired
     private OpetussuunnitelmaService opetussuunnitelmaService;
 
+    private static final int DEFAULT_PATH_SKIP_VALUE = 5;
+
     @ApiImplicitParams({
             @ApiImplicitParam(name = "perusteenDiaarinumero", dataType = "string", paramType = "query"),
             @ApiImplicitParam(name = "perusteId", dataType = "long", paramType = "query"),
@@ -88,7 +90,7 @@ public class ExternalController {
             response= OpetussuunnitelmaKaikkiDto.class
     )
     public ResponseEntity<Object> getOpetussuunnitelmaDynamicQuery(HttpServletRequest req, @PathVariable("opsId") final long id) {
-        return getJulkaistuSisaltoObjectNodeWithQuery(id, requestToQueries(req, 4));
+        return getJulkaistuSisaltoObjectNodeWithQuery(id, requestToQueries(req, DEFAULT_PATH_SKIP_VALUE));
     }
 
     @ApiOperation(value = "Opintokokonaisuuden haku opintokokonaisuuden koodin arvolla")
@@ -98,7 +100,7 @@ public class ExternalController {
     }
 
     private List<String> requestToQueries(HttpServletRequest req, int skipCount) {
-        String[] queries = req.getPathInfo().split("/");
+        String[] queries = req.getServletPath().split("/");
         return Arrays.stream(queries).skip(skipCount).collect(Collectors.toList());
     }
 
