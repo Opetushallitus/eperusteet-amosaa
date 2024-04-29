@@ -8,6 +8,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.JulkaisuRepository;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InitJacksonConverter;
+import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiService;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.ExternalPdfService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.utils.client.RestClientFactory;
@@ -17,6 +18,7 @@ import fi.vm.sade.javautils.http.OphHttpRequest;
 import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -42,10 +44,14 @@ public class ExternalPdfServiceImpl implements ExternalPdfService {
     private OpetussuunnitelmaService opetussuunnitelmaService;
 
     @Autowired
-    RestClientFactory restClientFactory;
+    private RestClientFactory restClientFactory;
 
     @Autowired
     private JulkaisuRepository julkaisuRepository;
+
+    @Lazy
+    @Autowired
+    private DokumenttiService dokumenttiService;
 
     private final ObjectMapper mapper = InitJacksonConverter.createMapper();
 
@@ -53,8 +59,8 @@ public class ExternalPdfServiceImpl implements ExternalPdfService {
     public void generatePdf(DokumenttiDto dto, Long ktId) throws JsonProcessingException {
 
         OpetussuunnitelmaKaikkiDto ops = null;
-        Julkaisu julkaisu = julkaisuRepository.findOneByDokumentitIn(Collections.singleton(dto.getId()));
-        if (dto.getTila().equals(DokumenttiTila.EPAONNISTUI) && julkaisu != null) {
+        DokumenttiDto viimeisinJulkaistuDokumentti = dokumenttiService.getJulkaistuDokumentti(ktId, dto.getOpsId(), dto.getKieli(), null);
+        if (viimeisinJulkaistuDokumentti.getId().equals(dto.getId())) {
             ops = opetussuunnitelmaService.getOpetussuunnitelmaJulkaistuSisalto(dto.getOpsId());
         } else {
             ops = opetussuunnitelmaService.getOpetussuunnitelmaKaikki(ktId, dto.getOpsId());
