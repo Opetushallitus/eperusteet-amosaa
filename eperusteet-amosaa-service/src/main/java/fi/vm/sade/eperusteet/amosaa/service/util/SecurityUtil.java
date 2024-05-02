@@ -16,8 +16,10 @@ import org.ietf.jgss.Oid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public final class SecurityUtil {
@@ -92,5 +94,14 @@ public final class SecurityUtil {
             return false;
         }
         return true;
+    }
+
+    public static Authentication useAdminAuth() {
+        // Käytetään pääkäyttäjän oikeuksia.
+        return new UsernamePasswordAuthenticationToken("system",
+                "ROLE_ADMIN", AuthorityUtils.createAuthorityList("ROLE_ADMIN",
+                "ROLE_APP_EPERUSTEET_AMOSAA_ADMIN_1.2.246.562.10.00000000001",
+                "ROLE_APP_EPERUSTEET_VST_ADMIN_1.2.246.562.10.00000000001",
+                "ROLE_APP_EPERUSTEET_KOTO_ADMIN_1.2.246.562.10.00000000001"));
     }
 }
