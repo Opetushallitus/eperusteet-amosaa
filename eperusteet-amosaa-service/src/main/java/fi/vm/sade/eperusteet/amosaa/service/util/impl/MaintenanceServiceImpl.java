@@ -27,6 +27,8 @@ import fi.vm.sade.eperusteet.amosaa.service.util.MaintenanceService;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
@@ -37,6 +39,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Propagation;
@@ -123,6 +126,7 @@ public class MaintenanceServiceImpl implements MaintenanceService {
     @Override
     @Async
     public void kaynnistaJob(String job, Map<String, String> parametrit) throws Exception {
+        SecurityContextHolder.getContext().setAuthentication(SecurityUtil.useAdminAuth());
         parametrit.put("kaynnistysaika", String.valueOf(new Date().getTime()));
         jobLauncher.run(jobs.stream().filter(j -> j.getName().equals(job))
                         .findFirst()
