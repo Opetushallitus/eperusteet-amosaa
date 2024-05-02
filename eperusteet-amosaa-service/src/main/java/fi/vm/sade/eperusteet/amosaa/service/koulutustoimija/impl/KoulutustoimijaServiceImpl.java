@@ -7,6 +7,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.EtusivuDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koodisto.KoodistoKoodiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaJulkinenDto;
@@ -37,6 +38,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import fi.vm.sade.eperusteet.amosaa.service.security.KoulutustyyppiRolePrefix;
+import fi.vm.sade.eperusteet.amosaa.service.util.KoodistoClient;
 import fi.vm.sade.eperusteet.amosaa.service.util.MaintenanceService;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 import org.slf4j.Logger;
@@ -74,6 +76,9 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     @Autowired
     @Lazy
     private MaintenanceService maintenanceService;
+
+    @Autowired
+    private KoodistoClient koodistoClient;
 
     @Autowired
     private DtoMapper mapper;
@@ -334,6 +339,12 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     @Override
     public List<KoulutustoimijaJulkinenDto> findKoulutusatyypinKoulutustoimijat(Set<KoulutusTyyppi> koulutustyypit) {
         return mapper.mapAsList(repository.findByKoulutustyypit(koulutustyypit), KoulutustoimijaJulkinenDto.class);
+    }
+
+    @Override
+    public List<KoodistoKoodiDto> getVstYksilollisetOppilaitostyypit() {
+        Set<String> yksilollisetKoodit = opetussuunnitelmaRepository.findDistinctOppilaitosTyyppiKoodiUri(Set.of(KoulutusTyyppi.VAPAASIVISTYSTYO, KoulutusTyyppi.VAPAASIVISTYSTYOLUKUTAITO));
+        return yksilollisetKoodit.stream().map(koodi -> koodistoClient.getByUri(koodi)).collect(Collectors.toList());
     }
 
 }

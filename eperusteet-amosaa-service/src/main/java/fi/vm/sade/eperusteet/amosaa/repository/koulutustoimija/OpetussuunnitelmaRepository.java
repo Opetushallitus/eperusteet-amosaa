@@ -193,4 +193,12 @@ public interface OpetussuunnitelmaRepository extends JpaWithVersioningRepository
             "WHERE (p.koulutustyyppi IN (:koulutustyyppi) OR o.koulutustyyppi IN (:koulutustyyppi)) ")
     List<Opetussuunnitelma> findOpetussuunnitelmaTilastot(@Param("koulutustyyppi") Set<KoulutusTyyppi> koulutusTyyppi);
 
+    @Query(value = "SELECT DISTINCT kt.oppilaitosTyyppiKoodiUri " +
+            "FROM Opetussuunnitelma o " +
+            "JOIN o.koulutustoimija kt " +
+            "LEFT OUTER JOIN o.peruste p " +
+            "WHERE o.tila != 'POISTETTU' " +
+            "AND kt.oppilaitosTyyppiKoodiUri IS NOT NULL " +
+            "AND (p.koulutustyyppi IN (:koulutustyyppi) OR o.koulutustyyppi IN (:koulutustyyppi))")
+    Set<String> findDistinctOppilaitosTyyppiKoodiUri(@Param("koulutustyyppi") Set<KoulutusTyyppi> koulutusTyyppi);
 }
