@@ -6,6 +6,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
+import fi.vm.sade.eperusteet.amosaa.dto.koodisto.KoodistoKoodiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaJulkinenDto;
@@ -278,6 +279,12 @@ public class KoulutustoimijaServiceIT extends AbstractIntegrationTest {
         assertThat(julkinenDto.getNimi().get(Kieli.SV)).isEqualTo("bor");
         assertThat(ystavaDto.getNimi().get(Kieli.FI)).isEqualTo("faa");
         assertThat(ystavaDto.getNimi().get(Kieli.SV)).isEqualTo("bor");
+    }
+
+    @Test
+    public void testYksilöllisetOrganisaatioTyypit() {
+        List<KoodistoKoodiDto> koodit = koulutustoimijaService.getVstYksilollisetOppilaitostyypit();
+        assertThat(koodit).hasSize(0);
     }
 
 }
