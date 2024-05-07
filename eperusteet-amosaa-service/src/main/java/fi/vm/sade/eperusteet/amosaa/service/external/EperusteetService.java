@@ -63,8 +63,6 @@ public interface EperusteetService {
 
     JsonNode getGeneeriset();
 
-    String getYllapitoAsetus(String key);
-
     GeneerinenArviointiasteikkoKaikkiDto getGeneerinen(Long id);
 
     JsonNode getTiedotteetHaku(TiedoteQueryDto queryDto);
@@ -77,36 +75,4 @@ public interface EperusteetService {
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")
     PerusteDto getKoulutuskoodillaKorvaavaPeruste(@P("ktId") Long ktId, Long opsId);
-
-//    <T> T getPeruste(String diaariNumero, Class<T> type);
-//
-//    PerusteDto getYleinenPohja();
-//
-//    String getYleinenPohjaSisalto();
-//
-//    String getPerusteData(Long id);
-//
-//    List<PerusteDto> findPerusteet();
-//
-//    List<PerusteDto> findPerusteet(Set<KoulutusTyyppi> tyypit);
-//
-//    JsonNode getTiedotteet(Long jalkeen);
-//
-//    List<TutkinnonOsaSuoritustapaDto> convertTutkinnonOsat(JsonNode tutkinnonosat);
-//
-//    <T> T getPeruste(Long id, Class<T> type);
-//
-//    <T> T getPerusteSisalto(Long cperusteId, Class<T> type);
-//
-//    <T> T getPerusteSisalto(CachedPeruste cperuste, Class<T> type);
-//
-//    JsonNode getTutkinnonOsaViitteet(Long id);
-//
-//    JsonNode getSuoritustavat(Long id);
-//
-//    JsonNode getTutkinnonOsa(Long id, Long tosaId);
-//
-//    JsonNode getSuoritustapa(Long id, String tyyppi);
-//
-//    ArviointiasteikkoDto getArviointiasteikko(Long id);
 }

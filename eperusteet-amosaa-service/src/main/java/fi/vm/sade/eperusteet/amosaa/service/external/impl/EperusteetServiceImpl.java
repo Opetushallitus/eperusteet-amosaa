@@ -42,7 +42,6 @@ import fi.vm.sade.eperusteet.amosaa.service.peruste.PerusteCacheService;
 import fi.vm.sade.eperusteet.amosaa.service.util.CollectionUtil;
 import fi.vm.sade.eperusteet.amosaa.service.util.JsonMapper;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,9 +81,6 @@ public class EperusteetServiceImpl implements EperusteetService {
 
     @Value("${fi.vm.sade.eperusteet.amosaa.eperusteet-service: ''}")
     private String eperusteetServiceUrl;
-
-    @Value("${fi.vm.sade.eperusteet.amosaa.use-pdf-service: }")
-    private String usePdfServiceLocal;
 
     @Autowired
     CachedPerusteRepository cachedPerusteRepository;
@@ -300,18 +296,6 @@ public class EperusteetServiceImpl implements EperusteetService {
         String url = eperusteetServiceUrl + "/api/geneerinenarviointi/julkaistu";
         JsonNode result = client.exchange(url, HttpMethod.GET, httpEntity, JsonNode.class).getBody();
         return result;
-    }
-
-    @Override
-    public String getYllapitoAsetus(String key) {
-        if (!StringUtils.isBlank(usePdfServiceLocal)) {
-            return usePdfServiceLocal;
-        }
-        try {
-            return client.getForObject(eperusteetServiceUrl + "/api/maintenance/yllapito/" + key, String.class);
-        } catch (Exception e) {
-            throw new BusinessRuleViolationException("yllapitoasetuksia-ei-saatu-haettu-eperusteista");
-        }
     }
 
     @Override
