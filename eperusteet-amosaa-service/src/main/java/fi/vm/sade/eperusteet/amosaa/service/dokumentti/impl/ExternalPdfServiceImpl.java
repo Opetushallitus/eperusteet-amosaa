@@ -2,11 +2,8 @@ package fi.vm.sade.eperusteet.amosaa.service.dokumentti.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiTila;
-import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Julkaisu;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaKaikkiDto;
-import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.JulkaisuRepository;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InitJacksonConverter;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiService;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.ExternalPdfService;
@@ -22,7 +19,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
-import java.util.Collections;
 import java.util.Optional;
 
 import static javax.servlet.http.HttpServletResponse.SC_ACCEPTED;
@@ -45,9 +41,6 @@ public class ExternalPdfServiceImpl implements ExternalPdfService {
 
     @Autowired
     private RestClientFactory restClientFactory;
-
-    @Autowired
-    private JulkaisuRepository julkaisuRepository;
 
     @Lazy
     @Autowired
