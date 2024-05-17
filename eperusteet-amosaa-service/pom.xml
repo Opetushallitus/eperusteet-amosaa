@@ -869,7 +869,10 @@
                                         <scheme>http</scheme>
                                         <scheme>https</scheme>
                                     </schemes>
-                                    <basePath>https://eperusteet.opintopolku.fi/eperusteet-amosaa-service</basePath>
+
+                                    <host>virkailija.opintopolku.fi</host>
+                                    <basePath>/eperusteet-amosaa-service</basePath>
+
                                     <locations>
                                         <location>${eperusteet.amosaa.resources}.julkinen.ExternalController</location>
                                     </locations>

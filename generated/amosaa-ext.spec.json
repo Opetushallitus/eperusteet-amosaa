@@ -5,7 +5,8 @@
     "version" : "1",
     "title" : "TOTSU-työkalu API"
   },
-  "basePath" : "https://eperusteet.opintopolku.fi/eperusteet-amosaa-service",
+  "host" : "virkailija.opintopolku.fi",
+  "basePath" : "/eperusteet-amosaa-service",
   "tags" : [ {
     "name" : "external"
   } ],
@@ -1917,13 +1918,13 @@
     "Page" : {
       "type" : "object",
       "properties" : {
-        "totalPages" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "totalElements" : {
           "type" : "integer",
           "format" : "int64"
+        },
+        "totalPages" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "size" : {
           "type" : "integer",
@@ -1942,8 +1943,9 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
-        "first" : {
-          "type" : "boolean"
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "last" : {
           "type" : "boolean"
@@ -1951,9 +1953,8 @@
         "pageable" : {
           "$ref" : "#/definitions/Pageable"
         },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
+        "first" : {
+          "type" : "boolean"
         },
         "empty" : {
           "type" : "boolean"
@@ -1963,13 +1964,13 @@
     "PageOpetussuunnitelmaDto" : {
       "type" : "object",
       "properties" : {
-        "totalPages" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "totalElements" : {
           "type" : "integer",
           "format" : "int64"
+        },
+        "totalPages" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "size" : {
           "type" : "integer",
@@ -1988,8 +1989,9 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
-        "first" : {
-          "type" : "boolean"
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "last" : {
           "type" : "boolean"
@@ -1997,9 +1999,8 @@
         "pageable" : {
           "$ref" : "#/definitions/Pageable"
         },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
+        "first" : {
+          "type" : "boolean"
         },
         "empty" : {
           "type" : "boolean"
@@ -2020,10 +2021,10 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "unpaged" : {
+        "paged" : {
           "type" : "boolean"
         },
-        "paged" : {
+        "unpaged" : {
           "type" : "boolean"
         },
         "pageSize" : {
