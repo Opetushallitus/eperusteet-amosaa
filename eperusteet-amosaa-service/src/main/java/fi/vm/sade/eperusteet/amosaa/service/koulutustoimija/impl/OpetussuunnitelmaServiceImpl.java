@@ -1080,7 +1080,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
     @Override
     public List<OpetussuunnitelmaDto> getKaikkiJulkaistutOpetussuunnitelmat() {
-        return julkaisuRepository.findAllJulkaistutOpetussuunnitelmatByVoimassaolo(DateTime.now().getMillis(), false, true, false).stream()
+        return julkaisuRepository.findAllJulkaistutOpetussuunnitelmatByVoimassaolo(DateTime.now().getMillis(), true, true, false).stream()
                 .map(this::convertToOpetussuunnitelmaDto).collect(Collectors.toList());
     }
 
