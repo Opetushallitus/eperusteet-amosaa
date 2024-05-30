@@ -33,7 +33,7 @@
         <org.apache.tomcat.version>9.0.86</org.apache.tomcat.version>
         <spring.security.test.version>5.7.11</spring.security.test.version>
         <batik.version>1.13</batik.version>
-        <springfox.version>2.7.0</springfox.version>
+        <springfox.version>2.10.0</springfox.version>
     </properties>
 
     <dependencies>
