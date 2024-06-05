@@ -34,6 +34,7 @@
         <spring.security.test.version>5.7.11</spring.security.test.version>
         <batik.version>1.13</batik.version>
         <springfox.version>2.7.0</springfox.version>
+        <jacoco.version>0.8.12</jacoco.version>
     </properties>
 
     <dependencies>
@@ -470,6 +471,11 @@
             <artifactId>metrics-jmx</artifactId>
             <version>${metrics.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>${jacoco.version}</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -563,7 +569,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <argLine>${failsafeArgLine}</argLine>
+                    <argLine>-Dlog4j2.level=OFF -Xmx2048m -XX:+CMSClassUnloadingEnabled -javaagent:${settings.localRepository}/org/jacoco/org.jacoco.agent/${jacoco.version}/org.jacoco.agent-${jacoco.version}-runtime.jar=destfile=${project.build.directory}/jacoco-it.exec</argLine>
                     <systemPropertyVariables>
                         <ittestdb.user>${eperusteet-amosaa.ittestdb.user}</ittestdb.user>
                         <ittestdb.password>${eperusteet-amosaa.ittestdb.password}</ittestdb.password>
@@ -580,22 +586,8 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-<!--                <configuration>-->
-<!--                    <argLine>${surefireArgLine}</argLine>-->
-<!--                    <systemPropertyVariables>-->
-<!--                        <ittestdb.user>${eperusteet-amosaa.ittestdb.user}</ittestdb.user>-->
-<!--                        <ittestdb.password>${eperusteet-amosaa.ittestdb.password}</ittestdb.password>-->
-<!--                        <ittestdb.jdbcurl>${eperusteet-amosaa.ittestdb.jdbcurl}</ittestdb.jdbcurl>-->
-<!--                    </systemPropertyVariables>-->
-<!--                </configuration>-->
                 <configuration>
-                    <argLine>-Dlog4j2.level=OFF</argLine>
-                    <!--                    <argLine>${surefireArgLine}</argLine>-->
-                    <!--                    <systemPropertyVariables>-->
-                    <!--                        <ittestdb.user>${eperusteet-ylops.ittestdb.user}</ittestdb.user>-->
-                    <!--                        <ittestdb.password>${eperusteet-ylops.ittestdb.password}</ittestdb.password>-->
-                    <!--                        <ittestdb.jdbcurl>${eperusteet-ylops.ittestdb.jdbcurl}</ittestdb.jdbcurl>-->
-                    <!--                    </systemPropertyVariables>-->
+                    <argLine>-Dlog4j2.level=OFF -javaagent:${settings.localRepository}/org/jacoco/org.jacoco.agent/${jacoco.version}/org.jacoco.agent-${jacoco.version}-runtime.jar=destfile=${project.build.directory}/jacoco-ut.exec</argLine>
                     <excludes>
                         <exclude>**/test/**.java</exclude>
                         <exclude>**/*IT.java</exclude>
@@ -627,6 +619,82 @@
                         <arg>--all-projects</arg>
                     </args>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <executions>
+                    <execution>
+                        <id>pre-unit-test</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <configuration>
+                            <destFile>${project.build.directory}/jacoco-ut.exec</destFile>
+                            <propertyName>surefireArgLine</propertyName>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>pre-integration-test</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <configuration>
+                            <destFile>${project.build.directory}/jacoco-it.exec</destFile>
+                            <propertyName>failsafeArgLine</propertyName>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <dataFile>${project.build.directory}/jacoco.exec</dataFile>
+                            <outputDirectory>${project.build.directory}/jacoco</outputDirectory>
+                            <formats>
+                                <format>XML</format>
+                                <format>HTML</format>
+                            </formats>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>merge-files</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>merge</goal>
+                        </goals>
+                        <configuration>
+                            <fileSets>
+                                <fileSet>
+                                    <directory>${project.build.directory}</directory>
+                                    <includes>
+                                        <include>*.exec</include>
+                                    </includes>
+                                </fileSet>
+                            </fileSets>
+                            <destFile>${project.build.directory}/jacoco.exec</destFile>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>post-integration-test</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <dataFile>${project.build.directory}/jacoco.exec</dataFile>
+                            <outputDirectory>${project.build.directory}/jacoco</outputDirectory>
+                            <formats>
+                                <format>XML</format>
+                                <format>HTML</format>
+                            </formats>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
         <pluginManagement>
@@ -725,69 +793,6 @@
                         <configuration>
                             <hibernateMapping>${project.basedir}/src/test/config/hibernate-typedefs.xml</hibernateMapping>
                         </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>jacoco</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.jacoco</groupId>
-                        <artifactId>jacoco-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>pre-unit-test</id>
-                                <goals>
-                                    <goal>prepare-agent</goal>
-                                </goals>
-                                <configuration>
-                                    <destFile>${project.build.directory}/jacoco-ut.exec</destFile>
-                                    <propertyName>surefireArgLine</propertyName>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>pre-integration-test</id>
-                                <phase>pre-integration-test</phase>
-                                <goals>
-                                    <goal>prepare-agent</goal>
-                                </goals>
-                                <configuration>
-                                    <destFile>${project.build.directory}/jacoco-it.exec</destFile>
-                                    <propertyName>failsafeArgLine</propertyName>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>merge-files</id>
-                                <phase>post-integration-test</phase>
-                                <goals>
-                                    <goal>merge</goal>
-                                </goals>
-                                <configuration>
-                                    <fileSets>
-                                        <fileSet>
-                                            <directory>${project.build.directory}</directory>
-                                            <includes>
-                                                <include>*.exec</include>
-                                            </includes>
-                                        </fileSet>
-                                    </fileSets>
-                                    <destFile>${project.build.directory}/jacoco.exec</destFile>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>post-integration-test</id>
-                                <phase>post-integration-test</phase>
-                                <goals>
-                                    <goal>report</goal>
-                                </goals>
-                                <configuration>
-                                    <dataFile>${project.build.directory}/jacoco.exec</dataFile>
-                                    <outputDirectory>${project.reporting.outputDirectory}/jacoco</outputDirectory>
-                                </configuration>
-                            </execution>
-                        </executions>
                     </plugin>
                 </plugins>
             </build>
@@ -897,22 +902,6 @@
                     </plugin>
                 </plugins>
             </build>
-        </profile>
-        <profile>
-            <id>local</id>
-            <properties>
-                <eperusteet.devdb.user>oph</eperusteet.devdb.user>
-                <eperusteet.devdb.password>test</eperusteet.devdb.password>
-                <eperusteet.devdb.jdbcurl>jdbc:postgresql://localhost:5432/eperusteet</eperusteet.devdb.jdbcurl>
-
-                <eperusteet-amosaa.devdb.user>oph</eperusteet-amosaa.devdb.user>
-                <eperusteet-amosaa.devdb.password>test</eperusteet-amosaa.devdb.password>
-                <eperusteet-amosaa.devdb.jdbcurl>jdbc:postgresql://localhost:5433/amosaa</eperusteet-amosaa.devdb.jdbcurl>
-
-                <eperusteet-ylops.devdb.user>oph</eperusteet-ylops.devdb.user>
-                <eperusteet-ylops.devdb.password>test</eperusteet-ylops.devdb.password>
-                <eperusteet-ylops.devdb.jdbcurl>jdbc:postgresql://localhost:5434/ylops</eperusteet-ylops.devdb.jdbcurl>
-            </properties>
         </profile>
     </profiles>
 
