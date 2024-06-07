@@ -66,4 +66,14 @@ public class DokumenttiServiceMock implements DokumenttiService {
     public void updateDokumenttiTila(DokumenttiTila tila, Long dokumenttiId) {
 
     }
+
+    @Override
+    public DokumenttiDto getJulkaistuDokumentti(Long opsId, Kieli kieli, Integer revision) {
+        return null;
+    }
+
+    @Override
+    public byte[] get(Long id) {
+        return new byte[0];
+    }
 }
