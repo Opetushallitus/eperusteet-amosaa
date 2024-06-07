@@ -16,6 +16,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.ops.TiedoteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteKevytDto;
+import fi.vm.sade.eperusteet.amosaa.resource.util.CacheControl;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
@@ -27,6 +28,7 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
 import org.springframework.context.annotation.Lazy;
@@ -43,6 +45,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -258,6 +261,31 @@ public class JulkinenController {
         return new ResponseEntity<>(pdfdata, headers, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/dokumentti/{dokumenttiId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<Object> getDokumenttiWithId(@PathVariable Long dokumenttiId) {
+        return pdfDataResponse(dokumenttiId, dokumenttiService.getData(dokumenttiId), "pdf");
+    }
+
+    @RequestMapping(value = "/dokumentti/{dokumenttiId}/html", method = RequestMethod.GET, produces = "text/html")
+    @ResponseBody
+    @CacheControl(age = CacheControl.ONE_YEAR, nonpublic = false)
+    public ResponseEntity<Object> getDokumenttihtml(@PathVariable("dokumenttiId") Long dokumenttiId) {
+        return pdfDataResponse(dokumenttiId, dokumenttiService.getHtml(dokumenttiId), "html");
+    }
+
+    private ResponseEntity<Object> pdfDataResponse(Long dokumenttiId, byte[] data, String type) {
+        if (data == null || data.length == 0) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-disposition", "inline; filename=\"" + dokumenttiId + "." + type + "\"");
+        headers.setContentLength(data.length);
+        headers.set("X-Robots-Tag", "noindex");
+
+        return new ResponseEntity<>(data, headers, HttpStatus.OK);
+    }
+
     @Parameters({
             @Parameter(name = "ktId", schema = @Schema(implementation = String.class), in = ParameterIn.PATH, required = true)
     })
@@ -291,6 +319,14 @@ public class JulkinenController {
                                                          @RequestParam(required = false) Integer revision) {
 
         return ResponseEntity.ok(dokumenttiService.getJulkaistuDokumentti(ktId, opsId, Kieli.of(kieli), revision));
+    }
+
+    @RequestMapping(value = "/opetussuunnitelmat/{opsId}/dokumentti/julkaistu", method = RequestMethod.GET)
+    public ResponseEntity<DokumenttiDto> getJulkaistuDokumenttiWithoutKt(@PathVariable Long opsId,
+                                                                @RequestParam(defaultValue = "fi") String kieli,
+                                                                @RequestParam(required = false) Integer revision) {
+
+        return ResponseEntity.ok(dokumenttiService.getJulkaistuDokumentti(opsId, Kieli.of(kieli), revision));
     }
 
     @Parameters({

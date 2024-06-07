@@ -4,6 +4,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiTila;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaKaikkiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.pdf.PdfData;
 import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
 import org.springframework.security.core.parameters.P;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -40,7 +41,16 @@ public interface DokumenttiService {
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'ESITYS')")
     byte[] getDataByDokumenttiId(@P("ktId") Long ktId, @P("opsId") Long opsId, Long dokumenttiId);
 
-    void updateDokumenttiPdfData(byte[] pdfData, Long dokumenttiId);
+    void updateDokumenttiPdfData(PdfData pdfData, Long dokumenttiId);
 
     void updateDokumenttiTila(DokumenttiTila tila, Long dokumenttiId);
+
+    @PreAuthorize("permitAll()")
+    DokumenttiDto getJulkaistuDokumentti(Long opsId, Kieli kieli, Integer revision);
+
+    @PreAuthorize("permitAll()")
+    byte[] getData(Long id);
+
+    @PreAuthorize("permitAll()")
+    byte[] getHtml(Long id);
 }

@@ -30,7 +30,7 @@ public class DokumenttiPdfContoller {
     @ResponseBody
     public ResponseEntity<String> savePdfData(@PathVariable("dokumenttiId") Long dokumenttiId,
                                               @RequestBody PdfData pdfData) {
-        dokumenttiService.updateDokumenttiPdfData(Base64.getDecoder().decode(pdfData.getData()), dokumenttiId);
+        dokumenttiService.updateDokumenttiPdfData(pdfData, dokumenttiId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

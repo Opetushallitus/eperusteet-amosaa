@@ -7,6 +7,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaKaikkiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.pdf.PdfData;
 import fi.vm.sade.eperusteet.amosaa.repository.dokumentti.DokumenttiRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.JulkaisuRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
@@ -30,6 +31,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.validation.constraints.NotNull;
+
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
@@ -227,9 +230,10 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     }
 
     @Override
-    public void updateDokumenttiPdfData(byte[] data, Long dokumenttiId) {
+    public void updateDokumenttiPdfData(PdfData pdfData, Long dokumenttiId) {
         Dokumentti dokumentti = dokumenttiRepository.findById(dokumenttiId).orElseThrow();
-        dokumentti.setData(data);
+        dokumentti.setData(Base64.getDecoder().decode(pdfData.getData()));
+        dokumentti.setHtml(Base64.getDecoder().decode(pdfData.getHtml()));
         dokumentti.setTila(DokumenttiTila.VALMIS);
         dokumentti.setValmistumisaika(new Date());
         dokumentti.setVirhekoodi(null);
@@ -241,5 +245,28 @@ public class DokumenttiServiceImpl implements DokumenttiService {
         Dokumentti dokumentti = dokumenttiRepository.findById(dokumenttiId).orElseThrow();
         dokumentti.setTila(tila);
         dokumenttiRepository.save(dokumentti);
+    }
+
+    @Override
+    public DokumenttiDto getJulkaistuDokumentti(Long opsId, Kieli kieli, Integer revision) {
+        return getJulkaistuDokumentti(null, opsId, kieli, revision);
+    }
+
+    @Override
+    public byte[] getData(Long id) {
+        Dokumentti dokumentti  = dokumenttiRepository.findOne(id);
+        if (dokumentti != null) {
+            return dokumentti.getData();
+        }
+        return null;
+    }
+
+    @Override
+    public byte[] getHtml(Long id) {
+        Dokumentti dokumentti  = dokumenttiRepository.findOne(id);
+        if (dokumentti != null) {
+            return dokumentti.getHtml();
+        }
+        return null;
     }
 }

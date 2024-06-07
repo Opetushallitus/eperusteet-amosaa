@@ -4,6 +4,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiTila;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaKaikkiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.pdf.PdfData;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiService;
 import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
 import org.springframework.context.annotation.Profile;
@@ -15,7 +16,7 @@ public class DokumenttiServiceMock implements DokumenttiService {
     @Override
     public DokumenttiDto getValmisDto(Long ktId, Long opsId, Kieli kieli) {
         DokumenttiDto dto = new DokumenttiDto();
-        dto.setId(new Double(Math.random() * 1000).longValue());
+        dto.setId(Long.parseLong(Math.random() * 1000 + ""));
         return dto;
     }
 
@@ -65,7 +66,7 @@ public class DokumenttiServiceMock implements DokumenttiService {
     }
 
     @Override
-    public void updateDokumenttiPdfData(byte[] pdfData, Long dokumenttiId) {
+    public void updateDokumenttiPdfData(PdfData pdfData, Long dokumenttiId) {
 
     }
 
@@ -73,4 +74,20 @@ public class DokumenttiServiceMock implements DokumenttiService {
     public void updateDokumenttiTila(DokumenttiTila tila, Long dokumenttiId) {
 
     }
+
+    @Override
+    public DokumenttiDto getJulkaistuDokumentti(Long opsId, Kieli kieli, Integer revision) {
+        return null;
+    }
+
+    @Override
+    public byte[] getData(Long id) {
+        return new byte[0];
+    }
+
+    @Override
+    public byte[] getHtml(Long id) {
+        return new byte[0];
+    }
+
 }

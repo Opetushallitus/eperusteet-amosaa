@@ -6,6 +6,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiTila;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 
 import java.util.Date;
+import java.util.List;
 
 import lombok.*;
 
@@ -25,4 +26,5 @@ public class DokumenttiDto {
     private String virhekoodi = "";
     private boolean perusteenSisalto;
     private Boolean julkaisuDokumentti = false;
+    private List<String> dataTyypit;
 }
