@@ -39,6 +39,7 @@ import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoviiteServiceProvider;
 import fi.vm.sade.eperusteet.amosaa.service.util.JsonMapper;
+import fi.vm.sade.eperusteet.amosaa.service.util.Nulls;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
@@ -126,7 +127,7 @@ public class JulkaisuServiceImpl implements JulkaisuService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<JulkaisuBaseDto> getJulkaisut(long ktIds, long opsId) {
+    public List<JulkaisuBaseDto> getJulkaisutJaViimeisinStatus(long ktIds, long opsId) {
         Opetussuunnitelma opetussuunnitelma = opetussuunnitelmaRepository.findOne(opsId);
         if (opetussuunnitelma == null) {
             throw new BusinessRuleViolationException("opetussuunnitelmaa-ei-loytynyt");
@@ -145,6 +146,14 @@ public class JulkaisuServiceImpl implements JulkaisuService {
         }
 
         return taytaKayttajaTiedot(julkaisut);
+    }
+
+    @Override
+    public List<JulkaisuBaseDto> getJulkaisut(long ktId, long opsId) {
+        Opetussuunnitelma ops = opetussuunnitelmaRepository.findOne(opsId);
+        Nulls.assertExists(ops, "Pyydettyä opetussuunnitelmaa ei ole olemassa");
+        List<Julkaisu> julkaisut = julkaisuRepository.findAllByOpetussuunnitelma(ops);
+        return mapper.mapAsList(julkaisut, JulkaisuBaseDto.class);
     }
 
     @Override

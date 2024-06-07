@@ -35,7 +35,7 @@ public class JulkaisuServiceIt extends AbstractIntegrationTest {
     public void testJulkaisu1() {
         useProfileKP1();
         OpetussuunnitelmaBaseDto ops = createOpetussuunnitelma();
-        assertThat(julkaisuService.getJulkaisut(getKoulutustoimijaId(), ops.getId())).isEmpty();
+        assertThat(julkaisuService.getJulkaisutJaViimeisinStatus(getKoulutustoimijaId(), ops.getId())).isEmpty();
 
         JulkaisuBaseDto julkaisuDto = JulkaisuBaseDto.builder().tiedote(LokalisoituTekstiDto.of("tiedote")).build();
 //        JulkaisuBaseDto uusiJulkaisu = julkaisuService.teeJulkaisu(getKoulutustoimijaId(), ops.getId(), julkaisuDto);
