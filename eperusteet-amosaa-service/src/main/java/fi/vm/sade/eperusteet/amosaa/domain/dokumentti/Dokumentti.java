@@ -2,7 +2,10 @@ package fi.vm.sade.eperusteet.amosaa.domain.dokumentti;
 
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
@@ -47,6 +50,11 @@ public class Dokumentti {
     @Column(name = "dokumenttidata")
     private byte[] data;
 
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    @Column(name = "dokumenttihtml")
+    private byte[] html;
+
     @Column(name = "virhekoodi")
     private String virhekoodi;
 
@@ -54,4 +62,15 @@ public class Dokumentti {
     @Setter
     @Column(name = "perusteen_sisalto")
     private boolean perusteenSisalto = false;
+
+    public List<String> getDataTyypit() {
+        List<String> tyypit = new ArrayList<>();
+        if (data != null) {
+            tyypit.add("PDF");
+        }
+        if (html != null) {
+            tyypit.add("HTML");
+        }
+        return tyypit;
+    }
 }

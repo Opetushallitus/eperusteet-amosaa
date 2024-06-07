@@ -12,8 +12,13 @@ import org.springframework.stereotype.Service;
 @Profile("test")
 public class JulkaisuServiceMock implements JulkaisuService {
     @Override
-    public List<JulkaisuBaseDto> getJulkaisut(long ktId, long opsId) {
+    public List<JulkaisuBaseDto> getJulkaisutJaViimeisinStatus(long ktId, long opsId) {
         return null;
+    }
+
+    @Override
+    public List<JulkaisuBaseDto> getJulkaisut(long ktId, long opsId) {
+        return List.of();
     }
 
     @Override
