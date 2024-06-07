@@ -37,6 +37,16 @@ public class JulkaisuController extends KoulutustoimijaIdGetterAbstractControlle
     public List<JulkaisuBaseDto> getJulkaisut(
             @Parameter(hidden = true) @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable("opsId") final long opsId) {
+        return julkaisutService.getJulkaisutJaViimeisinStatus(ktId, opsId);
+    }
+
+    @Parameters({
+            @Parameter(name = "ktId", schema = @Schema(implementation = String.class), in = ParameterIn.PATH)
+    })
+    @RequestMapping(method = GET, value = "/julkaisut/kaikki")
+    public List<JulkaisuBaseDto> getJulkaisutKaikki(
+            @ModelAttribute("solvedKtId") final Long ktId,
+            @PathVariable("opsId") final long opsId) {
         return julkaisutService.getJulkaisut(ktId, opsId);
     }
 
