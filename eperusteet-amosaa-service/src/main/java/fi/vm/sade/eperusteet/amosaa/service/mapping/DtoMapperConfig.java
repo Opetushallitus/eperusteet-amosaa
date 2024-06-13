@@ -198,7 +198,12 @@ public class DtoMapperConfig {
                             KoodistoKoodiDto koodistokoodi = koodistoClient.getByUri(source.getUri());
                             if (koodistokoodi != null) {
                                 Map<String, String> lokalisoitu = Arrays.stream(koodistokoodi.getMetadata()).collect(Collectors.toMap(KoodistoMetadataDto::getKieli, KoodistoMetadataDto::getNimi));
-                                target.setKooditettu(new LokalisoituTekstiDto(lokalisoitu), koodistokoodi.getVoimassaAlkuPvm(), koodistokoodi.getVoimassaLoppuPvm());
+                                if (koodistokoodi.getKoodisto().getKoodistoUri().equals("osaamismerkit")) {
+                                    target.setKooditettu(new LokalisoituTekstiDto(lokalisoitu), koodistokoodi.getVoimassaAlkuPvm(), koodistokoodi.getVoimassaLoppuPvm());
+                                }
+                                else {
+                                    target.setKooditettu(new LokalisoituTekstiDto(lokalisoitu));
+                                }
                             }
                         }
                     }
