@@ -8,5 +8,7 @@ public interface KooditettuDto {
 
     default void setKooditettu(LokalisoituTekstiDto kooditettu) {}
 
-    default void setKooditettu(LokalisoituTekstiDto kooditettu, Date voimassaAlkuPvm, Date voimassaLoppuPvm) {}
+    default void setKooditettu(LokalisoituTekstiDto kooditettu, Date voimassaAlkuPvm, Date voimassaLoppuPvm) {
+        setKooditettu(kooditettu);
+    }
 }
