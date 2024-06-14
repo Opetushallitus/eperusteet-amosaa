@@ -199,12 +199,7 @@ public class DtoMapperConfig {
                             KoodistoKoodiDto koodistokoodi = koodistoClient.getByUri(source.getUri());
                             if (koodistokoodi != null) {
                                 Map<String, String> lokalisoitu = Arrays.stream(koodistokoodi.getMetadata()).collect(Collectors.toMap(KoodistoMetadataDto::getKieli, KoodistoMetadataDto::getNimi));
-                                if (KoodistoUriArvo.OSAAMISMERKIT.equals(koodistokoodi.getKoodisto().getKoodistoUri())) {
-                                    target.setKooditettu(new LokalisoituTekstiDto(lokalisoitu), koodistokoodi.getVoimassaAlkuPvm(), koodistokoodi.getVoimassaLoppuPvm());
-                                }
-                                else {
-                                    target.setKooditettu(new LokalisoituTekstiDto(lokalisoitu));
-                                }
+                                target.setKooditettu(new LokalisoituTekstiDto(lokalisoitu), koodistokoodi.getVoimassaAlkuPvm(), koodistokoodi.getVoimassaLoppuPvm());
                             }
                         }
                     }
