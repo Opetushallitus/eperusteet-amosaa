@@ -14,6 +14,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.KooditettuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiKuvaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koodisto.KoodistoKoodiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koodisto.KoodistoMetadataDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koodisto.KoodistoUriArvo;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaJulkinenDto;
@@ -198,7 +199,12 @@ public class DtoMapperConfig {
                             KoodistoKoodiDto koodistokoodi = koodistoClient.getByUri(source.getUri());
                             if (koodistokoodi != null) {
                                 Map<String, String> lokalisoitu = Arrays.stream(koodistokoodi.getMetadata()).collect(Collectors.toMap(KoodistoMetadataDto::getKieli, KoodistoMetadataDto::getNimi));
-                                target.setKooditettu(new LokalisoituTekstiDto(lokalisoitu), koodistokoodi.getVoimassaAlkuPvm(), koodistokoodi.getVoimassaLoppuPvm());
+                                if (KoodistoUriArvo.OSAAMISMERKIT.equals(koodistokoodi.getKoodisto().getKoodistoUri())) {
+                                    target.setKooditettu(new LokalisoituTekstiDto(lokalisoitu), koodistokoodi.getVoimassaAlkuPvm(), koodistokoodi.getVoimassaLoppuPvm());
+                                }
+                                else {
+                                    target.setKooditettu(new LokalisoituTekstiDto(lokalisoitu));
+                                }
                             }
                         }
                     }
