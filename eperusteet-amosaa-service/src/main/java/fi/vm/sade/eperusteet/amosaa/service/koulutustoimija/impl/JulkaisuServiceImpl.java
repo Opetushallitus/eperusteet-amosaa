@@ -115,7 +115,7 @@ public class JulkaisuServiceImpl implements JulkaisuService {
     @Lazy
     private JulkaisuService self;
 
-    private static final int JULKAISUN_ODOTUSAIKA_SEKUNNEISSA = 5 * 60;
+    private static final int JULKAISUN_ODOTUSAIKA_SEKUNNEISSA = 60 * 60;
 
     private ObjectMapper objectMapper = InitJacksonConverter.createMapper();
 
