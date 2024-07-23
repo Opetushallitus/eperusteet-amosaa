@@ -9,6 +9,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface JulkaisuService {
     @PreAuthorize("permitAll()")
+    List<JulkaisuBaseDto> getJulkaisutJaViimeisinStatus(long ktId, long opsId);
+
+    @PreAuthorize("permitAll()")
     List<JulkaisuBaseDto> getJulkaisut(long ktId, long opsId);
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'MUOKKAUS')")
