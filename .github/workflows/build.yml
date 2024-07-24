@@ -15,12 +15,15 @@ jobs:
         EPERUSTEET_AMOSAA_SPECFILE: https://raw.githubusercontent.com/Opetushallitus/eperusteet-amosaa/${{ github.ref_name }}/generated/amosaa.spec.json
     steps:
       - name: Checkout source
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Set up Node 16
-        uses: actions/setup-node@v3
+      - name: Set up Node 21
+        uses: actions/setup-node@v4
         with:
-          node-version: '16'
+          node-version: '21.7.3'  
+       
+      - name: Enable corepack for nodejs
+        run: corepack enable 
 
       - name: Check if UI has same branch
         id: ui_branch_status
@@ -51,10 +54,10 @@ jobs:
           cd ../..
           echo "----------viimeisimman commitin sha----------"
           git rev-parse HEAD
-          yarn run build
+          yarn build
           
       - name: Upload eperusteet-amosaa-ui
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: eperusteet-amosaa-ui
           path: eperusteet-amosaa-ui/dist/
@@ -64,23 +67,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         
       - name: Download ui
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: eperusteet-amosaa-ui
           path: eperusteet-amosaa-service/src/main/resources/static/ui
 
       - name: Set up JDK 11
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: '11'
           distribution: 'adopt'
           cache: 'maven'
 
       - name: Cache Maven repository
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-cache-${{ hashFiles('**/pom.xml') }}
@@ -107,7 +110,7 @@ jobs:
           ./cc-test-reporter upload-coverage  
           
       - name: Upload eperusteet-amosaa-service-jar
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: eperusteet-amosaa-service-jar
           path: eperusteet-amosaa-service/target/eperusteet-amosaa-service.jar
@@ -117,10 +120,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         
       - name: Download service-jar
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: eperusteet-amosaa-service-jar
           
