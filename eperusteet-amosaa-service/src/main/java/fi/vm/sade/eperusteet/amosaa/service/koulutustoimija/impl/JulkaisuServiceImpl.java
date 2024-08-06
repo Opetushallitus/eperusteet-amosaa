@@ -205,7 +205,7 @@ public class JulkaisuServiceImpl implements JulkaisuService {
                 DokumenttiDto dokumenttiDto = dokumenttiService.createDtoFor(ktId, opsId, kieli);
                 try {
                     dokumenttiService.setStarted(ktId, opsId, dokumenttiDto);
-                    dokumenttiService.generateWithDto(ktId, opsId, dokumenttiDto);
+                    dokumenttiService.generateWithDto(ktId, opsId, dokumenttiDto, opetussuunnitelmaKaikki);
                     dokumenttiIds.add(dokumenttiDto.getId());
                 } catch (DokumenttiException e) {
                     log.error(Throwables.getStackTraceAsString(e));
