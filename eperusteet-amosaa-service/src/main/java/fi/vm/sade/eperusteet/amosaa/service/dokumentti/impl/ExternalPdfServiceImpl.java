@@ -49,17 +49,12 @@ public class ExternalPdfServiceImpl implements ExternalPdfService {
     private final ObjectMapper mapper = InitJacksonConverter.createMapper();
 
     @Override
-    public void generatePdf(DokumenttiDto dto, Long ktId) throws JsonProcessingException {
-
-        OpetussuunnitelmaKaikkiDto ops = null;
-        DokumenttiDto viimeisinJulkaistuDokumentti = dokumenttiService.getJulkaistuDokumentti(ktId, dto.getOpsId(), dto.getKieli(), null);
-        if (viimeisinJulkaistuDokumentti != null && viimeisinJulkaistuDokumentti.getId().equals(dto.getId())) {
-            ops = opetussuunnitelmaService.getOpetussuunnitelmaJulkaistuSisalto(dto.getOpsId());
-        } else {
-            ops = opetussuunnitelmaService.getOpetussuunnitelmaKaikki(ktId, dto.getOpsId());
+    public void generatePdf(DokumenttiDto dto, Long ktId, OpetussuunnitelmaKaikkiDto opsDto) throws JsonProcessingException {
+        if (opsDto == null) {
+            opsDto = opetussuunnitelmaService.getOpetussuunnitelmaKaikki(ktId, dto.getOpsId());
         }
 
-        String json = mapper.writeValueAsString(ops);
+        String json = mapper.writeValueAsString(opsDto);
         OphHttpClient client = restClientFactory.get(pdfServiceUrl, true);
         String url = pdfServiceUrl + "/api/pdf/generate/amosaa/" + dto.getId() + "/" + dto.getKieli().name() + "/" + ktId;
 
@@ -81,5 +76,11 @@ public class ExternalPdfServiceImpl implements ExternalPdfService {
         if (!ObjectUtils.isEmpty(result)) {
             throw new RuntimeException("Virhe pdf-palvelun kutsussa");
         }
+
+    }
+
+    @Override
+    public void generatePdf(DokumenttiDto dto, Long ktId) throws JsonProcessingException {
+        generatePdf(dto, ktId, null);
     }
 }

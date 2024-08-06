@@ -59,7 +59,7 @@ public class DokumenttiController extends KoulutustoimijaIdGetterAbstractControl
         DokumenttiDto viimeisinJulkaistuDokumentti = dokumenttiService.getJulkaistuDokumentti(ktId, opsId, Kieli.of(kieli), null);
         if (viimeisinJulkaistuDokumentti != null && viimeisinJulkaistuDokumentti.getTila().equals(DokumenttiTila.EPAONNISTUI)) {
             dokumenttiService.setStarted(ktId, opsId, viimeisinJulkaistuDokumentti);
-            dokumenttiService.generateWithDto(ktId, opsId, viimeisinJulkaistuDokumentti);
+            dokumenttiService.generateWithDto(ktId, opsId, viimeisinJulkaistuDokumentti, opsService.getOpetussuunnitelmaJulkaistuSisalto(opsId));
         }
 
         DokumenttiDto dto = dokumenttiService.createDtoFor(ktId, opsId, Kieli.of(kieli));

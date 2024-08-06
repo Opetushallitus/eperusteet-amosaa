@@ -6,6 +6,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Julkaisu;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.repository.dokumentti.DokumenttiRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.JulkaisuRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
@@ -183,10 +184,17 @@ public class DokumenttiServiceImpl implements DokumenttiService {
     @Transactional(noRollbackFor = DokumenttiException.class, propagation = Propagation.REQUIRES_NEW)
     @Async(value = "docTaskExecutor")
     public void generateWithDto(Long ktId, @NotNull Long opsId, DokumenttiDto dto) throws DokumenttiException {
+        generateWithDto(ktId, opsId, dto, null);
+    }
+
+    @Override
+    @Transactional(noRollbackFor = DokumenttiException.class, propagation = Propagation.REQUIRES_NEW)
+    @Async(value = "docTaskExecutor")
+    public void generateWithDto(Long ktId, @NotNull Long opsId, DokumenttiDto dto, OpetussuunnitelmaKaikkiDto opsDto) throws DokumenttiException {
         dto.setTila(DokumenttiTila.LUODAAN);
 
         try {
-            externalPdfService.generatePdf(dto, ktId);
+            externalPdfService.generatePdf(dto, ktId, opsDto);
         } catch (Exception ex) {
             log.error(ex.getMessage());
             dto.setTila(DokumenttiTila.EPAONNISTUI);

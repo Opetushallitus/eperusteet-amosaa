@@ -3,7 +3,9 @@ package fi.vm.sade.eperusteet.amosaa.service.util;
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiTila;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiService;
+import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +46,11 @@ public class DokumenttiServiceMock implements DokumenttiService {
 
     @Override
     public void generateWithDto(Long ktId, Long opsId, DokumenttiDto dto) {
+
+    }
+
+    @Override
+    public void generateWithDto(Long ktId, Long opsId, DokumenttiDto dto, OpetussuunnitelmaKaikkiDto opsDto) throws DokumenttiException {
 
     }
 
