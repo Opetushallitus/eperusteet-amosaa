@@ -1,6 +1,7 @@
 package fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import fi.vm.sade.eperusteet.amosaa.domain.JotpaTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
@@ -32,6 +33,7 @@ public class OpetussuunnitelmaTilastoDto {
     private Set<Kieli> julkaisukielet;
     private Set<JulkaisuKevytDto> julkaisut;
     private KoulutusTyyppi koulutustyyppi;
+    private JotpaTyyppi jotpatyyppi;
 
     @JsonIgnore
     private CachedPerusteKevytDto peruste;
