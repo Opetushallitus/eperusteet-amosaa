@@ -43,6 +43,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaKaikkiD
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaLuontiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaQueryDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaTilastoDto;
+import fi.vm.sade.eperusteet.amosaa.dto.ops.OpetussuunnitelmaWithLatestTilaUpdateTime;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.VanhentunutPohjaperusteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioHistoriaLiitosDto;
 import fi.vm.sade.eperusteet.amosaa.dto.organisaatio.OrganisaatioStatus;
@@ -302,10 +303,17 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     @Override
     public Page<OpetussuunnitelmaTilastoDto> getOpetussuunnitelmaTilastot(Integer sivu, Integer sivukoko) {
         Pageable pageable = PageRequest.of(sivu, sivukoko, Sort.Direction.ASC, "id");
-        Page<Opetussuunnitelma> opetussuunnitelmat = repository.findAll(pageable);
-        return new PageImpl(opetussuunnitelmat.getContent().stream()
+        List<OpetussuunnitelmaTilastoDto> opetussuunnitelmatDto = repository.findAll(pageable).getContent().stream()
                 .map(t -> mapper.map(t, OpetussuunnitelmaTilastoDto.class))
-                .collect(Collectors.toList()), pageable, opetussuunnitelmat.getTotalElements());
+                .collect(Collectors.toList());
+
+        Map<Long, Date> opetussuunnitelmaWithLatestTilaUpdateTimesMaps = repository.findAllWithLatestTilaUpdateDate(
+                        opetussuunnitelmatDto.stream().map(OpetussuunnitelmaTilastoDto::getId).collect(Collectors.toList()))
+                .stream().collect(Collectors.toMap(OpetussuunnitelmaWithLatestTilaUpdateTime::getId, OpetussuunnitelmaWithLatestTilaUpdateTime::getViimeisinTilaMuutosAika));
+
+        return new PageImpl(opetussuunnitelmatDto.stream()
+                .peek(opsDto -> opsDto.setViimeisinTilaMuutosAika(opetussuunnitelmaWithLatestTilaUpdateTimesMaps.get(opsDto.getId())))
+                .collect(Collectors.toList()), pageable, opetussuunnitelmatDto.size());
     }
 
     @Override

@@ -8,6 +8,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.liite.version.JpaWithVersioningRepository;
+import fi.vm.sade.eperusteet.amosaa.dto.ops.OpetussuunnitelmaWithLatestTilaUpdateTime;
 import fi.vm.sade.eperusteet.amosaa.service.util.Pair;
 import java.util.Set;
 import org.springframework.data.domain.Page;
@@ -30,6 +31,13 @@ public interface OpetussuunnitelmaRepository extends JpaWithVersioningRepository
     Page<Opetussuunnitelma> findAllByKoulutustoimija(Koulutustoimija koulutustoimija, Pageable pageable);
 
     Page<Opetussuunnitelma> findAll(Pageable pageable);
+
+    @Query(nativeQuery = true,
+            value = "SELECT ops.id, aud.muokattu AS viimeisinTilaMuutosAika " +
+                    "FROM opetussuunnitelma ops " +
+                    "INNER JOIN (SELECT MIN(muokattu) muokattu, tila, id FROM opetussuunnitelma_aud GROUP BY tila, id) aud ON aud.id = ops.id AND aud.tila = ops.tila " +
+                    "WHERE ops.id in (:ids)")
+    List<OpetussuunnitelmaWithLatestTilaUpdateTime> findAllWithLatestTilaUpdateDate(List<Long> ids);
 
     long countByKoulutustoimija(Koulutustoimija koulutustoimija);
 
