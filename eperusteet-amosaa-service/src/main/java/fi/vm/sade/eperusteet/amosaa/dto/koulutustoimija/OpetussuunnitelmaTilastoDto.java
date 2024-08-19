@@ -34,6 +34,7 @@ public class OpetussuunnitelmaTilastoDto {
     private Set<JulkaisuKevytDto> julkaisut;
     private KoulutusTyyppi koulutustyyppi;
     private JotpaTyyppi jotpatyyppi;
+    private Date viimeisinTilaMuutosAika;
 
     @JsonIgnore
     private CachedPerusteKevytDto peruste;
