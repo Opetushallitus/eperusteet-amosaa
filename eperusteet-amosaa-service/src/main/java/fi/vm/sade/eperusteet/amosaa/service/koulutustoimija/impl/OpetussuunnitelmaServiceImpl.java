@@ -98,6 +98,7 @@ import fi.vm.sade.eperusteet.amosaa.service.peruste.OpetussuunnitelmaPerustePaiv
 import fi.vm.sade.eperusteet.amosaa.service.security.KoulutustyyppiRolePrefix;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionManager;
 import fi.vm.sade.eperusteet.amosaa.service.util.CollectionUtil;
+import fi.vm.sade.eperusteet.amosaa.service.util.NavigationUtil;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 import lombok.extern.slf4j.Slf4j;
@@ -447,7 +448,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                 .filter(node -> !node.getType().equals(NavigationType.suorituspolut) || CollectionUtils.isNotEmpty(node.getChildren()))
                 .collect(Collectors.toList())
         );
-
+        NavigationUtil.asetaNumerointi(repository.findOne(opsId), rootNode);
         return rootNode;
     }
 
