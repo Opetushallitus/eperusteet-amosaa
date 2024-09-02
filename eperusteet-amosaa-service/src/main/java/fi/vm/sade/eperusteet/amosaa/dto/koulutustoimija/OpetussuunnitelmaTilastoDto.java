@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import fi.vm.sade.eperusteet.amosaa.domain.JotpaTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteKevytDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
@@ -35,6 +36,7 @@ public class OpetussuunnitelmaTilastoDto {
     private KoulutusTyyppi koulutustyyppi;
     private JotpaTyyppi jotpatyyppi;
     private Date viimeisinTilaMuutosAika;
+    private OpsTyyppi tyyppi;
 
     @JsonIgnore
     private CachedPerusteKevytDto peruste;
