@@ -57,7 +57,7 @@
         <bean id="dataSource"
               class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" depends-on="h2db">
             <property name="driverClassName" value="org.h2.Driver"/>
-            <property name="url" value="jdbc:h2:tcp://localhost:12345/mem:test"/>
+            <property name="url" value="jdbc:h2:~/test;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH"/>
         </bean>
     </beans>
 
