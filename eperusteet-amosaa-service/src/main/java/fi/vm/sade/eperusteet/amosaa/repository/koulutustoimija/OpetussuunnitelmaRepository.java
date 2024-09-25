@@ -32,12 +32,14 @@ public interface OpetussuunnitelmaRepository extends JpaWithVersioningRepository
 
     Page<Opetussuunnitelma> findAll(Pageable pageable);
 
+    Page<Opetussuunnitelma> findAllByTyyppiIn(List<OpsTyyppi> opsTyyppi, Pageable pageable);
+
     @Query(nativeQuery = true,
             value = "SELECT ops.id, aud.muokattu AS viimeisinTilaMuutosAika " +
                     "FROM opetussuunnitelma ops " +
                     "INNER JOIN (SELECT MIN(muokattu) muokattu, tila, id FROM opetussuunnitelma_aud GROUP BY tila, id) aud ON aud.id = ops.id AND aud.tila = ops.tila " +
-                    "WHERE ops.id in (:ids)")
-    List<OpetussuunnitelmaWithLatestTilaUpdateTime> findAllWithLatestTilaUpdateDate(List<Long> ids);
+                    "WHERE ops.id in (:ids) AND ops.tyyppi in :tyyppi")
+    List<OpetussuunnitelmaWithLatestTilaUpdateTime> findAllWithLatestTilaUpdateDate(List<Long> ids, List<String> tyyppi);
 
     long countByKoulutustoimija(Koulutustoimija koulutustoimija);
 

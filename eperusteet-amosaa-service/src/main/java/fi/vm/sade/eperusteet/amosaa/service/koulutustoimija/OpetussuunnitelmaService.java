@@ -155,7 +155,7 @@ public interface OpetussuunnitelmaService extends RevisionService {
     @PreAuthorize("hasPermission(null, 'OPH','HALLINTA')")
     List<OpetussuunnitelmaTilastoDto> getOpetussuunnitelmaTilastot(Set<KoulutusTyyppi> koulutusTyyppi);
 
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated() or @profileService.isDevProfileActive()")
     Page<OpetussuunnitelmaTilastoDto> getOpetussuunnitelmaTilastot(Integer sivu, Integer sivukoko);
 
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUKU')")

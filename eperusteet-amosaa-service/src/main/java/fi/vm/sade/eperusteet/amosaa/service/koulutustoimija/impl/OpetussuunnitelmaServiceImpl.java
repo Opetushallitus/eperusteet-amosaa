@@ -304,12 +304,12 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     @Override
     public Page<OpetussuunnitelmaTilastoDto> getOpetussuunnitelmaTilastot(Integer sivu, Integer sivukoko) {
         Pageable pageable = PageRequest.of(sivu, sivukoko, Sort.Direction.ASC, "id");
-        List<OpetussuunnitelmaTilastoDto> opetussuunnitelmatDto = repository.findAll(pageable).getContent().stream()
+        List<OpetussuunnitelmaTilastoDto> opetussuunnitelmatDto = repository.findAllByTyyppiIn(List.of(OpsTyyppi.OPS, OpsTyyppi.YHTEINEN), pageable).getContent().stream()
                 .map(t -> mapper.map(t, OpetussuunnitelmaTilastoDto.class))
                 .collect(Collectors.toList());
 
         Map<Long, Date> opetussuunnitelmaWithLatestTilaUpdateTimesMaps = repository.findAllWithLatestTilaUpdateDate(
-                        opetussuunnitelmatDto.stream().map(OpetussuunnitelmaTilastoDto::getId).collect(Collectors.toList()))
+                        opetussuunnitelmatDto.stream().map(OpetussuunnitelmaTilastoDto::getId).collect(Collectors.toList()), List.of(OpsTyyppi.OPS.name(), OpsTyyppi.YHTEINEN.name()))
                 .stream().collect(Collectors.toMap(OpetussuunnitelmaWithLatestTilaUpdateTime::getId, OpetussuunnitelmaWithLatestTilaUpdateTime::getViimeisinTilaMuutosAika));
 
         return new PageImpl(opetussuunnitelmatDto.stream()
