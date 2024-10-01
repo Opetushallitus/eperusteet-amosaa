@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
-import fi.vm.sade.eperusteet.amosaa.dto.PalauteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.AbstractRakenneOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.ArviointiasteikkoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
@@ -20,16 +19,6 @@ import fi.vm.sade.eperusteet.utils.client.OphClientHelper;
 import fi.vm.sade.eperusteet.utils.client.RestClientFactory;
 import fi.vm.sade.javautils.http.OphHttpClient;
 import fi.vm.sade.javautils.http.OphHttpRequest;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
@@ -44,6 +33,17 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
@@ -136,11 +136,6 @@ public class EperusteetClientImpl implements EperusteetClient {
                     }
                 })
                 .orElse(null);
-    }
-
-    @Override
-    public PalauteDto lahetaPalaute(PalauteDto palaute) throws JsonProcessingException {
-        return ophClientHelper.post(eperusteetServiceUrl, String.format(eperusteetServiceUrl + "/api/palaute"), palaute, PalauteDto.class);
     }
 
     @Override
