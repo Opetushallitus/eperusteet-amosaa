@@ -199,6 +199,10 @@ public class SisaltoViite extends AbstractAuditedEntity implements Referenceable
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     private OsaamismerkkiKappale osaamismerkkiKappale;
 
+    @Getter
+    @Setter
+    private Boolean piilotettu;
+
     public SisaltoViite() {
     }
 
@@ -271,6 +275,7 @@ public class SisaltoViite extends AbstractAuditedEntity implements Referenceable
             result.updatePohjanTekstikappale(original.getPohjanTekstikappale());
             result.setOsaAlueet(original.getOsaAlueet().stream().map(OmaOsaAlue::copy).collect(Collectors.toList()));
             result.setOsaamismerkkiKappale(OsaamismerkkiKappale.copy(original.getOsaamismerkkiKappale()));
+            result.setPiilotettu(original.getPiilotettu());
 
             if ((kopiointiType.equals(TekstiHierarkiaKopiointiToiminto.POHJAVIITE) || kopiointiType.equals(TekstiHierarkiaKopiointiToiminto.KOPIOI_JA_SAILYTA_POHJAVIITE))
                     && original.getTekstiKappale() != null

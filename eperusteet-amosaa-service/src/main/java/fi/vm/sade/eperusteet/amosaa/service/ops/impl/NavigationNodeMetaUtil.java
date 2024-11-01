@@ -25,6 +25,8 @@ public class NavigationNodeMetaUtil {
             navigationNodeDto.meta("postfix_label", "tutkinnon-osa-paikallinen-merkki");
             navigationNodeDto.meta("postfix_tooltip", "paikallisesti-luotu-tutkinnon-osa");
         }
+
+        navigationNodeDto.meta("piilotettu", sisaltoviite.isPiilotettu());
     }
 
     public static void lisaaTutkinnonOsanOsaAlueet(PerusteKaikkiDto perusteKaikkiDto, SisaltoViiteKevytDto lapsi, NavigationNodeDto node, Predicate<OmaOsaAlueKevytDto> filter) {

@@ -95,6 +95,7 @@ public class WebSecurityConfigurationDev {
                         "APP_EPERUSTEET_TUVA",
                         "APP_EPERUSTEET_KOTO",
                         "APP_EPERUSTEET_VST_ADMIN_1.2.246.562.10.54645809036",
+                        "APP_EPERUSTEET_TUVA_ADMIN_1.2.246.562.10.00000000001",
                         "APP_EPERUSTEET_TUVA_ADMIN_1.2.246.562.10.54645809036",
                         "APP_EPERUSTEET_TUVA_ADMIN_1.2.246.562.10.81269623245",
                         "APP_EPERUSTEET_KOTO_ADMIN_1.2.246.562.10.54645809036",
