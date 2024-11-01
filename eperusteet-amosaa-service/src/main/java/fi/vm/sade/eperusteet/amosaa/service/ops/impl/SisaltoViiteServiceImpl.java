@@ -502,6 +502,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
                 break;
             case OPINTOKOKONAISUUS:
             case KOULUTUKSENOSA:
+            case KOULUTUKSENOSAT:
             case LAAJAALAINENOSAAMINEN:
             case KOTO_KIELITAITOTASO:
             case KOTO_LAAJAALAINENOSAAMINEN:

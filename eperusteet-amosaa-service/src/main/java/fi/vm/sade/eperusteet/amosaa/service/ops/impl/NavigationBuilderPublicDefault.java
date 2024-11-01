@@ -52,6 +52,7 @@ public class NavigationBuilderPublicDefault implements NavigationBuilderPublic {
 
     private List<NavigationNodeDto> sisaltoviitteet(SisaltoViiteExportDto root, OpetussuunnitelmaKaikkiDto opetussuunnitelmaKaikkiDto, PerusteKaikkiDto perusteKaikkiDto) {
         return root.getLapset().stream()
+                .filter(viite -> !viite.isPiilotettu())
                 .map(sisaltoViite -> sisaltoviiteToNavigationNode(sisaltoViite, opetussuunnitelmaKaikkiDto, perusteKaikkiDto))
                 .collect(Collectors.toList());
     }
@@ -68,9 +69,7 @@ public class NavigationBuilderPublicDefault implements NavigationBuilderPublic {
         NavigationNodeMetaUtil.asetaMetaTiedot(result, mapper.map(sisaltoviite, SisaltoViiteKevytDto.class));
         NavigationNodeMetaUtil.lisaaTutkinnonOsanOsaAlueet(perusteKaikkiDto, mapper.map(sisaltoviite, SisaltoViiteKevytDto.class), result, (osaalue) -> !osaalue.isPiilotettu());
         return result.addAll(sisaltoviite.getLapset() != null ?
-                        sisaltoviite.getLapset().stream()
-                                .map(lapsi -> sisaltoviiteToNavigationNode(lapsi, opetussuunnitelmaKaikkiDto, perusteKaikkiDto))
-                                .collect(Collectors.toList())
+                        sisaltoviitteet(sisaltoviite, opetussuunnitelmaKaikkiDto, perusteKaikkiDto)
                         : Collections.emptyList());
     }
 

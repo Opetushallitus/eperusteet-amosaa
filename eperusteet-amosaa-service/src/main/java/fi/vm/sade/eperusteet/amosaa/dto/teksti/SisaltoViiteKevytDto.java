@@ -36,6 +36,7 @@ public class SisaltoViiteKevytDto {
     private OpintokokonaisuusDto opintokokonaisuus;
     private Long perusteenOsaId;
     private List<OmaOsaAlueKevytDto> osaAlueet = new ArrayList<>();
+    private boolean piilotettu;
 
     public LokalisoituTekstiDto getNimi() {
         if (SisaltoTyyppi.OSAAMISMERKKI.equals(tyyppi)) {

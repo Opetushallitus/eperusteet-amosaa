@@ -42,6 +42,7 @@ public class SisaltoViiteExportDto extends SisaltoViiteExportBaseDto {
     private OsaamismerkkiKappaleDto osaamismerkkiKappale;
     private Long perusteenOsaId;
     private List<OmaOsaAlueExportDto> osaAlueet = new ArrayList<>();
+    private boolean piilotettu;
 
     public LokalisoituTekstiDto getNimi() {
         if (koulutuksenosa != null) {

@@ -52,6 +52,7 @@ public class SisaltoViiteDto {
     private Long linkattuPeruste;
     private SisaltoTyyppi linkattuTyyppi;
     private OsaamismerkkiKappaleDto osaamismerkkiKappale;
+    private boolean piilotettu;
 
     @JsonProperty("_tekstiKappale")
     private Reference tekstiKappaleRef;
