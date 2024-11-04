@@ -34,7 +34,6 @@ public class SisaltoViiteDto {
     private CachedPerusteBaseDto peruste;
     private SisaltoTyyppi tyyppi;
     private LokalisoituTekstiDto ohjeteksti;
-    private LokalisoituTekstiDto perusteteksti;
     private TutkinnonosaDto tosa;
     private SuorituspolkuDto suorituspolku;
     private OpintokokonaisuusDto opintokokonaisuus;

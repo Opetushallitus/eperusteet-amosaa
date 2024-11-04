@@ -66,7 +66,7 @@ public class NavigationBuilderPublicDefault implements NavigationBuilderPublic {
                         getSisaltoviiteNimi(sisaltoviite),
                         sisaltoviite.getId())
                 .meta("koodi", getSisaltoviiteMetaKoodi(sisaltoviite));
-        NavigationNodeMetaUtil.asetaMetaTiedot(result, mapper.map(sisaltoviite, SisaltoViiteKevytDto.class));
+        NavigationNodeMetaUtil.asetaPublicMetaTiedot(result, mapper.map(sisaltoviite, SisaltoViiteKevytDto.class));
         NavigationNodeMetaUtil.lisaaTutkinnonOsanOsaAlueet(perusteKaikkiDto, mapper.map(sisaltoviite, SisaltoViiteKevytDto.class), result, (osaalue) -> !osaalue.isPiilotettu());
         return result.addAll(sisaltoviite.getLapset() != null ?
                         sisaltoviitteet(sisaltoviite, opetussuunnitelmaKaikkiDto, perusteKaikkiDto)

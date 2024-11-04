@@ -20,6 +20,15 @@ import java.util.function.Predicate;
 public class NavigationNodeMetaUtil {
 
     public static void asetaMetaTiedot(NavigationNodeDto navigationNodeDto, SisaltoViiteKevytDto sisaltoviite) {
+        asetaPublicMetaTiedot(navigationNodeDto, sisaltoviite);
+
+        if (sisaltoviite.getTyyppi().equals(SisaltoTyyppi.TEKSTIKAPPALE) && sisaltoviite.getPerusteenOsaId() == null) {
+            navigationNodeDto.meta("postfix_label", "tekstikappale-paikallinen-merkki");
+            navigationNodeDto.meta("postfix_tooltip", "paikallisesti-luotu-tekstikappale");
+        }
+    }
+
+    public static void asetaPublicMetaTiedot(NavigationNodeDto navigationNodeDto, SisaltoViiteKevytDto sisaltoviite) {
 
         if(sisaltoviite.getTyyppi().equals(SisaltoTyyppi.TUTKINNONOSA) && sisaltoviite.getTosa() != null && sisaltoviite.getTosa().getTyyppi().equals(TutkinnonosaTyyppi.OMA)) {
             navigationNodeDto.meta("postfix_label", "tutkinnon-osa-paikallinen-merkki");

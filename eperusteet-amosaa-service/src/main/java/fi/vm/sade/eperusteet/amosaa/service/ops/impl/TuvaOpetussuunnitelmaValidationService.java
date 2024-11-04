@@ -57,7 +57,7 @@ public class TuvaOpetussuunnitelmaValidationService implements Opetussuunnitelma
         LokalisoituTeksti nimi = viite.getTekstiKappale() != null ? viite.getTekstiKappale().getNimi() : null;
 
         // Validointi jos osa on pakollinen tai kyseessä itse määritetty sisältö millä ei ole alisisältöä
-        if ((viite.getPerusteteksti() == null && viite.getPohjanTekstikappale() == null)) {
+        if ((viite.getPerusteenOsaId() == null && viite.getPohjanTekstikappale() == null)) {
             if (viite.getLapset().isEmpty()) {
                 LokalisoituTeksti.validoi(validointi, ops, viite.getTekstiKappale().getTeksti(), NavigationNodeDto.of(viite));
             }
