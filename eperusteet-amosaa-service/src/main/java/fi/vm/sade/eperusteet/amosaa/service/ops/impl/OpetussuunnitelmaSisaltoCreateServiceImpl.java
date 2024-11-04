@@ -115,7 +115,6 @@ public class OpetussuunnitelmaSisaltoCreateServiceImpl implements Opetussuunnite
 
         if (sisalto.getPerusteenOsa() instanceof TekstiKappaleDto) {
             sisaltoviite = SisaltoViite.createTekstikappale(parentViite);
-            sisaltoviite.setPerusteteksti(LokalisoituTeksti.of(((TekstiKappaleDto) sisalto.getPerusteenOsa()).getTeksti()));
             sisaltoviite.setNaytaPerusteenTeksti(true);
         }
 
@@ -149,7 +148,6 @@ public class OpetussuunnitelmaSisaltoCreateServiceImpl implements Opetussuunnite
             TuvaLaajaAlainenOsaaminenDto tuvaLaajaAlainenOsaaminenDto = (TuvaLaajaAlainenOsaaminenDto) sisalto.getPerusteenOsa();
             mapper.map(tuvaLaajaAlainenOsaaminenDto, tuvaLaajaAlainenOsaaminen);
 
-            sisaltoviite.setPerusteteksti(LokalisoituTeksti.of(tuvaLaajaAlainenOsaaminenDto.getTeksti()));
             sisaltoviite.setNaytaPerusteenTeksti(true);
 
             sisaltoviite.getTuvaLaajaAlainenOsaaminen().setId(null);

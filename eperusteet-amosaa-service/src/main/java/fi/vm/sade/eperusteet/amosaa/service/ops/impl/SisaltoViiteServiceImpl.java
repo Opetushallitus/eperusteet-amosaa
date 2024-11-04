@@ -482,7 +482,6 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
             viite.setPakollinen(uusi.isPakollinen());
             viite.setLiikkumaton(uusi.isLiikkumaton());
             viite.setOhjeteksti(LokalisoituTeksti.of(uusi.getOhjeteksti()));
-            viite.setPerusteteksti(LokalisoituTeksti.of(uusi.getPerusteteksti()));
         }
         viite.setNaytaPerusteenTeksti(uusi.isNaytaPerusteenTeksti());
         viite.setNaytaPohjanTeksti(uusi.isNaytaPohjanTeksti());

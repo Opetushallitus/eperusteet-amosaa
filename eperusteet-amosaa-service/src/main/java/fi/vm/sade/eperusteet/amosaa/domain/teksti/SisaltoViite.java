@@ -105,6 +105,7 @@ public class SisaltoViite extends AbstractAuditedEntity implements Referenceable
     @Setter
     private LokalisoituTeksti ohjeteksti;
 
+    @Deprecated
     @ValidHtml
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
@@ -259,7 +260,6 @@ public class SisaltoViite extends AbstractAuditedEntity implements Referenceable
             result.setNaytaPerusteenTeksti(original.isNaytaPerusteenTeksti());
             result.setOhjeteksti(original.getOhjeteksti());
             result.setTyyppi(original.getTyyppi());
-            result.setPerusteteksti(original.getPerusteteksti());
             result.setTosa(Tutkinnonosa.copy(original.getTosa()));
             result.setSuorituspolku(Suorituspolku.copy(original.getSuorituspolku()));
             result.setOpintokokonaisuus(Opintokokonaisuus.copy(original.getOpintokokonaisuus()));
@@ -445,13 +445,6 @@ public class SisaltoViite extends AbstractAuditedEntity implements Referenceable
             return this.linkkiSisaltoViite.ohjeteksti;
         }
         return ohjeteksti;
-    }
-
-    public LokalisoituTeksti getPerusteteksti() {
-        if (SisaltoTyyppi.LINKKI.equals(tyyppi)) {
-            return this.linkkiSisaltoViite.perusteteksti;
-        }
-        return perusteteksti;
     }
 
     public boolean isNaytaPerusteenTeksti() {
