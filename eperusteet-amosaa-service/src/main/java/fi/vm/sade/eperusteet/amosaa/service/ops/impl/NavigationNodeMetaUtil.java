@@ -14,17 +14,20 @@ import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteKevytDto;
 import lombok.experimental.UtilityClass;
 import org.springframework.util.CollectionUtils;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 @UtilityClass
 public class NavigationNodeMetaUtil {
 
+    private static final List<SisaltoTyyppi> PAIKALLINEN_SISALTO = List.of(SisaltoTyyppi.TEKSTIKAPPALE, SisaltoTyyppi.KOULUTUKSENOSA, SisaltoTyyppi.LAAJAALAINENOSAAMINEN);
+
     public static void asetaMetaTiedot(NavigationNodeDto navigationNodeDto, SisaltoViiteKevytDto sisaltoviite) {
         asetaPublicMetaTiedot(navigationNodeDto, sisaltoviite);
 
-        if (sisaltoviite.getTyyppi().equals(SisaltoTyyppi.TEKSTIKAPPALE) && sisaltoviite.getPerusteenOsaId() == null) {
-            navigationNodeDto.meta("postfix_label", "tekstikappale-paikallinen-merkki");
-            navigationNodeDto.meta("postfix_tooltip", "paikallisesti-luotu-tekstikappale");
+        if (PAIKALLINEN_SISALTO.contains(sisaltoviite.getTyyppi()) && sisaltoviite.getPerusteenOsaId() == null) {
+            navigationNodeDto.meta("postfix_label", "sisalto-paikallinen-merkki");
+            navigationNodeDto.meta("postfix_tooltip", "paikallisesti-luotu-" + SisaltoTyyppi.TEKSTIKAPPALE.toString().toLowerCase());
         }
     }
 
