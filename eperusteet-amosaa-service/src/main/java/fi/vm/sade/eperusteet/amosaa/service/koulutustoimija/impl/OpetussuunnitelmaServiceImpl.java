@@ -891,9 +891,10 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     @Override
     public OpetussuunnitelmaKaikkiDto getOpetussuunnitelmaJulkaistuSisalto(Long ktId, Long opsId, boolean esikatselu) {
         Opetussuunnitelma ops = repository.findOne(opsId);
-        if (ops == null || ops.getTila().equals(Tila.POISTETTU)) {
+        if (ops == null || ops.getTila().equals(Tila.POISTETTU) || (esikatselu && !ops.isEsikatseltavissa())) {
             throw new NotExistsException("");
         }
+
         if (esikatselu) {
             return getOpetussuunnitelmaKaikki(ktId, opsId);
         }
