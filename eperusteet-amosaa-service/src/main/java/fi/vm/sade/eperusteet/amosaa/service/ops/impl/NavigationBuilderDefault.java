@@ -75,7 +75,7 @@ public class NavigationBuilderDefault implements NavigationBuilder {
                         sisaltoviite.getNimi(),
                         sisaltoviite.getId())
                     .meta("koodi", getSisaltoviiteMetaKoodi(sisaltoviite));
-        NavigationNodeMetaUtil.asetaMetaTiedot(result, sisaltoviite);
+        NavigationNodeMetaUtil.asetaMetaTiedot(result, sisaltoviite, perusteKaikkiDto);
         NavigationNodeMetaUtil.lisaaTutkinnonOsanOsaAlueet(perusteKaikkiDto, sisaltoviite, result, (osaalue) -> true);
 
         return result.addAll(sisaltoviite.getLapset() != null ? sisaltoviite.getLapset().stream()

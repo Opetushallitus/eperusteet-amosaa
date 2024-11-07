@@ -22,10 +22,12 @@ public class NavigationNodeMetaUtil {
 
     private static final List<SisaltoTyyppi> PAIKALLINEN_SISALTO = List.of(SisaltoTyyppi.TEKSTIKAPPALE, SisaltoTyyppi.KOULUTUKSENOSA, SisaltoTyyppi.LAAJAALAINENOSAAMINEN);
 
-    public static void asetaMetaTiedot(NavigationNodeDto navigationNodeDto, SisaltoViiteKevytDto sisaltoviite) {
+    public static void asetaMetaTiedot(NavigationNodeDto navigationNodeDto, SisaltoViiteKevytDto sisaltoviite, PerusteKaikkiDto perusteKaikkiDto) {
         asetaPublicMetaTiedot(navigationNodeDto, sisaltoviite);
 
-        if (PAIKALLINEN_SISALTO.contains(sisaltoviite.getTyyppi()) && sisaltoviite.getPerusteenOsaId() == null) {
+        navigationNodeDto.meta("piilotettu", sisaltoviite.isPiilotettu());
+
+        if (PAIKALLINEN_SISALTO.contains(sisaltoviite.getTyyppi()) && sisaltoviite.getPerusteenOsaId() == null && perusteKaikkiDto != null) {
             navigationNodeDto.meta("postfix_label", "sisalto-paikallinen-merkki");
             navigationNodeDto.meta("postfix_tooltip", "paikallisesti-luotu-" + SisaltoTyyppi.TEKSTIKAPPALE.toString().toLowerCase());
         }
@@ -37,8 +39,6 @@ public class NavigationNodeMetaUtil {
             navigationNodeDto.meta("postfix_label", "tutkinnon-osa-paikallinen-merkki");
             navigationNodeDto.meta("postfix_tooltip", "paikallisesti-luotu-tutkinnon-osa");
         }
-
-        navigationNodeDto.meta("piilotettu", sisaltoviite.isPiilotettu());
     }
 
     public static void lisaaTutkinnonOsanOsaAlueet(PerusteKaikkiDto perusteKaikkiDto, SisaltoViiteKevytDto lapsi, NavigationNodeDto node, Predicate<OmaOsaAlueKevytDto> filter) {
