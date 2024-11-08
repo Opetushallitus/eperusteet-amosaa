@@ -18,7 +18,7 @@
         <eperusteet-amosaa.devdb.jdbcurl>jdbc:postgresql://localhost:5432/${eperusteet-amosaa.devdb.user}</eperusteet-amosaa.devdb.jdbcurl>
         <eperusteet-amosaa.ittestdb.jdbcurl>jdbc:postgresql://localhost:5432/${eperusteet-amosaa.ittestdb.user}</eperusteet-amosaa.ittestdb.jdbcurl>
         <jsoup.version>1.15.3</jsoup.version>
-        <fop.version>2.9</fop.version>
+        <fop.version>2.10</fop.version>
         <pdfbox.version>2.0.29</pdfbox.version>
         <metrics.version>4.2.18</metrics.version>
         <schema.file>${project.basedir}/target/schema.ddl</schema.file>
