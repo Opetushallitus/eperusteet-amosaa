@@ -202,7 +202,7 @@ public class SisaltoViite extends AbstractAuditedEntity implements Referenceable
 
     @Getter
     @Setter
-    private Boolean piilotettu;
+    private Boolean piilotettu = false;
 
     public SisaltoViite() {
     }
