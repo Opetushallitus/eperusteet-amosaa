@@ -127,8 +127,10 @@
         }, {
           "name" : "sivu",
           "in" : "query",
+          "description" : "Sivunumero (0 perusarvo)",
           "required" : false,
           "type" : "integer",
+          "default" : 0,
           "format" : "int64"
         }, {
           "name" : "sivukoko",
@@ -1926,19 +1928,6 @@
           "type" : "integer",
           "format" : "int64"
         },
-        "first" : {
-          "type" : "boolean"
-        },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-        "last" : {
-          "type" : "boolean"
-        },
-        "pageable" : {
-          "$ref" : "#/definitions/Pageable"
-        },
         "size" : {
           "type" : "integer",
           "format" : "int32"
@@ -1956,6 +1945,19 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
+        "first" : {
+          "type" : "boolean"
+        },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "last" : {
+          "type" : "boolean"
+        },
+        "pageable" : {
+          "$ref" : "#/definitions/Pageable"
+        },
         "empty" : {
           "type" : "boolean"
         }
@@ -1971,19 +1973,6 @@
         "totalElements" : {
           "type" : "integer",
           "format" : "int64"
-        },
-        "first" : {
-          "type" : "boolean"
-        },
-        "numberOfElements" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-        "last" : {
-          "type" : "boolean"
-        },
-        "pageable" : {
-          "$ref" : "#/definitions/Pageable"
         },
         "size" : {
           "type" : "integer",
@@ -2002,6 +1991,19 @@
         "sort" : {
           "$ref" : "#/definitions/Sort"
         },
+        "first" : {
+          "type" : "boolean"
+        },
+        "numberOfElements" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "last" : {
+          "type" : "boolean"
+        },
+        "pageable" : {
+          "$ref" : "#/definitions/Pageable"
+        },
         "empty" : {
           "type" : "boolean"
         }
@@ -2010,26 +2012,26 @@
     "Pageable" : {
       "type" : "object",
       "properties" : {
-        "pageNumber" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-        "unpaged" : {
-          "type" : "boolean"
-        },
-        "pageSize" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-        "paged" : {
-          "type" : "boolean"
-        },
         "offset" : {
           "type" : "integer",
           "format" : "int64"
         },
         "sort" : {
           "$ref" : "#/definitions/Sort"
+        },
+        "paged" : {
+          "type" : "boolean"
+        },
+        "pageSize" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "unpaged" : {
+          "type" : "boolean"
+        },
+        "pageNumber" : {
+          "type" : "integer",
+          "format" : "int32"
         }
       }
     },
@@ -2187,6 +2189,9 @@
             "$ref" : "#/definitions/OmaOsaAlueExportDto"
           }
         },
+        "piilotettu" : {
+          "type" : "boolean"
+        },
         "nimi" : {
           "type" : "object",
           "additionalProperties" : {
@@ -2242,13 +2247,13 @@
     "Sort" : {
       "type" : "object",
       "properties" : {
+        "empty" : {
+          "type" : "boolean"
+        },
         "sorted" : {
           "type" : "boolean"
         },
         "unsorted" : {
-          "type" : "boolean"
-        },
-        "empty" : {
           "type" : "boolean"
         }
       }
