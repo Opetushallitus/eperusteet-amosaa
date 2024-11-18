@@ -1,6 +1,0 @@
-div.sisalto-list(ui-sortable="sortableOptions" ng-model="rakenne.lapset")
-  div.sisalto-item(ng-repeat="tkv in rakenne.lapset")
-    div.sisalto-handle
-      +icon("arrows-v")
-    div.sisalto-nimi(ng-bind="items[tkv.id].tekstiKappale.nimi | kaanna")
-
