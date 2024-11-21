@@ -13,7 +13,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <apache.httpclient.version>4.5.13</apache.httpclient.version>
         <hibernate.jpamodel.version>5.3.6.Final</hibernate.jpamodel.version>
-        <spring.session.jdbc.version>2.4.3</spring.session.jdbc.version>
+        <spring.session.jdbc.version>3.3.3</spring.session.jdbc.version>
         <jackson.version>2.15.4</jackson.version>
         <eperusteet-amosaa.devdb.jdbcurl>jdbc:postgresql://localhost:5432/${eperusteet-amosaa.devdb.user}</eperusteet-amosaa.devdb.jdbcurl>
         <eperusteet-amosaa.ittestdb.jdbcurl>jdbc:postgresql://localhost:5432/${eperusteet-amosaa.ittestdb.user}</eperusteet-amosaa.ittestdb.jdbcurl>
@@ -30,7 +30,7 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <eperusteet.backend-utils.version>2.5</eperusteet.backend-utils.version>
-        <org.apache.tomcat.version>9.0.90</org.apache.tomcat.version>
+        <org.apache.tomcat.version>9.0.96</org.apache.tomcat.version>
         <spring.security.test.version>5.7.11</spring.security.test.version>
         <batik.version>1.13</batik.version>
         <springfox.version>2.7.0</springfox.version>
