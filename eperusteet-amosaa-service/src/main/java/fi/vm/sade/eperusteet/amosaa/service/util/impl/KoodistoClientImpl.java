@@ -55,9 +55,6 @@ public class KoodistoClientImpl implements KoodistoClient {
     @Value("${koodisto.service.url:https://virkailija.opintopolku.fi/koodisto-service}")
     private String koodistoServiceUrl;
 
-    @Value("${koodisto.service.internal.url:${koodisto.service.url:''}}")
-    private String koodistoServiceInternalUrl;
-
     private static final String KOODISTO_API = "/rest/json/";
     private static final String YLARELAATIO = "relaatio/sisaltyy-ylakoodit/";
     private static final String ALARELAATIO = "relaatio/sisaltyy-alakoodit/";
@@ -82,7 +79,7 @@ public class KoodistoClientImpl implements KoodistoClient {
     @Override
     public List<KoodistoKoodiDto> getAll(String koodisto) {
         RestTemplate restTemplate = new RestTemplate();
-        String url = koodistoServiceInternalUrl + KOODISTO_API + koodisto + "/koodi/";
+        String url = koodistoServiceUrl + KOODISTO_API + koodisto + "/koodi/";
 
         ResponseEntity<KoodistoKoodiDto[]> response = restTemplate.exchange(url, HttpMethod.GET, httpEntity, KoodistoKoodiDto[].class);
         List<KoodistoKoodiDto> koodistoDtot = mapper.mapAsList(Arrays.asList(response.getBody()), KoodistoKoodiDto.class);
@@ -93,7 +90,7 @@ public class KoodistoClientImpl implements KoodistoClient {
     @Cacheable("koodistokoodit")
     public KoodistoKoodiDto get(String koodisto, String koodi) {
         RestTemplate restTemplate = new RestTemplate();
-        String url = koodistoServiceInternalUrl + KOODISTO_API + koodisto + "/koodi/" + koodi;
+        String url = koodistoServiceUrl + KOODISTO_API + koodisto + "/koodi/" + koodi;
         try {
             ResponseEntity<KoodistoKoodiDto> response = restTemplate.exchange(url, HttpMethod.GET, httpEntity, KoodistoKoodiDto.class);
             return response.getBody();
@@ -151,7 +148,7 @@ public class KoodistoClientImpl implements KoodistoClient {
     @Cacheable(value = "koodistot", key = "'alarelaatio:'+#p0")
     public List<KoodistoKoodiDto> getAlarelaatio(String koodi) {
         RestTemplate restTemplate = new RestTemplate();
-        String url = koodistoServiceInternalUrl + KOODISTO_API + ALARELAATIO + koodi;
+        String url = koodistoServiceUrl + KOODISTO_API + ALARELAATIO + koodi;
         ResponseEntity<KoodistoKoodiDto[]> response = restTemplate.exchange(url, HttpMethod.GET, httpEntity, KoodistoKoodiDto[].class);
         List<KoodistoKoodiDto> koodistoDtot = mapper.mapAsList(Arrays.asList(response.getBody()), KoodistoKoodiDto.class);
         return koodistoDtot;
@@ -161,7 +158,7 @@ public class KoodistoClientImpl implements KoodistoClient {
     @Cacheable(value = "koodistot", key = "'ylarelaatio:'+#p0")
     public List<KoodistoKoodiDto> getYlarelaatio(String koodi) {
         RestTemplate restTemplate = new RestTemplate();
-        String url = koodistoServiceInternalUrl + KOODISTO_API + YLARELAATIO + koodi;
+        String url = koodistoServiceUrl + KOODISTO_API + YLARELAATIO + koodi;
         ResponseEntity<KoodistoKoodiDto[]> response = restTemplate.exchange(url, HttpMethod.GET, httpEntity, KoodistoKoodiDto[].class);
         List<KoodistoKoodiDto> koodistoDtot = mapper.mapAsList(Arrays.asList(response.getBody()), KoodistoKoodiDto.class);
         return koodistoDtot;
@@ -171,7 +168,7 @@ public class KoodistoClientImpl implements KoodistoClient {
     public KoodistoKoodiDto addKoodi(KoodistoKoodiDto koodi) {
         OphHttpClient client = restClientFactory.get(koodistoServiceUrl, true);
 
-        String url = koodistoServiceInternalUrl
+        String url = koodistoServiceUrl
                 + CODEELEMENT + "/"
                 + koodi.getKoodisto().getKoodistoUri();
         try {
