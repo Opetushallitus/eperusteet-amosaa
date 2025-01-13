@@ -27,7 +27,7 @@ public interface SisaltoviiteRepository extends JpaWithVersioningRepository<Sisa
             "FROM SisaltoViite sv " +
             "LEFT JOIN FETCH sv.tekstiKappale tk " +
             "LEFT JOIN FETCH tk.nimi nimi " +
-            "LEFT JOIN FETCH nimi.teksti tk " +
+            "LEFT JOIN FETCH nimi.teksti nimitk " +
             "WHERE sv.owner.id = ?1")
     List<SisaltoViite> findAllByOwnerId(Long owner);
 

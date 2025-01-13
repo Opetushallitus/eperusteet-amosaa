@@ -34,8 +34,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import fi.vm.sade.eperusteet.amosaa.service.security.KoulutustyyppiRolePrefix;
 import fi.vm.sade.eperusteet.amosaa.service.util.KoodistoClient;
@@ -312,7 +312,7 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
         EtusivuDto result = new EtusivuDto();
 
         if (koulutustoimija != null) {
-            Set<Koulutustoimija> koulutustoimijat = Collections.singleton(koulutustoimija);
+            Set<Long> koulutustoimijat = Collections.singleton(koulutustoimija.getId());
             if (koulutustyypit.stream().anyMatch(kt -> SecurityUtil.isUserOphAdmin(KoulutustyyppiRolePrefix.of(kt)))) {
                 koulutustoimijat = null;
             }

@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import fi.vm.sade.eperusteet.amosaa.service.util.Copyable;
 import lombok.Getter;

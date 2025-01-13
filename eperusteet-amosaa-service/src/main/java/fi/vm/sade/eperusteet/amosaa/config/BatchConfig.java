@@ -1,31 +1,31 @@
 package fi.vm.sade.eperusteet.amosaa.config;
 
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Julkaisu;
-import javax.sql.DataSource;
-
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
-import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
-import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.launch.support.SimpleJobLauncher;
+import org.springframework.batch.core.launch.support.TaskExecutorJobLauncher;
 import org.springframework.batch.core.repository.JobRepository;
-import org.springframework.batch.core.repository.support.JobRepositoryFactoryBean;
+import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.interceptor.DefaultTransactionAttribute;
 
+import javax.sql.DataSource;
+
+@Profile("!test")
 @Configuration
-@EnableBatchProcessing
 public class BatchConfig {
 
     @Autowired
@@ -35,17 +35,15 @@ public class BatchConfig {
     private PlatformTransactionManager transactionManager;
 
     @Autowired
-    private JobBuilderFactory jobs;
+    private JobRepository jobRepository;
 
-    @Autowired
-    private StepBuilderFactory steps;
-
-    private JobRepository getJobRepository() throws Exception {
-        JobRepositoryFactoryBean factory = new JobRepositoryFactoryBean();
-        factory.setDataSource(dataSource);
-        factory.setTransactionManager(transactionManager);
-        factory.afterPropertiesSet();
-        return factory.getObject();
+    @Bean
+    public JobLauncher jobLauncher() throws Exception {
+        TaskExecutorJobLauncher jobLauncher = new TaskExecutorJobLauncher();
+        jobLauncher.setJobRepository(jobRepository);
+        jobLauncher.setTaskExecutor(getSimpleAsyncTaskExecutor());
+        jobLauncher.afterPropertiesSet();
+        return jobLauncher;
     }
 
     private ThreadPoolTaskExecutor getSimpleAsyncTaskExecutor() {
@@ -56,21 +54,17 @@ public class BatchConfig {
     }
 
     @Bean
-    public JobLauncher getJobLauncher() throws Exception {
-        SimpleJobLauncher jobLauncher = new SimpleJobLauncher();
-        jobLauncher.setJobRepository(getJobRepository());
-        jobLauncher.setTaskExecutor(getSimpleAsyncTaskExecutor());
-        jobLauncher.afterPropertiesSet();
-        return jobLauncher;
-    }
-
-    @Bean
-    protected Step julkaisuJobStep(ItemReader<Long> julkaisuJobReader, ItemProcessor<Long, Julkaisu> julkaisuJobProcessor, ItemWriter<Julkaisu> julkaisuJobWriter) {
+    protected Step julkaisuJobStep(
+            JobRepository jobRepository,
+            PlatformTransactionManager transactionManager,
+            ItemReader<Long> julkaisuJobReader,
+            ItemProcessor<Long, Julkaisu> julkaisuJobProcessor,
+            ItemWriter<Julkaisu> julkaisuJobWriter) {
         DefaultTransactionAttribute attribute = new DefaultTransactionAttribute();
         attribute.setPropagationBehavior(Propagation.NEVER.value());
 
-        return steps.get("julkaisuJobStep")
-                .<Long, Julkaisu>chunk(10)
+        return new StepBuilder("julkaisuJobStep", jobRepository)
+                .<Long, Julkaisu>chunk(10, transactionManager)
                 .reader(julkaisuJobReader)
                 .processor(julkaisuJobProcessor)
                 .writer(julkaisuJobWriter)
@@ -79,22 +73,24 @@ public class BatchConfig {
     }
 
     @Bean
-    public Job julkaisuJob(Step julkaisuJobStep) {
-        return jobs.get("julkaisuJob")
+    public Job julkaisuJob(JobRepository jobRepository, Step julkaisuJobStep) {
+        return new JobBuilder("julkaisuJob", jobRepository)
                 .start(julkaisuJobStep)
                 .build();
     }
 
     @Bean
     protected Step perusteKoulutuksetMigrateJobStep(
+            JobRepository jobRepository,
+            PlatformTransactionManager transactionManager,
             ItemReader<Long> koulutuskoodiConvertReader,
             ItemProcessor<Long, CachedPeruste> koulutuskoodiConvertProcessor,
             ItemWriter<CachedPeruste> koulutuskoodiConvertWriter) {
         DefaultTransactionAttribute attribute = new DefaultTransactionAttribute();
         attribute.setPropagationBehavior(Propagation.NEVER.value());
 
-        return steps.get("perusteKoulutuksetMigrateJobStep")
-                .<Long, CachedPeruste>chunk(10)
+        return new StepBuilder("perusteKoulutuksetMigrateJobStep", jobRepository)
+                .<Long, CachedPeruste>chunk(10, transactionManager)
                 .reader(koulutuskoodiConvertReader)
                 .processor(koulutuskoodiConvertProcessor)
                 .writer(koulutuskoodiConvertWriter)
@@ -104,8 +100,8 @@ public class BatchConfig {
 
 
     @Bean
-    public Job perusteKoulutuksetMigrateJob(Step perusteKoulutuksetMigrateJobStep) {
-        return jobs.get("perusteKoulutuksetMigrateJob")
+    public Job perusteKoulutuksetMigrateJob(JobRepository jobRepository, Step perusteKoulutuksetMigrateJobStep) {
+        return new JobBuilder("perusteKoulutuksetMigrateJob", jobRepository)
                 .start(perusteKoulutuksetMigrateJobStep)
                 .build();
     }

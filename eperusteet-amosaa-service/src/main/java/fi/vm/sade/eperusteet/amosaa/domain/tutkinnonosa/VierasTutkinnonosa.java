@@ -5,8 +5,8 @@ import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 
 import java.io.Serializable;
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import fi.vm.sade.eperusteet.amosaa.service.util.Copyable;
 import lombok.Getter;

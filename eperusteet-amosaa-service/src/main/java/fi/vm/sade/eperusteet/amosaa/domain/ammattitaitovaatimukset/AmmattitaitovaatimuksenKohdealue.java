@@ -6,7 +6,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 
 import java.io.Serializable;
 import java.util.*;
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import fi.vm.sade.eperusteet.amosaa.service.util.Copyable;
 import lombok.Getter;

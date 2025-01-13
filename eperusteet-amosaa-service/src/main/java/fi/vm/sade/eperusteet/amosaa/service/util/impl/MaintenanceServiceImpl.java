@@ -131,7 +131,7 @@ public class MaintenanceServiceImpl implements MaintenanceService {
         jobLauncher.run(jobs.stream().filter(j -> j.getName().equals(job))
                         .findFirst()
                         .orElseThrow(() -> new BusinessRuleViolationException("Jobia ei löydy")),
-                new JobParameters(parametrit.keySet().stream().collect(Collectors.toMap(k -> k, k -> new JobParameter(parametrit.get(k))))));
+                new JobParameters(parametrit.keySet().stream().collect(Collectors.toMap(k -> k, k -> new JobParameter(parametrit.get(k), String.class)))));
     }
 
     private void teeJulkaisu(Long opsId) {

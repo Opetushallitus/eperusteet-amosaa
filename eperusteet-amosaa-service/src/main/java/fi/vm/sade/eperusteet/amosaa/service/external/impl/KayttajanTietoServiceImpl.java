@@ -52,9 +52,9 @@ import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 import static fi.vm.sade.eperusteet.amosaa.service.external.impl.KayttajanTietoParser.parsiKayttaja;
-import static javax.servlet.http.HttpServletResponse.SC_FORBIDDEN;
-import static javax.servlet.http.HttpServletResponse.SC_OK;
-import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
+import static jakarta.servlet.http.HttpServletResponse.SC_FORBIDDEN;
+import static jakarta.servlet.http.HttpServletResponse.SC_OK;
+import static jakarta.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 
 @Service
 @Transactional
@@ -330,7 +330,7 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
     @Override
     public EtusivuDto haeKayttajanEtusivu(PermissionEvaluator.RolePrefix rolePrefix) {
         EtusivuDto result = new EtusivuDto();
-        List<Koulutustoimija> koulutustoimijat = mapper.mapAsList(koulutustoimijat(rolePrefix), Koulutustoimija.class);
+        List<Long> koulutustoimijat = mapper.mapAsList(koulutustoimijat(rolePrefix), Koulutustoimija.class).stream().map(Koulutustoimija::getId).toList();
         if (ObjectUtils.isEmpty(koulutustoimijat)) {
             result.setToteutussuunnitelmatKeskeneraiset(0L);
             result.setToteutussuunnitelmatJulkaistut(0L);

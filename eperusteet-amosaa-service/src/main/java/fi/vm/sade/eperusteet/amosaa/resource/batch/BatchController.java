@@ -4,7 +4,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.batch.BatchStepExecution;
 import fi.vm.sade.eperusteet.amosaa.repository.batch.BatchStepExecutionRepository;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.service.util.MaintenanceService;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,7 +25,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @RestController
 @RequestMapping("/api/batch")
 @InternalApi
-@Api("batch")
+@Tag(name = "batch")
 public class BatchController {
 
     @Autowired

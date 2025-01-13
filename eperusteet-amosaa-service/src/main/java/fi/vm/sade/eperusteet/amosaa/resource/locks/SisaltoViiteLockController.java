@@ -5,7 +5,7 @@ import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.resource.locks.contexts.SisaltoViiteCtx;
 import fi.vm.sade.eperusteet.amosaa.resource.util.Etags;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +21,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
 @RequestMapping("/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tekstit/{svId}/lukko")
-@Api(value = "SisaltoviiteLukko")
+@Tag(name = "SisaltoviiteLukko")
 @InternalApi
 public class SisaltoViiteLockController {
     @Autowired

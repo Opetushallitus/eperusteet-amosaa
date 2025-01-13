@@ -5,8 +5,8 @@ import fi.vm.sade.eperusteet.amosaa.domain.OsaamistasonKriteeri;
 import fi.vm.sade.eperusteet.amosaa.domain.arviointi.ArvioinninKohde;
 import fi.vm.sade.eperusteet.amosaa.domain.arviointi.Arviointiasteikko;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 public class ValidArvioinninKohdeValidator implements ConstraintValidator<ValidArvioinninKohde, ArvioinninKohde> {
 

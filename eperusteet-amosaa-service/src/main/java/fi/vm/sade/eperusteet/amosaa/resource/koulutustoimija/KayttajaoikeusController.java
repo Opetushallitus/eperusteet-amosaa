@@ -5,12 +5,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KayttajaoikeusService;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator;
-import io.swagger.annotations.Api;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,9 +13,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 @RestController
 @RequestMapping("/api/kayttaja")
-@Api(value = "kayttajaoikeudet")
+@Tag(name = "kayttajaoikeudet")
 @InternalApi
 public class KayttajaoikeusController {
     @Autowired

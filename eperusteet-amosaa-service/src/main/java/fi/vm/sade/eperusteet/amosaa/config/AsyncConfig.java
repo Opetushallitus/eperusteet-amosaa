@@ -14,7 +14,7 @@ import java.util.concurrent.Executor;
 @Profile("!test")
 public class AsyncConfig {
 
-    @Bean(name = "julkaisuTaskExecutor")
+    @Bean
     public Executor julkaisuTaskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.initialize();

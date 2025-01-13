@@ -21,12 +21,12 @@ import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaServi
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.TiedoteService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
 import org.springframework.data.domain.Page;
@@ -43,11 +43,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import springfox.documentation.annotations.ApiIgnore;
+
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/julkinen")
-@Api(value = "julkinen")
+@Tag(name = "julkinen")
 public class JulkinenController {
 
     @Autowired
@@ -66,7 +69,7 @@ public class JulkinenController {
     DokumenttiService dokumenttiService;
 
     @RequestMapping(value = "/tutkinnonosat/{koodi}", method = RequestMethod.GET)
-    @ApiIgnore
+    @Parameter(hidden = true)
     public SisaltoViiteDto getTutkinnonOsa(
             @PathVariable final String koodi
     ) {
@@ -97,49 +100,49 @@ public class JulkinenController {
         return ktService.getKoulutustoimijaJulkinen(ktId);
     }
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "perusteenDiaarinumero", dataType = "string", paramType = "query"),
-            @ApiImplicitParam(name = "perusteId", dataType = "long", paramType = "query"),
-            @ApiImplicitParam(name = "organisaatio", dataType = "string", paramType = "query"),
-            @ApiImplicitParam(name = "tyyppi", dataType = "string", paramType = "query", allowMultiple = true),
-            @ApiImplicitParam(name = "sivu", dataType = "long", paramType = "query"),
-            @ApiImplicitParam(name = "sivukoko", dataType = "long", paramType = "query"),
-            @ApiImplicitParam(name = "nimi", dataType = "string", paramType = "query"),
-            @ApiImplicitParam(name = "kieli", dataType = "string", paramType = "query"),
-            @ApiImplicitParam(name = "organisaatioRyhma", dataType = "boolean", paramType = "query", defaultValue = "false"),
-            @ApiImplicitParam(name = "oppilaitosTyyppiKoodiUri", dataType = "string", paramType = "query"),
-            @ApiImplicitParam(name = "koulutustyyppi", dataType = "string", paramType = "query", allowMultiple = true),
+    @Parameters({
+            @Parameter(name = "perusteenDiaarinumero", schema = @Schema(implementation = String.class), in = ParameterIn.QUERY),
+            @Parameter(name = "perusteId", schema = @Schema(implementation = Long.class), in = ParameterIn.QUERY),
+            @Parameter(name = "organisaatio", schema = @Schema(implementation = String.class), in = ParameterIn.QUERY),
+            @Parameter(name = "tyyppi", in = ParameterIn.QUERY, array =  @ArraySchema(schema = @Schema(type = "string"))),
+            @Parameter(name = "sivu", schema = @Schema(implementation = Long.class), in = ParameterIn.QUERY),
+            @Parameter(name = "sivukoko", schema = @Schema(implementation = Long.class), in = ParameterIn.QUERY),
+            @Parameter(name = "nimi", schema = @Schema(implementation = String.class), in = ParameterIn.QUERY),
+            @Parameter(name = "kieli", schema = @Schema(implementation = String.class), in = ParameterIn.QUERY),
+            @Parameter(name = "organisaatioRyhma", schema = @Schema(implementation = Boolean.class, defaultValue = "false"), in = ParameterIn.QUERY),
+            @Parameter(name = "oppilaitosTyyppiKoodiUri", schema = @Schema(implementation = String.class), in = ParameterIn.QUERY),
+            @Parameter(name = "koulutustyyppi", in = ParameterIn.QUERY, array =  @ArraySchema(schema = @Schema(type = "string"))),
     })
     @RequestMapping(value = "/opetussuunnitelmat", method = RequestMethod.GET)
     @Description("Opetussuunnitelmien parametrihaku.")
     public Page<OpetussuunnitelmaDto> findOpetussuunnitelmat(
-            @ApiIgnore final OpetussuunnitelmaQueryDto pquery
+            @Parameter(hidden = true) final OpetussuunnitelmaQueryDto pquery
     ) {
         // Oletuksena älä palauta pohjia
         PageRequest p = PageRequest.of(pquery.getSivu(), Math.min(pquery.getSivukoko(), 100));
         return opsService.findOpetussuunnitelmat(p, pquery);
     }
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "perusteenDiaarinumero", dataType = "string", paramType = "query"),
-            @ApiImplicitParam(name = "perusteId", dataType = "long", paramType = "query"),
-            @ApiImplicitParam(name = "organisaatio", dataType = "string", paramType = "query"),
-            @ApiImplicitParam(name = "tyyppi", dataType = "string", paramType = "query", allowMultiple = true),
-            @ApiImplicitParam(name = "sivu", dataType = "long", paramType = "query"),
-            @ApiImplicitParam(name = "sivukoko", dataType = "long", paramType = "query"),
-            @ApiImplicitParam(name = "nimi", dataType = "string", paramType = "query"),
-            @ApiImplicitParam(name = "kieli", dataType = "string", paramType = "query"),
-            @ApiImplicitParam(name = "oppilaitosTyyppiKoodiUri", dataType = "string", paramType = "query"),
-            @ApiImplicitParam(name = "koulutustyyppi", dataType = "string", paramType = "query", allowMultiple = true),
-            @ApiImplicitParam(name = "tuleva", dataType = "boolean", paramType = "query"),
-            @ApiImplicitParam(name = "voimassaolo", dataType = "boolean", paramType = "query"),
-            @ApiImplicitParam(name = "poistunut", dataType = "boolean", paramType = "query"),
-            @ApiImplicitParam(name = "jotpatyyppi", dataType = "string", paramType = "query", allowMultiple = true),
+    @Parameters({
+            @Parameter(name = "perusteenDiaarinumero", schema = @Schema(implementation = String.class), in = ParameterIn.QUERY),
+            @Parameter(name = "perusteId", schema = @Schema(implementation = Long.class), in = ParameterIn.QUERY),
+            @Parameter(name = "organisaatio", schema = @Schema(implementation = String.class), in = ParameterIn.QUERY),
+            @Parameter(name = "tyyppi", in = ParameterIn.QUERY, array =  @ArraySchema(schema = @Schema(type = "string"))),
+            @Parameter(name = "sivu", schema = @Schema(implementation = Long.class), in = ParameterIn.QUERY),
+            @Parameter(name = "sivukoko", schema = @Schema(implementation = Long.class), in = ParameterIn.QUERY),
+            @Parameter(name = "nimi", schema = @Schema(implementation = String.class), in = ParameterIn.QUERY),
+            @Parameter(name = "kieli", schema = @Schema(implementation = String.class), in = ParameterIn.QUERY),
+            @Parameter(name = "oppilaitosTyyppiKoodiUri", schema = @Schema(implementation = String.class), in = ParameterIn.QUERY),
+            @Parameter(name = "koulutustyyppi", in = ParameterIn.QUERY, array =  @ArraySchema(schema = @Schema(type = "string"))),
+            @Parameter(name = "tuleva", schema = @Schema(implementation = Boolean.class), in = ParameterIn.QUERY),
+            @Parameter(name = "voimassaolo", schema = @Schema(implementation = Boolean.class), in = ParameterIn.QUERY),
+            @Parameter(name = "poistunut", schema = @Schema(implementation = Boolean.class), in = ParameterIn.QUERY),
+            @Parameter(name = "jotpatyyppi", in = ParameterIn.QUERY, array =  @ArraySchema(schema = @Schema(type = "string"))),
     })
     @RequestMapping(value = "/opetussuunnitelmat/julkaisut", method = RequestMethod.GET)
     @Description("Opetussuunnitelmien parametrihaku.")
     public Page<OpetussuunnitelmaDto> findOpetussuunnitelmatJulkaisut(
-            @ApiIgnore final OpetussuunnitelmaJulkaistuQueryDto pquery
+            @Parameter(hidden = true) final OpetussuunnitelmaJulkaistuQueryDto pquery
     ) {
         return opsService.findOpetussuunnitelmatJulkaisut(pquery);
     }
@@ -157,16 +160,16 @@ public class JulkinenController {
         return opsService.getJulkaistutPerusteenOpetussuunnitelmat(perusteenDiaarinumero, OpetussuunnitelmaJulkinenDto.class);
     }
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "sivu", dataType = "long", paramType = "query"),
-            @ApiImplicitParam(name = "sivukoko", dataType = "long", paramType = "query"),
-            @ApiImplicitParam(name = "nimi", dataType = "string", paramType = "query"),
-            @ApiImplicitParam(name = "organisaatioRyhma", dataType = "boolean", paramType = "query", defaultValue = "false"),
-            @ApiImplicitParam(name = "koulutustyyppi", dataType = "string", paramType = "query", allowMultiple = true),
+    @Parameters({
+            @Parameter(name = "sivu", schema = @Schema(implementation = Long.class), in = ParameterIn.QUERY),
+            @Parameter(name = "sivukoko", schema = @Schema(implementation = Long.class), in = ParameterIn.QUERY),
+            @Parameter(name = "nimi", schema = @Schema(implementation = String.class), in = ParameterIn.QUERY),
+            @Parameter(name = "organisaatioRyhma", schema = @Schema(implementation = Boolean.class, defaultValue = "false"), in = ParameterIn.QUERY),
+            @Parameter(name = "koulutustyyppi", in = ParameterIn.QUERY, array =  @ArraySchema(schema = @Schema(type = "string"))),
     })
     @RequestMapping(value = "/koulutustoimijat", method = RequestMethod.GET)
     public Page<KoulutustoimijaJulkinenDto> findKoulutustoimijat(
-            @ApiIgnore final KoulutustoimijaQueryDto pquery
+            @Parameter(hidden = true) final KoulutustoimijaQueryDto pquery
     ) {
         // Oletuksena älä palauta pohjia
         PageRequest p = PageRequest.of(pquery.getSivu(), Math.min(pquery.getSivukoko(), 1000));
@@ -180,55 +183,55 @@ public class JulkinenController {
         return ResponseEntity.ok(svService.getByKoodiJulkinen(null, koodi, SisaltoViiteSijaintiDto.class));
     }
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path", required = true)
+    @Parameters({
+            @Parameter(name = "ktId", schema = @Schema(implementation = String.class), in = ParameterIn.PATH, required = true)
     })
     @RequestMapping(value = "/koulutustoimijat/{ktId}/koodi/{koodi}", method = RequestMethod.GET)
     public ResponseEntity<List<SisaltoViiteSijaintiDto>> getByKoodi(
-            @ApiIgnore @ModelAttribute("ktId") final Long ktId,
+            @Parameter(hidden = true) @ModelAttribute("ktId") final Long ktId,
             @PathVariable final String koodi
     ) {
         return ResponseEntity.ok(svService.getByKoodiJulkinen(ktId, koodi, SisaltoViiteSijaintiDto.class));
     }
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path", required = true)
+    @Parameters({
+            @Parameter(name = "ktId", schema = @Schema(implementation = String.class), in = ParameterIn.PATH, required = true)
     })
     @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat", method = RequestMethod.GET)
     public List<OpetussuunnitelmaDto> getAllOpetussuunnitelmat(
-            @ApiIgnore @ModelAttribute("ktId") final Long ktId
+            @Parameter(hidden = true) @ModelAttribute("ktId") final Long ktId
     ) {
         return opsService.getJulkisetOpetussuunnitelmat(ktId);
     }
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path", required = true)
+    @Parameters({
+            @Parameter(name = "ktId", schema = @Schema(implementation = String.class), in = ParameterIn.PATH, required = true)
     })
     @RequestMapping(value = "/koulutustoimijat/{ktId}/tiedotteet", method = RequestMethod.GET)
     public List<TiedoteDto> getJulkisetTiedotteet(
-            @ApiIgnore @ModelAttribute("ktId") final Long ktId
+            @Parameter(hidden = true) @ModelAttribute("ktId") final Long ktId
     ) {
         return tiedoteService.getJulkisetTiedotteet(ktId);
     }
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path", required = true)
+    @Parameters({
+            @Parameter(name = "ktId", schema = @Schema(implementation = String.class), in = ParameterIn.PATH, required = true)
     })
     @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}", method = RequestMethod.GET)
     public OpetussuunnitelmaDto getOpetussuunnitelmaJulkinen(
-            @ApiIgnore @ModelAttribute("ktId") final Long ktId,
+            @Parameter(hidden = true) @ModelAttribute("ktId") final Long ktId,
             @PathVariable final Long opsId
     ) {
         return opsService.getOpetussuunnitelma(ktId, opsId);
     }
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    @Parameters({
+            @Parameter(name = "ktId", schema = @Schema(implementation = String.class), in = ParameterIn.PATH)
     })
     @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/dokumentti", method = RequestMethod.GET, produces = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity<Object> getDokumentti(@ApiIgnore @ModelAttribute("ktId") final Long ktId,
+    public ResponseEntity<Object> getDokumentti(@Parameter(hidden = true) @ModelAttribute("ktId") final Long ktId,
                                                 @PathVariable final Long opsId,
-                                                @RequestParam(defaultValue = "fi") final String kieli,
+                                                @RequestParam final String kieli,
                                                 @RequestParam final Long dokumenttiId) {
         byte[] pdfdata = dokumenttiService.getDataByDokumenttiId(ktId, opsId, dokumenttiId);
 
@@ -253,14 +256,14 @@ public class JulkinenController {
         return new ResponseEntity<>(pdfdata, headers, HttpStatus.OK);
     }
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path", required = true)
+    @Parameters({
+            @Parameter(name = "ktId", schema = @Schema(implementation = String.class), in = ParameterIn.PATH, required = true)
     })
     @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/dokumentti/tila", method = RequestMethod.GET)
     public ResponseEntity<DokumenttiDto> queryDokumentti(
-            @ApiIgnore @ModelAttribute("ktId") final Long ktId,
+            @Parameter(hidden = true) @ModelAttribute("ktId") final Long ktId,
             @PathVariable Long opsId,
-            @RequestParam(defaultValue = "fi") String kieli
+            @RequestParam String kieli
     ) {
         DokumenttiDto dokumenttiDto = null;
         try {
@@ -276,58 +279,58 @@ public class JulkinenController {
         }
     }
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path", required = true)
+    @Parameters({
+            @Parameter(name = "ktId", schema = @Schema(implementation = String.class), in = ParameterIn.PATH, required = true)
     })
     @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/dokumentti/julkaistu", method = RequestMethod.GET)
-    public ResponseEntity<DokumenttiDto> getJulkaistuDokumentti(@ApiIgnore @ModelAttribute("ktId") final Long ktId,
+    public ResponseEntity<DokumenttiDto> getJulkaistuDokumentti(@Parameter(hidden = true) @ModelAttribute("ktId") final Long ktId,
                                                          @PathVariable Long opsId,
-                                                         @RequestParam(defaultValue = "fi") String kieli,
+                                                         @RequestParam String kieli,
                                                          @RequestParam(required = false) Integer revision) {
 
         return ResponseEntity.ok(dokumenttiService.getJulkaistuDokumentti(ktId, opsId, Kieli.of(kieli), revision));
     }
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path", required = true)
+    @Parameters({
+            @Parameter(name = "ktId", schema = @Schema(implementation = String.class), in = ParameterIn.PATH, required = true)
     })
     @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/kaikki", method = RequestMethod.GET)
     public OpetussuunnitelmaKaikkiDto getOpetussuunnitelmaKaikki(
-            @ApiIgnore @ModelAttribute("ktId") final Long ktId,
+            @Parameter(hidden = true) @ModelAttribute("ktId") final Long ktId,
             @PathVariable final Long opsId
     ) {
         return opsService.getOpetussuunnitelmaKaikki(ktId, opsId);
     }
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path", required = true)
+    @Parameters({
+            @Parameter(name = "ktId", schema = @Schema(implementation = String.class), in = ParameterIn.PATH, required = true)
     })
     @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/julkaisu", method = RequestMethod.GET)
     public OpetussuunnitelmaKaikkiDto getOpetussuunnitelmaJulkaistuSisalto(
-            @ApiIgnore @ModelAttribute("ktId") final Long ktId,
+            @Parameter(hidden = true) @ModelAttribute("ktId") final Long ktId,
             @PathVariable final Long opsId,
             @RequestParam(value = "esikatselu", required = false) final boolean esikatselu
     ) {
         return opsService.getOpetussuunnitelmaJulkaistuSisalto(ktId, opsId, esikatselu);
     }
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path", required = true)
+    @Parameters({
+            @Parameter(name = "ktId", schema = @Schema(implementation = String.class), in = ParameterIn.PATH, required = true)
     })
     @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/otsikot", method = RequestMethod.GET)
     public List<SisaltoViiteKevytDto> getOpetussuunnitelmaOtsikot(
-            @ApiIgnore @ModelAttribute("ktId") final Long ktId,
+            @Parameter(hidden = true) @ModelAttribute("ktId") final Long ktId,
             @PathVariable final Long opsId
     ) {
         return svService.getSisaltoViitteet(ktId, opsId, SisaltoViiteKevytDto.class);
     }
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path", required = true)
+    @Parameters({
+            @Parameter(name = "ktId", schema = @Schema(implementation = String.class), in = ParameterIn.PATH, required = true)
     })
     @RequestMapping(value = "/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tekstit/{svId}", method = RequestMethod.GET)
     public SisaltoViiteDto.Matala getOpetussuunnitelmaTekstit(
-            @ApiIgnore @ModelAttribute("ktId") final Long ktId,
+            @Parameter(hidden = true) @ModelAttribute("ktId") final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long svId
     ) {

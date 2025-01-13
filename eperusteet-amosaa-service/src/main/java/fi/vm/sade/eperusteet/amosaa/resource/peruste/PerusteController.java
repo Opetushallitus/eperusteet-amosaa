@@ -1,9 +1,20 @@
 package fi.vm.sade.eperusteet.amosaa.resource.peruste;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteenOsaDto;
-import java.util.List;
-import java.util.Map;
-
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonOsaSuoritustapaDto;
+import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
+import fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija.KoulutustoimijaIdGetterAbstractController;
+import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetClient;
+import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
+import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,24 +23,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.JsonNode;
-
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonOsaSuoritustapaDto;
-import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
-import fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija.KoulutustoimijaIdGetterAbstractController;
-import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetClient;
-import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
-import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import springfox.documentation.annotations.ApiIgnore;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/perusteet")
-@Api(value = "perusteet")
+@Tag(name = "perusteet")
 @InternalApi
 public class PerusteController extends KoulutustoimijaIdGetterAbstractController {
     @Autowired
@@ -123,34 +122,15 @@ public class PerusteController extends KoulutustoimijaIdGetterAbstractController
         return service.getPerusteenOsa(perusteId, perusteenosaId);
     }
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    @Parameters({
+            @Parameter(name = "ktId", schema = @Schema(implementation = String.class), in = ParameterIn.PATH)
     })
     @RequestMapping(value = "/koulutustoimija/{ktId}/opetussuunnitelma/{opetussuunnitelmaId}/koulutuskoodillakorvaava", method = RequestMethod.GET)
     public PerusteDto getKoulutuskoodillaKorvaavaPeruste(
-            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @Parameter(hidden = true) @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable Long opetussuunnitelmaId
     ) {
         return service.getKoulutuskoodillaKorvaavaPeruste(ktId, opetussuunnitelmaId);
     }
 
-//    @RequestMapping(value = "/{perusteId}/tutkintonimikekoodit", method = GET)
-//    @InternalApi
-//    public ResponseEntity<List<CombinedDto<TutkintonimikeKoodiDto, HashMap<String, KoodistoKoodiDto>>>> getTutkintonimikekoodit(@PathVariable("perusteId") final long id) {
-//        List<TutkintonimikeKoodiDto> tutkintonimikeKoodit = service.getTutkintonimikeKoodit(id);
-//        List<CombinedDto<TutkintonimikeKoodiDto, HashMap<String, KoodistoKoodiDto>>> response = new ArrayList<>();
-//
-//        for (TutkintonimikeKoodiDto tkd : tutkintonimikeKoodit) {
-//            HashMap<String, KoodistoKoodiDto> nimet = new HashMap<>();
-//            if (tkd.getOsaamisalaUri() != null) {
-//                nimet.put(tkd.getOsaamisalaArvo(), koodistoService.get("osaamisala", tkd.getOsaamisalaUri()));
-//            }
-//            nimet.put(tkd.getTutkintonimikeArvo(), koodistoService.get("tutkintonimikkeet", tkd.getTutkintonimikeUri()));
-//            if (tkd.getTutkinnonOsaUri() != null) {
-//                nimet.put(tkd.getTutkinnonOsaArvo(), koodistoService.get("tutkinnonosat", tkd.getTutkinnonOsaUri()));
-//            }
-//            response.add(new CombinedDto<>(tkd, nimet));
-//        }
-//        return new ResponseEntity<>(response, HttpStatus.OK);
-//    }
 }

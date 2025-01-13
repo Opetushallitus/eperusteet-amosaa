@@ -4,7 +4,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiTila;
 import fi.vm.sade.eperusteet.amosaa.dto.pdf.PdfData;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiService;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +20,7 @@ import java.util.Base64;
 @RestController
 @RequestMapping("/api/dokumentit")
 @InternalApi
-@Api(value = "Dokumentit")
+@Tag(name = "Dokumentit")
 public class DokumenttiPdfContoller {
 
     @Autowired

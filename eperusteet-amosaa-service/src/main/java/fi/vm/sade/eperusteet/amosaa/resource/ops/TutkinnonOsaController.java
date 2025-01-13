@@ -7,16 +7,17 @@ import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija.KoulutustoimijaIdGetterAbstractController;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 
@@ -25,7 +26,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @RestController
 @RequestMapping("/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tutkinnonosat")
 @InternalApi
-@Api(value = "Tutkinnonosa")
+@Tag(name = "Tutkinnonosa")
 public class TutkinnonOsaController extends KoulutustoimijaIdGetterAbstractController {
 
     @Autowired
@@ -38,12 +39,12 @@ public class TutkinnonOsaController extends KoulutustoimijaIdGetterAbstractContr
     private DtoMapper mapper;
 
     // todo: Rajapinta muita varten
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    @Parameters({
+            @Parameter(name = "ktId", schema = @Schema(implementation = String.class), in = ParameterIn.PATH)
     })
     @RequestMapping(value = "/viite/{id}", method = GET)
     public ResponseEntity<Tutkinnonosa> haeTutkinnonosa(
-            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @Parameter(hidden = true) @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId,
             @PathVariable final Long id
     ) {
@@ -51,12 +52,12 @@ public class TutkinnonOsaController extends KoulutustoimijaIdGetterAbstractContr
         return ResponseEntity.ok(mapper.map(tutkinnonosa, Tutkinnonosa.class));
     }
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    @Parameters({
+            @Parameter(name = "ktId", schema = @Schema(implementation = String.class), in = ParameterIn.PATH)
     })
     @RequestMapping(value = "/oletustoteutukset", method = GET)
     public ResponseEntity<List<OletusToteutusDto>> haeOletusTutkinnonosaToteutukset(
-            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @Parameter(hidden = true) @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final Long opsId
     ) {
         return ResponseEntity.ok(sisaltoViiteService.tutkinnonosienOletusToteutukset(ktId, opsId));
