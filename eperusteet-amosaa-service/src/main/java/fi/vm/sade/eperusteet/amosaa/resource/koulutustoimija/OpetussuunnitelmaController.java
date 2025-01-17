@@ -417,18 +417,10 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
     @RequestMapping(value = "/koulutustoimija", method = RequestMethod.GET)
     public List<OpetussuunnitelmaDto> getKoulutustoimijaOpetussuunnitelmat(
             @Parameter(hidden = true) @ModelAttribute("solvedKtId") final Long ktId,
-            @RequestParam(value = "koulutustyypit", required = false) final Set<String> koulutustyypit,
-            @RequestParam(value = "tyyppi", required = false) final OpsTyyppi tyyppi
+            @RequestParam(value = "koulutustyypit") final Set<String> koulutustyypit,
+            @RequestParam(value = "tilat") final Set<String> tilat
     ) {
-        if (CollectionUtils.isNotEmpty(koulutustyypit) && !ObjectUtils.isEmpty(tyyppi)) {
-            return service.getOpetussuunnitelmat(ktId, koulutustyypit, tyyppi);
-        } else if (CollectionUtils.isNotEmpty(koulutustyypit)) {
-            return service.getOpetussuunnitelmat(ktId, koulutustyypit);
-        } else if (!ObjectUtils.isEmpty(tyyppi)) {
-            return service.getOpetussuunnitelmat(ktId, tyyppi);
-        }
-
-        return service.getOpetussuunnitelmat(ktId);
+        return service.getOpetussuunnitelmat(ktId, koulutustyypit, tilat.stream().map(Tila::of).collect(Collectors.toSet()));
     }
 
     @Parameters({

@@ -68,16 +68,6 @@ public class WebSecurityConfiguration {
     @Autowired
     private OphSessionMappingStorage ophSessionMappingStorage;
 
-    @PostConstruct
-    public void post() {
-        log.info("caskey " + casKey);
-        log.info("casService " + casService);
-        log.info("casSendRenew " + casSendRenew);
-        log.info("casLogin " + casLogin);
-        log.info("hostAlb " + hostAlb);
-        log.info("webUrlCas " + webUrlCas);
-    }
-
     @Bean
     public CasAuthenticator casAuthenticator() {
         return new CasAuthenticator(this.webUrlCas, eperusteet_username, eperusteet_password, hostAlb, null, false, null);
@@ -149,7 +139,7 @@ public class WebSecurityConfiguration {
                 .headers(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/buildversion.txt").permitAll()
+                        .requestMatchers("/actuator/health").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/").permitAll()
                         .anyRequest().authenticated())

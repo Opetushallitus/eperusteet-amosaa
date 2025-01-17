@@ -27,7 +27,7 @@ public interface JulkaisuRepository extends JpaRepository<Julkaisu, Long> {
             "   SELECT * " +
             "   FROM julkaistu_opetussuunnitelma_Data_view data" +
             "   WHERE 1 = 1 " +
-            "   AND (COALESCE(:koulutustyypit, NULL) = '' OR koulutustyyppi IN (:koulutustyypit) OR peruste->>'koulutustyyppi' IN (:koulutustyypit))" +
+            "   AND (COALESCE(:koulutustyypit, null) IS NULL OR koulutustyyppi IN (:koulutustyypit) OR peruste->>'koulutustyyppi' IN (:koulutustyypit))" +
             "   AND (:nimi LIKE '' " +
             "       OR LOWER(nimi->>:kieli) LIKE LOWER(CONCAT('%',:nimi,'%'))" +
             "       OR LOWER(koulutustoimija->'nimi'->>:kieli) LIKE LOWER(CONCAT('%',:nimi,'%'))) " +
@@ -44,7 +44,7 @@ public interface JulkaisuRepository extends JpaRepository<Julkaisu, Long> {
             "              (:tulevat = true AND (data.\"voimaantulo\" IS NOT NULL AND CAST(data.\"voimaantulo\" as bigint) > :nykyhetki)) " +
             "              OR (:poistuneet = true AND CAST(data.\"voimassaoloLoppuu\" as bigint) < :nykyhetki)" +
             "              OR (:voimassa = true AND (data.\"voimaantulo\" IS NULL OR CAST(data.\"voimaantulo\" as bigint) < :nykyhetki) AND (data.\"voimassaoloLoppuu\" IS NULL OR CAST(data.\"voimassaoloLoppuu\" as bigint) > :nykyhetki)))) " +
-            "   AND (COALESCE(:jotpatyypit, NULL) = '' " +
+            "   AND (COALESCE(:jotpatyypit, NULL) IS NULL " +
             "       OR ( " +
             "            (:jotpattomat = false AND jotpatyyppi IN (:jotpatyypit)) " +
             "            OR (:jotpattomat = true AND (jotpatyyppi IS NULL OR jotpatyyppi IN (:jotpatyypit)))))" +

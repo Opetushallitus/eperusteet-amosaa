@@ -270,7 +270,7 @@ public class EperusteetServiceImpl implements EperusteetService {
             JsonNode node = mapper.readTree(cperuste.getPeruste());
             if (node.get("suoritustavat") != null) {
                 for (JsonNode suoritustapa : node.get("suoritustavat")) {
-                    if (suoritustapa.get("suoritustapakoodi").asText().equals(tyyppi)) {
+                    if (suoritustapa.get("suoritustapakoodi").asText().equalsIgnoreCase(tyyppi)) {
                         return suoritustapa;
                     }
                 }
@@ -364,7 +364,7 @@ public class EperusteetServiceImpl implements EperusteetService {
             JsonNode node = mapper.readTree(cperuste.getPeruste());
             if (node.get("suoritustavat") != null) {
                 for (JsonNode suoritustapa : node.get("suoritustavat")) {
-                    if (suoritustapa.get("suoritustapakoodi").asText().equals(tyyppi)) {
+                    if (suoritustapa.get("suoritustapakoodi").asText().equalsIgnoreCase(tyyppi)) {
                         return suoritustapa.get("tutkinnonOsaViitteet");
                     }
                 }

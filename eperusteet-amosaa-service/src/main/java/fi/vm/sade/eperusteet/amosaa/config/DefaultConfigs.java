@@ -108,7 +108,7 @@ public class DefaultConfigs {
         props.put("hibernate.hbm2ddl.auto", "validate");
         props.put("hibernate.show_sql", false);
         props.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
-        props.put("javax.persistence.sharedCache.mode", "ENABLE_SELECTIVE");
+        props.put("jakarta.persistence.sharedCache.mode", "ENABLE_SELECTIVE");
         props.put("org.hibernate.envers.audit_strategy", "org.hibernate.envers.strategy.internal.DefaultAuditStrategy");
         props.put("org.hibernate.envers.revision_listener", "fi.vm.sade.eperusteet.amosaa.service.internal.AuditRevisionListener");
         props.put("hibernate.jdbc.batch_size", 20);
