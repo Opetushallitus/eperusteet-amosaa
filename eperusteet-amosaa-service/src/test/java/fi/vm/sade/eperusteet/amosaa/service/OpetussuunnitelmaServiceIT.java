@@ -738,7 +738,7 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
 
         OpsHakuInternalDto haku = createDefaultOpsHakuInternalDto();
 
-        Page<OpetussuunnitelmaDto> opss = opetussuunnitelmaService.getOpetussuunnitelmat(getKoulutustoimijaId(), haku);
+        Page<OpetussuunnitelmaListausDto> opss = opetussuunnitelmaService.getOpetussuunnitelmat(getKoulutustoimijaId(), haku);
         assertThat(opss.getTotalElements()).isEqualTo(1L);
 
         haku.setNimi("kaikki");

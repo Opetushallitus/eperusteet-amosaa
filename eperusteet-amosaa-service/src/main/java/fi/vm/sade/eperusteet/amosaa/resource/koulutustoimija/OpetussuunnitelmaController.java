@@ -13,6 +13,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaListausDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaLuontiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaTilastoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.VanhentunutPohjaperusteDto;
@@ -432,7 +433,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
             @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
     })
     @RequestMapping(value = "/kaikki", method = RequestMethod.GET)
-    public Page<OpetussuunnitelmaDto> getKaikkiOpetussuunnitelmat(
+    public Page<OpetussuunnitelmaListausDto> getKaikkiOpetussuunnitelmat(
             @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
             @ApiIgnore OpsHakuInternalDto query
     ) {
