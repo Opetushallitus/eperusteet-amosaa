@@ -40,6 +40,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaJulkaistuQueryDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaKaikkiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaListausDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaLuontiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaQueryDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaTilastoDto;
@@ -332,7 +333,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     }
 
     @Override
-    public Page<OpetussuunnitelmaDto> getOpetussuunnitelmat(Long ktId, OpsHakuInternalDto query) {
+    public Page<OpetussuunnitelmaListausDto> getOpetussuunnitelmat(Long ktId, OpsHakuInternalDto query) {
         PageRequest pageRequest = PageRequest.of(query.getSivu(), query.getSivukoko(), Sort.by(Sort.Direction.fromString("ASC"), "nimi.teksti"));
 
         if (query.getKoulutustyyppi().stream().noneMatch(kt -> SecurityUtil.isUserOphAdmin(KoulutustyyppiRolePrefix.of(KoulutusTyyppi.of(kt))))) {
@@ -353,7 +354,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                         query.getTyyppi(),
                         query.isPoistunut(),
                         pageRequest)
-                .map(ops -> mapper.map(ops, OpetussuunnitelmaDto.class));
+                .map(ops -> mapper.map(ops, OpetussuunnitelmaListausDto.class));
     }
 
     @Override
