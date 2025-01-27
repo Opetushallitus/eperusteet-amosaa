@@ -35,7 +35,7 @@ public class OpetussuunnitelmaJulkaistuQueryDto extends QueryDto {
 
     public List<String> getJotpatyyppi() {
         if (CollectionUtils.isEmpty(jotpatyyppi)) {
-            return Arrays.asList("");
+            return List.of();
         }
 
         return jotpatyyppi;
