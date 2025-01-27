@@ -22,7 +22,7 @@ import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.servlet.config.annotation.*;
 
-import javax.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityManagerFactory;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
@@ -42,7 +42,6 @@ public class MvcConfiguration implements WebMvcConfigurer {
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/ui/").setViewName("forward:/ui/index.html");
         registry.addRedirectViewController("/ui", "/ui/");
-        registry.addRedirectViewController("/swagger", "/swagger/index.html");
     }
 
     @Override

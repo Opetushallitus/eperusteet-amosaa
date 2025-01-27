@@ -3,9 +3,7 @@ package fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaMuokkaustietoDto;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaMuokkaustietoService;
-import io.swagger.annotations.Api;
-import java.util.Date;
-import java.util.List;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,10 +13,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/koulutustoimijat/{ktId}/opetussuunnitelma/{opsId}/muokkaustieto")
 @InternalApi
-@Api("Muokkaustieto")
+@Tag(name = "Muokkaustieto")
 public class OpetussuunnitelmanMuokkaustietoController {
 
     @Autowired

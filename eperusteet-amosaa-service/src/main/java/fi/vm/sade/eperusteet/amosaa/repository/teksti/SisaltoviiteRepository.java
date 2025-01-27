@@ -27,7 +27,7 @@ public interface SisaltoviiteRepository extends JpaWithVersioningRepository<Sisa
             "FROM SisaltoViite sv " +
             "LEFT JOIN FETCH sv.tekstiKappale tk " +
             "LEFT JOIN FETCH tk.nimi nimi " +
-            "LEFT JOIN FETCH nimi.teksti tk " +
+            "LEFT JOIN FETCH nimi.teksti nimitk " +
             "WHERE sv.owner.id = ?1")
     List<SisaltoViite> findAllByOwnerId(Long owner);
 
@@ -84,7 +84,8 @@ public interface SisaltoviiteRepository extends JpaWithVersioningRepository<Sisa
             "AND (:opsTyyppi IS NULL OR sv.owner.tyyppi = :opsTyyppi) " +
             "AND (:nimi IS NULL OR LOWER(nimi.teksti) LIKE LOWER(CONCAT('%', :nimi,'%'))) " +
             "AND (:opsId IS NULL or sv.owner.id = :opsId) " +
-            "AND (:notInOpetussuunnitelmaId IS NULL or sv.owner.id <> :notInOpetussuunnitelmaId) ")
+            "AND (:notInOpetussuunnitelmaId IS NULL or sv.owner.id <> :notInOpetussuunnitelmaId) " +
+            "AND sv.owner.tila != 'POISTETTU'")
     Page<SisaltoViite> findAllWithPagination(@Param("ktId") Long ktId,
                                              @Param("tyyppi") SisaltoTyyppi tyyppi,
                                              @Param("kieli") Kieli kieli,

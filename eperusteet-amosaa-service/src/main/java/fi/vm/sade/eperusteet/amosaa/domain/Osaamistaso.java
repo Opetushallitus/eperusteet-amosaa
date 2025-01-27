@@ -4,7 +4,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.Serializable;
 
 @Setter

@@ -7,8 +7,8 @@ import fi.vm.sade.eperusteet.amosaa.domain.revision.RevisionInfo_;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.LockModeType;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
 
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;

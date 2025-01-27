@@ -50,7 +50,7 @@
     <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
 
     <bean id="dataSource"
-          class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+          class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
         <property name="driverClassName" value="org.postgresql.Driver"/>
         <property name="username" value="${ittestdb.user}"/>
         <property name="password" value="${ittestdb.password}"/>
@@ -67,7 +67,7 @@
                 <entry key="hibernate.hbm2ddl.auto" value="validate"/>
                 <entry key="hibernate.show_sql" value="true"/>
                 <entry key="hibernate.dialect" value="fi.vm.sade.eperusteet.utils.repository.dialect.CustomPostgreSqlDialect"/>
-                <entry key="javax.persistence.sharedCache.mode" value="ENABLE_SELECTIVE"/>
+                <entry key="jakarta.persistence.sharedCache.mode" value="ENABLE_SELECTIVE"/>
                 <entry key="hibernate.cache.use_second_level_cache" value="true"/>
                 <entry key="net.sf.ehcache.configurationResourceName" value="/eperusteet-hibernate-ehcache.xml"/>
                 <entry key="hibernate.cache.region.factory_class" value="org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory"/>

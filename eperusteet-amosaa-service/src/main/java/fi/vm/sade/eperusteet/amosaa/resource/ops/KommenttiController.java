@@ -4,9 +4,10 @@ import fi.vm.sade.eperusteet.amosaa.dto.teksti.KommenttiDto;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija.KoulutustoimijaIdGetterAbstractController;
 import fi.vm.sade.eperusteet.amosaa.service.teksti.KommenttiService;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import java.util.List;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import springfox.documentation.annotations.ApiIgnore;
+
+import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -30,12 +32,12 @@ public class KommenttiController extends KoulutustoimijaIdGetterAbstractControll
     @Autowired
     private KommenttiService kommenttiService;
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    @Parameters({
+            @Parameter(name = "ktId", schema = @Schema(implementation = String.class), in = ParameterIn.PATH)
     })
     @RequestMapping(method = GET)
     public ResponseEntity<List<KommenttiDto>> getAll(
-            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @Parameter(hidden = true) @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final long opsId,
             @PathVariable final long tkvId
     ) {
@@ -43,12 +45,12 @@ public class KommenttiController extends KoulutustoimijaIdGetterAbstractControll
         return new ResponseEntity<>(t, HttpStatus.OK);
     }
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    @Parameters({
+            @Parameter(name = "ktId", schema = @Schema(implementation = String.class), in = ParameterIn.PATH)
     })
     @RequestMapping(method = POST)
     public ResponseEntity<KommenttiDto> add(
-            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @Parameter(hidden = true) @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final long opsId,
             @PathVariable final long tkvId,
             @RequestBody KommenttiDto body
@@ -58,12 +60,12 @@ public class KommenttiController extends KoulutustoimijaIdGetterAbstractControll
         return new ResponseEntity<>(kommenttiService.add(ktId, opsId, body), HttpStatus.CREATED);
     }
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    @Parameters({
+            @Parameter(name = "ktId", schema = @Schema(implementation = String.class), in = ParameterIn.PATH)
     })
     @RequestMapping(value = "/{id}", method = GET)
     public ResponseEntity<KommenttiDto> get(
-            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @Parameter(hidden = true) @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final long opsId,
             @PathVariable final long tkvId,
             @PathVariable final long id
@@ -72,12 +74,12 @@ public class KommenttiController extends KoulutustoimijaIdGetterAbstractControll
         return new ResponseEntity<>(kommenttiDto, kommenttiDto == null ? HttpStatus.NOT_FOUND : HttpStatus.OK);
     }
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    @Parameters({
+            @Parameter(name = "ktId", schema = @Schema(implementation = String.class), in = ParameterIn.PATH)
     })
     @RequestMapping(value = "/{id}", method = PUT)
     public ResponseEntity<KommenttiDto> update(
-            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @Parameter(hidden = true) @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final long opsId,
             @PathVariable final long tkvId,
             @PathVariable final long id,
@@ -85,12 +87,12 @@ public class KommenttiController extends KoulutustoimijaIdGetterAbstractControll
         return new ResponseEntity<>(kommenttiService.update(ktId, opsId, id, body), HttpStatus.OK);
     }
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    @Parameters({
+            @Parameter(name = "ktId", schema = @Schema(implementation = String.class), in = ParameterIn.PATH)
     })
     @RequestMapping(value = "/{id}", method = DELETE)
     public void delete(
-            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @Parameter(hidden = true) @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final long opsId,
             @PathVariable final long tkvId,
             @PathVariable final long id

@@ -11,7 +11,7 @@ import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.*;
 
@@ -46,8 +46,8 @@ public class OsaamistasonKriteeri implements Serializable, Copyable<Osaamistason
     @NotAudited
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "arvioinninkohde_osaamistasonkriteeri",
-            joinColumns = @JoinColumn(name = "osaamistasonKriteerit_id", updatable = false, nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "arvioinninkohde_id", nullable = false, updatable = false))
+            joinColumns = @JoinColumn(name = "osaamistasonKriteerit_id", nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "arvioinninkohde_id", nullable = false))
     private Set<ArvioinninKohde> arvioinninKohteet = new HashSet<>();
 
     public OsaamistasonKriteeri() {

@@ -5,7 +5,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 

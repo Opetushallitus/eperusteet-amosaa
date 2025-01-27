@@ -9,6 +9,7 @@ import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaMuo
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,8 @@ public class JulkaisuJobWriter implements ItemWriter<Julkaisu> {
     @Autowired
     private OpetussuunnitelmaRepository opetussuunnitelmaRepository;
 
-    public void write(List<? extends Julkaisu> julkaisut) throws Exception {
+    @Override
+    public void write(Chunk<? extends Julkaisu> julkaisut) throws Exception {
         for (Julkaisu julkaisu : julkaisut) {
             log.info("Luodaan julkaisu opetussuunnitelmalle: " + julkaisu.getOpetussuunnitelma().getId());
             julkaisuRepository.save(julkaisu);

@@ -37,9 +37,7 @@
     <!-- generic cache manager -->
     <bean id="cacheManager" class="org.springframework.cache.concurrent.ConcurrentMapCacheManager"/>
 
-    <!-- import resource="file:///${user.home:''}/oph-configuration/security-context-backend.xml"/ -->
     <context:component-scan base-package="fi.vm.sade.eperusteet.amosaa.service">
-        <!--<context:exclude-filter type="regex" expression="fi.vm.sade.eperusteet.amosaa.service.external.*"/>-->
     </context:component-scan>
     <context:component-scan base-package="fi.vm.sade.eperusteet.amosaa.service.util"/>
     <context:component-scan base-package="fi.vm.sade.eperusteet.utils"/>
@@ -47,15 +45,13 @@
     <tx:annotation-driven/>
     <aop:aspectj-autoproxy/>
 
-    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
-
     <beans profile="h2db">
         <bean id="h2db" class="org.h2.tools.Server"
               factory-method="createTcpServer" init-method="start" destroy-method="stop" lazy-init="false">
             <constructor-arg value="-tcpAllowOthers,-tcpPort,12345"/>
         </bean>
         <bean id="dataSource"
-              class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" depends-on="h2db">
+              class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close" depends-on="h2db">
             <property name="driverClassName" value="org.h2.Driver"/>
             <property name="url" value="jdbc:h2:~/test;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH"/>
         </bean>
@@ -73,7 +69,7 @@
         </bean>
 
         <bean id="dataSource"
-              class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+              class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
             <property name="driverClassName" value="org.h2.Driver"/>
             <property name="url" value="jdbc:h2:mem:test"/>
         </bean>
@@ -88,20 +84,16 @@
             <property name="jpaPropertyMap">
                 <map>
                     <entry key="hibernate.hbm2ddl.auto" value="create"/>
-                    <entry key="hibernate.show_sql" value="${hibernate.show_sql:false}"/>
-                    <entry key="hibernate.dialect" value="fi.vm.sade.eperusteet.utils.repository.dialect.CustomH2Dialect"/>
-                    <entry key="javax.persistence.sharedCache.mode" value="ENABLE_SELECTIVE"/>
+                    <entry key="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
+                    <entry key="jakarta.persistence.sharedCache.mode" value="ENABLE_SELECTIVE"/>
                     <entry key="hibernate.cache.use_second_level_cache" value="false"/>
-<!--                    <entry key="net.sf.ehcache.configurationResourceName" value="/eperusteet-hibernate-ehcache.xml"/>-->
-<!--                    <entry key="hibernate.cache.region.factory_class" value="org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory"/>-->
-<!--                    <entry key="org.hibernate.envers.audit_strategy" value="org.hibernate.envers.strategy.DefaultAuditStrategy"/>-->
+                    <entry key="org.hibernate.envers.audit_strategy" value="org.hibernate.envers.strategy.DefaultAuditStrategy"/>
                     <entry key="org.hibernate.envers.allow_identifier_reuse" value="true"/>
-                    <entry key="javax.persistence.validation.factory" value-ref="validator"/>
+                    <entry key="hibernate.id.db_structure_naming_strategy" value="single"/>
                 </map>
             </property>
             <property name="mappingResources">
                 <list>
-                    <value>typedefs-h2.xml</value>
                     <value>orm-h2.xml</value>
                 </list>
             </property>

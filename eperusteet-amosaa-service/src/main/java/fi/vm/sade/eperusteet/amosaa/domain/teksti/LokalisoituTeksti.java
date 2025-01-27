@@ -10,16 +10,16 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Immutable;
 
-import javax.persistence.Cacheable;
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import jakarta.persistence.Cacheable;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.io.Serializable;
 import java.text.Normalizer;
 import java.util.Collections;
@@ -41,6 +41,7 @@ public class LokalisoituTeksti implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Getter
     private Long id;
 
     @Getter
@@ -51,7 +52,7 @@ public class LokalisoituTeksti implements Serializable {
     @Immutable
     @CollectionTable(name = "lokalisoituteksti_teksti")
     @ElementCollection(fetch = FetchType.EAGER)
-    private Set<Teksti> teksti = new HashSet<>();
+    private Set<Teksti> teksti;
 
     protected LokalisoituTeksti() {
     }
@@ -59,10 +60,6 @@ public class LokalisoituTeksti implements Serializable {
     private LokalisoituTeksti(Set<Teksti> tekstit, UUID tunniste) {
         this.teksti = tekstit;
         this.tunniste = tunniste != null ? tunniste : UUID.randomUUID();
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public Map<Kieli, String> getTeksti() {

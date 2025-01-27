@@ -55,7 +55,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -270,7 +270,7 @@ public class EperusteetServiceImpl implements EperusteetService {
             JsonNode node = mapper.readTree(cperuste.getPeruste());
             if (node.get("suoritustavat") != null) {
                 for (JsonNode suoritustapa : node.get("suoritustavat")) {
-                    if (suoritustapa.get("suoritustapakoodi").asText().equals(tyyppi)) {
+                    if (suoritustapa.get("suoritustapakoodi").asText().equalsIgnoreCase(tyyppi)) {
                         return suoritustapa;
                     }
                 }
@@ -364,7 +364,7 @@ public class EperusteetServiceImpl implements EperusteetService {
             JsonNode node = mapper.readTree(cperuste.getPeruste());
             if (node.get("suoritustavat") != null) {
                 for (JsonNode suoritustapa : node.get("suoritustavat")) {
-                    if (suoritustapa.get("suoritustapakoodi").asText().equals(tyyppi)) {
+                    if (suoritustapa.get("suoritustapakoodi").asText().equalsIgnoreCase(tyyppi)) {
                         return suoritustapa.get("tutkinnonOsaViitteet");
                     }
                 }

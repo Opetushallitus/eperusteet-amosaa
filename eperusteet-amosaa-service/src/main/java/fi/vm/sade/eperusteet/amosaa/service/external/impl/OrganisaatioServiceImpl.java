@@ -31,7 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import static javax.servlet.http.HttpServletResponse.SC_OK;
+import static jakarta.servlet.http.HttpServletResponse.SC_OK;
 
 @Service
 @Profile("default")

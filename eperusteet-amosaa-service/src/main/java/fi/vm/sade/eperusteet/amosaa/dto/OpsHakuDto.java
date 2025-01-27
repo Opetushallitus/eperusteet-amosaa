@@ -23,23 +23,23 @@ public class OpsHakuDto extends QueryDto {
     private Set<OpsTyyppi> tyyppi;
     private boolean organisaatioRyhma;
 
-    public void setTila(Tila tila) {
-        if (this.tila == null) {
-            this.tila = new HashSet<>();
-        }
-        this.tila.add(tila);
-    }
+//    public void setTila(Tila tila) {
+//        if (this.tila == null) {
+//            this.tila = new HashSet<>();
+//        }
+//        this.tila.add(tila);
+//    }
 
     public void setTila(Set<Tila> tila) {
         this.tila = tila;
     }
 
-    public void setTyyppi(OpsTyyppi tyyppi) {
-        if (this.tyyppi == null) {
-            this.tyyppi = new HashSet<>();
-        }
-        this.tyyppi.add(tyyppi);
-    }
+//    public void setTyyppi(OpsTyyppi tyyppi) {
+//        if (this.tyyppi == null) {
+//            this.tyyppi = new HashSet<>();
+//        }
+//        this.tyyppi.add(tyyppi);
+//    }
 
     public void setTyyppi(Set<OpsTyyppi> tyyppi) {
         this.tyyppi = tyyppi;

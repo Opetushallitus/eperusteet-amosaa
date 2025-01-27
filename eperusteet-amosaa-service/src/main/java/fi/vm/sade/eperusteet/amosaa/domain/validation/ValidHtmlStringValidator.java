@@ -3,8 +3,8 @@ package fi.vm.sade.eperusteet.amosaa.domain.validation;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Safelist;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 public class ValidHtmlStringValidator implements ConstraintValidator<ValidHtml, String> {
 

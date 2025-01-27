@@ -2,7 +2,8 @@ package fi.vm.sade.eperusteet.amosaa.resource.util;
 
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.ArviointiasteikkoDto;
 import fi.vm.sade.eperusteet.amosaa.service.external.ArviointiasteikkoService;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,14 +12,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/arviointiasteikot")
-@Api(value = "Arviointiasteikot")
-@ApiIgnore
+@Tag(name = "Arviointiasteikot")
 public class ArviointiasteikkoController {
 
     @Autowired

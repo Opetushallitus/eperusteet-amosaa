@@ -4,20 +4,15 @@ import fi.vm.sade.eperusteet.amosaa.dto.liite.LiiteDto;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
 import fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija.KoulutustoimijaIdGetterAbstractController;
 import fi.vm.sade.eperusteet.amosaa.resource.util.CacheControl;
-
 import fi.vm.sade.eperusteet.amosaa.service.ops.LiiteService;
-import io.swagger.annotations.Api;
-
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.io.*;
-import java.util.*;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
-
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.tika.Tika;
 import org.slf4j.Logger;
@@ -28,12 +23,32 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
-import springfox.documentation.annotations.ApiIgnore;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PushbackInputStream;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 @RestController
-@Api("liitetiedostot")
+@Tag(name = "liitetiedostot")
 @InternalApi
 public class LiitetiedostoController extends KoulutustoimijaIdGetterAbstractController {
     private static final Logger LOG = LoggerFactory.getLogger(LiitetiedostoController.class);
@@ -51,12 +66,12 @@ public class LiitetiedostoController extends KoulutustoimijaIdGetterAbstractCont
         SUPPORTED_TYPES = Collections.unmodifiableSet(tmp);
     }
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    @Parameters({
+            @Parameter(name = "ktId", schema = @Schema(implementation = String.class), in = ParameterIn.PATH)
     })
     @RequestMapping(value = "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/kuvat", method = RequestMethod.POST)
     public ResponseEntity<String> upload(
-            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @Parameter(hidden = true) @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable Long opsId,
             @RequestParam String nimi,
             @RequestParam Part file,
@@ -119,13 +134,13 @@ public class LiitetiedostoController extends KoulutustoimijaIdGetterAbstractCont
         return preview;
     }
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    @Parameters({
+            @Parameter(name = "ktId", schema = @Schema(implementation = String.class), in = ParameterIn.PATH)
     })
     @RequestMapping(value = "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/kuvat/{fileName}", method = RequestMethod.GET)
     @CacheControl(age = CacheControl.ONE_YEAR)
     public void getKoulutustoimjaImage(
-            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @Parameter(hidden = true) @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable Long opsId,
             @PathVariable String fileName,
             @RequestHeader(value = "If-None-Match", required = false) String etag,
@@ -159,25 +174,25 @@ public class LiitetiedostoController extends KoulutustoimijaIdGetterAbstractCont
         }
     }
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    @Parameters({
+            @Parameter(name = "ktId", schema = @Schema(implementation = String.class), in = ParameterIn.PATH)
     })
     @RequestMapping(value = "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/kuvat/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteImage(
-            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @Parameter(hidden = true) @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable Long opsId,
             @PathVariable UUID id
     ) {
         liitteet.delete(ktId, opsId, id);
     }
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "ktId", dataType = "string", paramType = "path")
+    @Parameters({
+            @Parameter(name = "ktId", schema = @Schema(implementation = String.class), in = ParameterIn.PATH)
     })
     @RequestMapping(value = "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/kuvat", method = RequestMethod.GET)
     public List<LiiteDto> getAllImages(
-            @ApiIgnore @ModelAttribute("solvedKtId") final Long ktId,
+            @Parameter(hidden = true) @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable Long opsId
     ) {
         return liitteet.getAll(ktId, opsId);

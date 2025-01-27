@@ -7,7 +7,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtmlValidatorBase;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import javax.validation.Payload;
+import jakarta.validation.Payload;
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
 

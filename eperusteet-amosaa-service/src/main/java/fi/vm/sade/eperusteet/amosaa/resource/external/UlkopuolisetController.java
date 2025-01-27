@@ -11,12 +11,13 @@ import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetClient;
 import fi.vm.sade.eperusteet.amosaa.service.external.EperusteetService;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import fi.vm.sade.eperusteet.amosaa.service.external.KoodistoService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
-import java.util.List;
-import java.util.Set;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,14 +26,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import springfox.documentation.annotations.ApiIgnore;
+
+import java.util.List;
+import java.util.Set;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @RestController
 @RequestMapping("/api/ulkopuoliset")
 @InternalApi
-@Api("Ulkopuoliset")
+@Tag(name = "Ulkopuoliset")
 public class UlkopuolisetController {
 
     @Autowired
@@ -74,23 +77,23 @@ public class UlkopuolisetController {
 
     @RequestMapping(value = "/tiedotteet/haku", method = GET)
     @ResponseBody
-    @ApiOperation(value = "tiedotteiden haku")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "sivu", dataType = "long", paramType = "query"),
-            @ApiImplicitParam(name = "sivukoko", dataType = "long", paramType = "query"),
-            @ApiImplicitParam(name = "kieli", dataType = "string", paramType = "query", allowMultiple = true, value = "tiedotteen kieli"),
-            @ApiImplicitParam(name = "nimi", dataType = "string", paramType = "query", value = "hae nimellä"),
-            @ApiImplicitParam(name = "perusteId", dataType = "long", paramType = "query", value = "hae perusteeseen liitetyt tiedotteet"),
-            @ApiImplicitParam(name = "perusteeton", dataType = "boolean", paramType = "query", value = "hae perusteettomat tiedotteet"),
-            @ApiImplicitParam(name = "julkinen", dataType = "boolean", paramType = "query", value = "hae julkiset tiedotteet"),
-            @ApiImplicitParam(name = "yleinen", dataType = "boolean", paramType = "query", value = "hae yleiset tiedotteet"),
-            @ApiImplicitParam(name = "perusteIds", dataType = "long", paramType = "query", allowMultiple = true, value = "tiedotteen perusteiden"),
-            @ApiImplicitParam(name = "tiedoteJulkaisuPaikka", dataType = "string", paramType = "query", allowMultiple = true, value = "tiedotteen julkaisupaikat"),
-            @ApiImplicitParam(name = "koulutusTyyppi", dataType = "string", paramType = "query", allowMultiple = true, value = "tiedotteen koulutustyypit"),
-            @ApiImplicitParam(name = "jarjestys", dataType = "string", paramType = "query", allowMultiple = false, value = "tiedotteen jarjestys"),
-            @ApiImplicitParam(name = "jarjestysNouseva", dataType = "boolean", paramType = "query", allowMultiple = false, value = "tiedotteen jarjestyksen suunta")
+    @Operation(summary = "tiedotteiden haku")
+    @Parameters({
+            @Parameter(name = "sivu", schema = @Schema(implementation = Long.class), in = ParameterIn.QUERY),
+            @Parameter(name = "sivukoko", schema = @Schema(implementation = Long.class), in = ParameterIn.QUERY),
+            @Parameter(name = "kieli", in = ParameterIn.QUERY, array = @ArraySchema(schema = @Schema(type = "string")), description = "tiedotteen kieli"),
+            @Parameter(name = "nimi", schema = @Schema(implementation = String.class), in = ParameterIn.QUERY, description = "hae nimellä"),
+            @Parameter(name = "perusteId", schema = @Schema(implementation = Long.class), in = ParameterIn.QUERY, description = "hae perusteeseen liitetyt tiedotteet"),
+            @Parameter(name = "perusteeton", schema = @Schema(implementation = Boolean.class), in = ParameterIn.QUERY, description = "hae perusteettomat tiedotteet"),
+            @Parameter(name = "julkinen", schema = @Schema(implementation = Boolean.class), in = ParameterIn.QUERY, description = "hae julkiset tiedotteet"),
+            @Parameter(name = "yleinen", schema = @Schema(implementation = Boolean.class), in = ParameterIn.QUERY, description = "hae yleiset tiedotteet"),
+            @Parameter(name = "perusteIds", in = ParameterIn.QUERY, array = @ArraySchema(schema = @Schema(type = "number")), description = "tiedotteen perusteiden"),
+            @Parameter(name = "tiedoteJulkaisuPaikka", in = ParameterIn.QUERY, array = @ArraySchema(schema = @Schema(type = "string")), description = "tiedotteen julkaisupaikat"),
+            @Parameter(name = "koulutusTyyppi", in = ParameterIn.QUERY, array = @ArraySchema(schema = @Schema(type = "string")), description = "tiedotteen koulutustyypit"),
+            @Parameter(name = "jarjestys", schema = @Schema(implementation = String.class), in = ParameterIn.QUERY, description = "tiedotteen jarjestys"),
+            @Parameter(name = "jarjestysNouseva", schema = @Schema(implementation = Boolean.class), in = ParameterIn.QUERY, description = "tiedotteen jarjestyksen suunta")
     })
-    public ResponseEntity<JsonNode> getTiedotteetHaku(@ApiIgnore TiedoteQueryDto queryDto) {
+    public ResponseEntity<JsonNode> getTiedotteetHaku(@Parameter(hidden = true) TiedoteQueryDto queryDto) {
         return ResponseEntity.ok(eperusteetClient.getTiedotteetHaku(queryDto));
     }
 
