@@ -17,9 +17,18 @@
         </encoder>
     </appender>
 
+<!--    <logger name="org.hibernate.SQL" level="DEBUG" additivity="false">-->
+<!--        <appender-ref ref="STDOUT-CONSOLE" />-->
+<!--    </logger>-->
+
+<!--    <logger name="org.hibernate.orm.jdbc.bind" level="TRACE" additivity="false">-->
+<!--        <appender-ref ref="STDOUT-CONSOLE" />-->
+<!--    </logger>-->
+
     <logger name="fi.vm" level="INFO" additivity="false">
         <appender-ref ref="STDOUT-APP"/>
     </logger>
+
     <root level="INFO">
         <appender-ref ref="STDOUT-CONSOLE"/>
     </root>

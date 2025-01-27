@@ -1067,7 +1067,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         koulutustyypit.addAll(pquery.getKoulutustyyppi().stream().map(KoulutusTyyppi::name).collect(Collectors.toList()));
 
         if (CollectionUtils.isEmpty(koulutustyypit) || (CollectionUtils.isNotEmpty(pquery.getTyyppi()) && pquery.getTyyppi().contains(OpsTyyppi.YHTEINEN.toString()))) {
-            koulutustyypit = Arrays.asList("");
+            koulutustyypit = List.of();
         }
 
         return julkaisuRepository.findAllJulkisetJulkaisut(
