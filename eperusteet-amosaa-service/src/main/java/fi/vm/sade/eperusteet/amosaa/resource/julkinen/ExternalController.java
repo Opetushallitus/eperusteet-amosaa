@@ -89,7 +89,7 @@ public class ExternalController {
         return opetussuunnitelmaService.getOpetussuunnitelmaJulkaistuSisalto(opsId);
     }
 
-    @RequestMapping(value = "/opetussuunnitelma/{opsId:\\d+}/**", method = GET)
+    @RequestMapping(value = "/opetussuunnitelma/{opsId:\\d+}/{custompath}", method = GET)
     @ResponseBody
     @Operation(
             summary = "Opetussuunnitelman tietojen haku tarkalla sisältörakenteella",
@@ -99,6 +99,12 @@ public class ExternalController {
             @ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = OpetussuunnitelmaKaikkiDto.class))}),
     })
     public ResponseEntity<Object> getOpetussuunnitelmaDynamicQuery(HttpServletRequest req, @PathVariable("opsId") final long id) {
+        return getJulkaistuSisaltoObjectNodeWithQuery(id, requestToQueries(req, DEFAULT_PATH_SKIP_VALUE));
+    }
+
+    // Springdoc ei generoi rajapintoja /** poluille, joten tämä on tehty erikseen
+    @RequestMapping(value = "/opetussuunnitelma/{opsId:\\d+}/{custompath}/**", method = GET)
+    public ResponseEntity<Object> getOpetussuunnitelmaDynamicQueryHidden(HttpServletRequest req, @PathVariable("opsId") final long id) {
         return getJulkaistuSisaltoObjectNodeWithQuery(id, requestToQueries(req, DEFAULT_PATH_SKIP_VALUE));
     }
 
