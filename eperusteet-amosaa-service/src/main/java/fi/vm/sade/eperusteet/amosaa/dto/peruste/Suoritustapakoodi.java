@@ -37,6 +37,6 @@ public enum Suoritustapakoodi {
 
     @JsonValue
     public String value() {
-        return name();
+        return koodi;
     }
 }
