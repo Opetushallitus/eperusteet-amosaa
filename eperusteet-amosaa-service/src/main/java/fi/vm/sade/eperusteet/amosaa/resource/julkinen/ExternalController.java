@@ -5,6 +5,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaJulkaistuQueryDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -98,11 +99,12 @@ public class ExternalController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = OpetussuunnitelmaKaikkiDto.class))}),
     })
-    public ResponseEntity<Object> getOpetussuunnitelmaDynamicQuery(HttpServletRequest req, @PathVariable("opsId") final long id) {
+    public ResponseEntity<Object> getOpetussuunnitelmaDynamicQuery(HttpServletRequest req, @PathVariable("opsId") final long id, @PathVariable("custompath") final String custompath) {
         return getJulkaistuSisaltoObjectNodeWithQuery(id, requestToQueries(req, DEFAULT_PATH_SKIP_VALUE));
     }
 
     // Springdoc ei generoi rajapintoja /** poluille, joten tämä on tehty erikseen
+    @Hidden
     @RequestMapping(value = "/opetussuunnitelma/{opsId:\\d+}/{custompath}/**", method = GET)
     public ResponseEntity<Object> getOpetussuunnitelmaDynamicQueryHidden(HttpServletRequest req, @PathVariable("opsId") final long id) {
         return getJulkaistuSisaltoObjectNodeWithQuery(id, requestToQueries(req, DEFAULT_PATH_SKIP_VALUE));
