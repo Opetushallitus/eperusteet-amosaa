@@ -4,7 +4,6 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Julkaisu;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.launch.support.TaskExecutorJobLauncher;
@@ -97,7 +96,6 @@ public class BatchConfig {
                 .transactionAttribute(attribute)
                 .build();
     }
-
 
     @Bean
     public Job perusteKoulutuksetMigrateJob(JobRepository jobRepository, Step perusteKoulutuksetMigrateJobStep) {

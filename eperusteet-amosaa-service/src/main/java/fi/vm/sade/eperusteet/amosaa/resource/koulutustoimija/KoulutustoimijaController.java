@@ -23,6 +23,7 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -43,15 +44,19 @@ import java.util.stream.Collectors;
 @Tag(name = "koulutustoimijat")
 @InternalApi
 public class KoulutustoimijaController extends KoulutustoimijaIdGetterAbstractController {
+
+    @Lazy
     @Autowired
     private KoulutustoimijaService koulutustoimijaService;
 
     @Autowired
     private SisaltoViiteService sisaltoViiteService;
 
+    @Lazy
     @Autowired
-    private KayttajanTietoService kayttajaTietoService;
+    private KayttajanTietoService kayttajanTietoService;
 
+    @Lazy
     @Autowired
     private OrganisaatioService organisaatioService;
 
@@ -106,7 +111,7 @@ public class KoulutustoimijaController extends KoulutustoimijaIdGetterAbstractCo
             @Parameter(hidden = true) @ModelAttribute("solvedKtId") final Long ktId,
             @RequestParam(value = "app") final String app
     ) {
-        return new ResponseEntity<>(kayttajaTietoService.getKayttajat(ktId, PermissionEvaluator.RolePrefix.valueOf(app)), HttpStatus.OK);
+        return new ResponseEntity<>(kayttajanTietoService.getKayttajat(ktId, PermissionEvaluator.RolePrefix.valueOf(app)), HttpStatus.OK);
     }
 
     @Parameters({
@@ -117,7 +122,7 @@ public class KoulutustoimijaController extends KoulutustoimijaIdGetterAbstractCo
             @Parameter(hidden = true) @ModelAttribute("solvedKtId") final Long ktId,
             @RequestParam(value = "app") final String app
     ) {
-        return new ResponseEntity<>(kayttajaTietoService.getKaikkiKayttajat(ktId, PermissionEvaluator.RolePrefix.valueOf(app)), HttpStatus.OK);
+        return new ResponseEntity<>(kayttajanTietoService.getKaikkiKayttajat(ktId, PermissionEvaluator.RolePrefix.valueOf(app)), HttpStatus.OK);
     }
 
     @Parameters({
@@ -128,7 +133,7 @@ public class KoulutustoimijaController extends KoulutustoimijaIdGetterAbstractCo
             @Parameter(hidden = true) @ModelAttribute("solvedKtId") final Long ktId,
             @RequestParam(value = "app") final String app
     ) {
-        return new ResponseEntity<>(kayttajaTietoService.getYstavaOrganisaatioKayttajat(ktId, PermissionEvaluator.RolePrefix.valueOf(app)), HttpStatus.OK);
+        return new ResponseEntity<>(kayttajanTietoService.getYstavaOrganisaatioKayttajat(ktId, PermissionEvaluator.RolePrefix.valueOf(app)), HttpStatus.OK);
     }
 
     @Parameters({
@@ -139,7 +144,7 @@ public class KoulutustoimijaController extends KoulutustoimijaIdGetterAbstractCo
             @Parameter(hidden = true) @ModelAttribute("solvedKtId") final Long ktId,
             @PathVariable final String kayttajaOid
     ) {
-        return ResponseEntity.ok(kayttajaTietoService.getKayttaja(ktId, kayttajaOid));
+        return ResponseEntity.ok(kayttajanTietoService.getKayttaja(ktId, kayttajaOid));
     }
 
     @Parameters({

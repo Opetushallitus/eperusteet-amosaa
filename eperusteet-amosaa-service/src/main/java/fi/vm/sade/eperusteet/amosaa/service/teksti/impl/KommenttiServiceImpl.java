@@ -14,6 +14,7 @@ import fi.vm.sade.eperusteet.amosaa.service.teksti.KommenttiService;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -27,18 +28,16 @@ public class KommenttiServiceImpl implements KommenttiService {
 
     @Autowired
     private KommenttiRepository repository;
-
-    @Autowired
-    private KayttajanTietoService kayttajat;
-
+    
     @Autowired
     private DtoMapper mapper;
 
     @Autowired
     private PermissionManager permissionManager;
 
+    @Lazy
     @Autowired
-    KayttajanTietoService kayttajanTietoService;
+    private KayttajanTietoService kayttajanTietoService;
 
     @Override
     @Transactional(readOnly = true)
@@ -108,7 +107,7 @@ public class KommenttiServiceImpl implements KommenttiService {
 
     private void assertRights(Kommentti kommentti, Long opsId, Permission p) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        KayttajanTietoDto kirjautunut = kayttajat.haeKirjautaunutKayttaja();
+        KayttajanTietoDto kirjautunut = kayttajanTietoService.haeKirjautaunutKayttaja();
         if (kirjautunut.getOidHenkilo().equals(kommentti.getLuoja())) {
             return;
         }

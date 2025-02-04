@@ -32,6 +32,7 @@ import fi.vm.sade.javautils.http.OphHttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Component;
@@ -62,6 +63,7 @@ public class KayttajanTietoServiceImpl implements KayttajanTietoService {
     @Autowired
     private KayttajaClient client;
 
+    @Lazy
     @Autowired
     private KoulutustoimijaService koulutustoimijaService;
 

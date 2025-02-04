@@ -16,15 +16,18 @@ import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 
 public abstract class AbstractPermissionManager implements PermissionManager {
 
+@Lazy
     @Autowired
     private KayttajanTietoService kayttajanTietoService;
 
+    @Lazy
     @Autowired
     private KoulutustoimijaService koulutustoimijaService;
 
@@ -42,7 +45,6 @@ public abstract class AbstractPermissionManager implements PermissionManager {
 
     @Autowired
     private DtoMapper mapper;
-
 
     @Transactional(readOnly = true)
     public Map<PermissionEvaluator.RolePermission, Set<Long>> getOrganisaatioOikeudet(PermissionEvaluator.RolePrefix rolePrefix) {

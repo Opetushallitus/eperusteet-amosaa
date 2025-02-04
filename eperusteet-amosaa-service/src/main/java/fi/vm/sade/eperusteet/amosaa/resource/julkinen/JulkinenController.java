@@ -29,6 +29,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
@@ -53,8 +54,9 @@ import java.util.stream.Collectors;
 @Tag(name = "julkinen")
 public class JulkinenController {
 
+    @Lazy
     @Autowired
-    private KoulutustoimijaService ktService;
+    private KoulutustoimijaService koulutustoimijaService;
 
     @Autowired
     private SisaltoViiteService svService;
@@ -89,7 +91,7 @@ public class JulkinenController {
     public KoulutustoimijaJulkinenDto getKoulutustoimijaByOid(
             @PathVariable final String ktOid
     ) {
-        return ktService.getKoulutustoimijaJulkinen(ktOid);
+        return koulutustoimijaService.getKoulutustoimijaJulkinen(ktOid);
     }
 
     @RequestMapping(value = "/koulutustoimijat/{ktId}", method = RequestMethod.GET)
@@ -97,7 +99,7 @@ public class JulkinenController {
     public KoulutustoimijaJulkinenDto getKoulutustoimijaByKtId(
             @PathVariable final Long ktId
     ) {
-        return ktService.getKoulutustoimijaJulkinen(ktId);
+        return koulutustoimijaService.getKoulutustoimijaJulkinen(ktId);
     }
 
     @Parameters({
@@ -173,7 +175,7 @@ public class JulkinenController {
     ) {
         // Oletuksena älä palauta pohjia
         PageRequest p = PageRequest.of(pquery.getSivu(), Math.min(pquery.getSivukoko(), 1000));
-        return ktService.findKoulutustoimijat(p, pquery);
+        return koulutustoimijaService.findKoulutustoimijat(p, pquery);
     }
 
     @RequestMapping(value = "/koodi/{koodi}", method = RequestMethod.GET)
@@ -341,11 +343,11 @@ public class JulkinenController {
     public List<KoulutustoimijaJulkinenDto> findKoulutusatyypinKoulutustoimijat(
             @RequestParam(value = "koulutustyypit") final Set<String> koulutustyypit
     ) {
-        return ktService.findKoulutusatyypinKoulutustoimijat(koulutustyypit.stream().map(KoulutusTyyppi::of).collect(Collectors.toSet()));
+        return koulutustoimijaService.findKoulutusatyypinKoulutustoimijat(koulutustyypit.stream().map(KoulutusTyyppi::of).collect(Collectors.toSet()));
     }
 
     @GetMapping("/koulutustoimija/vst/oppilaitostyypi")
     public List<KoodistoKoodiDto> getVstYksilollisetOppilaitostyypit() {
-        return ktService.getVstYksilollisetOppilaitostyypit();
+        return koulutustoimijaService.getVstYksilollisetOppilaitostyypit();
     }
 }

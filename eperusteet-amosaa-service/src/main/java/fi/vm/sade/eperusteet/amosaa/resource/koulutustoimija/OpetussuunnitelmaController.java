@@ -33,6 +33,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.util.ObjectUtils;
@@ -59,6 +60,7 @@ public class OpetussuunnitelmaController extends KoulutustoimijaIdGetterAbstract
     @Autowired
     private OpetussuunnitelmaService service;
 
+    @Lazy
     @Autowired
     private KoulutustoimijaService koulutustoimijaService;
 
