@@ -61,6 +61,7 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
 
     private static final Logger LOG = LoggerFactory.getLogger(KoulutustoimijaServiceImpl.class);
 
+    @Lazy
     @Autowired
     private OrganisaatioService organisaatioService;
 
@@ -88,7 +89,6 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
 
     private static String OPH = "1.2.246.562.10.00000000001";
 
-    @Transactional
     private Koulutustoimija initialize(String kOid) {
         Koulutustoimija koulutustoimija = repository.findOneByOrganisaatio(kOid);
         if (koulutustoimija != null) {
@@ -135,7 +135,6 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     }
 
     @Override
-    @Transactional
     public KoulutustoimijaDto updateKoulutustoimija(Long ktId, KoulutustoimijaDto ktDto) {
         Koulutustoimija toimija = repository.findOne(ktId);
         if (ktDto.getYstavat() == null) {
@@ -151,7 +150,6 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     }
 
     @Override
-    @Transactional
     public void hylkaaYhteistyopyynto(Long ktId, Long vierasKtId) {
         Koulutustoimija toimija = repository.findOne(ktId);
         Koulutustoimija vierasToimija = repository.findOne(vierasKtId);
@@ -166,7 +164,6 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     }
 
     @Override
-    @Transactional
     public List<KoulutustoimijaBaseDto> getKoulutustoimijat(Set<String> kOid) {
         return kOid.stream()
                 .map(ktId -> {
@@ -178,7 +175,6 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     }
 
     @Override
-    @Transactional
     @Cacheable("koulutustoimijat")
     public List<KoulutustoimijaBaseDto> getKoulutustoimijat() {
         return repository.findAll().stream()

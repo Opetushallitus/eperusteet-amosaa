@@ -37,6 +37,7 @@ import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -90,6 +91,7 @@ public class MaintenanceServiceImpl implements MaintenanceService {
     @Autowired
     private KoulutustoimijaRepository koulutustoimijaRepository;
 
+    @Lazy
     @Autowired
     private OrganisaatioService organisaatioService;
 

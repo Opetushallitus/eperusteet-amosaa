@@ -1,5 +1,6 @@
 package fi.vm.sade.eperusteet.amosaa.config;
 
+import com.fasterxml.jackson.core.StreamReadConstraints;
 import fi.vm.sade.eperusteet.amosaa.domain.liite.version.JpaWithVersioningRepositoryFactoryBean;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionEvaluator;
 import jakarta.persistence.EntityManager;
@@ -8,6 +9,7 @@ import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.id.enhanced.SingleNamingStrategy;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +18,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.Role;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -66,14 +69,14 @@ public class DefaultConfigs {
     }
 
     @Bean
-    public PermissionEvaluator ylopsPermissionEvaluator() {
+    public PermissionEvaluator amosaaPermissionEvaluator() {
         return new PermissionEvaluator();
     }
 
     @Bean
     public DefaultMethodSecurityExpressionHandler expressionHandler() {
         DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
-        expressionHandler.setPermissionEvaluator(ylopsPermissionEvaluator());
+        expressionHandler.setPermissionEvaluator(amosaaPermissionEvaluator());
         return expressionHandler;
     }
 
@@ -114,6 +117,7 @@ public class DefaultConfigs {
         props.put("hibernate.jdbc.batch_size", 20);
         props.put("hibernate.jdbc.fetch_size", 20);
         props.put(AvailableSettings.ID_DB_STRUCTURE_NAMING_STRATEGY, SingleNamingStrategy.STRATEGY_NAME);
+        props.put("hibernate.javax.cache.missing_cache_strategy", "create");
         entityManagerFactory.setJpaPropertyMap(props);
         return entityManagerFactory;
     }
@@ -126,5 +130,11 @@ public class DefaultConfigs {
     @Bean
     public HandlerMappingIntrospector mvcHandlerMappingIntrospector() {
         return new HandlerMappingIntrospector();
+    }
+
+    static {
+        StreamReadConstraints.overrideDefaultStreamReadConstraints(
+                StreamReadConstraints.builder().maxStringLength(200000000).build()
+        );
     }
 }

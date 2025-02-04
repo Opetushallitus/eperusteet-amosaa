@@ -15,6 +15,7 @@ import fi.vm.sade.eperusteet.amosaa.service.security.PermissionManager;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,15 +33,16 @@ public class KayttajaoikeusServiceImpl implements KayttajaoikeusService {
     @Autowired
     private KayttajaRepository kayttajaRepository;
 
+    @Lazy
     @Autowired
-    private KayttajanTietoService ktService;
+    private KayttajanTietoService kayttajanTietoService;
 
     @Autowired
     private PermissionManager permissionManager;
 
     @Override
     public List<KayttajaoikeusDto> getKayttooikeudet() {
-        Kayttaja kayttaja = kayttajaRepository.findOneByOid(ktService.getUserOid());
+        Kayttaja kayttaja = kayttajaRepository.findOneByOid(kayttajanTietoService.getUserOid());
         List<Kayttajaoikeus> result = kayttajaoikeusRepository.findAllByKayttaja(kayttaja);
         return mapper.mapAsList(result, KayttajaoikeusDto.class);
     }

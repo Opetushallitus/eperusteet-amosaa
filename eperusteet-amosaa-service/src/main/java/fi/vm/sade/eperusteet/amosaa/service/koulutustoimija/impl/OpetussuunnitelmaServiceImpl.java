@@ -111,6 +111,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -173,8 +174,9 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     @Autowired
     private ValidointiService validointiService;
 
+    @Lazy
     @Autowired
-    private KayttajanTietoService ktService;
+    private KayttajanTietoService kayttajanTietoService;
 
     @Autowired
     private CachedPerusteRepository cachedPerusteRepository;
@@ -184,6 +186,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     @Autowired
     private SisaltoviiteRepository sisaltoviiteRepository;
 
+    @Lazy
     @Autowired
     private OrganisaatioService organisaatioService;
 
@@ -400,7 +403,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
     @Override
     public List<OpetussuunnitelmaDto> getOtherOpetussuunnitelmat(Long ktId, Set<KoulutusTyyppi> koulutustyypit) {
-        Kayttaja kayttaja = kayttajaRepository.findOneByOid(ktService.getUserOid());
+        Kayttaja kayttaja = kayttajaRepository.findOneByOid(kayttajanTietoService.getUserOid());
         Koulutustoimija omaKoulutustoimija = koulutustoimijaRepository.findOne(ktId);
         List<Kayttajaoikeus> oikeudet = kayttajaoikeusRepository.findAllByKayttaja(kayttaja);
         return oikeudet.stream()
@@ -429,7 +432,6 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     }
 
     @Override
-    @Cacheable("ops-navigation")
     public NavigationNodeDto buildNavigationJulkinen(Long ktId, Long opsId) {
         NavigationNodeDto rootNode = buildNavigation(ktId, opsId);
         rootNode.getChildren().add(0, NavigationNodeDto.of(NavigationType.tiedot, null, opsId));
@@ -442,6 +444,11 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     }
 
     @Override
+    @Cacheable(
+            value= "ops-navigation",
+            condition = "#esikatselu == false",
+            key = "#opsId"
+    )
     public NavigationNodeDto buildNavigationPublic(Long ktId, Long opsId, boolean esikatselu) {
         NavigationNodeDto rootNode = dispatcher.get(opsId, NavigationBuilderPublic.class).buildNavigation(ktId, opsId, esikatselu);
         rootNode.getChildren().add(0, NavigationNodeDto.of(NavigationType.tiedot, null, opsId));

@@ -57,6 +57,7 @@ public class DtoMapperConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(DtoMapperConfig.class);
 
+    @Lazy
     @Autowired
     OrganisaatioService organisaatioService;
 

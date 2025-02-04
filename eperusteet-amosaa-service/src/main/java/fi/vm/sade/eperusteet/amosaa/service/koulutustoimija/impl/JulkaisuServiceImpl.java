@@ -45,6 +45,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Async;
@@ -93,6 +94,7 @@ public class JulkaisuServiceImpl implements JulkaisuService {
     @Autowired
     private JsonMapper jsonMapper;
 
+    @Lazy
     @Autowired
     private KayttajanTietoService kayttajanTietoService;
 
@@ -114,6 +116,9 @@ public class JulkaisuServiceImpl implements JulkaisuService {
     @Autowired
     @Lazy
     private JulkaisuService self;
+
+    @Autowired
+    private CacheManager cacheManager;
 
     private static final int JULKAISUN_ODOTUSAIKA_SEKUNNEISSA = 60 * 60;
 
@@ -234,6 +239,7 @@ public class JulkaisuServiceImpl implements JulkaisuService {
         opetussuunnitelma.setEsikatseltavissa(false);
         julkaistuOpetussuunnitelmaTila.setJulkaisutila(JulkaisuTila.JULKAISTU);
         self.saveJulkaistuOpetussuunnitelmaTila(julkaistuOpetussuunnitelmaTila);
+        cacheManager.getCache("ops-navigation").evictIfPresent(opsId);
     }
 
     @Override
