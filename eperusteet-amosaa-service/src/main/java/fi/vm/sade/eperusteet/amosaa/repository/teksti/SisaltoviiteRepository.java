@@ -52,9 +52,9 @@ public interface SisaltoviiteRepository extends JpaWithVersioningRepository<Sisa
             "LEFT OUTER JOIN tutkinnonosa vtosatosa ON vtosatosa.perusteentutkinnonosa = vtosa.tosa_id " +
             "WHERE 1 = 1 " +
             "AND (tosa.tyyppi = 'PERUSTEESTA' OR tosa.tyyppi ='VIERAS') " +
-            "AND ops.koulutustoimija_id = ?1 " +
-            "AND (tosa.koodi = ?2 or vtosatosa.koodi = ?2)")
-    List<SisaltoViite> findAllTutkinnonOsatByKoodi(Koulutustoimija kt, String koodi);
+            "AND ops.koulutustoimija_id = :ktId " +
+            "AND (tosa.koodi = :koodi or vtosatosa.koodi = :koodi)")
+    List<SisaltoViite> findAllTutkinnonOsatByKoodi(@Param("ktId") Long ktId, @Param("koodi") String koodi);
 
     @Query(value = "SELECT sv FROM SisaltoViite sv WHERE sv.owner = ?1 AND sv.tyyppi = 'TUTKINNONOSAT'")
     SisaltoViite findTutkinnonosatRoot(Opetussuunnitelma owner);

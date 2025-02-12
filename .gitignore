@@ -9,6 +9,7 @@
 /eperusteet-amosaa-app/tests/typings/
 /eperusteet-amosaa-app/src/app/**/*.js
 /eperusteet-amosaa-app/src/app/**/*.map
+/eperusteet-amosaa-service/.vscode/
 target/**
 **/target/**
 **/oldtests/**

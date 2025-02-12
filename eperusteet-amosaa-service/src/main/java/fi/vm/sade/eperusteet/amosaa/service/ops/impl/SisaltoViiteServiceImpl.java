@@ -941,8 +941,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
             Koulutustoimija kt = koulutustoimijaRepository.findOneByOrganisaatio(ktOrg);
             return repository.findAllPaikallisetTutkinnonOsatByKoodi(kt, osaKoodi);
         } else if (ktId != null && koodi.startsWith("tutkinnonosat_")) {
-            Koulutustoimija kt = koulutustoimijaRepository.findOne(ktId);
-            List<SisaltoViite> tutkinnonOsaSisallot = repository.findAllTutkinnonOsatByKoodi(kt, koodi);
+            List<SisaltoViite> tutkinnonOsaSisallot = repository.findAllTutkinnonOsatByKoodi(ktId, koodi);
             return rankTutkinnonOsat(tutkinnonOsaSisallot);
         }
 
@@ -974,8 +973,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
                     .filter(k -> opsRepository.isEsikatseltavissa(k.getOwner().getId()))
                     .collect(Collectors.toList());
         } else if (koodi.startsWith("tutkinnonosat_")) {
-            Koulutustoimija kt = koulutustoimijaRepository.findOne(ktId);
-            return repository.findAllTutkinnonOsatByKoodi(kt, koodi).stream()
+            return repository.findAllTutkinnonOsatByKoodi(ktId, koodi).stream()
                     .filter(k -> opsRepository.isEsikatseltavissa(k.getOwner().getId()))
                     .collect(Collectors.toList());
         }
