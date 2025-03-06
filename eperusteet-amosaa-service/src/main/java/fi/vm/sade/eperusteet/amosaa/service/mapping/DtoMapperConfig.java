@@ -4,6 +4,7 @@ import com.google.common.base.Throwables;
 import fi.vm.sade.eperusteet.amosaa.domain.Kooditettu;
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiKuva;
 import fi.vm.sade.eperusteet.amosaa.domain.dokumentti.DokumenttiKuva_;
+import fi.vm.sade.eperusteet.amosaa.domain.koodisto.KoodistoKoodi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Koulutustoimija;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
@@ -23,6 +24,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaTilastoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.SuorituspolkuOsaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.KoodiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
@@ -45,6 +47,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestClientException;
 
 import java.time.Instant;
@@ -203,6 +206,24 @@ public class DtoMapperConfig {
                                 target.setKooditettu(new LokalisoituTekstiDto(lokalisoitu), koodistokoodi.getVoimassaAlkuPvm(), koodistokoodi.getVoimassaLoppuPvm());
                             }
                         }
+                    }
+                })
+                .register();
+
+        factory.classMap(KoodistoKoodi.class, KoodiDto.class)
+                .byDefault()
+                .customize(new CustomMapper<KoodistoKoodi, KoodiDto>() {
+                    @Override
+                    public void mapAtoB(KoodistoKoodi a, KoodiDto b, MappingContext context) {
+                        super.mapAtoB(a, b, context);
+                        KoodistoKoodiDto koodistokoodi = koodistoClient.getByUri(a.getKoodiUri());
+                        Map<String, String> lokalisoitu = Arrays.stream(koodistokoodi.getMetadata()).collect(Collectors.toMap(KoodistoMetadataDto::getKieli, KoodistoMetadataDto::getNimi));
+                        b.setNimi(lokalisoitu);
+                    }
+
+                    @Override
+                    public void mapBtoA(KoodiDto b, KoodistoKoodi a, MappingContext context) {
+                        super.mapBtoA(b, a, context);
                     }
                 })
                 .register();
