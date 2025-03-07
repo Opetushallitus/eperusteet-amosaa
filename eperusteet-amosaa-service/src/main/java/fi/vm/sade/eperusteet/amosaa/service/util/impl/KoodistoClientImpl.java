@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
@@ -105,12 +106,18 @@ public class KoodistoClientImpl implements KoodistoClient {
         if (splitted.length < 2) {
             return null;
         } else if (splitted.length == 2) {
-            return get(splitted[0], uri);
+            return self.get(splitted[0], uri);
         } else if (splitted[0].startsWith("paikallinen_tutkinnonosa")) {
             return null; // FIXME
         } else {
             return null;
         }
+    }
+
+    @Override
+    public LokalisoituTekstiDto getNimi(String uri) {
+        KoodistoKoodiDto koodistokoodi = getByUri(uri);
+        return new LokalisoituTekstiDto(Arrays.stream(koodistokoodi.getMetadata()).collect(Collectors.toMap(KoodistoMetadataDto::getKieli, KoodistoMetadataDto::getNimi)));
     }
 
     @Override

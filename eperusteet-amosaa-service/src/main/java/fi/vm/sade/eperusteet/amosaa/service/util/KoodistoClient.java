@@ -18,6 +18,8 @@ public interface KoodistoClient {
 
     KoodistoKoodiDto getByUri(String uri);
 
+    LokalisoituTekstiDto getNimi(String uri);
+
     List<KoodistoKoodiDto> filterBy(String koodisto, String haku);
 
     List<KoodistoKoodiDto> getAlarelaatio(String koodi);
