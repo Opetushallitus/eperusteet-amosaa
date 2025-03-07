@@ -38,6 +38,11 @@ public class KoodistoClientMock implements KoodistoClient {
     }
 
     @Override
+    public LokalisoituTekstiDto getNimi(String uri) {
+        return null;
+    }
+
+    @Override
     public List<KoodistoKoodiDto> filterBy(String koodisto, String haku) {
         return null;
     }

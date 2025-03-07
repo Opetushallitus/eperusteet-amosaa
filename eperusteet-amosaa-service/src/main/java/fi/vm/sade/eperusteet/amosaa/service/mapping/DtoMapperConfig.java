@@ -210,24 +210,6 @@ public class DtoMapperConfig {
                 })
                 .register();
 
-        factory.classMap(KoodistoKoodi.class, KoodiDto.class)
-                .byDefault()
-                .customize(new CustomMapper<KoodistoKoodi, KoodiDto>() {
-                    @Override
-                    public void mapAtoB(KoodistoKoodi a, KoodiDto b, MappingContext context) {
-                        super.mapAtoB(a, b, context);
-                        KoodistoKoodiDto koodistokoodi = koodistoClient.getByUri(a.getKoodiUri());
-                        Map<String, String> lokalisoitu = Arrays.stream(koodistokoodi.getMetadata()).collect(Collectors.toMap(KoodistoMetadataDto::getKieli, KoodistoMetadataDto::getNimi));
-                        b.setNimi(lokalisoitu);
-                    }
-
-                    @Override
-                    public void mapBtoA(KoodiDto b, KoodistoKoodi a, MappingContext context) {
-                        super.mapBtoA(b, a, context);
-                    }
-                })
-                .register();
-
         factory.classMap(OmaOsaAlue.class, OmaOsaAlueExportDto.class)
                 .byDefault()
                 .favorExtension(true)
