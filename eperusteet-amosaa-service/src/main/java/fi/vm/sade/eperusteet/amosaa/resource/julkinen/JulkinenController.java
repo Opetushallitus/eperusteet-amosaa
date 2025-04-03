@@ -258,6 +258,22 @@ public class JulkinenController {
         return new ResponseEntity<>(pdfdata, headers, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/dokumentti/{dokumenttiId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<Object> getDokumenttiWithId(@PathVariable Long dokumenttiId) {
+        byte[] pdfdata = dokumenttiService.get(dokumenttiId);
+
+        if (pdfdata == null || pdfdata.length == 0) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-disposition", "inline; filename=\"" + dokumenttiId + ".pdf\"");
+        headers.setContentLength(pdfdata.length);
+        headers.set("X-Robots-Tag", "noindex");
+
+        return new ResponseEntity<>(pdfdata, headers, HttpStatus.OK);
+    }
+
     @Parameters({
             @Parameter(name = "ktId", schema = @Schema(implementation = String.class), in = ParameterIn.PATH, required = true)
     })
@@ -291,6 +307,14 @@ public class JulkinenController {
                                                          @RequestParam(required = false) Integer revision) {
 
         return ResponseEntity.ok(dokumenttiService.getJulkaistuDokumentti(ktId, opsId, Kieli.of(kieli), revision));
+    }
+
+    @RequestMapping(value = "/opetussuunnitelmat/{opsId}/dokumentti/julkaistu", method = RequestMethod.GET)
+    public ResponseEntity<DokumenttiDto> getJulkaistuDokumenttiWithoutKt(@PathVariable Long opsId,
+                                                                @RequestParam(defaultValue = "fi") String kieli,
+                                                                @RequestParam(required = false) Integer revision) {
+
+        return ResponseEntity.ok(dokumenttiService.getJulkaistuDokumentti(opsId, Kieli.of(kieli), revision));
     }
 
     @Parameters({
