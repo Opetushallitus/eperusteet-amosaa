@@ -242,4 +242,14 @@ public class DokumenttiServiceImpl implements DokumenttiService {
         dokumentti.setTila(tila);
         dokumenttiRepository.save(dokumentti);
     }
+
+    @Override
+    public DokumenttiDto getJulkaistuDokumentti(Long opsId, Kieli kieli, Integer revision) {
+        return getJulkaistuDokumentti(null, opsId, kieli, revision);
+    }
+
+    @Override
+    public byte[] get(Long id) {
+        return getDataByDokumenttiId(null, null, id);
+    }
 }
