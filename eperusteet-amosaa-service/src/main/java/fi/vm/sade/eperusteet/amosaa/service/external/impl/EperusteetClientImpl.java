@@ -19,6 +19,7 @@ import fi.vm.sade.eperusteet.utils.client.OphClientHelper;
 import fi.vm.sade.eperusteet.utils.client.RestClientFactory;
 import fi.vm.sade.javautils.http.OphHttpClient;
 import fi.vm.sade.javautils.http.OphHttpRequest;
+import jakarta.annotation.PostConstruct;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
@@ -28,13 +29,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import jakarta.annotation.PostConstruct;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -45,8 +46,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static java.util.Collections.singletonList;
 import static jakarta.servlet.http.HttpServletResponse.SC_OK;
+import static java.util.Collections.singletonList;
 
 @Service
 @Profile("default")
@@ -197,7 +198,12 @@ public class EperusteetClientImpl implements EperusteetClient {
     @Override
     public List<PerusteDto> findPerusteet(Set<KoulutusTyyppi> tyypit) {
         List<PerusteDto> perusteet = new ArrayList<>();
-        JsonNode node = commonGet("/api/perusteet/amosaaops", JsonNode.class);
+        ResponseEntity<JsonNode> response = restTemplate.exchange(eperusteetServiceUrl + "/api/perusteet/amosaaops",
+                HttpMethod.GET,
+                null,
+                JsonNode.class);
+        JsonNode node = response.getBody();
+        
         for (JsonNode perusteJson : node) {
             try {
                 PerusteDto peruste = mapper.treeToValue(perusteJson, PerusteDto.class);
