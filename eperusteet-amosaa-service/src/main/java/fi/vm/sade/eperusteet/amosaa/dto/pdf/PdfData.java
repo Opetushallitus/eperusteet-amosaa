@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class PdfData {
     private String data;
     private String tila;
+    private String html;
 }
