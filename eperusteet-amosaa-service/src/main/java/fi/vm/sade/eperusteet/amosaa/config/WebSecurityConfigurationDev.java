@@ -24,7 +24,7 @@ import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 
 import java.util.List;
 
-@Profile({"dev"})
+@Profile({"local"})
 @Configuration
 @EnableGlobalMethodSecurity(securedEnabled = true)
 @EnableWebSecurity
