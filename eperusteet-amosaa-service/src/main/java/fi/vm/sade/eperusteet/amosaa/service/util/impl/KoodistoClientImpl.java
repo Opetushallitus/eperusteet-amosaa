@@ -193,6 +193,7 @@ public class KoodistoClientImpl implements KoodistoClient {
             return client.<KoodistoKoodiDto>execute(request)
                     .handleErrorStatus(SC_UNAUTHORIZED, SC_FORBIDDEN, SC_METHOD_NOT_ALLOWED, SC_BAD_REQUEST, SC_INTERNAL_SERVER_ERROR)
                     .with(res -> {
+                        log.error("Koodin lisäys epäonnistui, status {} ", res);
                         return Optional.empty();
                     })
                     .expectedStatus(SC_OK, SC_CREATED)
