@@ -2,6 +2,8 @@ package fi.vm.sade.eperusteet.amosaa.domain.teksti;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
+import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
+import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtmlValidator;
 import fi.vm.sade.eperusteet.amosaa.dto.NavigationNodeDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
@@ -192,6 +194,10 @@ public class LokalisoituTeksti implements Serializable {
 
     static public void validoi(Validointi validointi, Opetussuunnitelma ops, LokalisoituTeksti teksti, NavigationNodeDto navigationNodeDto) {
         validoi("kielisisaltoa-ei-loytynyt-opsin-kielilla", validointi, ops, teksti, navigationNodeDto);
+
+        if (!ValidHtmlValidator.isValid(teksti, ValidHtml.WhitelistType.NORMAL.getWhitelist())) {
+            validointi.virhe("tekstin-sisalto-virheellinen-html", navigationNodeDto);
+        }
     }
 
     static public void validoi(String kuvaus, Validointi validointi, Opetussuunnitelma ops, LokalisoituTeksti teksti, NavigationNodeDto navigationNodeDto) {
