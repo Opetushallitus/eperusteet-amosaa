@@ -58,7 +58,7 @@ public class WebSecurityConfigurationDev {
 
     @Bean
     public UserDetailsService users() {
-        UserDetails test = User.withDefaultPasswordEncoder()
+        UserDetails testMaster = User.withDefaultPasswordEncoder()
                 .username("test")
                 .password("test")
                 .roles("USER",
@@ -107,7 +107,16 @@ public class WebSecurityConfigurationDev {
                         "APP_EPERUSTEET_KOTO_ADMIN_1.2.246.562.10.54645809036",
                         "APP_EPERUSTEET_KOTO_ADMIN_1.2.246.562.10.81269623245")
                 .build();
-        return new InMemoryUserDetailsManager(test);
+
+        UserDetails testOther = User.withDefaultPasswordEncoder()
+                .username("testkt")
+                .password("test")
+                .roles("USER",
+                        "APP_EPERUSTEET",
+                        "APP_EPERUSTEET_AMOSAA_ADMIN_1.2.246.562.10.81269623245",
+                        "APP_EPERUSTEET_KOTO_ADMIN_1.2.246.562.10.81269623245")
+                .build();
+        return new InMemoryUserDetailsManager(testMaster, testOther);
     }
 
     @Bean
