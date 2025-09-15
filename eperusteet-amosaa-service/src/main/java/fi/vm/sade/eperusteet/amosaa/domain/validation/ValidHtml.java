@@ -29,7 +29,7 @@ public @interface ValidHtml {
     enum WhitelistType {
         NONE(Safelist.none()),
         MINIMAL(Safelist.none().addTags("p")),
-        SIMPLIFIED(Safelist.none().addTags("p", "strong", "em", "i", "s", "ol", "li", "ul")),
+        SIMPLIFIED(Safelist.none().addTags("p", "strong", "em", "i", "s", "ol", "li", "ul", "br")),
         NORMAL(getNormalWhiteList()),
         NORMAL_PDF(getNormalWhiteList().removeAttributes("a", "routenode"));
 
