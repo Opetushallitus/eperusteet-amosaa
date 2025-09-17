@@ -482,6 +482,10 @@ public class EperusteetServiceImpl implements EperusteetService {
         }
 
         PerusteDto opetussuunnitelmanPeruste = getPerusteSisalto(opetussuunnitelma.getPeruste(), PerusteDto.class);
+        if (CollectionUtils.isEmpty(opetussuunnitelmanPeruste.getKoulutukset())) {
+            return null;
+        }
+
         PerusteDto uusiPeruste = eperusteetClient.findPerusteetByKoulutuskoodit(opetussuunnitelmanPeruste.getKoulutukset().stream()
                         .map(KoulutusDto::getKoulutuskoodiUri)
                         .collect(Collectors.toList()))
