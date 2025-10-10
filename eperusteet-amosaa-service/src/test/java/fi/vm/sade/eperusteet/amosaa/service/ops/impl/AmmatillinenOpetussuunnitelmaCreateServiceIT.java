@@ -6,6 +6,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.Kieli;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
+import fi.vm.sade.eperusteet.amosaa.domain.teksti.TekstiKappale;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaOsaAlue;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaOsaAlueToteutus;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaOsaAlueTyyppi;
@@ -65,6 +66,8 @@ public class AmmatillinenOpetussuunnitelmaCreateServiceIT extends AbstractIntegr
         assertThat(pohjanTutkinnonosat).hasSize(2);
         SisaltoViite svTosa = sisaltoviiteRepository.findOne(pohjanTutkinnonosat.stream().filter(sv -> sv.getOsaAlueet().size() == 0).findFirst().get().getId());
         svTosa.getTosa().setOsaamisenOsoittaminen(LokalisoituTeksti.of(Kieli.FI, "osaamisenosoittaminen"));
+        svTosa.setTekstiKappale(new TekstiKappale());
+        svTosa.getTekstiKappale().setTeksti(LokalisoituTeksti.of(Kieli.FI, "tutkinnonosa kuvaus"));
         TutkinnonosaToteutus tutkinnonosaToteutus = new TutkinnonosaToteutus();
         tutkinnonosaToteutus.setKoodit(Set.of("1234"));
         tutkinnonosaToteutus.setTutkinnonosa(svTosa.getTosa());
@@ -123,6 +126,8 @@ public class AmmatillinenOpetussuunnitelmaCreateServiceIT extends AbstractIntegr
         SisaltoViite perusteenTosa = sisaltoviitteet.stream()
                 .filter(sv -> sv.getTosa() != null && sv.getTosa().getTyyppi().equals(TutkinnonosaTyyppi.PERUSTEESTA) && sv.getTosa().getOsaamisenOsoittaminen() != null).findFirst().get();
         assertThat(perusteenTosa.getTosa().getOsaamisenOsoittaminen().getTeksti().get(Kieli.FI)).isEqualTo(svTosa.getTosa().getOsaamisenOsoittaminen().getTeksti().get(Kieli.FI));
+        assertThat(perusteenTosa.getTekstiKappale()).isNotNull();
+        assertThat(perusteenTosa.getTekstiKappale().getTeksti().getTeksti().get(Kieli.FI)).isEqualTo("tutkinnonosa kuvaus");
 
         SisaltoViite osaalueellinen = sisaltoviiteRepository.findOne(tutkinnonosat.stream()
                 .filter(tosa -> tosa.getTosa().getTyyppi().equals(TutkinnonosaTyyppi.PERUSTEESTA) && tosa.getOsaAlueet().size() > 0).findFirst().get().getId());

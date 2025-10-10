@@ -165,6 +165,7 @@ public class AmmatillinenOpetussuunnitelmaCreateService implements Opetussuunnit
                             .collect(Collectors.toList());
 
                     sisaltoviite.getTosa().asetaPaikallisetMaaritykset(pohjanSisaltoviite.getTosa());
+                    sisaltoviite.setTekstiKappale(pohjanSisaltoviite.getTekstiKappale().copy());
                     sisaltoviite.getOsaAlueet().addAll(pohjanPaikallisetOsaAlueet);
                     sisaltoviite.getOsaAlueet().stream()
                         .filter(osaalue -> pohjanOsaAlueet.containsKey(osaalue.getPerusteenOsaAlueId() + "" + osaalue.getTyyppi()))
