@@ -57,14 +57,12 @@ public class UlkopuolisetController {
         return new ResponseEntity<>(kayttajanTietoService.hae(oid), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/julkaistutperusteet", method = GET)
-    public ResponseEntity<List<PerusteDto>> getJulkaistutPerusteet() {
-        return new ResponseEntity<>(eperusteetService.findPerusteet(), HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/julkaistutperusteet/kevyt", method = GET)
-    public ResponseEntity<List<PerusteKevytDto>> getJulkaistutPerusteetKevyt(@RequestParam(value = "koulutustyyppi", required = false) final Set<String> koulutustyypit) {
-        return new ResponseEntity<>(eperusteetService.findPerusteet(koulutustyypit, PerusteKevytDto.class), HttpStatus.OK);
+    @RequestMapping(value = "/perusteet", method = GET)
+    public ResponseEntity<List<PerusteKevytDto>> getPerusteet(
+            @RequestParam(value = "koulutustyyppi", required = false) final Set<String> koulutustyypit,
+            @RequestParam(value = "nimi", required = false, defaultValue = "") final String nimi,
+            @RequestParam(value = "kieli", required = false, defaultValue = "fi") final String kieli) {
+        return new ResponseEntity<>(eperusteetService.findPerusteet(koulutustyypit, nimi, kieli), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/tiedotteet", method = GET)

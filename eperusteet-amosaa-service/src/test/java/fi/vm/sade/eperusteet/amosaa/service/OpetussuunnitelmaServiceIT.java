@@ -488,11 +488,16 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
     @Test
     @Rollback
     public void testYleisenPohjanLuominen() {
-        // FIXME: Lisää feikkiperuste
-//        OpetussuunnitelmaBaseDto yhteinen = createOpetussuunnitelma(ops -> {
-//            ops.setTyyppi(OpsTyyppi.YLEINEN);
-//        });
-//        assertThat(yhteinen).isNotNull();
+        OpetussuunnitelmaBaseDto opsLuonti = createOpetussuunnitelma(ops -> {
+            ops.setTyyppi(OpsTyyppi.YLEINEN);
+            ops.setPerusteId(AMOSAA_YHTEINEN_PERUSTE_ID);
+        });
+        OpetussuunnitelmaDto yleinen = opetussuunnitelmaService.getOpetussuunnitelma(getKoulutustoimijaId(), opsLuonti.getId());
+        assertThat(yleinen).isNotNull();
+        assertThat(yleinen.getTyyppi()).isEqualTo(OpsTyyppi.YLEINEN);
+        List<SisaltoViiteDto> sisaltoviitteet = sisaltoViiteService.getSisaltoViitteet(getKoulutustoimijaId(), yleinen.getId(), SisaltoViiteDto.class);
+        assertThat(sisaltoviitteet.stream().filter(sisaltoviite -> sisaltoviite.getTyyppi().equals(SisaltoTyyppi.TUTKINNONOSA))).hasSize(9);
+
     }
 
     @Test

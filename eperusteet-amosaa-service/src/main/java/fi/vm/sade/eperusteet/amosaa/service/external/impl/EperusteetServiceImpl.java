@@ -12,19 +12,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.peruste.Koulutuskoodi;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.ops.SuorituspolkuRiviDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.AbstractRakenneOsaDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteBaseDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.KoulutusDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteBaseDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKaikkiDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteenOsaDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteenOsaViiteDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliTunnisteDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.SuoritustapaLaajaDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.TiedoteQueryDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonOsaSuoritustapaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.*;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.geneerinenarviointiasteikko.GeneerinenArviointiasteikkoKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
@@ -57,17 +45,7 @@ import org.springframework.web.client.RestTemplate;
 
 import jakarta.annotation.PostConstruct;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Stack;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
@@ -395,28 +373,11 @@ public class EperusteetServiceImpl implements EperusteetService {
     }
 
     @Override
-    public List<PerusteDto> findPerusteet() {
-        return findPerusteet(PerusteDto.class);
-    }
-
-    @Override
-    public <T> List<T> findPerusteet(Class<T> type) {
-        HashSet<KoulutusTyyppi> koulutustyypit = new HashSet<>();
-        koulutustyypit.add(KoulutusTyyppi.AMMATTITUTKINTO);
-        koulutustyypit.add(KoulutusTyyppi.ERIKOISAMMATTITUTKINTO);
-        koulutustyypit.add(KoulutusTyyppi.PERUSTUTKINTO);
-        koulutustyypit.add(KoulutusTyyppi.VALMA);
-        koulutustyypit.add(KoulutusTyyppi.TELMA);
-        return dtoMapper.mapAsList(eperusteetClient.findPerusteet(koulutustyypit), type);
-    }
-
-    @Override
-    public <T> List<T> findPerusteet(Set<String> koulutustyypit, Class<T> type) {
-        if (CollectionUtils.isNotEmpty(koulutustyypit)) {
-            return dtoMapper.mapAsList(eperusteetClient.findPerusteet(koulutustyypit.stream().map(KoulutusTyyppi::of).collect(Collectors.toSet())), type);
-        } else {
-            return findPerusteet(type);
-        }
+    public List<PerusteKevytDto> findPerusteet(Set<String> koulutustyypit, String nimi, String kieli) {
+        return eperusteetClient.findPerusteet(
+                Optional.ofNullable(koulutustyypit).orElse(Set.of()).stream().map(KoulutusTyyppi::of).collect(Collectors.toSet()),
+                nimi,
+                kieli);
     }
 
     @Override

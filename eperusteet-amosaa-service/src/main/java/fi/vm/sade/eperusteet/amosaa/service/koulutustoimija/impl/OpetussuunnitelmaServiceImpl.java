@@ -98,10 +98,7 @@ import fi.vm.sade.eperusteet.amosaa.service.ops.impl.OpetussuunnitelmaSisaltoCre
 import fi.vm.sade.eperusteet.amosaa.service.peruste.OpetussuunnitelmaPerustePaivitysService;
 import fi.vm.sade.eperusteet.amosaa.service.security.KoulutustyyppiRolePrefix;
 import fi.vm.sade.eperusteet.amosaa.service.security.PermissionManager;
-import fi.vm.sade.eperusteet.amosaa.service.util.CollectionUtil;
-import fi.vm.sade.eperusteet.amosaa.service.util.NavigationUtil;
-import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
-import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
+import fi.vm.sade.eperusteet.amosaa.service.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -589,7 +586,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
             cperuste.setPerusteId(peruste.getId());
             cperuste.setLuotu(viimeisinJulkaisu);
             cperuste.setPeruste(ops.getTyyppi() == OpsTyyppi.YLEINEN
-                    ? eperusteetClient.getYleinenPohjaSisalto()
+                    ? JsonUtil.jsonNodeToString(eperusteetClient.getJaetunOsanPohja(peruste.getId(), JsonNode.class))
                     : eperusteetClient.getPerusteData(peruste.getId()));
             cperuste.setKoulutustyyppi(peruste.getKoulutustyyppi());
             cperuste.setKoulutuskoodit(peruste.getKoulutukset().stream().map(koulutusDto ->  koulutuskoodiRepository.save(Koulutuskoodi.of(koulutusDto))).collect(Collectors.toSet()));
@@ -813,7 +810,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                         }
                         break;
                     case YLEINEN:
-                        PerusteDto yleinen = eperusteetClient.getYleinenPohja();
+                        PerusteDto yleinen = eperusteetClient.getJaetunOsanPohja(opsDto.getPerusteId(), PerusteDto.class);
                         setOpsCommon(ops, yleinen, rootTkv);
                         opsDto.setSuoritustapa("yleinen");
                         break;

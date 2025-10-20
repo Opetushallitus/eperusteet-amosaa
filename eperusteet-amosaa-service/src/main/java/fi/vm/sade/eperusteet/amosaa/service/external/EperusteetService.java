@@ -2,15 +2,7 @@ package fi.vm.sade.eperusteet.amosaa.service.external;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.CachedPerusteBaseDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteBaseDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKaikkiDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteenOsaDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliTunnisteDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.SuoritustapaLaajaDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.TiedoteQueryDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonOsaSuoritustapaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.*;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.geneerinenarviointiasteikko.GeneerinenArviointiasteikkoKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -49,11 +41,7 @@ public interface EperusteetService {
 
     <T> T getPerusteSisalto(CachedPeruste cperuste, Class<T> type);
 
-    List<PerusteDto> findPerusteet();
-
-    <T> List<T> findPerusteet(Class<T> type);
-
-    <T> List<T> findPerusteet(Set<String> koulutustyypit, Class<T> type);
+    List<PerusteKevytDto> findPerusteet(Set<String> koulutustyypit, String nimi, String kieli);
 
     <T> T getPerusteSisaltoByPerusteId(Long perusteId, Class<T> type);
 

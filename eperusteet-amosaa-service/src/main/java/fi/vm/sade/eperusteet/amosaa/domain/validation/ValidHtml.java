@@ -47,8 +47,9 @@ public @interface ValidHtml {
             return Safelist.none()
                     .addTags("p", "span", "strong", "em", "i", "s", "ol", "li", "ul", "blockquote", "table", "caption",
                             "tbody", "tr", "td", "hr", "pre", "th", "thead", "a", "abbr", "comment", "figcaption", "br",
-                            "dt", "dl", "dd")
+                            "dt", "dl", "dd", "colgroup", "col")
                     .addAttributes("table", "align", "border", "cellpadding", "cellspacing", "style", "summary")
+                    .addAttributes("col", "style")
                     .addAttributes("th", "scope", "colspan", "rowspan", "style")
                     .addAttributes("td", "colspan", "rowspan", "style", "data-colwidth")
                     .addAttributes("a", "href", "target", "rel", "routenode")
