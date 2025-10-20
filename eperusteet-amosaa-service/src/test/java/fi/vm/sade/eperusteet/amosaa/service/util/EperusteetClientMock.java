@@ -5,10 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.AbstractRakenneOsaDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.ArviointiasteikkoDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.TiedoteQueryDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.*;
 import fi.vm.sade.eperusteet.amosaa.resource.config.AbstractRakenneOsaDeserializer;
 import fi.vm.sade.eperusteet.amosaa.resource.config.MappingModule;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
@@ -31,6 +28,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+
+import static fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest.AMOSAA_YHTEINEN_PERUSTE_ID;
 
 @Service
 @Profile("test")
@@ -56,6 +55,7 @@ public class EperusteetClientMock implements EperusteetClient {
         perusteet.add(openFakeData("/perusteet/tuvaPeruste.json"));
         perusteet.add(openFakeData("/perusteet/vstPeruste.json"));
         perusteet.add(openFakeData("/perusteet/amosaaPeruste2.json"));
+        perusteet.add(openFakeData("/perusteet/amosaayhteinenPeruste.json"));
         perusteet.add(openFakeData("/perusteet/amosaaPerusteKoulutuskoodiVanha.json"));
         perusteet.add(openFakeData("/perusteet/amosaaPerusteKoulutuskoodiUusi.json"));
         perusteet.add(openFakeData("/perusteet/amosaaPerusteKoulutuskoodiUusi2.json"));
@@ -87,13 +87,23 @@ public class EperusteetClientMock implements EperusteetClient {
 
 
     @Override
-    public PerusteDto getYleinenPohja() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<PerusteKevytDto> getJaetunOsanPohjat() {
+        JsonNode node = getMockPeruste(AMOSAA_YHTEINEN_PERUSTE_ID);
+        try {
+            return List.of(objectMapper.treeToValue(node, PerusteKevytDto.class));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
-    public String getYleinenPohjaSisalto() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public <T> T getJaetunOsanPohja(Long id, Class<T> type) {
+        JsonNode node = getMockPeruste(id);
+        try {
+            return objectMapper.treeToValue(node, type);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Autowired
@@ -116,8 +126,8 @@ public class EperusteetClientMock implements EperusteetClient {
     }
 
     @Override
-    public List<PerusteDto> findPerusteet(Set<KoulutusTyyppi> tyypit) {
-        PerusteDto peruste = new PerusteDto();
+    public List<PerusteKevytDto> findPerusteet(Set<KoulutusTyyppi> tyypit, String nimi, String kieli) {
+        PerusteKevytDto peruste = new PerusteKevytDto();
         peruste.setDiaarinumero(DIAARINUMERO);
         return Collections.singletonList(peruste);
     }
