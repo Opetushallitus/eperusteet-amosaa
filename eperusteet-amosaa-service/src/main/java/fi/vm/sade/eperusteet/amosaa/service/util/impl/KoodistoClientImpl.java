@@ -211,26 +211,6 @@ public class KoodistoClientImpl implements KoodistoClient {
 
     @Override
     public KoodistoKoodiDto addKoodiNimella(String koodistonimi, LokalisoituTekstiDto koodinimi) {
-        List<KoodistoKoodiDto> koodit = self.getAll(koodistonimi);
-        KoodistoKoodiDto olemassaoleva = koodit.stream()
-                .filter(koodi -> !ObjectUtils.isEmpty(koodi.getMetadata()))
-                .filter(koodi -> {
-                    Map<String, String> nimet = metadataToLocalized(koodi);
-                    return nimet.entrySet().stream()
-                            .allMatch(entry -> {
-                                String kieli = entry.getKey();
-                                String nimi = entry.getValue();
-                                String uusiNimi = koodinimi.getTekstit().get(Kieli.of(kieli));
-                                return uusiNimi != null && uusiNimi.equals(nimi);
-                            });
-                })
-                .findFirst()
-                .orElse(null);
-
-        if (olemassaoleva != null) {
-            return olemassaoleva;
-        }
-
         long seuraavaKoodi = nextKoodiId(koodistonimi);
         return addKoodiNimella(koodistonimi, koodinimi, seuraavaKoodi);
     }
