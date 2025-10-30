@@ -65,6 +65,8 @@ public abstract class AbstractIntegrationTest {
     static public String KP8_KAYTTAJA_OID = "1.22.3.4.5.kp2";
     static public String KPTMPR_KAYTTAJA_OID = "1.22.3.4.5.TMPR";
 
+    static public Long AMOSAA_YHTEINEN_PERUSTE_ID = 8505691L;
+
     @Autowired
     protected OpetussuunnitelmaService opetussuunnitelmaService;
 
@@ -152,7 +154,7 @@ public abstract class AbstractIntegrationTest {
         HashMap<String, String> nimi = new HashMap<>();
         nimi.put("fi", "auto");
         ops.setNimi(new LokalisoituTekstiDto(nimi));
-        ops.setPerusteId(515491l);
+        ops.setPerusteId(515491L);
         opsfn.accept(ops);
         return opetussuunnitelmaService.addOpetussuunnitelma(getKoulutustoimijaId(), ops);
     }

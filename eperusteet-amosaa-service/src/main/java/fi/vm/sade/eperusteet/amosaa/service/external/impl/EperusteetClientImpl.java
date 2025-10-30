@@ -6,10 +6,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.AbstractRakenneOsaDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.ArviointiasteikkoDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
-import fi.vm.sade.eperusteet.amosaa.dto.peruste.TiedoteQueryDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.*;
 import fi.vm.sade.eperusteet.amosaa.resource.config.AbstractRakenneOsaDeserializer;
 import fi.vm.sade.eperusteet.amosaa.resource.config.MappingModule;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
@@ -45,6 +42,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import static jakarta.servlet.http.HttpServletResponse.SC_OK;
 import static java.util.Collections.singletonList;
@@ -144,8 +142,7 @@ public class EperusteetClientImpl implements EperusteetClient {
         try {
             JsonNode node = commonGet("/api/perusteet/" + String.valueOf(id) + "/kaikki", JsonNode.class);
             Object perusteObj = mapper.treeToValue(node, Object.class);
-            String json = mapper.writeValueAsString(perusteObj);
-            return json;
+            return mapper.writeValueAsString(perusteObj);
         } catch (IOException ex) {
             throw new BusinessRuleViolationException("perustetta-ei-loytynyt");
         }
@@ -175,47 +172,69 @@ public class EperusteetClientImpl implements EperusteetClient {
     }
 
     @Override
-    public PerusteDto getYleinenPohja() {
+    public <T> T getJaetunOsanPohja(Long id, Class<T> type) {
         try {
-            return commonGet("/api/perusteet/amosaapohja", PerusteDto.class);
+            return commonGet("/api/perusteet/amosaapohja/" + id, type);
         } catch (Exception e) {
             throw new BusinessRuleViolationException("amosaa-pohjien-haku-epaonnistui");
         }
     }
 
     @Override
-    public String getYleinenPohjaSisalto() {
+    public List<PerusteKevytDto> getJaetunOsanPohjat() {
+        UriComponentsBuilder builder = UriComponentsBuilder
+                .fromUriString(eperusteetServiceUrl + "/api/perusteet/julkaisut")
+                .queryParam("tyyppi", PerusteTyyppi.AMOSAA_YHTEINEN.toString())
+                .queryParam("sivu", 0)
+                .queryParam("sivukoko", 9999);
+
+        String url = builder.build().toUriString();
+
         try {
-            JsonNode node = commonGet("/api/perusteet/amosaapohja", JsonNode.class);
-            Object perusteObj = mapper.treeToValue(node, Object.class);
-            String json = mapper.writeValueAsString(perusteObj);
-            return json;
-        } catch (IOException ex) {
-            throw new BusinessRuleViolationException("perustetta-ei-loytynyt");
+            ResponseEntity<JsonNode> response = restTemplate.exchange(url,
+                    HttpMethod.GET,
+                    httpEntity,
+                    JsonNode.class);
+
+            JsonNode dataNode = response.getBody().get("data");
+            return mapper.readValue(dataNode.toString(), new TypeReference<List<PerusteKevytDto>>() {});
+        } catch (JsonProcessingException ex) {
+            throw new BusinessRuleViolationException("Perusteiden haku epäonnistui", ex);
         }
     }
 
     @Override
-    public List<PerusteDto> findPerusteet(Set<KoulutusTyyppi> tyypit) {
-        List<PerusteDto> perusteet = new ArrayList<>();
-        ResponseEntity<JsonNode> response = restTemplate.exchange(eperusteetServiceUrl + "/api/perusteet/amosaaops",
-                HttpMethod.GET,
-                null,
-                JsonNode.class);
-        JsonNode node = response.getBody();
-        
-        for (JsonNode perusteJson : node) {
-            try {
-                PerusteDto peruste = mapper.treeToValue(perusteJson, PerusteDto.class);
-                perusteet.add(peruste);
-            } catch (IOException ex) {
-                logger.error(ex.getMessage());
-            }
+    public List<PerusteKevytDto> findPerusteet(Set<KoulutusTyyppi> koulutustyypit, String nimi, String kieli) {
+        UriComponentsBuilder builder = UriComponentsBuilder
+                .fromUriString(eperusteetServiceUrl + "/api/perusteet/julkaisut")
+                .queryParam("sivu", 0)
+                .queryParam("sivukoko", 9999);
+
+        if (koulutustyypit != null && !koulutustyypit.isEmpty()) {
+            koulutustyypit.forEach(kt -> builder.queryParam("koulutustyyppi", kt.toString()));
         }
 
-        return perusteet.stream()
-                .filter(peruste -> tyypit.contains(peruste.getKoulutustyyppi()))
-                .collect(Collectors.toList());
+        if (nimi != null && !nimi.isEmpty()) {
+            builder.queryParam("nimi", nimi);
+        }
+
+        if (kieli != null && !kieli.isEmpty()) {
+            builder.queryParam("kieli", kieli);
+        }
+
+        String url = builder.build().toUriString();
+
+        try {
+            ResponseEntity<JsonNode> response = restTemplate.exchange(url,
+                    HttpMethod.GET,
+                    httpEntity,
+                    JsonNode.class);
+
+            JsonNode dataNode = response.getBody().get("data");
+            return mapper.readValue(dataNode.toString(), new TypeReference<List<PerusteKevytDto>>() {});
+        } catch (JsonProcessingException ex) {
+            throw new BusinessRuleViolationException("Perusteiden haku epäonnistui", ex);
+        }
     }
 
     @Override
