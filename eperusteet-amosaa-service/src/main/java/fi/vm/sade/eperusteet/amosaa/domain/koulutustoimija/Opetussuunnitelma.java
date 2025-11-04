@@ -71,6 +71,7 @@ public class Opetussuunnitelma extends AbstractAuditedEntity implements Serializ
     @NotNull
     private OpsTyyppi tyyppi = OpsTyyppi.OPS;
 
+    @Deprecated
     @Getter
     @Setter
     private String perusteDiaarinumero;

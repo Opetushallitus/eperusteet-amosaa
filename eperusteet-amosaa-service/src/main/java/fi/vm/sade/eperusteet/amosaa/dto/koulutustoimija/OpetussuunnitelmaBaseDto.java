@@ -33,7 +33,8 @@ public class OpetussuunnitelmaBaseDto {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long perusteId;
-
+    
+    @Deprecated
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String perusteDiaarinumero;
 
