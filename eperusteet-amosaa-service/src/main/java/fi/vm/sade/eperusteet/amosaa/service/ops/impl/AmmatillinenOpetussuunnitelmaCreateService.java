@@ -178,6 +178,7 @@ public class AmmatillinenOpetussuunnitelmaCreateService implements Opetussuunnit
 
     private Opetussuunnitelma asetaPerusteenTiedot(Koulutustoimija koulutustoimija, Opetussuunnitelma pohja, PerusteDto uusiPeruste) {
         Opetussuunnitelma ops = pohja.copy();
+        ops.setPerusteDiaarinumero(uusiPeruste.getDiaarinumero());
         ops.setTila(Tila.LUONNOS);
         if (!ops.getSuoritustapa().equalsIgnoreCase(uusiPeruste.getSuoritustavat().stream().findFirst().get().getSuoritustapakoodi().value())) {
             ops.setSuoritustapa(uusiPeruste.getSuoritustavat().stream().findFirst().get().getSuoritustapakoodi().value());
