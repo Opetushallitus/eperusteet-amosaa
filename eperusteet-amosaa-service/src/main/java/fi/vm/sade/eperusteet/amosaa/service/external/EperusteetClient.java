@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.ArviointiasteikkoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKevytDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TiedoteQueryDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -24,11 +25,11 @@ public interface EperusteetClient {
 
     <T> T getPeruste(String diaariNumero, Class<T> type);
 
-    PerusteDto getYleinenPohja();
+    List<PerusteKevytDto> getJaetunOsanPohjat();
 
-    String getYleinenPohjaSisalto();
+    <T> T getJaetunOsanPohja(Long id, Class<T> type);
 
-    List<PerusteDto> findPerusteet(Set<KoulutusTyyppi> tyypit);
+    List<PerusteKevytDto> findPerusteet(Set<KoulutusTyyppi> koulutustyypit, String nimi, String kieli);
 
     JsonNode getTiedotteet(Long jalkeen);
 

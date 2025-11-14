@@ -3,6 +3,7 @@ package fi.vm.sade.eperusteet.amosaa.resource.peruste;
 import com.fasterxml.jackson.databind.JsonNode;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKevytDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteenOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonOsaSuoritustapaDto;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InternalApi;
@@ -16,12 +17,7 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -43,11 +39,6 @@ public class PerusteController extends KoulutustoimijaIdGetterAbstractController
     @RequestMapping(value = "/haku", method = RequestMethod.GET)
     public JsonNode haePerusteista(@RequestParam  Map<String, String> params) {
         return eperusteet.findFromPerusteet(params);
-    }
-
-    @RequestMapping(method = RequestMethod.GET)
-    public List<PerusteDto> getPerusteet() {
-        return service.findPerusteet();
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -131,6 +122,11 @@ public class PerusteController extends KoulutustoimijaIdGetterAbstractController
             @PathVariable Long opetussuunnitelmaId
     ) {
         return service.getKoulutuskoodillaKorvaavaPeruste(ktId, opetussuunnitelmaId);
+    }
+
+    @GetMapping("/jaettujenosienpohjat")
+    public List<PerusteKevytDto> getJaettujenOsienPohjat() {
+        return eperusteet.getJaetunOsanPohjat();
     }
 
 }
