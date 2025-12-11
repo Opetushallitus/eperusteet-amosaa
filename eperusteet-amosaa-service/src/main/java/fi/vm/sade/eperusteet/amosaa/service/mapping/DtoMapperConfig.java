@@ -202,8 +202,7 @@ public class DtoMapperConfig {
                         if (source.getUri() != null) {
                             KoodistoKoodiDto koodistokoodi = koodistoClient.getByUri(source.getUri());
                             if (koodistokoodi != null) {
-                                Map<String, String> lokalisoitu = Arrays.stream(koodistokoodi.getMetadata()).collect(Collectors.toMap(KoodistoMetadataDto::getKieli, KoodistoMetadataDto::getNimi));
-                                target.setKooditettu(new LokalisoituTekstiDto(lokalisoitu), koodistokoodi.getVoimassaAlkuPvm(), koodistokoodi.getVoimassaLoppuPvm());
+                                target.setKoodistoKoodi(koodistokoodi);
                             }
                         }
                     }
