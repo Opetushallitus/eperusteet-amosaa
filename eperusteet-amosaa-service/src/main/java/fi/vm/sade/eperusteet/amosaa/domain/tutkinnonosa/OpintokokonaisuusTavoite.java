@@ -1,6 +1,7 @@
 package fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa;
 
 import fi.vm.sade.eperusteet.amosaa.domain.AbstractAuditedEntity;
+import fi.vm.sade.eperusteet.amosaa.domain.Kooditettu;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 import java.io.Serializable;
@@ -25,7 +26,7 @@ import org.hibernate.envers.RelationTargetAuditMode;
 @Setter
 @Table(name = "opintokokonaisuus_tavoite")
 @NoArgsConstructor
-public class OpintokokonaisuusTavoite extends AbstractAuditedEntity implements Serializable {
+public class OpintokokonaisuusTavoite extends AbstractAuditedEntity implements Serializable, Kooditettu {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -59,5 +60,10 @@ public class OpintokokonaisuusTavoite extends AbstractAuditedEntity implements S
         }
 
         return null;
+    }
+
+    @Override
+    public String getUri() {
+        return tavoiteKoodi;
     }
 }
