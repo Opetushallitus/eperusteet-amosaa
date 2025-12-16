@@ -578,6 +578,20 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
             }));
         };
 
+        // Lisää yksi vieras-tutkinnonosa
+        SisaltoViiteKevytDto tutkinnonosat = getFirstOfType(getKoulutustoimijaId(), ops1.getId(), SisaltoTyyppi.TUTKINNONOSAT);
+        sisaltoViiteService.addSisaltoViite(getKoulutustoimijaId(), ops1.getId(), tutkinnonosat.getId(), createSisalto(osa -> {
+                    osa.setTyyppi(SisaltoTyyppi.TUTKINNONOSA);
+                    TutkinnonosaDto tosa = new TutkinnonosaDto();
+                    tosa.setTyyppi(TutkinnonosaTyyppi.VIERAS);
+                    tosa.setVierastutkinnonosa(new VierasTutkinnonosaDto());
+                    tosa.getVierastutkinnonosa().setPerusteId(515491L);
+                    tosa.getVierastutkinnonosa().setTosaId(577941L);
+                    osa.setTosa(tosa);
+                    LokalisoituTekstiDto teksti = LokalisoituTekstiDto.of("tutkinnonosa_vieras");
+                    osa.setTekstiKappale(new TekstiKappaleDto(teksti, null, null));
+                }));
+
         addOsaWithKoodi.apply(new Object[]{ops1.getId(), "tutkinnonosa_11", "sverige_11"});
         addOsaWithKoodi.apply(new Object[]{ops1.getId(), "tutkinnonosa_12", "sverige_12"});
 

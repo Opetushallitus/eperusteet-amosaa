@@ -74,18 +74,22 @@ public interface SisaltoviiteRepository extends JpaWithVersioningRepository<Sisa
     @Query(value = "SELECT sv FROM SisaltoViite sv WHERE sv.owner = ?1 AND (sv.tyyppi = 'SUORITUSPOLKU' OR sv.tyyppi = 'OSASUORITUSPOLKU')")
     List<SisaltoViite> findSuorituspolut(Opetussuunnitelma owner);
 
-    @Query(value = "SELECT sv FROM SisaltoViite sv " +
-            "LEFT JOIN sv.tekstiKappale tk " +
-            "LEFT JOIN tk.nimi tkNimi " +
-            "LEFT JOIN tkNimi.teksti nimi " +
-            "WHERE sv.tyyppi = :tyyppi " +
-            "AND sv.owner.koulutustoimija.id = :ktId " +
-            "AND nimi.kieli = :kieli " +
-            "AND (:opsTyyppi IS NULL OR sv.owner.tyyppi = :opsTyyppi) " +
-            "AND (:nimi IS NULL OR LOWER(nimi.teksti) LIKE LOWER(CONCAT('%', :nimi,'%'))) " +
-            "AND (:opsId IS NULL or sv.owner.id = :opsId) " +
-            "AND (:notInOpetussuunnitelmaId IS NULL or sv.owner.id <> :notInOpetussuunnitelmaId) " +
-            "AND sv.owner.tila != 'POISTETTU'")
+    @Query(value = """
+            SELECT sv FROM SisaltoViite sv 
+            LEFT JOIN sv.tekstiKappale tk 
+            LEFT JOIN tk.nimi tkNimi 
+            LEFT JOIN tkNimi.teksti nimi 
+            LEFT JOIN sv.tosa tosa
+            WHERE sv.tyyppi = :tyyppi 
+            AND sv.owner.koulutustoimija.id = :ktId 
+            AND nimi.kieli = :kieli 
+            AND (:opsTyyppi IS NULL OR sv.owner.tyyppi = :opsTyyppi) 
+            AND (:nimi IS NULL OR LOWER(nimi.teksti) LIKE LOWER(CONCAT('%', :nimi,'%'))) 
+            AND (:opsId IS NULL or sv.owner.id = :opsId) 
+            AND (:notInOpetussuunnitelmaId IS NULL or sv.owner.id <> :notInOpetussuunnitelmaId) 
+            AND sv.owner.tila != 'POISTETTU'
+            AND (:tyyppi <> 'TUTKINNONOSA' OR tosa.tyyppi <> 'VIERAS') 
+            """)
     Page<SisaltoViite> findAllWithPagination(@Param("ktId") Long ktId,
                                              @Param("tyyppi") SisaltoTyyppi tyyppi,
                                              @Param("kieli") Kieli kieli,
