@@ -6,7 +6,6 @@ import java.util.EnumSet;
 public enum SisaltoTyyppi {
     TEKSTIKAPPALE("tekstikappale"),
     TUTKINNONOSAT("tutkinnonosat"),
-
     TUTKINNONOSA("tutkinnonosa"),
     TOSARYHMA("tutkinnonosaryhma"),
     SUORITUSPOLUT("suorituspolut"),
