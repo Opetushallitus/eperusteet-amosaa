@@ -1200,6 +1200,12 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     @Override
     @Transactional(readOnly = true)
     public Object getJulkaistuSisaltoObjectNode(Long opetussuunnitelmaId, List<String> queryList) {
+        queryList.forEach(query -> {
+            if (!query.matches("[a-zA-Z0-9_]+")) {
+                throw new NotExistsException("");
+            }
+        });
+
         Opetussuunnitelma opetussuunnitelma = repository.findOne(opetussuunnitelmaId);
 
         if (opetussuunnitelma == null || opetussuunnitelma.getTila().equals(Tila.POISTETTU)) {
@@ -1215,9 +1221,9 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
         try {
             return objMapper.readValue(julkaisuRepository.findJulkaisutByJsonPath(opetussuunnitelmaId, query), Object.class);
-        } catch (JsonProcessingException e) {
+        } catch (Exception e) {
             log.error(Throwables.getStackTraceAsString(e));
-            return null;
+            throw new NotExistsException("");
         }
     }
 }
