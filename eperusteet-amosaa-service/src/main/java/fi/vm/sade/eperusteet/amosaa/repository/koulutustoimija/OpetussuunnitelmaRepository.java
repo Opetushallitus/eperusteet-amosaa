@@ -118,20 +118,25 @@ public interface OpetussuunnitelmaRepository extends JpaWithVersioningRepository
 
     List<Opetussuunnitelma> findAllByKoulutustoimijaIdAndTyyppi(Long ktId, OpsTyyppi tyyppi);
 
-    @Query(value = "SELECT o " +
-            "FROM Opetussuunnitelma o " +
-            "LEFT JOIN o.nimi onimi " +
-            "LEFT JOIN onimi.teksti nimi " +
-            "JOIN o.koulutustoimija kt " +
-            "LEFT OUTER JOIN o.peruste p " +
-            "WHERE (:koulutustoimijat IS NULL OR kt.id in (:koulutustoimijat)) " +
-            "AND (p.koulutustyyppi IN (:koulutustyyppi) OR o.koulutustyyppi IN (:koulutustyyppi)) " +
-            "AND nimi.kieli = :kieli " +
-            "AND (:nimi is null OR LOWER(nimi.teksti) LIKE LOWER(CONCAT('%', :nimi,'%'))) " +
-            "AND (:jotpa = false OR o.jotpatyyppi IS NOT NULL) " +
-            "AND ((:poistettu = false AND tila != 'POISTETTU' AND ((:julkaistuTaiValmis = false AND (o.julkaisut IS EMPTY AND o.tila = 'LUONNOS')) OR (:julkaistuTaiValmis = true AND (o.julkaisut IS NOT EMPTY OR o.tila = 'VALMIS')))) " +
-            "    OR (:poistettu = true AND tila = 'POISTETTU')) " +
-            "AND o.tyyppi = :tyyppi ")
+    @Query(value = """
+            SELECT o
+            FROM Opetussuunnitelma o
+            LEFT JOIN o.nimi onimi
+            LEFT JOIN onimi.teksti nimi
+            JOIN o.koulutustoimija kt
+            LEFT OUTER JOIN o.peruste p
+            WHERE (:koulutustoimijat IS NULL OR kt.id in (:koulutustoimijat))
+            AND (p.koulutustyyppi IN (:koulutustyyppi) OR o.koulutustyyppi IN (:koulutustyyppi))
+            AND nimi.kieli = :kieli
+            AND (:nimi is null OR LOWER(nimi.teksti) LIKE LOWER(CONCAT('%', :nimi,'%')))
+            AND (:jotpa = false OR o.jotpatyyppi IS NOT NULL)
+            AND ((:poistettu = false AND tila != 'POISTETTU' AND ((:julkaistuTaiValmis = false AND (o.julkaisut IS EMPTY AND o.tila = 'LUONNOS')) OR (:julkaistuTaiValmis = true AND (o.julkaisut IS NOT EMPTY OR o.tila = 'VALMIS'))))
+                OR (:poistettu = true AND tila = 'POISTETTU'))
+            AND o.tyyppi = :tyyppi
+            AND ((:voimassaolo = true AND (o.voimassaoloLoppuu IS NULL OR o.voimassaoloLoppuu >= CURRENT_DATE))
+                 OR (:vanhentunut = true AND o.voimassaoloLoppuu IS NOT NULL AND o.voimassaoloLoppuu < CURRENT_DATE)
+                 OR (:voimassaolo = false AND :vanhentunut = false))
+            """)
     Page<Opetussuunnitelma> findByKoulutustoimijaInAndPerusteKoulutustyyppiInAndOpsTyyppi(
             @Param("koulutustoimijat") List<Long> ktId,
             @Param("koulutustyyppi") List<KoulutusTyyppi> koulutusTyyppi,
@@ -141,6 +146,8 @@ public interface OpetussuunnitelmaRepository extends JpaWithVersioningRepository
             @Param("julkaistuTaiValmis") Boolean julkaistuTaiValmis,
             @Param("tyyppi") OpsTyyppi tyyppi,
             @Param("poistettu") Boolean poistettu,
+            @Param("voimassaolo") Boolean voimassaolo,
+            @Param("vanhentunut") Boolean vanhentunut,
             Pageable pageable);
 
     @Query(value = "SELECT o " +
