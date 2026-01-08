@@ -353,6 +353,8 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                         query.getJulkaistuTaiValmis(),
                         query.getTyyppi(),
                         query.isPoistunut(),
+                        query.isVoimassaolo(),
+                        query.isVanhentunut(),
                         pageRequest)
                 .map(ops -> mapper.map(ops, OpetussuunnitelmaListausDto.class));
     }

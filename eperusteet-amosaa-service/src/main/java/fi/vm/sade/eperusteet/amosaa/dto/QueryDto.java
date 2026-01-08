@@ -12,6 +12,7 @@ public class QueryDto {
     private boolean siirtyma = true;
     private boolean voimassaolo = true;
     private boolean poistunut = true;
+    private boolean vanhentunut = true;
     private String nimi;
     private String kieli = "fi";
     private String jarjestys;
