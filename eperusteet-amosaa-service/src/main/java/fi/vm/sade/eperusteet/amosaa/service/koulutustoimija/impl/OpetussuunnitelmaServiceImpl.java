@@ -116,11 +116,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import jakarta.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -1201,12 +1204,20 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
     @Override
     @Transactional(readOnly = true)
-    public Object getJulkaistuSisaltoObjectNode(Long opetussuunnitelmaId, List<String> queryList) {
+    public Object getJulkaistuSisaltoObjectNode(Long opetussuunnitelmaId, List<String> queryList, Map<String, String> filters) {
         queryList.forEach(query -> {
             if (!query.matches("[a-zA-Z0-9_]+")) {
                 throw new NotExistsException("");
             }
         });
+
+        if (!ObjectUtils.isEmpty(filters)) {
+            filters.forEach((key, value) -> {
+                if (!key.matches("[a-zA-Z0-9_]+") || !value.matches("[a-zA-Z0-9_]+")) {
+                    throw new NotExistsException("");
+                }
+            });
+        }
 
         Opetussuunnitelma opetussuunnitelma = repository.findOne(opetussuunnitelmaId);
 
@@ -1222,10 +1233,32 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
         });
 
         try {
-            return objMapper.readValue(julkaisuRepository.findJulkaisutByJsonPath(opetussuunnitelmaId, query), Object.class);
+            Object result = objMapper.readValue(julkaisuRepository.findJulkaisutByJsonPath(opetussuunnitelmaId, query), Object.class);
+            if (result instanceof List && filters != null && !filters.isEmpty()) {
+                result = filterJsonList((List<?>) result, filters);
+            }
+            return result;
         } catch (Exception e) {
             log.error(Throwables.getStackTraceAsString(e));
             throw new NotExistsException("");
         }
+    }
+
+    private List<?> filterJsonList(List<?> list, Map<String, String> filters) {
+        return list.stream()
+                .filter(item -> item instanceof Map && matchesFilters((Map<?, ?>) item, filters))
+                .collect(Collectors.toList());
+    }
+
+    private boolean matchesFilters(Map<?, ?> item, Map<String, String> filters) {
+        return filters.entrySet().stream().allMatch(entry -> {
+            Object value = item.get(entry.getKey());
+            if (value == null) {
+                return false;
+            }
+            String filterValue = entry.getValue();
+            String itemValueStr = value.toString();
+            return filterValue.equals(itemValueStr);
+        });
     }
 }

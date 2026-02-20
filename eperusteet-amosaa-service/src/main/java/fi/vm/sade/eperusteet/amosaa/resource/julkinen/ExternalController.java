@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -94,20 +95,26 @@ public class ExternalController {
     @ResponseBody
     @Operation(
             summary = "Opetussuunnitelman tietojen haku tarkalla sisältörakenteella",
-            description = "Url parametreiksi voi antaa opetussuunnitelman id:n lisäksi erilaisia opetussuunnitelman rakenteen osia ja id-kenttien arvoja. Esim. /opetussuunnitelma/8505691/tutkinnonOsat/7283253/tosa antaa opetussuunnitelman (id: 8505691) tutkinnon osien tietueen (id: 7283253)."
+            description = 
+            """
+              Url parametreiksi voi antaa opetussuunnitelman id:n lisäksi erilaisia opetussuunnitelman rakenteen osia ja id-kenttien arvoja. 
+              Esim. /opetussuunnitelma/8505691/tutkinnonOsat/7283253/tosa antaa opetussuunnitelman (id: 8505691) tutkinnon osien tietueen (id: 7283253).
+              Mikäli palautuva json sisältää listan, voidaan rajapinnan parametreina antaa myös listan filtterit. 
+              Esim. /opetussuunnitelma/8505691/tutkinnonOsat?tyyppi=oma antaa opetussuunnitelman (id: 8505691) tutkinnon osien tietueet, joissa tyyppi-kentän arvo on 'oma'.
+            """
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = OpetussuunnitelmaKaikkiDto.class))}),
     })
     public ResponseEntity<Object> getOpetussuunnitelmaDynamicQuery(HttpServletRequest req, @PathVariable("opsId") final long id, @PathVariable("custompath") final String custompath) {
-        return getJulkaistuSisaltoObjectNodeWithQuery(id, requestToQueries(req, DEFAULT_PATH_SKIP_VALUE));
+        return getJulkaistuSisaltoObjectNodeWithQuery(id, requestToQueries(req, DEFAULT_PATH_SKIP_VALUE), requestToQueryParamsFirstValueOnly(req));
     }
 
     // Springdoc ei generoi rajapintoja /** poluille, joten tämä on tehty erikseen
     @Hidden
     @RequestMapping(value = "/opetussuunnitelma/{opsId:\\d+}/{custompath}/**", method = GET)
     public ResponseEntity<Object> getOpetussuunnitelmaDynamicQueryHidden(HttpServletRequest req, @PathVariable("opsId") final long id) {
-        return getJulkaistuSisaltoObjectNodeWithQuery(id, requestToQueries(req, DEFAULT_PATH_SKIP_VALUE));
+        return getJulkaistuSisaltoObjectNodeWithQuery(id, requestToQueries(req, DEFAULT_PATH_SKIP_VALUE), requestToQueryParamsFirstValueOnly(req));
     }
 
     @Operation(summary = "Opintokokonaisuuden haku opintokokonaisuuden koodin arvolla")
@@ -121,11 +128,15 @@ public class ExternalController {
         return Arrays.stream(queries).skip(skipCount).collect(Collectors.toList());
     }
 
-    private ResponseEntity<Object> getJulkaistuSisaltoObjectNodeWithQuery(long id, List<String> queries) {
-        Object result = opetussuunnitelmaService.getJulkaistuSisaltoObjectNode(id, queries);
+    private ResponseEntity<Object> getJulkaistuSisaltoObjectNodeWithQuery(long id, List<String> queries, Map<String,String> queryParams) {
+        Object result = opetussuunnitelmaService.getJulkaistuSisaltoObjectNode(id, queries, queryParams);
         if (result == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(result);
+    }
+
+    private Map<String,String> requestToQueryParamsFirstValueOnly(HttpServletRequest req) {
+        return req.getParameterMap().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue()[0]));
     }
 }

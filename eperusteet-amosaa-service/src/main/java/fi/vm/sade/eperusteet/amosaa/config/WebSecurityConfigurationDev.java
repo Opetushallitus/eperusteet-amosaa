@@ -118,7 +118,15 @@ public class WebSecurityConfigurationDev {
                         "APP_EPERUSTEET_AMOSAA_ADMIN_1.2.246.562.10.81269623245",
                         "APP_EPERUSTEET_KOTO_ADMIN_1.2.246.562.10.81269623245")
                 .build();
-        return new InMemoryUserDetailsManager(testMaster, testOther);
+
+        UserDetails testOther2 = User.withDefaultPasswordEncoder()
+                .username("testkt2")
+                .password("test")
+                .roles("USER",
+                        "APP_EPERUSTEET",
+                        "APP_EPERUSTEET_AMOSAA_ADMIN_1.2.246.562.10.594252633210")
+                .build();
+        return new InMemoryUserDetailsManager(testMaster, testOther, testOther2);
     }
 
     @Bean
