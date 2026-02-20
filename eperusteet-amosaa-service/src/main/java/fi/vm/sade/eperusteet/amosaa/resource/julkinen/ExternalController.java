@@ -101,10 +101,11 @@ public class ExternalController {
               Esim. /opetussuunnitelma/8505691/tutkinnonOsat/7283253/tosa antaa opetussuunnitelman (id: 8505691) tutkinnon osien tietueen (id: 7283253).
 
               Mikäli palautuva JSON sisältää listan, voidaan rajapinnan parametreina antaa myös listan filtterit (kyselyparametrit).
-              Esim. /opetussuunnitelma/8505691/tutkinnonOsat?tyyppi=oma antaa opetussuunnitelman (id: 8505691) tutkinnon osien tietueet, joissa tyyppi-kentän arvo on 'oma'.
+              Esim. /opetussuunnitelma/8505691/tutkinnonOsat?tyyppi=oma antaa tutkinnon osien tietueet, joissa tyyppi-kentän arvo on 'oma'.
+              Sisäkkäisiä kenttiä voi suodattaa pisteellä erotetulla polulla, esim. ?tosa.tyyppi=oma tai ?nimi.fi=johdanto.
 
-              Useita filttereitä voidaan yhdistää lisäämällä useita kyselyparametreja, esim. /opetussuunnitelma/8505691/tutkinnonOsat?tyyppi=oma&status=aktiivinen.
-              Tällöin kaikki annetut filtterit sovelletaan yhtäaikaisesti (logiikka: AND), eli palautettujen tietueiden on täytettävä jokaisen annetun parametrin ehto.
+              Useita filttereitä voidaan yhdistää lisäämällä useita kyselyparametreja, esim. ?tyyppi=oma&tosa.tyyppi=oma.
+              Kaikki annetut filtterit sovelletaan yhtäaikaisesti (logiikka: AND).
             """
     )
     @ApiResponses(value = {
@@ -128,12 +129,12 @@ public class ExternalController {
     }
 
     private List<String> requestToQueries(HttpServletRequest req, int skipCount) {
-        String[] queries = req.getServletPath().split("/");
-        return Arrays.stream(queries).skip(skipCount).collect(Collectors.toList());
+        String[] paths = req.getServletPath().split("/");
+        return Arrays.stream(paths).skip(skipCount).collect(Collectors.toList());
     }
 
-    private ResponseEntity<Object> getJulkaistuSisaltoObjectNodeWithQuery(long id, List<String> queries, Map<String,String> queryParams) {
-        Object result = opetussuunnitelmaService.getJulkaistuSisaltoObjectNode(id, queries, queryParams);
+    private ResponseEntity<Object> getJulkaistuSisaltoObjectNodeWithQuery(long id, List<String> paths, Map<String,String> queryParams) {
+        Object result = opetussuunnitelmaService.getJulkaistuSisaltoObjectNode(id, paths, queryParams);
         if (result == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }

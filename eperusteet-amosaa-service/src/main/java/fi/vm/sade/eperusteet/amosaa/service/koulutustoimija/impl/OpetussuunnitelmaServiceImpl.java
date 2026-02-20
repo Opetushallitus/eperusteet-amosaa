@@ -226,7 +226,9 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     @Autowired
     private CacheManager cacheManager;
 
-    private final String QUERY_PARAMS_REGEX = "[a-zA-Z0-9_-]+";
+    private static final String PATH_PARAMS_KEY_REGEX = "[a-zA-Z0-9_-]+";
+    private static final String FILTER_KEY_PARAMS_REGEX = "[a-zA-Z0-9_.-]+";
+    private static final String FILTER_VALUE_PARAMS_REGEX = "[a-zA-Z0-9_ .-]+";
 
     @PostConstruct
     protected void init() {
@@ -1204,16 +1206,16 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
     @Override
     @Transactional(readOnly = true)
-    public Object getJulkaistuSisaltoObjectNode(Long opetussuunnitelmaId, List<String> queryList, Map<String, String> filters) {
-        queryList.forEach(query -> {
-            if (!query.matches(QUERY_PARAMS_REGEX)) {
+    public Object getJulkaistuSisaltoObjectNode(Long opetussuunnitelmaId, List<String> paths, Map<String, String> filters) {
+        paths.forEach(path -> {
+            if (!path.matches(PATH_PARAMS_KEY_REGEX)) {
                 throw new NotExistsException("");
             }
         });
 
         if (!ObjectUtils.isEmpty(filters)) {
             filters.forEach((key, value) -> {
-                if (!key.matches(QUERY_PARAMS_REGEX) || !value.matches(QUERY_PARAMS_REGEX)) {
+                if (!key.matches(FILTER_KEY_PARAMS_REGEX) || !value.matches(FILTER_VALUE_PARAMS_REGEX)) {
                     throw new NotExistsException("");
                 }
             });
@@ -1225,11 +1227,11 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
             throw new NotExistsException("");
         }
 
-        String query = queryList.stream().reduce("$", (subquery, element) -> {
+        String query = paths.stream().reduce("$", (path, element) -> {
             if (NumberUtils.isCreatable(element)) {
-                return subquery + String.format("?(@.id==%s)", element);
+                return path + String.format("?(@.id==%s)", element);
             }
-            return subquery + "." + element;
+            return path + "." + element;
         });
 
         try {
@@ -1252,7 +1254,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
     private boolean matchesFilters(Map<?, ?> item, Map<String, String> filters) {
         return filters.entrySet().stream().allMatch(entry -> {
-            Object value = item.get(entry.getKey());
+            Object value = getNestedValue(item, entry.getKey());
             if (value == null) {
                 return false;
             }
@@ -1260,5 +1262,17 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
             String itemValueStr = value.toString();
             return filterValue.equals(itemValueStr);
         });
+    }
+
+    private Object getNestedValue(Map<?, ?> item, String path) {
+        String[] parts = path.split("\\.");
+        Object current = item;
+        for (String part : parts) {
+            if (current == null || !(current instanceof Map)) {
+                return null;
+            }
+            current = ((Map<?, ?>) current).get(part);
+        }
+        return current;
     }
 }

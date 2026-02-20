@@ -185,7 +185,7 @@ public interface OpetussuunnitelmaService extends RevisionService {
     void setOpsCommon(Long ktId, Opetussuunnitelma ops, PerusteDto peruste, SisaltoViite rootTkv);
 
     @PreAuthorize("permitAll()")
-    Object getJulkaistuSisaltoObjectNode(Long opetussuunnitelmaId, List<String> queryList, Map<String, String> filters);
+    Object getJulkaistuSisaltoObjectNode(Long opetussuunnitelmaId, List<String> paths, Map<String, String> filters);
 
     @PreAuthorize("isAuthenticated() or @profileService.isDevProfileActive()")
     List<OpetussuunnitelmaDto> getKaikkiJulkaistutOpetussuunnitelmat();
