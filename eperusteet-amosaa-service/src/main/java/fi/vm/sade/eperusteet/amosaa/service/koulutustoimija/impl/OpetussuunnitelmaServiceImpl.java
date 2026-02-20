@@ -226,7 +226,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     @Autowired
     private CacheManager cacheManager;
 
-    private final String QUERY_PARAMS_REGEX = "[a-zA-Z0-9_ .-]+";
+    private final String QUERY_PARAMS_REGEX = "[a-zA-Z0-9_-]+";
 
     @PostConstruct
     protected void init() {

@@ -95,12 +95,16 @@ public class ExternalController {
     @ResponseBody
     @Operation(
             summary = "Opetussuunnitelman tietojen haku tarkalla sisältörakenteella",
-            description = 
+            description =
             """
-              Url parametreiksi voi antaa opetussuunnitelman id:n lisäksi erilaisia opetussuunnitelman rakenteen osia ja id-kenttien arvoja. 
+              Url-parametreiksi voi antaa opetussuunnitelman id:n lisäksi erilaisia opetussuunnitelman rakenteen osia ja id-kenttien arvoja.
               Esim. /opetussuunnitelma/8505691/tutkinnonOsat/7283253/tosa antaa opetussuunnitelman (id: 8505691) tutkinnon osien tietueen (id: 7283253).
-              Mikäli palautuva json sisältää listan, voidaan rajapinnan parametreina antaa myös listan filtterit. 
+
+              Mikäli palautuva JSON sisältää listan, voidaan rajapinnan parametreina antaa myös listan filtterit (kyselyparametrit).
               Esim. /opetussuunnitelma/8505691/tutkinnonOsat?tyyppi=oma antaa opetussuunnitelman (id: 8505691) tutkinnon osien tietueet, joissa tyyppi-kentän arvo on 'oma'.
+
+              Useita filttereitä voidaan yhdistää lisäämällä useita kyselyparametreja, esim. /opetussuunnitelma/8505691/tutkinnonOsat?tyyppi=oma&status=aktiivinen.
+              Tällöin kaikki annetut filtterit sovelletaan yhtäaikaisesti (logiikka: AND), eli palautettujen tietueiden on täytettävä jokaisen annetun parametrin ehto.
             """
     )
     @ApiResponses(value = {
@@ -137,6 +141,10 @@ public class ExternalController {
     }
 
     private Map<String,String> requestToQueryParamsFirstValueOnly(HttpServletRequest req) {
-        return req.getParameterMap().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue()[0]));
+        return req.getParameterMap().entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, e -> {
+                    String[] values = e.getValue();
+                    return values.length > 0 ? values[0] : "";
+                }));
     }
 }
