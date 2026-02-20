@@ -127,8 +127,6 @@ import java.util.Map;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
@@ -227,6 +225,8 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
     @Autowired
     private CacheManager cacheManager;
+
+    private final String QUERY_PARAMS_REGEX = "[a-zA-Z0-9_ .-]+";
 
     @PostConstruct
     protected void init() {
@@ -1206,14 +1206,14 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     @Transactional(readOnly = true)
     public Object getJulkaistuSisaltoObjectNode(Long opetussuunnitelmaId, List<String> queryList, Map<String, String> filters) {
         queryList.forEach(query -> {
-            if (!query.matches("[a-zA-Z0-9_]+")) {
+            if (!query.matches(QUERY_PARAMS_REGEX)) {
                 throw new NotExistsException("");
             }
         });
 
         if (!ObjectUtils.isEmpty(filters)) {
             filters.forEach((key, value) -> {
-                if (!key.matches("[a-zA-Z0-9_]+") || !value.matches("[a-zA-Z0-9_]+")) {
+                if (!key.matches(QUERY_PARAMS_REGEX) || !value.matches(QUERY_PARAMS_REGEX)) {
                     throw new NotExistsException("");
                 }
             });
@@ -1234,7 +1234,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
         try {
             Object result = objMapper.readValue(julkaisuRepository.findJulkaisutByJsonPath(opetussuunnitelmaId, query), Object.class);
-            if (result instanceof List && filters != null && !filters.isEmpty()) {
+            if (result instanceof List && !ObjectUtils.isEmpty(filters)) {
                 result = filterJsonList((List<?>) result, filters);
             }
             return result;
