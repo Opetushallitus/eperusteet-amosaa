@@ -11,6 +11,7 @@ import fi.vm.sade.eperusteet.amosaa.resource.koulutustoimija.KoulutustoimijaIdGe
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiKuvaService;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiService;
 import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
+import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.JulkaisuService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -52,10 +53,13 @@ public class DokumenttiController extends KoulutustoimijaIdGetterAbstractControl
     DokumenttiKuvaService dokumenttiKuvaService;
 
     @Autowired
-    OpetussuunnitelmaService opsService;
+    JulkaisuService julkaisuService;
 
     @Autowired
     DokumenttiRepository repository;
+
+    @Autowired
+    OpetussuunnitelmaService opetussuunnitelmaService;
 
     @Parameters({
             @Parameter(name = "ktId", schema = @Schema(implementation = String.class), in = ParameterIn.PATH)
@@ -68,7 +72,7 @@ public class DokumenttiController extends KoulutustoimijaIdGetterAbstractControl
         DokumenttiDto viimeisinJulkaistuDokumentti = dokumenttiService.getJulkaistuDokumentti(ktId, opsId, Kieli.of(kieli), null);
         if (viimeisinJulkaistuDokumentti != null && viimeisinJulkaistuDokumentti.getTila().equals(DokumenttiTila.EPAONNISTUI)) {
             dokumenttiService.setStarted(ktId, opsId, viimeisinJulkaistuDokumentti);
-            dokumenttiService.generateWithDto(ktId, opsId, viimeisinJulkaistuDokumentti, opsService.getOpetussuunnitelmaJulkaistuSisalto(opsId));
+            dokumenttiService.generateWithDto(ktId, opsId, viimeisinJulkaistuDokumentti, julkaisuService.getOpetussuunnitelmaJulkaistuSisalto(opsId));
         }
 
         DokumenttiDto dto = dokumenttiService.createDtoFor(ktId, opsId, Kieli.of(kieli));
@@ -113,7 +117,7 @@ public class DokumenttiController extends KoulutustoimijaIdGetterAbstractControl
 
         HttpHeaders headers = new HttpHeaders();
 
-        LokalisoituTekstiDto nimiDto = opsService.getOpetussuunnitelma(ktId, opsId).getNimi();
+        LokalisoituTekstiDto nimiDto = opetussuunnitelmaService.getOpetussuunnitelma(ktId, opsId).getNimi();
         String nimi = nimiDto.get(Kieli.of(kieli));
         if (nimi != null) {
             headers.set("Content-disposition", "inline; filename=\"" + nimi + ".pdf\"");

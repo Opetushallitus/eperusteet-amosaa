@@ -10,13 +10,11 @@ import fi.vm.sade.eperusteet.amosaa.dto.NavigationNodeDto;
 import fi.vm.sade.eperusteet.amosaa.dto.OpsHakuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.OpsHakuInternalDto;
 import fi.vm.sade.eperusteet.amosaa.dto.PoistettuDto;
-import fi.vm.sade.eperusteet.amosaa.dto.external.SisaltoviiteOpintokokonaisuusExternalDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaJulkinenDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaJulkaistuQueryDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaListausDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaLuontiDto;
@@ -26,8 +24,8 @@ import fi.vm.sade.eperusteet.amosaa.dto.ops.VanhentunutPohjaperusteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteDto;
 import fi.vm.sade.eperusteet.amosaa.service.revision.RevisionService;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
-import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.context.annotation.Profile;
@@ -116,12 +114,6 @@ public interface OpetussuunnitelmaService extends RevisionService {
     @PreAuthorize("permitAll()")
     Page<OpetussuunnitelmaDto> findOpetussuunnitelmat(PageRequest p, OpetussuunnitelmaQueryDto pquery);
 
-    @PreAuthorize("permitAll()")
-    Page<OpetussuunnitelmaDto> findOpetussuunnitelmatJulkaisut(OpetussuunnitelmaJulkaistuQueryDto pquery);
-
-    @PreAuthorize("permitAll()")
-    SisaltoviiteOpintokokonaisuusExternalDto findJulkaistuOpintokokonaisuus(String koodiArvo) throws IOException;
-
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'HALLINTA')")
     OpetussuunnitelmaDto updateKoulutustoimija(@P("ktId") Long ktId, @P("opsId") Long opsId, KoulutustoimijaBaseDto body);
 
@@ -130,9 +122,6 @@ public interface OpetussuunnitelmaService extends RevisionService {
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'ESITYS')")
     OpetussuunnitelmaKaikkiDto getOpetussuunnitelmaKaikki(@P("ktId") Long ktId, @P("opsId") Long opsId);
-
-    @PreAuthorize("permitAll()")
-    OpetussuunnitelmaKaikkiDto getOpetussuunnitelmaJulkaistuSisalto(Long opsId);
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'ESITYS')")
     OpetussuunnitelmaKaikkiDto getOpetussuunnitelmaJulkaistuSisalto(@P("ktId") Long ktId, @P("opsId") Long opsId, boolean esikatselu);
@@ -183,10 +172,7 @@ public interface OpetussuunnitelmaService extends RevisionService {
     @PreAuthorize("hasPermission(#ktId, 'koulutustoimija', 'LUONTI')")
     void setOpsCommon(Long ktId, Opetussuunnitelma ops, PerusteDto peruste, SisaltoViite rootTkv);
 
-    @PreAuthorize("permitAll()")
-    Object getJulkaistuSisaltoObjectNode(Long opetussuunnitelmaId, List<String> queryList);
-
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated() or @profileService.isDevProfileActive()")
     List<OpetussuunnitelmaDto> getKaikkiJulkaistutOpetussuunnitelmat();
 }
 

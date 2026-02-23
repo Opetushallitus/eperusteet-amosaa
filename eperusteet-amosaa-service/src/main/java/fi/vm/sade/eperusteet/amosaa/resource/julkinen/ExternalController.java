@@ -4,7 +4,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.external.SisaltoviiteOpintokokonaisuusEx
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaJulkaistuQueryDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaKaikkiDto;
-import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
+import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.JulkaisuService;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -45,7 +46,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 public class ExternalController {
 
     @Autowired
-    private OpetussuunnitelmaService opetussuunnitelmaService;
+    private JulkaisuService julkaisuService;
 
     private static final int DEFAULT_PATH_SKIP_VALUE = 5;
 
@@ -70,7 +71,7 @@ public class ExternalController {
     public Page<OpetussuunnitelmaDto> getPublicOpetussuunnitelmat(
             @Parameter(hidden = true) final OpetussuunnitelmaJulkaistuQueryDto pquery
     ) {
-        return opetussuunnitelmaService.findOpetussuunnitelmatJulkaisut(pquery);
+        return julkaisuService.findOpetussuunnitelmatJulkaisut(pquery);
     }
 
     @Operation(summary = "Opetussuunnitelman tietojen haku")
@@ -78,7 +79,7 @@ public class ExternalController {
     public OpetussuunnitelmaKaikkiDto getPublicOpetussuunnitelma(
             @PathVariable final Long opsId
     ) {
-        return opetussuunnitelmaService.getOpetussuunnitelmaJulkaistuSisalto(opsId);
+        return julkaisuService.getOpetussuunnitelmaJulkaistuSisalto(opsId);
     }
     
     @RequestMapping(value = "/opetussuunnitelma/{koulutustoimijaId:\\d+}/{opsId:\\d+}", method = RequestMethod.GET)
@@ -87,45 +88,64 @@ public class ExternalController {
             @PathVariable final Long koulutustoimijaId,
             @PathVariable final Long opsId
     ) {
-        return opetussuunnitelmaService.getOpetussuunnitelmaJulkaistuSisalto(opsId);
+        return julkaisuService.getOpetussuunnitelmaJulkaistuSisalto(opsId);
     }
 
     @RequestMapping(value = "/opetussuunnitelma/{opsId:\\d+}/{custompath}", method = GET)
     @ResponseBody
     @Operation(
             summary = "Opetussuunnitelman tietojen haku tarkalla sisältörakenteella",
-            description = "Url parametreiksi voi antaa opetussuunnitelman id:n lisäksi erilaisia opetussuunnitelman rakenteen osia ja id-kenttien arvoja. Esim. /opetussuunnitelma/8505691/tutkinnonOsat/7283253/tosa antaa opetussuunnitelman (id: 8505691) tutkinnon osien tietueen (id: 7283253)."
+            description =
+            """
+              Url-parametreiksi voi antaa opetussuunnitelman id:n lisäksi erilaisia opetussuunnitelman rakenteen osia ja id-kenttien arvoja.
+              Esim. /opetussuunnitelma/8505691/tutkinnonOsat/7283253/tosa antaa opetussuunnitelman (id: 8505691) tutkinnon osien tietueen (id: 7283253).
+
+              Mikäli palautuva JSON sisältää listan, voidaan rajapinnan parametreina antaa myös listan filtterit (kyselyparametrit).
+              Esim. /opetussuunnitelma/8505691/tutkinnonOsat?tyyppi=oma antaa tutkinnon osien tietueet, joissa tyyppi-kentän arvo on 'oma'.
+              Sisäkkäisiä kenttiä voi suodattaa pisteellä erotetulla polulla, esim. ?tosa.tyyppi=oma tai ?nimi.fi=johdanto.
+
+              Useita filttereitä voidaan yhdistää lisäämällä useita kyselyparametreja, esim. ?tyyppi=oma&tosa.tyyppi=oma.
+              Kaikki annetut filtterit sovelletaan yhtäaikaisesti (logiikka: AND).
+            """
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = OpetussuunnitelmaKaikkiDto.class))}),
     })
     public ResponseEntity<Object> getOpetussuunnitelmaDynamicQuery(HttpServletRequest req, @PathVariable("opsId") final long id, @PathVariable("custompath") final String custompath) {
-        return getJulkaistuSisaltoObjectNodeWithQuery(id, requestToQueries(req, DEFAULT_PATH_SKIP_VALUE));
+        return getJulkaistuSisaltoObjectNodeWithQuery(id, requestToQueries(req, DEFAULT_PATH_SKIP_VALUE), requestToQueryParamsFirstValueOnly(req));
     }
 
     // Springdoc ei generoi rajapintoja /** poluille, joten tämä on tehty erikseen
     @Hidden
     @RequestMapping(value = "/opetussuunnitelma/{opsId:\\d+}/{custompath}/**", method = GET)
     public ResponseEntity<Object> getOpetussuunnitelmaDynamicQueryHidden(HttpServletRequest req, @PathVariable("opsId") final long id) {
-        return getJulkaistuSisaltoObjectNodeWithQuery(id, requestToQueries(req, DEFAULT_PATH_SKIP_VALUE));
+        return getJulkaistuSisaltoObjectNodeWithQuery(id, requestToQueries(req, DEFAULT_PATH_SKIP_VALUE), requestToQueryParamsFirstValueOnly(req));
     }
 
     @Operation(summary = "Opintokokonaisuuden haku opintokokonaisuuden koodin arvolla")
     @RequestMapping(value = "/opintokokonaisuus/{koodiArvo}", method = RequestMethod.GET)
     public ResponseEntity<SisaltoviiteOpintokokonaisuusExternalDto> getPublicOpintokokonaisuusKoodilla(@PathVariable final String koodiArvo) throws IOException {
-        return ResponseEntity.of(Optional.ofNullable(opetussuunnitelmaService.findJulkaistuOpintokokonaisuus(koodiArvo)));
+        return ResponseEntity.of(Optional.ofNullable(julkaisuService.findJulkaistuOpintokokonaisuus(koodiArvo)));
     }
 
     private List<String> requestToQueries(HttpServletRequest req, int skipCount) {
-        String[] queries = req.getServletPath().split("/");
-        return Arrays.stream(queries).skip(skipCount).collect(Collectors.toList());
+        String[] paths = req.getServletPath().split("/");
+        return Arrays.stream(paths).skip(skipCount).collect(Collectors.toList());
     }
 
-    private ResponseEntity<Object> getJulkaistuSisaltoObjectNodeWithQuery(long id, List<String> queries) {
-        Object result = opetussuunnitelmaService.getJulkaistuSisaltoObjectNode(id, queries);
+    private ResponseEntity<Object> getJulkaistuSisaltoObjectNodeWithQuery(long id, List<String> paths, Map<String,String> queryParams) {
+        Object result = julkaisuService.getJulkaistuSisaltoObjectNode(id, paths, queryParams);
         if (result == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(result);
+    }
+
+    private Map<String,String> requestToQueryParamsFirstValueOnly(HttpServletRequest req) {
+        return req.getParameterMap().entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, e -> {
+                    String[] values = e.getValue();
+                    return values.length > 0 ? values[0] : "";
+                }));
     }
 }

@@ -17,6 +17,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteKevytDto;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiService;
+import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.JulkaisuService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.KoulutustoimijaService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
 import fi.vm.sade.eperusteet.amosaa.service.ops.SisaltoViiteService;
@@ -63,6 +64,9 @@ public class JulkinenController {
 
     @Autowired
     private OpetussuunnitelmaService opsService;
+
+    @Autowired
+    private JulkaisuService julkaisuService;
 
     @Autowired
     private TiedoteService tiedoteService;
@@ -146,7 +150,7 @@ public class JulkinenController {
     public Page<OpetussuunnitelmaDto> findOpetussuunnitelmatJulkaisut(
             @Parameter(hidden = true) final OpetussuunnitelmaJulkaistuQueryDto pquery
     ) {
-        return opsService.findOpetussuunnitelmatJulkaisut(pquery);
+        return julkaisuService.findOpetussuunnitelmatJulkaisut(pquery);
     }
 
     @RequestMapping(value = "/kaikkijulkaistut", method = RequestMethod.GET)

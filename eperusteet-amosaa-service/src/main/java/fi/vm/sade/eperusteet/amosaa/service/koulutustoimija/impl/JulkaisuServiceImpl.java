@@ -1,11 +1,15 @@
 package fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Sets;
+import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.MuokkausTapahtuma;
 import fi.vm.sade.eperusteet.amosaa.domain.Tila;
+import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.OpsTyyppi;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.JulkaistuOpetussuunnitelmaTila;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Julkaisu;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.JulkaisuData;
@@ -17,8 +21,13 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.SisaltoViite;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 import fi.vm.sade.eperusteet.amosaa.dto.dokumentti.DokumenttiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajanTietoDto;
+import fi.vm.sade.eperusteet.amosaa.dto.external.SisaltoviiteOpintokokonaisuusExternalDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.JulkaisuBaseDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaJulkaistuQueryDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaKaikkiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.AbstractRakenneOsaDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteExportOpintokokonaisuusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaMuokkaustietoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteRakenneDto;
@@ -27,9 +36,12 @@ import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.JulkaisuDataRepos
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.JulkaisuRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
+import fi.vm.sade.eperusteet.amosaa.resource.config.AbstractRakenneOsaDeserializer;
 import fi.vm.sade.eperusteet.amosaa.resource.config.InitJacksonConverter;
+import fi.vm.sade.eperusteet.amosaa.resource.config.MappingModule;
 import fi.vm.sade.eperusteet.amosaa.service.dokumentti.DokumenttiService;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
+import fi.vm.sade.eperusteet.amosaa.service.exception.NotExistsException;
 import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.JulkaisuService;
@@ -42,6 +54,8 @@ import fi.vm.sade.eperusteet.amosaa.service.util.JsonMapper;
 import fi.vm.sade.eperusteet.amosaa.service.util.Validointi;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.joda.time.DateTime;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,9 +64,15 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
+
+import jakarta.annotation.PostConstruct;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -122,7 +142,22 @@ public class JulkaisuServiceImpl implements JulkaisuService {
 
     private static final int JULKAISUN_ODOTUSAIKA_SEKUNNEISSA = 60 * 60;
 
+    private static final String PATH_PARAMS_KEY_REGEX = "[a-zA-Z0-9_-]+";
+    private static final String FILTER_KEY_PARAMS_REGEX = "[a-zA-Z0-9_.-]+";
+    private static final String FILTER_VALUE_PARAMS_REGEX = "[a-zA-Z0-9_ .-]+";
+
     private ObjectMapper objectMapper = InitJacksonConverter.createMapper();
+
+    private ObjectMapper objMapper;
+
+    @PostConstruct
+    protected void initObjMapper() {
+        objMapper = new ObjectMapper();
+        MappingModule module = new MappingModule();
+        module.addDeserializer(AbstractRakenneOsaDto.class, new AbstractRakenneOsaDeserializer());
+        objMapper.registerModule(module);
+        objMapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
+    }
 
     @Override
     @Transactional(readOnly = true)
@@ -330,5 +365,158 @@ public class JulkaisuServiceImpl implements JulkaisuService {
             }
         }
         return true;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<OpetussuunnitelmaDto> findOpetussuunnitelmatJulkaisut(OpetussuunnitelmaJulkaistuQueryDto pquery) {
+        Pageable pageable = PageRequest.of(pquery.getSivu(), pquery.getSivukoko());
+        List<String> koulutustyypit = pquery.getKoulutustyyppi().stream().map(KoulutusTyyppi::toString).collect(Collectors.toList());
+        koulutustyypit.addAll(pquery.getKoulutustyyppi().stream().map(KoulutusTyyppi::name).collect(Collectors.toList()));
+
+        if (CollectionUtils.isEmpty(koulutustyypit) || (CollectionUtils.isNotEmpty(pquery.getTyyppi()) && pquery.getTyyppi().contains(OpsTyyppi.YHTEINEN.toString()))) {
+            koulutustyypit = List.of();
+        }
+
+        return julkaisuRepository.findAllJulkisetJulkaisut(
+                koulutustyypit,
+                pquery.getNimi(),
+                pquery.getKieli(),
+                pquery.getOppilaitosTyyppiKoodiUri(),
+                pquery.getTyyppi(),
+                pquery.getOrganisaatio(),
+                pquery.getPerusteId(),
+                pquery.getPerusteenDiaarinumero(),
+                pquery.isTuleva(),
+                pquery.isVoimassaolo(),
+                pquery.isPoistunut(),
+                pquery.getJotpatyyppi(),
+                pquery.getJotpatyyppi().contains("NULL"),
+                DateTime.now().getMillis(),
+                pageable)
+                .map(this::convertToOpetussuunnitelmaDto);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public OpetussuunnitelmaKaikkiDto getOpetussuunnitelmaJulkaistuSisalto(Long opsId) {
+        Opetussuunnitelma ops = opetussuunnitelmaRepository.findOne(opsId);
+        Julkaisu julkaisu = julkaisuRepository.findFirstByOpetussuunnitelmaOrderByRevisionDesc(ops);
+
+        if (julkaisu == null) {
+            return null;
+        }
+
+        ObjectNode data = julkaisu.getData().getData();
+        try {
+            ObjectMapper om = InitJacksonConverter.createMapper();
+            OpetussuunnitelmaKaikkiDto kaikkiDto = om.treeToValue(data, OpetussuunnitelmaKaikkiDto.class);
+            kaikkiDto.setTila(Tila.JULKAISTU);
+            return kaikkiDto;
+        } catch (JsonProcessingException e) {
+            log.error(Throwables.getStackTraceAsString(e));
+            throw new BusinessRuleViolationException("opetussuunnitelman-haku-epaonnistui");
+        }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public SisaltoviiteOpintokokonaisuusExternalDto findJulkaistuOpintokokonaisuus(String koodiArvo) throws IOException {
+        String opetussuunnitelma = julkaisuRepository.findByOpintokokonaisuusKoodiArvo(koodiArvo);
+        if (opetussuunnitelma != null) {
+            OpetussuunnitelmaKaikkiDto opsKaikki = objMapper.readValue(opetussuunnitelma, OpetussuunnitelmaKaikkiDto.class);
+            SisaltoViiteExportOpintokokonaisuusDto opintokokonaisuusViite = opsKaikki.getOpintokokonaisuudet().stream()
+                    .filter(opintokokonaisuus -> opintokokonaisuus.getOpintokokonaisuus().getKoodiArvo() != null)
+                    .filter(opintokokonaisuus -> opintokokonaisuus.getOpintokokonaisuus().getKoodiArvo().equals(koodiArvo))
+                    .findFirst().orElseThrow(() -> new IOException("Virhe luettaessa opintokokonaisuutta opetussuunnitelmasta"));
+
+            SisaltoviiteOpintokokonaisuusExternalDto opintokokonaisuusExternalDto = mapper.map(opintokokonaisuusViite, SisaltoviiteOpintokokonaisuusExternalDto.class);
+            opintokokonaisuusExternalDto.setOpetussuunnitelmaId(opsKaikki.getId());
+
+            return opintokokonaisuusExternalDto;
+        }
+
+        return null;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Object getJulkaistuSisaltoObjectNode(Long opetussuunnitelmaId, List<String> paths, Map<String, String> filters) {
+        paths.forEach(path -> {
+            if (!path.matches(PATH_PARAMS_KEY_REGEX)) {
+                throw new NotExistsException("");
+            }
+        });
+
+        if (!ObjectUtils.isEmpty(filters)) {
+            filters.forEach((key, value) -> {
+                if (!key.matches(FILTER_KEY_PARAMS_REGEX) || !value.matches(FILTER_VALUE_PARAMS_REGEX)) {
+                    throw new NotExistsException("");
+                }
+            });
+        }
+
+        Opetussuunnitelma opetussuunnitelma = opetussuunnitelmaRepository.findOne(opetussuunnitelmaId);
+
+        if (opetussuunnitelma == null || opetussuunnitelma.getTila().equals(Tila.POISTETTU)) {
+            throw new NotExistsException("");
+        }
+
+        String query = paths.stream().reduce("$", (path, element) -> {
+            if (NumberUtils.isCreatable(element)) {
+                return path + String.format("?(@.id==%s)", element);
+            }
+            return path + "." + element;
+        });
+
+        try {
+            Object result = objMapper.readValue(julkaisuRepository.findJulkaisutByJsonPath(opetussuunnitelmaId, query), Object.class);
+            if (result instanceof List && !ObjectUtils.isEmpty(filters)) {
+                result = filterJsonList((List<?>) result, filters);
+            }
+            return result;
+        } catch (Exception e) {
+            log.error(Throwables.getStackTraceAsString(e));
+            throw new NotExistsException("");
+        }
+    }
+
+    private OpetussuunnitelmaDto convertToOpetussuunnitelmaDto(String obj) {
+        try {
+            return objMapper.readValue(obj, OpetussuunnitelmaDto.class);
+        } catch (JsonProcessingException e) {
+            log.error("Failed to convert to OpetussuunnitelmaDto", e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    private List<?> filterJsonList(List<?> list, Map<String, String> filters) {
+        return list.stream()
+                .filter(item -> item instanceof Map && matchesFilters((Map<?, ?>) item, filters))
+                .collect(Collectors.toList());
+    }
+
+    private boolean matchesFilters(Map<?, ?> item, Map<String, String> filters) {
+        return filters.entrySet().stream().allMatch(entry -> {
+            Object value = getNestedValue(item, entry.getKey());
+            if (value == null) {
+                return false;
+            }
+            String filterValue = entry.getValue();
+            String itemValueStr = value.toString();
+            return filterValue.equals(itemValueStr);
+        });
+    }
+
+    private Object getNestedValue(Map<?, ?> item, String path) {
+        String[] parts = path.split("\\.");
+        Object current = item;
+        for (String part : parts) {
+            if (current == null || !(current instanceof Map)) {
+                return null;
+            }
+            current = ((Map<?, ?>) current).get(part);
+        }
+        return current;
     }
 }
