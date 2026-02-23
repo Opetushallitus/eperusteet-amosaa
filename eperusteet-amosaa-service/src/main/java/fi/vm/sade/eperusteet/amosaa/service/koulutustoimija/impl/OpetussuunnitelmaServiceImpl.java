@@ -31,14 +31,12 @@ import fi.vm.sade.eperusteet.amosaa.dto.NavigationType;
 import fi.vm.sade.eperusteet.amosaa.dto.OpsHakuDto;
 import fi.vm.sade.eperusteet.amosaa.dto.OpsHakuInternalDto;
 import fi.vm.sade.eperusteet.amosaa.dto.PoistettuDto;
-import fi.vm.sade.eperusteet.amosaa.dto.external.SisaltoviiteOpintokokonaisuusExternalDto;
 import fi.vm.sade.eperusteet.amosaa.dto.kayttaja.KayttajaoikeusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.JulkaisuBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.KoulutustoimijaJulkinenDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaBaseDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
-import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaJulkaistuQueryDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaListausDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaLuontiDto;
@@ -101,7 +99,6 @@ import fi.vm.sade.eperusteet.amosaa.service.security.PermissionManager;
 import fi.vm.sade.eperusteet.amosaa.service.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -116,7 +113,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ObjectUtils;
 
 import jakarta.annotation.PostConstruct;
 import java.io.IOException;
@@ -225,10 +221,6 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
     @Autowired
     private CacheManager cacheManager;
-
-    private static final String PATH_PARAMS_KEY_REGEX = "[a-zA-Z0-9_-]+";
-    private static final String FILTER_KEY_PARAMS_REGEX = "[a-zA-Z0-9_.-]+";
-    private static final String FILTER_VALUE_PARAMS_REGEX = "[a-zA-Z0-9_ .-]+";
 
     @PostConstruct
     protected void init() {
@@ -911,28 +903,7 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
             return getOpetussuunnitelmaKaikki(ktId, opsId);
         }
 
-        return getOpetussuunnitelmaJulkaistuSisalto(opsId);
-    }
-
-    @Override
-    public OpetussuunnitelmaKaikkiDto getOpetussuunnitelmaJulkaistuSisalto(Long opsId) {
-        Opetussuunnitelma ops = repository.findOne(opsId);
-        Julkaisu julkaisu = julkaisuRepository.findFirstByOpetussuunnitelmaOrderByRevisionDesc(ops);
-
-        if (julkaisu == null) {
-            return null;
-        }
-
-        ObjectNode data = julkaisu.getData().getData();
-        try {
-            ObjectMapper objectMapper = InitJacksonConverter.createMapper();
-            OpetussuunnitelmaKaikkiDto kaikkiDto = objectMapper.treeToValue(data, OpetussuunnitelmaKaikkiDto.class);
-            kaikkiDto.setTila(Tila.JULKAISTU);
-            return kaikkiDto;
-        } catch (JsonProcessingException e) {
-            log.error(Throwables.getStackTraceAsString(e));
-            throw new BusinessRuleViolationException("opetussuunnitelman-haku-epaonnistui");
-        }
+        return julkaisuService.getOpetussuunnitelmaJulkaistuSisalto(opsId);
     }
 
     @Override
@@ -1072,35 +1043,6 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     }
 
     @Override
-    public Page<OpetussuunnitelmaDto> findOpetussuunnitelmatJulkaisut(OpetussuunnitelmaJulkaistuQueryDto pquery) {
-        Pageable pageable = PageRequest.of(pquery.getSivu(), pquery.getSivukoko());
-        List<String> koulutustyypit = pquery.getKoulutustyyppi().stream().map(KoulutusTyyppi::toString).collect(Collectors.toList());
-        koulutustyypit.addAll(pquery.getKoulutustyyppi().stream().map(KoulutusTyyppi::name).collect(Collectors.toList()));
-
-        if (CollectionUtils.isEmpty(koulutustyypit) || (CollectionUtils.isNotEmpty(pquery.getTyyppi()) && pquery.getTyyppi().contains(OpsTyyppi.YHTEINEN.toString()))) {
-            koulutustyypit = List.of();
-        }
-
-        return julkaisuRepository.findAllJulkisetJulkaisut(
-                koulutustyypit,
-                pquery.getNimi(),
-                pquery.getKieli(),
-                pquery.getOppilaitosTyyppiKoodiUri(),
-                pquery.getTyyppi(),
-                pquery.getOrganisaatio(),
-                pquery.getPerusteId(),
-                pquery.getPerusteenDiaarinumero(),
-                pquery.isTuleva(),
-                pquery.isVoimassaolo(),
-                pquery.isPoistunut(),
-                pquery.getJotpatyyppi(),
-                pquery.getJotpatyyppi().contains("NULL"),
-                DateTime.now().getMillis(),
-                pageable)
-                .map(this::convertToOpetussuunnitelmaDto);
-    }
-
-    @Override
     public List<OpetussuunnitelmaDto> getKaikkiJulkaistutOpetussuunnitelmat() {
         return julkaisuRepository.findAllJulkaistutOpetussuunnitelmatByVoimassaolo(DateTime.now().getMillis(), true, true, false).stream()
                 .map(this::convertToOpetussuunnitelmaDto).collect(Collectors.toList());
@@ -1113,39 +1055,6 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
-    }
-
-    @Override
-    public SisaltoviiteOpintokokonaisuusExternalDto findJulkaistuOpintokokonaisuus(String koodiArvo) throws IOException {
-        String opetussuunnitelma = julkaisuRepository.findByOpintokokonaisuusKoodiArvo(koodiArvo);
-        if (opetussuunnitelma != null) {
-            OpetussuunnitelmaKaikkiDto opsKaikki = objMapper.readValue(opetussuunnitelma, OpetussuunnitelmaKaikkiDto.class);
-            SisaltoViiteExportOpintokokonaisuusDto opintokokonaisuusViite = opsKaikki.getOpintokokonaisuudet().stream()
-                    .filter(opintokokonaisuus -> opintokokonaisuus.getOpintokokonaisuus().getKoodiArvo() != null)
-                    .filter(opintokokonaisuus -> opintokokonaisuus.getOpintokokonaisuus().getKoodiArvo().equals(koodiArvo))
-                    .findFirst().orElseThrow(() -> new IOException("Virhe luettaessa opintokokonaisuutta opetussuunnitelmasta"));
-
-            SisaltoviiteOpintokokonaisuusExternalDto opintokokonaisuusExternalDto = mapper.map(opintokokonaisuusViite, SisaltoviiteOpintokokonaisuusExternalDto.class);
-            opintokokonaisuusExternalDto.setOpetussuunnitelmaId(opsKaikki.getId());
-
-            return opintokokonaisuusExternalDto;
-        }
-
-        return null;
-    }
-
-    private List<fi.vm.sade.eperusteet.amosaa.dto.teksti.OpintokokonaisuusDto> recursiveOpintokokonaisuudet(SisaltoViiteExportDto sisalto) {
-        List<fi.vm.sade.eperusteet.amosaa.dto.teksti.OpintokokonaisuusDto> opintokokonaisuudet = new ArrayList<>();
-
-        if (sisalto.getOpintokokonaisuus() != null) {
-            opintokokonaisuudet.add(sisalto.getOpintokokonaisuus());
-        }
-
-        if (CollectionUtils.isNotEmpty(sisalto.getLapset())) {
-            sisalto.getLapset().forEach(lapsi -> opintokokonaisuudet.addAll(recursiveOpintokokonaisuudet(lapsi)));
-        }
-
-        return opintokokonaisuudet;
     }
 
     @Override
@@ -1202,77 +1111,5 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
 
         ops.changeKoulutustoimija(kt);
         return mapper.map(ops, OpetussuunnitelmaDto.class);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Object getJulkaistuSisaltoObjectNode(Long opetussuunnitelmaId, List<String> paths, Map<String, String> filters) {
-        paths.forEach(path -> {
-            if (!path.matches(PATH_PARAMS_KEY_REGEX)) {
-                throw new NotExistsException("");
-            }
-        });
-
-        if (!ObjectUtils.isEmpty(filters)) {
-            filters.forEach((key, value) -> {
-                if (!key.matches(FILTER_KEY_PARAMS_REGEX) || !value.matches(FILTER_VALUE_PARAMS_REGEX)) {
-                    throw new NotExistsException("");
-                }
-            });
-        }
-
-        Opetussuunnitelma opetussuunnitelma = repository.findOne(opetussuunnitelmaId);
-
-        if (opetussuunnitelma == null || opetussuunnitelma.getTila().equals(Tila.POISTETTU)) {
-            throw new NotExistsException("");
-        }
-
-        String query = paths.stream().reduce("$", (path, element) -> {
-            if (NumberUtils.isCreatable(element)) {
-                return path + String.format("?(@.id==%s)", element);
-            }
-            return path + "." + element;
-        });
-
-        try {
-            Object result = objMapper.readValue(julkaisuRepository.findJulkaisutByJsonPath(opetussuunnitelmaId, query), Object.class);
-            if (result instanceof List && !ObjectUtils.isEmpty(filters)) {
-                result = filterJsonList((List<?>) result, filters);
-            }
-            return result;
-        } catch (Exception e) {
-            log.error(Throwables.getStackTraceAsString(e));
-            throw new NotExistsException("");
-        }
-    }
-
-    private List<?> filterJsonList(List<?> list, Map<String, String> filters) {
-        return list.stream()
-                .filter(item -> item instanceof Map && matchesFilters((Map<?, ?>) item, filters))
-                .collect(Collectors.toList());
-    }
-
-    private boolean matchesFilters(Map<?, ?> item, Map<String, String> filters) {
-        return filters.entrySet().stream().allMatch(entry -> {
-            Object value = getNestedValue(item, entry.getKey());
-            if (value == null) {
-                return false;
-            }
-            String filterValue = entry.getValue();
-            String itemValueStr = value.toString();
-            return filterValue.equals(itemValueStr);
-        });
-    }
-
-    private Object getNestedValue(Map<?, ?> item, String path) {
-        String[] parts = path.split("\\.");
-        Object current = item;
-        for (String part : parts) {
-            if (current == null || !(current instanceof Map)) {
-                return null;
-            }
-            current = ((Map<?, ?>) current).get(part);
-        }
-        return current;
     }
 }

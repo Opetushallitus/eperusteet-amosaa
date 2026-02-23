@@ -4,7 +4,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.external.SisaltoviiteOpintokokonaisuusEx
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaJulkaistuQueryDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaKaikkiDto;
-import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
+import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.JulkaisuService;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -46,7 +46,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 public class ExternalController {
 
     @Autowired
-    private OpetussuunnitelmaService opetussuunnitelmaService;
+    private JulkaisuService julkaisuService;
 
     private static final int DEFAULT_PATH_SKIP_VALUE = 5;
 
@@ -71,7 +71,7 @@ public class ExternalController {
     public Page<OpetussuunnitelmaDto> getPublicOpetussuunnitelmat(
             @Parameter(hidden = true) final OpetussuunnitelmaJulkaistuQueryDto pquery
     ) {
-        return opetussuunnitelmaService.findOpetussuunnitelmatJulkaisut(pquery);
+        return julkaisuService.findOpetussuunnitelmatJulkaisut(pquery);
     }
 
     @Operation(summary = "Opetussuunnitelman tietojen haku")
@@ -79,7 +79,7 @@ public class ExternalController {
     public OpetussuunnitelmaKaikkiDto getPublicOpetussuunnitelma(
             @PathVariable final Long opsId
     ) {
-        return opetussuunnitelmaService.getOpetussuunnitelmaJulkaistuSisalto(opsId);
+        return julkaisuService.getOpetussuunnitelmaJulkaistuSisalto(opsId);
     }
     
     @RequestMapping(value = "/opetussuunnitelma/{koulutustoimijaId:\\d+}/{opsId:\\d+}", method = RequestMethod.GET)
@@ -88,7 +88,7 @@ public class ExternalController {
             @PathVariable final Long koulutustoimijaId,
             @PathVariable final Long opsId
     ) {
-        return opetussuunnitelmaService.getOpetussuunnitelmaJulkaistuSisalto(opsId);
+        return julkaisuService.getOpetussuunnitelmaJulkaistuSisalto(opsId);
     }
 
     @RequestMapping(value = "/opetussuunnitelma/{opsId:\\d+}/{custompath}", method = GET)
@@ -125,7 +125,7 @@ public class ExternalController {
     @Operation(summary = "Opintokokonaisuuden haku opintokokonaisuuden koodin arvolla")
     @RequestMapping(value = "/opintokokonaisuus/{koodiArvo}", method = RequestMethod.GET)
     public ResponseEntity<SisaltoviiteOpintokokonaisuusExternalDto> getPublicOpintokokonaisuusKoodilla(@PathVariable final String koodiArvo) throws IOException {
-        return ResponseEntity.of(Optional.ofNullable(opetussuunnitelmaService.findJulkaistuOpintokokonaisuus(koodiArvo)));
+        return ResponseEntity.of(Optional.ofNullable(julkaisuService.findJulkaistuOpintokokonaisuus(koodiArvo)));
     }
 
     private List<String> requestToQueries(HttpServletRequest req, int skipCount) {
@@ -134,7 +134,7 @@ public class ExternalController {
     }
 
     private ResponseEntity<Object> getJulkaistuSisaltoObjectNodeWithQuery(long id, List<String> paths, Map<String,String> queryParams) {
-        Object result = opetussuunnitelmaService.getJulkaistuSisaltoObjectNode(id, paths, queryParams);
+        Object result = julkaisuService.getJulkaistuSisaltoObjectNode(id, paths, queryParams);
         if (result == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
