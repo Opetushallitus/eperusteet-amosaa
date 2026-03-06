@@ -166,17 +166,17 @@ public class WebSecurityConfiguration {
         return authenticationManagerBuilder.build();
     }
 
-    @Bean
-    public StrictHttpFirewall httpFirewall() {
-        StrictHttpFirewall firewall = new StrictHttpFirewall();
-        firewall.setAllowedHostnames(hostname -> 
-            List.of(
-              "virkailija.opintopolku.fi", 
-              "virkailija.testiopintopolku.fi", 
-              "virkailija.untuvaopintopolku.fi",
-              "virkailija.hahtuvaopintopolku.fi"
-            )
-            .contains(hostname));
-        return firewall;
-    }
+    // @Bean
+    // public StrictHttpFirewall httpFirewall() {
+    //     StrictHttpFirewall firewall = new StrictHttpFirewall();
+    //     firewall.setAllowedHostnames(hostname -> 
+    //         List.of(
+    //           "virkailija.opintopolku.fi", 
+    //           "virkailija.testiopintopolku.fi", 
+    //           "virkailija.untuvaopintopolku.fi",
+    //           "virkailija.hahtuvaopintopolku.fi"
+    //         )
+    //         .contains(hostname));
+    //     return firewall;
+    // }
 }
