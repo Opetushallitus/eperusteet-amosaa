@@ -4,9 +4,13 @@ import fi.vm.sade.eperusteet.amosaa.repository.OphSessionMappingStorage;
 import fi.vm.sade.java_utils.security.OpintopolkuCasAuthenticationFilter;
 import fi.vm.sade.javautils.http.auth.CasAuthenticator;
 import fi.vm.sade.javautils.kayttooikeusclient.OphUserDetailsServiceImpl;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.List;
+import java.io.IOException;
 
 import org.apereo.cas.client.session.SingleSignOutFilter;
 import org.apereo.cas.client.validation.Cas20ProxyTicketValidator;
@@ -30,9 +34,9 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.HeaderWriterLogoutHandler;
-import org.springframework.security.web.firewall.StrictHttpFirewall;
 import org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 @Slf4j
 @Profile({"!local & !test"})
@@ -67,6 +71,9 @@ public class WebSecurityConfiguration {
 
     @Value("${fi.vm.sade.eperusteet.amosaa.oph_password}")
     private String eperusteet_password;
+
+    @Value("${server.name}")
+    private String serverName;
 
     @Autowired
     private OphSessionMappingStorage ophSessionMappingStorage;
@@ -147,8 +154,9 @@ public class WebSecurityConfiguration {
                         .requestMatchers(HttpMethod.GET, "/").permitAll()
                         .anyRequest().authenticated())
                 .addFilter(casAuthenticationFilter(http))
-                .exceptionHandling(handling -> handling.authenticationEntryPoint(casAuthenticationEntryPoint()))
                 .addFilterBefore(singleSignOutFilter(), CasAuthenticationFilter.class)
+                .addFilterAfter(hostCheckFilter(), CasAuthenticationFilter.class)
+                .exceptionHandling(handling -> handling.authenticationEntryPoint(casAuthenticationEntryPoint()))
                 .logout((logout) -> {
                     logout.logoutUrl("/api/logout");
                     logout.logoutSuccessUrl("https://" + this.hostVirkailija + "/cas/logout?service=https%3A%2F%2F" + this.hostVirkailija);
@@ -167,16 +175,34 @@ public class WebSecurityConfiguration {
     }
 
     @Bean
-    public StrictHttpFirewall httpFirewall() {
-        StrictHttpFirewall firewall = new StrictHttpFirewall();
-        firewall.setAllowedHostnames(hostname -> 
-            List.of(
-              "virkailija.opintopolku.fi", 
-              "virkailija.testiopintopolku.fi", 
-              "virkailija.untuvaopintopolku.fi",
-              "virkailija.hahtuvaopintopolku.fi"
-            )
-            .contains(hostname));
-        return firewall;
+    public OncePerRequestFilter hostCheckFilter() {
+      return new OncePerRequestFilter() {
+           
+        @Override
+        protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+                                        FilterChain filterChain) throws ServletException, IOException {
+            String host = request.getHeader("Host");
+            String forwardedHost = request.getHeader("X-Forwarded-Host");
+    
+            log.info("host: {}, forwardedHost: {}, serverName: {}", host, forwardedHost, serverName);
+    
+            // String hostToCheck = forwardedHost != null && !forwardedHost.isBlank() ? forwardedHost : host;
+    
+            // if (hostToCheck == null || hostToCheck.isBlank()) {
+            //     log.warn("Host check rejected: missing Host and X-Forwarded-Host headers");
+            //     response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing Host header");
+            //     return;
+            // }
+    
+            // if (!allowedHostnames.contains(hostToCheck)) {
+            //     log.warn("Host check rejected: host={}, forwardedHost={}, allowedHostnames={}",
+            //         host, forwardedHost, allowedHostnames);
+            //     response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid Host");
+            //     return;
+            // }
+    
+            filterChain.doFilter(request, response);
+        };
+      };
     }
 }
