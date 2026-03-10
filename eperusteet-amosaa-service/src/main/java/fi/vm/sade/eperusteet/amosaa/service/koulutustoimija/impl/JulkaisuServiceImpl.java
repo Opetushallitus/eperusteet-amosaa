@@ -466,7 +466,7 @@ public class JulkaisuServiceImpl implements JulkaisuService {
             if (NumberUtils.isCreatable(element)) {
                 return path + String.format("?(@.id==%s)", element);
             }
-            return path + "." + element;
+            return path + "." + element.toLowerCase();
         });
 
         try {
