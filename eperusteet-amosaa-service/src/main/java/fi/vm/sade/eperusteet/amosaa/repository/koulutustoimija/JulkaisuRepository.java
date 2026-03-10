@@ -85,7 +85,7 @@ public interface JulkaisuRepository extends JpaRepository<Julkaisu, Long> {
     long countByOpetussuunnitelmaId(Long id);
 
     @Query(nativeQuery = true,
-            value = "SELECT CAST(jsonb_path_query(jd.data, CAST(:query AS jsonpath)) AS text) " +
+            value = "SELECT CAST(jsonb_path_query(jsonb_lower_keys(jd.data), CAST(:query AS jsonpath)) AS text) " +
                     "FROM julkaisu ju " +
                     "INNER JOIN julkaisu_data jd ON ju.data_id = jd.id " +
                     "WHERE ju.opetussuunnitelma_id = :opetussuunnitelma_id " +
