@@ -585,6 +585,10 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
         SisaltoViite viite = findViite(opsId, viiteId);
         Opetussuunnitelma ops = opsRepository.findOne(opsId);
 
+        if (repository.findAllByLinkkiSisaltoViite(viite).size() > 0) {
+            throw new BusinessRuleViolationException("Linkitettyä sisältöä ei voi poistaa");
+        }
+
         if (viite.getVanhempi() == null) {
             throw new BusinessRuleViolationException("Sisällön juurielementtiä ei voi poistaa");
         }
