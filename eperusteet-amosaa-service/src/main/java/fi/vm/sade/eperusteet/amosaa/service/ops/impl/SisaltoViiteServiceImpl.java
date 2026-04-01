@@ -33,6 +33,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliRooli;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.SuoritustapaLaajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.Suoritustapakoodi;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonosaKaikkiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaKevytDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.*;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
@@ -1237,5 +1238,15 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
                     return oletustoteutus;
                 }).collect(Collectors.toList())
         ).flatMap(Collection::stream).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<SisaltoViiteLinkittavaDto> getSisaltoviitteetByLinkkiSisaltoViite(Long ktId, Long opsId, Long linkkiSisaltoViiteId) {
+        SisaltoViite linkkiKohde = findViite(opsId, linkkiSisaltoViiteId);
+        return repository.findAllByLinkkiSisaltoViite(linkkiKohde).stream().map(sv -> {
+            SisaltoViiteLinkittavaDto dto = mapper.map(sv, SisaltoViiteLinkittavaDto.class);
+            dto.setOpetussuunnitelma(mapper.map(sv.getOwner(), OpetussuunnitelmaKevytDto.class));
+            return dto;
+        }).collect(Collectors.toList());
     }
 }
