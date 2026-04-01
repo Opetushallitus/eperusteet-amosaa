@@ -113,4 +113,6 @@ public interface SisaltoviiteRepository extends JpaWithVersioningRepository<Sisa
             "JOIN tosa.toteutukset tot " +
             "WHERE sv.owner.id = :opetussuunnitelmaId AND tot.oletustoteutus = true")
     List<SisaltoViite> findTutkinnonosienOletusotetutukset(@Param("opetussuunnitelmaId") Long opetussuunnitelmaId);
+
+    List<SisaltoViite> findAllByLinkkiSisaltoViite(SisaltoViite linkkiSisaltoViite);
 }
