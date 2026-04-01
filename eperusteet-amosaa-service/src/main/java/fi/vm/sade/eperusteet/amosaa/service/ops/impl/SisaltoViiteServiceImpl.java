@@ -33,6 +33,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliRooli;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.SuoritustapaLaajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.Suoritustapakoodi;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TutkinnonosaKaikkiDto;
+import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaKevytDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.*;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.KoulutustoimijaRepository;
 import fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija.OpetussuunnitelmaRepository;
@@ -586,39 +587,39 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
         Opetussuunnitelma ops = opsRepository.findOne(opsId);
 
         if (repository.findAllByLinkkiSisaltoViite(viite).size() > 0) {
-            throw new BusinessRuleViolationException("Linkitettyä sisältöä ei voi poistaa");
+            throw new BusinessRuleViolationException("linkitetty-tyyppi-poisto-virhe-%s".formatted(viite.getTyyppi()));
         }
 
         if (viite.getVanhempi() == null) {
-            throw new BusinessRuleViolationException("Sisällön juurielementtiä ei voi poistaa");
+            throw new BusinessRuleViolationException("sisallon-juurielementtia-ei-voi-poistaa");
         }
 
         if (viite.getLapset() != null && !viite.getLapset().isEmpty()) {
             if (!SisaltoTyyppi.TEKSTIKAPPALE.equals(viite.getTyyppi())) {
-                throw new BusinessRuleViolationException("Sisällöllä on lapsia, ei voida poistaa");
+                throw new BusinessRuleViolationException("sisallolla-on-lapsia-ei-voida-poistaa");
             }
 
             Sets.newHashSet(viite.getLapset()).forEach(lapsi -> removeSisaltoViite(ktId, opsId, lapsi.getId()));
         }
 
         if (viite.isPakollinen() && ops.getTyyppi() != OpsTyyppi.POHJA) {
-            throw new BusinessRuleViolationException("Pakollista tekstikappaletta ei voi poistaa");
+            throw new BusinessRuleViolationException("pakollista-tekstikappaletta-ei-voi-poistaa");
         }
 
         if (viite.getTyyppi() == SisaltoTyyppi.TUTKINNONOSAT
                 || viite.getTyyppi() == SisaltoTyyppi.SUORITUSPOLUT) {
-            throw new BusinessRuleViolationException("Pakollisia sisältöjä ei voi poistaa");
+            throw new BusinessRuleViolationException("pakollisia-sisaltoja-ei-voi-poistaa");
         }
 
         if (viite.getTyyppi() == SisaltoTyyppi.KOULUTUKSENOSA && viite.getPerusteenOsaId() != null) {
-            throw new BusinessRuleViolationException("Pakollisia sisältöjä ei voi poistaa");
+            throw new BusinessRuleViolationException("pakollisia-sisaltoja-ei-voi-poistaa");
         }
 
         if (viite.getTyyppi().equals(SisaltoTyyppi.OPINTOKOKONAISUUS)
                 && viite.getOpintokokonaisuus().getKoodi() != null
                 && !permissionManager.hasOphAdminPermission()
                 && !ops.getTila().equals(Tila.POISTETTU)) {
-            throw new BusinessRuleViolationException("Julkaistuja sisältöjä ei voi poistaa");
+            throw new BusinessRuleViolationException("julkaistuja-sisaltoja-ei-voi-poistaa");
         }
 
         poistetutService.lisaaPoistettu(ktId, ops, viite);
@@ -1237,5 +1238,15 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
                     return oletustoteutus;
                 }).collect(Collectors.toList())
         ).flatMap(Collection::stream).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<SisaltoViiteLinkittavaDto> getSisaltoviitteetByLinkkiSisaltoViite(Long ktId, Long opsId, Long linkkiSisaltoViiteId) {
+        SisaltoViite linkkiKohde = findViite(opsId, linkkiSisaltoViiteId);
+        return repository.findAllByLinkkiSisaltoViite(linkkiKohde).stream().map(sv -> {
+            SisaltoViiteLinkittavaDto dto = mapper.map(sv, SisaltoViiteLinkittavaDto.class);
+            dto.setOpetussuunnitelma(mapper.map(sv.getOwner(), OpetussuunnitelmaKevytDto.class));
+            return dto;
+        }).collect(Collectors.toList());
     }
 }
