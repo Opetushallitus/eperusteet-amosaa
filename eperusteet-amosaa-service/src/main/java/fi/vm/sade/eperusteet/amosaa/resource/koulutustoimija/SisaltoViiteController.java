@@ -6,6 +6,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.RevisionKayttajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.SisaltoviiteLaajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.SisaltoviiteQueryDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteLinkittavaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteKevytDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteRakenneDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteTutkinnonosaKevytDto;
@@ -284,5 +285,17 @@ public class SisaltoViiteController extends KoulutustoimijaIdGetterAbstractContr
             @Parameter(hidden = true) SisaltoviiteQueryDto query
     ) {
         return service.getSisaltoviitteetWithQuery(ktId, query, SisaltoviiteLaajaDto.class);
+    }
+
+    @Parameters({
+      @Parameter(name = "ktId", schema = @Schema(implementation = String.class), in = ParameterIn.PATH)
+    })
+    @RequestMapping(value = "/tekstit/{linkkiSvId}/linkittavat", method = RequestMethod.GET)
+    public List<SisaltoViiteLinkittavaDto> getSisaltoviitteetLinkittainLinkkiKohteeseen(
+          @Parameter(hidden = true) @ModelAttribute("solvedKtId") final Long ktId,
+          @PathVariable final Long opsId,
+          @PathVariable final Long linkkiSvId
+    ) {
+      return service.getSisaltoviitteetByLinkkiSisaltoViite(ktId, opsId, linkkiSvId);
     }
 }

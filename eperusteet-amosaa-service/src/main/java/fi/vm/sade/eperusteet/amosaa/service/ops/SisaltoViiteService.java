@@ -9,6 +9,7 @@ import fi.vm.sade.eperusteet.amosaa.dto.RevisionKayttajaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.SisaltoviiteQueryDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.RakenneModuuliDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteLinkittavaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteRakenneDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SuorituspolkuRakenneDto;
 import fi.vm.sade.eperusteet.amosaa.resource.locks.contexts.SisaltoViiteCtx;
@@ -123,5 +124,8 @@ public interface SisaltoViiteService extends LockService<SisaltoViiteCtx> {
 
     @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'LUKU')")
     List<OletusToteutusDto> tutkinnonosienOletusToteutukset(@P("ktId") Long ktId, @P("opsId") Long opsId);
+
+    @PreAuthorize("hasPermission({#ktId, #opsId}, 'opetussuunnitelma', 'ESITYS')")
+    List<SisaltoViiteLinkittavaDto> getSisaltoviitteetByLinkkiSisaltoViite(@P("ktId") Long ktId, @P("opsId") Long opsId, Long linkkiSisaltoViiteId);
 }
 

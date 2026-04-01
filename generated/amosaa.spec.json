@@ -4556,6 +4556,51 @@
         "tags" : [ "Sisaltoviitteet" ]
       }
     },
+    "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tekstit/{linkkiSvId}/linkittavat" : {
+      "get" : {
+        "operationId" : "getSisaltoviitteetLinkittainLinkkiKohteeseen",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "opsId",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "in" : "path",
+          "name" : "linkkiSvId",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "in" : "path",
+          "name" : "ktId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/SisaltoViiteLinkittavaDto"
+                  }
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "Sisaltoviitteet" ]
+      }
+    },
     "/api/koulutustoimijat/{ktId}/opetussuunnitelmat/{opsId}/tekstit/{svId}" : {
       "delete" : {
         "operationId" : "removeSisaltoViite",
@@ -12524,6 +12569,120 @@
           },
           "tosa" : {
             "$ref" : "#/components/schemas/TutkinnonOsaKevytDto"
+          },
+          "tuvaLaajaAlainenOsaaminen" : {
+            "$ref" : "#/components/schemas/TuvaLaajaAlainenOsaaminenDto"
+          },
+          "tyyppi" : {
+            "type" : "string",
+            "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU", "OPINTOKOKONAISUUS", "KOULUTUKSENOSA", "KOULUTUKSENOSAT", "LAAJAALAINENOSAAMINEN", "KOTO_KIELITAITOTASO", "KOTO_OPINTO", "KOTO_LAAJAALAINENOSAAMINEN", "OSAAMISMERKKI", "LINKKI" ]
+          },
+          "valmis" : {
+            "type" : "boolean"
+          },
+          "vanhempi" : {
+            "type" : "string"
+          }
+        }
+      },
+      "SisaltoViiteLinkittavaDto" : {
+        "type" : "object",
+        "properties" : {
+          "_tekstiKappale" : {
+            "type" : "string"
+          },
+          "id" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "kommentti" : {
+            "type" : "string"
+          },
+          "kotoKielitaitotaso" : {
+            "$ref" : "#/components/schemas/KotoKielitaitotasoDto"
+          },
+          "kotoLaajaAlainenOsaaminen" : {
+            "$ref" : "#/components/schemas/KotoLaajaAlainenOsaaminenDto"
+          },
+          "kotoOpinto" : {
+            "$ref" : "#/components/schemas/KotoOpintoDto"
+          },
+          "koulutuksenosa" : {
+            "$ref" : "#/components/schemas/KoulutuksenOsaDto"
+          },
+          "liikkumaton" : {
+            "type" : "boolean"
+          },
+          "linkattuOps" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "linkattuPeruste" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "linkattuSisaltoViiteId" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "linkattuTyyppi" : {
+            "type" : "string",
+            "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU", "OPINTOKOKONAISUUS", "KOULUTUKSENOSA", "KOULUTUKSENOSAT", "LAAJAALAINENOSAAMINEN", "KOTO_KIELITAITOTASO", "KOTO_OPINTO", "KOTO_LAAJAALAINENOSAAMINEN", "OSAAMISMERKKI", "LINKKI" ]
+          },
+          "naytaPerusteenTeksti" : {
+            "type" : "boolean"
+          },
+          "naytaPohjanTeksti" : {
+            "type" : "boolean"
+          },
+          "ohjeteksti" : {
+            "type" : "object",
+            "additionalProperties" : {
+              "type" : "string"
+            }
+          },
+          "opetussuunnitelma" : {
+            "$ref" : "#/components/schemas/OpetussuunnitelmaKevytDto"
+          },
+          "opintokokonaisuus" : {
+            "$ref" : "#/components/schemas/OpintokokonaisuusDto"
+          },
+          "osaAlueet" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/OmaOsaAlueDto"
+            }
+          },
+          "osaamismerkkiKappale" : {
+            "$ref" : "#/components/schemas/OsaamismerkkiKappaleDto"
+          },
+          "owner" : {
+            "type" : "string"
+          },
+          "pakollinen" : {
+            "type" : "boolean"
+          },
+          "peruste" : {
+            "$ref" : "#/components/schemas/CachedPerusteBaseDto"
+          },
+          "perusteenOsaId" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "piilotettu" : {
+            "type" : "boolean"
+          },
+          "pohjanTekstikappale" : {
+            "$ref" : "#/components/schemas/TekstiKappaleDto"
+          },
+          "suorituspolku" : {
+            "$ref" : "#/components/schemas/SuorituspolkuDto"
+          },
+          "tekstiKappale" : {
+            "$ref" : "#/components/schemas/TekstiKappaleDto"
+          },
+          "tosa" : {
+            "$ref" : "#/components/schemas/TutkinnonosaDto"
           },
           "tuvaLaajaAlainenOsaaminen" : {
             "$ref" : "#/components/schemas/TuvaLaajaAlainenOsaaminenDto"
