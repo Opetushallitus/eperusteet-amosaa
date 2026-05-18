@@ -130,9 +130,9 @@ public class JulkinenController {
     }
 
     @Parameters({
-            @Parameter(name = "perusteenDiaarinumero", schema = @Schema(implementation = String.class), in = ParameterIn.QUERY),
-            @Parameter(name = "perusteId", schema = @Schema(implementation = Long.class), in = ParameterIn.QUERY),
-            @Parameter(name = "organisaatio", schema = @Schema(implementation = String.class), in = ParameterIn.QUERY),
+            @Parameter(name = "perusteenDiaarinumero", in = ParameterIn.QUERY, array = @ArraySchema(schema = @Schema(type = "string"))),
+            @Parameter(name = "perusteId", in = ParameterIn.QUERY, array = @ArraySchema(schema = @Schema(type = "integer", format = "int64"))),
+            @Parameter(name = "organisaatio", in = ParameterIn.QUERY, array = @ArraySchema(schema = @Schema(type = "string"))),
             @Parameter(name = "tyyppi", in = ParameterIn.QUERY, array =  @ArraySchema(schema = @Schema(type = "string"))),
             @Parameter(name = "sivu", schema = @Schema(implementation = Long.class), in = ParameterIn.QUERY),
             @Parameter(name = "sivukoko", schema = @Schema(implementation = Long.class), in = ParameterIn.QUERY),

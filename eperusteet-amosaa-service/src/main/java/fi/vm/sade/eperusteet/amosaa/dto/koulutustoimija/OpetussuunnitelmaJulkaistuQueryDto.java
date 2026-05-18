@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import lombok.*;
+import lombok.experimental.Tolerate;
+
 import org.apache.commons.collections.CollectionUtils;
 
 @Data
@@ -15,15 +17,16 @@ import org.apache.commons.collections.CollectionUtils;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OpetussuunnitelmaJulkaistuQueryDto extends QueryDto {
-    private String perusteenDiaarinumero = "";
-    private Long perusteId = 0l;
-    private String organisaatio = "";
+    private List<String> perusteenDiaarinumero;
+    private List<Long> perusteId;
+    private List<String> organisaatio;
     private List<String> tyyppi;
     private String oppilaitosTyyppiKoodiUri = "";
     private List<KoulutusTyyppi> koulutustyyppi = new ArrayList<>();
     private String nimi = "";
     private int sivukoko = 10;
     private List<String> jotpatyyppi = new ArrayList<>();
+    private Boolean paikallistasisaltoa;
 
     public List<String> getTyyppi() {
         if (tyyppi == null) {
@@ -41,4 +44,18 @@ public class OpetussuunnitelmaJulkaistuQueryDto extends QueryDto {
         return jotpatyyppi;
     }
 
+    @Tolerate
+    public void setPerusteid(List<Long> perusteid) {
+      this.perusteId = perusteid;
+    }
+
+    @Tolerate
+    public void setPerusteendiaarinumero(List<String> perusteenDiaarinumero) {
+      this.perusteenDiaarinumero = perusteenDiaarinumero;
+    }
+
+    @Tolerate
+    public void setOppilaitostyyppikoodiuri(String oppilaitosTyyppiKoodiUri) {
+      this.oppilaitosTyyppiKoodiUri = oppilaitosTyyppiKoodiUri;
+    }
 }

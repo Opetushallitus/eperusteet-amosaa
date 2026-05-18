@@ -51,20 +51,21 @@ public class ExternalController {
     private static final int DEFAULT_PATH_SKIP_VALUE = 5;
 
     @Parameters({
-            @Parameter(name = "perusteenDiaarinumero", schema = @Schema(implementation = String.class), in = ParameterIn.QUERY),
-            @Parameter(name = "perusteId", schema = @Schema(implementation = Long.class), in = ParameterIn.QUERY),
-            @Parameter(name = "organisaatio", schema = @Schema(implementation = String.class), in = ParameterIn.QUERY),
+            @Parameter(name = "perusteenDiaarinumero", in = ParameterIn.QUERY, array = @ArraySchema(schema = @Schema(type = "string"))),
+            @Parameter(name = "perusteId", in = ParameterIn.QUERY, array = @ArraySchema(schema = @Schema(type = "integer", format = "int64"))),
+            @Parameter(name = "organisaatio", in = ParameterIn.QUERY, array = @ArraySchema(schema = @Schema(type = "string"))),
             @Parameter(name = "tyyppi", in = ParameterIn.QUERY, array =  @ArraySchema(schema = @Schema(type = "string"))),
             @Parameter(name = "sivu", schema = @Schema(implementation = Long.class, defaultValue = "false"), in = ParameterIn.QUERY, description = "Sivunumero (0 perusarvo)"),
             @Parameter(name = "sivukoko", schema = @Schema(implementation = Long.class), in = ParameterIn.QUERY),
             @Parameter(name = "nimi", schema = @Schema(implementation = String.class), in = ParameterIn.QUERY),
             @Parameter(name = "kieli", schema = @Schema(implementation = String.class), in = ParameterIn.QUERY),
             @Parameter(name = "oppilaitosTyyppiKoodiUri", schema = @Schema(implementation = String.class), in = ParameterIn.QUERY),
-            @Parameter(name = "koulutustyyppi", in = ParameterIn.QUERY, array =  @ArraySchema(schema = @Schema(type = "string"))),
+            @Parameter(name = "koulutustyyppi", in = ParameterIn.QUERY, array = @ArraySchema(schema = @Schema(type = "string"))),
             @Parameter(name = "tuleva", schema = @Schema(implementation = Boolean.class), in = ParameterIn.QUERY),
             @Parameter(name = "voimassaolo", schema = @Schema(implementation = Boolean.class), in = ParameterIn.QUERY),
             @Parameter(name = "poistunut", schema = @Schema(implementation = Boolean.class), in = ParameterIn.QUERY),
             @Parameter(name = "jotpatyyppi", in = ParameterIn.QUERY, array =  @ArraySchema(schema = @Schema(type = "string"))),
+            @Parameter(name = "paikallistasisaltoa", schema = @Schema(implementation = Boolean.class), in = ParameterIn.QUERY, description = "Suodattaa paikallisen tutkinnon osan (tosa.tyyppi = oma) perusteella. true = sisältää, false = ei sisällä, pois jätettynä suodatinta ei käytetä"),
     })
     @RequestMapping(value = "/opetussuunnitelmat", method = RequestMethod.GET)
     @Description("Opetussuunnitelmien haku.")

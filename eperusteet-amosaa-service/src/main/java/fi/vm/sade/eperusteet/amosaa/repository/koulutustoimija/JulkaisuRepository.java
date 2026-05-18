@@ -34,11 +34,9 @@ public interface JulkaisuRepository extends JpaRepository<Julkaisu, Long> {
             "   AND cast(koulutustoimija->>'organisaatioRyhma' as boolean) = false " +
             "   AND (:oppilaitosTyyppiKoodiUri = '' OR koulutustoimija->>'oppilaitosTyyppiKoodiUri' = :oppilaitosTyyppiKoodiUri)" +
             "   AND tyyppi IN (:tyyppi) " +
-            "   AND (:organisaatio = '' OR koulutustoimija->>'organisaatio' = :organisaatio)" +
-            "   AND ((:perusteId = 0) OR (:perusteId IS NULL) " +
-            "           OR (cast(peruste->>'perusteId' as bigint) = :perusteId))" +
-            "   AND ((:perusteenDiaarinumero IS NULL) OR (:perusteenDiaarinumero = '') " +
-            "           OR (peruste->>'diaarinumero' = :perusteenDiaarinumero))" +
+            "   AND (COALESCE(:organisaatiot, null) IS NULL OR koulutustoimija->>'organisaatio' IN (:organisaatiot))" +
+            "   AND (COALESCE(:perusteIds, null) IS NULL OR cast(peruste->>'perusteId' as bigint) IN (:perusteIds))" +
+            "   AND (COALESCE(:perusteenDiaarinumerot, null) IS NULL OR peruste->>'diaarinumero' IN (:perusteenDiaarinumerot))" +
             "   AND ((:tulevat = false AND :poistuneet = false AND :voimassa = false) " +
             "           OR (" +
             "              (:tulevat = true AND (data.\"voimaantulo\" IS NOT NULL AND CAST(data.\"voimaantulo\" as bigint) > :nykyhetki)) " +
@@ -49,6 +47,7 @@ public interface JulkaisuRepository extends JpaRepository<Julkaisu, Long> {
             "            (:jotpattomat = false AND jotpatyyppi IN (:jotpatyypit)) " +
             "            OR (:jotpattomat = true AND (jotpatyyppi IS NULL OR jotpatyyppi IN (:jotpatyypit)))))" +
             "   AND (:kieli LIKE '' OR LOWER(CAST(julkaisukielet as text)) LIKE LOWER(CONCAT('%', :kieli,'%'))) " +
+            "   AND (:paikallistasisaltoa IS NULL OR data.paikallistasisaltoa = :paikallistasisaltoa) " +
             "   order by nimi->>:kieli asc " +
             ") t";
 
@@ -62,14 +61,15 @@ public interface JulkaisuRepository extends JpaRepository<Julkaisu, Long> {
             @Param("kieli") String kieli,
             @Param("oppilaitosTyyppiKoodiUri") String oppilaitosTyyppiKoodiUri,
             @Param("tyyppi") List<String> tyyppi,
-            @Param("organisaatio") String organisaatio,
-            @Param("perusteId") Long perusteId,
-            @Param("perusteenDiaarinumero") String perusteenDiaarinumero,
+            @Param("organisaatiot") List<String> organisaatiot,
+            @Param("perusteIds") List<Long> perusteIds,
+            @Param("perusteenDiaarinumerot") List<String> perusteenDiaarinumerot,
             @Param("tulevat") boolean tulevat,
             @Param("voimassa") boolean voimassa,
             @Param("poistuneet") boolean poistuneet,
             @Param("jotpatyypit") List<String> jotpatyypit,
             @Param("jotpattomat") boolean jotpattomat,
+            @Param("paikallistasisaltoa") Boolean paikallistasisaltoa,
             @Param("nykyhetki") Long nykyhetki,
             Pageable pageable
     );
