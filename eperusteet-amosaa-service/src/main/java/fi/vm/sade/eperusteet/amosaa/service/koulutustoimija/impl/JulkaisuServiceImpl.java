@@ -384,14 +384,15 @@ public class JulkaisuServiceImpl implements JulkaisuService {
                 pquery.getKieli(),
                 pquery.getOppilaitosTyyppiKoodiUri(),
                 pquery.getTyyppi(),
-                pquery.getOrganisaatio(),
-                pquery.getPerusteId(),
-                pquery.getPerusteenDiaarinumero(),
+                CollectionUtils.isEmpty(pquery.getOrganisaatio()) ? List.of() : pquery.getOrganisaatio(),
+                CollectionUtils.isEmpty(pquery.getPerusteId()) ? List.of() : pquery.getPerusteId(),
+                CollectionUtils.isEmpty(pquery.getPerusteenDiaarinumero()) ? List.of() : pquery.getPerusteenDiaarinumero(),
                 pquery.isTuleva(),
                 pquery.isVoimassaolo(),
                 pquery.isPoistunut(),
                 pquery.getJotpatyyppi(),
                 pquery.getJotpatyyppi().contains("NULL"),
+                pquery.getPaikallistasisaltoa(),
                 DateTime.now().getMillis(),
                 pageable)
                 .map(this::convertToOpetussuunnitelmaDto);
