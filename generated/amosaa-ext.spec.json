@@ -121,20 +121,29 @@
           "in" : "query",
           "name" : "perusteenDiaarinumero",
           "schema" : {
-            "type" : "string"
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
           }
         }, {
           "in" : "query",
           "name" : "perusteId",
           "schema" : {
-            "type" : "integer",
-            "format" : "int64"
+            "type" : "array",
+            "items" : {
+              "type" : "integer",
+              "format" : "int64"
+            }
           }
         }, {
           "in" : "query",
           "name" : "organisaatio",
           "schema" : {
-            "type" : "string"
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
           }
         }, {
           "in" : "query",
@@ -213,6 +222,13 @@
             "items" : {
               "type" : "string"
             }
+          }
+        }, {
+          "description" : "Suodattaa paikallisen tutkinnon osan (tosa.tyyppi = oma) perusteella. true = sisältää, false = ei sisällä, pois jätettynä suodatinta ei käytetä",
+          "in" : "query",
+          "name" : "paikallistasisaltoa",
+          "schema" : {
+            "type" : "boolean"
           }
         } ],
         "responses" : {
