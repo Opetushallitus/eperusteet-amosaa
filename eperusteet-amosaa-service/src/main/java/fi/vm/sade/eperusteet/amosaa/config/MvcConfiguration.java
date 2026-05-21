@@ -46,6 +46,13 @@ public class MvcConfiguration implements WebMvcConfigurer {
     }
 
     @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/api-docs/external")
+                .allowedOriginPatterns("*")
+                .allowedMethods("GET", "OPTIONS");
+    }
+
+    @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         converters.add(byteArrayConverter());
         converters.add(converter());
