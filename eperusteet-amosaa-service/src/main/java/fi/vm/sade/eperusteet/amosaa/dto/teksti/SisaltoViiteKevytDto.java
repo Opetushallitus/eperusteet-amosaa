@@ -55,6 +55,10 @@ public class SisaltoViiteKevytDto {
             return opintokokonaisuus.getKooditettuNimi();
         }
 
+        if (tosa != null && tosa.getKooditettuNimi() != null) {
+          return tosa.getKooditettuNimi();
+      }
+
         if (tekstiKappale != null) {
             return tekstiKappale.getNimi();
         }

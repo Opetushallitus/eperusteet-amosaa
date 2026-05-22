@@ -76,5 +76,4 @@ public class NavigationBuilderPublicDefault implements NavigationBuilderPublic {
     protected LokalisoituTekstiDto getSisaltoviiteNimi(SisaltoViiteExportDto sisaltoviite) {
         return sisaltoviite.getNimi();
     }
-
 }
