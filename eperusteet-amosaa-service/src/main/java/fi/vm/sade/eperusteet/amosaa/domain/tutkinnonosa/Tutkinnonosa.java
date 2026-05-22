@@ -1,6 +1,7 @@
 package fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa;
 
 import fi.vm.sade.eperusteet.amosaa.domain.AbstractAuditedEntity;
+import fi.vm.sade.eperusteet.amosaa.domain.Kooditettu;
 import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.VapaaTeksti;
@@ -33,7 +34,7 @@ import org.springframework.util.ObjectUtils;
 @Entity
 @Audited
 @Table(name = "tutkinnonosa")
-public class Tutkinnonosa extends AbstractAuditedEntity implements Serializable, ReferenceableEntity {
+public class Tutkinnonosa extends AbstractAuditedEntity implements Serializable, ReferenceableEntity, Kooditettu {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Getter
@@ -141,5 +142,10 @@ public class Tutkinnonosa extends AbstractAuditedEntity implements Serializable,
                 this.getVapaat().add(vapaa.copy());
             }
         }
+    }
+
+    @Override
+    public String getUri() {
+        return koodi;
     }
 }

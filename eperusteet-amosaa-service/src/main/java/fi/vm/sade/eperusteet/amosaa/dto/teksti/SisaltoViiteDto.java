@@ -72,4 +72,30 @@ public class SisaltoViiteDto {
     public static class Puu extends SisaltoViiteDto {
         private List<Puu> lapset;
     }
+
+    public LokalisoituTekstiDto getNimi() {
+      if (koulutuksenosa != null) {
+          return koulutuksenosa.getNimi();
+      }
+
+      if (tuvaLaajaAlainenOsaaminen != null) {
+          return tuvaLaajaAlainenOsaaminen.getNimi();
+      }
+
+      if (opintokokonaisuus != null && opintokokonaisuus.getKooditettuNimi() != null) {
+          return opintokokonaisuus.getKooditettuNimi();
+      }
+
+      if (tosa != null && tosa.getKooditettuNimi() != null) {
+          return tosa.getKooditettuNimi();
+      }
+
+      if (tekstiKappale != null) {
+          return tekstiKappale.getNimi();
+      }
+
+      return null;
+  }
+
+
 }
