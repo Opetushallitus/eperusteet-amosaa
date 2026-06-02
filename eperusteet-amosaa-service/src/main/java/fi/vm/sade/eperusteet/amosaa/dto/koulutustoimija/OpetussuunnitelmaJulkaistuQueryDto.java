@@ -58,4 +58,8 @@ public class OpetussuunnitelmaJulkaistuQueryDto extends QueryDto {
     public void setOppilaitostyyppikoodiuri(String oppilaitosTyyppiKoodiUri) {
       this.oppilaitosTyyppiKoodiUri = oppilaitosTyyppiKoodiUri;
     }
+
+    public int getSivukoko() {
+      return Math.min(sivukoko, 50);
+    }
 }
