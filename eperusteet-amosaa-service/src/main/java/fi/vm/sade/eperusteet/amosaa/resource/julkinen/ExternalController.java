@@ -51,21 +51,21 @@ public class ExternalController {
     private static final int DEFAULT_PATH_SKIP_VALUE = 5;
 
     @Parameters({
-            @Parameter(name = "perusteenDiaarinumero", in = ParameterIn.QUERY, array = @ArraySchema(schema = @Schema(type = "string"))),
-            @Parameter(name = "perusteId", in = ParameterIn.QUERY, array = @ArraySchema(schema = @Schema(type = "integer", format = "int64"))),
-            @Parameter(name = "organisaatio", in = ParameterIn.QUERY, array = @ArraySchema(schema = @Schema(type = "string"))),
-            @Parameter(name = "tyyppi", in = ParameterIn.QUERY, array =  @ArraySchema(schema = @Schema(type = "string"))),
-            @Parameter(name = "sivu", schema = @Schema(implementation = Long.class, defaultValue = "false"), in = ParameterIn.QUERY, description = "Sivunumero (0 perusarvo)"),
-            @Parameter(name = "sivukoko", schema = @Schema(implementation = Long.class), in = ParameterIn.QUERY),
-            @Parameter(name = "nimi", schema = @Schema(implementation = String.class), in = ParameterIn.QUERY),
-            @Parameter(name = "kieli", schema = @Schema(implementation = String.class), in = ParameterIn.QUERY),
-            @Parameter(name = "oppilaitosTyyppiKoodiUri", schema = @Schema(implementation = String.class), in = ParameterIn.QUERY),
-            @Parameter(name = "koulutustyyppi", in = ParameterIn.QUERY, array = @ArraySchema(schema = @Schema(type = "string"))),
-            @Parameter(name = "tuleva", schema = @Schema(implementation = Boolean.class), in = ParameterIn.QUERY),
-            @Parameter(name = "voimassaolo", schema = @Schema(implementation = Boolean.class), in = ParameterIn.QUERY),
-            @Parameter(name = "poistunut", schema = @Schema(implementation = Boolean.class), in = ParameterIn.QUERY),
-            @Parameter(name = "jotpatyyppi", in = ParameterIn.QUERY, array =  @ArraySchema(schema = @Schema(type = "string"))),
-            @Parameter(name = "paikallistasisaltoa", schema = @Schema(implementation = Boolean.class), in = ParameterIn.QUERY, description = "Suodattaa paikallisen tutkinnon osan (tosa.tyyppi = oma) perusteella. true = sisältää, false = ei sisällä, pois jätettynä suodatinta ei käytetä"),
+            @Parameter(name = "perusteenDiaarinumero", in = ParameterIn.QUERY, array = @ArraySchema(schema = @Schema(type = "string")), description = "Perusteen diaarinumero."),
+            @Parameter(name = "perusteId", in = ParameterIn.QUERY, array = @ArraySchema(schema = @Schema(type = "integer", format = "int64")), description = "Perusteen tunnisteet ePerusteet-palvelussa (perusteId)."),
+            @Parameter(name = "organisaatio", in = ParameterIn.QUERY, array = @ArraySchema(schema = @Schema(type = "string")), description = "Koulutustoimijan organisaatiotunnisteet (OID)."),
+            @Parameter(name = "tyyppi", in = ParameterIn.QUERY, array = @ArraySchema(schema = @Schema(type = "string")), description = "Opetussuunnitelman tyyppi (esim. ops, yhteinen, yleinen). Oletusarvo 'ops', jos parametria ei anneta."),
+            @Parameter(name = "sivu", schema = @Schema(implementation = Long.class, defaultValue = "0"), in = ParameterIn.QUERY, description = "Sivutus: haettavan sivun numero (0-indeksoitu). Oletusarvo 0."),
+            @Parameter(name = "sivukoko", schema = @Schema(implementation = Long.class, defaultValue = "10"), in = ParameterIn.QUERY, description = "Sivutus: yhdellä sivulla palautettavien tulosten määrä. Oletusarvo 10. Maksimi 50."),
+            @Parameter(name = "nimi", schema = @Schema(implementation = String.class), in = ParameterIn.QUERY, description = "Vapaa tekstihaku opetussuunnitelman ja koulutustoimijan nimeen (osittainen täsmäys, kieli-parametrin mukaisella kielellä)."),
+            @Parameter(name = "kieli", schema = @Schema(implementation = String.class, defaultValue = "fi"), in = ParameterIn.QUERY, description = "Kieli, jolla nimeä haetaan ja jolla tulokset järjestetään. Suodattaa myös julkaistuja kieliversioita. Oletusarvo fi."),
+            @Parameter(name = "oppilaitosTyyppiKoodiUri", schema = @Schema(implementation = String.class), in = ParameterIn.QUERY, description = "Oppilaitostyypin koodisto-URI (koulutustoimijan oppilaitosTyyppiKoodiUri). Tyhjä arvo ei rajaa tuloksia."),
+            @Parameter(name = "koulutustyyppi", in = ParameterIn.QUERY, array = @ArraySchema(schema = @Schema(type = "string")), description = "Koulutustyypit (esim. koulutustyyppi_1). Useita arvoja voi antaa toistamalla parametrin. Tyhjä lista ei rajaa tuloksia."),
+            @Parameter(name = "tuleva", schema = @Schema(implementation = Boolean.class, defaultValue = "true"), in = ParameterIn.QUERY, description = "Sisällytetäänkö tulevaisuudessa voimaan tulevat opetussuunnitelmat (voimaantulo > nykyhetki). Oletusarvo true."),
+            @Parameter(name = "voimassaolo", schema = @Schema(implementation = Boolean.class, defaultValue = "true"), in = ParameterIn.QUERY, description = "Sisällytetäänkö voimassa olevat opetussuunnitelmat. Oletusarvo true."),
+            @Parameter(name = "poistunut", schema = @Schema(implementation = Boolean.class, defaultValue = "true"), in = ParameterIn.QUERY, description = "Sisällytetäänkö voimassaolon päättyneet opetussuunnitelmat. Oletusarvo true."),
+            @Parameter(name = "jotpatyyppi", in = ParameterIn.QUERY, array = @ArraySchema(schema = @Schema(type = "string")), description = "JOTPA-tyypin suodatin (esim. VST, MUU). Arvo NULL sisältää myös opetussuunnitelmat ilman JOTPA-tyyppiä. Useita arvoja voi antaa toistamalla parametrin. Tyhjä lista ei rajaa tuloksia."),
+            @Parameter(name = "paikallistasisaltoa", schema = @Schema(implementation = Boolean.class), in = ParameterIn.QUERY, description = "Suodattaa paikallisen tutkinnon osan (tosa.tyyppi = oma) perusteella. true = sisältää, false = ei sisällä, pois jätettynä suodatinta ei käytetä."),
     })
     @RequestMapping(value = "/opetussuunnitelmat", method = RequestMethod.GET)
     @Description("Opetussuunnitelmien haku.")
@@ -83,15 +83,6 @@ public class ExternalController {
         return julkaisuService.getOpetussuunnitelmaJulkaistuSisalto(opsId);
     }
     
-    @RequestMapping(value = "/opetussuunnitelma/{koulutustoimijaId:\\d+}/{opsId:\\d+}", method = RequestMethod.GET)
-    @Operation(summary = "Opetussuunnitelman tietojen haku koulutustoimijan ja opetussuunnitelman id:llä")
-    public OpetussuunnitelmaKaikkiDto getPublicOpetussuunnitelmaKoulutustoimija(
-            @PathVariable final Long koulutustoimijaId,
-            @PathVariable final Long opsId
-    ) {
-        return julkaisuService.getOpetussuunnitelmaJulkaistuSisalto(opsId);
-    }
-
     @RequestMapping(value = "/opetussuunnitelma/{opsId:\\d+}/{custompath}", method = GET)
     @ResponseBody
     @Operation(
@@ -150,3 +141,4 @@ public class ExternalController {
                 }));
     }
 }
+
