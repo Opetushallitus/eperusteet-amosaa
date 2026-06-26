@@ -118,6 +118,7 @@
       "get" : {
         "operationId" : "getPublicOpetussuunnitelmat",
         "parameters" : [ {
+          "description" : "Perusteen diaarinumero.",
           "in" : "query",
           "name" : "perusteenDiaarinumero",
           "schema" : {
@@ -127,6 +128,7 @@
             }
           }
         }, {
+          "description" : "Perusteen tunnisteet ePerusteet-palvelussa (perusteId).",
           "in" : "query",
           "name" : "perusteId",
           "schema" : {
@@ -137,6 +139,7 @@
             }
           }
         }, {
+          "description" : "Koulutustoimijan organisaatiotunnisteet (OID).",
           "in" : "query",
           "name" : "organisaatio",
           "schema" : {
@@ -146,6 +149,7 @@
             }
           }
         }, {
+          "description" : "Opetussuunnitelman tyyppi (esim. ops, yhteinen, yleinen). Oletusarvo 'ops', jos parametria ei anneta.",
           "in" : "query",
           "name" : "tyyppi",
           "schema" : {
@@ -155,7 +159,7 @@
             }
           }
         }, {
-          "description" : "Sivunumero (0 perusarvo)",
+          "description" : "Sivutus: haettavan sivun numero (0-indeksoitu). Oletusarvo 0.",
           "in" : "query",
           "name" : "sivu",
           "schema" : {
@@ -163,6 +167,7 @@
             "format" : "int64"
           }
         }, {
+          "description" : "Sivutus: yhdellä sivulla palautettavien tulosten määrä. Oletusarvo 10.",
           "in" : "query",
           "name" : "sivukoko",
           "schema" : {
@@ -170,24 +175,28 @@
             "format" : "int64"
           }
         }, {
+          "description" : "Vapaa tekstihaku opetussuunnitelman ja koulutustoimijan nimeen (osittainen täsmäys, kieli-parametrin mukaisella kielellä).",
           "in" : "query",
           "name" : "nimi",
           "schema" : {
             "type" : "string"
           }
         }, {
+          "description" : "Kieli, jolla nimeä haetaan ja jolla tulokset järjestetään. Suodattaa myös julkaistuja kieliversioita. Oletusarvo fi.",
           "in" : "query",
           "name" : "kieli",
           "schema" : {
             "type" : "string"
           }
         }, {
+          "description" : "Oppilaitostyypin koodisto-URI (koulutustoimijan oppilaitosTyyppiKoodiUri). Tyhjä arvo ei rajaa tuloksia.",
           "in" : "query",
           "name" : "oppilaitosTyyppiKoodiUri",
           "schema" : {
             "type" : "string"
           }
         }, {
+          "description" : "Koulutustyypit (esim. koulutustyyppi_1). Useita arvoja voi antaa toistamalla parametrin. Tyhjä lista ei rajaa tuloksia.",
           "in" : "query",
           "name" : "koulutustyyppi",
           "schema" : {
@@ -197,24 +206,28 @@
             }
           }
         }, {
+          "description" : "Sisällytetäänkö tulevaisuudessa voimaan tulevat opetussuunnitelmat (voimaantulo > nykyhetki). Oletusarvo true.",
           "in" : "query",
           "name" : "tuleva",
           "schema" : {
             "type" : "boolean"
           }
         }, {
+          "description" : "Sisällytetäänkö voimassa olevat opetussuunnitelmat. Oletusarvo true.",
           "in" : "query",
           "name" : "voimassaolo",
           "schema" : {
             "type" : "boolean"
           }
         }, {
+          "description" : "Sisällytetäänkö voimassaolon päättyneet opetussuunnitelmat. Oletusarvo true.",
           "in" : "query",
           "name" : "poistunut",
           "schema" : {
             "type" : "boolean"
           }
         }, {
+          "description" : "JOTPA-tyypin suodatin (esim. VST, MUU). Arvo NULL sisältää myös opetussuunnitelmat ilman JOTPA-tyyppiä. Useita arvoja voi antaa toistamalla parametrin. Tyhjä lista ei rajaa tuloksia.",
           "in" : "query",
           "name" : "jotpatyyppi",
           "schema" : {
@@ -224,7 +237,7 @@
             }
           }
         }, {
-          "description" : "Suodattaa paikallisen tutkinnon osan (tosa.tyyppi = oma) perusteella. true = sisältää, false = ei sisällä, pois jätettynä suodatinta ei käytetä",
+          "description" : "Suodattaa paikallisen tutkinnon osan (tosa.tyyppi = oma) perusteella. true = sisältää, false = ei sisällä, pois jätettynä suodatinta ei käytetä.",
           "in" : "query",
           "name" : "paikallistasisaltoa",
           "schema" : {
