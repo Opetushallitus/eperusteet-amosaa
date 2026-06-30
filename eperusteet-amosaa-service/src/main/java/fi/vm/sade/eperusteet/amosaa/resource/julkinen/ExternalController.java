@@ -1,5 +1,6 @@
 package fi.vm.sade.eperusteet.amosaa.resource.julkinen;
 
+import fi.vm.sade.eperusteet.amosaa.dto.SivutettuTulosDto;
 import fi.vm.sade.eperusteet.amosaa.dto.external.SisaltoviiteOpintokokonaisuusExternalDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija.OpetussuunnitelmaJulkaistuQueryDto;
@@ -19,7 +20,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -69,10 +69,10 @@ public class ExternalController {
     })
     @RequestMapping(value = "/opetussuunnitelmat", method = RequestMethod.GET)
     @Description("Opetussuunnitelmien haku.")
-    public Page<OpetussuunnitelmaDto> getPublicOpetussuunnitelmat(
+    public SivutettuTulosDto<OpetussuunnitelmaDto> getPublicOpetussuunnitelmat(
             @Parameter(hidden = true) final OpetussuunnitelmaJulkaistuQueryDto pquery
     ) {
-        return julkaisuService.findOpetussuunnitelmatJulkaisut(pquery);
+        return SivutettuTulosDto.of(julkaisuService.findOpetussuunnitelmatJulkaisut(pquery));
     }
 
     @Operation(summary = "Opetussuunnitelman tietojen haku")
