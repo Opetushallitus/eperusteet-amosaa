@@ -285,7 +285,7 @@ public class EperusteetClientImpl implements EperusteetClient {
         }
 
         String url = UriComponentsBuilder
-                .fromHttpUrl(eperusteetServiceUrl + "/api/perusteet/julkaisut")
+                .fromUriString(eperusteetServiceUrl + "/api/perusteet/julkaisut")
                 .queryParam("koodi", koulutuskoodit)
                 .queryParam("sivukoko", 100)
                 .build().toUriString();

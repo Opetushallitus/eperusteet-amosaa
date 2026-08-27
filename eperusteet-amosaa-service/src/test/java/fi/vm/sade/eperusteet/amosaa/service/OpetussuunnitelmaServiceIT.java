@@ -703,7 +703,7 @@ public class OpetussuunnitelmaServiceIT extends AbstractIntegrationTest {
         KoulutustoimijaDto kt2 = koulutustoimijaService.getKoulutustoimija(getKoulutustoimijaId());
 
         assertThatThrownBy(() -> opetussuunnitelmaService.validoi(ops.getKoulutustoimija().getId(), ops.getId()))
-                .hasMessage("Access is denied");
+                .hasMessage("Access Denied");
 
         useProfileKP1();
         kt1.setSalliystavat(true);

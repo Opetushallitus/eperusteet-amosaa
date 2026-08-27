@@ -22,14 +22,15 @@ public class KoodistoKoodiDto {
     private Date voimassaLoppuPvm;
     private KoodistoDto koodisto;
     private KoodistoMetadataDto[] metadata;
-    private LokalisoituTekstiDto nimi;
 
-    public void setMetadata(KoodistoMetadataDto[] metadata) {
-        this.metadata = metadata;
-
-        if (metadata != null) {
-            Map<String, String> lokalisoitu = Arrays.stream(metadata).collect(Collectors.toMap(KoodistoMetadataDto::getKieli, KoodistoMetadataDto::getNimi));
-            this.nimi = new LokalisoituTekstiDto(lokalisoitu);
+    public LokalisoituTekstiDto getNimi() {
+        if (metadata == null) {
+            return null;
         }
+
+        Map<String, String> lokalisoitu = Arrays.stream(metadata)
+                .filter(meta -> meta.getKieli() != null)
+                .collect(Collectors.toMap(KoodistoMetadataDto::getKieli, KoodistoMetadataDto::getNimi, (a, b) -> a));
+        return new LokalisoituTekstiDto(lokalisoitu);
     }
 }

@@ -53,7 +53,7 @@ public class KayttooikeusServiceImpl implements KayttooikeusService{
 
         OphHttpClient client = restClientFactory.get(kayttooikeusServiceUrl, true);
         
-        UriComponents uri = UriComponentsBuilder.fromHttpUrl(kayttooikeusServiceUrl)
+        UriComponents uri = UriComponentsBuilder.fromUriString(kayttooikeusServiceUrl)
                 .path(VIRKAILIJA_HAKU_PATH)
                 .buildAndExpand(organisaatioOid);
 

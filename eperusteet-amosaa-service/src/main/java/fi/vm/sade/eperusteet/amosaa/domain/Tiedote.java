@@ -11,8 +11,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -38,10 +36,8 @@ public class Tiedote implements Serializable {
 
     private Boolean tarkea;
 
-    @Temporal(TemporalType.TIMESTAMP)
     private Date luotu;
 
-    @Temporal(TemporalType.TIMESTAMP)
     private Date muokattu;
 
     private String luoja;
