@@ -4,10 +4,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.access.vote.AffirmativeBased;
-import org.springframework.security.access.vote.RoleVoter;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -17,15 +15,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.HeaderWriterLogoutHandler;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 
-import java.util.List;
-
 @Profile({"local"})
 @Configuration
-@EnableGlobalMethodSecurity(securedEnabled = true)
+@EnableMethodSecurity(securedEnabled = true)
 @EnableWebSecurity
 public class WebSecurityConfigurationDev {
 
@@ -126,22 +121,5 @@ public class WebSecurityConfigurationDev {
                         "APP_EPERUSTEET_AMOSAA_ADMIN_1.2.246.562.10.594252633210")
                 .build();
         return new InMemoryUserDetailsManager(testMaster, testOther, testOther2);
-    }
-
-    @Bean
-    public CookieCsrfTokenRepository cookieCsrfTokenRepository() {
-        CookieCsrfTokenRepository cookieCsrfTokenRepository = new CookieCsrfTokenRepository();
-        cookieCsrfTokenRepository.setCookieHttpOnly(false);
-        cookieCsrfTokenRepository.setCookieName("CSRF");
-        cookieCsrfTokenRepository.setHeaderName("CSRF");
-        cookieCsrfTokenRepository.setCookiePath("/");
-        return cookieCsrfTokenRepository;
-    }
-
-    @Bean
-    public AffirmativeBased affirmativeBased() {
-        AffirmativeBased affirmativeBased = new AffirmativeBased(List.of(new RoleVoter()));
-        affirmativeBased.setAllowIfAllAbstainDecisions(true);
-        return affirmativeBased;
     }
 }

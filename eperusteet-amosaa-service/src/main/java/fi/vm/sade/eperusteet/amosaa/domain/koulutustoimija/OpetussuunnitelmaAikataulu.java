@@ -15,8 +15,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -51,7 +49,6 @@ public class OpetussuunnitelmaAikataulu extends AbstractAuditedEntity {
     private AikatauluTapahtuma tapahtuma;
 
     @NotNull
-    @Temporal(TemporalType.TIMESTAMP)
     private Date tapahtumapaiva;
 
 }

@@ -76,7 +76,11 @@
     </beans>
 
     <beans>
-        <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+            <constructor-arg ref="dataSource"/>
+        </bean>
+
+        <bean id="entityManagerFactory" lazy-init="false" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
             <property name="persistenceUnitName" value="eperusteet"/>
             <property name="dataSource" ref="dataSource"/>
             <property name="packagesToScan" value="fi.vm.sade.eperusteet.amosaa.domain"/>
@@ -92,15 +96,14 @@
                     <entry key="hibernate.id.db_structure_naming_strategy" value="single"/>
                 </map>
             </property>
-            <property name="mappingResources">
-                <list>
-                    <value>orm-h2.xml</value>
-                </list>
-            </property>
         </bean>
 
 
         <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+            <property name="entityManagerFactory" ref="entityManagerFactory"/>
+        </bean>
+
+        <bean id="entityManager" primary="true" class="org.springframework.orm.jpa.support.SharedEntityManagerBean">
             <property name="entityManagerFactory" ref="entityManagerFactory"/>
         </bean>
 
@@ -113,10 +116,9 @@
             <property name="permissionEvaluator" ref="permissionEvaluator"/>
         </bean>
 
-        <security:global-method-security secured-annotations="enabled" pre-post-annotations="enabled" >
+        <security:method-security secured-enabled="true">
             <security:expression-handler ref="expressionHandler"/>
-            <security:protect-pointcut expression="execution(* fi.vm.sade.eperusteet.amosaa.service.*.*(..))" access="ROLE_DENY_ALL"/>
-        </security:global-method-security>
+        </security:method-security>
 
         <security:authentication-manager alias="authenticationManager">
             <security:authentication-provider>
@@ -148,15 +150,6 @@
                 </security:user-service>
             </security:authentication-provider>
         </security:authentication-manager>
-
-        <bean id="accessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
-            <property name="allowIfAllAbstainDecisions" value="true"/>
-            <constructor-arg>
-                <list>
-                    <bean class="org.springframework.security.access.vote.RoleVoter"/>
-                </list>
-            </constructor-arg>
-        </bean>
 
     </beans>
 </beans>

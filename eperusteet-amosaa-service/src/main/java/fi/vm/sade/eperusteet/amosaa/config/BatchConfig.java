@@ -2,16 +2,16 @@ package fi.vm.sade.eperusteet.amosaa.config;
 
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Julkaisu;
 import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.Step;
+import org.springframework.batch.core.job.Job;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.launch.support.TaskExecutorJobLauncher;
 import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.step.Step;
 import org.springframework.batch.core.step.builder.StepBuilder;
-import org.springframework.batch.item.ItemProcessor;
-import org.springframework.batch.item.ItemReader;
-import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.infrastructure.item.ItemProcessor;
+import org.springframework.batch.infrastructure.item.ItemReader;
+import org.springframework.batch.infrastructure.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,7 +23,7 @@ import org.springframework.transaction.interceptor.DefaultTransactionAttribute;
 
 import javax.sql.DataSource;
 
-@Profile("!test")
+@Profile("!test & !docker")
 @Configuration
 public class BatchConfig {
 

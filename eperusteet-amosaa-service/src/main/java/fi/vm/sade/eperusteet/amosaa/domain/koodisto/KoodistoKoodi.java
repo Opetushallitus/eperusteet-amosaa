@@ -11,13 +11,15 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.annotations.Immutable;
+import jakarta.validation.constraints.NotEmpty;
 
 import java.io.Serializable;
 
 @Entity
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
+@Immutable
 @EqualsAndHashCode(of = "koodiUri")
 @Getter
 @Table(name = "koodistokoodi", uniqueConstraints = {

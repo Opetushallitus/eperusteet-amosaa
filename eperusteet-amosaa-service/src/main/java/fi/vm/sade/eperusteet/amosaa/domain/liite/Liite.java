@@ -17,8 +17,6 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -46,7 +44,6 @@ public class Liite implements Serializable {
     @Size(max = 1024)
     private String nimi;
 
-    @Temporal(TemporalType.TIMESTAMP)
     private Date luotu;
 
     @Getter

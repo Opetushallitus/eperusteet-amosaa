@@ -98,7 +98,7 @@ public class OrganisaatioServiceImpl implements OrganisaatioService {
         public JsonNode getOrganisaationHistoriaLiitokset(String organisaatioOid) {
             OphHttpClient client = restClientFactory.get(serviceUrl, false);
 
-            UriComponents uri = UriComponentsBuilder.fromHttpUrl(serviceUrl)
+            UriComponents uri = UriComponentsBuilder.fromUriString(serviceUrl)
                     .path(ORGANISAATIOT)
                     .path("v4/{organisaatioOid}/historia")
                     .buildAndExpand(organisaatioOid);

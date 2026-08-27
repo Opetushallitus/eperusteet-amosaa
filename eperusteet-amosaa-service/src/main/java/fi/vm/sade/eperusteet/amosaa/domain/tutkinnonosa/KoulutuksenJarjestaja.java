@@ -5,11 +5,13 @@ import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import fi.vm.sade.eperusteet.amosaa.domain.validation.ValidHtml;
 import java.io.Serializable;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -44,7 +46,11 @@ public class KoulutuksenJarjestaja extends AbstractAuditedEntity implements Seri
     private LokalisoituTeksti kuvaus;
 
     @ManyToOne
+    @JoinColumn(name = "paikallinenTarkennus_id", insertable = false, updatable = false)
     private KoulutuksenosanPaikallinenTarkennus paikallinenTarkennus;
+
+    @Column(name = "koulutuksenJarjestajat_ORDER", insertable = false, updatable = false)
+    private Integer jarjestys;
 
     public static KoulutuksenJarjestaja copy(KoulutuksenJarjestaja original) {
         if (original != null) {

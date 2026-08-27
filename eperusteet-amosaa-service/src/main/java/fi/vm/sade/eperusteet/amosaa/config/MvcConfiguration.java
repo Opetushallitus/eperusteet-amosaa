@@ -1,31 +1,40 @@
 package fi.vm.sade.eperusteet.amosaa.config;
 
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.ByteArrayHttpMessageConverter;
+import org.springframework.http.converter.HttpMessageConverters;
+import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.web.filter.UrlHandlerFilter;
+import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.AbstractRakenneOsaDto;
 import fi.vm.sade.eperusteet.amosaa.resource.config.AbstractRakenneOsaDeserializer;
 import fi.vm.sade.eperusteet.amosaa.resource.config.MappingModule;
 import fi.vm.sade.eperusteet.amosaa.resource.config.ReferenceNamingStrategy;
 import fi.vm.sade.eperusteet.amosaa.resource.util.CacheHeaderInterceptor;
 import fi.vm.sade.eperusteet.amosaa.resource.util.LoggingInterceptor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.ByteArrayHttpMessageConverter;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.web.servlet.config.annotation.*;
-
 import jakarta.persistence.EntityManagerFactory;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.List;
 
 @Configuration
 public class MvcConfiguration implements WebMvcConfigurer {
@@ -34,15 +43,9 @@ public class MvcConfiguration implements WebMvcConfigurer {
     EntityManagerFactory emf;
 
     @Override
-    public void configurePathMatch(PathMatchConfigurer matcher) {
-        matcher.setUseRegisteredSuffixPatternMatch(true);
-        matcher.setUseTrailingSlashMatch(true);
-    }
-
-    @Override
     public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addViewController("/ui").setViewName("forward:/ui/index.html");
         registry.addViewController("/ui/").setViewName("forward:/ui/index.html");
-        registry.addRedirectViewController("/ui", "/ui/");
     }
 
     @Override
@@ -53,12 +56,12 @@ public class MvcConfiguration implements WebMvcConfigurer {
     }
 
     @Override
-    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        converters.add(byteArrayConverter());
-        converters.add(converter());
+    public void configureMessageConverters(HttpMessageConverters.ServerBuilder builder) {
+        builder.addCustomConverter(byteArrayConverter());
+        builder.addCustomConverter(converter());
         StringHttpMessageConverter stringHttpMessageConverter = new StringHttpMessageConverter(StandardCharsets.UTF_8);
         stringHttpMessageConverter.setWriteAcceptCharset(false);
-        converters.add(stringHttpMessageConverter);
+        builder.addCustomConverter(stringHttpMessageConverter);
     }
 
     @Override
@@ -85,22 +88,34 @@ public class MvcConfiguration implements WebMvcConfigurer {
     }
 
     @Bean
+    @Order(Ordered.HIGHEST_PRECEDENCE)
     ByteArrayHttpMessageConverter byteArrayConverter() {
         ByteArrayHttpMessageConverter converter = new ByteArrayHttpMessageConverter();
-        converter.setSupportedMediaTypes(MediaType.parseMediaTypes(Arrays.asList("application/pdf", "image/jpeg", "image/png")));
+        converter.setSupportedMediaTypes(List.of(
+                MediaType.APPLICATION_PDF,
+                MediaType.IMAGE_JPEG,
+                MediaType.IMAGE_PNG,
+                MediaType.APPLICATION_JSON));
         return converter;
     }
 
     @Override
     public void configureAsyncSupport(AsyncSupportConfigurer configurer) {
-        // numbers chosen by magic-random wizardry. please fix as needed.
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(2);
         executor.setMaxPoolSize(4);
-        executor.setQueueCapacity(20); // overkills ftw
+        executor.setQueueCapacity(20);
         executor.setThreadFactory(new CustomizableThreadFactory("AsyncThreadFactory-"));
         executor.afterPropertiesSet();
 
         configurer.setTaskExecutor(executor).setDefaultTimeout(120000);
+    }
+
+    @Bean
+    public FilterRegistrationBean<UrlHandlerFilter> trailingSlashUrlHandlerFilter() {
+        FilterRegistrationBean<UrlHandlerFilter> registration = new FilterRegistrationBean<>(
+                UrlHandlerFilter.trailingSlashHandler("/**").wrapRequest().build());
+        registration.setOrder(Ordered.HIGHEST_PRECEDENCE + 1);
+        return registration;
     }
 }

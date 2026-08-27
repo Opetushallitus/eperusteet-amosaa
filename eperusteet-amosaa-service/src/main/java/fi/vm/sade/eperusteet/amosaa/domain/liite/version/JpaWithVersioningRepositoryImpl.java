@@ -1,20 +1,20 @@
 package fi.vm.sade.eperusteet.amosaa.domain.liite.version;
 
-import fi.vm.sade.eperusteet.amosaa.domain.revision.Revision;
-import fi.vm.sade.eperusteet.amosaa.domain.revision.RevisionInfo;
-import fi.vm.sade.eperusteet.amosaa.domain.revision.RevisionInfo_;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.LockModeType;
 
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.query.AuditEntity;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
+
+import fi.vm.sade.eperusteet.amosaa.domain.revision.Revision;
+import fi.vm.sade.eperusteet.amosaa.domain.revision.RevisionInfo_;
+import fi.vm.sade.eperusteet.utils.revision.RevisioKommenttiHolder;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
 
 class JpaWithVersioningRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRepository<T, ID> implements
         JpaWithVersioningRepository<T, ID> {
@@ -96,8 +96,7 @@ class JpaWithVersioningRepositoryImpl<T, ID extends Serializable> extends Simple
 
     @Override
     public void setRevisioKommentti(String kommentti) {
-        RevisionInfo currentRevision = AuditReaderFactory.get(entityManager).getCurrentRevision(RevisionInfo.class, false);
-        currentRevision.addKommentti(kommentti);
+        RevisioKommenttiHolder.set(kommentti);
     }
 
 }

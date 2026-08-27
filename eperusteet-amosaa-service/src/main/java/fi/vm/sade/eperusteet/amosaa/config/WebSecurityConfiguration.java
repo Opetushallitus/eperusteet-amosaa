@@ -1,7 +1,7 @@
 package fi.vm.sade.eperusteet.amosaa.config;
 
 import fi.vm.sade.eperusteet.amosaa.repository.OphSessionMappingStorage;
-import fi.vm.sade.java_utils.security.OpintopolkuCasAuthenticationFilter;
+import fi.vm.sade.eperusteet.utils.security.OpintopolkuCasAuthenticationFilter;
 import fi.vm.sade.javautils.http.auth.CasAuthenticator;
 import fi.vm.sade.javautils.kayttooikeusclient.OphUserDetailsServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +32,7 @@ import org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 
 @Slf4j
-@Profile({"!local & !test"})
+@Profile({"!local & !test & !docker"})
 @Configuration
 @EnableMethodSecurity(securedEnabled = true)
 @EnableWebSecurity

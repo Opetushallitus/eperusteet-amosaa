@@ -38,7 +38,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-@Profile("!test")
+@Profile("!test & !docker")
 @Configuration
 @ComponentScan({"fi.vm.sade.eperusteet.amosaa.service", "fi.vm.sade.eperusteet.utils"})
 @EnableAsync

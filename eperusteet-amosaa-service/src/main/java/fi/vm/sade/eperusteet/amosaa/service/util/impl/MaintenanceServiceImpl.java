@@ -31,9 +31,8 @@ import java.util.stream.Collectors;
 import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobParameter;
-import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.job.Job;
+import org.springframework.batch.core.job.parameters.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
@@ -130,10 +129,12 @@ public class MaintenanceServiceImpl implements MaintenanceService {
     public void kaynnistaJob(String job, Map<String, String> parametrit) throws Exception {
         SecurityContextHolder.getContext().setAuthentication(SecurityUtil.useAdminAuth());
         parametrit.put("kaynnistysaika", String.valueOf(new Date().getTime()));
+        JobParametersBuilder jobParametersBuilder = new JobParametersBuilder();
+        parametrit.forEach(jobParametersBuilder::addString);
         jobLauncher.run(jobs.stream().filter(j -> j.getName().equals(job))
                         .findFirst()
                         .orElseThrow(() -> new BusinessRuleViolationException("Jobia ei löydy")),
-                new JobParameters(parametrit.keySet().stream().collect(Collectors.toMap(k -> k, k -> new JobParameter(parametrit.get(k), String.class)))));
+                jobParametersBuilder.toJobParameters());
     }
 
     private void teeJulkaisu(Long opsId) {

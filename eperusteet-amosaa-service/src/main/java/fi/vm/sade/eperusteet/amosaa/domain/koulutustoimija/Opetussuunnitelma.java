@@ -37,8 +37,6 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotNull;
 
 import fi.vm.sade.eperusteet.amosaa.service.util.Copyable;
@@ -117,12 +115,10 @@ public class Opetussuunnitelma extends AbstractAuditedEntity implements Serializ
     @Setter
     private boolean esikatseltavissa = false;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Getter
     @Setter
     private Date voimaantulo;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Getter
     @Setter
     @Column(name = "voimassaolo_loppuu")
@@ -136,7 +132,6 @@ public class Opetussuunnitelma extends AbstractAuditedEntity implements Serializ
     @Setter
     private String paatosnumero;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Getter
     @Setter
     private Date paatospaivamaara;
@@ -195,7 +190,6 @@ public class Opetussuunnitelma extends AbstractAuditedEntity implements Serializ
     @Getter
     private List<SisaltoViite> sisaltoviitteet = new ArrayList<>();
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Getter
     @Setter
     @Column(name="peruste_paivitetty_pvm")

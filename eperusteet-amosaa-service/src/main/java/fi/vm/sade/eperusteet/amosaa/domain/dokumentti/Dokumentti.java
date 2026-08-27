@@ -28,10 +28,8 @@ public class Dokumentti {
     @NotNull
     private Kieli kieli;
 
-    @Temporal(TemporalType.TIMESTAMP)
     private Date aloitusaika;
 
-    @Temporal(TemporalType.TIMESTAMP)
     private Date valmistumisaika;
 
     @Enumerated(EnumType.STRING)

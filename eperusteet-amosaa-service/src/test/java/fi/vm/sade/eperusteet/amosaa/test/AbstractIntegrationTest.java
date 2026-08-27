@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
@@ -202,7 +201,7 @@ public abstract class AbstractIntegrationTest {
 
     private void updateProfile(String username, PermissionEvaluator.RolePrefix rolePrefix) {
         SecurityContext ctx = SecurityContextHolder.createEmptyContext();
-        ctx.setAuthentication(new UsernamePasswordAuthenticationToken(username, "test"));
+        ctx.setAuthentication(TestUser.authenticated(username));
         SecurityContextHolder.setContext(ctx);
         kayttajanTietoService.updateKoulutustoimijat(rolePrefix);
         String userOrgOid = kayttajanTietoService.getUserOrganizations(rolePrefix).stream().findFirst().get();

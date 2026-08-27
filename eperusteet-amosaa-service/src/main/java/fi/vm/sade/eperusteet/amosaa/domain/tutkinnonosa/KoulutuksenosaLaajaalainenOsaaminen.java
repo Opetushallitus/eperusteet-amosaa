@@ -6,11 +6,13 @@ import fi.vm.sade.eperusteet.amosaa.domain.ReferenceableEntity;
 import fi.vm.sade.eperusteet.amosaa.domain.teksti.LokalisoituTeksti;
 import java.io.Serializable;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -36,7 +38,11 @@ public class KoulutuksenosaLaajaalainenOsaaminen extends AbstractAuditedEntity i
     private LokalisoituTeksti laajaAlaisenOsaamisenKuvaus;
 
     @ManyToOne
+    @JoinColumn(name = "paikallinenTarkennus_id", insertable = false, updatable = false)
     private KoulutuksenosanPaikallinenTarkennus paikallinenTarkennus;
+
+    @Column(name = "laajaalaisetosaamiset_ORDER", insertable = false, updatable = false)
+    private Integer jarjestys;
 
     public static KoulutuksenosaLaajaalainenOsaaminen copy(KoulutuksenosaLaajaalainenOsaaminen original) {
         if (original != null) {
