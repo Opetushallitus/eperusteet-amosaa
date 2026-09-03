@@ -103,10 +103,9 @@
         <property name="permissionEvaluator" ref="testPermissionEvaluator"/>
     </bean>
 
-    <security:global-method-security secured-annotations="enabled" pre-post-annotations="enabled" >
+    <security:method-security secured-enabled="true">
         <security:expression-handler ref="expressionHandler"/>
-        <security:protect-pointcut expression="execution(* fi.vm.sade.eperusteet.amosaa.service.*.*(..))" access="ROLE_DENY_ALL"/>
-    </security:global-method-security>
+    </security:method-security>
 
     <security:authentication-manager alias="authenticationManager">
         <security:authentication-provider>
@@ -123,13 +122,4 @@
             </security:user-service>
         </security:authentication-provider>
     </security:authentication-manager>
-
-    <bean id="accessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
-        <property name="allowIfAllAbstainDecisions" value="true"/>
-        <constructor-arg>
-            <list>
-                <bean class="org.springframework.security.access.vote.RoleVoter"/>
-            </list>
-        </constructor-arg>
-    </bean>
 </beans>

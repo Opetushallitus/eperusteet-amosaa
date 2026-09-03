@@ -36,7 +36,6 @@ public class CachedPeruste implements Serializable, ReferenceableEntity {
     @Column(name = "peruste_id")
     private Long perusteId;
 
-    @Temporal(TemporalType.TIMESTAMP)
     private Date luotu;
 
     @Enumerated(EnumType.STRING)
