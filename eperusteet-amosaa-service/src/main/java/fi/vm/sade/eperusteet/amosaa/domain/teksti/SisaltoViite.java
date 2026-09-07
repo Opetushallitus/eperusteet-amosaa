@@ -22,6 +22,7 @@ import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationExcep
 import fi.vm.sade.eperusteet.amosaa.service.util.Copyable;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.envers.AuditMappedBy;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
@@ -80,9 +81,14 @@ public class SisaltoViite extends AbstractAuditedEntity implements Referenceable
     private SisaltoTyyppi tyyppi = SisaltoTyyppi.TEKSTIKAPPALE;
 
     @ManyToOne
+    @JoinColumn(name = "vanhempi_id", insertable = false, updatable = false)
     @Getter
     @Setter
     private SisaltoViite vanhempi;
+
+    @Column(name = "lapset_order", insertable = false, updatable = false)
+    @Getter
+    private Integer lapsetOrder;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @Getter
@@ -190,8 +196,10 @@ public class SisaltoViite extends AbstractAuditedEntity implements Referenceable
     @Setter
     private SisaltoViite linkkiSisaltoViite;
 
-    @OneToMany(mappedBy = "vanhempi", fetch = FetchType.LAZY)
-    @OrderColumn
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "vanhempi_id")
+    @OrderColumn(name = "lapset_order")
+    @AuditMappedBy(mappedBy = "vanhempi", positionMappedBy = "lapsetOrder")
     private List<SisaltoViite> lapset = new ArrayList<>();
 
     @Getter

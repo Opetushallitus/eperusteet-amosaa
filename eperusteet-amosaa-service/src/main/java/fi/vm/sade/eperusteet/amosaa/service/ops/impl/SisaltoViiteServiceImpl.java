@@ -235,7 +235,6 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
         uusiViite.setOwner(parentViite.getOwner());
         viiteDto.setTekstiKappale(tekstiKappaleService.add(opsId, uusiViite, viiteDto.getTekstiKappale()));
         uusiViite.setVanhempi(parentViite);
-        parentViite.getLapset().add(uusiViite);
 
         switch (uusiViite.getTyyppi()) {
             case TOSARYHMA:
@@ -296,6 +295,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
         }
 
         uusiViite = repository.save(uusiViite);
+        parentViite.getLapset().add(uusiViite);
         opetussuunnitelmaMuokkaustietoService.addOpsMuokkausTieto(opsId, uusiViite, MuokkausTapahtuma.LUONTI);
         return mapper.map(uusiViite, SisaltoViiteDto.Matala.class);
     }
@@ -333,10 +333,10 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
         }
 
         uusiViite.setVanhempi(parentViite);
-        parentViite.getLapset().add(0, uusiViite);
         uusiViite.setTekstiKappale(null);
         mapTutkinnonParts(uusiViite.getTosa());
         uusiViite = repository.save(uusiViite);
+        parentViite.getLapset().add(0, uusiViite);
         pelastettu.getTekstiKappale().setId(null);
         tekstiKappaleService.add(opsId, uusiViite, pelastettu.getTekstiKappale());
         poistetutRepository.delete(poistettu);

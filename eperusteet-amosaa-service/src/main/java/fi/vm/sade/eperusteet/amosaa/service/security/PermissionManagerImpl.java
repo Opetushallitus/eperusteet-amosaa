@@ -14,6 +14,7 @@ import fi.vm.sade.eperusteet.amosaa.service.util.SecurityUtil;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -29,6 +30,7 @@ public class PermissionManagerImpl extends AbstractPermissionManager {
 
     private static final String MSG_OPS_EI_OLEMASSA = "Pyydettyä opetussuunnitelmaa ei ole olemassa";
 
+    @Transactional(readOnly = true)
     public boolean hasPermission(Authentication authentication, Serializable targetObject, TargetType target,
                                  Permission perm) {
 

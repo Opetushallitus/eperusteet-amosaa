@@ -25,6 +25,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.envers.AuditMappedBy;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 import org.springframework.util.ObjectUtils;
@@ -54,8 +55,10 @@ public class KoulutuksenosanPaikallinenTarkennus extends AbstractAuditedEntity i
     @BatchSize(size = 25)
     private List<LokalisoituTeksti> tavoitteet = new ArrayList<>();
 
-    @OneToMany(mappedBy = "paikallinenTarkennus", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "paikallinenTarkennus_id")
     @OrderColumn
+    @AuditMappedBy(mappedBy = "paikallinenTarkennus", positionMappedBy = "jarjestys")
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     @BatchSize(size = 25)
     private List<KoulutuksenosaLaajaalainenOsaaminen> laajaalaisetosaamiset = new ArrayList<>();
@@ -68,8 +71,10 @@ public class KoulutuksenosanPaikallinenTarkennus extends AbstractAuditedEntity i
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     private LokalisoituTeksti arvioinninKuvaus;
 
-    @OneToMany(mappedBy = "paikallinenTarkennus", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "paikallinenTarkennus_id")
     @OrderColumn
+    @AuditMappedBy(mappedBy = "paikallinenTarkennus", positionMappedBy = "jarjestys")
     @BatchSize(size = 25)
     private List<KoulutuksenJarjestaja> koulutuksenJarjestajat = new ArrayList<>();
 

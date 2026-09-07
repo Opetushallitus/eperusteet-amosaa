@@ -29,6 +29,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import jakarta.persistence.EntityManager;
 import jakarta.validation.ConstraintViolationException;
 import java.io.ByteArrayInputStream;
 import java.util.*;
@@ -55,6 +56,9 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
 
     @Autowired
     private SisaltoviiteRepository sisaltoviiteRepository;
+
+    @Autowired
+    private EntityManager entityManager;
 
     @Test
     @Rollback
@@ -228,6 +232,43 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
         rakenne = sisaltoViiteService.getRakenne(getKoulutustoimijaId(), ops.getId());
         assertThat(rakenne.getLapset().get(0)).hasFieldOrPropertyWithValue("id", b.getId());
         assertThat(rakenne.getLapset().get(lastIdx)).hasFieldOrPropertyWithValue("id", a.getId());
+    }
+
+    @Test
+    @Rollback
+    public void testSisaltoViiteLapsetJarjestysJaVanhempiSailyvatKannassa() {
+        useProfileKP2();
+        OpetussuunnitelmaBaseDto ops = createOpetussuunnitelma();
+        Long ktId = getKoulutustoimijaId();
+        Long opsId = ops.getId();
+        SisaltoViiteDto.Matala root = sisaltoViiteService.getSisaltoRoot(ktId, opsId);
+
+        SisaltoViiteDto.Matala eka = sisaltoViiteService.addSisaltoViite(ktId, opsId, root.getId(), createSisalto());
+        SisaltoViiteDto.Matala toka = sisaltoViiteService.addSisaltoViite(ktId, opsId, root.getId(), createSisalto());
+
+        entityManager.flush();
+        entityManager.clear();
+
+        SisaltoViite parent = sisaltoviiteRepository.findOneByOwnerIdAndId(opsId, root.getId());
+        Long parentId = parent.getId();
+        List<Long> jarjestys = lapsiIdt(parent);
+        assertThat(jarjestys).containsSubsequence(eka.getId(), toka.getId());
+        assertThat(parent.getLapset()).filteredOn(Objects::nonNull).allSatisfy(lapsi -> {
+            assertThat(lapsi.getVanhempi().getId()).isEqualTo(parentId);
+            assertThat(lapsi.getLapsetOrder()).isNotNull();
+        });
+
+        SisaltoViiteRakenneDto rakenne = sisaltoViiteService.getRakenne(ktId, opsId);
+        Collections.swap(rakenne.getLapset(), indexOfLapsi(rakenne.getLapset(), eka.getId()), indexOfLapsi(rakenne.getLapset(), toka.getId()));
+        sisaltoViiteService.reorderSubTree(ktId, opsId, root.getId(), rakenne);
+
+        entityManager.flush();
+        entityManager.clear();
+
+        SisaltoViite jarjestetty = sisaltoviiteRepository.findOneByOwnerIdAndId(opsId, root.getId());
+        assertThat(lapsiIdt(jarjestetty)).containsSubsequence(toka.getId(), eka.getId());
+        assertThat(sisaltoviiteRepository.findOneByOwnerIdAndId(opsId, toka.getId()).getLapsetOrder())
+                .isLessThan(sisaltoviiteRepository.findOneByOwnerIdAndId(opsId, eka.getId()).getLapsetOrder());
     }
 
     @Test
@@ -723,6 +764,22 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
                     sisaltoViiteDto.setTyyppi(SisaltoTyyppi.OPINTOKOKONAISUUS);
                 }))).hasMessage("ei-sallittu-sisaltoviite-tyyppi");
 
+    }
+
+    private List<Long> lapsiIdt(SisaltoViite parent) {
+        return parent.getLapset().stream()
+                .filter(Objects::nonNull)
+                .map(SisaltoViite::getId)
+                .collect(Collectors.toList());
+    }
+
+    private int indexOfLapsi(List<SisaltoViiteRakenneDto> lapset, Long id) {
+        for (int i = 0; i < lapset.size(); i++) {
+            if (id.equals(lapset.get(i).getId())) {
+                return i;
+            }
+        }
+        throw new AssertionError("sisaltoviitetta ei loytynyt: " + id);
     }
 
     private void addModuleToRoot(UUID tunniste, RakenneModuuliDto moduuliDtoRoot) {

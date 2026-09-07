@@ -196,8 +196,7 @@ public class JulkaisuServiceImpl implements JulkaisuService {
 
         JulkaistuOpetussuunnitelmaTila julkaistuOpetussuunnitelmaTila = getOrCreateTila(opsId);
         julkaistuOpetussuunnitelmaTila.setJulkaisutila(JulkaisuTila.KESKEN);
-        saveJulkaistuOpetussuunnitelmaTila(julkaistuOpetussuunnitelmaTila);
-
+        self.saveJulkaistuOpetussuunnitelmaTila(julkaistuOpetussuunnitelmaTila);
         self.teeJulkaisuAsync(ktId, opsId, julkaisuBaseDto);
     }
 
@@ -273,14 +272,14 @@ public class JulkaisuServiceImpl implements JulkaisuService {
         opetussuunnitelma.setTila(Tila.JULKAISTU);
         opetussuunnitelma.setEsikatseltavissa(false);
         julkaistuOpetussuunnitelmaTila.setJulkaisutila(JulkaisuTila.JULKAISTU);
-        self.saveJulkaistuOpetussuunnitelmaTila(julkaistuOpetussuunnitelmaTila);
+        julkaistuOpetussuunnitelmaTilaRepository.saveAndFlush(julkaistuOpetussuunnitelmaTila);
         cacheManager.getCache("ops-navigation").evictIfPresent(opsId);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void saveJulkaistuOpetussuunnitelmaTila(JulkaistuOpetussuunnitelmaTila julkaistuOpetussuunnitelmaTila) {
-        julkaistuOpetussuunnitelmaTilaRepository.save(julkaistuOpetussuunnitelmaTila);
+        julkaistuOpetussuunnitelmaTilaRepository.saveAndFlush(julkaistuOpetussuunnitelmaTila);
     }
 
     @Override
@@ -336,7 +335,7 @@ public class JulkaisuServiceImpl implements JulkaisuService {
                 && (new Date().getTime() - julkaistuOpetussuunnitelmaTila.getMuokattu().getTime()) / 1000 > JULKAISUN_ODOTUSAIKA_SEKUNNEISSA) {
             log.error("Julkaisu kesti yli {} sekuntia, opsilla {}", JULKAISUN_ODOTUSAIKA_SEKUNNEISSA, opsId);
             julkaistuOpetussuunnitelmaTila.setJulkaisutila(JulkaisuTila.VIRHE);
-            saveJulkaistuOpetussuunnitelmaTila(julkaistuOpetussuunnitelmaTila);
+            self.saveJulkaistuOpetussuunnitelmaTila(julkaistuOpetussuunnitelmaTila);
         }
 
         return julkaistuOpetussuunnitelmaTila != null ? julkaistuOpetussuunnitelmaTila.getJulkaisutila() : JulkaisuTila.JULKAISEMATON;
