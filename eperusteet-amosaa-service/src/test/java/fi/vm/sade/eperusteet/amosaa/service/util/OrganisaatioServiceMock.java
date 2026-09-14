@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 @Service
-@Profile("test")
+@Profile({"test", "docker"})
 public class OrganisaatioServiceMock implements OrganisaatioService {
     @Override
     public JsonNode getOrganisaatio(String organisaatioOid) {

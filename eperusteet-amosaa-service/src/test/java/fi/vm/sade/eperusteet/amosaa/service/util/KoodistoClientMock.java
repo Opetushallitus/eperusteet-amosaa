@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@Profile("test")
+@Profile({"test", "docker"})
 public class KoodistoClientMock implements KoodistoClient {
 
     private Long koodiNumero = 1000l;
