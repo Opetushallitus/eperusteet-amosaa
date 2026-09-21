@@ -1,0 +1,20 @@
+services:
+  eperusteet-amosaa:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: oph
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: amosaa
+    ports:
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - amosaa_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U oph -d amosaa"]
+      interval: 2s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+
+volumes:
+  amosaa_data:
