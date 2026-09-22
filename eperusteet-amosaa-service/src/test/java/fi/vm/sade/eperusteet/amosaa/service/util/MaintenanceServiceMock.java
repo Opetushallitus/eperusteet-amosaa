@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 @Service
-@Profile("test")
+@Profile({"test", "docker"})
 public class MaintenanceServiceMock implements MaintenanceService {
 
     @Override

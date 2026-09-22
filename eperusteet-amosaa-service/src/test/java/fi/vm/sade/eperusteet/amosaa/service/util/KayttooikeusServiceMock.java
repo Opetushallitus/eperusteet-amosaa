@@ -17,7 +17,7 @@ import fi.vm.sade.eperusteet.amosaa.service.external.KayttooikeusService;
 import fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest;
 
 @Service
-@Profile("test")
+@Profile({"test", "docker"})
 public class KayttooikeusServiceMock implements KayttooikeusService{
 
     @Override

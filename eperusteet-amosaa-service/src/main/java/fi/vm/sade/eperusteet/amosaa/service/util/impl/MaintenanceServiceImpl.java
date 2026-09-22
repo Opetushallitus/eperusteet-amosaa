@@ -49,7 +49,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 @Service
-@Profile("!test")
+@Profile("!test & !docker")
 public class MaintenanceServiceImpl implements MaintenanceService {
 
     private static final Logger logger = LoggerFactory.getLogger(MaintenanceServiceImpl.class);

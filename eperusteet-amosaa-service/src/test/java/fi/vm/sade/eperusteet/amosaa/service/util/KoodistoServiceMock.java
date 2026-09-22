@@ -2,6 +2,7 @@ package fi.vm.sade.eperusteet.amosaa.service.util;
 
 import fi.vm.sade.eperusteet.amosaa.dto.koodisto.KoodistoKoodiDto;
 import fi.vm.sade.eperusteet.amosaa.service.external.KoodistoService;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -9,7 +10,8 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
-@Profile("test")
+@Primary
+@Profile({"test", "docker"})
 public class KoodistoServiceMock implements KoodistoService {
     @Override
     public List<KoodistoKoodiDto> getAll(String koodisto) {

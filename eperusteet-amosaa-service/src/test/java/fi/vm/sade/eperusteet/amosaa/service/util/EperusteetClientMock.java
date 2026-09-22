@@ -32,7 +32,7 @@ import java.util.Set;
 import static fi.vm.sade.eperusteet.amosaa.test.AbstractIntegrationTest.AMOSAA_YHTEINEN_PERUSTE_ID;
 
 @Service
-@Profile("test")
+@Profile({"test", "docker"})
 @SuppressWarnings("TransactionalAnnotations")
 @Transactional
 public class EperusteetClientMock implements EperusteetClient {
