@@ -27,7 +27,7 @@ public class NavigationUtil {
             KoulutusTyyppi.VAPAASIVISTYSTYO, KoulutusTyyppi.VAPAASIVISTYSTYOLUKUTAITO, KoulutusTyyppi.MAAHANMUUTTAJIENKOTOUTUMISKOULUTUS, KoulutusTyyppi.TUTKINTOONVALMENTAVA);
 
     public static NavigationNodeDto asetaNumerointi(Opetussuunnitelma opetussuunnitelma, NavigationNodeDto node) {
-        if (TUETUT_KOULUTUSTYYPIT.contains(opetussuunnitelma.getOpsKoulutustyyppi())){
+        if (opetussuunnitelma.getOpsKoulutustyyppi() != null && TUETUT_KOULUTUSTYYPIT.contains(opetussuunnitelma.getOpsKoulutustyyppi())){
             asetaNumerointi(node.getChildren(), "");
         }
         return node;
