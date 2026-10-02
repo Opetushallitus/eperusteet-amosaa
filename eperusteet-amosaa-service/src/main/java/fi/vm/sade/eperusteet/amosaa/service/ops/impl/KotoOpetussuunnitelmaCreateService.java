@@ -39,7 +39,7 @@ public class KotoOpetussuunnitelmaCreateService implements OpetussuunnitelmaCrea
 
     @Override
     public Set<KoulutusTyyppi> getTyypit() {
-        return Sets.newHashSet(KoulutusTyyppi.MAAHANMUUTTAJIENKOTOUTUMISKOULUTUS);
+        return Sets.newHashSet(KoulutusTyyppi.MAAHANMUUTTAJIENKOTOUTUMISKOULUTUS, KoulutusTyyppi.LUKUTAITOKOULUTUS);
     }
 
     @Override
