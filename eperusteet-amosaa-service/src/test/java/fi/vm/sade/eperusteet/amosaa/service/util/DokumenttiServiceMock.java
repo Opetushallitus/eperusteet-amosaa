@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 @Service
-@Profile("test")
+@Profile({"test", "docker"})
 public class DokumenttiServiceMock implements DokumenttiService {
     @Override
     public DokumenttiDto getValmisDto(Long ktId, Long opsId, Kieli kieli) {
@@ -26,7 +26,12 @@ public class DokumenttiServiceMock implements DokumenttiService {
 
     @Override
     public DokumenttiDto createDtoFor(Long ktId, Long opsId, Kieli kieli) {
-        return null;
+        DokumenttiDto dto = new DokumenttiDto();
+        dto.setId(new Double(Math.random() * 1000).longValue());
+        dto.setOpsId(opsId);
+        dto.setKieli(kieli);
+        dto.setTila(DokumenttiTila.EI_OLE);
+        return dto;
     }
 
     @Override

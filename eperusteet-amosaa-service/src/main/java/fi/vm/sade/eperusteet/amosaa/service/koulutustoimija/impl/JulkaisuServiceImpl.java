@@ -44,6 +44,7 @@ import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationExcep
 import fi.vm.sade.eperusteet.amosaa.service.exception.NotExistsException;
 import fi.vm.sade.eperusteet.amosaa.service.exception.DokumenttiException;
 import fi.vm.sade.eperusteet.amosaa.service.external.KayttajanTietoService;
+import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.JulkaistuOpetussuunnitelmaTilaService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.JulkaisuService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaMuokkaustietoService;
 import fi.vm.sade.eperusteet.amosaa.service.koulutustoimija.OpetussuunnitelmaService;
@@ -68,7 +69,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
@@ -87,7 +87,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @Transactional
-@Profile("default")
+@Profile("!test")
 public class JulkaisuServiceImpl implements JulkaisuService {
 
     @Value("${fi.vm.sade.eperusteet.salli_virheelliset:false}")
@@ -136,6 +136,9 @@ public class JulkaisuServiceImpl implements JulkaisuService {
     @Autowired
     @Lazy
     private JulkaisuService self;
+
+    @Autowired
+    private JulkaistuOpetussuunnitelmaTilaService julkaistuOpetussuunnitelmaTilaService;
 
     @Autowired
     private CacheManager cacheManager;
@@ -196,7 +199,7 @@ public class JulkaisuServiceImpl implements JulkaisuService {
 
         JulkaistuOpetussuunnitelmaTila julkaistuOpetussuunnitelmaTila = getOrCreateTila(opsId);
         julkaistuOpetussuunnitelmaTila.setJulkaisutila(JulkaisuTila.KESKEN);
-        self.saveJulkaistuOpetussuunnitelmaTila(julkaistuOpetussuunnitelmaTila);
+        julkaistuOpetussuunnitelmaTilaService.saveJulkaistuOpetussuunnitelmaTila(julkaistuOpetussuunnitelmaTila);
         self.teeJulkaisuAsync(ktId, opsId, julkaisuBaseDto);
     }
 
@@ -265,21 +268,20 @@ public class JulkaisuServiceImpl implements JulkaisuService {
         } catch (Exception e) {
             log.error(Throwables.getStackTraceAsString(e));
             julkaistuOpetussuunnitelmaTila.setJulkaisutila(JulkaisuTila.VIRHE);
-            self.saveJulkaistuOpetussuunnitelmaTila(julkaistuOpetussuunnitelmaTila);
+            julkaistuOpetussuunnitelmaTilaService.saveJulkaistuOpetussuunnitelmaTila(julkaistuOpetussuunnitelmaTila);
             throw new BusinessRuleViolationException("julkaisun-tallennus-epaonnistui");
         }
 
         opetussuunnitelma.setTila(Tila.JULKAISTU);
         opetussuunnitelma.setEsikatseltavissa(false);
         julkaistuOpetussuunnitelmaTila.setJulkaisutila(JulkaisuTila.JULKAISTU);
-        julkaistuOpetussuunnitelmaTilaRepository.saveAndFlush(julkaistuOpetussuunnitelmaTila);
+        julkaistuOpetussuunnitelmaTilaService.saveJulkaistuOpetussuunnitelmaTila(julkaistuOpetussuunnitelmaTila);
         cacheManager.getCache("ops-navigation").evictIfPresent(opsId);
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void saveJulkaistuOpetussuunnitelmaTila(JulkaistuOpetussuunnitelmaTila julkaistuOpetussuunnitelmaTila) {
-        julkaistuOpetussuunnitelmaTilaRepository.saveAndFlush(julkaistuOpetussuunnitelmaTila);
+        julkaistuOpetussuunnitelmaTilaService.saveJulkaistuOpetussuunnitelmaTila(julkaistuOpetussuunnitelmaTila);
     }
 
     @Override
@@ -335,18 +337,10 @@ public class JulkaisuServiceImpl implements JulkaisuService {
                 && (new Date().getTime() - julkaistuOpetussuunnitelmaTila.getMuokattu().getTime()) / 1000 > JULKAISUN_ODOTUSAIKA_SEKUNNEISSA) {
             log.error("Julkaisu kesti yli {} sekuntia, opsilla {}", JULKAISUN_ODOTUSAIKA_SEKUNNEISSA, opsId);
             julkaistuOpetussuunnitelmaTila.setJulkaisutila(JulkaisuTila.VIRHE);
-            self.saveJulkaistuOpetussuunnitelmaTila(julkaistuOpetussuunnitelmaTila);
+            julkaistuOpetussuunnitelmaTilaService.saveJulkaistuOpetussuunnitelmaTila(julkaistuOpetussuunnitelmaTila);
         }
 
         return julkaistuOpetussuunnitelmaTila != null ? julkaistuOpetussuunnitelmaTila.getJulkaisutila() : JulkaisuTila.JULKAISEMATON;
-    }
-
-    private String generoiOpetussuunnitelmaKaikkiDtotoString(OpetussuunnitelmaKaikkiDto opetussuunnitelmaKaikki) throws IOException {
-        opetussuunnitelmaKaikki.setViimeisinJulkaisuAika(null);
-        opetussuunnitelmaKaikki.setTila(null);
-        opetussuunnitelmaKaikki.setTila2016(null);
-        opetussuunnitelmaKaikki.setMuokattu(null);
-        return objectMapper.writeValueAsString(opetussuunnitelmaKaikki);
     }
 
     private void kooditaSisaltoviite(SisaltoViite sisaltoViite) {
