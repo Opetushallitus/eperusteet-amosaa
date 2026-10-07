@@ -224,7 +224,8 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
         if (koulutusTyyppi != null &&
                 ((koulutusTyyppi.isAmmatillinen() && !viiteDto.getTyyppi().isAmmatillinenTyyppi())
                         || (koulutusTyyppi.isVST() && !viiteDto.getTyyppi().isVstTyyppi())
-                        || (koulutusTyyppi.isTuva() && !viiteDto.getTyyppi().isTuvaTyyppi()))) {
+                        || (koulutusTyyppi.isTuva() && !viiteDto.getTyyppi().isTuvaTyyppi())
+                        || (koulutusTyyppi.isLukutaitokoulutus() && !SisaltoTyyppi.TEKSTIKAPPALE.equals(viiteDto.getTyyppi())))) {
             throw new BusinessRuleViolationException("ei-sallittu-sisaltoviite-tyyppi");
         }
 

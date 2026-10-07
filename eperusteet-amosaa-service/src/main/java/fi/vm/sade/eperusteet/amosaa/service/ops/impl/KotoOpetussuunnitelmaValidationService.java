@@ -32,7 +32,7 @@ public class KotoOpetussuunnitelmaValidationService implements Opetussuunnitelma
 
     @Override
     public Set<KoulutusTyyppi> getTyypit() {
-        return Sets.newHashSet(KoulutusTyyppi.MAAHANMUUTTAJIENKOTOUTUMISKOULUTUS);
+        return Sets.newHashSet(KoulutusTyyppi.MAAHANMUUTTAJIENKOTOUTUMISKOULUTUS, KoulutusTyyppi.LUKUTAITOKOULUTUS);
     }
 
     @Override

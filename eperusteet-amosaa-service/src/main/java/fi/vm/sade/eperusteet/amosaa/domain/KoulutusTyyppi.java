@@ -13,6 +13,7 @@ public enum KoulutusTyyppi {
     VALMA("koulutustyyppi_18"),
     VAPAASIVISTYSTYO("koulutustyyppi_10"),
     MAAHANMUUTTAJIENKOTOUTUMISKOULUTUS("koulutustyyppi_30"),
+    LUKUTAITOKOULUTUS("koulutustyyppi_31"),
     VAPAASIVISTYSTYOLUKUTAITO("koulutustyyppi_35"),
     TUTKINTOONVALMENTAVA("koulutustyyppi_40");
 
@@ -60,6 +61,10 @@ public enum KoulutusTyyppi {
 
     public boolean isTuva() {
         return isOneOf(TUTKINTOONVALMENTAVA);
+    }
+
+    public boolean isLukutaitokoulutus() {
+        return isOneOf(LUKUTAITOKOULUTUS);
     }
 
     public static List<KoulutusTyyppi> ammatilliset() {

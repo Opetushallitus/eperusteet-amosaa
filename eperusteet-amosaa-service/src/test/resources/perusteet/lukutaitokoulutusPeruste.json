@@ -1,0 +1,89 @@
+{
+  "id": 98860,
+  "globalVersion": {
+    "aikaleima": 1654513164994
+  },
+  "nimi": {
+    "_id": "198039",
+    "fi": "lukutaitokoulutus peruste"
+  },
+  "koulutustyyppi": "koulutustyyppi_31",
+  "toteutus": "kotoutumiskoulutus",
+  "koulutukset": [],
+  "kielet": [
+    "fi"
+  ],
+  "kuvaus": null,
+  "maarayskirje": null,
+  "muutosmaaraykset": [],
+  "diaarinumero": "555/333/9495",
+  "voimassaoloAlkaa": 1654030800000,
+  "siirtymaPaattyy": null,
+  "voimassaoloLoppuu": null,
+  "paatospvm": 1656018000000,
+  "luotu": 1654512965417,
+  "muokattu": 1654513164954,
+  "tila": "luonnos",
+  "tyyppi": "normaali",
+  "koulutusvienti": false,
+  "korvattavatDiaarinumerot": [],
+  "osaamisalat": [],
+  "tyotehtavatJoissaVoiToimia": null,
+  "suorittaneenOsaaminen": null,
+  "perusteenAikataulut": [],
+  "lukutaitokoulutus": {
+    "id": 98870,
+    "sisalto": {
+      "id": 98880,
+      "lapset": [
+        {
+          "id": 98881,
+          "perusteenOsa": {
+            "id": 98930,
+            "luotu": 1654512981431,
+            "muokattu": 1654513124880,
+            "muokkaaja": "test",
+            "nimi": {
+              "_id": "98911",
+              "fi": "Lukutaitokoulutuksen tekstikappale"
+            },
+            "tila": "luonnos",
+            "teksti": {
+              "_id": "198038",
+              "fi": "<p>perusteen teksti</p>"
+            },
+            "koodit": [],
+            "liite": false,
+            "osanTyyppi": "tekstikappale"
+          },
+          "lapset": [
+            {
+              "id": 98882,
+              "perusteenOsa": {
+                "id": 98931,
+                "luotu": 1654512981431,
+                "muokattu": 1654513124880,
+                "muokkaaja": "test",
+                "nimi": {
+                  "_id": "98912",
+                  "fi": "Alikappale"
+                },
+                "tila": "luonnos",
+                "teksti": {
+                  "_id": "198040",
+                  "fi": "<p>alikappaleen teksti</p>"
+                },
+                "koodit": [],
+                "liite": false,
+                "osanTyyppi": "tekstikappale"
+              },
+              "lapset": [],
+              "_perusteenOsa": "98931"
+            }
+          ],
+          "_perusteenOsa": "98930"
+        }
+      ]
+    }
+  }
+}

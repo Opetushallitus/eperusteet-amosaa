@@ -51,6 +51,7 @@ public class EperusteetClientMock implements EperusteetClient {
         objectMapper.registerModule(module);
         objectMapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
         perusteet.add(openFakeData("/perusteet/kotoPeruste.json"));
+        perusteet.add(openFakeData("/perusteet/lukutaitokoulutusPeruste.json"));
         perusteet.add(openFakeData("/perusteet/amosaaPeruste.json"));
         perusteet.add(openFakeData("/perusteet/tuvaPeruste.json"));
         perusteet.add(openFakeData("/perusteet/vstPeruste.json"));
