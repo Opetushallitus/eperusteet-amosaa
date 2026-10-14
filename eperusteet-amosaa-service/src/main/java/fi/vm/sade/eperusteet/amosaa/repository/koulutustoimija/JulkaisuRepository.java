@@ -2,8 +2,6 @@ package fi.vm.sade.eperusteet.amosaa.repository.koulutustoimija;
 
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Julkaisu;
 import fi.vm.sade.eperusteet.amosaa.domain.koulutustoimija.Opetussuunnitelma;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -23,10 +21,7 @@ public interface JulkaisuRepository extends JpaRepository<Julkaisu, Long> {
 
     Julkaisu findByOpetussuunnitelmaAndRevision(Opetussuunnitelma opetussuunnitelma, int revision);
 
-    String julkaisutQuery = "FROM ( " +
-            "   SELECT * " +
-            "   FROM julkaistu_opetussuunnitelma_Data_view data" +
-            "   WHERE 1 = 1 " +
+    String julkaisutWhere = "   WHERE 1 = 1 " +
             "   AND (COALESCE(:koulutustyypit, null) IS NULL OR koulutustyyppi IN (:koulutustyypit) OR peruste->>'koulutustyyppi' IN (:koulutustyypit))" +
             "   AND (:nimi LIKE '' " +
             "       OR LOWER(nimi->>:kieli) LIKE LOWER(CONCAT('%',:nimi,'%'))" +
@@ -47,15 +42,27 @@ public interface JulkaisuRepository extends JpaRepository<Julkaisu, Long> {
             "            (:jotpattomat = false AND jotpatyyppi IN (:jotpatyypit)) " +
             "            OR (:jotpattomat = true AND (jotpatyyppi IS NULL OR jotpatyyppi IN (:jotpatyypit)))))" +
             "   AND (:kieli LIKE '' OR LOWER(CAST(julkaisukielet as text)) LIKE LOWER(CONCAT('%', :kieli,'%'))) " +
-            "   AND (:paikallistasisaltoa IS NULL OR data.paikallistasisaltoa = :paikallistasisaltoa) " +
-            "   order by nimi->>:kieli asc " +
-            ") t";
+            "   AND (:paikallistasisaltoa IS NULL OR data.paikallistasisaltoa = :paikallistasisaltoa) ";
 
     @Query(nativeQuery = true,
-            value = "SELECT CAST(row_to_json(t) as text) " + julkaisutQuery,
-            countQuery = "SELECT count(*) " + julkaisutQuery
+            value = "WITH sivu AS ( " +
+                    "   SELECT data.id, data.nimi->>:kieli AS lajittelunimi " +
+                    "   FROM julkaistu_opetussuunnitelma_data_view data " +
+                    julkaisutWhere +
+                    "   ORDER BY lajittelunimi, data.id " +
+                    "   LIMIT :sivukoko OFFSET :offset " +
+                    ") " +
+                    "SELECT CAST(row_to_json(t) as text) " +
+                    "FROM ( " +
+                    "   SELECT d.id, d.nimi, d.koulutustoimija, d.peruste, d.\"oppilaitosTyyppiKoodiUri\", " +
+                    "          d.tyyppi, d.koulutustyyppi, d.\"voimaantulo\", d.\"voimassaoloLoppuu\", " +
+                    "          d.jotpatyyppi, d.julkaisukielet " +
+                    "   FROM sivu s " +
+                    "   JOIN julkaistu_opetussuunnitelma_data_view d ON d.id = s.id " +
+                    "   ORDER BY s.lajittelunimi, s.id " +
+                    ") t"
     )
-    Page<String> findAllJulkisetJulkaisut(
+    List<String> findAllJulkisetJulkaisut(
             @Param("koulutustyypit") List<String> koulutustyypit,
             @Param("nimi") String nimi,
             @Param("kieli") String kieli,
@@ -71,7 +78,29 @@ public interface JulkaisuRepository extends JpaRepository<Julkaisu, Long> {
             @Param("jotpattomat") boolean jotpattomat,
             @Param("paikallistasisaltoa") Boolean paikallistasisaltoa,
             @Param("nykyhetki") Long nykyhetki,
-            Pageable pageable
+            @Param("sivukoko") int sivukoko,
+            @Param("offset") long offset
+    );
+
+    @Query(nativeQuery = true,
+            value = "SELECT count(*) FROM julkaistu_opetussuunnitelma_data_view data " + julkaisutWhere
+    )
+    long countJulkisetJulkaisut(
+            @Param("koulutustyypit") List<String> koulutustyypit,
+            @Param("nimi") String nimi,
+            @Param("kieli") String kieli,
+            @Param("oppilaitosTyyppiKoodiUri") String oppilaitosTyyppiKoodiUri,
+            @Param("tyyppi") List<String> tyyppi,
+            @Param("organisaatiot") List<String> organisaatiot,
+            @Param("perusteIds") List<Long> perusteIds,
+            @Param("perusteenDiaarinumerot") List<String> perusteenDiaarinumerot,
+            @Param("tulevat") boolean tulevat,
+            @Param("voimassa") boolean voimassa,
+            @Param("poistuneet") boolean poistuneet,
+            @Param("jotpatyypit") List<String> jotpatyypit,
+            @Param("jotpattomat") boolean jotpattomat,
+            @Param("paikallistasisaltoa") Boolean paikallistasisaltoa,
+            @Param("nykyhetki") Long nykyhetki
     );
 
     @Query(nativeQuery = true, value =

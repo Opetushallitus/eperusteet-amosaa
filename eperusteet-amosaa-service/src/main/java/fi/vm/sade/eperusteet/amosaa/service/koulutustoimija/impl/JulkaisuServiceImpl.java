@@ -66,6 +66,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -371,24 +372,52 @@ public class JulkaisuServiceImpl implements JulkaisuService {
             koulutustyypit = List.of();
         }
 
-        return julkaisuRepository.findAllJulkisetJulkaisut(
+        List<String> organisaatiot = CollectionUtils.isEmpty(pquery.getOrganisaatio()) ? List.of() : pquery.getOrganisaatio();
+        List<Long> perusteIds = CollectionUtils.isEmpty(pquery.getPerusteId()) ? List.of() : pquery.getPerusteId();
+        List<String> perusteenDiaarinumerot = CollectionUtils.isEmpty(pquery.getPerusteenDiaarinumero()) ? List.of() : pquery.getPerusteenDiaarinumero();
+        boolean jotpattomat = pquery.getJotpatyyppi().contains("NULL");
+        long nykyhetki = DateTime.now().getMillis();
+
+        List<OpetussuunnitelmaDto> sisalto = julkaisuRepository.findAllJulkisetJulkaisut(
                 koulutustyypit,
                 pquery.getNimi(),
                 pquery.getKieli(),
                 pquery.getOppilaitosTyyppiKoodiUri(),
                 pquery.getTyyppi(),
-                CollectionUtils.isEmpty(pquery.getOrganisaatio()) ? List.of() : pquery.getOrganisaatio(),
-                CollectionUtils.isEmpty(pquery.getPerusteId()) ? List.of() : pquery.getPerusteId(),
-                CollectionUtils.isEmpty(pquery.getPerusteenDiaarinumero()) ? List.of() : pquery.getPerusteenDiaarinumero(),
+                organisaatiot,
+                perusteIds,
+                perusteenDiaarinumerot,
                 pquery.isTuleva(),
                 pquery.isVoimassaolo(),
                 pquery.isPoistunut(),
                 pquery.getJotpatyyppi(),
-                pquery.getJotpatyyppi().contains("NULL"),
+                jotpattomat,
                 pquery.getPaikallistasisaltoa(),
-                DateTime.now().getMillis(),
-                pageable)
-                .map(this::convertToOpetussuunnitelmaDto);
+                nykyhetki,
+                pageable.getPageSize(),
+                pageable.getOffset())
+                .stream()
+                .map(this::convertToOpetussuunnitelmaDto)
+                .collect(Collectors.toList());
+
+        long lukumaara = julkaisuRepository.countJulkisetJulkaisut(
+                koulutustyypit,
+                pquery.getNimi(),
+                pquery.getKieli(),
+                pquery.getOppilaitosTyyppiKoodiUri(),
+                pquery.getTyyppi(),
+                organisaatiot,
+                perusteIds,
+                perusteenDiaarinumerot,
+                pquery.isTuleva(),
+                pquery.isVoimassaolo(),
+                pquery.isPoistunut(),
+                pquery.getJotpatyyppi(),
+                jotpattomat,
+                pquery.getPaikallistasisaltoa(),
+                nykyhetki);
+
+        return new PageImpl<>(sisalto, pageable, lukumaara);
     }
 
     @Override
