@@ -16,4 +16,6 @@ public class VanhentunutPohjaperusteDto {
 
     Date edellinenPaivitys;
     Date perustePaivittynyt;
+
+    boolean siirtymaPaattynyt;
 }
