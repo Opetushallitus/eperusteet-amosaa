@@ -21,7 +21,8 @@ public class NavigationUtil {
             NavigationType.koulutuksenosa,
             NavigationType.koto_laajaalainenosaaminen,
             NavigationType.koto_kielitaitotaso,
-            NavigationType.koto_opinto);
+            NavigationType.koto_opinto,
+            NavigationType.lukutaitokoulutus_tavoitteetjasisaltoalueet);
 
     private static final Set<KoulutusTyyppi> TUETUT_KOULUTUSTYYPIT = Set.of(
             KoulutusTyyppi.VAPAASIVISTYSTYO, KoulutusTyyppi.VAPAASIVISTYSTYOLUKUTAITO, KoulutusTyyppi.MAAHANMUUTTAJIENKOTOUTUMISKOULUTUS, KoulutusTyyppi.LUKUTAITOKOULUTUS, KoulutusTyyppi.TUTKINTOONVALMENTAVA);

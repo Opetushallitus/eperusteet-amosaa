@@ -14,6 +14,7 @@ import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.TuvaLaajaAlainenOsaamine
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.KotoKielitaitotasoDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.KotoLaajaAlainenOsaaminenDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.KotoOpintoDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.LukutaitokoulutusTavoitteetJaSisaltoalueetDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.KoulutuksenOsaDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.OpintokokonaisuusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKaikkiDto;
@@ -172,6 +173,10 @@ public class OpetussuunnitelmaSisaltoCreateServiceImpl implements Opetussuunnite
 
         if (sisalto.getPerusteenOsa() instanceof KotoLaajaAlainenOsaaminenDto) {
             sisaltoviite = SisaltoViite.createKotoLaajaAlainenOsaaminen(parentViite);
+        }
+
+        if (sisalto.getPerusteenOsa() instanceof LukutaitokoulutusTavoitteetJaSisaltoalueetDto) {
+            sisaltoviite = SisaltoViite.createLukutaitoTavoitealue(parentViite);
         }
 
         if (sisaltoviite == null) {

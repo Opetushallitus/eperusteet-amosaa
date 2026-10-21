@@ -38,7 +38,13 @@ public class LukutaitokoulutusOpsitIT extends AbstractIntegrationTest {
                 .containsExactlyInAnyOrder(98930L, 98931L);
         assertThat(sisaltoviitteet(ops).stream().filter(sv -> sv.getVanhempi() != null).collect(Collectors.toList()))
                 .extracting(SisaltoViiteDto::getTyyppi)
-                .containsOnly(SisaltoTyyppi.TEKSTIKAPPALE);
+                .containsExactlyInAnyOrder(
+                        SisaltoTyyppi.TEKSTIKAPPALE,
+                        SisaltoTyyppi.TEKSTIKAPPALE,
+                        SisaltoTyyppi.LUKUTAITOKOULUTUS_TAVOITTEETJASISALTOALUEET);
+        assertThat(tavoitealueet(ops))
+                .extracting(SisaltoViiteDto::getPerusteenOsaId)
+                .containsExactly(98932L);
     }
 
     @Test
@@ -50,6 +56,10 @@ public class LukutaitokoulutusOpsitIT extends AbstractIntegrationTest {
                 .findFirst().orElseThrow();
         pohjanKappale.getTekstiKappale().setTeksti(LokalisoituTekstiDto.of("Pohjan paikallinen tarkennus"));
         sisaltoViiteService.updateSisaltoViite(pohja.getKoulutustoimija().getId(), pohja.getId(), pohjanKappale.getId(), pohjanKappale);
+
+        SisaltoViiteDto pohjanTavoitealue = tavoitealueet(pohja).get(0);
+        pohjanTavoitealue.getLukutaitoTavoitealue().setPaikallinenTarkennus(LokalisoituTekstiDto.of("Tavoitealueen paikallinen tarkennus"));
+        sisaltoViiteService.updateSisaltoViite(pohja.getKoulutustoimija().getId(), pohja.getId(), pohjanTavoitealue.getId(), pohjanTavoitealue);
 
         OpetussuunnitelmaBaseDto ops = createOpetussuunnitelma(opetussuunnitelma -> {
             opetussuunnitelma.setPerusteId(LUKUTAITOKOULUTUS_PERUSTE_ID);
@@ -66,6 +76,11 @@ public class LukutaitokoulutusOpsitIT extends AbstractIntegrationTest {
                 .findFirst().orElseThrow();
         assertThat(kopioitu.getTekstiKappale().getTeksti().getTeksti())
                 .isEqualTo(LokalisoituTekstiDto.of("Pohjan paikallinen tarkennus").getTekstit());
+
+        SisaltoViiteDto kopioituTavoitealue = tavoitealueet(ops).get(0);
+        assertThat(kopioituTavoitealue.getPerusteenOsaId()).isEqualTo(98932L);
+        assertThat(kopioituTavoitealue.getLukutaitoTavoitealue().getPaikallinenTarkennus().getTeksti())
+                .isEqualTo(LokalisoituTekstiDto.of("Tavoitealueen paikallinen tarkennus").getTekstit());
     }
 
     @Test
@@ -96,6 +111,12 @@ public class LukutaitokoulutusOpsitIT extends AbstractIntegrationTest {
     private List<SisaltoViiteDto> perusteenTekstikappaleet(OpetussuunnitelmaBaseDto ops) {
         return sisaltoviitteet(ops).stream()
                 .filter(viite -> SisaltoTyyppi.TEKSTIKAPPALE.equals(viite.getTyyppi()) && viite.getTekstiKappale() != null && viite.getPerusteenOsaId() != null)
+                .collect(Collectors.toList());
+    }
+
+    private List<SisaltoViiteDto> tavoitealueet(OpetussuunnitelmaBaseDto ops) {
+        return sisaltoviitteet(ops).stream()
+                .filter(viite -> SisaltoTyyppi.LUKUTAITOKOULUTUS_TAVOITTEETJASISALTOALUEET.equals(viite.getTyyppi()))
                 .collect(Collectors.toList());
     }
 }
