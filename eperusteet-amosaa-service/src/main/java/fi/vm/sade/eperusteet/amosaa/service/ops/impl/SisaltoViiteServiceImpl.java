@@ -508,6 +508,7 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
             case KOTO_KIELITAITOTASO:
             case KOTO_LAAJAALAINENOSAAMINEN:
             case KOTO_OPINTO:
+            case TAVOITESISALTOALUE:
             case OSAAMISMERKKI:
                 sisaltoviiteServiceProvider.updateSisaltoViite(viite, uusi);
             default:
@@ -612,7 +613,8 @@ public class SisaltoViiteServiceImpl extends AbstractLockService<SisaltoViiteCtx
             throw new BusinessRuleViolationException("pakollisia-sisaltoja-ei-voi-poistaa");
         }
 
-        if (viite.getTyyppi() == SisaltoTyyppi.KOULUTUKSENOSA && viite.getPerusteenOsaId() != null) {
+        if ((viite.getTyyppi() == SisaltoTyyppi.KOULUTUKSENOSA || viite.getTyyppi() == SisaltoTyyppi.TAVOITESISALTOALUE)
+                && viite.getPerusteenOsaId() != null) {
             throw new BusinessRuleViolationException("pakollisia-sisaltoja-ei-voi-poistaa");
         }
 

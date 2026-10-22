@@ -9594,7 +9594,7 @@
           },
           "linkattuTyyppi" : {
             "type" : "string",
-            "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU", "OPINTOKOKONAISUUS", "KOULUTUKSENOSA", "KOULUTUKSENOSAT", "LAAJAALAINENOSAAMINEN", "KOTO_KIELITAITOTASO", "KOTO_OPINTO", "KOTO_LAAJAALAINENOSAAMINEN", "OSAAMISMERKKI", "LINKKI" ]
+            "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU", "OPINTOKOKONAISUUS", "KOULUTUKSENOSA", "KOULUTUKSENOSAT", "LAAJAALAINENOSAAMINEN", "KOTO_KIELITAITOTASO", "KOTO_OPINTO", "KOTO_LAAJAALAINENOSAAMINEN", "TAVOITESISALTOALUE", "OSAAMISMERKKI", "LINKKI" ]
           },
           "naytaPerusteenTeksti" : {
             "type" : "boolean"
@@ -9648,6 +9648,9 @@
           "suorituspolku" : {
             "$ref" : "#/components/schemas/SuorituspolkuDto"
           },
+          "tavoitesisaltoalue" : {
+            "$ref" : "#/components/schemas/TavoitesisaltoalueDto"
+          },
           "tekstiKappale" : {
             "$ref" : "#/components/schemas/TekstiKappaleDto"
           },
@@ -9659,7 +9662,7 @@
           },
           "tyyppi" : {
             "type" : "string",
-            "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU", "OPINTOKOKONAISUUS", "KOULUTUKSENOSA", "KOULUTUKSENOSAT", "LAAJAALAINENOSAAMINEN", "KOTO_KIELITAITOTASO", "KOTO_OPINTO", "KOTO_LAAJAALAINENOSAAMINEN", "OSAAMISMERKKI", "LINKKI" ]
+            "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU", "OPINTOKOKONAISUUS", "KOULUTUKSENOSA", "KOULUTUKSENOSAT", "LAAJAALAINENOSAAMINEN", "KOTO_KIELITAITOTASO", "KOTO_OPINTO", "KOTO_LAAJAALAINENOSAAMINEN", "TAVOITESISALTOALUE", "OSAAMISMERKKI", "LINKKI" ]
           },
           "valmis" : {
             "type" : "boolean"
@@ -9707,7 +9710,7 @@
           },
           "type" : {
             "type" : "string",
-            "enum" : [ "root", "tiedot", "viite", "liitteet", "liite", "peruste", "opetussuunnitelma", "tekstikappale", "tutkinnonosat", "tutkinnonosat_pakolliset", "tutkinnonosat_paikalliset", "tutkinnonosat_tuodut", "valmatelmaKoulutuksenosat", "tutkinnonosa", "tosaryhma", "suorituspolut", "suorituspolku", "osasuorituspolku", "opintokokonaisuus", "koulutuksenosa", "koulutuksenosat", "laajaalainenosaaminen", "koto_kielitaitotaso", "koto_opinto", "koto_laajaalainenosaaminen", "opetussuunnitelma_rakenne", "linkki", "pakolliset_osaalueet", "valinnaiset_osaalueet", "paikalliset_osaalueet", "osaalue", "osaamismerkki" ]
+            "enum" : [ "root", "tiedot", "viite", "liitteet", "liite", "peruste", "opetussuunnitelma", "tekstikappale", "tutkinnonosat", "tutkinnonosat_pakolliset", "tutkinnonosat_paikalliset", "tutkinnonosat_tuodut", "valmatelmaKoulutuksenosat", "tutkinnonosa", "tosaryhma", "suorituspolut", "suorituspolku", "osasuorituspolku", "opintokokonaisuus", "koulutuksenosa", "koulutuksenosat", "laajaalainenosaaminen", "koto_kielitaitotaso", "koto_opinto", "koto_laajaalainenosaaminen", "tavoitesisaltoalue", "opetussuunnitelma_rakenne", "linkki", "pakolliset_osaalueet", "valinnaiset_osaalueet", "paikalliset_osaalueet", "osaalue", "osaamismerkki" ]
           }
         }
       },
@@ -11061,7 +11064,7 @@
           },
           "kohde" : {
             "type" : "string",
-            "enum" : [ "root", "tiedot", "viite", "liitteet", "liite", "peruste", "opetussuunnitelma", "tekstikappale", "tutkinnonosat", "tutkinnonosat_pakolliset", "tutkinnonosat_paikalliset", "tutkinnonosat_tuodut", "valmatelmaKoulutuksenosat", "tutkinnonosa", "tosaryhma", "suorituspolut", "suorituspolku", "osasuorituspolku", "opintokokonaisuus", "koulutuksenosa", "koulutuksenosat", "laajaalainenosaaminen", "koto_kielitaitotaso", "koto_opinto", "koto_laajaalainenosaaminen", "opetussuunnitelma_rakenne", "linkki", "pakolliset_osaalueet", "valinnaiset_osaalueet", "paikalliset_osaalueet", "osaalue", "osaamismerkki" ]
+            "enum" : [ "root", "tiedot", "viite", "liitteet", "liite", "peruste", "opetussuunnitelma", "tekstikappale", "tutkinnonosat", "tutkinnonosat_pakolliset", "tutkinnonosat_paikalliset", "tutkinnonosat_tuodut", "valmatelmaKoulutuksenosat", "tutkinnonosa", "tosaryhma", "suorituspolut", "suorituspolku", "osasuorituspolku", "opintokokonaisuus", "koulutuksenosa", "koulutuksenosat", "laajaalainenosaaminen", "koto_kielitaitotaso", "koto_opinto", "koto_laajaalainenosaaminen", "tavoitesisaltoalue", "opetussuunnitelma_rakenne", "linkki", "pakolliset_osaalueet", "valinnaiset_osaalueet", "paikalliset_osaalueet", "osaalue", "osaamismerkki" ]
           },
           "kohdeId" : {
             "type" : "integer",
@@ -12339,7 +12342,7 @@
           },
           "tyyppi" : {
             "type" : "string",
-            "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU", "OPINTOKOKONAISUUS", "KOULUTUKSENOSA", "KOULUTUKSENOSAT", "LAAJAALAINENOSAAMINEN", "KOTO_KIELITAITOTASO", "KOTO_OPINTO", "KOTO_LAAJAALAINENOSAAMINEN", "OSAAMISMERKKI", "LINKKI" ]
+            "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU", "OPINTOKOKONAISUUS", "KOULUTUKSENOSA", "KOULUTUKSENOSAT", "LAAJAALAINENOSAAMINEN", "KOTO_KIELITAITOTASO", "KOTO_OPINTO", "KOTO_LAAJAALAINENOSAAMINEN", "TAVOITESISALTOALUE", "OSAAMISMERKKI", "LINKKI" ]
           }
         }
       },
@@ -12507,7 +12510,7 @@
           },
           "linkattuTyyppi" : {
             "type" : "string",
-            "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU", "OPINTOKOKONAISUUS", "KOULUTUKSENOSA", "KOULUTUKSENOSAT", "LAAJAALAINENOSAAMINEN", "KOTO_KIELITAITOTASO", "KOTO_OPINTO", "KOTO_LAAJAALAINENOSAAMINEN", "OSAAMISMERKKI", "LINKKI" ]
+            "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU", "OPINTOKOKONAISUUS", "KOULUTUKSENOSA", "KOULUTUKSENOSAT", "LAAJAALAINENOSAAMINEN", "KOTO_KIELITAITOTASO", "KOTO_OPINTO", "KOTO_LAAJAALAINENOSAAMINEN", "TAVOITESISALTOALUE", "OSAAMISMERKKI", "LINKKI" ]
           },
           "naytaPerusteenTeksti" : {
             "type" : "boolean"
@@ -12561,6 +12564,9 @@
           "suorituspolku" : {
             "$ref" : "#/components/schemas/SuorituspolkuDto"
           },
+          "tavoitesisaltoalue" : {
+            "$ref" : "#/components/schemas/TavoitesisaltoalueDto"
+          },
           "tekstiKappale" : {
             "$ref" : "#/components/schemas/TekstiKappaleDto"
           },
@@ -12572,7 +12578,7 @@
           },
           "tyyppi" : {
             "type" : "string",
-            "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU", "OPINTOKOKONAISUUS", "KOULUTUKSENOSA", "KOULUTUKSENOSAT", "LAAJAALAINENOSAAMINEN", "KOTO_KIELITAITOTASO", "KOTO_OPINTO", "KOTO_LAAJAALAINENOSAAMINEN", "OSAAMISMERKKI", "LINKKI" ]
+            "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU", "OPINTOKOKONAISUUS", "KOULUTUKSENOSA", "KOULUTUKSENOSAT", "LAAJAALAINENOSAAMINEN", "KOTO_KIELITAITOTASO", "KOTO_OPINTO", "KOTO_LAAJAALAINENOSAAMINEN", "TAVOITESISALTOALUE", "OSAAMISMERKKI", "LINKKI" ]
           },
           "valmis" : {
             "type" : "boolean"
@@ -12668,6 +12674,9 @@
           "suorituspolku" : {
             "$ref" : "#/components/schemas/SuorituspolkuExportDto"
           },
+          "tavoitesisaltoalue" : {
+            "$ref" : "#/components/schemas/TavoitesisaltoalueExportDto"
+          },
           "tekstiKappale" : {
             "$ref" : "#/components/schemas/TekstiKappaleJulkinenDto"
           },
@@ -12679,7 +12688,7 @@
           },
           "tyyppi" : {
             "type" : "string",
-            "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU", "OPINTOKOKONAISUUS", "KOULUTUKSENOSA", "KOULUTUKSENOSAT", "LAAJAALAINENOSAAMINEN", "KOTO_KIELITAITOTASO", "KOTO_OPINTO", "KOTO_LAAJAALAINENOSAAMINEN", "OSAAMISMERKKI", "LINKKI" ]
+            "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU", "OPINTOKOKONAISUUS", "KOULUTUKSENOSA", "KOULUTUKSENOSAT", "LAAJAALAINENOSAAMINEN", "KOTO_KIELITAITOTASO", "KOTO_OPINTO", "KOTO_LAAJAALAINENOSAAMINEN", "TAVOITESISALTOALUE", "OSAAMISMERKKI", "LINKKI" ]
           }
         },
         "description" : "Opetussuunnitelman tutkinnon osat."
@@ -12711,7 +12720,7 @@
           },
           "tyyppi" : {
             "type" : "string",
-            "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU", "OPINTOKOKONAISUUS", "KOULUTUKSENOSA", "KOULUTUKSENOSAT", "LAAJAALAINENOSAAMINEN", "KOTO_KIELITAITOTASO", "KOTO_OPINTO", "KOTO_LAAJAALAINENOSAAMINEN", "OSAAMISMERKKI", "LINKKI" ]
+            "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU", "OPINTOKOKONAISUUS", "KOULUTUKSENOSA", "KOULUTUKSENOSAT", "LAAJAALAINENOSAAMINEN", "KOTO_KIELITAITOTASO", "KOTO_OPINTO", "KOTO_LAAJAALAINENOSAAMINEN", "TAVOITESISALTOALUE", "OSAAMISMERKKI", "LINKKI" ]
           }
         },
         "description" : "Opetussuunnitelman opintokokonaisuudet."
@@ -12740,7 +12749,7 @@
           },
           "linkattuTyyppi" : {
             "type" : "string",
-            "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU", "OPINTOKOKONAISUUS", "KOULUTUKSENOSA", "KOULUTUKSENOSAT", "LAAJAALAINENOSAAMINEN", "KOTO_KIELITAITOTASO", "KOTO_OPINTO", "KOTO_LAAJAALAINENOSAAMINEN", "OSAAMISMERKKI", "LINKKI" ]
+            "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU", "OPINTOKOKONAISUUS", "KOULUTUKSENOSA", "KOULUTUKSENOSAT", "LAAJAALAINENOSAAMINEN", "KOTO_KIELITAITOTASO", "KOTO_OPINTO", "KOTO_LAAJAALAINENOSAAMINEN", "TAVOITESISALTOALUE", "OSAAMISMERKKI", "LINKKI" ]
           },
           "nimi" : {
             "type" : "object",
@@ -12781,7 +12790,7 @@
           },
           "tyyppi" : {
             "type" : "string",
-            "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU", "OPINTOKOKONAISUUS", "KOULUTUKSENOSA", "KOULUTUKSENOSAT", "LAAJAALAINENOSAAMINEN", "KOTO_KIELITAITOTASO", "KOTO_OPINTO", "KOTO_LAAJAALAINENOSAAMINEN", "OSAAMISMERKKI", "LINKKI" ]
+            "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU", "OPINTOKOKONAISUUS", "KOULUTUKSENOSA", "KOULUTUKSENOSAT", "LAAJAALAINENOSAAMINEN", "KOTO_KIELITAITOTASO", "KOTO_OPINTO", "KOTO_LAAJAALAINENOSAAMINEN", "TAVOITESISALTOALUE", "OSAAMISMERKKI", "LINKKI" ]
           },
           "valmis" : {
             "type" : "boolean"
@@ -12833,7 +12842,7 @@
           },
           "linkattuTyyppi" : {
             "type" : "string",
-            "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU", "OPINTOKOKONAISUUS", "KOULUTUKSENOSA", "KOULUTUKSENOSAT", "LAAJAALAINENOSAAMINEN", "KOTO_KIELITAITOTASO", "KOTO_OPINTO", "KOTO_LAAJAALAINENOSAAMINEN", "OSAAMISMERKKI", "LINKKI" ]
+            "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU", "OPINTOKOKONAISUUS", "KOULUTUKSENOSA", "KOULUTUKSENOSAT", "LAAJAALAINENOSAAMINEN", "KOTO_KIELITAITOTASO", "KOTO_OPINTO", "KOTO_LAAJAALAINENOSAAMINEN", "TAVOITESISALTOALUE", "OSAAMISMERKKI", "LINKKI" ]
           },
           "naytaPerusteenTeksti" : {
             "type" : "boolean"
@@ -12890,6 +12899,9 @@
           "suorituspolku" : {
             "$ref" : "#/components/schemas/SuorituspolkuDto"
           },
+          "tavoitesisaltoalue" : {
+            "$ref" : "#/components/schemas/TavoitesisaltoalueDto"
+          },
           "tekstiKappale" : {
             "$ref" : "#/components/schemas/TekstiKappaleDto"
           },
@@ -12901,7 +12913,7 @@
           },
           "tyyppi" : {
             "type" : "string",
-            "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU", "OPINTOKOKONAISUUS", "KOULUTUKSENOSA", "KOULUTUKSENOSAT", "LAAJAALAINENOSAAMINEN", "KOTO_KIELITAITOTASO", "KOTO_OPINTO", "KOTO_LAAJAALAINENOSAAMINEN", "OSAAMISMERKKI", "LINKKI" ]
+            "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU", "OPINTOKOKONAISUUS", "KOULUTUKSENOSA", "KOULUTUKSENOSAT", "LAAJAALAINENOSAAMINEN", "KOTO_KIELITAITOTASO", "KOTO_OPINTO", "KOTO_LAAJAALAINENOSAAMINEN", "TAVOITESISALTOALUE", "OSAAMISMERKKI", "LINKKI" ]
           },
           "valmis" : {
             "type" : "boolean"
@@ -13019,6 +13031,9 @@
           "suorituspolku" : {
             "$ref" : "#/components/schemas/SuorituspolkuDto"
           },
+          "tavoitesisaltoalue" : {
+            "$ref" : "#/components/schemas/TavoitesisaltoalueDto"
+          },
           "tekstiKappale" : {
             "$ref" : "#/components/schemas/TekstiKappaleDto"
           },
@@ -13030,7 +13045,7 @@
           },
           "tyyppi" : {
             "type" : "string",
-            "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU", "OPINTOKOKONAISUUS", "KOULUTUKSENOSA", "KOULUTUKSENOSAT", "LAAJAALAINENOSAAMINEN", "KOTO_KIELITAITOTASO", "KOTO_OPINTO", "KOTO_LAAJAALAINENOSAAMINEN", "OSAAMISMERKKI", "LINKKI" ]
+            "enum" : [ "TEKSTIKAPPALE", "TUTKINNONOSAT", "TUTKINNONOSA", "TOSARYHMA", "SUORITUSPOLUT", "SUORITUSPOLKU", "OSASUORITUSPOLKU", "OPINTOKOKONAISUUS", "KOULUTUKSENOSA", "KOULUTUKSENOSAT", "LAAJAALAINENOSAAMINEN", "KOTO_KIELITAITOTASO", "KOTO_OPINTO", "KOTO_LAAJAALAINENOSAAMINEN", "TAVOITESISALTOALUE", "OSAAMISMERKKI", "LINKKI" ]
           }
         }
       },
@@ -13255,6 +13270,104 @@
           "suoritustapakoodi" : {
             "type" : "string",
             "enum" : [ "OPS", "NAYTTO", "REFORMI", "PERUSOPETUS", "LISAOPETUS", "VARHAISKASVATUS", "ESIOPETUS", "LUKIOKOULUTUS" ]
+          }
+        }
+      },
+      "TavoiteAlueDto" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "keskeisetSisaltoalueet" : {
+            "type" : "array",
+            "items" : {
+              "type" : "object",
+              "additionalProperties" : {
+                "type" : "string"
+              }
+            }
+          },
+          "otsikko" : {
+            "$ref" : "#/components/schemas/KoodiDto"
+          },
+          "tavoiteAlueTyyppi" : {
+            "type" : "string",
+            "enum" : [ "OTSIKKO", "TAVOITESISALTOALUE" ]
+          },
+          "tavoitteet" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/KoodiDto"
+            }
+          }
+        }
+      },
+      "TavoitesisaltoalueDto" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "luotu" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "muokattu" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "nimi" : {
+            "type" : "object",
+            "additionalProperties" : {
+              "type" : "string"
+            }
+          },
+          "nimiKoodi" : {
+            "$ref" : "#/components/schemas/KoodiDto"
+          },
+          "osanTyyppi" : {
+            "type" : "string"
+          },
+          "tavoitealueet" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/TavoiteAlueDto"
+            }
+          },
+          "teksti" : {
+            "type" : "object",
+            "additionalProperties" : {
+              "type" : "string"
+            }
+          },
+          "tila" : {
+            "type" : "string",
+            "enum" : [ "LUONNOS", "VALMIS", "POISTETTU" ]
+          },
+          "tunniste" : {
+            "type" : "string",
+            "enum" : [ "NORMAALI", "LAAJAALAINENOSAAMINEN", "RAKENNE" ]
+          }
+        }
+      },
+      "TavoitesisaltoalueExportDto" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "paikallinenTarkennus" : {
+            "type" : "object",
+            "additionalProperties" : {
+              "type" : "string"
+            }
+          },
+          "perusteenOsa" : {
+            "$ref" : "#/components/schemas/TavoitesisaltoalueDto"
           }
         }
       },

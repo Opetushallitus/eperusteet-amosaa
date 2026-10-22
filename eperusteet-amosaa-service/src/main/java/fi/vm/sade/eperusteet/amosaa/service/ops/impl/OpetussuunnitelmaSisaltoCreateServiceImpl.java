@@ -19,7 +19,9 @@ import fi.vm.sade.eperusteet.amosaa.dto.peruste.OpintokokonaisuusDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteKaikkiDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.PerusteenOsaViiteDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TekstiKappaleDto;
+import fi.vm.sade.eperusteet.amosaa.dto.peruste.TavoitesisaltoalueDto;
 import fi.vm.sade.eperusteet.amosaa.dto.peruste.TuvaLaajaAlainenOsaaminenDto;
+import fi.vm.sade.eperusteet.amosaa.dto.teksti.LokalisoituTekstiDto;
 import fi.vm.sade.eperusteet.amosaa.repository.teksti.SisaltoviiteRepository;
 import fi.vm.sade.eperusteet.amosaa.service.exception.BusinessRuleViolationException;
 import fi.vm.sade.eperusteet.amosaa.service.mapping.DtoMapper;
@@ -172,6 +174,13 @@ public class OpetussuunnitelmaSisaltoCreateServiceImpl implements Opetussuunnite
 
         if (sisalto.getPerusteenOsa() instanceof KotoLaajaAlainenOsaaminenDto) {
             sisaltoviite = SisaltoViite.createKotoLaajaAlainenOsaaminen(parentViite);
+        }
+
+        if (sisalto.getPerusteenOsa() instanceof TavoitesisaltoalueDto tavoitesisaltoalueDto) {
+            sisaltoviite = SisaltoViite.createTavoitesisaltoalue(parentViite);
+            if (tavoitesisaltoalueDto.getNimi() == null && tavoitesisaltoalueDto.getNimiKoodi() != null) {
+                tavoitesisaltoalueDto.setNimi(new LokalisoituTekstiDto(tavoitesisaltoalueDto.getNimiKoodi().getNimi()));
+            }
         }
 
         if (sisaltoviite == null) {
