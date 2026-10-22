@@ -38,7 +38,15 @@ public class LukutaitokoulutusOpsitIT extends AbstractIntegrationTest {
                 .containsExactlyInAnyOrder(98930L, 98931L);
         assertThat(sisaltoviitteet(ops).stream().filter(sv -> sv.getVanhempi() != null).collect(Collectors.toList()))
                 .extracting(SisaltoViiteDto::getTyyppi)
-                .containsOnly(SisaltoTyyppi.TEKSTIKAPPALE);
+                .containsOnly(SisaltoTyyppi.TEKSTIKAPPALE, SisaltoTyyppi.TAVOITESISALTOALUE);
+
+        SisaltoViiteDto tavoitesisaltoalue = sisaltoviitteet(ops).stream()
+                .filter(viite -> SisaltoTyyppi.TAVOITESISALTOALUE.equals(viite.getTyyppi()))
+                .findFirst().orElseThrow();
+        assertThat(tavoitesisaltoalue.getPerusteenOsaId()).isEqualTo(98932L);
+        assertThat(tavoitesisaltoalue.getTekstiKappale().getNimi().getTeksti())
+                .isEqualTo(LokalisoituTekstiDto.of("Tavoitteet ja sisältöalueet").getTekstit());
+        assertThat(tavoitesisaltoalue.getTavoitesisaltoalue()).isNotNull();
     }
 
     @Test

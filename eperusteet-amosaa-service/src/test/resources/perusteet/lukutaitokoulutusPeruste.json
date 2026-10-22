@@ -82,6 +82,48 @@
             }
           ],
           "_perusteenOsa": "98930"
+        },
+        {
+          "id": 98883,
+          "perusteenOsa": {
+            "id": 98932,
+            "luotu": 1654512981431,
+            "muokattu": 1654513124880,
+            "muokkaaja": "test",
+            "nimi": {
+              "_id": "98913",
+              "fi": "Tavoitteet ja sisältöalueet"
+            },
+            "tila": "luonnos",
+            "nimiKoodi": {
+              "nimi": {
+                "fi": "Tavoitteet ja sisältöalueet"
+              },
+              "arvo": "01",
+              "uri": "tavoitesisaltoalueenotsikko_01",
+              "koodisto": "tavoitesisaltoalueenotsikko"
+            },
+            "teksti": {
+              "_id": "198041",
+              "fi": "<p>tavoitesisaltoalueen teksti</p>"
+            },
+            "tavoitealueet": [
+              {
+                "tavoiteAlueTyyppi": "OTSIKKO",
+                "otsikko": {
+                  "nimi": {
+                    "fi": "Otsikko"
+                  },
+                  "arvo": "otsikko1",
+                  "uri": "tavoitealueet_otsikko1",
+                  "koodisto": "tavoitealueet"
+                }
+              }
+            ],
+            "osanTyyppi": "tavoitesisaltoalue"
+          },
+          "lapset": [],
+          "_perusteenOsa": "98932"
         }
       ]
     }
