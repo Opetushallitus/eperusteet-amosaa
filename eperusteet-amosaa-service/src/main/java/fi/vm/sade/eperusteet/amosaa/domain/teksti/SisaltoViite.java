@@ -9,7 +9,6 @@ import fi.vm.sade.eperusteet.amosaa.domain.peruste.CachedPeruste;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.KotoKielitaitotaso;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.KotoLaajaAlainenOsaaminen;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.KotoOpinto;
-import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.LukutaitoTavoitealue;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Koulutuksenosa;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.OmaOsaAlue;
 import fi.vm.sade.eperusteet.amosaa.domain.tutkinnonosa.Opintokokonaisuus;
@@ -178,11 +177,6 @@ public class SisaltoViite extends AbstractAuditedEntity implements Referenceable
     @Setter
     private KotoLaajaAlainenOsaaminen kotoLaajaAlainenOsaaminen;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @Getter
-    @Setter
-    private LukutaitoTavoitealue lukutaitoTavoitealue;
-
     @OrderColumn
     @OneToMany(orphanRemoval = true, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinTable(name = "sisaltoviite_omaosaalue",
@@ -282,7 +276,6 @@ public class SisaltoViite extends AbstractAuditedEntity implements Referenceable
             result.setKotoKielitaitotaso(KotoKielitaitotaso.copy(original.getKotoKielitaitotaso()));
             result.setKotoOpinto(KotoOpinto.copy(original.getKotoOpinto()));
             result.setKotoLaajaAlainenOsaaminen(KotoLaajaAlainenOsaaminen.copy(original.getKotoLaajaAlainenOsaaminen()));
-            result.setLukutaitoTavoitealue(LukutaitoTavoitealue.copy(original.getLukutaitoTavoitealue()));
             result.setPeruste(original.getPeruste());
             result.setPerusteenOsaId(original.getPerusteenOsaId());
             result.setTekstiKappale(TekstiKappale.copy(original.getTekstiKappale()));
@@ -386,13 +379,6 @@ public class SisaltoViite extends AbstractAuditedEntity implements Referenceable
         result.setTyyppi(SisaltoTyyppi.KOTO_LAAJAALAINENOSAAMINEN);
         KotoLaajaAlainenOsaaminen lao = new KotoLaajaAlainenOsaaminen();
         result.setKotoLaajaAlainenOsaaminen(lao);
-        return result;
-    }
-
-    static public SisaltoViite createLukutaitoTavoitealue(SisaltoViite parent) {
-        SisaltoViite result = createCommon(parent);
-        result.setTyyppi(SisaltoTyyppi.LUKUTAITOKOULUTUS_TAVOITTEETJASISALTOALUEET);
-        result.setLukutaitoTavoitealue(new LukutaitoTavoitealue());
         return result;
     }
 
@@ -537,13 +523,6 @@ public class SisaltoViite extends AbstractAuditedEntity implements Referenceable
             return this.linkkiSisaltoViite.kotoLaajaAlainenOsaaminen;
         }
         return kotoLaajaAlainenOsaaminen;
-    }
-
-    public LukutaitoTavoitealue getLukutaitoTavoitealue() {
-        if (SisaltoTyyppi.LINKKI.equals(tyyppi)) {
-            return this.linkkiSisaltoViite.lukutaitoTavoitealue;
-        }
-        return lukutaitoTavoitealue;
     }
 
     public List<OmaOsaAlue> getOsaAlueet() {

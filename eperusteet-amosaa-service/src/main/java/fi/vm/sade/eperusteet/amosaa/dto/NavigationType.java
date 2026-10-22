@@ -25,7 +25,6 @@ public enum NavigationType {
     koto_kielitaitotaso,
     koto_opinto,
     koto_laajaalainenosaaminen,
-    lukutaitokoulutus_tavoitteetjasisaltoalueet,
     opetussuunnitelma_rakenne,
     linkki,
     pakolliset_osaalueet,
