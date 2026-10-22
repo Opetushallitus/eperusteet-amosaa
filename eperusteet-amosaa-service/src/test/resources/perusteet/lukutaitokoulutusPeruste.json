@@ -82,38 +82,6 @@
             }
           ],
           "_perusteenOsa": "98930"
-        },
-        {
-          "id": 98883,
-          "perusteenOsa": {
-            "id": 98932,
-            "luotu": 1654512981431,
-            "muokattu": 1654513124880,
-            "muokkaaja": "test",
-            "nimi": {
-              "_id": "98913",
-              "fi": "Monilukutaito"
-            },
-            "tila": "luonnos",
-            "osanTyyppi": "lukutaitokoulutus_tavoitteetjasisaltoalueet",
-            "tavoitealueet": [
-              {
-                "id": 1,
-                "nimi": {
-                  "_id": "98914",
-                  "fi": "Vuorovaikutustilanteissa toimiminen"
-                },
-                "tavoitteet": [
-                  {
-                    "_id": "98915",
-                    "fi": "toimia arjen vuorovaikutustilanteissa"
-                  }
-                ]
-              }
-            ]
-          },
-          "lapset": [],
-          "_perusteenOsa": "98932"
         }
       ]
     }
