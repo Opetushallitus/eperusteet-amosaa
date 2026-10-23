@@ -671,16 +671,15 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
     private VanhentunutPohjaperusteDto getOpetussuunnitelmaVanhentunutPeruste(Opetussuunnitelma ops) {
         VanhentunutPohjaperusteDto vanhentunutPohjaperusteDto = null;
 
-        CachedPeruste cperuste = ops.getPeruste();
-        if (cperuste != null) {
+        if (ops.getPeruste() != null) {
             try {
+                Date viimeisinJulkaisu = eperusteetClient.getViimeisinJulkaisuPeruste(ops.getPeruste().getPerusteId());
+                CachedPeruste cperuste = ops.getPeruste();
                 PerusteDto perusteVanha = eperusteetService.getPerusteSisalto(cperuste.getId(), PerusteDto.class);
                 boolean siirtymaPaattynyt = perusteVanha != null && perusteVanha.getSiirtymaPaattyy() != null
                         && perusteVanha.getSiirtymaPaattyy().before(new Date());
-                Date viimeisinJulkaisu = eperusteetClient.getViimeisinJulkaisuPeruste(cperuste.getPerusteId());
 
-                if (!siirtymaPaattynyt && viimeisinJulkaisu != null && cperuste.getLuotu() != null
-                        && viimeisinJulkaisu.after(cperuste.getLuotu())) {
+                if (!siirtymaPaattynyt && cperuste != null && viimeisinJulkaisu.getTime() > cperuste.getLuotu().getTime()) {
                     PerusteDto perusteDto = eperusteetClient.getPerusteOrNull(ops.getPeruste().getPerusteId(), PerusteDto.class);
                     if (perusteDto != null) {
                         vanhentunutPohjaperusteDto = new VanhentunutPohjaperusteDto();
