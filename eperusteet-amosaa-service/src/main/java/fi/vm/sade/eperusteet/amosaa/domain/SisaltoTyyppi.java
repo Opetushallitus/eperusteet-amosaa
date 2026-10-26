@@ -18,6 +18,7 @@ public enum SisaltoTyyppi {
     KOTO_KIELITAITOTASO("koto_kielitaitotaso"),
     KOTO_OPINTO("koto_opinto"),
     KOTO_LAAJAALAINENOSAAMINEN("koto_laajaalainenosaaminen"),
+    TAVOITESISALTOALUE("tavoitesisaltoalue"),
     OSAAMISMERKKI("osaamismerkki"),
 
     // Linkki toiseen minkä läpi voi vain lukea
