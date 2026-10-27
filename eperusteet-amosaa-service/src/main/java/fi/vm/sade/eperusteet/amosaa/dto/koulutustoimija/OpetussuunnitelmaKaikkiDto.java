@@ -1,5 +1,6 @@
 package fi.vm.sade.eperusteet.amosaa.dto.koulutustoimija;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import fi.vm.sade.eperusteet.amosaa.domain.KoulutusTyyppi;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteExportDto;
 import fi.vm.sade.eperusteet.amosaa.dto.teksti.SisaltoViiteExportOpintokokonaisuusDto;
@@ -26,6 +27,10 @@ public class OpetussuunnitelmaKaikkiDto extends OpetussuunnitelmaDto {
     List<SisaltoViiteExportDto> tutkinnonOsat;
     @Schema(description = "Opetussuunnitelman opintokokonaisuudet.")
     List<SisaltoViiteExportOpintokokonaisuusDto> opintokokonaisuudet;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @Schema(description = "Palautetun opetussuunnitelman julkaisun versionumero. "
+            + "Kenttä puuttuu, jos palautettu sisältö ei ole julkaisu.")
+    Integer julkaisuRevisio;
 
     public KoulutusTyyppi getKoulutustyyppi() {
         if (super.getKoulutustyyppi() != null) {

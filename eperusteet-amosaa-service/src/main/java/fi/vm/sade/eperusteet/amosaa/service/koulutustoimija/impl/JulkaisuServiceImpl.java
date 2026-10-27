@@ -430,11 +430,32 @@ public class JulkaisuServiceImpl implements JulkaisuService {
             return null;
         }
 
+        return julkaisunSisalto(julkaisu);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public OpetussuunnitelmaKaikkiDto getOpetussuunnitelmaJulkaistuSisalto(Long opsId, Integer julkaisuRevisio) {
+        Opetussuunnitelma ops = opetussuunnitelmaRepository.findOne(opsId);
+        if (ops == null || Tila.POISTETTU.equals(ops.getTila()) || julkaisuRevisio == null) {
+            return null;
+        }
+
+        Julkaisu julkaisu = julkaisuRepository.findByOpetussuunnitelmaAndRevision(ops, julkaisuRevisio);
+        if (julkaisu == null) {
+            return null;
+        }
+
+        return julkaisunSisalto(julkaisu);
+    }
+
+    private OpetussuunnitelmaKaikkiDto julkaisunSisalto(Julkaisu julkaisu) {
         ObjectNode data = julkaisu.getData().getData();
         try {
             ObjectMapper om = InitJacksonConverter.createMapper();
             OpetussuunnitelmaKaikkiDto kaikkiDto = om.treeToValue(data, OpetussuunnitelmaKaikkiDto.class);
             kaikkiDto.setTila(Tila.JULKAISTU);
+            kaikkiDto.setJulkaisuRevisio(julkaisu.getRevision());
             return kaikkiDto;
         } catch (JsonProcessingException e) {
             log.error(Throwables.getStackTraceAsString(e));

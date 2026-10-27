@@ -68,6 +68,11 @@ public class JulkaisuServiceMock implements JulkaisuService {
     }
 
     @Override
+    public OpetussuunnitelmaKaikkiDto getOpetussuunnitelmaJulkaistuSisalto(Long opsId, Integer julkaisuRevisio) {
+        return null;
+    }
+
+    @Override
     public SisaltoviiteOpintokokonaisuusExternalDto findJulkaistuOpintokokonaisuus(String koodiArvo) throws IOException {
         return null;
     }
