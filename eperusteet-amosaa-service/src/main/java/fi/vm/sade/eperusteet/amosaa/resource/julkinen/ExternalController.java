@@ -23,6 +23,7 @@ import org.springframework.context.annotation.Description;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -82,7 +83,20 @@ public class ExternalController {
     ) {
         return julkaisuService.getOpetussuunnitelmaJulkaistuSisalto(opsId);
     }
-    
+
+    @Operation(summary = "Opetussuunnitelman tietyn julkaisuversion tietojen haku")
+    @GetMapping(value = "/opetussuunnitelma/{opsId:\\d+}/v{julkaisuRevisio:\\d+}")
+    public ResponseEntity<OpetussuunnitelmaKaikkiDto> getPublicOpetussuunnitelmaJulkaisuRevisio(
+            @PathVariable("opsId") final Long opsId,
+            @Parameter(description = "Opetussuunnitelman julkaisun revisio")
+            @PathVariable("julkaisuRevisio") final Integer julkaisuRevisio) {
+        OpetussuunnitelmaKaikkiDto ops = julkaisuService.getOpetussuunnitelmaJulkaistuSisalto(opsId, julkaisuRevisio);
+        if (ops == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(ops);
+    }
+
     @RequestMapping(value = "/opetussuunnitelma/{opsId:\\d+}/{custompath}", method = GET)
     @ResponseBody
     @Operation(

@@ -46,6 +46,9 @@ public interface JulkaisuService {
     OpetussuunnitelmaKaikkiDto getOpetussuunnitelmaJulkaistuSisalto(Long opsId);
 
     @PreAuthorize("permitAll()")
+    OpetussuunnitelmaKaikkiDto getOpetussuunnitelmaJulkaistuSisalto(Long opsId, Integer julkaisuRevisio);
+
+    @PreAuthorize("permitAll()")
     SisaltoviiteOpintokokonaisuusExternalDto findJulkaistuOpintokokonaisuus(String koodiArvo) throws IOException;
 
     @PreAuthorize("permitAll()")
