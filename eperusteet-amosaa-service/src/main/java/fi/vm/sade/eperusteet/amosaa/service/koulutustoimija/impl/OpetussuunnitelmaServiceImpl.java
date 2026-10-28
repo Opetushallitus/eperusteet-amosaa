@@ -675,13 +675,10 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
             try {
                 Date viimeisinJulkaisu = eperusteetClient.getViimeisinJulkaisuPeruste(ops.getPeruste().getPerusteId());
                 CachedPeruste cperuste = ops.getPeruste();
-                PerusteDto perusteVanha = eperusteetService.getPerusteSisalto(cperuste.getId(), PerusteDto.class);
-                boolean siirtymaPaattynyt = perusteVanha != null && perusteVanha.getSiirtymaPaattyy() != null
-                        && perusteVanha.getSiirtymaPaattyy().before(new Date());
-
-                if (!siirtymaPaattynyt && cperuste != null && viimeisinJulkaisu.getTime() > cperuste.getLuotu().getTime()) {
+                if (cperuste != null && viimeisinJulkaisu.getTime() > cperuste.getLuotu().getTime()) {
                     PerusteDto perusteDto = eperusteetClient.getPerusteOrNull(ops.getPeruste().getPerusteId(), PerusteDto.class);
                     if (perusteDto != null) {
+                        PerusteDto perusteVanha = eperusteetService.getPerusteSisalto(cperuste.getId(), PerusteDto.class);
                         vanhentunutPohjaperusteDto = new VanhentunutPohjaperusteDto();
                         vanhentunutPohjaperusteDto.setOpetussuunnitelma(mapper.map(ops, OpetussuunnitelmaBaseDto.class));
                         vanhentunutPohjaperusteDto.setPerusteVanha(perusteVanha);
@@ -689,15 +686,6 @@ public class OpetussuunnitelmaServiceImpl implements OpetussuunnitelmaService {
                         vanhentunutPohjaperusteDto.setPerustePaivittynyt(viimeisinJulkaisu);
                         vanhentunutPohjaperusteDto.setEdellinenPaivitys(cperuste.getLuotu());
                     }
-                }
-
-                // Siirtymäajan päätyttyä perusteen pohjalta laadittu totsu pitää
-                // arkistoida, eikä sitä voi enää päivittää uuteen perusteeseen.
-                if (vanhentunutPohjaperusteDto == null && siirtymaPaattynyt) {
-                        vanhentunutPohjaperusteDto = new VanhentunutPohjaperusteDto();
-                        vanhentunutPohjaperusteDto.setOpetussuunnitelma(mapper.map(ops, OpetussuunnitelmaBaseDto.class));
-                        vanhentunutPohjaperusteDto.setPerusteVanha(perusteVanha);
-                        vanhentunutPohjaperusteDto.setSiirtymaPaattynyt(true);
                 }
             } catch (BusinessRuleViolationException e) {
                 log.error("Perusteen viimeisimman julkaisuajan haku epaonnistui: {}", ops.getPeruste().getId());
