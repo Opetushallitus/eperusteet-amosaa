@@ -46,6 +46,11 @@ public class PerusteController extends KoulutustoimijaIdGetterAbstractController
         return service.getPerusteSisalto(id, PerusteDto.class);
     }
 
+    @RequestMapping(value = "/{id}/kentta/{kentta}", method = RequestMethod.GET)
+    public JsonNode getPerusteKentta(@PathVariable Long id, @PathVariable String kentta) {
+        return service.getPerusteKentta(id, kentta);
+    }
+
     @RequestMapping(value = "/{id}/kaikki", method = RequestMethod.GET)
     public JsonNode getPerusteAll(@PathVariable Long id) {
         return service.getPerusteSisalto(id, JsonNode.class);
