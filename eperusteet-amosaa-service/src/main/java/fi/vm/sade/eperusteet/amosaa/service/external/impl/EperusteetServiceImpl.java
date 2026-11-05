@@ -362,7 +362,7 @@ public class EperusteetServiceImpl implements EperusteetService {
 
     @Override
     public JsonNode getPerusteKentta(Long cperusteId, String kentta) {
-        String value = cachedPerusteRepository.findLatestPerusteKentta(cperusteId, kentta);
+        String value = cachedPerusteRepository.findPerusteKentta(cperusteId, kentta);
         if (value == null) {
             throw new BusinessRuleViolationException("perustetta-ei-loytynyt");
         }

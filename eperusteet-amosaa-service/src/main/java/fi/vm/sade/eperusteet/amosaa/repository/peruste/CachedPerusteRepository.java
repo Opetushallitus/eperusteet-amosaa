@@ -24,11 +24,10 @@ public interface CachedPerusteRepository extends CustomJpaRepository<CachedPerus
 
     CachedPeruste findFirstByPerusteIdOrderByLuotuDesc(Long perusteId);
 
-    @Query(value = "SELECT COALESCE((CAST(p.peruste AS json) -> :kentta)::text, 'null') " +
+    @Query(value = "SELECT COALESCE(CAST(CAST(p.peruste AS json) -> :kentta AS text), 'null') " +
             "FROM peruste_cache p " +
-            "WHERE p.peruste_id = (SELECT peruste_id FROM peruste_cache WHERE id = :id) " +
-            "ORDER BY p.luotu DESC LIMIT 1", nativeQuery = true)
-    String findLatestPerusteKentta(@Param("id") Long id, @Param("kentta") String kentta);
+            "WHERE p.id = :id", nativeQuery = true)
+    String findPerusteKentta(@Param("id") Long id, @Param("kentta") String kentta);
 
     @Query("SELECT p.id " +
             "FROM CachedPeruste p " +
