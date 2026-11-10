@@ -81,7 +81,11 @@ public class ValidointiServiceImpl implements ValidointiService {
 
     @Override
     public List<Validointi> validoi(Opetussuunnitelma ops) {
-        Validointi opsValidointi = new Validointi(ValidationCategory.OPETUSSUUNNITELMA);
+        KoulutusTyyppi koulutustyyppi = ops.getOpsKoulutustyyppi();
+        ValidationCategory opsKategoria = koulutustyyppi != null && koulutustyyppi.isAmmatillinen()
+                ? ValidationCategory.TOTEUTUSSUUNNITELMA
+                : ValidationCategory.OPETUSSUUNNITELMA;
+        Validointi opsValidointi = new Validointi(opsKategoria);
         validoiTiedot(opsValidointi, ops);
         SisaltoViite root = sisaltoviiteRepository.findOneRoot(ops);
 

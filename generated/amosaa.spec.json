@@ -253,6 +253,43 @@
         "tags" : [ "external" ]
       }
     },
+    "/api/external/opetussuunnitelma/{opsId}/v{julkaisuRevisio}" : {
+      "get" : {
+        "operationId" : "getPublicOpetussuunnitelmaJulkaisuRevisio",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "opsId",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "description" : "Opetussuunnitelman julkaisun revisio",
+          "in" : "path",
+          "name" : "julkaisuRevisio",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/OpetussuunnitelmaKaikkiDto"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "summary" : "Opetussuunnitelman tietyn julkaisuversion tietojen haku",
+        "tags" : [ "external" ]
+      }
+    },
     "/api/external/opetussuunnitelma/{opsId}/{custompath}" : {
       "get" : {
         "description" : "  Url-parametreiksi voi antaa opetussuunnitelman id:n lisäksi erilaisia opetussuunnitelman rakenteen osia ja id-kenttien arvoja.\n  Esim. /opetussuunnitelma/8505691/tutkinnonOsat/7283253/tosa antaa opetussuunnitelman (id: 8505691) tutkinnon osien tietueen (id: 7283253).\n\n  Mikäli palautuva JSON sisältää listan, voidaan rajapinnan parametreina antaa myös listan filtterit (kyselyparametrit).\n  Esim. /opetussuunnitelma/8505691/tutkinnonOsat?tyyppi=oma antaa tutkinnon osien tietueet, joissa tyyppi-kentän arvo on 'oma'.\n  Sisäkkäisiä kenttiä voi suodattaa pisteellä erotetulla polulla, esim. ?tosa.tyyppi=oma tai ?nimi.fi=johdanto.\n\n  Useita filttereitä voidaan yhdistää lisäämällä useita kyselyparametreja, esim. ?tyyppi=oma&tosa.tyyppi=oma.\n  Kaikki annetut filtterit sovelletaan yhtäaikaisesti (logiikka: AND).\n",
@@ -10595,6 +10632,11 @@
             "description" : "JOTPA-tyyppi (esim. VST, MUU).",
             "enum" : [ "VST", "MUU" ]
           },
+          "julkaisuRevisio" : {
+            "type" : "integer",
+            "description" : "Palautetun opetussuunnitelman julkaisun versionumero. Kenttä puuttuu, jos palautettu sisältö ei ole julkaisu.",
+            "format" : "int32"
+          },
           "julkaisukielet" : {
             "uniqueItems" : true,
             "type" : "array",
@@ -14107,7 +14149,7 @@
           },
           "kategoria" : {
             "type" : "string",
-            "enum" : [ "OPETUSSUUNNITELMA", "SISALTO" ]
+            "enum" : [ "OPETUSSUUNNITELMA", "TOTEUTUSSUUNNITELMA", "SISALTO" ]
           },
           "virheet" : {
             "type" : "array",

@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 public enum ValidationCategory {
 
     OPETUSSUUNNITELMA("opetussuunnitelma"),
+    TOTEUTUSSUUNNITELMA("toteutussuunnitelma"),
     SISALTO("sisalto");
 
     private final String tyyppi;
