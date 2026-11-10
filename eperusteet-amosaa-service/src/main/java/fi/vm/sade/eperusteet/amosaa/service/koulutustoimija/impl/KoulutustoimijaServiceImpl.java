@@ -88,6 +88,7 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     private EntityManager em;
 
     private static String OPH = "1.2.246.562.10.00000000001";
+    private static final List<String> ORGANISAATIO_FILTER_TOIMIPAIKKA_TYPE = List.of("VARHAISKASVATUKSEN_TOIMIPAIKKA");
 
     private Koulutustoimija initialize(String kOid) {
         Koulutustoimija koulutustoimija = repository.findOneByOrganisaatio(kOid);
@@ -280,7 +281,24 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
     public OrganisaatioHierarkiaDto getOrganisaatioHierarkia(Long ktId) {
         Koulutustoimija kt = repository.findOne(ktId);
         OrganisaatioHierarkiaDto result = organisaatioService.getOrganisaatioPuu(kt.getOrganisaatio());
-        return result;
+        return poistaSuodatettavatOrganisaatiot(result);
+    }
+
+    private OrganisaatioHierarkiaDto poistaSuodatettavatOrganisaatiot(OrganisaatioHierarkiaDto organisaatio) {
+        if (organisaatio == null || onSuodatettavaOrganisaatio(organisaatio)) {
+            return null;
+        }
+        List<OrganisaatioHierarkiaDto> lapset = organisaatio.getChildren().stream()
+                .map(this::poistaSuodatettavatOrganisaatiot)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+        organisaatio.setChildren(lapset);
+        return organisaatio;
+    }
+
+    private boolean onSuodatettavaOrganisaatio(OrganisaatioHierarkiaDto organisaatio) {
+        List<String> tyypit = organisaatio.getOrganisaatiotyypit();
+        return tyypit != null && tyypit.stream().anyMatch(ORGANISAATIO_FILTER_TOIMIPAIKKA_TYPE::contains);
     }
 
     @Override
