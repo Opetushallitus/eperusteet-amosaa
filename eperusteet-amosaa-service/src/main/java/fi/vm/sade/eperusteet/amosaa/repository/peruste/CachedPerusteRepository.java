@@ -7,6 +7,7 @@ import java.util.List;
 import fi.vm.sade.eperusteet.amosaa.repository.CustomJpaRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -22,6 +23,11 @@ public interface CachedPerusteRepository extends CustomJpaRepository<CachedPerus
     CachedPeruste findFirstByPerusteIdAndLuotu(Long perusteId, Date luotu);
 
     CachedPeruste findFirstByPerusteIdOrderByLuotuDesc(Long perusteId);
+
+    @Query(value = "SELECT COALESCE(CAST(CAST(p.peruste AS json) -> :kentta AS text), 'null') " +
+            "FROM peruste_cache p " +
+            "WHERE p.id = :id", nativeQuery = true)
+    String findPerusteKentta(@Param("id") Long id, @Param("kentta") String kentta);
 
     @Query("SELECT p.id " +
             "FROM CachedPeruste p " +

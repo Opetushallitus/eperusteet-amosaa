@@ -39,6 +39,8 @@ public interface EperusteetService {
 
     <T> T getPerusteSisalto(Long cperusteId, Class<T> type);
 
+    JsonNode getPerusteKentta(Long cperusteId, String kentta);
+
     <T> T getPerusteSisalto(CachedPeruste cperuste, Class<T> type);
 
     List<PerusteKevytDto> findPerusteet(Set<String> koulutustyypit, String nimi, String kieli);

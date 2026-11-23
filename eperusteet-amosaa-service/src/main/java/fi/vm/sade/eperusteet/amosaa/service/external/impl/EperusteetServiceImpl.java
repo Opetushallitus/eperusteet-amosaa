@@ -361,6 +361,21 @@ public class EperusteetServiceImpl implements EperusteetService {
     }
 
     @Override
+    public JsonNode getPerusteKentta(Long cperusteId, String kentta) {
+        String value = cachedPerusteRepository.findPerusteKentta(cperusteId, kentta);
+        if (value == null) {
+            throw new BusinessRuleViolationException("perustetta-ei-loytynyt");
+        }
+
+        try {
+            return mapper.readTree(value);
+        } catch (IOException ex) {
+            logger.error("Perusteen kentän parsinta epäonnistui", ex);
+            throw new BusinessRuleViolationException("perusteen-parsinta-epaonnistui");
+        }
+    }
+
+    @Override
     public <T> T getPerusteSisalto(CachedPeruste cperuste, Class<T> type) {
         try {
             JsonNode node = mapper.readTree(cperuste.getPeruste());
