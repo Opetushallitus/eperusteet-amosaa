@@ -374,7 +374,7 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
         assertThatCode(() -> addOsaWithKoodi.apply("999")).doesNotThrowAnyException();
 
         { // Validi
-            SisaltoViiteDto.Matala osa = addOsaWithKoodi.apply("999999999");
+            SisaltoViiteDto.Matala osa = addOsaWithKoodi.apply("9999999999999999999999999");
             assertThat(validointiService.tutkinnonOsanValidointivirheet(ops.getId(), osa.getId()))
                     .doesNotContain("oma-tutkinnon-osa-virheellinen-koodi");
         }
@@ -386,7 +386,7 @@ public class SisaltoViiteServiceIT extends AbstractIntegrationTest {
         }
 
         { // Epävalidi
-            SisaltoViiteDto.Matala osa = addOsaWithKoodi.apply("9999999999");
+            SisaltoViiteDto.Matala osa = addOsaWithKoodi.apply("99999999999999999999999999");
             assertThat(validointiService.tutkinnonOsanValidointivirheet(ops.getId(), osa.getId()))
                     .contains("oma-tutkinnon-osa-virheellinen-koodi");
         }
