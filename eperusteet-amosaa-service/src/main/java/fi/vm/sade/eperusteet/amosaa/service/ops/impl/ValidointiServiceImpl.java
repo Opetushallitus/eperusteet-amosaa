@@ -146,13 +146,7 @@ public class ValidointiServiceImpl implements ValidointiService {
                     validointi.virhe("oma-tutkinnon-osa-ei-sisaltoa", NavigationNodeDto.of(viite));
                 }
             } else {
-                try {
-                    Integer arvo = Integer.valueOf(oma.getKoodi());
-                    if (arvo < 1000 || arvo > 999999999) {
-                        validointi.virhe("oma-tutkinnon-osa-virheellinen-koodi", NavigationNodeDto.of(viite));
-                    }
-                }
-                catch (NumberFormatException ex) {
+                if (oma.getKoodi() == null || !oma.getKoodi().matches("\\d{4,25}")) {
                     validointi.virhe("oma-tutkinnon-osa-virheellinen-koodi", NavigationNodeDto.of(viite));
                 }
 
