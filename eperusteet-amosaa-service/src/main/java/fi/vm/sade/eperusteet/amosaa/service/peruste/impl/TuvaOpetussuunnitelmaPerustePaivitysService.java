@@ -36,7 +36,7 @@ public class TuvaOpetussuunnitelmaPerustePaivitysService extends MuutOpetussuunn
 
     @Override
     public Set<KoulutusTyyppi> getTyypit() {
-        return Sets.newHashSet(KoulutusTyyppi.TUTKINTOONVALMENTAVA);
+        return Sets.newHashSet(KoulutusTyyppi.TUTKINTOONVALMENTAVA, KoulutusTyyppi.TELMA_VALMENTAVA);
     }
 
     @Override

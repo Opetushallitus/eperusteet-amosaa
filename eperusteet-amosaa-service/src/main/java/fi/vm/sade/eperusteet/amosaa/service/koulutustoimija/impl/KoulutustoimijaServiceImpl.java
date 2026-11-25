@@ -334,7 +334,7 @@ public class KoulutustoimijaServiceImpl implements KoulutustoimijaService {
             result.setToteutussuunnitelmatKeskeneraiset(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.OPS, false, koulutustoimijat, koulutustyypit));
             result.setToteutussuunnitelmatJulkaistut(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.OPS, true, koulutustoimijat, koulutustyypit));
 
-            if (koulutustyypit.contains(KoulutusTyyppi.VAPAASIVISTYSTYO) || koulutustyypit.contains(KoulutusTyyppi.TUTKINTOONVALMENTAVA)) {
+            if (koulutustyypit.contains(KoulutusTyyppi.VAPAASIVISTYSTYO) || koulutustyypit.contains(KoulutusTyyppi.TUTKINTOONVALMENTAVA) || koulutustyypit.contains(KoulutusTyyppi.TELMA_VALMENTAVA)) {
                 result.setToteutussuunnitelmaPohjatKeskeneraiset(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.OPSPOHJA, Collections.singleton(Tila.LUONNOS), koulutustoimijat, koulutustyypit));
                 result.setToteutussuunnitelmaPohjatValmiit(opetussuunnitelmaRepository.countByTyyppi(OpsTyyppi.OPSPOHJA, Collections.singleton(Tila.VALMIS), koulutustoimijat, koulutustyypit));
             } else if (koulutustoimija.isOph()) {

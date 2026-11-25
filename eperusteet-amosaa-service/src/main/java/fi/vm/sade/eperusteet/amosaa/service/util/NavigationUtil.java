@@ -25,7 +25,7 @@ public class NavigationUtil {
             NavigationType.tavoitesisaltoalue);
 
     private static final Set<KoulutusTyyppi> TUETUT_KOULUTUSTYYPIT = Set.of(
-            KoulutusTyyppi.VAPAASIVISTYSTYO, KoulutusTyyppi.VAPAASIVISTYSTYOLUKUTAITO, KoulutusTyyppi.MAAHANMUUTTAJIENKOTOUTUMISKOULUTUS, KoulutusTyyppi.LUKUTAITOKOULUTUS, KoulutusTyyppi.TUTKINTOONVALMENTAVA);
+            KoulutusTyyppi.VAPAASIVISTYSTYO, KoulutusTyyppi.VAPAASIVISTYSTYOLUKUTAITO, KoulutusTyyppi.MAAHANMUUTTAJIENKOTOUTUMISKOULUTUS, KoulutusTyyppi.LUKUTAITOKOULUTUS, KoulutusTyyppi.TUTKINTOONVALMENTAVA, KoulutusTyyppi.TELMA_VALMENTAVA);
 
     public static NavigationNodeDto asetaNumerointi(Opetussuunnitelma opetussuunnitelma, NavigationNodeDto node) {
         if (opetussuunnitelma.getOpsKoulutustyyppi() != null && TUETUT_KOULUTUSTYYPIT.contains(opetussuunnitelma.getOpsKoulutustyyppi())){

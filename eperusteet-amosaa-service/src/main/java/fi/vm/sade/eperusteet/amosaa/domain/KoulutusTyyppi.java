@@ -15,7 +15,8 @@ public enum KoulutusTyyppi {
     MAAHANMUUTTAJIENKOTOUTUMISKOULUTUS("koulutustyyppi_30"),
     LUKUTAITOKOULUTUS("koulutustyyppi_31"),
     VAPAASIVISTYSTYOLUKUTAITO("koulutustyyppi_35"),
-    TUTKINTOONVALMENTAVA("koulutustyyppi_40");
+    TUTKINTOONVALMENTAVA("koulutustyyppi_40"),
+    TELMA_VALMENTAVA("koulutustyyppi_32");
 
     private final String tyyppi;
 
@@ -60,7 +61,7 @@ public enum KoulutusTyyppi {
     }
 
     public boolean isTuva() {
-        return isOneOf(TUTKINTOONVALMENTAVA);
+        return isOneOf(TUTKINTOONVALMENTAVA, TELMA_VALMENTAVA);
     }
 
     public boolean isLukutaitokoulutus() {
