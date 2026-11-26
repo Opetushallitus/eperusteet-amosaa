@@ -22,6 +22,7 @@ public class PerusteKaikkiDto extends PerusteBaseDto {
     VapaasivistystyoSisaltoDto vapaasivistystyo;
     TutkintoonvalmentavaSisaltoDto tutkintoonvalmentava;
     LukutaitokoulutusSisaltoDto lukutaitokoulutus;
+    TelmaValmentavaSisaltoDto telmavalmentava;
 
     @JsonIgnore
     public PerusteenOsaViiteDto.Laaja getSisalto() {
@@ -35,6 +36,10 @@ public class PerusteKaikkiDto extends PerusteBaseDto {
 
         if (lukutaitokoulutus != null) {
             return lukutaitokoulutus.getSisalto();
+        }
+
+        if (telmavalmentava != null) {
+            return telmavalmentava.getSisalto();
         }
 
         return null;

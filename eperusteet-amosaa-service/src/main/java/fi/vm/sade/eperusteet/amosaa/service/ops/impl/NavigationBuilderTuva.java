@@ -14,7 +14,7 @@ public class NavigationBuilderTuva extends NavigationBuilderDefault {
 
     @Override
     public Set<KoulutusTyyppi> getTyypit() {
-        return Sets.newHashSet(KoulutusTyyppi.TUTKINTOONVALMENTAVA);
+        return Sets.newHashSet(KoulutusTyyppi.TUTKINTOONVALMENTAVA, KoulutusTyyppi.TELMA_VALMENTAVA);
     }
 
     @Override

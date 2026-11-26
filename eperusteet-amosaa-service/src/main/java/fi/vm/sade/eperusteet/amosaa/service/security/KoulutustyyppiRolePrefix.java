@@ -12,6 +12,7 @@ public enum KoulutustyyppiRolePrefix {
     KOULUTUSTYYPPI_30_KOTO(KoulutusTyyppi.MAAHANMUUTTAJIENKOTOUTUMISKOULUTUS, PermissionEvaluator.RolePrefix.ROLE_APP_EPERUSTEET_KOTO),
     KOULUTUSTYYPPI_31_KOTO(KoulutusTyyppi.LUKUTAITOKOULUTUS, PermissionEvaluator.RolePrefix.ROLE_APP_EPERUSTEET_KOTO),
     KOULUTUSTYYPPI_35_VST(KoulutusTyyppi.VAPAASIVISTYSTYOLUKUTAITO, PermissionEvaluator.RolePrefix.ROLE_APP_EPERUSTEET_VST),
+    KOULUTUSTYYPPI_32_TUVA(KoulutusTyyppi.TELMA_VALMENTAVA, PermissionEvaluator.RolePrefix.ROLE_APP_EPERUSTEET_TUVA),
     KOULUTUSTYYPPI_40_TUVA(KoulutusTyyppi.TUTKINTOONVALMENTAVA, PermissionEvaluator.RolePrefix.ROLE_APP_EPERUSTEET_TUVA);
 
     private KoulutusTyyppi koulutusTyyppi;
